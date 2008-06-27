@@ -1,0 +1,43 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: Sun Jun 22 21:23:52 2008\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: ENCODING\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: site_layout.html:35
+msgid "rhmsadmin Mail System Manager"
+msgstr "邮件管理系统"
+
+#: site_layout.html:41
+msgid "Home"
+msgstr "主页"
+
+#: site_layout.html:46
+msgid "Virtual Domains"
+msgstr "虚拟域"
+
+#: site_layout.html:51
+msgid "Virtual Users"
+msgstr "虚拟用户"
+
+#: site_layout.html:56
+msgid "About"
+msgstr "关于"
+
+#: site_layout.html:61
+msgid "Logout"
+msgstr "退出"
+
+msgid "Dashboard"
+msgstr "控制面板"

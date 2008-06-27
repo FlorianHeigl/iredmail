@@ -1,0 +1,20 @@
+===================================================================
+RCS file: /horde/cvs/horde/config/conf.xml,v
+retrieving revision 1.229
+retrieving revision 1.230
+diff -p --unified=3 -r1.229 -r1.230
+--- config/conf.xml	2008/05/19 23:22:04	1.229
++++ config/conf.xml	2008/05/26 11:51:43	1.230
+@@ -1132,8 +1132,10 @@
+    of Horde to ensure that a form can only be submitted once.">none
+     <case name="none" desc="Disable Form Tokens"/>
+     <case name="file" desc="Local filesystem token storage">
+-     <configstring name="token_dir" required="false" desc="The directory where
+-     to keep token files"/>
++     <configsection name="params">
++      <configstring name="token_dir" required="false" desc="The directory where
++      to keep token files"/>
++     </configsection>
+     </case>
+     <case name="sql" desc="SQL-based token storage">
+      <configsection name="params">

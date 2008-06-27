@@ -1,0 +1,36 @@
+#login { background: #fff; }
+#login .container {
+    background: #464646;
+    border:1px solid #ccc;
+    width:28em;
+    min-width:300px;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:100px;
+    float: left;
+    color: #fff;
+}
+#login .content-main { width:100%; }
+#login .form {
+    margin-top:1em;
+}
+
+#login .form-title {
+    display: block;
+    margin-top: 1em;
+    margin-left: 1.5em;
+    padding: 4px 0;
+    float: left;
+    width: 100%;
+    font-size: 2em;
+}
+
+#login .form-row {
+    margin-left: 2em;
+    padding:4px 0;
+    float:left;
+    width:100%;
+}
+
+#login .form-row #username, #login .form-row #password { width:14em; }
+#login .submit-row { margin-bottom: 1em; clear:both; padding:1em 0 0 9.4em; }

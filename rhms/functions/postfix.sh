@@ -1,0 +1,620 @@
+# -------------------------------------------------------
+# ---------------------- Postfix ------------------------
+# -------------------------------------------------------
+
+postfix_config_basic()
+{
+    backup_file ${SMTPD_CONF}
+
+    cat > ${SMTPD_CONF} <<EOF
+${CONF_MSG}
+pwcheck_method: saslauthd
+mech_list: PLAIN LOGIN MD5
+saslauthd_path: /var/run/saslauthd/mux
+EOF
+
+    ECHO_INFO "Enable chroot for Postfix."
+    backup_file ${POSTFIX_FILE_MASTER_CF}
+    perl -pi -e 's/^(smtp.*inet)(.*)(n)(.*)(n)(.*smtpd)$/${1}${2}${3}${4}-${6}/' ${POSTFIX_FILE_MASTER_CF}
+
+    ECHO_INFO "Copy /etc/hosts file to chrooted postfix."
+    mkdir -p "${POSTFIX_CHROOT_DIR}/etc/"
+    cp -f /etc/hosts ${POSTFIX_CHROOT_DIR}/etc/
+    cp -f /etc/resolv.conf ${POSTFIX_CHROOT_DIR}/etc/
+
+    postconf -e myhostname=$(hostname)
+    postconf -e mydomain=$(hostname)
+    postconf -e myorigin=$(hostname)
+    postconf -e relay_domains='$mydestination'
+    postconf -e inet_interfaces="all"
+    postconf -e mynetworks="127.0.0.0/8"
+    postconf -e receive_override_options='no_address_mappings'
+    postconf -e smtpd_data_restrictions='reject_unauth_pipelining'
+
+    # We use 'maildir' format, not 'mbox'.
+    if [ X"${HOME_MAILBOX}" == X"Maildir" ]; then
+        postconf -e home_mailbox="Maildir/"
+    elif [ X"${HOME_MAILBOX}" == X"mbox" ]; then
+        postconf -e home_mailbox="Mailbox"
+        postconf -e mailbox_delivery_lock='fcntl, dotlock'
+        postconf -e virtual_mailbox_lock='fcntl'
+    else
+        :
+    fi
+    postconf -e maximal_backoff_time="4000s"
+
+    # Allow recipient address start with '-'.
+    postconf -e allow_min_user='no'
+
+    if [ ! -z ${MAIL_ALIAS_ROOT} ]; then
+        echo "root: ${MAIL_ALIAS_ROOT}" >> /etc/postfix/aliases
+        postconf -e alias_maps="hash:/etc/postfix/aliases"
+        postconf -e alias_database="hash:/etc/postfix/aliases"
+        postalias hash:/etc/postfix/aliases
+        newaliases
+    else
+        :
+    fi
+
+    # Set message_size_limit.
+    postconf -e mailbox_size_limit="${MESSAGE_SIZE_LIMIT}"
+    postconf -e message_size_limit="${MESSAGE_SIZE_LIMIT}"
+    postconf -e virtual_mailbox_limit_override="yes"
+    # Set maildir overquota. 
+    postconf -e virtual_overquota_bounce="yes"
+    postconf -e virtual_mailbox_limit_message="${MAILDIR_LIMIT_MESSAGE}"
+
+    postconf -e smtpd_sender_restrictions="reject_authenticated_sender_login_mismatch, reject_sender_login_mismatch, reject_unauthenticated_sender_login_mismatch, permit_sasl_authenticated, permit_mynetworks"
+
+    ECHO_INFO "Setting up virtual domain in Postfix."
+    postconf -e virtual_minimum_uid="${VMAIL_USER_UID}"
+    postconf -e virtual_uid_maps="static:${VMAIL_USER_UID}"
+    postconf -e virtual_gid_maps="static:${VMAIL_USER_GID}"
+    postconf -e virtual_mailbox_base="${VMAIL_USER_HOME_DIR}"
+
+    postconf -e check_sender_access="hash:${POSTFIX_ROOTDIR}/sender_access"
+    cat > ${POSTFIX_ROOTDIR}/sender_access <<EOF
+${CONF_MSG}
+# This file has to be compiled with "postmap".
+
+# Examples:
+# Using domain name.
+#example.com    554 Spam not tolerated here
+#example.com    REJECT
+
+#example.com    DUNNO
+
+# Using IP address.
+# 10.0.0.0/8
+#10             554 Go away!
+
+# 172.16/16
+#172.16         554 Bugger off!
+
+#1.2.3.4        REJECT
+
+# 192.168.4/24 is bad, but 192.168.4.128 is okay
+#192.168.4.128       OK
+#192.168.4           554 Take a hike!
+
+# Write your own rules below.
+
+EOF
+    postmap hash:${POSTFIX_ROOTDIR}/sender_access
+
+    # Simple backscatter block method.
+    postconf -e header_checks="pcre:${POSTFIX_ROOTDIR}/header_checks"
+    cat >> ${POSTFIX_ROOTDIR}/header_checks <<EOF
+# *******************************************************************
+# Below rules is wrote in pcre syntax, shipped within rhms project:
+#   http://rhms.googlecode.com
+# Reference:
+#   http://www.postfix.org/BACKSCATTER_README.html#real
+# *******************************************************************
+
+# Use your real hostname to replace 'porcupine.org'.
+#if /^Received:/
+#/^Received: +from +(porcupine\.org) +/
+#    reject forged client name in Received: header: $1
+#/^Received: +from +[^ ]+ +\(([^ ]+ +[he]+lo=|[he]+lo +)(porcupine\.org)\)/
+#    reject forged client name in Received: header: $2
+#/^Received:.* +by +(porcupine\.org)\b/
+#    reject forged mail server name in Received: header: $1
+#endif
+#/^Message-ID:.* <!&!/ DUNNO
+#/^Message-ID:.*@(porcupine\.org)/
+#    reject forged domain name in Message-ID: header: $1
+EOF
+
+    cat >> ${TIP_FILE} <<EOF
+Postfix (basic):
+    * Configuration files:
+        - ${POSTFIX_ROOTDIR}
+        - ${POSTFIX_ROOTDIR}/aliases
+        - ${POSTFIX_FILE_MAIN_CF}
+        - ${POSTFIX_FILE_MASTER_CF}
+
+EOF
+
+    echo 'export status_postfix_config_basic="DONE"' >> ${STATUS_FILE}
+}
+
+postfix_config_ldap()
+{
+    ECHO_INFO "Setting up LDAP lookup in Postfix."
+    postconf -e smtpd_sender_restrictions="permit_sasl_authenticated, permit_mynetworks"
+    postconf -e mydestination="\$myhostname, localhost, localhost.localdomain, localhost.\$myhostname, ldap:${ldap_virtual_domains_cf}"
+    postconf -e transport_maps="ldap:${ldap_transport_maps_cf}"
+    postconf -e virtual_mailbox_maps="ldap:${ldap_accounts_cf}, ldap:${ldap_accountsmap_cf}"
+    postconf -e virtual_alias_maps="ldap:${ldap_virtual_alias_maps_cf}"
+    postconf -e local_recipient_maps='$alias_maps $virtual_alias_maps $virtual_mailbox_maps'
+    postconf -e sender_bcc_maps="ldap:${ldap_sender_bcc_maps_domain_cf}, ldap:${ldap_sender_bcc_maps_user_cf}"
+    postconf -e recipient_bcc_maps="ldap:${ldap_recipient_bcc_maps_domain_cf}, ldap:${ldap_recipient_bcc_maps_user_cf}"
+
+    postconf -e smtpd_sender_login_maps="ldap:${ldap_sender_login_maps_cf}"
+    postconf -e smtpd_reject_unlisted_sender='yes'
+
+    #
+    # For mydestination = ldap:virtualdomains
+    #
+    ECHO_INFO "Setting up LDAP virtual domains: ${ldap_virtual_domains_cf}."
+
+    cat > ${ldap_virtual_domains_cf} <<EOF
+${CONF_MSG}
+server_host     = ${LDAP_SERVER_HOST}
+server_port     = ${LDAP_SERVER_PORT}
+bind            = ${LDAP_BIND}
+start_tls       = no
+version         = ${LDAP_BIND_VERSION}
+bind_dn         = ${LDAP_BINDDN}
+bind_pw         = ${LDAP_BINDPW}
+search_base     = ${LDAP_BASEDN}
+scope           = one
+query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_DOMAIN})(${LDAP_ATTR_DOMAIN_DN_NAME}=%s)(${LDAP_ATTR_DOMAIN_STATUS}=active))
+result_attribute= ${LDAP_ATTR_DOMAIN_DN_NAME}
+debug_level     = 0
+EOF
+
+    #
+    # LDAP transport maps
+    #
+    ECHO_INFO "Setting up LDAP transport_maps: ${ldap_transport_maps_cf}."
+
+    cat > ${ldap_transport_maps_cf} <<EOF
+${CONF_MSG}
+server_host     = ${LDAP_SERVER_HOST}
+server_port     = ${LDAP_SERVER_PORT}
+version         = ${LDAP_BIND_VERSION}
+bind            = ${LDAP_BIND}
+start_tls       = no
+bind_dn         = ${LDAP_BINDDN}
+bind_pw         = ${LDAP_BINDPW}
+search_base     = ${LDAP_BASEDN}
+scope           = one
+query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_DOMAIN})(${LDAP_ATTR_DOMAIN_DN_NAME}=%s)(${LDAP_ATTR_DOMAIN_STATUS}=active))
+result_attribute= ${LDAP_ATTR_DOMAIN_TRANSPORT}
+debug_level     = 0
+EOF
+
+    #
+    # LDAP Virtual Users.
+    #
+    ECHO_INFO "Setting up LDAP virtual users: ${ldap_accounts_cf}, ${ldap_accountsmap_cf}."
+
+    cat > ${ldap_accounts_cf} <<EOF
+${CONF_MSG}
+server_host     = ${LDAP_SERVER_HOST}
+server_port     = ${LDAP_SERVER_PORT}
+version         = ${LDAP_BIND_VERSION}
+bind            = ${LDAP_BIND}
+start_tls       = no
+bind_dn         = ${LDAP_BINDDN}
+bind_pw         = ${LDAP_BINDPW}
+search_base     = ${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}
+scope           = sub
+query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_DN_NAME}=%s)(${LDAP_ATTR_USER_STATUS}=active))
+result_attribute= mailMessageStore
+debug_level     = 0
+EOF
+
+    cat > ${ldap_accountsmap_cf} <<EOF
+${CONF_MSG}
+server_host     = ${LDAP_SERVER_HOST}
+server_port     = ${LDAP_SERVER_PORT}
+version         = ${LDAP_BIND_VERSION}
+bind            = ${LDAP_BIND}
+start_tls       = no
+bind_dn         = ${LDAP_BINDDN}
+bind_pw         = ${LDAP_BINDPW}
+search_base     = ${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}
+scope           = sub
+query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_DN_NAME}=%s)(${LDAP_ATTR_USER_STATUS}=active)(${LDAP_ATTR_USER_ENABLE_DELIVER}=yes))
+result_attribute= ${LDAP_ATTR_USER_DN_NAME}
+debug_level     = 0
+EOF
+
+    ECHO_INFO "Setting up LDAP sender login maps: ${ldap_sender_login_maps_cf}."
+    cat > ${ldap_sender_login_maps_cf} <<EOF
+${CONF_MSG}
+server_host     = ${LDAP_SERVER_HOST}
+server_port     = ${LDAP_SERVER_PORT}
+version         = ${LDAP_BIND_VERSION}
+bind            = ${LDAP_BIND}
+start_tls       = no
+bind_dn         = ${LDAP_BINDDN}
+bind_pw         = ${LDAP_BINDPW}
+search_base     = ${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}
+scope           = sub
+query_filter    = (&(${LDAP_ATTR_USER_DN_NAME}=%s)(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=active)(${LDAP_ATTR_USER_ENABLE_SMTP}=yes))
+result_attribute= ${LDAP_ATTR_USER_DN_NAME}
+debug_level     = 0
+EOF
+
+    ECHO_INFO "Setting up LDAP virtual aliases: ${ldap_virtual_alias_maps_cf}."
+
+    cat > ${ldap_virtual_alias_maps_cf} <<EOF
+${CONF_MSG}
+server_host     = ${LDAP_SERVER_HOST}
+server_port     = ${LDAP_SERVER_PORT}
+version         = ${LDAP_BIND_VERSION}
+bind            = ${LDAP_BIND}
+start_tls       = no
+bind_dn         = ${LDAP_BINDDN}
+bind_pw         = ${LDAP_BINDPW}
+search_base     = ${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}
+scope           = sub
+query_filter    = (&(${LDAP_ATTR_USER_DN_NAME}=%s)(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=active))
+result_attribute= ${LDAP_ATTR_USER_ALIAS}
+debug_level     = 0
+EOF
+
+    cat > ${ldap_recipient_bcc_maps_domain_cf} <<EOF
+${CONF_MSG}
+server_host     = ${LDAP_SERVER_HOST}
+server_port     = ${LDAP_SERVER_PORT}
+version         = ${LDAP_BIND_VERSION}
+bind            = ${LDAP_BIND}
+start_tls       = no
+bind_dn         = ${LDAP_BINDDN}
+bind_pw         = ${LDAP_BINDPW}
+search_base     = ${LDAP_BASEDN}
+scope           = one
+query_filter    = (&(&(${LDAP_ATTR_DOMAIN_DN_NAME}=%d)(objectClass=${LDAP_OBJECTCLASS_DOMAIN}))(${LDAP_ATTR_DOMAIN_STATUS}=active))
+result_attribute= ${LDAP_ATTR_DOMAIN_RECIPIENT_BCC_ADDRESS}
+debug_level     = 0
+EOF
+
+    cat > ${ldap_recipient_bcc_maps_user_cf} <<EOF
+${CONF_MSG}
+server_host     = ${LDAP_SERVER_HOST}
+server_port     = ${LDAP_SERVER_PORT}
+version         = ${LDAP_BIND_VERSION}
+bind            = ${LDAP_BIND}
+start_tls       = no
+bind_dn         = ${LDAP_BINDDN}
+bind_pw         = ${LDAP_BINDPW}
+search_base     = ${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}
+scope           = sub
+query_filter    = (&(&(${LDAP_ATTR_USER_DN_NAME}=%s)(objectClass=${LDAP_OBJECTCLASS_USER}))(${LDAP_ATTR_USER_STATUS}=active))
+result_attribute= ${LDAP_ATTR_USER_RECIPIENT_BCC_ADDRESS}
+debug_level     = 0
+EOF
+
+    cat > ${ldap_sender_bcc_maps_domain_cf} <<EOF
+${CONF_MSG}
+server_host     = ${LDAP_SERVER_HOST}
+server_port     = ${LDAP_SERVER_PORT}
+version         = ${LDAP_BIND_VERSION}
+bind            = ${LDAP_BIND}
+start_tls       = no
+bind_dn         = ${LDAP_BINDDN}
+bind_pw         = ${LDAP_BINDPW}
+search_base     = ${LDAP_BASEDN}
+scope           = one
+query_filter    = (&(&(${LDAP_ATTR_DOMAIN_DN_NAME}=%d)(objectClass=${LDAP_OBJECTCLASS_DOMAIN}))(${LDAP_ATTR_DOMAIN_STATUS}=active))
+result_attribute= ${LDAP_ATTR_DOMAIN_SENDER_BCC_ADDRESS}
+debug_level     = 0
+EOF
+
+    cat > ${ldap_sender_bcc_maps_user_cf} <<EOF
+${CONF_MSG}
+server_host     = ${LDAP_SERVER_HOST}
+server_port     = ${LDAP_SERVER_PORT}
+version         = ${LDAP_BIND_VERSION}
+bind            = ${LDAP_BIND}
+start_tls       = no
+bind_dn         = ${LDAP_BINDDN}
+bind_pw         = ${LDAP_BINDPW}
+search_base     = ${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}
+scope           = sub
+query_filter    = (&(&(${LDAP_ATTR_USER_DN_NAME}=%s)(objectClass=${LDAP_OBJECTCLASS_USER}))(${LDAP_ATTR_USER_STATUS}=active))
+result_attribute= ${LDAP_ATTR_USER_SENDER_BCC_ADDRESS}
+debug_level     = 0
+EOF
+
+    ECHO_INFO "Set file permission: Owner/Group -> root/root, Mode -> 0640."
+    chown root:root ${ldap_virtual_domains_cf} \
+        ${ldap_transport_maps_cf} \
+        ${ldap_accounts_cf} \
+        ${ldap_accountsmap_cf} \
+        ${ldap_virtual_alias_maps_cf} \
+        ${ldap_recipient_bcc_maps_domain_cf} \
+        ${ldap_recipient_bcc_maps_user_cf} \
+        ${ldap_sender_bcc_maps_domain_cf} \
+        ${ldap_sender_bcc_maps_user_cf}
+
+    chmod 0644 ${ldap_virtual_domains_cf} \
+        ${ldap_transport_maps_cf} \
+        ${ldap_accounts_cf} \
+        ${ldap_accountsmap_cf} \
+        ${ldap_virtual_alias_maps_cf} \
+        ${ldap_recipient_bcc_maps_domain_cf} \
+        ${ldap_recipient_bcc_maps_user_cf} \
+        ${ldap_sender_bcc_maps_domain_cf} \
+        ${ldap_sender_bcc_maps_user_cf}
+
+    cat >> ${TIP_FILE} <<EOF
+Postfix (LDAP):
+    * Configuration files:
+        - ${ldap_virtual_domains_cf}
+        - ${ldap_transport_maps_cf}
+        - ${ldap_accounts_cf}
+        - ${ldap_accountsmap_cf}
+        - ${ldap_virtual_alias_maps_cf}
+        - ${ldap_recipient_bcc_maps_domain_cf}
+        - ${ldap_recipient_bcc_maps_user_cf}
+        - ${ldap_sender_bcc_maps_domain_cf}
+        - ${ldap_sender_bcc_maps_user_cf}
+
+EOF
+
+    echo 'export status_postfix_config_ldap="DONE"' >> ${STATUS_FILE}
+}
+
+postfix_config_mysql()
+{
+    ECHO_INFO "Configure Postfix for MySQL lookup."
+
+    postconf -e mydestination="\$myhostname, localhost, localhost.localdomain, localhost.\$myhostname, mysql:${mysql_virtual_domains_cf}"
+    postconf -e transport_maps="mysql:${mysql_transport_maps_cf}"
+    postconf -e virtual_mailbox_maps="mysql:${mysql_virtual_mailbox_maps_cf}"
+    postconf -e virtual_mailbox_limit_maps="mysql:${mysql_virtual_mailbox_limit_maps_cf}"
+    postconf -e virtual_alias_maps="mysql:${mysql_virtual_alias_maps_cf}"
+    postconf -e local_recipient_maps='$alias_maps $virtual_alias_maps $virtual_mailbox_maps'
+    postconf -e sender_bcc_maps="mysql:${mysql_sender_bcc_maps_domain_cf}, mysql:${mysql_sender_bcc_maps_user_cf}"
+    postconf -e recipient_bcc_maps="mysql:${mysql_recipient_bcc_maps_domain_cf}, mysql:${mysql_recipient_bcc_maps_user_cf}"
+
+    postconf -e smtpd_sender_login_maps="mysql:${mysql_sender_login_maps_cf}"
+    postconf -e smtpd_reject_unlisted_sender='yes'
+
+    cat > ${mysql_transport_maps_cf} <<EOF
+user        = ${MYSQL_BIND_USER}
+password    = ${MYSQL_BIND_PW}
+hosts       = ${MYSQL_SERVER}
+port        = ${MYSQL_PORT}
+dbname      = ${VMAIL_DB}
+query       = SELECT transport FROM domain WHERE domain='%s' AND active='1'
+EOF
+
+    cat > ${mysql_virtual_domains_cf} <<EOF
+user        = ${MYSQL_BIND_USER}
+password    = ${MYSQL_BIND_PW}
+hosts       = ${MYSQL_SERVER}
+port        = ${MYSQL_PORT}
+dbname      = ${VMAIL_DB}
+query       = SELECT domain FROM domain WHERE domain='%s' AND active='1'
+EOF
+
+    cat > ${mysql_virtual_mailbox_maps_cf} <<EOF
+user        = ${MYSQL_BIND_USER}
+password    = ${MYSQL_BIND_PW}
+hosts       = ${MYSQL_SERVER}
+port        = ${MYSQL_PORT}
+dbname      = ${VMAIL_DB}
+query       = SELECT maildir FROM mailbox WHERE username='%s' AND active='1' AND enabledeliver='1'
+EOF
+
+    cat > ${mysql_virtual_mailbox_limit_maps_cf} <<EOF
+user        = ${MYSQL_BIND_USER}
+password    = ${MYSQL_BIND_PW}
+hosts       = ${MYSQL_SERVER}
+port        = ${MYSQL_PORT}
+dbname      = ${VMAIL_DB}
+query       = SELECT quota FROM mailbox WHERE username='%s' AND active='1'
+EOF
+
+    cat > ${mysql_virtual_alias_maps_cf} <<EOF
+user        = ${MYSQL_BIND_USER}
+password    = ${MYSQL_BIND_PW}
+hosts       = ${MYSQL_SERVER}
+port        = ${MYSQL_PORT}
+dbname      = ${VMAIL_DB}
+query       = SELECT goto FROM alias WHERE address='%s' AND active='1'
+EOF
+
+    cat > ${mysql_sender_login_maps_cf} <<EOF
+user        = ${MYSQL_BIND_USER}
+password    = ${MYSQL_BIND_PW}
+hosts       = ${MYSQL_SERVER}
+port        = ${MYSQL_PORT}
+dbname      = ${VMAIL_DB}
+query       = SELECT username FROM mailbox WHERE username='%s' AND active='1' AND enablesmtp='1'
+EOF
+
+    cat > ${mysql_sender_bcc_maps_domain_cf} <<EOF
+user        = ${MYSQL_BIND_USER}
+password    = ${MYSQL_BIND_PW}
+hosts       = ${MYSQL_SERVER}
+port        = ${MYSQL_PORT}
+dbname      = ${VMAIL_DB}
+query       = SELECT bcc_address FROM sender_bcc_domain WHERE domain='%d' AND active='1'
+EOF
+
+    cat > ${mysql_sender_bcc_maps_user_cf} <<EOF
+user        = ${MYSQL_BIND_USER}
+password    = ${MYSQL_BIND_PW}
+hosts       = ${MYSQL_SERVER}
+port        = ${MYSQL_PORT}
+dbname      = ${VMAIL_DB}
+query       = SELECT bcc_address FROM sender_bcc_user WHERE username='%s' AND active='1'
+EOF
+
+    cat > ${mysql_recipient_bcc_maps_domain_cf} <<EOF
+user        = ${MYSQL_BIND_USER}
+password    = ${MYSQL_BIND_PW}
+hosts       = ${MYSQL_SERVER}
+port        = ${MYSQL_PORT}
+dbname      = ${VMAIL_DB}
+query       = SELECT bcc_address FROM recipient_bcc_domain WHERE domain='%d' AND active='1'
+EOF
+
+    cat > ${mysql_recipient_bcc_maps_user_cf} <<EOF
+user        = ${MYSQL_BIND_USER}
+password    = ${MYSQL_BIND_PW}
+hosts       = ${MYSQL_SERVER}
+port        = ${MYSQL_PORT}
+dbname      = ${VMAIL_DB}
+query       = SELECT bcc_address FROM recipient_bcc_user WHERE username='%s' AND active='1'
+EOF
+
+    ECHO_INFO "Set file permission: Owner/Group -> postfix/postfix, Mode -> 0640."
+    chown root:root ${mysql_virtual_domains_cf} \
+        ${mysql_transport_maps_cf} \
+        ${mysql_virtual_mailbox_maps_cf} \
+        ${mysql_virtual_mailbox_limit_maps_cf} \
+        ${mysql_virtual_alias_maps_cf} \
+        ${mysql_sender_login_maps_cf} \
+        ${mysql_sender_bcc_maps_domain_cf} \
+        ${mysql_sender_bcc_maps_user_cf} \
+        ${mysql_recipient_bcc_maps_domain_cf} \
+        ${mysql_recipient_bcc_maps_user_cf}
+
+    chmod 0644 ${mysql_virtual_domains_cf} \
+        ${mysql_transport_maps_cf} \
+        ${mysql_virtual_mailbox_maps_cf} \
+        ${mysql_virtual_mailbox_limit_maps_cf} \
+        ${mysql_virtual_alias_maps_cf} \
+        ${mysql_sender_login_maps_cf} \
+        ${mysql_sender_bcc_maps_domain_cf} \
+        ${mysql_sender_bcc_maps_user_cf} \
+        ${mysql_recipient_bcc_maps_domain_cf} \
+        ${mysql_recipient_bcc_maps_user_cf}
+
+    cat >> ${TIP_FILE} <<EOF
+Postfix (MySQL):
+    * Configuration files:
+        - ${mysql_virtual_domains_cf}
+        - ${mysql_transport_maps_cf}
+        - ${mysql_virtual_mailbox_maps_cf}
+        - ${mysql_virtual_mailbox_limit_maps_cf}
+        - ${mysql_virtual_alias_maps_cf}
+        - ${mysql_sender_login_maps_cf}
+        - ${mysql_sender_bcc_maps_domain_cf}
+        - ${mysql_sender_bcc_maps_user_cf}
+        - ${mysql_recipient_bcc_maps_domain_cf}
+        - ${mysql_recipient_bcc_maps_user_cf}
+
+EOF
+
+    echo 'export status_postfix_config_mysql="DONE"' >> ${STATUS_FILE}
+}
+
+# Starting config.
+postfix_config_virtual_host()
+{
+    if [ X"${BACKEND}" == X"OpenLDAP" ]; then
+        check_status_before_run postfix_config_ldap
+    elif [ X"${BACKEND}" == X"MySQL" ]; then
+        check_status_before_run postfix_config_mysql
+    else
+        :
+    fi
+
+    echo 'export status_postfix_config_virtual_host="DONE"' >> ${STATUS_FILE}
+}
+
+postfix_config_sasl()
+{
+    ECHO_INFO "Setting up SASL configration for Postfix."
+
+    # For SASL auth
+    postconf -e smtpd_sasl_auth_enable="yes"
+    postconf -e smtpd_sasl_local_domain=''
+    postconf -e smtpd_sasl_security_options="noanonymous"
+    postconf -e broken_sasl_auth_clients="yes"
+    postconf -e enable_original_recipient="no" # Default is 'yes'. refer to postconf(5).
+
+    # Report the SASL authenticated user name in Received message header.
+    # Used to reject backscatter.
+    # Such as:
+    # ----8<----
+    # Received: xxxxxxxxxxx
+    #           (Authenticated sender: www@a.cn)
+    # ----8<----
+    # Default is 'no'.
+    postconf -e smtpd_sasl_authenticated_header="no"
+
+    # smtpd_recipient_restrictions reference:
+    #   http://www.postfix.org/SASL_README.html
+    #
+    #   Must order:
+    #       xxx, permit_sasl_authenticated, reject_unauth_destination, _policy_
+    #
+    if [ X"${BACKEND}" == X"OpenLDAP" ]; then
+        #
+        # Non-SPF.
+        #
+        postconf -e smtpd_recipient_restrictions="permit_mynetworks, reject_invalid_hostname, reject_unknown_recipient_domain, reject_unverified_recipient, reject_unlisted_recipient, reject_non_fqdn_sender, reject_non_fqdn_recipient, permit_sasl_authenticated, reject_unauth_destination, check_policy_service inet:127.0.0.1:10031"
+    elif [ X"${BACKEND}" == X"MySQL" ]; then
+        #
+        # Policyd, perl-Mail-SPF and non-SPF.
+        #
+        postconf -e smtpd_recipient_restrictions="permit_mynetworks, reject_invalid_hostname, reject_unknown_recipient_domain, reject_unverified_recipient, reject_unlisted_recipient, reject_non_fqdn_sender, reject_non_fqdn_recipient, permit_sasl_authenticated, reject_unauth_destination, check_policy_service inet:127.0.0.1:10031"
+    else
+        :
+    fi
+
+    echo 'export status_postfix_config_sasl="DONE"' >> ${STATUS_FILE}
+}
+
+postfix_config_tls()
+{
+    ECHO_INFO "Generate CA file for Postfix TLS support."
+    mkdir -p ${POSTFIX_ROOTDIR}/certs/
+    cd ${POSTFIX_ROOTDIR}/certs/
+
+    gen_pem_key postfix
+
+    chown root:root ${POSTFIX_ROOTDIR}/certs/*
+    chmod 400 ${POSTFIX_ROOTDIR}/certs/
+
+    cat >> ${POSTFIX_FILE_MAIN_CF} <<EOF
+#
+# Postfix TLS support. Please refer to:
+#   * http://www.postfix.org/TLS_README.html
+#   * http://code.google.com/p/rhms/wiki/rhms_tut_Postfix#TLS_Support
+#
+# Example:
+#    $ openssl req -newkey rsa:1024 -x509 -nodes -out postfixCert.pem -keyout postfixKey.pem
+#
+# Enable TLS. Note: 'smtpd_use_tls' equal to 'smtpd_tls_security_level'.
+#
+smtpd_tls_security_level = may
+smtpd_enforce_tls = no
+smtpd_tls_loglevel = 0
+smtpd_tls_key_file = /etc/postfix/certs/postfixKey.pem
+smtpd_tls_cert_file = /etc/postfix/certs/postfixCert.pem
+#smtpd_tls_CAfile = /etc/postfix/certs/cacert.pem
+tls_random_source = dev:/dev/urandom
+tls_daemon_random_source = dev:/dev/urandom
+EOF
+
+    cat >> ${POSTFIX_FILE_MASTER_CF} <<EOF
+smtps     inet  n       -       n       -       -       smtpd
+  -o smtpd_tls_wrappermode=yes
+  -o smtpd_sasl_auth_enable=yes
+  -o smtpd_client_restrictions=permit_sasl_authenticated,reject
+EOF
+
+    echo 'export status_postfix_config_tls="DONE"' >> ${STATUS_FILE}
+}
