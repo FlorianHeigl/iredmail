@@ -10,16 +10,16 @@ trap "exit 255" 2
 check_arch
 
 DIALOG='dialog --no-collapse'
-DIALOG_BACKTITLE='Mail Server Installation Wizard for RHEL/CentOS 5.x'
+DIALOG_BACKTITLE='iRedMail: Mail Server Installation Wizard for RHEL/CentOS 5.x'
 
 # Welcome message.
 ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --title "Welcome and thanks for use" \
     --msgbox "\
-Thanks for your use of this script for mail server.
+Thanks for your use of iRedMail.
 Feedback, bug report, communication are all welcome.
 
-Contact me if you need help about this script or RHEL:
+Contact me if you need help for iRedMail or RHEL/CentOS:
 
     * Author:       Bibby
     * Mail/GTalk:   michaelbibby (at) gmail.com
@@ -36,14 +36,13 @@ ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --msgbox "\
 The mail server contains the following main features:
 
-* SMTP (Use Postfix, with LDAP & MySQL support)
-* POP3/IMAP (Use Dovecot)
-* Virtual Domains/Users (Use OpenLDAP or MySQL)
-* Anti-Spam (Use SpamAssassin)
-* Anti-Virus (Use ClamAV)
-* Web Mail
-    * SquirrelMail for LDAP backend. i18n support, with useful plugins
-    * Roundcube for MySQL backend. Ajax web mail
+* Virtual domains/users support.
+* SMTP & SMTPS
+* POP3, POP3S, IMAP, IMAPS
+* SPF & DKIM
+* Anti-Spam
+* Anti-Virus
+* Web Mail: SquirrelMail, RoundcubeMail, Horde, ExtMail.
 " 20 76
 
 # VMAIL_USER_HOME_DIR

@@ -1,4 +1,5 @@
 0.5.0-rc2:
+    * rhms renamed to 'iRedMail'.
     * Update clamav to 0.93.1.
     * Set 'smtpd_sasl_authenticated_header=no' by default.
     * Add 'reject_unverified_recipient' in smtpd_recipient_restrictions.
