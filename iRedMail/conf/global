@@ -42,7 +42,7 @@ export DATE=$(/bin/date +%Y.%m.%d_%H.%M.%S)
 export CONFIG_VIA_DIALOG="${TOOLS_DIR}/config_via_dialog.sh"
 export CONFIG_FILE="${ROOTDIR}/config"
 export TIP_FILE="${ROOTDIR}/${PROG_NAME}.tips"
-export STATUS_FILE="${ROOTDIR}/.iredmail.installation.status"
+export STATUS_FILE="${ROOTDIR}/.${PROG_NAME}.installation.status"
 
 # iRedMail specical.
 export OUTPUT_FLAG="<<< ${PROG_NAME} >>>"

@@ -1,5 +1,11 @@
+iRedMail-0.1-rc1:
+    * Initialize version of iRedMail. Same as rhms-0.5.0-rc2.
+      rhms ChangeLog please check:
+      http://rhms.googlecode.com/svn/trunk/rhms/ChangeLog
+
 0.5.0-rc2:
-    * rhms renamed to 'iRedMail'.
+    * Project renamed: iRedMail:
+      http://iRedMail.googlecode.com/
     * Update clamav to 0.93.1.
     * Set 'smtpd_sasl_authenticated_header=no' by default.
     * Add 'reject_unverified_recipient' in smtpd_recipient_restrictions.
