@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE template SYSTEM "template.dtd">
 <!--
-    For rhms (Mail Server Solution for Red Hat series).
-    Project: http://code.google.com/p/rhms/
+    For iRedMail (Mail Server Solution for Red Hat series).
+    Project: http://iRedMail.googlecode.com/
     Author: Zhang Huangbin (michaelbibby <at> gmail.com)
 -->
 <template>

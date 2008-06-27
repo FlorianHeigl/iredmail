@@ -18,7 +18,7 @@ PATCH_DIR="${ROOTDIR}/patches"
 . ${CONF_DIR}/functions
 
 # ------------------------------
-# Check target platform and environment for rhms.
+# Check target platform and environment.
 # ------------------------------
 check_arch && check_env
 

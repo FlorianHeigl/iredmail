@@ -18,4 +18,4 @@ export MYSQL_INIT_SQL="${CONF_DIR}/mysql_init.sql"
 
 # MySQL database to store virtual hosts.
 export VMAIL_DB='vmail'
-export SAMPLE_SQL="${SAMPLE_DIR}/rhms.sql"
+export SAMPLE_SQL="${SAMPLE_DIR}/iredmail.sql"

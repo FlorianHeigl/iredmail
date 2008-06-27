@@ -110,7 +110,7 @@ check_arch()
         :
     else
         ECHO_INFO "Your architecture is not supported yet: ${ARCH}."
-        ECHO_INFO "rhms support i386 only up to now."
+        ECHO_INFO "${PROG_NAME} support i386 only up to now."
     fi
 }
 
@@ -181,7 +181,7 @@ check_env()
                 cat > ${TIP_FILE} <<EOF
 ${CONF_MSG}
 If you consider here should be put some more infomation, please contact us:
-    - http://rhms.googlecode.com/
+    - http://${PROG_NAME}.googlecode.com/
 
 EOF
                 ;;

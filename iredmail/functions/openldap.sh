@@ -6,8 +6,8 @@ openldap_config()
 {
     backup_file ${OPENLDAP_SLAPD_CONF} ${OPENLDAP_LDAP_CONF}
 
-    # Copy rhms.schema.
-    cp -f ${SAMPLE_DIR}/rhms.schema ${OPENLDAP_SCHEMA_DIR}
+    # Copy ${PROG_NAME}.schema.
+    cp -f ${SAMPLE_DIR}/${PROG_NAME_LOWERCASE}.schema ${OPENLDAP_SCHEMA_DIR}
 
     ECHO_INFO "Generate new configuration file: ${OPENLDAP_SLAPD_CONF}."
     cat > ${OPENLDAP_SLAPD_CONF} <<EOF
@@ -18,7 +18,7 @@ include     ${OPENLDAP_SCHEMA_DIR}/cosine.schema
 include     ${OPENLDAP_SCHEMA_DIR}/inetorgperson.schema
 include     ${OPENLDAP_SCHEMA_DIR}/nis.schema
 
-include     ${OPENLDAP_SCHEMA_DIR}/rhms.schema
+include     ${OPENLDAP_SCHEMA_DIR}/${PROG_NAME_LOWERCASE}.schema
 
 pidfile     /var/run/openldap/slapd.pid
 argsfile    /var/run/openldap/slapd.args
@@ -327,7 +327,7 @@ OpenLDAP:
         - ${OPENLDAP_ROOTDIR}
         - ${OPENLDAP_SLAPD_CONF}
         - ${OPENLDAP_LDAP_CONF}
-        - ${OPENLDAP_SCHEMA_DIR}/rhms.schema
+        - ${OPENLDAP_SCHEMA_DIR}/${PROG_NAME_LOWERCASE}.schema
     * Log file related:
         - /etc/syslog.conf
         - ${OPENLDAP_LOGROTATE_FILE}

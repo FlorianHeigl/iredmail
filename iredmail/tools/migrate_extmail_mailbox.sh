@@ -2,10 +2,10 @@
 
 # Author:   Zhang Huangbin (michaelbibby <at> gmail.com )
 # Date:     2008.06.11
-# Purpose:  Migrate ExtMail mailbox table to rhms.
+# Purpose:  Migrate ExtMail mailbox table to iRedMail.
 
 # Migration guide wrote in Chinese:
-#   http://code.google.com/p/rhms/wiki/rhms_tut_Migration
+#   http://code.google.com/p/iRedMail/wiki/iRedMail_tut_Migration
 
 # Usage:
 #   English:
@@ -29,7 +29,7 @@ usage()
 
 [ X"$#" != X"1" ] && usage && exit 255 
 
-OUTPUT_SQL="$1.rhms"
+OUTPUT_SQL="$1.iRedMail"
 echo ''> ${OUTPUT_SQL}
 
 while read line; do

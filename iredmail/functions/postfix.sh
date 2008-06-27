@@ -106,8 +106,8 @@ EOF
     postconf -e header_checks="pcre:${POSTFIX_ROOTDIR}/header_checks"
     cat >> ${POSTFIX_ROOTDIR}/header_checks <<EOF
 # *******************************************************************
-# Below rules is wrote in pcre syntax, shipped within rhms project:
-#   http://rhms.googlecode.com
+# Below rules is wrote in pcre syntax, shipped within ${PROG_NAME} project:
+#   http://${PROG_NAME}.googlecode.com
 # Reference:
 #   http://www.postfix.org/BACKSCATTER_README.html#real
 # *******************************************************************
@@ -592,7 +592,7 @@ postfix_config_tls()
 #
 # Postfix TLS support. Please refer to:
 #   * http://www.postfix.org/TLS_README.html
-#   * http://code.google.com/p/rhms/wiki/rhms_tut_Postfix#TLS_Support
+#   * http://code.google.com/p/${PROG_NAME_LOWERCASE}/wiki/${PROG_NAME}_tut_Postfix#TLS_Support
 #
 # Example:
 #    $ openssl req -newkey rsa:1024 -x509 -nodes -out postfixCert.pem -keyout postfixKey.pem

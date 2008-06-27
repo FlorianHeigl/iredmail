@@ -2,8 +2,8 @@
 # Sample procmail global filter rules. It should be localted at:
 #   /etc/procmailrc
 #
-# Shipped within rhms project:
-#   * http://rhms.googlecode.com/
+# Shipped within iRedMail project:
+#   * http://iRedMail.googlecode.com/
 #
 
 # Global variables.

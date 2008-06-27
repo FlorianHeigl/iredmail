@@ -1,6 +1,6 @@
 #
-# This schema is shipped within rhms project:
-#   http://rhms.googlecode.com/
+# This schema is shipped within iRedMail project:
+#   http://iRedMail.googlecode.com/
 #
 # It should be localed at:
 #   /etc/openldap/schema/qmail.schema

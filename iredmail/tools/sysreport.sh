@@ -2,16 +2,16 @@
 
 # Author: Zhang Huangbin (michaelbibby <at> gmail.com)
 # Date: 2008.03.29
-# Purpose: Collect some log files and configuration files for rhms error 
-#          analytic.
+# Purpose: Collect some log files and configuration files for iRedMail
+#          error analytic.
 
 # Collect all ${ALL_FILES} to this directory.
-COLLDIR="/tmp/rhms_sysreport/"
+COLLDIR="/tmp/iRedMail_sysreport/"
 [ -d ${COLLDIR} ] || mkdir -p ${COLLDIR}
 rm -rf ${COLLDIR}/*
 
 # Compress and tar them.
-TARBALL='/tmp/rhms_sysreport.tar.bz2'
+TARBALL='/tmp/iRedMail_sysreport.tar.bz2'
 rm -f ${TARBALL}
 
 SERVICES='amavisd clamd dovecot freshclam httpd iptables ldap mailgraph postfix postgrey saslauthd spamassassin syslog'
@@ -21,7 +21,7 @@ FIREWALL='/etc/selinux/config
 /etc/sysconfig/iptables
 '
 
-OPENLDAP='/etc/openldap/schema/rhms.schema
+OPENLDAP='/etc/openldap/schema/iredmail.schema
 /etc/openldap/slapd.conf
 /etc/openldap/ldap.conf
 /var/log/openldap.log

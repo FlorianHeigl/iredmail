@@ -2,8 +2,8 @@
 # Sample iptables rules. It should be localted at:
 #   /etc/sysconfig/iptables
 #
-# Shipped within rhms project:
-#   * http://rhms.googlecode.com/
+# Shipped within iRedMail project:
+#   * http://iRedMail.googlecode.com/
 #
 
 *filter
