@@ -140,7 +140,7 @@ amavisd_config()
 );
 
 # SpamAssassin debugging. Default if off(0).
-# Note: '$log_level' variable above is required for SA debug.
+# Note: '\$log_level' variable above is required for SA debug.
 \$sa_debug = 0;
 
 # Modify email subject, add '$sa_spam_subject_tag'.
