@@ -187,7 +187,7 @@ HEADER
 <table><tr><td>
 <a href="http://mailgraph.schweikert.ch/">Mailgraph</a> $VERSION
 by <a href="http://david.schweikert.ch/">David Schweikert</a>. 
-Shipped within <a href="http://iRedMail.googlecode.com">iRedMail</a> project.</td>
+Shipped within <em><a href="http://code.google.com/p/iredmail">iRedMail</a></em> project.</td>
 </tr></table>
 </body></html>
 FOOTER
