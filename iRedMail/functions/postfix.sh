@@ -31,6 +31,7 @@ EOF
     postconf -e receive_override_options='no_address_mappings'
     postconf -e smtpd_data_restrictions='reject_unauth_pipelining'
     postconf -e delay_warning_time='30m'
+    postconf -e policy_time_limit='3600'
 
     # We use 'maildir' format, not 'mbox'.
     if [ X"${HOME_MAILBOX}" == X"Maildir" ]; then

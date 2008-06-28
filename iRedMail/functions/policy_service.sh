@@ -36,7 +36,6 @@ pypolicyd_spf_config()
     python setup.py build >/dev/null && python setup.py install >/dev/null
     
     postconf -e spf-policyd_time_limit='3600'
-    postconf -e policyd_time_limit='3600'
 
     cat >> ${POSTFIX_FILE_MASTER_CF} <<EOF
 policyd-spf  unix  -       n       n       -       -       spawn
