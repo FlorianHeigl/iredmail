@@ -1,7 +1,7 @@
 iRedMail-0.1-rc1:
     * Add 'delay_warning_time=30m', remind by muniao. Thanks :)
     * Add perl-Mail-SPF-Query.noarch as mandatory for SPF feature.
-    * Initialize version of iRedMail. Same as rhms-0.5.0-rc2.
+    * Initialize version of iRedMail. based on rhms-0.5.0-rc2.
       rhms ChangeLog please check:
       http://rhms.googlecode.com/svn/trunk/rhms/ChangeLog
 
