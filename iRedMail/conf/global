@@ -21,6 +21,7 @@ export VMAIL_USER_GID='2000'
 
 # SPF.
 # Either 'pypolicyd-spf' or 'perl-Mail-SPF'
+# pypolicyd-spf is *NOT* recommended.
 SPF_PROGRAM='perl-Mail-SPF'
 
 # TLS support.

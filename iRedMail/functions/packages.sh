@@ -70,8 +70,10 @@ install_all()
 
     # SPF.
     if [ X"${ENABLE_SPF}" == X"YES" ]; then
-        # Via pypolicyd-spf.
+        # Via pypolicyd-spf. It's *NOT* recommended. Reference:
+        # http://code.google.com/p/iredmail/wiki/iRedMail_tut_SPF
         [ X"${SPF_PROGRAM}" == X'pypolicyd-spf' ] && ALL_PKGS="${ALL_PKGS} pydns.noarch pyspf.noarch"
+
         # Via perl-Mail-SPF.
         [ X"${SPF_PROGRAM}" == X'perl-Mail-SPF' ] && ALL_PKGS="${ALL_PKGS} perl-Mail-SPF.noarch perl-Mail-SPF-Query.noarch"
     else
