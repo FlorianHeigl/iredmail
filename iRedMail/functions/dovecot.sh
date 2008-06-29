@@ -39,6 +39,16 @@ ${CONF_MSG}
 # Provided services.
 protocols = ${DOVECOT_PROTOCOLS}
 
+# Listen addresses. for Dovecot-1.1.x.
+# ipv4: *
+# ipv6: [::]
+#listen = *, [::]
+listen = *
+
+# mail uid/gid.
+mail_uid = ${VMAIL_USER_UID}
+mail_gid = ${VMAIL_USER_GID}
+
 #
 # Debug options.
 #
@@ -53,9 +63,35 @@ protocols = ${DOVECOT_PROTOCOLS}
 #log_timestamp = "%Y-%m-%d %H:%M:%S "
 log_path = ${DOVECOT_LOG_FILE}
 
-max_mail_processes = 1024
+max_mail_processes = 2048
 umask = 0077
 disable_plaintext_auth = no
+
+# number of connections per-user per-IP
+mail_max_userip_connections = 10
+
+# Performance Tuning. Reference:
+#   http://wiki.dovecot.org/LoginProcess
+#
+# High-Security mode. Dovecot default setting.
+#
+# It works by using a new imap-login or pop3-login process for each
+# incoming connection. Since the processes run in a highly restricted
+# chroot, running each connection in a separate process means that in
+# case there is a security hole in Dovecot's pre-authentication code
+# or in the SSL library, the attacker can't see other users'
+# connections and can't really do anything destructive.
+login_process_per_connection=yes
+
+#
+# High-Performance mode.
+#
+# It works by using a number of long running login processes,
+# each handling a number of connections. This loses much of
+# the security benefits of the login process design, because
+# in case of a security hole the attacker is now able to see
+# other users logging in and steal their passwords.
+#login_process_per_connection = no
 
 # Default realm/domain to use if none was specified.
 # This is used for both SASL realms and appending '@domain.ltd' to username in plaintext logins.
@@ -144,8 +180,6 @@ deref           = never
 user_filter     = (&(mail=%u)(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=active)(enable%Us=yes))
 pass_filter     = (mail=%u)
 pass_attrs      = ${LDAP_ATTR_USER_PASSWD}=password
-user_global_uid = ${VMAIL_USER_UID}
-user_global_gid = ${VMAIL_USER_GID}
 default_pass_scheme = CRYPT
 EOF
         # Maildir format.
@@ -172,10 +206,10 @@ password_query = SELECT password FROM mailbox WHERE username='%u' AND active='1'
 EOF
         # Maildir format.
         [ X"${HOME_MAILBOX}" == X"Maildir" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
-user_query = SELECT ${VMAIL_USER_UID} AS uid, ${VMAIL_USER_GID} AS gid, "${VMAIL_USER_HOME_DIR}" AS home, maildir, CONCAT('maildir:storage=', quota) AS quota FROM mailbox WHERE username='%u' AND active='1' AND enable%Ls='1'
+user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, maildir, CONCAT('maildir:storage=', quota) AS quota FROM mailbox WHERE username='%u' AND active='1' AND enable%Ls='1'
 EOF
         [ X"${HOME_MAILBOX}" == X"mbox" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
-user_query = SELECT ${VMAIL_USER_UID} AS uid, ${VMAIL_USER_GID} AS gid, "${VMAIL_USER_HOME_DIR}" AS home, maildir, CONCAT('dirsize:storage=', quota) AS quota FROM mailbox WHERE username='%u' AND active='1' AND enable%Ls='1'
+user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, maildir, CONCAT('dirsize:storage=', quota) AS quota FROM mailbox WHERE username='%u' AND active='1' AND enable%Ls='1'
 EOF
     fi
 

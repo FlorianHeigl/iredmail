@@ -28,6 +28,6 @@ d2094601c7b5184c7bbd1b2b458c06d3  rpms/perl-rrdtool-1.2.23-1.el5.rf.x86_64.rpm
 efc9e8f5324a253334150b33823dd654  rpms/arc-5.21o-1.el5.rf.x86_64.rpm
 f9a0ba7c14714e971c63c0028c1088b7  rpms/mhash-0.9.2-6.el5.x86_64.rpm
 fb2574ec5b714b136e4ee4bd85344b1c  rpms/policyd-1.82-4.rhms.x86_64.rpm
-fd9cfdf6332d266b632451c96526c813  rpms/amavisd-new-2.6.0-1.rhms.x86_64.rpm
 887f7631927c5acedcdc1a2077cac371  rpms/perl-NetAddr-IP-4.007-1.el5.rf.x86_64.rpm
 3b5ec46941d0dec19e0028bdcaea672d  rpms/perl-version-0.74-1.el5.rf.x86_64.rpm
+2d49d9dc5c6cd35fcbf014d13aba5436  rpms/amavisd-new-2.6.1-1.ired.x86_64.rpm

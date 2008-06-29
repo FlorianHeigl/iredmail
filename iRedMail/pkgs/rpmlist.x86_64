@@ -1,4 +1,3 @@
-amavisd-new-2.6.0-1.rhms.x86_64.rpm
 arc-5.21o-1.el5.rf.x86_64.rpm
 cabextract-1.2-1.el5.rf.x86_64.rpm
 clamav-0.93.1-1.el5.rf.x86_64.rpm
@@ -32,3 +31,4 @@ rrdtool-1.2.23-1.el5.rf.x86_64.rpm
 unarj-2.63-0.a.2.el5.rf.x86_64.rpm
 unrar-3.7.4-1.el5.rf.x86_64.rpm
 zoo-2.10-2.2.el5.rf.x86_64.rpm
+amavisd-new-2.6.1-1.ired.x86_64.rpm
