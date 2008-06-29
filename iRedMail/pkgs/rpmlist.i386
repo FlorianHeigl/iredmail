@@ -1,8 +1,5 @@
-amavisd-new-2.6.0-1.rhms.i386.rpm
 arc-5.21o-1.el5.rf.i386.rpm
 cabextract-1.2-1.el5.rf.i386.rpm
-dovecot-1.0.15-1.rhms.i386.rpm
-dovecot-sieve-1.0.3-7.el5.i386.rpm
 freeze-2.5.0-1.2.el5.rf.i386.rpm
 lha-1.14i-19.2.2.el5.rf.i386.rpm
 libmcrypt-2.5.7-5.el5.i386.rpm
@@ -32,3 +29,6 @@ zoo-2.10-2.2.el5.rf.i386.rpm
 clamav-0.93.1-1.el5.rf.i386.rpm
 clamav-db-0.93.1-1.el5.rf.i386.rpm
 clamd-0.93.1-1.el5.rf.i386.rpm
+dovecot-sieve-1.1.5-8.el5.i386.rpm
+amavisd-new-2.6.1-1.ired.i386.rpm
+dovecot-1.1.1-1.ired.i386.rpm

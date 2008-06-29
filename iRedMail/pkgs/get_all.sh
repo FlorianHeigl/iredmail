@@ -14,7 +14,7 @@ FETCH_CMD='wget -c'
 #           |- rpms/
 #           |- misc/
 #
-MIRROR='http://www.osspinc.com/rhms/packages'
+MIRROR='http://www.osspinc.com/iredmail/packages'
 
 ROOTDIR="$(pwd)"
 CONF_DIR="${ROOTDIR}/../conf"

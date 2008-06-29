@@ -63,12 +63,13 @@ mail_gid = ${VMAIL_USER_GID}
 #log_timestamp = "%Y-%m-%d %H:%M:%S "
 log_path = ${DOVECOT_LOG_FILE}
 
-max_mail_processes = 2048
+#login_processes_count = 3
+#login_max_processes_count = 128
+#login_max_connections = 256
+#max_mail_processes = 512
+
 umask = 0077
 disable_plaintext_auth = no
-
-# number of connections per-user per-IP
-mail_max_userip_connections = 10
 
 # Performance Tuning. Reference:
 #   http://wiki.dovecot.org/LoginProcess
@@ -110,6 +111,27 @@ EOF
 #          ----------- ================
 #          homeDirectory  mailMessageStore
 mail_location = maildir:/%Lh/%Ld/%Ln/:INDEX=/%Lh/%Ld/%Ln/
+
+plugin {
+    quota = maildir
+
+    # Quota rules.
+    #quota_rule = *:storage=1G
+    #quota_rule2 = Trash:storage=100M
+    #quota_rule3 = SPAM:ignore
+
+    # Quota warning. Sample File:
+    #   http://dovecot.org/list/dovecot/2008-June/031456.html
+    #quota_warning = storage=95%% /usr/bin/quota-warning.sh 95
+    #quota_warning2 = storage=80%% /usr/bin/quota-warning.sh 80
+}
+
+plugin {
+    # NOTE: %variable expansion works only with Dovecot v1.0.2+.
+    # For maildir format.
+    sieve = /%Lh/%Ld/%Ln/${SIEVE_RULE_FILENAME}
+}
+
 EOF
     elif [ X"${HOME_MAILBOX}" == X"mbox" ]; then
         cat >> ${DOVECOT_CONF} <<EOF
@@ -125,6 +147,27 @@ mbox_min_index_size=10240
 mbox_very_dirty_syncs = yes
 mbox_read_locks = fcntl
 mbox_write_locks = dotlock fcntl
+
+plugin {
+    quota = dirsize
+
+    # Quota rules.
+    #quota_rule = *:storage=1G
+    #quota_rule2 = Trash:storage=100M
+    #quota_rule3 = SPAM:ignore
+
+    # Quota warning. Sample File:
+    #   http://dovecot.org/list/dovecot/2008-June/031456.html
+    #quota_warning = storage=95%% /usr/bin/quota-warning.sh 95
+    #quota_warning2 = storage=80%% /usr/bin/quota-warning.sh 80
+}
+
+plugin {
+    # NOTE: %variable expansion works only with Dovecot v1.0.2+.
+    # For mbox format.
+    sieve = /%Lh/%Ld/.%Ln${SIEVE_RULE_FILENAME}
+}
+}
 EOF
     else
         :
@@ -143,6 +186,9 @@ protocol lda {
 # IMAP configuration
 protocol imap {
     mail_plugins = quota imap_quota
+
+    # number of connections per-user per-IP
+    #mail_max_userip_connections = 10
 }
 
 # POP3 configuration
@@ -229,15 +275,6 @@ EOF
         }
     }
 }
-
-#plugin {
-#    # NOTE: %variable expansion works only with Dovecot v1.0.2+.
-#    # For maildir format.
-#    sieve = /%Lh/%Ld/%Ln/.sieve.rule
-#
-#    # For mbox format.
-#    sieve = /%Lh/%Ld/.%Ln.sieve.rule
-#}
 EOF
 
     ECHO_INFO "Generate dovecot sieve rule filter file: ${SIEVE_FILTER_FILE}."

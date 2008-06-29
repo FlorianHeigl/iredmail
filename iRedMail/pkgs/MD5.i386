@@ -2,12 +2,9 @@
 2cc1000c18bcead44fd9164e473f2077  rpms/mhash-0.9.2-6.el5.i386.rpm
 35b7a5f19c8e06a8d2703640e2ec1395  rpms/perl-Digest-SHA-5.47-1.el5.rf.i386.rpm
 3ca3851c5f12a7d449b4cab9367b716e  rpms/php-mhash-5.1.6-4.el5.i386.rpm
-49a2c2ed3e5b5ae9524972cc90b50e74  rpms/amavisd-new-2.6.0-1.rhms.i386.rpm
 5875f75b5873cb058700d0a2b917c776  rpms/perl-Unix-Syslog-1.0-1.el5.rf.i386.rpm
 6f0da93aa785bf28549fd06adfd03c08  rpms/libmcrypt-2.5.7-5.el5.i386.rpm
 7ef35a7662a7d7bcb264eb4a1b1974f3  rpms/postfix-2.3.14-1.rhms.i386.rpm
-829f18efb77aab9f245e0b31a5ee75a5  rpms/dovecot-1.0.15-1.rhms.i386.rpm
-93200daffad0c3890e6f1e020aecb667  rpms/dovecot-sieve-1.0.3-7.el5.i386.rpm
 96304815847ffc139dd8b70dc9f0956d  rpms/mcrypt-2.6.4-3.el5.i386.rpm
 993dae91be09086b9fc441a48d0478a9  rpms/unrar-3.7.4-1.el5.rf.i386.rpm
 99af49e7604c7a312222a4e4decab0c4  rpms/lzo-1.08-4.2.el5.rf.i386.rpm
@@ -29,3 +26,6 @@ b202afff9e0d5af2b092d392a75e7a59  rpms/perl-version-0.74-1.el5.rf.i386.rpm
 3439500f99b345b097d6a89d9dd4ae10  rpms/clamav-0.93.1-1.el5.rf.i386.rpm
 44294ae4438799457efb9e10e8937ff0  rpms/clamav-db-0.93.1-1.el5.rf.i386.rpm
 caeace1325c7d77cfc55b22afdcc1b03  rpms/clamd-0.93.1-1.el5.rf.i386.rpm
+3ee9ea21a7fad9599d417e931ab2f681  rpms/dovecot-sieve-1.1.5-8.el5.i386.rpm
+f4d04c5cc21515625534c9f557eb11b4  rpms/amavisd-new-2.6.1-1.ired.i386.rpm
+e697bee9a9f9bc7a503c581d9fa0e782  rpms/dovecot-1.1.1-1.ired.i386.rpm

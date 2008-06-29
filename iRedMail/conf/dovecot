@@ -8,4 +8,5 @@ export DOVECOT_DELIVER='/usr/libexec/dovecot/deliver'
 export DOVECOT_LOG_FILE='/var/log/dovecot.log'
 
 export SIEVE_LOG_FILE='/var/log/sieve.log'
-export SIEVE_FILTER_FILE="${VMAIL_USER_HOME_DIR}/.dovecot.sieve"
+export SIEVE_RULE_FILENAME='.dovecot.sieve'
+export SIEVE_FILTER_FILE="${VMAIL_USER_HOME_DIR}/${SIEVE_RULE_FILENAME}"

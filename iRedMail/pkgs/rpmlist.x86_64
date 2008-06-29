@@ -3,8 +3,6 @@ cabextract-1.2-1.el5.rf.x86_64.rpm
 clamav-0.93.1-1.el5.rf.x86_64.rpm
 clamav-db-0.93.1-1.el5.rf.x86_64.rpm
 clamd-0.93.1-1.el5.rf.x86_64.rpm
-dovecot-1.0.15-1.rhms.x86_64.rpm
-dovecot-sieve-1.0.3-7.el5.x86_64.rpm
 freeze-2.5.0-1.2.el5.rf.x86_64.rpm
 lha-1.14i-19.2.2.el5.rf.x86_64.rpm
 libmcrypt-2.5.7-5.el5.x86_64.rpm
@@ -32,3 +30,5 @@ unarj-2.63-0.a.2.el5.rf.x86_64.rpm
 unrar-3.7.4-1.el5.rf.x86_64.rpm
 zoo-2.10-2.2.el5.rf.x86_64.rpm
 amavisd-new-2.6.1-1.ired.x86_64.rpm
+dovecot-1.1.1-1.ired.x86_64.rpm
+dovecot-sieve-1.1.5-8.el5.x86_64.rpm

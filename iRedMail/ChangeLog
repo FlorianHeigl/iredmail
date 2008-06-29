@@ -1,4 +1,8 @@
-iRedMail-0.1-rc1:
+iRedMail-0.2:
+    * Update dovecot to 1.1.1.
+    * Update amavisd-new to 2.6.1.
+
+iRedMail-0.1:
     * Add 'policy_time_limit=3600'. Reminded by Edison. Thanks :)
     * Add 'delay_warning_time=30m'. Reminded by muniao. Thanks :)
     * Add perl-Mail-SPF-Query.noarch as mandatory for SPF feature.

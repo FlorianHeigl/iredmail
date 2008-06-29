@@ -14,12 +14,10 @@
 6b39b795a07fe50fc7dbf5c408cbe535  rpms/perl-Digest-SHA-5.47-1.el5.rf.x86_64.rpm
 6e4adbb751b6b9367f9e785d7a6a2368  rpms/nomarch-1.4-1.el5.rf.x86_64.rpm
 57dfbaeaaba2ca6976059a4fb2495d8c  rpms/clamd-0.93.1-1.el5.rf.x86_64.rpm
-c77d664d5fe2b60aef8249b396474d76  rpms/dovecot-1.0.15-1.rhms.x86_64.rpm
 9a4ff39758333331da213792186d1220  rpms/php-mhash-5.1.6-4.el5.x86_64.rpm
 be6b6fa677ea8f2482764e8553665995  rpms/clamav-db-0.93.1-1.el5.rf.x86_64.rpm
 a3e550f92a31ae342f41ddd4aaa1565a  rpms/unarj-2.63-0.a.2.el5.rf.x86_64.rpm
 ad0af83c9322de6f297e480bd5739940  rpms/perl-BerkeleyDB-0.33-1.el5.rf.x86_64.rpm
-075e149ef38a43d681192af62bfd2129  rpms/dovecot-sieve-1.0.3-7.el5.x86_64.rpm
 ba25deb11c0d6f2081af381b58ddae96  rpms/lha-1.14i-19.2.2.el5.rf.x86_64.rpm
 bcafee6dec064dcb08fe0d0999f59c0d  rpms/perl-Crypt-OpenSSL-RSA-0.25-1.el5.rf.x86_64.rpm
 a541cfe6ee12775b8c29d11e0c962241  rpms/clamav-0.93.1-1.el5.rf.x86_64.rpm
@@ -31,3 +29,5 @@ fb2574ec5b714b136e4ee4bd85344b1c  rpms/policyd-1.82-4.rhms.x86_64.rpm
 887f7631927c5acedcdc1a2077cac371  rpms/perl-NetAddr-IP-4.007-1.el5.rf.x86_64.rpm
 3b5ec46941d0dec19e0028bdcaea672d  rpms/perl-version-0.74-1.el5.rf.x86_64.rpm
 2d49d9dc5c6cd35fcbf014d13aba5436  rpms/amavisd-new-2.6.1-1.ired.x86_64.rpm
+030de07b6cad195cac980be235d5cfea  rpms/dovecot-1.1.1-1.ired.x86_64.rpm
+53cc6dc4e7fd98ad728c640a087def4b  rpms/dovecot-sieve-1.1.5-8.el5.x86_64.rpm
