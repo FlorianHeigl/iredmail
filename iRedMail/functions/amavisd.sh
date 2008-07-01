@@ -15,6 +15,15 @@ amavisd_dkim()
     setfacl -m u:amavis:r-- ${pem_file}
 
     cat >> ${AMAVISD_CONF} <<EOF
+# The default set of header fields to be signed can be controlled
+# by setting %signed_header_fields elements to true (to sign) or
+# to false (not to sign). Keys must be in lowercase, e.g.:
+# 0 -> off
+# 1 -> on
+\$signed_header_fields{'received'} = 0;
+\$signed_header_fields{'to'} = 1;
+
+
 # Add dkim_key here.
 dkim_key("${FIRST_DOMAIN}", "${AMAVISD_DKIM_SELECTOR}", "${pem_file}");
 
