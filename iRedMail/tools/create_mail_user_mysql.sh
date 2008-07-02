@@ -47,8 +47,12 @@ generate_sql()
 
         echo $username | grep '^#' >/dev/null
         if [ X"$?" != X"0" ]; then
-            echo "INSERT INTO mailbox (username, password, name, maildir, quota, domain, active) VALUES ('${username}@${DOMAIN}', '${CRYPT_PASSWD}', '${username}', "${maildir}", '${DEFAULT_QUOTA}', '${DOMAIN}', '1');" >> ${SQL}
-            echo "INSERT INTO alias (address, goto, domain, active) VALUES ('${username}@${DOMAIN}', '${username}@${DOMAIN}', '${DOMAIN}', '1');" >> ${SQL}
+            cat >> ${SQL} <<EOF
+INSERT INTO mailbox (username, password, name, maildir, quota, domain, active)
+    VALUES ('${username}@${DOMAIN}', '${CRYPT_PASSWD}', '${username}', '${maildir}', '${DEFAULT_QUOTA}', '${DOMAIN}', '1');
+INSERT INTO alias (address, goto, domain, active)
+    VALUES ('${username}@${DOMAIN}', '${username}@${DOMAIN}', '${DOMAIN}', '1');
+EOF
         else
             :
         fi
