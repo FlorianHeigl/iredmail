@@ -14,6 +14,11 @@ source_dir='./'
 # Copy to another directory, converted as standard IMAP directory structure.
 target_dir='./'
 
+# vmail user name/uid.
+vmail_user='vmail'
+# vmail group name/uid.
+vmail_group='vmail'
+
 for i in $(ls -d *@w-ibeda.com)
 do
     username="$(echo $i | awk -F'@' '{print $1}')"
@@ -47,4 +52,6 @@ do
     do
         cp -f $email ${mailbox}/.Sent/
     done
+
+    chown -R ${vmail_user}:${vmail_group} ${target_dir}/${domain}
 done
