@@ -1,4 +1,9 @@
 iRedMail-0.2:
+    * Fix ExtMail configuration about 'SYS_MAILDIR_BASE' in webmail.cf,
+      Thanks xcrossbow@gmail.
+    * Typo in Roundcubemail display_username.patch. remove 'dot' after
+      username, so that it won't make user confused. Thanks
+      xcrossbow@gmail.
     * Fix typo error in 'create_mail_mysql_user.sh'. Thanks muniao.
     * Remove roundcubemail version info in 'useragent' option in
       'config/main.inc.php', less is more.

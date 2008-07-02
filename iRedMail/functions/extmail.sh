@@ -49,7 +49,8 @@ EOF
 
     perl -pi -e 's#(SYS_USER_LANG.*)en_US#${1}$ENV{'SYS_USER_LANG'}#' webmail.cf
 
-    perl -pi -e 's#(SYS_MAILDIR_BASE.*)/home/domains#${1}$ENV{'VMAIL_USER_HOME_DIR'}#' webmail.cf
+    export VMAIL_USER_HOME_DIR
+    perl -pi -e 's#(SYS_MAILDIR_BASE.*)/home/domains#${1}$ENV{VMAIL_USER_HOME_DIR}#' webmail.cf
 
     ECHO_INFO "Fix incorrect quota display."
     cd ${EXTSUITE_HTTPD_ROOT}/extmail/libs/Ext/
