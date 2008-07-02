@@ -2,7 +2,7 @@
 
 # Author:   Zhang Huangbin (michaelbibby <at> gmail.com )
 # Date:     2008.06.11
-# Purpose:  Migrate ExtMail mailbox table to iRedMail.
+# Purpose:  Migrate ExtMail MySQL 'mailbox' table to iRedMail format.
 
 # Migration guide wrote in Chinese:
 #   http://code.google.com/p/iRedMail/wiki/iRedMail_tut_Migration

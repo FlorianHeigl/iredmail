@@ -62,14 +62,14 @@ EOF
 if [ -f $1 ]; then
     userlist="$1"
 
-    # Use 'dos2unix' convert file format.
+    # Use 'dos2unix' to convert file format.
     which dos2unix
     [ X"$?" == X"0" ] && dos2unix ${userlist}
 
-    # Create SQL template.
+    # Generate SQL template.
     generate_sql ${userlist} && \
-    echo "Please import SQL file manually after you verify the data is correct:"
-    echo "${SQL}"
+        echo "Please import SQL file manually after you verify the data is correct:"
+        echo "${SQL}"
 else
     echo "Usage: sh $0 userlist.txt"
 fi
