@@ -1,4 +1,6 @@
 iRedMail-0.2:
+    * Fix SQL while SITE_ADMIN_NAME equal to FIRST_DOMAIN_ADMIN_NAME.
+      Reported by muniao. Thanks :)
     * Add script to convert WinMail user mailboxes to standard IMAP
       directory structure.
     * Fix ExtMail configuration about 'SYS_MAILDIR_BASE' in webmail.cf,
