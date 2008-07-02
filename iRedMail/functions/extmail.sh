@@ -36,8 +36,8 @@ DocumentRoot /var/www/html/
 ScriptAlias /extmail/cgi /var/www/extsuite/extmail/cgi
 Alias /extmail /var/www/extsuite/extmail/html
 
-Alias /mail /var/www/extsuite/extmail/html
-Alias /webmail /var/www/extsuite/extmail/html
+#Alias /mail /var/www/extsuite/extmail/html
+#Alias /webmail /var/www/extsuite/extmail/html
 
 SuexecUserGroup ${VMAIL_USER_NAME} ${VMAIL_GROUP_NAME}
 </VirtualHost>

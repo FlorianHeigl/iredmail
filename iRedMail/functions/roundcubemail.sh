@@ -74,6 +74,7 @@ EOF
 ${CONF_MSG}
 Alias /mail "${HTTPD_SERVERROOT}/roundcubemail-${RCM_VERSION}/"
 Alias /webmail "${HTTPD_SERVERROOT}/roundcubemail-${RCM_VERSION}/"
+Alias /roundcube "${HTTPD_SERVERROOT}/roundcubemail-${RCM_VERSION}/"
 EOF
 
     # Roundcubemail-0.1.1 only.
