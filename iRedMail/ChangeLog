@@ -1,4 +1,6 @@
 iRedMail-0.2:
+    * Remove roundcubemail version info in 'useragent' option in
+      'config/main.inc.php', less is more.
     * Add 'signed_header_fields' in amavisd.conf.
     * Update dovecot to 1.1.1.
     * Update amavisd-new to 2.6.1.

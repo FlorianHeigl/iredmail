@@ -66,6 +66,9 @@ EOF
     perl -pi -e 's#(.*enable_spellcheck.*)(TRUE)(.*)#${1}FALSE${3}#' main.inc.php
     perl -pi -e 's#(.*default_charset.*=)(.*)#${1}"UTF-8";#' main.inc.php
 
+    # Set useragent, add project info.
+    perl -pi -e 's#(.*rcmail_config.*useragent.*=).*#${1} "RoundCube WebMail";#' main.inc.php
+
     ECHO_INFO "Create directory alias for Roundcubemail."
     cat > ${HTTPD_CONF_DIR}/roundcubemail.conf <<EOF
 ${CONF_MSG}
