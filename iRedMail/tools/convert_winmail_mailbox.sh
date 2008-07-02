@@ -31,6 +31,14 @@
 #       * vmail_user    -> Owner (user) of your user mailboxes.
 #       * vmail_group   -> Owner (group) of your user mailboxes.
 #
+#       Default file localtion looks like below:
+#
+#           /path/to/mail/store/
+#                           |- user1@example.com/
+#                           |- user2@example.com/
+#                           |- user3@example.com/
+#                           |- convert_winmail_mailbox.sh   # <- we are here.
+#
 #   2) Execute command:
 #
 #       # sh convert_winmail_mailbox.sh
