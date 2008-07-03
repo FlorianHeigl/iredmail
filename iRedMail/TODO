@@ -1,4 +1,4 @@
-* SpamAssassin auto-learn.
+* Add 'SMTP_SERVER'.
 * Roundcubemail plugin:
     * per-user whitelist/blacklist. Roundcubemail will provide an 
       official plugin to support sieve filter language.

@@ -85,10 +85,6 @@ amavisd_config()
     #perl -pi -e 's/^(\$daemon_user)/$1\ =\ "clamav"\;\t#/' ${AMAVISD_CONF}
     #perl -pi -e 's/^(\$daemon_group)/$1\ =\ "clamav"\;\t#/' ${AMAVISD_CONF}
 
-    # ---- Make amavisd log to standalone file: ${AMAVISD_LOGROTATE_FILE} ----
-    perl -pi -e 's#(.*syslog_facility.*)(mail)(.*)#${1}local0${3}#' ${AMAVISD_CONF}
-    echo -e "local0.*\t\t\t\t\t\t-${AMAVISD_LOGFILE}" >>/etc/syslog.conf
-
     perl -pi -e 's/^(\$mydomain)/$1\ =\ \"$ENV{'HOSTNAME'}\"\;\t#/' ${AMAVISD_CONF}
     perl -pi -e 's/(.*local_domains_maps.*)(].*)/${1},"$ENV{'FIRST_DOMAIN'}"${2}/' ${AMAVISD_CONF}
 
@@ -204,8 +200,14 @@ EOF
 
     postconf -e content_filter='smtp-amavis:[127.0.0.1]:10024'
 
-    ECHO_INFO "Setting logrotate for amavisd log file: ${AMAVISD_LOGFILE}."
-    cat > ${AMAVISD_LOGROTATE_FILE} <<EOF
+    # ---- Make amavisd log to standalone file: ${AMAVISD_LOGROTATE_FILE} ----
+    if [ X"${AMAVISD_SEPERATE_LOG}" == X"YES" ]; then
+        ECHO_INFO "Make Amavisd log to file: ${AMAVISD_LOGFILE}."
+        perl -pi -e 's#(.*syslog_facility.*)(mail)(.*)#${1}local0${3}#' ${AMAVISD_CONF}
+        echo -e "local0.*\t\t\t\t\t\t-${AMAVISD_LOGFILE}" >> /etc/syslog.conf
+
+        ECHO_INFO "Setting logrotate for amavisd log file: ${AMAVISD_LOGFILE}."
+        cat > ${AMAVISD_LOGROTATE_FILE} <<EOF
 ${CONF_MSG}
 ${AMAVISD_LOGFILE} {
     compress
@@ -218,6 +220,9 @@ ${AMAVISD_LOGFILE} {
     endscript
 }
 EOF
+    else
+        :
+    fi
 
     cat >> ${TIP_FILE} <<EOF
 Amavisd-new:

@@ -1,4 +1,6 @@
 iRedMail-0.2:
+    * Make amavisd log to /var/log/maillog by default, so that
+      mailgraph will detect spam mails.
     * Fix SQL while SITE_ADMIN_NAME equal to FIRST_DOMAIN_ADMIN_NAME.
       Reported by muniao. Thanks :)
     * Add script to convert WinMail user mailboxes to standard IMAP
