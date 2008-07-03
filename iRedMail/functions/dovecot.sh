@@ -118,7 +118,7 @@ plugin {
     # Quota rules.
     quota_rule = *:storage=10M
     #quota_rule2 = Trash:storage=100M
-    #quota_rule3 = SPAM:ignore
+    #quota_rule3 = Junk:ignore
 
     # Quota warning. Sample File:
     #   http://wiki.dovecot.org/Quota/1.1#head-03d8c4f6fb28e2e2f1cb63ec623810b45bec1734
@@ -154,7 +154,7 @@ plugin {
     # Quota rules.
     quota_rule = *:storage=10M
     #quota_rule2 = Trash:storage=100M
-    #quota_rule3 = SPAM:ignore
+    #quota_rule3 = Junk:ignore
 
     # Quota warning. Sample File:
     #   http://dovecot.org/list/dovecot/2008-June/031456.html
@@ -230,10 +230,10 @@ default_pass_scheme = CRYPT
 EOF
         # Maildir format.
         [ X"${HOME_MAILBOX}" == X"Maildir" ] && cat >> ${DOVECOT_LDAP_CONF} <<EOF
-user_attrs      = homeDirectory=home,mailMessageStore=maildir:mail,${LDAP_ATTR_USER_QUOTA}=quota=maildir:storage
+user_attrs      = homeDirectory=home,mailMessageStore=maildir:mail,${LDAP_ATTR_USER_QUOTA}*1024=quota_rule=*:bytes=%\$
 EOF
         [ X"${HOME_MAILBOX}" == X"mbox" ] && cat >> ${DOVECOT_LDAP_CONF} <<EOF
-user_attrs      = homeDirectory=home,mailMessageStore=dirsize:mail,${LDAP_ATTR_USER_QUOTA}=quota=dirsize:storage
+user_attrs      = homeDirectory=home,mailMessageStore=dirsize:mail,${LDAP_ATTR_USER_QUOTA}*1024=quota_rule=*:bytes=%\$
 EOF
     else
         cat >> ${DOVECOT_CONF} <<EOF
@@ -252,10 +252,10 @@ password_query = SELECT password FROM mailbox WHERE username='%u' AND active='1'
 EOF
         # Maildir format.
         [ X"${HOME_MAILBOX}" == X"Maildir" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
-user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, maildir, CONCAT('maildir:storage=', quota) AS quota FROM mailbox WHERE username='%u' AND active='1' AND enable%Ls='1'
+user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, maildir, CONCAT('*:bytes=', quota*1024) AS quota_rule FROM mailbox WHERE username='%u' AND active='1' AND enable%Ls='1'
 EOF
         [ X"${HOME_MAILBOX}" == X"mbox" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
-user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, maildir, CONCAT('dirsize:storage=', quota) AS quota FROM mailbox WHERE username='%u' AND active='1' AND enable%Ls='1'
+user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, maildir, CONCAT('*:bytes=', quota*1024) AS quota_rule FROM mailbox WHERE username='%u' AND active='1' AND enable%Ls='1'
 EOF
     fi
 
