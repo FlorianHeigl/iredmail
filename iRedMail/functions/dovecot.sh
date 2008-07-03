@@ -116,12 +116,12 @@ plugin {
     quota = maildir
 
     # Quota rules.
-    #quota_rule = *:storage=1G
+    quota_rule = *:storage=10M
     #quota_rule2 = Trash:storage=100M
     #quota_rule3 = SPAM:ignore
 
     # Quota warning. Sample File:
-    #   http://dovecot.org/list/dovecot/2008-June/031456.html
+    #   http://wiki.dovecot.org/Quota/1.1#head-03d8c4f6fb28e2e2f1cb63ec623810b45bec1734
     #quota_warning = storage=95%% /usr/bin/quota-warning.sh 95
     #quota_warning2 = storage=80%% /usr/bin/quota-warning.sh 80
 }
@@ -152,7 +152,7 @@ plugin {
     quota = dirsize
 
     # Quota rules.
-    #quota_rule = *:storage=1G
+    quota_rule = *:storage=10M
     #quota_rule2 = Trash:storage=100M
     #quota_rule3 = SPAM:ignore
 

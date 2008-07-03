@@ -20,7 +20,7 @@ rm -f /tmp/site_admin_name
 
 # If SITE_ADMIN_NAME not equal FIRST_DOMAIN_ADMIN_NAME, we need to
 # set password for PostfixAdmin site admin.
-if [ X"${SITE_ADMIN_NAME}" != X"${FIRST_DOMAIN_ADMIN_NAME}" ]; then
+if [ X"${SITE_ADMIN_NAME}" != X"${FIRST_DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}" ]; then
     # Prompt to set password.
     while : ; do
         ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \

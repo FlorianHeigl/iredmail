@@ -1,4 +1,5 @@
 iRedMail-0.2:
+    * Fix quota config in dovecot for 1.1.x. Thanks chenwei. :)
     * Make amavisd log to /var/log/maillog by default, so that
       mailgraph will detect spam mails.
     * Fix SQL while SITE_ADMIN_NAME equal to FIRST_DOMAIN_ADMIN_NAME.
