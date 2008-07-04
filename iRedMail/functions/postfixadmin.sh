@@ -67,7 +67,7 @@ EOF
     perl -pi -e 's#(.*domain_path.*=)(.*)#${1}"YES";#' config.inc.php
     perl -pi -e 's#(.*domain_in_mailbox.*=)(.*)#${1}"NO";#' config.inc.php
     perl -pi -e 's#(.*quota.*=)(.*)(NO)(.*)#${1}"YES";#' config.inc.php
-    perl -pi -e 's#(.*quota_multiplier.*)1024000(.*)#${1}1048576${2}#' config.inc.php
+    perl -pi -e 's#(.*quota_multiplier.*)1024000(.*)#${1}1${2}#' config.inc.php
     perl -pi -e 's#(.*transport.*=)(.*)(NO)(.*)#${1}"YES";#' config.inc.php
     perl -pi -e 's#(.*virtual.*,)#${1}"dovecot",#' config.inc.php
     perl -pi -e 's#(.*transport_default.*=)(.*)#${1}"dovecot";#' config.inc.php
