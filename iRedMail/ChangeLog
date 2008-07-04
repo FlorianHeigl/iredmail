@@ -1,4 +1,5 @@
 iRedMail-0.2:
+    * Add more amavisd options.
     * Adjust mailgraph filter rule, add greylist graph.
     * Fix quota config in dovecot for 1.1.x. Thanks chenwei. :)
       Warning: we use '10' as '10M' now. please refer dovecot userbd

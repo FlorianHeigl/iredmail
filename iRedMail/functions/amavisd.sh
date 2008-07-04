@@ -165,6 +165,35 @@ amavisd_config()
 #\$X_HEADER_TAG = 'X-Virus-Scanned';
 #\$X_HEADER_LINE = "by amavisd at \$myhostname";
 
+# Notify virus sender?
+\$warnvirussender = 0;
+
+# Notify spam sender?
+\$warnspamsender = 0;
+
+# Notify sender of banned files?
+\$warnbannedsender = 0;
+
+# Notify sender of syntactically invalid header containing non-ASCII characters?
+\$warnbadhsender = 0;
+
+# Notify virus (or banned files) RECIPIENT?
+#  (not very useful, but some policies demand it)
+\$warnvirusrecip = 0;
+\$warnbannedrecip = 0;
+
+# Notify also non-local virus/banned recipients if \$warn*recip is true?
+#  (including those not matching local_domains*)
+\$warn_offsite = 1;
+
+#\$notify_sender_templ      = read_text('/var/amavis/notify_sender.txt');
+#\$notify_virus_sender_templ= read_text('/var/amavis/notify_virus_sender.txt');
+#\$notify_virus_admin_templ = read_text('/var/amavis/notify_virus_admin.txt');
+#\$notify_virus_recips_templ= read_text('/var/amavis/notify_virus_recips.txt');
+#\$notify_spam_sender_templ = read_text('/var/amavis/notify_spam_sender.txt');
+#\$notify_spam_admin_templ  = read_text('/var/amavis/notify_spam_admin.txt');
+
+
 1;  # insure a defined return
 EOF
     # ------------- END configure /etc/amavisd.conf ------------
