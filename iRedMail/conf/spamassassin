@@ -1,3 +1,4 @@
 # For SpamAssassin.
 
+export SA_INIT_PRE='/etc/mail/spamassassin/init.pre'
 export SA_LOCAL_CF='/etc/mail/spamassassin/local.cf'

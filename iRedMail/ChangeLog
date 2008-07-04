@@ -1,5 +1,8 @@
 iRedMail-0.2:
+    * Adjust mailgraph filter rule, add greylist graph.
     * Fix quota config in dovecot for 1.1.x. Thanks chenwei. :)
+      Warning: we use '10' as '10M' now. please refer dovecot userbd
+      setting file: /etc/dovecot-{mysql,ldap}.conf.
     * Make amavisd log to /var/log/maillog by default, so that
       mailgraph will detect spam mails.
     * Fix SQL while SITE_ADMIN_NAME equal to FIRST_DOMAIN_ADMIN_NAME.

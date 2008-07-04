@@ -22,7 +22,7 @@ MAILDIR_STRING='Maildir/'
 # You domain name.
 DOMAIN='example.com'
 DEFAULT_PASSWD='888888'
-DEFAULT_QUOTA='10240'   # 10240 -> 10M (10240/1024)
+DEFAULT_QUOTA='10'   # 10 -> 10M
 
 # Cyrpt the password.
 CRYPT_PASSWD="$(openssl passwd -1 ${DEFAULT_PASSWD})"

@@ -364,7 +364,7 @@ use File::Tail;
 use Getopt::Long;
 use POSIX 'setsid';
 
-my $VERSION = "1.14";
+my $VERSION = "1.14g3";
 
 # config
 my $rrdstep = 60;
@@ -379,9 +379,10 @@ my $daemon_rrd_dir = '/var/log';
 my $logfile;
 my $rrd = "mailgraph.rrd";
 my $rrd_virus = "mailgraph_virus.rrd";
+my $rrd_greylist = "mailgraph_greylist.rrd";
 my $year;
 my $this_minute;
-my %sum = ( sent => 0, received => 0, bounced => 0, rejected => 0, virus => 0, spam => 0 );
+my %sum = ( sent => 0, received => 0, bounced => 0, rejected => 0, virus => 0, spam => 0, greylisted => 0, delayed => 0);
 my $rrd_inited=0;
 
 my %opt = ();
@@ -395,6 +396,8 @@ sub event_bounced($);
 sub event_rejected($);
 sub event_virus($);
 sub event_spam($);
+sub event_greylisted($);
+sub event_delayed($);
 sub init_rrd($);
 sub update($);
 
@@ -415,8 +418,9 @@ sub usage
 	print "  --daemon-log=FILE  write verbose-log to FILE instead of /var/log/mailgraph.log\n";
 	print "  --ignore-localhost ignore mail to/from localhost (used for virus scanner)\n";
 	print "  --ignore-host=HOST ignore mail to/from HOST regexp (used for virus scanner)\n";
-	print "  --only-mail-rrd    update only the mail rrd\n";
-	print "  --only-virus-rrd   update only the virus rrd\n";
+	print "  --no-mail-rrd      no update mail rrd\n";
+	print "  --no-virus-rrd     no update virus rrd\n";
+	print "  --no-greylist-rrd  no update greylist rrd\n";
 	print "  --rrd-name=NAME    use NAME.rrd and NAME_virus.rrd for the rrd files\n";
 	print "  --rbl-is-spam      count rbl rejects as spam\n";
 	print "  --virbl-is-virus   count virbl rejects as viruses\n";
@@ -431,7 +435,7 @@ sub main
 		'year|y=i', 'host=s', 'verbose|v', 'daemon|d!',
 		'daemon_pid|daemon-pid=s', 'daemon_rrd|daemon-rrd=s',
 		'daemon_log|daemon-log=s', 'ignore-localhost!', 'ignore-host=s@',
-		'only-mail-rrd', 'only-virus-rrd', 'rrd_name|rrd-name=s',
+		'no-mail-rrd', 'no-virus-rrd', 'no-greylist-rrd', 'rrd_name|rrd-name=s',
 		'rbl-is-spam', 'virbl-is-virus'
 		) or exit(1);
 	usage if $opt{help};
@@ -446,6 +450,7 @@ sub main
 	$daemon_rrd_dir = $opt{daemon_rrd} if defined $opt{daemon_rrd};
 	$rrd		= $opt{rrd_name}.".rrd" if defined $opt{rrd_name};
 	$rrd_virus	= $opt{rrd_name}."_virus.rrd" if defined $opt{rrd_name};
+	$rrd_virus	= $opt{rrd_name}."_greylist.rrd" if defined $opt{rrd_name};
 
 	# compile --ignore-host regexps
 	if(defined $opt{'ignore-host'}) {
@@ -522,7 +527,7 @@ sub init_rrd($)
 	my $year_steps = $month_steps*12;
 
 	# mail rrd
-	if(! -f $rrd and ! $opt{'only-virus-rrd'}) {
+	if(! -f $rrd and ! $opt{'no-mail-rrd'}) {
 		RRDs::create($rrd, '--start', $m, '--step', $rrdstep,
 				'DS:sent:ABSOLUTE:'.($rrdstep*2).':0:U',
 				'DS:recv:ABSOLUTE:'.($rrdstep*2).':0:U',
@@ -544,7 +549,7 @@ sub init_rrd($)
 	}
 
 	# virus rrd
-	if(! -f $rrd_virus and ! $opt{'only-mail-rrd'}) {
+	if(! -f $rrd_virus and ! $opt{'no-virus-rrd'}) {
 		RRDs::create($rrd_virus, '--start', $m, '--step', $rrdstep,
 				'DS:virus:ABSOLUTE:'.($rrdstep*2).':0:U',
 				'DS:spam:ABSOLUTE:'.($rrdstep*2).':0:U',
@@ -561,6 +566,25 @@ sub init_rrd($)
 	elsif(-f $rrd_virus and ! defined $rrd_virus) {
 		$this_minute = RRDs::last($rrd_virus) + $rrdstep;
 	}
+        # greylist rrd
+        if(! -f $rrd_greylist and ! $opt{'no-greylist-rrd'}) {
+                        RRDs::create($rrd_greylist, '--start', $m, '--step', $rrdstep,
+                                'DS:greylisted:ABSOLUTE:'.($rrdstep*2).':0:U',
+                                'DS:delayed:ABSOLUTE:'.($rrdstep*2).':0:U',
+                                "RRA:AVERAGE:0.5:$day_steps:$realrows",   # day
+                                "RRA:AVERAGE:0.5:$week_steps:$realrows",  # week
+                                "RRA:AVERAGE:0.5:$month_steps:$realrows", # month
+                                "RRA:AVERAGE:0.5:$year_steps:$realrows",  # year
+                                "RRA:MAX:0.5:$day_steps:$realrows",   # day
+                                "RRA:MAX:0.5:$week_steps:$realrows",  # week
+                                "RRA:MAX:0.5:$month_steps:$realrows", # month
+                                "RRA:MAX:0.5:$year_steps:$realrows",  # year
+                                );
+                $this_minute = $m;
+        }
+        elsif(-f $rrd_greylist and ! defined $rrd_greylist) {
+                $this_minute = RRDs::last($rrd_greylist) + $rrdstep;
+        }
 
 	$rrd_inited=1;
 }
@@ -595,6 +619,11 @@ sub process_line($)
 				event($time, 'bounced');
 			}
 		}
+		elsif($prog eq 'pipe') {
+			if($text =~ /delivered via dovecot service/) {
+				event($time, 'received');
+			}
+		}
 		elsif($prog eq 'smtpd') {
 			if($text =~ /^[0-9A-Z]+: client=(\S+)/) {
 				my $client = $1;
@@ -610,6 +639,18 @@ sub process_line($)
 			elsif($opt{'rbl-is-spam'} and $text    =~ /^(?:[0-9A-Z]+: |NOQUEUE: )?reject: .*: 554.* blocked using/) {
 				event($time, 'spam');
 			}
+			elsif($text =~ /^(?:[0-9A-Z]+: |NOQUEUE: )?reject: .*: 550.* /) {
+				event($time, 'rejected');
+			}
+			elsif($text =~ /^(?:[0-9A-Z]+: |NOQUEUE: )?reject: .*: 501.* /) {
+				event($time, 'rejected');
+			}
+			elsif($text =~ /^(?:[0-9A-Z]+: |NOQUEUE: )?reject: .*: 504.* /) {
+				event($time, 'rejected');
+			}
+                        elsif($text =~ /Greylisted/) {
+                                event($time, 'greylisted');
+                        }
 			elsif($text =~ /^(?:[0-9A-Z]+: |NOQUEUE: )?reject: /) {
 				event($time, 'rejected');
 			}
@@ -853,6 +894,35 @@ sub process_line($)
 			event($time, 'virus');
 		}
 	}
+        elsif($prog eq 'postgrey') {
+                # Old versions (up to 1.27)
+                if($text =~ /delayed [0-9]+ seconds: client/) {
+                        event($time, 'delayed');
+                }
+                # New versions (from 1.28)
+                if($text =~ /delay=[0-9]+/) {
+                        event($time, 'delayed');
+                }
+        }
+        elsif($prog eq 'policyd') {
+                # New versions (from 1.28)
+                #if($text =~ /delay=[0-9]+/) {
+                #        event($time, 'delayed');
+                #}
+                # policyd.
+                if($text =~ /greylist=/) {
+                        event($time, 'greylisted');
+                }
+                if($text =~ /blacklist=/) {
+                        event($time, 'greylisted');
+                }
+                if($text =~ /throttle=/) {
+                        event($time, 'greylisted');
+                }
+                if($text =~ /throttle_rcpt=/) {
+                        event($time, 'greylisted');
+                }
+        }
 }
 
 sub event($$)
@@ -870,14 +940,16 @@ sub update($)
 	return 1 if $m == $this_minute;
 	return 0 if $m < $this_minute;
 
-	print "update $this_minute:$sum{sent}:$sum{received}:$sum{bounced}:$sum{rejected}:$sum{virus}:$sum{spam}\n" if $opt{verbose};
-	RRDs::update $rrd, "$this_minute:$sum{sent}:$sum{received}:$sum{bounced}:$sum{rejected}" unless $opt{'only-virus-rrd'};
-	RRDs::update $rrd_virus, "$this_minute:$sum{virus}:$sum{spam}" unless $opt{'only-mail-rrd'};
+	print "update $this_minute:$sum{sent}:$sum{received}:$sum{bounced}:$sum{rejected}:$sum{virus}:$sum{spam}:$sum{greylisted}:$sum{delayed}\n" if $opt{verbose};
+	RRDs::update $rrd, "$this_minute:$sum{sent}:$sum{received}:$sum{bounced}:$sum{rejected}" unless $opt{'no-mail-rrd'};
+	RRDs::update $rrd_virus, "$this_minute:$sum{virus}:$sum{spam}" unless $opt{'no-virus-rrd'};
+	RRDs::update $rrd_greylist, "$this_minute:$sum{greylisted}:$sum{delayed}" unless $opt{'no-greylist-rrd'};
 	if($m > $this_minute+$rrdstep) {
 		for(my $sm=$this_minute+$rrdstep;$sm<$m;$sm+=$rrdstep) {
-			print "update $sm:0:0:0:0:0:0 (SKIP)\n" if $opt{verbose};
-			RRDs::update $rrd, "$sm:0:0:0:0" unless $opt{'only-virus-rrd'};
-			RRDs::update $rrd_virus, "$sm:0:0" unless $opt{'only-mail-rrd'};
+			print "update $sm:0:0:0:0:0:0:0:0 (SKIP)\n" if $opt{verbose};
+			RRDs::update $rrd, "$sm:0:0:0:0" unless $opt{'no-mail-rrd'};
+			RRDs::update $rrd_virus, "$sm:0:0" unless $opt{'no-virus-rrd'};
+			RRDs::update $rrd_greylist, "$sm:0:0" unless $opt{'no-greylist-rrd'};
 		}
 	}
 	$this_minute = $m;
@@ -887,6 +959,8 @@ sub update($)
 	$sum{rejected}=0;
 	$sum{virus}=0;
 	$sum{spam}=0;
+        $sum{greylisted}=0;
+        $sum{delayed}=0;
 	return 1;
 }
 

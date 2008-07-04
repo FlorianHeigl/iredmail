@@ -8,6 +8,9 @@ sa_config()
     ECHO_INFO "Generate new configuration file: ${SA_LOCAL_CF}."
     cp -f ${SAMPLE_DIR}/sa.local.cf ${SA_LOCAL_CF}
 
+    #ECHO_INFO "Disable plugin: URIDNSBL."
+    #perl -pi -e 's/(^loadplugin.*Mail.*SpamAssassin.*Plugin.*URIDNSBL.*)/#${1}/' ${SA_INIT_PRE}
+
     ECHO_INFO "Enable crontabs for SpamAssassin update."
     perl -pi -e 's/#(10.*)/${1}/' /etc/cron.d/sa-update
 

@@ -230,10 +230,10 @@ default_pass_scheme = CRYPT
 EOF
         # Maildir format.
         [ X"${HOME_MAILBOX}" == X"Maildir" ] && cat >> ${DOVECOT_LDAP_CONF} <<EOF
-user_attrs      = homeDirectory=home,mailMessageStore=maildir:mail,${LDAP_ATTR_USER_QUOTA}*1024=quota_rule=*:bytes=%\$
+user_attrs      = homeDirectory=home,mailMessageStore=maildir:mail,${LDAP_ATTR_USER_QUOTA}*1048576=quota_rule=*:bytes=%\$
 EOF
         [ X"${HOME_MAILBOX}" == X"mbox" ] && cat >> ${DOVECOT_LDAP_CONF} <<EOF
-user_attrs      = homeDirectory=home,mailMessageStore=dirsize:mail,${LDAP_ATTR_USER_QUOTA}*1024=quota_rule=*:bytes=%\$
+user_attrs      = homeDirectory=home,mailMessageStore=dirsize:mail,${LDAP_ATTR_USER_QUOTA}*1048576=quota_rule=*:bytes=%\$
 EOF
     else
         cat >> ${DOVECOT_CONF} <<EOF
@@ -252,10 +252,10 @@ password_query = SELECT password FROM mailbox WHERE username='%u' AND active='1'
 EOF
         # Maildir format.
         [ X"${HOME_MAILBOX}" == X"Maildir" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
-user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, maildir, CONCAT('*:bytes=', quota*1024) AS quota_rule FROM mailbox WHERE username='%u' AND active='1' AND enable%Ls='1'
+user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, maildir, CONCAT('*:bytes=', quota*1048576) AS quota_rule FROM mailbox WHERE username='%u' AND active='1' AND enable%Ls='1'
 EOF
         [ X"${HOME_MAILBOX}" == X"mbox" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
-user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, maildir, CONCAT('*:bytes=', quota*1024) AS quota_rule FROM mailbox WHERE username='%u' AND active='1' AND enable%Ls='1'
+user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, maildir, CONCAT('*:bytes=', quota*1048576) AS quota_rule FROM mailbox WHERE username='%u' AND active='1' AND enable%Ls='1'
 EOF
     fi
 
