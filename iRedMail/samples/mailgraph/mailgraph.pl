@@ -373,7 +373,7 @@ my $points_per_sample = 3;
 
 my $daemon_logfile = '/var/log/mailgraph.log';
 my $daemon_pidfile = '/var/run/mailgraph.pid';
-my $daemon_rrd_dir = '/var/log';
+my $daemon_rrd_dir = '/var/lib/mailgraph';
 
 # global variables
 my $logfile;
@@ -597,6 +597,9 @@ sub process_line($)
 	my $text = $sl->[4];
 
 	if($prog =~ /^postfix\/(.*)/) {
+		if($text =~ /reject:/) {
+			event($time, 'rejected');
+		}
 		my $prog = $1;
 		if($prog eq 'smtp') {
 			if($text =~ /\bstatus=sent\b/) {
@@ -619,11 +622,6 @@ sub process_line($)
 				event($time, 'bounced');
 			}
 		}
-		elsif($prog eq 'pipe') {
-			if($text =~ /delivered via dovecot service/) {
-				event($time, 'received');
-			}
-		}
 		elsif($prog eq 'smtpd') {
 			if($text =~ /^[0-9A-Z]+: client=(\S+)/) {
 				my $client = $1;
@@ -633,27 +631,21 @@ sub process_line($)
 					$client =~ /$opt{'ignore-host'}/oi;
 				event($time, 'received');
 			}
+			elsif($text =~ /NOQUEUE: reject: /i) {
+				event($time, 'rejected');
+			}
 			elsif($opt{'virbl-is-virus'} and $text =~ /^(?:[0-9A-Z]+: |NOQUEUE: )?reject: .*: 554.* blocked using virbl.dnsbl.bit.nl/) {
 				event($time, 'virus');
 			}
 			elsif($opt{'rbl-is-spam'} and $text    =~ /^(?:[0-9A-Z]+: |NOQUEUE: )?reject: .*: 554.* blocked using/) {
 				event($time, 'spam');
 			}
-			elsif($text =~ /^(?:[0-9A-Z]+: |NOQUEUE: )?reject: .*: 550.* /) {
-				event($time, 'rejected');
-			}
-			elsif($text =~ /^(?:[0-9A-Z]+: |NOQUEUE: )?reject: .*: 501.* /) {
-				event($time, 'rejected');
-			}
-			elsif($text =~ /^(?:[0-9A-Z]+: |NOQUEUE: )?reject: .*: 504.* /) {
-				event($time, 'rejected');
-			}
                         elsif($text =~ /Greylisted/) {
                                 event($time, 'greylisted');
                         }
-			elsif($text =~ /^(?:[0-9A-Z]+: |NOQUEUE: )?reject: /) {
-				event($time, 'rejected');
-			}
+			#elsif($text =~ /^(?:[0-9A-Z]+: |NOQUEUE: )?reject: /) {
+			#	event($time, 'rejected');
+			#}
 			elsif($text =~ /^(?:[0-9A-Z]+: |NOQUEUE: )?milter-reject: /) {
 				if($text =~ /Blocked by SpamAssassin/) {
 					event($time, 'spam');
@@ -661,6 +653,11 @@ sub process_line($)
 				else {
 					event($time, 'rejected');
 				}
+			}
+		}
+		elsif($prog eq 'pipe') {
+			if($text =~ /delivered via dovecot service/) {
+				event($time, 'received');
 			}
 		}
 		elsif($prog eq 'error') {
@@ -672,77 +669,6 @@ sub process_line($)
 			if($text =~ /^[0-9A-Z]+: (?:reject|discard): /) {
 				event($time, 'rejected');
 			}
-		}
-	}
-	elsif($prog eq 'sendmail' or $prog eq 'sm-mta') {
-		if($text =~ /\bmailer=local\b/ ) {
-			event($time, 'received');
-		}
-                elsif($text =~ /\bmailer=relay\b/) {
-                        event($time, 'received');
-                }
-		elsif($text =~ /\bstat=Sent\b/ ) {
-			event($time, 'sent');
-		}
-                elsif($text =~ /\bmailer=esmtp\b/ ) {
-                        event($time, 'sent');
-                }
-		elsif($text =~ /\bruleset=check_XS4ALL\b/ ) {
-			event($time, 'rejected');
-		}
-		elsif($text =~ /\blost input channel\b/ ) {
-			event($time, 'rejected');
-		}
-		elsif($text =~ /\bruleset=check_rcpt\b/ ) {
-			event($time, 'rejected');
-		}
-                elsif($text =~ /\bstat=virus\b/ ) {
-                        event($time, 'virus');
-                }
-		elsif($text =~ /\bruleset=check_relay\b/ ) {
-			if (($opt{'virbl-is-virus'}) and ($text =~ /\bivirbl\b/ )) {
-				event($time, 'virus');
-			} elsif ($opt{'rbl-is-spam'}) {
-				event($time, 'spam');
-			} else {
-				event($time, 'rejected');
-			}
-		}
-		elsif($text =~ /\bsender blocked\b/ ) {
-			event($time, 'rejected');
-		}
-		elsif($text =~ /\bsender denied\b/ ) {
-			event($time, 'rejected');
-		}
-		elsif($text =~ /\brecipient denied\b/ ) {
-			event($time, 'rejected');
-		}
-		elsif($text =~ /\brecipient unknown\b/ ) {
-			event($time, 'rejected');
-		}
-		elsif($text =~ /\bUser unknown$/i ) {
-			event($time, 'bounced');
-		}
-		elsif($text =~ /\bMilter:.*\breject=55/ ) {
-			event($time, 'rejected');
-		}
-	}
-	elsif($prog eq 'exim') {
-		if($text =~ /^[0-9a-zA-Z]{6}-[0-9a-zA-Z]{6}-[0-9a-zA-Z]{2} <= \S+/) {
-			event($time, 'received');
-		}
-		elsif($text =~ /^[0-9a-zA-Z]{6}-[0-9a-zA-Z]{6}-[0-9a-zA-Z]{2} => \S+/) {
-			event($time, 'sent');
-		}
-		elsif($text =~ / rejected because \S+ is in a black list at \S+/) {
-			if($opt{'rbl-is-spam'}) {
-				event($time, 'spam');
-			} else {
-				event($time, 'rejected');
-			}
-		}
-		elsif($text =~ / rejected RCPT \S+: (Sender verify failed|Unknown user)/) {
-			event($time, 'rejected');
 		}
 	}
 	elsif($prog eq 'amavis' || $prog eq 'amavisd') {
@@ -767,131 +693,8 @@ sub process_line($)
 		elsif($text =~ /^Virus found\b/) {
 			event($time, 'virus');# AMaViS 0.3.12 and amavisd-0.1
 		}
-#		elsif($text =~ /^\([\w-]+\) Passed|Blocked BAD-HEADER\b/) {
-#		       event($time, 'badh');
-#		}
-	}
-	elsif($prog eq 'vagatefwd') {
-		# Vexira antivirus (old)
-		if($text =~ /^VIRUS/) {
-			event($time, 'virus');
-		}
-	}
-	elsif($prog eq 'hook') {
-		# Vexira antivirus
-		if($text =~ /^\*+ Virus\b/) {
-			event($time, 'virus');
-		}
-		# Vexira antispam
-		elsif($text =~ /\bcontains spam\b/) {
-			event($time, 'spam');
-		}
-	}
-	elsif($prog eq 'avgatefwd' or $prog eq 'avmailgate.bin') {
-		# AntiVir MailGate
-		if($text =~ /^Alert!/) {
-			event($time, 'virus');
-		}
-		elsif($text =~ /blocked\.$/) {
-			event($time, 'virus');
-		}
-	}
-	elsif($prog eq 'avcheck') {
-		# avcheck
-		if($text =~ /^infected/) {
-			event($time, 'virus');
-		}
-	}
-	elsif($prog eq 'spamd') {
-		if($text =~ /^(?:spamd: )?identified spam/) {
-			event($time, 'spam');
-		}
-		# ClamAV SpamAssassin-plugin
-		elsif($text =~ /(?:result: )?CLAMAV/) {
-			event($time, 'virus');
-		}
-	}
-	elsif($prog eq 'dspam') {
-		if($text =~ /spam detected from/) {
-			event($time, 'spam');
-		}
-	}
-	elsif($prog eq 'spamproxyd' or $prog eq 'spampd') {
-		if($text =~ /^\s*SPAM/ or $text =~ /^identified spam/) {
-			event($time, 'spam');
-		}
-	}
-	elsif($prog eq 'drweb-postfix') {
-		# DrWeb
-		if($text =~ /infected/) {
-			event($time, 'virus');
-		}
-	}
-	elsif($prog eq 'BlackHole') {
-		if($text =~ /Virus/) {
-			event($time, 'virus');
-		}
-		if($text =~ /(?:RBL|Razor|Spam)/) {
-			event($time, 'spam');
-		}
-	}
-	elsif($prog eq 'MailScanner') {
-		if($text =~ /(Virus Scanning: Found)/ ) {
-			event($time, 'virus');
-		}
-		elsif($text =~ /Bounce to/ ) {
-			event($time, 'bounced');
-		}
-		elsif($text =~ /^Spam Checks: Found ([0-9]+) spam messages/) {
-			my $cnt = $1;
-			for (my $i=0; $i<$cnt; $i++) {
-				event($time, 'spam');
-			}
-		}
-	}
-	elsif($prog eq 'clamsmtpd') {
-		if($text =~ /status=VIRUS/) {
-			event($time, 'virus');
-		}
-	}
-	elsif($prog eq 'clamav-milter') {
-		if($text =~ /Intercepted/) {
-			event($time, 'virus');
-		}
-	}
-	# uncommment for clamassassin:
-	#elsif($prog eq 'clamd') {
-	#	if($text =~ /^stream: .* FOUND$/) {
-	#		event($time, 'virus');
-	#	}
-	#}
-	elsif ($prog eq 'smtp-vilter') {
-		if ($text =~ /clamd: found/) {
-			event($time, 'virus');
-		}
-	}
-	elsif($prog eq 'avmilter') {
-		# AntiVir Milter
-		if($text =~ /^Alert!/) {
-			event($time, 'virus');
-		}
-		elsif($text =~ /blocked\.$/) {
-			event($time, 'virus');
-		}
-	}
-	elsif($prog eq 'bogofilter') {
-		if($text =~ /Spam/) {
-			event($time, 'spam');
-		}
-	}
-	elsif($prog eq 'filter-module') {
-		if($text =~ /\bspam_status\=(?:yes|spam)/) {
-			event($time, 'spam');
-		}
-	}
-	elsif($prog eq 'sta_scanner') {
-		if($text =~ /^[0-9A-F]+: virus/) {
-			event($time, 'virus');
+		elsif($text =~ /^\([\w-]+\) Passed|Blocked BAD-HEADER\b/) {
+		       event($time, 'badh');
 		}
 	}
         elsif($prog eq 'postgrey') {
@@ -905,24 +708,19 @@ sub process_line($)
                 }
         }
         elsif($prog eq 'policyd') {
-                # New versions (from 1.28)
-                #if($text =~ /delay=[0-9]+/) {
-                #        event($time, 'delayed');
-                #}
-                # policyd.
                 if($text =~ /greylist=/) {
                         event($time, 'greylisted');
                 }
-                if($text =~ /blacklist=/) {
+                elsif($text =~ /blacklist=/) {
                         event($time, 'greylisted');
                 }
-                if($text =~ /throttle=/) {
+                elsif($text =~ /throttle=/) {
                         event($time, 'greylisted');
                 }
-                if($text =~ /throttle_rcpt=/) {
+                elsif($text =~ /throttle_rcpt=/) {
                         event($time, 'greylisted');
                 }
-        }
+	}
 }
 
 sub event($$)

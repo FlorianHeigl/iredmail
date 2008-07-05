@@ -222,7 +222,7 @@ HEADER
 <a href="http://mailgraph.schweikert.ch/">Mailgraph</a> $VERSION
 by <a href="http://david.schweikert.ch/">David Schweikert</a></td>
 <td align="right">
-<a href="http://oss.oetiker.ch/rrdtool/"><img src="http://oss.oetiker.ch/rrdtool/.pics/rrdtool.gif" alt="" width="120" height="34"/></a>
+Shipped within <a href="http://iRedMail.googlecode.com/">iRedMail</a> project.</a>
 </td></tr></table>
 </body></html>
 FOOTER
