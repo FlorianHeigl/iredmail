@@ -71,8 +71,8 @@ ROOTPW="passwd"
 # ---------- LDAP User Setting --------------
 # Set default quota for LDAP users.
 # Courier: 10240000S = 10240000 Bit = 10M
-# Dovecot: 10 = 10M
-QUOTA='10'
+# Dovecot: 10240 = 10M
+QUOTA='10240'
 
 # Transport.
 TRANSPORT='dovecot'

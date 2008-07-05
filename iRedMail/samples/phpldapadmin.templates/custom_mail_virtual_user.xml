@@ -79,10 +79,10 @@
     </attribute>
 
     <attribute id="mailQuota">
-        <display>Mail Quota. Example: 10 (== 10M)</display>
-        <hint>Example: 10</hint>
+        <display>Mail Quota. Example: 10240 (== 10M)</display>
+        <hint>Example: 10240</hint>
         <images>images/hard-drive.png</images>
-        <value>10</value>
+        <value>10240</value>
         <order>6</order>
         <page>1</page>
     </attribute>

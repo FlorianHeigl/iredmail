@@ -230,10 +230,10 @@ default_pass_scheme = CRYPT
 EOF
         # Maildir format.
         [ X"${HOME_MAILBOX}" == X"Maildir" ] && cat >> ${DOVECOT_LDAP_CONF} <<EOF
-user_attrs      = homeDirectory=home,mailMessageStore=maildir:mail,${LDAP_ATTR_USER_QUOTA}*1048576=quota_rule=*:bytes=%\$
+user_attrs      = homeDirectory=home,mailMessageStore=maildir:mail,${LDAP_ATTR_USER_QUOTA}=quota_rule=*:bytes=%\$
 EOF
         [ X"${HOME_MAILBOX}" == X"mbox" ] && cat >> ${DOVECOT_LDAP_CONF} <<EOF
-user_attrs      = homeDirectory=home,mailMessageStore=dirsize:mail,${LDAP_ATTR_USER_QUOTA}*1048576=quota_rule=*:bytes=%\$
+user_attrs      = homeDirectory=home,mailMessageStore=dirsize:mail,${LDAP_ATTR_USER_QUOTA}=quota_rule=*:bytes=%\$
 EOF
     else
         cat >> ${DOVECOT_CONF} <<EOF
