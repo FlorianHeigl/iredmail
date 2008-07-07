@@ -544,6 +544,7 @@ postfix_config_sasl()
     postconf -e smtpd_sasl_local_domain=''
     postconf -e smtpd_sasl_security_options="noanonymous"
     postconf -e broken_sasl_auth_clients="yes"
+    postconf -e smtpd_helo_required="yes"
     postconf -e enable_original_recipient="no" # Default is 'yes'. refer to postconf(5).
 
     # Report the SASL authenticated user name in Received message header.
@@ -562,16 +563,18 @@ postfix_config_sasl()
     #   Must order:
     #       xxx, permit_sasl_authenticated, reject_unauth_destination, _policy_
     #
+    # reject_unknown_sender_domain
+    # 
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
         #
         # Non-SPF.
         #
-        postconf -e smtpd_recipient_restrictions="permit_mynetworks, reject_invalid_hostname, reject_unknown_recipient_domain, reject_unverified_recipient, reject_unlisted_recipient, reject_non_fqdn_sender, reject_non_fqdn_recipient, permit_sasl_authenticated, reject_unauth_destination, check_policy_service unix:postgrey/socket"
+        postconf -e smtpd_recipient_restrictions="permit_mynetworks, reject_non_fqdn_sender_domain, reject_invalid_hostname, reject_unknown_sender_domain, reject_unknown_recipient_domain, reject_unverified_recipient, reject_unlisted_recipient, reject_non_fqdn_sender, reject_non_fqdn_recipient, permit_sasl_authenticated, reject_unauth_destination, check_policy_service unix:postgrey/socket"
     elif [ X"${BACKEND}" == X"MySQL" ]; then
         #
         # Policyd, perl-Mail-SPF and non-SPF.
         #
-        postconf -e smtpd_recipient_restrictions="permit_mynetworks, reject_invalid_hostname, reject_unknown_recipient_domain, reject_unverified_recipient, reject_unlisted_recipient, reject_non_fqdn_sender, reject_non_fqdn_recipient, permit_sasl_authenticated, reject_unauth_destination, check_policy_service inet:127.0.0.1:10031"
+        postconf -e smtpd_recipient_restrictions="permit_mynetworks, reject_non_fqdn_sender_domain, reject_invalid_hostname, reject_unknown_sender_domain, reject_unknown_recipient_domain, reject_unverified_recipient, reject_unlisted_recipient, reject_non_fqdn_sender, reject_non_fqdn_recipient, permit_sasl_authenticated, reject_unauth_destination, check_policy_service inet:127.0.0.1:10031"
     else
         :
     fi

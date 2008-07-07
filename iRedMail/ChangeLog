@@ -1,4 +1,6 @@
 iRedMail-0.2-rc1:
+    * Add 'reject_non_fqdn_sender_domain', 'reject_unknown_sender_domain'
+      in smtpd_recipient_restrictions.
     * Add more amavisd options.
     * Adjust mailgraph filter rule, add greylist graph.
     * Fix quota config in dovecot for 1.1.x. Thanks chenwei. :)
