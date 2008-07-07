@@ -566,7 +566,7 @@ postfix_config_sasl()
         #
         # Non-SPF.
         #
-        postconf -e smtpd_recipient_restrictions="permit_mynetworks, reject_invalid_hostname, reject_unknown_recipient_domain, reject_unverified_recipient, reject_unlisted_recipient, reject_non_fqdn_sender, reject_non_fqdn_recipient, permit_sasl_authenticated, reject_unauth_destination, check_policy_service inet:127.0.0.1:10031"
+        postconf -e smtpd_recipient_restrictions="permit_mynetworks, reject_invalid_hostname, reject_unknown_recipient_domain, reject_unverified_recipient, reject_unlisted_recipient, reject_non_fqdn_sender, reject_non_fqdn_recipient, permit_sasl_authenticated, reject_unauth_destination, check_policy_service unix:postgrey/socket"
     elif [ X"${BACKEND}" == X"MySQL" ]; then
         #
         # Policyd, perl-Mail-SPF and non-SPF.
