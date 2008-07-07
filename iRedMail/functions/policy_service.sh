@@ -74,52 +74,68 @@ EOF
 
     # Configure policyd.
     ECHO_INFO "Configure policyd: ${POLICYD_CONF}."
+
     # ---- DATABASE CONFIG ----
-    perl -pi -e 's#^(MYSQLHOST=)(.*)#${1}"127.0.0.1"#' ${POLICYD_CONF}
+    export MYSQL_SERVER
+    perl -pi -e 's#^(MYSQLHOST=)(.*)#${1}"$ENV{MYSQL_SERVER}"#' ${POLICYD_CONF}
     perl -pi -e 's#^(MYSQLDBASE=)(.*)#${1}"$ENV{POLICYD_DB_NAME}"#' ${POLICYD_CONF}
     perl -pi -e 's#^(MYSQLUSER=)(.*)#${1}"$ENV{POLICYD_DB_USER}"#' ${POLICYD_CONF}
     perl -pi -e 's#^(MYSQLPASS=)(.*)#${1}"$ENV{POLICYD_DB_PASSWD}"#' ${POLICYD_CONF}
     perl -pi -e 's#^(FAILSAFE=)(.*)#${1}1#' ${POLICYD_CONF}
+
     # ---- DAEMON CONFIG ----
     perl -pi -e 's#^(DEBUG=)(.*)#${1}0#' ${POLICYD_CONF}
     perl -pi -e 's#^(DAEMON=)(.*)#${1}1#' ${POLICYD_CONF}
     perl -pi -e 's#^(BINDHOST=)(.*)#${1}"127.0.0.1"#' ${POLICYD_CONF}
     perl -pi -e 's#^(BINDPORT=)(.*)#${1}"10031"#' ${POLICYD_CONF}
+
     # ---- CHROOT ----
     export policyd_user_id="$(id -u ${POLICYD_USER_NAME})"
     export policyd_group_id="$(id -g ${POLICYD_USER_NAME})"
     perl -pi -e 's#^(UID=)(.*)#${1}$ENV{policyd_user_id}#' ${POLICYD_CONF}
     perl -pi -e 's#^(GID=)(.*)#${1}$ENV{policyd_group_id}#' ${POLICYD_CONF}
+
     # ---- WHITELISTING ----
     perl -pi -e 's#^(WHITELISTING=)(.*)#${1}1#' ${POLICYD_CONF}
     perl -pi -e 's#^(WHITELISTNULL=)(.*)#${1}0#' ${POLICYD_CONF}
     perl -pi -e 's#^(WHITELISTSENDER=)(.*)#${1}0#' ${POLICYD_CONF}
     perl -pi -e 's#^(AUTO_WHITE_LISTING=)(.*)#${1}1#' ${POLICYD_CONF}
     perl -pi -e 's#^(AUTO_WHITELIST_NUMBER=)(.*)#${1}10#' ${POLICYD_CONF}
+
     # ---- BLACKLISTING ----
     perl -pi -e 's#^(BLACKLISTING=)(.*)#${1}1#' ${POLICYD_CONF}
+    #perl -pi -e 's#^(BLACKLIST_REJECTION=)(.*)#${1}1#' ${POLICYD_CONF}
     perl -pi -e 's#^(AUTO_BLACK_LISTING=)(.*)#${1}1#' ${POLICYD_CONF}
     perl -pi -e 's#^(AUTO_WHITELIST_NUMBER=)(.*)#${1}10#' ${POLICYD_CONF}
+
     # ---- BLACKLISTING HELO ----
     perl -pi -e 's#^(BLACKLIST_HELO=)(.*)#${1}1#' ${POLICYD_CONF}
     # ---- BLACKLIST SENDER ----
     perl -pi -e 's#^(BLACKLISTSENDER=)(.*)#${1}1#' ${POLICYD_CONF}
+
     # ---- HELO_CHECK ----
     perl -pi -e 's#^(HELO_CHECK=)(.*)#${1}1#' ${POLICYD_CONF}
+
     # ---- SPAMTRAP ----
     perl -pi -e 's#^(SPAMTRAPPING=)(.*)#${1}1#' ${POLICYD_CONF} 
+    #perl -pi -e 's#^(SPAMTRAP_REJECTION=)(.*)#${1}"Spamtrap, go away."#' ${POLICYD_CONF} 
+
     # ---- GREYLISTING ----
     perl -pi -e 's#^(GREYLISTING=)(.*)#${1}1#' ${POLICYD_CONF} 
+    #perl -pi -e 's#^(GREYLIST_REJECTION=)(.*)#${1}"Greylist, please try again later."#' ${POLICYD_CONF} 
     perl -pi -e 's#^(TRAINING_MODE=)(.*)#${1}0#' ${POLICYD_CONF} 
     perl -pi -e 's#^(TRIPLET_TIME=)(.*)#${1}5m#' ${POLICYD_CONF} 
     #perl -pi -e 's#^(OPTINOUT=)(.*)#${1}1#' ${POLICYD_CONF} 
+
     # ---- SENDER THROTTLE ----
     perl -pi -e 's#^(SENDERTHROTTLE=)(.*)#${1}1#' ${POLICYD_CONF} 
     perl -pi -e 's#^(SENDER_THROTTLE_SASL=)(.*)#${1}1#' ${POLICYD_CONF} 
     perl -pi -e 's#^(SENDER_THROTTLE_HOST=)(.*)#${1}0#' ${POLICYD_CONF} 
     perl -pi -e 's#^(SENDERMSGSIZE=)(.*)#${1}$ENV{'MESSAGE_SIZE_LIMIT'}#' ${POLICYD_CONF} 
+
     # ---- RECIPIENT THROTTLE ----
     perl -pi -e 's#^(RECIPIENTTHROTTLE=)(.*)#${1}1#' ${POLICYD_CONF} 
+
     # ---- RCPT ACL ----
     perl -pi -e 's#^(RCPT_ACL=)(.*)#${1}1#' ${POLICYD_CONF} 
 

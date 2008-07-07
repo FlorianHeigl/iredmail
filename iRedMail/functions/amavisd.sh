@@ -159,7 +159,7 @@ amavisd_config()
 #\$X_HEADER_LINE = "by amavisd at \$myhostname";
 
 # Notify virus sender?
-\$warnvirussender = 0;
+\$warnvirussender = 1;
 
 # Notify spam sender?
 \$warnspamsender = 0;
