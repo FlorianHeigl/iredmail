@@ -108,13 +108,6 @@ amavisd_config()
     # Set pid_file.
     #echo '$pid_file = "/var/run/clamav/amavisd.pid";' >> ${AMAVISD_CONF}
 
-    # Enable DKIM feature.
-    if [ X"${ENABLE_DKIM}" == X"YES" ]; then
-        [ X"${status_amavisd_dkim}" != X"DONE" ] && amavisd_dkim
-    else
-        :
-    fi
-
     cat >> ${AMAVISD_CONF} <<EOF
 
 # Set listen IP/PORT.
@@ -192,7 +185,16 @@ amavisd_config()
 #\$notify_virus_recips_templ= read_text('/var/amavis/notify_virus_recips.txt');
 #\$notify_spam_sender_templ = read_text('/var/amavis/notify_spam_sender.txt');
 #\$notify_spam_admin_templ  = read_text('/var/amavis/notify_spam_admin.txt');
+EOF
 
+    # Enable DKIM feature.
+    if [ X"${ENABLE_DKIM}" == X"YES" ]; then
+        [ X"${status_amavisd_dkim}" != X"DONE" ] && amavisd_dkim
+    else
+        :
+    fi
+
+    cat >> ${AMAVISD_CONF} <<EOF
 
 1;  # insure a defined return
 EOF
