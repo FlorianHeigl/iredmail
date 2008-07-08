@@ -80,8 +80,6 @@ CREATE TABLE mailbox (
     PRIMARY KEY (username)
 ) TYPE=MyISAM;
 
-CREATE INDEX mailbox_idx ON mailbox (username);
-
 #
 # Table structure for table sender_bcc_domain
 #
