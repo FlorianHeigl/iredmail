@@ -1,4 +1,6 @@
 iRedMail-0.2-rc2:
+    * Remove 'reject_unverified_recipient, reject_unlisted_recipient,'
+      in smtpd_recipient_restrictions.
     * Remove INDEX on vmail.mailbox.
     * Add 'smtpd_helo_required=yes' in Postfix.
     * Add 'BLACKLIST_REJECTION', 'GREYLIST_REJECTION', 'SPAMTRAP_REJECTION'
