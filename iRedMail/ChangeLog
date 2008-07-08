@@ -1,4 +1,5 @@
 iRedMail-0.2-rc2:
+    * Add policyd spamtrap user lookup to postfix virtual_mailbox_maps.
     * Remove 'reject_unverified_recipient, reject_unlisted_recipient,'
       in smtpd_recipient_restrictions.
     * Remove INDEX on vmail.mailbox.

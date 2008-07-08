@@ -47,3 +47,5 @@ export mysql_sender_bcc_maps_domain_cf="${POSTFIX_ROOTDIR}/mysql_sender_bcc_maps
 export mysql_sender_bcc_maps_user_cf="${POSTFIX_ROOTDIR}/mysql_sender_bcc_maps_user.cf"
 export mysql_recipient_bcc_maps_domain_cf="${POSTFIX_ROOTDIR}/mysql_recipient_bcc_maps_domain.cf"
 export mysql_recipient_bcc_maps_user_cf="${POSTFIX_ROOTDIR}/mysql_recipient_bcc_maps_user.cf"
+# For policyd spamtrap lookup.
+export mysql_policyd_spamtrap_cf="${POSTFIX_ROOTDIR}/mysql_policyd_spamtrap.cf"
