@@ -544,8 +544,8 @@ postfix_config_sasl()
     postconf -e smtpd_sasl_local_domain=''
     postconf -e smtpd_sasl_security_options="noanonymous"
     postconf -e broken_sasl_auth_clients="yes"
-    postconf -e smtpd_helo_required="yes"
     postconf -e enable_original_recipient="no" # Default is 'yes'. refer to postconf(5).
+    #postconf -e smtpd_helo_required="yes"  # Warning: Foxmail will break this rule. Damn.
 
     # Report the SASL authenticated user name in Received message header.
     # Used to reject backscatter.
