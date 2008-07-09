@@ -379,7 +379,7 @@ postfix_config_mysql()
 
     postconf -e mydestination="\$myhostname, localhost, localhost.localdomain, localhost.\$myhostname, mysql:${mysql_virtual_domains_cf}"
     postconf -e transport_maps="mysql:${mysql_transport_maps_cf}"
-    postconf -e virtual_mailbox_maps="mysql:${mysql_virtual_mailbox_maps_cf}, mysql:${mysql_policyd_spamtrap_cf}"
+    postconf -e virtual_mailbox_maps="mysql:${mysql_virtual_mailbox_maps_cf}"
     postconf -e virtual_mailbox_limit_maps="mysql:${mysql_virtual_mailbox_limit_maps_cf}"
     postconf -e virtual_alias_maps="mysql:${mysql_virtual_alias_maps_cf}"
     postconf -e local_recipient_maps='$alias_maps $virtual_alias_maps $virtual_mailbox_maps'
@@ -414,15 +414,6 @@ hosts       = ${MYSQL_SERVER}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
 query       = SELECT maildir FROM mailbox WHERE username='%s' AND active='1' AND enabledeliver='1'
-EOF
-
-    cat > ${mysql_policyd_spamtrap_cf} <<EOF
-user        = ${POLICYD_DB_USER}
-password    = ${POLICYD_DB_PASSWD}
-hosts       = ${MYSQL_SERVER}
-port        = ${MYSQL_PORT}
-dbname      = ${POLICYD_DB_NAME}
-query       = SELECT _rcpt FROM spamtrap WHERE _rcpt='%s' AND _active='1'
 EOF
 
     cat > ${mysql_virtual_mailbox_limit_maps_cf} <<EOF
@@ -498,8 +489,7 @@ EOF
         ${mysql_sender_bcc_maps_domain_cf} \
         ${mysql_sender_bcc_maps_user_cf} \
         ${mysql_recipient_bcc_maps_domain_cf} \
-        ${mysql_recipient_bcc_maps_user_cf} \
-        ${mysql_policyd_spamtrap_cf}
+        ${mysql_recipient_bcc_maps_user_cf}
 
     chmod 0644 ${mysql_virtual_domains_cf} \
         ${mysql_transport_maps_cf} \
@@ -510,8 +500,7 @@ EOF
         ${mysql_sender_bcc_maps_domain_cf} \
         ${mysql_sender_bcc_maps_user_cf} \
         ${mysql_recipient_bcc_maps_domain_cf} \
-        ${mysql_recipient_bcc_maps_user_cf} \
-        ${mysql_policyd_spamtrap_cf}
+        ${mysql_recipient_bcc_maps_user_cf}
 
     cat >> ${TIP_FILE} <<EOF
 Postfix (MySQL):
@@ -526,7 +515,6 @@ Postfix (MySQL):
         - ${mysql_sender_bcc_maps_user_cf}
         - ${mysql_recipient_bcc_maps_domain_cf}
         - ${mysql_recipient_bcc_maps_user_cf}
-        - ${mysql_policyd_spamtrap_cf}
 
 EOF
 
