@@ -1,4 +1,6 @@
 iRedMail-0.2-rc2:
+    * Make policyd reject 5xx code while user quota exceeded. Thanks
+      chenwei1973@gmail.
     * Remove 'reject_unverified_recipient, reject_unlisted_recipient,'
       in smtpd_recipient_restrictions.
     * Remove INDEX on vmail.mailbox.
