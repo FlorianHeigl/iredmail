@@ -22,10 +22,8 @@ MAILDIR_STRING='Maildir/'
 # You domain name.
 DOMAIN='example.com'
 DEFAULT_PASSWD='888888'
+USE_DEFAULT_PASSWD='NO'
 DEFAULT_QUOTA='10'   # 10 -> 10M
-
-# Cyrpt the password.
-CRYPT_PASSWD="$(openssl passwd -1 ${DEFAULT_PASSWD})"
 
 # SQL file.
 SQL="./output.sql"
@@ -35,6 +33,13 @@ generate_sql()
 {
     while read username
     do
+        # Cyrpt the password.
+        if [ X"${USE_DEFAULT_PASSWD}" == X"YES" ]; then
+            CRYPT_PASSWD="$(openssl passwd -1 ${DEFAULT_PASSWD})"
+        else
+            CRYPT_PASSWD="$(openssl passwd -1 ${username})"
+        fi
+
         # For maildir format.
         if [ X"${MAILDIR_IN_MAILBOX}" == X"YES" ]; then
             [ X"${HOME_MAILBOX}" == X"Maildir" ] && maildir="${DOMAIN}/${username}/${MAILDIR_STRING}/"
