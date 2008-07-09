@@ -1,4 +1,5 @@
 iRedMail-0.2-rc2:
+    * Set 'BLACKLIST_TEMP_REJECT=0'. Disabled by default. Thanks muniao.
     * Add policyd blacklist_helo list. Thanks muniao. :)
     * Improve tool/create_mail_user_mysql.sh, use username as password
       by default.
