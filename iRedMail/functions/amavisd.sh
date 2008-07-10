@@ -111,8 +111,8 @@ amavisd_config()
     cat >> ${AMAVISD_CONF} <<EOF
 
 # Set listen IP/PORT.
-\$notify_method  = 'smtp:[127.0.0.1]:10025';
-\$forward_method = 'smtp:[127.0.0.1]:10025';
+\$notify_method  = 'smtp:[${SMTP_SERVER}]:10025';
+\$forward_method = 'smtp:[${SMTP_SERVER}]:10025';
 
 # Set default action.
 \$final_virus_destiny      = D_DISCARD;
@@ -208,7 +208,7 @@ smtp-amavis unix -  -   -   -   2  smtp
     -o disable_dns_lookups=yes
     -o max_use=20
 
-127.0.0.1:10025 inet n  -   -   -   -  smtpd
+${SMTP_SERVER}:10025 inet n  -   -   -   -  smtpd
     -o content_filter=
     -o local_recipient_maps=
     -o relay_recipient_maps=
@@ -229,7 +229,7 @@ smtp-amavis unix -  -   -   -   2  smtp
     -o receive_override_options=no_header_body_checks,no_unknown_recipient_checks
 EOF
 
-    postconf -e content_filter='smtp-amavis:[127.0.0.1]:10024'
+    postconf -e content_filter="smtp-amavis:[${SMTP_SERVER}]:10024"
 
     # ---- Make amavisd log to standalone file: ${AMAVISD_LOGROTATE_FILE} ----
     if [ X"${AMAVISD_SEPERATE_LOG}" == X"YES" ]; then

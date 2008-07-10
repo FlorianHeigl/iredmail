@@ -13,6 +13,9 @@ PROG_VERSION='0.2-rc2'
 # Maildir format: mbox, Maildir.
 HOME_MAILBOX='Maildir'
 
+# For distribute deployment.
+SMTP_SERVER='127.0.0.1'
+
 # vmail user.
 export VMAIL_USER_NAME='vmail'
 export VMAIL_GROUP_NAME='vmail'
@@ -38,7 +41,7 @@ export TLS_ADMIN="root@$(hostname)"
 # You do *NOT* need to modify them.
 # ----------------------------------
 export HOSTNAME="$(hostname)"
-export DATE=$(/bin/date +%Y.%m.%d_%H.%M.%S)
+export DATE="$(/bin/date +%Y.%m.%d_%H.%M.%S)"
 
 # Tools.
 export CONFIG_VIA_DIALOG="${TOOLS_DIR}/config_via_dialog.sh"
@@ -49,7 +52,7 @@ export STATUS_FILE="${ROOTDIR}/.${PROG_NAME}.installation.status"
 # iRedMail specical.
 export OUTPUT_FLAG="<<< ${PROG_NAME} >>>"
 export QUESTION_FLAG="<<< Question >>>"
-export BACKUP_FLAG="<<< BACKUP >>>"
+export BACKUP_FLAG="<<< Backup >>>"
 export LOCAL_REPO_NAME="${PROG_NAME}"
 export LOG_ROTATE_DIR='/etc/logrotate.d/'
 
@@ -63,7 +66,7 @@ export CONF_MSG="#
 #
 "
 
-# For perl.
+# For perl and run-time locale setting.
 export LC_ALL=C
 
 # Arch.

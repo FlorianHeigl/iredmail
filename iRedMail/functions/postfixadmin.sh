@@ -60,7 +60,7 @@ EOF
     export MYSQL_ADMIN_PW
     perl -pi -e 's#(.*database_password.*=)(.*)#${1}"$ENV{'MYSQL_ADMIN_PW'}";#' config.inc.php
     perl -pi -e 's#(.*database_name.*=)(.*)#${1}"$ENV{'VMAIL_DB'}";#' config.inc.php
-    perl -pi -e 's#(.*smtp_server.*)localhost(.*)#${1}127.0.0.1${2}#' config.inc.php
+    perl -pi -e 's#(.*smtp_server.*)localhost(.*)#${1}$ENV{SMTP_SERVER}${2}#' config.inc.php
 
     [ ! -z ${MAIL_ALIAS_ROOT} ] && perl -pi -e 's#(.*admin_email.*=)(.*)#${1}"$ENV{'MAIL_ALIAS_ROOT'}";#' config.inc.php
 

@@ -52,5 +52,5 @@ export SM_CONFIG="${SM_HTTPD_ROOT}/config/config.php"
 export SM_PLUGIN_DIR="${SM_HTTPD_ROOT}/plugins/"
 
 export PLUGIN_CHANGE_LDAPPASS_CONFIG="${SM_PLUGIN_DIR}/change_ldappass/config.php"
-export SM_DATA='/tmp/sm_data/'
-export SM_ATTACH='/tmp/sm_attach/'
+export SM_DATA_DIR="${SM_HTTPD_ROOT}/data/"
+export SM_ATTACHMENT_DIR="${SM_HTTPD_ROOT}/attachments/"

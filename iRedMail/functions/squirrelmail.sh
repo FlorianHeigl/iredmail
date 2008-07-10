@@ -49,11 +49,11 @@ Alias /mail "${HTTPD_SERVERROOT}/squirrelmail-${SM_VERSION}/"
 Alias /webmail "${HTTPD_SERVERROOT}/squirrelmail-${SM_VERSION}/"
 EOF
 
-    ECHO_INFO "Create directories to storage squirrelmail data and attachments: ${SM_DATA}, ${SM_ATTACH}."
+    ECHO_INFO "Create directories to storage squirrelmail data and attachments: ${SM_DATA_DIR}, ${SM_ATTACHMENT_DIR}."
 
-    mkdir -p ${SM_DATA} ${SM_ATTACH}
-    chown apache:apache ${SM_DATA} ${SM_ATTACH}
-    chmod 730 ${SM_ATTACH}
+    mkdir -p ${SM_DATA_DIR} ${SM_ATTACHMENT_DIR}
+    chown apache:apache ${SM_DATA_DIR} ${SM_ATTACHMENT_DIR}
+    chmod 730 ${SM_ATTACHMENT_DIR}
 
     cat >> ${TIP_FILE} <<EOF
 WebMail(SquirrelMail):
@@ -87,9 +87,9 @@ B
 R
 4
 1
-${SM_DATA}
+${SM_DATA_DIR}
 2
-${SM_ATTACH}
+${SM_ATTACHMENT_DIR}
 R
 6
 1
