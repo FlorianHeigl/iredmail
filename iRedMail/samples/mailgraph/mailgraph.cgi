@@ -220,7 +220,7 @@ HEADER
 <hr/>
 <table><tr><td>
 <a href="http://mailgraph.schweikert.ch/">Mailgraph</a> $VERSION
-by <a href="http://david.schweikert.ch/">David Schweikert</a></td>
+by <a href="http://david.schweikert.ch/">David Schweikert</a>.</td>
 <td align="right">
 Shipped within <a href="http://iRedMail.googlecode.com/">iRedMail</a> project.</a>
 </td></tr></table>

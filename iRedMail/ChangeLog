@@ -15,8 +15,7 @@ iRedMail-0.2-rc2:
     * Add 'smtpd_helo_required=yes' in Postfix.
     * Add 'BLACKLIST_REJECTION', 'GREYLIST_REJECTION', 'SPAMTRAP_REJECTION'
       in policyd, disabled by default.
-    * Add 'reject_non_fqdn_sender_domain', 'reject_unknown_sender_domain'
-      in smtpd_recipient_restrictions.
+    * Add 'reject_unknown_sender_domain' in smtpd_recipient_restrictions.
 
 iRedMail-0.2-rc1:
     * Add more amavisd options.
