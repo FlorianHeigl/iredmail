@@ -1,4 +1,6 @@
 iRedMail-0.2-rc2:
+    * Create HOME directory for policyd user. otherwise, crontabs will
+      failed. Thanks chenwei. :)
     * Add 'SMTP_SERVER' for distribute deployment.
     * Add iRedMail VERSION info in 'conf/global'.
     * Set 'BLACKLIST_TEMP_REJECT=0'. Disabled by default. Thanks muniao.

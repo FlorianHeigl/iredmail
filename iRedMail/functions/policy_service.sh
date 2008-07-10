@@ -58,7 +58,7 @@ policyd_user()
 {
     ECHO_INFO "Add user and group for policyd: ${POLICYD_USER_NAME}:${POLICYD_GROUP_NAME}."
     groupadd ${POLICYD_GROUP_NAME}
-    useradd -M -d /sbin/nologin -s /sbin/nologin -g ${POLICYD_GROUP_NAME} ${POLICYD_USER_NAME}
+    useradd -d /sbin/nologin -s /sbin/nologin -g ${POLICYD_GROUP_NAME} ${POLICYD_USER_NAME}
 
     echo 'export status_policyd_user="DONE"' >> ${STATUS_FILE}
 }
