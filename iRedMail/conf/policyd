@@ -7,6 +7,7 @@ export POLICYD_DB_PASSWD="$(echo $RANDOM\$$RANDOM\@$RANDOM\!$RANDOM\&$RANDOM\*$R
 
 export POLICYD_USER_NAME='policyd'
 export POLICYD_GROUP_NAME='policyd'
+export POLICYD_USER_HOME='/home/policyd'
 
 export POLICYD_CONF='/etc/policyd.conf'
 # Syslog setting.

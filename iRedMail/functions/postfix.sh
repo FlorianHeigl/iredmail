@@ -566,6 +566,7 @@ postfix_config_sasl()
     # reject_unknown_sender_domain
     # reject_unverified_recipient
     # reject_unlisted_recipient
+    #
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
         #
         # Non-SPF.
