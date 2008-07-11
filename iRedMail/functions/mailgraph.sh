@@ -3,9 +3,8 @@
 # -------------------------------------------------
 mailgraph_setup()
 {
-    mkdir -p ${HTTPD_SERVERROOT}/cgi-bin/mailgraph/
-    cp -f ${SAMPLE_DIR}/mailgraph/mailgraph.cgi ${HTTPD_SERVERROOT}/cgi-bin/mailgraph/
-    chmod 0755 ${HTTPD_SERVERROOT}/cgi-bin/mailgraph/mailgraph.cgi
+    cp -f ${SAMPLE_DIR}/mailgraph/mailgraph.cgi ${HTTPD_SERVERROOT}/cgi-bin/
+    chmod 0755 ${HTTPD_SERVERROOT}/cgi-bin/mailgraph.cgi
 
     cp -f ${SAMPLE_DIR}/mailgraph/mailgraph.css ${HTTPD_DOCUMENTROOT}/mailgraph.css
 
@@ -23,7 +22,7 @@ mailgraph_setup()
     cat >> ${TIP_FILE} <<EOF
 mailgraph:
     * URL:
-        - http://$(hostname)/cgi-bin/mailgraph/mailgraph.cgi"
+        - http://$(hostname)/cgi-bin/mailgraph.cgi"
     * See also:
         - /etc/init.d/mailgraph
         - /usr/local/bin/mailgraph.pl
