@@ -1,10 +1,10 @@
-#require ["fileinto", "reject"];
-require ["fileinto"];
+require ["fileinto", "reject"];
 
 if header :matches ["X-Spam-Flag"] ["YES"] {
     # If you do not ensure it is really a spam, drop it to 'Junk',
     # and stop here so that we do not reply to spammers.
-    fileinto "Junk";
+    #fileinto "Junk";
+    keep;
     stop;
 
     # If you ensure they are spam, discard it.

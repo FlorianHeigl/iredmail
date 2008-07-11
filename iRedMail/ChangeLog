@@ -1,4 +1,5 @@
 iRedMail-0.2-rc2:
+    * Drop SPAM mail to INBOX, not Junk.
     * Set policyd chroot directory to its home directory.
     * Create HOME directory for policyd user. otherwise, crontabs will
       failed. Thanks chenwei. :)
