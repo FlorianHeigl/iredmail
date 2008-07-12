@@ -52,7 +52,7 @@ replace_iptables_rule()
             cp ${SAMPLE_DIR}/iptables /etc/sysconfig/iptables
 
             if [ X"${HTTPD_PORT}" != X"80" ]; then
-                perl -pi -e 's#(.*)80(,.*)#${1}$ENV{HTTPD_PORT}${2}#' ${HTTPD_CONF}
+                perl -pi -e 's#(.*)80(,.*)#${1}$ENV{HTTPD_PORT}${2}#' /etc/sysconfig/iptables
             else
                 :
             fi
