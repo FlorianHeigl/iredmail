@@ -1,4 +1,6 @@
 iRedMail-0.2-rc2:
+    * Implement vacation via dovecot-sieve vacation feature, vacation
+      rule sample was added. We need a roundcubemail plugin now.
     * Allow specify non-standard httpd port in 'conf/httpd' now.
     * Mailgraph localtion changed to '/var/www/cgi-bin/mailgraph.cgi'.
     * Add 'redirect' command in sieve rule file.

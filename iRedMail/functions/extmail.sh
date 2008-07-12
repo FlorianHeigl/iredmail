@@ -128,8 +128,7 @@ ExtMail:
     * Reference:
         - ${HTTPD_CONF_DIR}/extmail.conf
     * URL:
-        - $(hostname)/mail
-        - $(hostname)/webmail
+        - $(hostname)/extmail
 EOF
 
     echo 'export status_extmail_config="DONE"' >> ${STATUS_FILE}
