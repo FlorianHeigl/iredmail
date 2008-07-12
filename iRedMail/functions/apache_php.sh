@@ -9,6 +9,13 @@ apache_php_config()
     ECHO_INFO "Disable 'AddDefaultCharset' in Apache."
     perl -pi -e 's/^(AddDefaultCharset UTF-8)/#${1}/' ${HTTPD_CONF}
 
+    if [ X"${HTTPD_PORT}" != X"80" ]; then
+        ECHO_INFO "Change Apache listen port to: ${HTTPD_PORT}."
+        perl -pi -e 's#^(Listen )(80)$#${1}$ENV{HTTPD_PORT}#' ${HTTPD_CONF}
+    else
+        :
+    fi
+
     backup_file ${PHP_INI}
 
     ECHO_INFO "Increase 'memory_limit' to 128M in ${PHP_INI}."

@@ -1,4 +1,5 @@
 iRedMail-0.2-rc2:
+    * Allow specify non-standard httpd port in 'conf/httpd' now.
     * Mailgraph localtion changed to '/var/www/cgi-bin/mailgraph.cgi'.
     * Add 'redirect' command in sieve rule file.
     * Drop SPAM mail to INBOX, not Junk.
