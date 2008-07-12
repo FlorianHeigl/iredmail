@@ -4,5 +4,5 @@ export AMAVISD_LOGROTATE_FILE="${LOG_ROTATE_DIR}/amavisd"
 export AMAVISD_DKIM_DIR='/var/lib/dkim'
 export AMAVISD_DKIM_SELECTOR='dkim'
 
-# Syslog setting.
-export AMAVISD_SEPERATE_LOG='NO'    # 'YES' or 'NO'
+# Syslog setting, 'YES' or 'NO'
+export AMAVISD_SEPERATE_LOG='NO'
