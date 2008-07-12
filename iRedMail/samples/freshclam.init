@@ -2,7 +2,7 @@
 
 # Author: Zhang Huangbin (michaelbibby <at> gmail.com)
 
-# chkconfig: 35 90 90
+# chkconfig: 345 90 90
 # description: run freshclam as daemon.
 
 . /etc/rc.d/init.d/functions
