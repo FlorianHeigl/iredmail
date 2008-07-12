@@ -34,8 +34,15 @@ Best Regards.
     vacation
         # Reply at most once a day to a same sender
         #:days 1
-        #:mime
-        #:subject "Auto-Reply: I'm out of office."
+
+        # Currently, Dovecot won't encode subject, so you can't use
+        # Non-English characters in subject field.
+        # The easiest way is let your webmail do that.
+        :subject "Auto-Reply: I'm out of office."
+
+        # Use 'mime' parameter to compose utf-8 message, you can use
+        # Non-English characters in mail body.
+        :mime
 "MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
