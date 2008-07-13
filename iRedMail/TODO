@@ -1,7 +1,8 @@
-* Add 'SMTP_SERVER'.
 * Roundcubemail plugin:
-    * per-user whitelist/blacklist. Roundcubemail will provide an 
-      official plugin to support sieve filter language.
+    * per-user whitelist/blacklist via policyd (use 'policyd.rcpt'
+      table').
+    * Migrate current plugin (change password, forward setting) to
+      roundcubemail-0.2.
 
 * Protecting internal email distribution lists
   Restricting what users can send mail to off-site destinations
