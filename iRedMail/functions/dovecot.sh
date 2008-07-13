@@ -252,7 +252,7 @@ password_query = SELECT password FROM mailbox WHERE username='%u' AND active='1'
 EOF
         # Maildir format.
         [ X"${HOME_MAILBOX}" == X"Maildir" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
-user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, maildir, CONCAT('*:bytes=', quota*1048576) AS quota_rule FROM mailbox WHERE username='%u' AND active='1' AND enable%Ls='1'
+user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, "${VMAIL_USER_HOME_DIR}/%Ld/%Ln" AS sieve_dir, maildir, CONCAT('*:bytes=', quota*1048576) AS quota_rule FROM mailbox WHERE username='%u' AND active='1' AND enable%Ls='1'
 EOF
         [ X"${HOME_MAILBOX}" == X"mbox" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
 user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, "${VMAIL_USER_HOME_DIR}/%Ld/%Ln/" AS sieve_dir, maildir, CONCAT('*:bytes=', quota*1048576) AS quota_rule FROM mailbox WHERE username='%u' AND active='1' AND enable%Ls='1'
