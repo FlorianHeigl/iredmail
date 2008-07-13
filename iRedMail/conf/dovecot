@@ -1,3 +1,11 @@
+#!/bin/sh
+
+# Author: Zhang Huangbin (michaelbibby <at> gmail.com)
+
+# ----------------------------------------
+# For Dovecot and dovecot-sieve. 
+# ----------------------------------------
+
 export DOVECOT_CONF='/etc/dovecot.conf'
 export DOVECOT_LDAP_CONF='/etc/dovecot-ldap.conf'
 export DOVECOT_MYSQL_CONF='/etc/dovecot-mysql.conf'

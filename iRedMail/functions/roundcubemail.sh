@@ -52,7 +52,7 @@ EOF
         :
     fi
 
-    perl -pi -e 's#(.*default_host.*= )(.*)#${1}"$ENV{'SMTP_SERVER'}";#' main.inc.php
+    perl -pi -e 's#(.*default_host.*= )(.*)#${1}"$ENV{'IMAP_SERVER'}";#' main.inc.php
     perl -pi -e 's#(.*smtp_server.*= )(.*)#${1}"$ENV{'SMTP_SERVER'}";#' main.inc.php
     perl -pi -e 's#(.*smtp_user.*= )(.*)#${1}"%u";#' main.inc.php
     perl -pi -e 's#(.*smtp_pass.*= )(.*)#${1}"%p";#' main.inc.php

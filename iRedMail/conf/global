@@ -14,6 +14,7 @@ export PROG_VERSION='0.2-rc2'
 export HOME_MAILBOX='Maildir'
 
 # For distribute deployment.
+export IMAP_SERVER='127.0.0.1'
 export SMTP_SERVER='127.0.0.1'
 
 # vmail user.
