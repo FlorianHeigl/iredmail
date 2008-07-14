@@ -29,3 +29,4 @@ caeace1325c7d77cfc55b22afdcc1b03  rpms/clamd-0.93.1-1.el5.rf.i386.rpm
 3ee9ea21a7fad9599d417e931ab2f681  rpms/dovecot-sieve-1.1.5-8.el5.i386.rpm
 f4d04c5cc21515625534c9f557eb11b4  rpms/amavisd-new-2.6.1-1.ired.i386.rpm
 e697bee9a9f9bc7a503c581d9fa0e782  rpms/dovecot-1.1.1-1.ired.i386.rpm
+0e6e9555d4ed671075e8b1f238d02b13  rpms/php-pecl-fileinfo-1.0.4-1.el5.rf.i386.rpm

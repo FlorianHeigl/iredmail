@@ -31,3 +31,4 @@ fb2574ec5b714b136e4ee4bd85344b1c  rpms/policyd-1.82-4.rhms.x86_64.rpm
 2d49d9dc5c6cd35fcbf014d13aba5436  rpms/amavisd-new-2.6.1-1.ired.x86_64.rpm
 030de07b6cad195cac980be235d5cfea  rpms/dovecot-1.1.1-1.ired.x86_64.rpm
 53cc6dc4e7fd98ad728c640a087def4b  rpms/dovecot-sieve-1.1.5-8.el5.x86_64.rpm
+aaec6805b06a16f241333037553b0c42  rpms/php-pecl-fileinfo-1.0.4-1.el5.rf.x86_64.rpm
