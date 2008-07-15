@@ -8,7 +8,7 @@ install_all()
     ALL_PKGS="${ALL_PKGS} httpd.${ARCH} mod_ssl.${ARCH}"
 
     # PHP.
-    ALL_PKGS="${ALL_PKGS} php.${ARCH} php-imap.${ARCH} php-gd.${ARCH} php-mbstring.${ARCH} libmcrypt.${ARCH} php-mcrypt.${ARCH} php-pear.noarch php-xml.${ARCH}"
+    ALL_PKGS="${ALL_PKGS} php.${ARCH} php-imap.${ARCH} php-gd.${ARCH} php-mbstring.${ARCH} libmcrypt.${ARCH} php-mcrypt.${ARCH} php-pear.noarch php-xml.${ARCH} php-pecl-fileinfo.${ARCH}"
 
     # Postfix.
     ALL_PKGS="${ALL_PKGS} postfix.${ARCH}"
