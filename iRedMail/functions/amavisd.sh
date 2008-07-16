@@ -99,6 +99,9 @@ amavisd_config()
     perl -pi -e 's#(mailfrom_notify_recip.*= ")(virusalert)(.*)#${1}root${3}#' ${AMAVISD_CONF}
     perl -pi -e 's#(mailfrom_notify_spamadmin.*= ")(spam.police)(.*)#${1}root${3}#' ${AMAVISD_CONF}
 
+    # Disable banned mail.
+    perl -pi -e 's#(.*defang_banned = )1(;.*)#${1}0${2}#' ${AMAVISD_CONF}
+
     # Remove the content from '@av_scanners' to the end of file.
     new_conf="$(sed '/\@av_scanners/,$d' ${AMAVISD_CONF})"
 
