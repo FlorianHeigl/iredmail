@@ -86,6 +86,10 @@ EOF
     cd ${RCM_HTTPD_ROOT} && \
     patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_national_imap_folder_name.patch >/dev/null
 
+    ECHO_INFO "Patch: Attachment display and save with Chiense characters."
+    cd ${RCM_HTTPD_ROOT} && \
+    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_PEAR_Mail_Mail_Mime_addAttachment_basename.patch >/dev/null
+
     ECHO_INFO "Patch: Change Password and Setting Mail Forwarding."
     cd ${RCM_HTTPD_ROOT} && \
     patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_chpwd_forward.patch >/dev/null

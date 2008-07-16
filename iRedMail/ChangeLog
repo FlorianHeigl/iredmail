@@ -1,5 +1,7 @@
 iRedMail-0.2-rc2:
     * Initialize import karadog@gmail's roundcubemail patch for
+      attachment name with Chinese characters. Thanks Kara. :)
+    * Initialize import karadog@gmail's roundcubemail patch for
       national imap folder name. Good Job, Kara. :)
     * Add optional package for Roundcubemail: php-pecl-fileinfo.
     * Changed 'SENDER_QUOTA_REJECTION' msg, reduce SENDERMSGLIMIT to
