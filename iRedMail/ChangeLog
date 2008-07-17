@@ -1,4 +1,5 @@
 iRedMail-0.2-rc2:
+    * Add file: AUTHORS. include all members.
     * Initialize import karadog@gmail's roundcubemail patch for
       attachment name with Chinese characters. Thanks Kara. :)
     * Initialize import karadog@gmail's roundcubemail patch for
