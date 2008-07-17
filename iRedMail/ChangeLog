@@ -1,3 +1,7 @@
+iRedMail-0.2-rc3:
+    * Update ClamAV to 0.93.3.
+    * Update perl-Convert-UUlib to 1.11. Bug fix version.
+
 iRedMail-0.2-rc2:
     * Add file: AUTHORS. include all members.
     * Initialize import karadog@gmail's roundcubemail patch for

@@ -8,7 +8,6 @@
 96304815847ffc139dd8b70dc9f0956d  rpms/mcrypt-2.6.4-3.el5.i386.rpm
 993dae91be09086b9fc441a48d0478a9  rpms/unrar-3.7.4-1.el5.rf.i386.rpm
 99af49e7604c7a312222a4e4decab0c4  rpms/lzo-1.08-4.2.el5.rf.i386.rpm
-9e141b797dd7f12e8142a9a5612200fe  rpms/perl-Convert-UUlib-1.051-1.2.el5.rf.i386.rpm
 9fca64af6540147cca4ff928f5a33fec  rpms/perl-BerkeleyDB-0.33-1.el5.rf.i386.rpm
 ad0fc442150938da416abb7b3df27dcc  rpms/freeze-2.5.0-1.2.el5.rf.i386.rpm
 afa0d6fa53736722635073a27f5bbdb8  rpms/php-mcrypt-5.1.6-4.el5.i386.rpm
@@ -23,10 +22,11 @@ f23703534d9982812245a75454d062ea  rpms/cabextract-1.2-1.el5.rf.i386.rpm
 fa2d06450fbe3f9b0dedba655133f2fb  rpms/unarj-2.63-0.a.2.el5.rf.i386.rpm
 b00545064abb6714ad78a6fd3d51b79e  rpms/perl-NetAddr-IP-4.007-1.el5.rf.i386.rpm
 b202afff9e0d5af2b092d392a75e7a59  rpms/perl-version-0.74-1.el5.rf.i386.rpm
-3439500f99b345b097d6a89d9dd4ae10  rpms/clamav-0.93.1-1.el5.rf.i386.rpm
-44294ae4438799457efb9e10e8937ff0  rpms/clamav-db-0.93.1-1.el5.rf.i386.rpm
-caeace1325c7d77cfc55b22afdcc1b03  rpms/clamd-0.93.1-1.el5.rf.i386.rpm
 3ee9ea21a7fad9599d417e931ab2f681  rpms/dovecot-sieve-1.1.5-8.el5.i386.rpm
 f4d04c5cc21515625534c9f557eb11b4  rpms/amavisd-new-2.6.1-1.ired.i386.rpm
 e697bee9a9f9bc7a503c581d9fa0e782  rpms/dovecot-1.1.1-1.ired.i386.rpm
 0e6e9555d4ed671075e8b1f238d02b13  rpms/php-pecl-fileinfo-1.0.4-1.el5.rf.i386.rpm
+e89ad55c67811e700c4e3cba55b097e5  rpms/perl-Convert-UUlib-1.11-1.ired.i386.rpm
+869d6d53b0a0cc467ed88a165ab91be1  rpms/clamav-0.93.3-1.el5.rf.i386.rpm
+01ef550236158761c208d3a63c8e1f4b  rpms/clamav-db-0.93.3-1.el5.rf.i386.rpm
+6defce0dea58190403d02c0d28ba218e  rpms/clamd-0.93.3-1.el5.rf.i386.rpm

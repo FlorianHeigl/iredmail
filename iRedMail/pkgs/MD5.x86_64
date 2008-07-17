@@ -2,7 +2,6 @@
 0df2fe02ee65f5c6b245126515ee2a7f  rpms/zoo-2.10-2.2.el5.rf.x86_64.rpm
 181ebb5946e077b8a757591b932f25a0  rpms/mcrypt-2.6.4-3.el5.x86_64.rpm
 1bec48d168cb06bafe72c6c8f6060292  rpms/ripole-0.2.0-1.2.el5.rf.x86_64.rpm
-1c42702b804e1d8d1e6d214779e4d9f8  rpms/perl-Convert-UUlib-1.051-1.2.el5.rf.x86_64.rpm
 1c5fd7f0b133e720afab31ee539b0de6  rpms/lzop-1.01-2.el5.rf.x86_64.rpm
 207d3fdf44be5a3fa561e44a865b9e15  rpms/unrar-3.7.4-1.el5.rf.x86_64.rpm
 3089bd0a7ab8489ced0e25553aea1505  rpms/freeze-2.5.0-1.2.el5.rf.x86_64.rpm
@@ -13,14 +12,11 @@
 6476fabf3dd80e52a2c63656f5798371  rpms/postfix-2.3.14-1.rhms.x86_64.rpm
 6b39b795a07fe50fc7dbf5c408cbe535  rpms/perl-Digest-SHA-5.47-1.el5.rf.x86_64.rpm
 6e4adbb751b6b9367f9e785d7a6a2368  rpms/nomarch-1.4-1.el5.rf.x86_64.rpm
-57dfbaeaaba2ca6976059a4fb2495d8c  rpms/clamd-0.93.1-1.el5.rf.x86_64.rpm
 9a4ff39758333331da213792186d1220  rpms/php-mhash-5.1.6-4.el5.x86_64.rpm
-be6b6fa677ea8f2482764e8553665995  rpms/clamav-db-0.93.1-1.el5.rf.x86_64.rpm
 a3e550f92a31ae342f41ddd4aaa1565a  rpms/unarj-2.63-0.a.2.el5.rf.x86_64.rpm
 ad0af83c9322de6f297e480bd5739940  rpms/perl-BerkeleyDB-0.33-1.el5.rf.x86_64.rpm
 ba25deb11c0d6f2081af381b58ddae96  rpms/lha-1.14i-19.2.2.el5.rf.x86_64.rpm
 bcafee6dec064dcb08fe0d0999f59c0d  rpms/perl-Crypt-OpenSSL-RSA-0.25-1.el5.rf.x86_64.rpm
-a541cfe6ee12775b8c29d11e0c962241  rpms/clamav-0.93.1-1.el5.rf.x86_64.rpm
 ce59f309a9e7780e9a025935979b36ea  rpms/perl-Unix-Syslog-1.0-1.el5.rf.x86_64.rpm
 d2094601c7b5184c7bbd1b2b458c06d3  rpms/perl-rrdtool-1.2.23-1.el5.rf.x86_64.rpm
 efc9e8f5324a253334150b33823dd654  rpms/arc-5.21o-1.el5.rf.x86_64.rpm
@@ -32,3 +28,7 @@ fb2574ec5b714b136e4ee4bd85344b1c  rpms/policyd-1.82-4.rhms.x86_64.rpm
 030de07b6cad195cac980be235d5cfea  rpms/dovecot-1.1.1-1.ired.x86_64.rpm
 53cc6dc4e7fd98ad728c640a087def4b  rpms/dovecot-sieve-1.1.5-8.el5.x86_64.rpm
 aaec6805b06a16f241333037553b0c42  rpms/php-pecl-fileinfo-1.0.4-1.el5.rf.x86_64.rpm
+bf93d00637fb30e832409fbae6b2b481  rpms/perl-Convert-UUlib-1.11-1.ired.x86_64.rpm
+72321283d8ac1b9cb3eefddb98d01a20  rpms/clamav-0.93.3-1.el5.rf.x86_64.rpm
+de15cca52eceb745b3b99e53d668c8fe  rpms/clamav-db-0.93.3-1.el5.rf.x86_64.rpm
+f4c3a965d31724f19c8bc0b69ee1d33e  rpms/clamd-0.93.3-1.el5.rf.x86_64.rpm

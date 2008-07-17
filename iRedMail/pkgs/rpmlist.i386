@@ -9,7 +9,6 @@ mcrypt-2.6.4-3.el5.i386.rpm
 mhash-0.9.2-6.el5.i386.rpm
 nomarch-1.4-1.el5.rf.i386.rpm
 perl-BerkeleyDB-0.33-1.el5.rf.i386.rpm
-perl-Convert-UUlib-1.051-1.2.el5.rf.i386.rpm
 perl-Crypt-OpenSSL-RSA-0.25-1.el5.rf.i386.rpm
 perl-DBD-SQLite-1.14-1.el5.rf.i386.rpm
 perl-Digest-SHA-5.47-1.el5.rf.i386.rpm
@@ -26,10 +25,11 @@ rrdtool-1.2.23-1.el5.rf.i386.rpm
 unarj-2.63-0.a.2.el5.rf.i386.rpm
 unrar-3.7.4-1.el5.rf.i386.rpm
 zoo-2.10-2.2.el5.rf.i386.rpm
-clamav-0.93.1-1.el5.rf.i386.rpm
-clamav-db-0.93.1-1.el5.rf.i386.rpm
-clamd-0.93.1-1.el5.rf.i386.rpm
 dovecot-sieve-1.1.5-8.el5.i386.rpm
 amavisd-new-2.6.1-1.ired.i386.rpm
 dovecot-1.1.1-1.ired.i386.rpm
 php-pecl-fileinfo-1.0.4-1.el5.rf.i386.rpm
+perl-Convert-UUlib-1.11-1.ired.i386.rpm
+clamav-0.93.3-1.el5.rf.i386.rpm
+clamav-db-0.93.3-1.el5.rf.i386.rpm
+clamd-0.93.3-1.el5.rf.i386.rpm
