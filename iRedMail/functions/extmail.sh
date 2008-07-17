@@ -68,9 +68,6 @@ EOF
 
 extmail_config_mysql()
 {
-    ECHO_INFO "Install dependences for MySQL support in perl."
-    install_pkg libdbi-dbd-mysql perl-DBD-mysql
-
     ECHO_INFO "Configure ExtMail for MySQL support.."
     cd ${EXTSUITE_HTTPD_ROOT}/extmail/
 
