@@ -112,7 +112,6 @@ amavisd_config()
     #echo '$pid_file = "/var/run/clamav/amavisd.pid";' >> ${AMAVISD_CONF}
 
     cat >> ${AMAVISD_CONF} <<EOF
-
 # Set listen IP/PORT.
 \$notify_method  = 'smtp:[${SMTP_SERVER}]:10025';
 \$forward_method = 'smtp:[${SMTP_SERVER}]:10025';
