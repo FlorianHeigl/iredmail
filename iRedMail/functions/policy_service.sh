@@ -213,12 +213,12 @@ EOF
     # ---- SENDER THROTTLE ----
     # We need only this feature in this policyd instance.
     perl -pi -e 's#^(SENDERTHROTTLE=)(.*)#${1}1#' ${POLICYD_SENDER_THROTTLE_CONF} 
-    perl -pi -e 's#^(SENDER_THROTTLE_SASL=)(.*)#${1}1#' ${POLICYD_CONF} 
-    perl -pi -e 's#^(SENDER_THROTTLE_HOST=)(.*)#${1}0#' ${POLICYD_CONF} 
-    perl -pi -e 's#^(QUOTA_EXCEEDED_TEMP_REJECT=)(.*)#${1}0#' ${POLICYD_CONF}
-    perl -pi -e 's#^(SENDER_QUOTA_REJECTION=)(.*)#${1}"Limit has been reached."#' ${POLICYD_CONF}
-    perl -pi -e 's#^(SENDERMSGSIZE=)(.*)#${1}$ENV{'MESSAGE_SIZE_LIMIT'}#' ${POLICYD_CONF} 
-    perl -pi -e 's#^(SENDERMSGLIMIT=)(.*)#${1}60#' ${POLICYD_CONF} 
+    perl -pi -e 's#^(SENDER_THROTTLE_SASL=)(.*)#${1}1#' ${POLICYD_SENDER_THROTTLE_CONF} 
+    perl -pi -e 's#^(SENDER_THROTTLE_HOST=)(.*)#${1}0#' ${POLICYD_SENDER_THROTTLE_CONF} 
+    perl -pi -e 's#^(QUOTA_EXCEEDED_TEMP_REJECT=)(.*)#${1}0#' ${POLICYD_SENDER_THROTTLE_CONF}
+    perl -pi -e 's#^(SENDER_QUOTA_REJECTION=)(.*)#${1}"Limit has been reached."#' ${POLICYD_SENDER_THROTTLE_CONF}
+    perl -pi -e 's#^(SENDERMSGSIZE=)(.*)#${1}$ENV{'MESSAGE_SIZE_LIMIT'}#' ${POLICYD_SENDER_THROTTLE_CONF} 
+    perl -pi -e 's#^(SENDERMSGLIMIT=)(.*)#${1}60#' ${POLICYD_SENDER_THROTTLE_CONF} 
 
     # ---- RCPT ACL ----
     perl -pi -e 's#^(RCPT_ACL=)(.*)#${1}0#' ${POLICYD_SENDER_THROTTLE_CONF} 

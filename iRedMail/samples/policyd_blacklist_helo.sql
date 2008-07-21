@@ -10,8 +10,6 @@ This is the real HELO:
 USE policyd;
 
 INSERT INTO blacklist_helo (_helo) VALUES ("sina.com");
-INSERT INTO blacklist_helo (_helo) VALUES ("gmail.com");
-INSERT INTO blacklist_helo (_helo) VALUES ("google.com");
 INSERT INTO blacklist_helo (_helo) VALUES ("126.com");
 INSERT INTO blacklist_helo (_helo) VALUES ("163.com");
 INSERT INTO blacklist_helo (_helo) VALUES ("sohu.com");
