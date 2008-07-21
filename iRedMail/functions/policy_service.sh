@@ -68,6 +68,8 @@ policyd_config()
     ECHO_INFO "Initialize MySQL database for policyd."
     mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWD} <<EOF
 SOURCE $(rpm -ql policyd | grep 'DATABASE.mysql');
+SOURCE $(rpm -ql policyd | grep 'blacklist_helo.sql');
+SOURCE $(rpm -ql policyd | grep 'whitelist.sql');
 SOURCE ${SAMPLE_DIR}/policyd_blacklist_helo.sql;
 GRANT SELECT,INSERT,UPDATE,DELETE ON ${POLICYD_DB_NAME}.* TO ${POLICYD_DB_USER}@localhost IDENTIFIED BY "${POLICYD_DB_PASSWD}";
 FLUSH PRIVILEGES;
@@ -239,7 +241,15 @@ EOF
     fi
 
     ECHO_INFO "Setting cron job for policyd user: ${POLICYD_USER_NAME}."
-    crontab -u ${POLICYD_USER_NAME} $(rpm -ql policyd | grep 'policyd.cron$')
+    policyd_cron="$(rpm -ql policyd | grep 'policyd.cron$')"
+
+    # Generate crontab file for policyd recipient throttle instance.
+    cp ${policyd_cron} /tmp/policyd_rcpt_throttle.cron
+    perl -pi -e 's#policyd.conf#$ENV{POLICYD_RCPT_THROTTLE_CONF}#' /tmp/policyd_rcpt_throttle.cron
+
+    crontab -u ${POLICYD_USER_NAME} ${policyd_cron}
+    crontab -u ${POLICYD_USER_NAME} /tmp/policyd_rcpt_throttle.cron
+    rm -f /tmp/policyd_rcpt_throttle.cron
 
     # Tips.
     cat >> ${TIP_FILE} <<EOF
