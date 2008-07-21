@@ -76,6 +76,19 @@ EOF
     # Configure policyd.
     ECHO_INFO "Configure policyd: ${POLICYD_CONF}."
 
+    # We will use another policyd instance for recipient throttle
+    # feature, it's used in 'smtpd_end_of_data_restrictions'.
+    cp -f ${POLICYD_CONF} ${POLICYD_RCPT_THROTTLE_CONF}
+
+    # Patch init script.
+    patch -p0 < ${PATCH_DIR}/policyd/policyd_init.patch >/dev/null
+
+    # Setup postfix for recipient throttle.
+    postconf -e smtpd_end_of_data_restrictions="check_policy_service inet:${POLICYD_RCPT_THROTTLE_BINDHOST}:${POLICYD_RCPT_THROTTLE_BINDPORT}"
+
+    # -------------------------------------------------------------
+    # Policyd config for normal feature exclude recipient throttle.
+    # -------------------------------------------------------------
     # ---- DATABASE CONFIG ----
     export MYSQL_SERVER
     perl -pi -e 's#^(MYSQLHOST=)(.*)#${1}"$ENV{MYSQL_SERVER}"#' ${POLICYD_CONF}
@@ -87,8 +100,8 @@ EOF
     # ---- DAEMON CONFIG ----
     perl -pi -e 's#^(DEBUG=)(.*)#${1}0#' ${POLICYD_CONF}
     perl -pi -e 's#^(DAEMON=)(.*)#${1}1#' ${POLICYD_CONF}
-    perl -pi -e 's#^(BINDHOST=)(.*)#${1}"127.0.0.1"#' ${POLICYD_CONF}
-    perl -pi -e 's#^(BINDPORT=)(.*)#${1}"10031"#' ${POLICYD_CONF}
+    perl -pi -e 's#^(BINDHOST=)(.*)#${1}"$ENV{POLICYD_BINDHOST}"#' ${POLICYD_CONF}
+    perl -pi -e 's#^(BINDPORT=)(.*)#${1}"$ENV{POLICYD_BINDPORT}"#' ${POLICYD_CONF}
 
     # ---- CHROOT ----
     export policyd_user_id="$(id -u ${POLICYD_USER_NAME})"
@@ -140,12 +153,71 @@ EOF
     perl -pi -e 's#^(SENDERMSGLIMIT=)(.*)#${1}60#' ${POLICYD_CONF} 
 
     # ---- RECIPIENT THROTTLE ----
-    perl -pi -e 's#^(RECIPIENTTHROTTLE=)(.*)#${1}1#' ${POLICYD_CONF} 
+    # Disable recipient throttle here, it should be used in postfix 
+    # 'smtpd_end_of_data_restrictions'.
+    perl -pi -e 's#^(RECIPIENTTHROTTLE=)(.*)#${1}0#' ${POLICYD_CONF} 
 
     # ---- RCPT ACL ----
     perl -pi -e 's#^(RCPT_ACL=)(.*)#${1}1#' ${POLICYD_CONF} 
 
-    # ---- Syslog Setting ----
+    # -------------------------------------------------------------
+    # Policyd config for recipient throttle only.
+    # -------------------------------------------------------------
+    # ---- DATABASE CONFIG ----
+    perl -pi -e 's#^(MYSQLHOST=)(.*)#${1}"$ENV{MYSQL_SERVER}"#' ${POLICYD_RCPT_THROTTLE_CONF}
+    perl -pi -e 's#^(MYSQLDBASE=)(.*)#${1}"$ENV{POLICYD_RCPT_THROTTLE_DB_NAME}"#' ${POLICYD_RCPT_THROTTLE_CONF}
+    perl -pi -e 's#^(MYSQLUSER=)(.*)#${1}"$ENV{POLICYD_RCPT_THROTTLE_DB_USER}"#' ${POLICYD_RCPT_THROTTLE_CONF}
+    perl -pi -e 's#^(MYSQLPASS=)(.*)#${1}"$ENV{POLICYD_RCPT_THROTTLE_DB_PASSWD}"#' ${POLICYD_RCPT_THROTTLE_CONF}
+    perl -pi -e 's#^(FAILSAFE=)(.*)#${1}1#' ${POLICYD_RCPT_THROTTLE_CONF}
+
+    # ---- DAEMON CONFIG ----
+    perl -pi -e 's#^(DEBUG=)(.*)#${1}0#' ${POLICYD_RCPT_THROTTLE_CONF}
+    perl -pi -e 's#^(DAEMON=)(.*)#${1}1#' ${POLICYD_RCPT_THROTTLE_CONF}
+    perl -pi -e 's#^(BINDHOST=)(.*)#${1}"$ENV{POLICYD_RCPT_THROTTLE_BINDHOST}"#' ${POLICYD_RCPT_THROTTLE_CONF}
+    perl -pi -e 's#^(BINDPORT=)(.*)#${1}"$ENV{POLICYD_RCPT_THROTTLE_BINDPORT}"#' ${POLICYD_RCPT_THROTTLE_CONF}
+
+    # ---- CHROOT ----
+    export policyd_rcpt_throttle_user_id="$(id -u ${POLICYD_RCPT_THROTTLE_USER_NAME})"
+    export policyd_rcpt_throttle_group_id="$(id -g ${POLICYD_RCPT_THROTTLE_USER_NAME})"
+    perl -pi -e 's#^(CHROOT=)(.*)#${1}$ENV{POLICYD_RCPT_THROTTLE_USER_HOME}#' ${POLICYD_RCPT_THROTTLE_CONF}
+    perl -pi -e 's#^(UID=)(.*)#${1}$ENV{policyd_rcpt_throttle_user_id}#' ${POLICYD_RCPT_THROTTLE_CONF}
+    perl -pi -e 's#^(GID=)(.*)#${1}$ENV{policyd_rcpt_throttle_group_id}#' ${POLICYD_RCPT_THROTTLE_CONF}
+
+    # ---- RECIPIENT THROTTLE ----
+    # We need only this feature in this policyd instance.
+    perl -pi -e 's#^(RECIPIENTTHROTTLE=)(.*)#${1}1#' ${POLICYD_RCPT_THROTTLE_CONF} 
+
+    # ------------------ DISABLE ALL OTHER FEATURES -----------------
+    # ---- WHITELISTING ----
+    perl -pi -e 's#^(WHITELISTING=)(.*)#${1}0#' ${POLICYD_RCPT_THROTTLE_CONF}
+
+    # ---- BLACKLISTING ----
+    perl -pi -e 's#^(BLACKLISTING=)(.*)#${1}0#' ${POLICYD_RCPT_THROTTLE_CONF}
+
+    # ---- BLACKLISTING HELO ----
+    perl -pi -e 's#^(BLACKLIST_HELO=)(.*)#${1}0#' ${POLICYD_RCPT_THROTTLE_CONF}
+
+    # ---- BLACKLIST SENDER ----
+    perl -pi -e 's#^(BLACKLISTSENDER=)(.*)#${1}0#' ${POLICYD_RCPT_THROTTLE_CONF}
+
+    # ---- HELO_CHECK ----
+    perl -pi -e 's#^(HELO_CHECK=)(.*)#${1}0#' ${POLICYD_RCPT_THROTTLE_CONF}
+
+    # ---- SPAMTRAP ----
+    perl -pi -e 's#^(SPAMTRAPPING=)(.*)#${1}0#' ${POLICYD_RCPT_THROTTLE_CONF} 
+
+    # ---- GREYLISTING ----
+    perl -pi -e 's#^(GREYLISTING=)(.*)#${1}0#' ${POLICYD_RCPT_THROTTLE_CONF} 
+
+    # ---- SENDER THROTTLE ----
+    perl -pi -e 's#^(SENDERTHROTTLE=)(.*)#${1}0#' ${POLICYD_RCPT_THROTTLE_CONF} 
+
+    # ---- RCPT ACL ----
+    perl -pi -e 's#^(RCPT_ACL=)(.*)#${1}0#' ${POLICYD_RCPT_THROTTLE_CONF} 
+
+    # -----------------
+    # Syslog Setting
+    # -----------------
     if [ X"${POLICYD_SEPERATE_LOG}" == X"YES" ]; then
         perl -pi -e 's#^(SYSLOG_FACILITY=)(.*)#${1}$ENV{POLICYD_SYSLOG_FACILITY}#' ${POLICYD_CONF} 
         echo -e "local1.*\t\t\t\t\t\t-${POLICYD_LOGFILE}" >>/etc/syslog.conf
