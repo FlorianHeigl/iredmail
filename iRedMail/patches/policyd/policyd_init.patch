@@ -1,18 +1,47 @@
---- /etc/rc.d/init.d/policyd	2008-07-21 11:13:03.000000000 -0400
-+++ /etc/rc.d/init.d/policyd	2008-07-21 11:12:16.000000000 -0400
-@@ -14,6 +14,7 @@
+--- /etc/rc.d/init.d/policyd	2008-07-21 12:52:59.000000000 -0400
++++ /etc/rc.d/init.d/policyd	2008-07-21 12:52:36.000000000 -0400
+@@ -14,26 +14,41 @@
  prog='policyd'
  POLICYD="/usr/sbin/policyd"
  CONF="/etc/policyd.conf"
 +CONF_RCPT_THROTTLE="/etc/policyd_rcpt_throttle.conf"
++POLICYD_PIDFILE='/var/run/policyd.pid'
++POLICYD_RCPT_THROTTLE_PIDFILE='/var/run/policyd_rcpt_throttle.pid'
  
  [ -f $POLICYD ] || exit 0
  [ -f $CONF ] || exit 0
-@@ -22,6 +23,7 @@
+ 
+ start()
  {
-     echo -n $"Starting $prog:"
+-    echo -n $"Starting $prog:"
++    echo -n $"Starting policyd:"
      daemon "$POLICYD -c $CONF"
-+    daemon "$POLICYD -c ${CONF_RCPT_THROTTLE}"
      RETVAL=$?
      [ "$RETVAL" = 0 ] && touch /var/lock/subsys/policyd
      echo
++
++    echo -n $"Starting policyd (recipient throttle):"
++    daemon "$POLICYD -c ${CONF_RCPT_THROTTLE}"
++    RETVAL=$?
++    [ "$RETVAL" = 0 ] && touch /var/lock/subsys/policyd_rcpt_throttle
++    echo
+ }
+ 
+ stop()
+ {
+-    echo -n $"Stopping $prog:"
+-    killproc policyd
++    echo -n $"Stopping policyd:"
++    killproc -p ${POLICYD_PIDFILE}
+     RETVAL=$?
+     [ "$RETVAL" = 0 ] && rm -f /var/lock/subsys/policyd
+     echo
++
++    echo -n $"Stopping policyd (recipient throttle):"
++    killproc -p ${POLICYD_RCPT_THROTTLE_PIDFILE}
++    RETVAL=$?
++    [ "$RETVAL" = 0 ] && rm -f /var/lock/subsys/policyd_rcpt_throttle
++    echo
+ }
+ 
+ restart()

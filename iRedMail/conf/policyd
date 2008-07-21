@@ -19,6 +19,7 @@ export POLICYD_USER_HOME='/home/policyd'
 # Another policyd instance for recipient throttle feature only.
 #
 export POLICYD_RCPT_THROTTLE_CONF='/etc/policyd_rcpt_throttle.conf'
+export POLICYD_RCPT_THROTTLE_PIDFILE='/var/run/policyd_rcpt_throttle.pid'
 
 export POLICYD_RCPT_THROTTLE_BINDHOST="${POLICYD_BINDHOST}"
 export POLICYD_RCPT_THROTTLE_BINDPORT='10032'

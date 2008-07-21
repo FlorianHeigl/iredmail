@@ -177,6 +177,7 @@ EOF
     perl -pi -e 's#^(DAEMON=)(.*)#${1}1#' ${POLICYD_RCPT_THROTTLE_CONF}
     perl -pi -e 's#^(BINDHOST=)(.*)#${1}"$ENV{POLICYD_RCPT_THROTTLE_BINDHOST}"#' ${POLICYD_RCPT_THROTTLE_CONF}
     perl -pi -e 's#^(BINDPORT=)(.*)#${1}"$ENV{POLICYD_RCPT_THROTTLE_BINDPORT}"#' ${POLICYD_RCPT_THROTTLE_CONF}
+    perl -pi -e 's#^(PIDFILE=)(.*)#${1}"$ENV{POLICYD_RCPT_THROTTLE_PIDFILE}"#' ${POLICYD_RCPT_THROTTLE_CONF}
 
     # ---- CHROOT ----
     export policyd_rcpt_throttle_user_id="$(id -u ${POLICYD_RCPT_THROTTLE_USER_NAME})"
@@ -222,6 +223,7 @@ EOF
     # -----------------
     if [ X"${POLICYD_SEPERATE_LOG}" == X"YES" ]; then
         perl -pi -e 's#^(SYSLOG_FACILITY=)(.*)#${1}$ENV{POLICYD_SYSLOG_FACILITY}#' ${POLICYD_CONF} 
+        perl -pi -e 's#^(SYSLOG_FACILITY=)(.*)#${1}$ENV{POLICYD_SYSLOG_FACILITY}#' ${POLICYD_RCPT_THROTTLE_CONF} 
         echo -e "local1.*\t\t\t\t\t\t-${POLICYD_LOGFILE}" >>/etc/syslog.conf
         cat > ${POLICYD_LOGROTATE_FILE} <<EOF
 ${CONF_MSG}
