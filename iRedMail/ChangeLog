@@ -2,7 +2,7 @@ iRedMail-0.2-rc3:
     * Add default whitelist and blacklist records shipped within
       policyd.
     * Add another policyd instance for recipient throttle feature,
-      sync init script, crontab job.
+      sync init script, crontab job, pidfile.
     * Update ClamAV to 0.93.3.
     * Update perl-Convert-UUlib to 1.11. Bug fix version.
 
