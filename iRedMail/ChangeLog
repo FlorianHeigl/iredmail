@@ -1,4 +1,5 @@
 iRedMail-0.2-rc3:
+    * Update phpMyAdmin to 2.11.7.1.
     * Add default whitelist and blacklist records shipped within
       policyd.
     * Add another policyd instance for sender throttle feature,
