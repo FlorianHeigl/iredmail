@@ -11,11 +11,11 @@
 
 . /etc/rc.d/init.d/functions
 
-PATH=/bin:/usr/bin
-MAILGRAPH_PL=/usr/local/bin/mailgraph.pl
-MAIL_LOG=/var/log/maillog
-PID_FILE=/var/run/mailgraph.pid
-RRD_DIR=/var/lib/mailgraph
+PATH='/bin:/usr/bin'
+MAILGRAPH_PL='/usr/local/bin/mailgraph.pl'
+MAIL_LOG='/var/log/maillog'
+PID_FILE='/var/run/mailgraph.pid'
+RRD_DIR='/var/lib/mailgraph'
 
 start()
 {

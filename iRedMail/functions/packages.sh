@@ -90,6 +90,7 @@ install_all()
 
     # Misc.
     ALL_PKGS="${ALL_PKGS} bzip2.${ARCH} acl.${ARCH} mailx.${ARCH} patch.${ARCH} crontabs.noarch"
+    ENABLED_SERVICES="${ENABLED_SERVICES} crond"
 
     # Install all packages.
     install_pkg ${ALL_PKGS}

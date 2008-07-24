@@ -19,6 +19,14 @@ mailgraph_setup()
     # We use /var/lib/mailgraph/ instead of '/var/lib/'.
     mkdir /var/lib/mailgraph/
 
+    if [ X"${USE_EXTMAIL}" == X"YES" ]; then
+        chown ${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} \
+            ${HTTPD_SERVERROOT}/cgi-bin/ \
+            ${HTTPD_SERVERROOT}/cgi-bin/mailgraph.cgi \
+    else
+        :
+    fi
+
     cat >> ${TIP_FILE} <<EOF
 mailgraph:
     * URL:
