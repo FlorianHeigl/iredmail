@@ -136,7 +136,7 @@ EOF
     perl -pi -e 's#^(AUTO_WHITELIST_NUMBER=)(.*)#${1}10#' ${POLICYD_CONF}
 
     # ---- BLACKLISTING HELO ----
-    perl -pi -e 's#^(BLACKLIST_HELO=)(.*)#${1}1#' ${POLICYD_CONF}
+    perl -pi -e 's#^(BLACKLIST_HELO=)(.*)#${1}0#' ${POLICYD_CONF}
     # ---- BLACKLIST SENDER ----
     perl -pi -e 's#^(BLACKLISTSENDER=)(.*)#${1}1#' ${POLICYD_CONF}
 

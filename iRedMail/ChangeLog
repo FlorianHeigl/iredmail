@@ -1,4 +1,6 @@
 iRedMail-0.2-rc3:
+    * Disable blacklist_helo in policyd, replaced by pcre table in
+      postfix.
     * Remove policyd_blacklist_helo.sql, it was merged into file:
       samples/check_helo_access.pcre. We won't import blacklist_helo
       records shipped within policyd by default.

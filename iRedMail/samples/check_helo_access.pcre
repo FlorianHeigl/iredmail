@@ -35,3 +35,8 @@
 # Reject spammers.
 #
 /dynamic\.163data\.com\.cn/ REJECT Go away.
+/pppoe/ REJECT Go away, adsl guys.
+/adsl/ REJECT Go away, adsl guys.
+/dialup/ REJECT Go away, adsl guys.
+/dhcp/ REJECT Go away, adsl guys.
+/dynamic/ REJECT Go away, adsl guys.
