@@ -1,0 +1,37 @@
+#
+# Sample Postfix check_helo_access rule. It should be localted at:
+#   /etc/postfix/check_helo_access.pcre
+#
+# Shipped within iRedMail project:
+#   * http://iRedMail.googlecode.com/
+#
+# Thanks all contributer(s):
+#   * muniao <at> gamil.
+#
+
+# No one will use these in helo command.
+/^localhost$/ REJECT Go away.
+/^localhost.localdomain$/ REJECT Go away.
+
+# Reject who use IP address as helo.
+# Correct:      [xxx.xxx.xxx.xxx]
+# Incorrect:    xxx.xxx.xxx.xxx
+/^[0-9.]+$/ REJECT not RFC compliant EHLO/HELO
+
+#
+# This is the real HELO identify of these ISPs:
+#   sohu.com    websmtp.sohu.com relay2nd.mail.sohu.com
+#   126.com     m15-78.126.com
+#   163.com     m31-189.vip.163.com m13-49.163.com
+#   sina.com    mail2-209.sinamail.sina.com.cn
+#   gmail.com   hu-out-0506.google.com
+#
+/^sina\.com$/ REJECT Go away.
+/^126\.com$/ REJECT Go away.
+/^163\.com$/ REJECT Go away.
+/^sohu\.com$/ REJECT Go away.
+
+#
+# Reject spammers.
+#
+/dynamic\.163data\.com\.cn/ REJECT Go away.

@@ -1,4 +1,7 @@
 iRedMail-0.2-rc3:
+    * Enable smtpd_helo_restrictions in Postfix and sample pcre table.
+    * Replace reject_invalid_hostname by reject_invalid_helo_hostname.
+      Thanks muniao. :)
     * Make saslauthd service disabled while we use dovecot as SASL
       auth mechanism in Postfix.
     * Add more blacklist helo records for policyd. Disabled by

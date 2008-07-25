@@ -1,4 +1,15 @@
 /*
+    Sample iptables rules. It should be localted at:
+        /etc/sysconfig/iptables
+
+    Shipped within iRedMail project:
+        http://iRedMail.googlecode.com/
+
+    Thanks all contributer(s):
+        * muniao <at> gamil.
+*/
+
+/*
 This is the real HELO:
     sohu.com    websmtp.sohu.com relay2nd.mail.sohu.com
     126.com     m15-78.126.com
@@ -7,9 +18,6 @@ This is the real HELO:
     gmail.com   hu-out-0506.google.com
 
 Some are imported from policyd blacklist_helo.sql.
-
-Thanks all contributer(s):
-    * muniao <at> gamil.
 */
 
 USE policyd;
