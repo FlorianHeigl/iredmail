@@ -567,6 +567,21 @@ postfix_config_sasl()
     # reject_unverified_recipient
     # reject_unlisted_recipient
     #
+    # **** HELO related (smtpd_helo_restrictions) ****
+    # Reject the request when the HELO or EHLO hostname syntax is
+    # invalid. 
+    #   - reject_invalid_helo_hostname
+    #
+    # Reject the request when the HELO or EHLO hostname is not in
+    # fully-qualified domain form, as required by the RFC. 
+    #   - reject_non_fqdn_helo_hostname
+    #
+    # Reject the request when the HELO or EHLO hostname has no DNS A
+    # or MX record.
+    #   - reject_unknown_helo_hostname
+    #
+    # **** End HELO related ****
+    #
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
         #
         # Non-SPF.

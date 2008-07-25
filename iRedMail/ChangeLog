@@ -1,5 +1,7 @@
 iRedMail-0.2-rc3:
-    * Fix mailgraph directory and cgi file privilege for extmail.
+    * Add more blacklist helo records for policyd. Disabled by
+      default. Thanks for muniao & ipostfix's help.
+    * Fix mailgraph directory and cgi file permission for extmail.
       Bug reported by ranjun. Thanks :)
     * Make 'crond' as enabled services.
     * Update phpMyAdmin to 2.11.7.1.

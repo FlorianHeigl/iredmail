@@ -18,3 +18,16 @@ INSERT INTO blacklist_helo (_helo) VALUES ("sina.com");
 INSERT INTO blacklist_helo (_helo) VALUES ("126.com");
 INSERT INTO blacklist_helo (_helo) VALUES ("163.com");
 INSERT INTO blacklist_helo (_helo) VALUES ("sohu.com");
+
+/*
+    Block all dynamic IP client.
+*/
+
+/*
+INSERT INTO blacklist_helo (_helo) VALUES ("%adsl%");
+INSERT INTO blacklist_helo (_helo) VALUES ("%pppoe%");
+INSERT INTO blacklist_helo (_helo) VALUES ("%ppp%");
+INSERT INTO blacklist_helo (_helo) VALUES ("%dialup%");
+INSERT INTO blacklist_helo (_helo) VALUES ("%dynamic%");
+INSERT INTO blacklist_helo (_helo) VALUES ("%-%-%-%");
+*/
