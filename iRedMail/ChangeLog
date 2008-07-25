@@ -1,4 +1,7 @@
 iRedMail-0.2-rc3:
+    * Remove policyd_blacklist_helo.sql, it was merged into file:
+      samples/check_helo_access.pcre. We won't import blacklist_helo
+      records shipped within policyd by default.
     * Enable smtpd_helo_restrictions in Postfix and sample pcre table.
     * Replace reject_invalid_hostname by reject_invalid_helo_hostname.
       Thanks muniao. :)
