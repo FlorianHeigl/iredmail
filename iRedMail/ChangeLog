@@ -1,4 +1,6 @@
 iRedMail-0.2-rc3:
+    * Make saslauthd service disabled while we use dovecot as SASL
+      auth mechanism in Postfix.
     * Add more blacklist helo records for policyd. Disabled by
       default. Thanks for muniao & ipostfix's help.
     * Fix mailgraph directory and cgi file permission for extmail.

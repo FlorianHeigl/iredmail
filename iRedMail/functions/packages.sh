@@ -53,7 +53,6 @@ install_all()
 
     # Cyrus-SASL.
     ALL_PKGS="${ALL_PKGS} cyrus-sasl.${ARCH} cyrus-sasl-lib.${ARCH} cyrus-sasl-plain.${ARCH} cyrus-sasl-md5.${ARCH}"
-    ENABLED_SERVICES="${ENABLED_SERVICES} saslauthd"
 
     # Dovecot.
     if [ X"${ENABLE_DOVECOT}" == X"YES" ]; then
@@ -61,6 +60,7 @@ install_all()
         ENABLED_SERVICES="${ENABLED_SERVICES} dovecot"
     else
         ALL_PKGS="procmail.${ARCH}"
+        ENABLED_SERVICES="${ENABLED_SERVICES} saslauthd"
     fi
 
     # Amavisd-new & ClamAV.
