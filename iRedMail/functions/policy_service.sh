@@ -67,11 +67,17 @@ policyd_config()
 {
     ECHO_INFO "Initialize MySQL database for policyd."
     mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWD} <<EOF
+# Import SQL structure.
 SOURCE $(rpm -ql policyd | grep 'DATABASE.mysql');
+
+# Grant privileges.
+GRANT SELECT,INSERT,UPDATE,DELETE ON ${POLICYD_DB_NAME}.* TO ${POLICYD_DB_USER}@localhost IDENTIFIED BY "${POLICYD_DB_PASSWD}";
+
+# Please do 'GRANT' before all other actions for fail-safe.
 SOURCE $(rpm -ql policyd | grep 'blacklist_helo.sql');
 SOURCE $(rpm -ql policyd | grep 'whitelist.sql');
 SOURCE ${SAMPLE_DIR}/policyd_blacklist_helo.sql;
-GRANT SELECT,INSERT,UPDATE,DELETE ON ${POLICYD_DB_NAME}.* TO ${POLICYD_DB_USER}@localhost IDENTIFIED BY "${POLICYD_DB_PASSWD}";
+
 FLUSH PRIVILEGES;
 EOF
 
