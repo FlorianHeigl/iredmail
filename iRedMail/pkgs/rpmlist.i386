@@ -18,7 +18,6 @@ perl-rrdtool-1.2.23-1.el5.rf.i386.rpm
 perl-Unix-Syslog-1.0-1.el5.rf.i386.rpm
 php-mcrypt-5.1.6-4.el5.i386.rpm
 php-mhash-5.1.6-4.el5.i386.rpm
-policyd-1.82-4.rhms.i386.rpm
 postfix-2.3.14-1.rhms.i386.rpm
 ripole-0.2.0-1.2.el5.rf.i386.rpm
 rrdtool-1.2.23-1.el5.rf.i386.rpm
@@ -33,3 +32,4 @@ perl-Convert-UUlib-1.11-1.ired.i386.rpm
 clamav-0.93.3-1.el5.rf.i386.rpm
 clamav-db-0.93.3-1.el5.rf.i386.rpm
 clamd-0.93.3-1.el5.rf.i386.rpm
+policyd-1.82-5.ired.i386.rpm

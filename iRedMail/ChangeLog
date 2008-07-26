@@ -1,4 +1,7 @@
 iRedMail-0.2-rc3:
+    * Update policyd to 1.82-5.ired, support wildcard in
+      blacklist_helo. Patch provided by Hugo Monteiro
+      <hugo.monteiro //at// fct.unl.pt>.
     * Disable blacklist_helo in policyd, replaced by pcre table in
       postfix.
     * Remove policyd_blacklist_helo.sql, it was merged into file:
