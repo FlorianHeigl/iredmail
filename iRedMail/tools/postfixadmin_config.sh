@@ -3,7 +3,8 @@
 # --------------------------------------------------
 
 # Username of PostfixAdmin site admin.
-${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
+while :; do
+    ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --title "Username of PostfixAdmin site admin" \
     --inputbox "\
 Please specify the username of PostfixAdmin site admin.
@@ -14,7 +15,11 @@ EXAMPLE:
 
 " 20 76 2>/tmp/site_admin_name
 
-SITE_ADMIN_NAME="$(cat /tmp/site_admin_name)"
+    SITE_ADMIN_NAME="$(cat /tmp/site_admin_name)"
+
+    [ X"${SITE_ADMIN_NAME}" != X"" ] && break
+done
+
 echo "export SITE_ADMIN_NAME='${SITE_ADMIN_NAME}'" >>${CONFIG_FILE}
 rm -f /tmp/site_admin_name
 

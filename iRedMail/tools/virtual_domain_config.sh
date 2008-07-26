@@ -1,5 +1,6 @@
 # First domain name.
-${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
+while : ; do
+    ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --title "Your first virtual domain" \
     --inputbox "\
 Please specify the name of your first virtual domain.
@@ -10,7 +11,11 @@ EXAMPLES:
 
 " 20 76 2>/tmp/first_domain
 
-FIRST_DOMAIN="$(cat /tmp/first_domain)"
+    FIRST_DOMAIN="$(cat /tmp/first_domain)"
+
+    [ X"${FIRST_DOMAIN}" != X"" ] && break
+done
+
 echo "export FIRST_DOMAIN='${FIRST_DOMAIN}'" >> ${CONFIG_FILE}
 rm -f /tmp/first_domain
 
@@ -55,6 +60,7 @@ rm -f /tmp/first_domain_admin_passwd
 
 #FIRST_USER
 FIRST_USER='www'
+
 ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --title "Add a user for your domain" \
     --inputbox "\
