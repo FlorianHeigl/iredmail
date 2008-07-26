@@ -560,8 +560,8 @@ postfix_config_sasl()
     #
     # Standalone smtpd_helo_restrictions.
     #
-    postconf -e smtpd_helo_restrictions="permit_mynetworks,permit_sasl_authenticated, check_helo_access pcre:${POSTFIX_ROOTDIR}/check_helo_access.pcre"
-    cp -f ${SAMPLE_DIR}/check_helo_access.pcre ${POSTFIX_ROOTDIR}/
+    postconf -e smtpd_helo_restrictions="permit_mynetworks,permit_sasl_authenticated, check_helo_access pcre:${POSTFIX_ROOTDIR}/helo_access.pcre"
+    cp -f ${SAMPLE_DIR}/helo_access.pcre ${POSTFIX_ROOTDIR}/
 
     # smtpd_recipient_restrictions reference:
     #   http://www.postfix.org/SASL_README.html

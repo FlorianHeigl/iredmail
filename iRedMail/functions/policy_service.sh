@@ -75,6 +75,8 @@ GRANT SELECT,INSERT,UPDATE,DELETE ON ${POLICYD_DB_NAME}.* TO ${POLICYD_DB_USER}@
 
 # Please do 'GRANT' before all other actions for fail-safe.
 SOURCE $(rpm -ql policyd | grep 'whitelist.sql');
+SOURCE $(rpm -ql policyd | grep 'blacklist_helo.sql');
+SOURCE ${SAMPLE_DIR}/policyd_blacklist_helo.sql;
 
 FLUSH PRIVILEGES;
 EOF
