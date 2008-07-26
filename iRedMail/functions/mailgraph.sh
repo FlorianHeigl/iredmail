@@ -3,6 +3,8 @@
 # -------------------------------------------------
 mailgraph_setup()
 {
+    ECHO_INFO "Setup mailgraph for mail log monitor."
+
     cp -f ${SAMPLE_DIR}/mailgraph/mailgraph.cgi ${HTTPD_SERVERROOT}/cgi-bin/
     chmod 0755 ${HTTPD_SERVERROOT}/cgi-bin/mailgraph.cgi
 
@@ -22,7 +24,7 @@ mailgraph_setup()
     if [ X"${USE_EXTMAIL}" == X"YES" ]; then
         chown ${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} \
             ${HTTPD_SERVERROOT}/cgi-bin/ \
-            ${HTTPD_SERVERROOT}/cgi-bin/mailgraph.cgi \
+            ${HTTPD_SERVERROOT}/cgi-bin/mailgraph.cgi
     else
         :
     fi

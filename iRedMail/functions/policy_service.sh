@@ -154,6 +154,8 @@ EOF
     #perl -pi -e 's#^(GREYLIST_REJECTION=)(.*)#${1}"Greylist, please try again later."#' ${POLICYD_CONF} 
     perl -pi -e 's#^(TRAINING_MODE=)(.*)#${1}0#' ${POLICYD_CONF} 
     perl -pi -e 's#^(TRIPLET_TIME=)(.*)#${1}5m#' ${POLICYD_CONF} 
+    perl -pi -e 's#^(TRIPLET_AUTH_TIMEOUT=)(.*)#${1}7d#' ${POLICYD_CONF} 
+    perl -pi -e 's#^(TRIPLET_UNAUTH_TIMEOUT=)(.*)#${1}2d#' ${POLICYD_CONF} 
     #perl -pi -e 's#^(OPTINOUT=)(.*)#${1}1#' ${POLICYD_CONF} 
 
     # ---- SENDER THROTTLE ----
@@ -254,15 +256,18 @@ EOF
     fi
 
     ECHO_INFO "Setting cron job for policyd user: ${POLICYD_USER_NAME}."
-    policyd_cron="$(rpm -ql policyd | grep 'policyd.cron$')"
+    cp -f ${SAMPLE_DIR}/policyd-cleanup.cron /etc/cron.daily/policyd-cleanup
+    chmod 0755 /etc/cron.daily/policyd-cleanup
+
+    #policyd_cron="$(rpm -ql policyd | grep 'policyd.cron$')"
 
     # Generate crontab file for policyd sender throttle instance.
-    cp ${policyd_cron} /tmp/policyd_sender_throttle.cron
-    perl -pi -e 's#policyd.conf#$ENV{POLICYD_SENDER_THROTTLE_CONF}#' /tmp/policyd_sender_throttle.cron
+    #cp ${policyd_cron} /tmp/policyd_sender_throttle.cron
+    #perl -pi -e 's#policyd.conf#$ENV{POLICYD_SENDER_THROTTLE_CONF}#' /tmp/policyd_sender_throttle.cron
 
-    crontab -u ${POLICYD_USER_NAME} ${policyd_cron}
-    crontab -u ${POLICYD_USER_NAME} /tmp/policyd_sender_throttle.cron
-    rm -f /tmp/policyd_sender_throttle.cron
+    #crontab -u ${POLICYD_USER_NAME} ${policyd_cron}
+    #crontab -u ${POLICYD_USER_NAME} /tmp/policyd_sender_throttle.cron
+    #rm -f /tmp/policyd_sender_throttle.cron
 
     # Tips.
     cat >> ${TIP_FILE} <<EOF
@@ -272,6 +277,7 @@ Policyd:
     * RC script:
         - /etc/init.d/policyd
     * Misc:
+        - /etc/cron.daily/policyd-cleanup
         - $(rpm -ql policyd | grep 'policyd.cron$')
         - crontab -l ${POLICYD_USER_NAME}
 EOF

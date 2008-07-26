@@ -26,10 +26,10 @@
 #   sina.com    mail2-209.sinamail.sina.com.cn
 #   gmail.com   hu-out-0506.google.com
 #
-/^sina\.com$/ REJECT Go away.
-/^126\.com$/ REJECT Go away.
-/^163\.com$/ REJECT Go away.
-/^sohu\.com$/ REJECT Go away.
+/^sina\.com$/ REJECT Go away, sina guys.
+/^126\.com$/ REJECT Go away, 126 guys.
+/^163\.com$/ REJECT Go away, 163 guys.
+/^sohu\.com$/ REJECT Go away, sohu guys.
 
 #
 # Reject spammers.
