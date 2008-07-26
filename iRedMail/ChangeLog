@@ -1,4 +1,5 @@
 iRedMail-0.2-rc3:
+    * Make maillog as standalone logrotated job.
     * Update policyd to 1.82-5.ired, support wildcard in
       blacklist_helo. Patch provided by Hugo Monteiro
       <hugo.monteiro //at// fct.unl.pt>.

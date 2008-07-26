@@ -150,7 +150,8 @@ check_status_before_run cyrus_sasl_config
 check_status_before_run postfix_config_basic && \
 check_status_before_run postfix_config_virtual_host && \
 check_status_before_run postfix_config_sasl && \
-check_status_before_run postfix_config_tls
+check_status_before_run postfix_config_tls && \
+check_status_before_run postfix_config_syslog
 
 # ------------------------------------------------
 # Policy service for Postfix: Postgrey & Policyd.

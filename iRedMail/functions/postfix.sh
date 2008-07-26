@@ -642,3 +642,48 @@ EOF
 
     echo 'export status_postfix_config_tls="DONE"' >> ${STATUS_FILE}
 }
+
+postfix_config_syslog()
+{
+    #
+    # maillog file is listed in ${LOG_ROTATE_DIR}/syslog file by
+    # default, logrotated weekly, it's not suited for a large network.
+    #
+
+    ECHO_INFO "Setting up logrotate for maillog as a daily work."
+
+    # Remove maillog from ${LOG_ROTATE_DIR}/syslog.
+    perl -pi -e 's#/var/log/maillog ##' ${LOG_ROTATE_DIR}/syslog
+
+    # Make maillog as standalone logrotated job.
+    cat >> ${LOG_ROTATE_DIR}/maillog <<EOF
+${CONF_MSG}
+#
+# Logrotate file for postfix maillog.
+#
+ 
+/var/log/maillog {
+    missingok
+    compress
+    compresscmd bzip2
+    compressoptions '-9'
+    uncompresscmd bzip2
+    notifempty
+    daily
+    rotate 30
+    create 0600 root root
+    postrotate
+        /bin/kill -HUP \`cat /var/run/syslogd.pid 2> /dev/null\` 2> /dev/null || true
+        /bin/kill -HUP \`cat /var/run/rsyslogd.pid 2> /dev/null\` 2> /dev/null || true
+    endscript
+}
+EOF
+
+    cat >> ${TIP_FILE} <<EOF
+Postfix (syslog):
+    * logrotate file: ${LOG_ROTATE_DIR}/maillog
+
+EOF
+
+    echo 'export status_postfix_config_syslog="DONE"' >> ${STATUS_FILE}
+}
