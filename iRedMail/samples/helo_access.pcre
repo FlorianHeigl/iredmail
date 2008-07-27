@@ -30,6 +30,8 @@
 /^126\.com$/ REJECT Go away, 126 guys.
 /^163\.com$/ REJECT Go away, 163 guys.
 /^sohu\.com$/ REJECT Go away, sohu guys.
+/^gmail\.com$/ REJECT Go away, gmail guys.
+/^google\.com$/ REJECT Go away, google guys.
 
 #
 # Reject spammers.
@@ -40,3 +42,5 @@
 /dialup/ REJECT Go away, adsl guys.
 /dhcp/ REJECT Go away, adsl guys.
 /dynamic/ REJECT Go away, adsl guys.
+/\.kornet$/ REJECT Go away.
+/\?/ REJECT Go away.
