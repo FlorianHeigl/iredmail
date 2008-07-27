@@ -285,7 +285,10 @@ EOF
     ECHO_INFO "Create dovecot log file: ${DOVECOT_LOG_FILE}, ${SIEVE_LOG_FILE}."
     touch ${DOVECOT_LOG_FILE} ${SIEVE_LOG_FILE}
     chown ${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} ${DOVECOT_LOG_FILE} ${SIEVE_LOG_FILE}
-    chmod 0700 ${DOVECOT_LOG_FILE} ${SIEVE_LOG_FILE}
+    chmod 0600 ${DOVECOT_LOG_FILE}
+
+    # Sieve log file must be world-writable.
+    chmod 0666 ${SIEVE_LOG_FILE}
 
     ECHO_INFO "Enable dovecot in postfix: ${POSTFIX_FILE_MAIN_CF}."
     postconf -e mailbox_command="${DOVECOT_DELIVER}"
