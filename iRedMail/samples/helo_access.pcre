@@ -10,13 +10,13 @@
 #
 
 # No one will use these in helo command.
-/^localhost$/ REJECT Go away.
-/^localhost.localdomain$/ REJECT Go away.
+/^localhost$/ REJECT Go away, bad guy (localhost).
+/^localhost.localdomain$/ REJECT Go away, bad guy (localhost.localdomain).
 
 # Reject who use IP address as helo.
 # Correct:      [xxx.xxx.xxx.xxx]
 # Incorrect:    xxx.xxx.xxx.xxx
-/^[0-9.]+$/ REJECT not RFC compliant EHLO/HELO
+/^[0-9.]+$/ REJECT Go away, bad guy (not RFC compliant).
 
 #
 # This is the real HELO identify of these ISPs:
@@ -26,21 +26,21 @@
 #   sina.com    mail2-209.sinamail.sina.com.cn
 #   gmail.com   hu-out-0506.google.com
 #
-/^sina\.com$/ REJECT Go away, sina guys.
-/^126\.com$/ REJECT Go away, 126 guys.
-/^163\.com$/ REJECT Go away, 163 guys.
-/^sohu\.com$/ REJECT Go away, sohu guys.
-/^gmail\.com$/ REJECT Go away, gmail guys.
-/^google\.com$/ REJECT Go away, google guys.
+/^sina\.com$/ REJECT Go away, bad guy (sina.com).
+/^126\.com$/ REJECT Go away, bad guy (126.com).
+/^163\.com$/ REJECT Go away, bad guy (163.com).
+/^sohu\.com$/ REJECT Go away, bad guy (sohu.com).
+/^gmail\.com$/ REJECT Go away, bad guy (gmail.com).
+/^google\.com$/ REJECT Go away, bad guy (google.com).
 
 #
 # Reject spammers.
 #
-/dynamic\.163data\.com\.cn/ REJECT Go away.
-/pppoe/ REJECT Go away, adsl guys.
-/adsl/ REJECT Go away, adsl guys.
-/dialup/ REJECT Go away, adsl guys.
-/dhcp/ REJECT Go away, adsl guys.
-/dynamic/ REJECT Go away, adsl guys.
-/\.kornet$/ REJECT Go away.
-/\?/ REJECT Go away.
+/dynamic\.163data\.com\.cn/ REJECT Go away, bad guy (dynamic.163data.com.cn).
+/pppoe/ REJECT Go away, bad guy (pppoe).
+/adsl/ REJECT Go away, bad guy (adsl).
+/dialup/ REJECT Go away, bad guy (dialup).
+/dhcp/ REJECT Go away, bad guy (dhcp).
+/dynamic/ REJECT Go away, bad guy (dynamic).
+/\.kornet$/ REJECT Go away, bad guy.
+/\?/ REJECT Go away, bad guy.
