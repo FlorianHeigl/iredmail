@@ -9,14 +9,18 @@
 #   * muniao <at> gamil.
 #
 
+#*******************************************
+# IP address: (([0-9]){3}-){2}
+#*******************************************
+
 # No one will use these in helo command.
-/^localhost$/ REJECT Go away, bad guy (localhost).
-/^localhost.localdomain$/ REJECT Go away, bad guy (localhost.localdomain).
+/^localhost$/               REJECT Go away, bad guy (localhost).
+/^localhost.localdomain$/   REJECT Go away, bad guy (localhost.localdomain).
 
 # Reject who use IP address as helo.
 # Correct:      [xxx.xxx.xxx.xxx]
 # Incorrect:    xxx.xxx.xxx.xxx
-/^[0-9.]+$/ REJECT Go away, bad guy (not RFC compliant).
+/^[0-9.]+$/     REJECT Go away, bad guy (not RFC compliant).
 
 #
 # This is the real HELO identify of these ISPs:
@@ -24,23 +28,71 @@
 #   126.com     m15-78.126.com
 #   163.com     m31-189.vip.163.com m13-49.163.com
 #   sina.com    mail2-209.sinamail.sina.com.cn
-#   gmail.com   hu-out-0506.google.com
+#   gmail.com   xx-out-NNNN.google.com
 #
-/^sina\.com$/ REJECT Go away, bad guy (sina.com).
-/^126\.com$/ REJECT Go away, bad guy (126.com).
-/^163\.com$/ REJECT Go away, bad guy (163.com).
-/^sohu\.com$/ REJECT Go away, bad guy (sohu.com).
-/^gmail\.com$/ REJECT Go away, bad guy (gmail.com).
-/^google\.com$/ REJECT Go away, bad guy (google.com).
+/^sina\.com$/       REJECT Go away, bad guy (sina.com).
+/^126\.com$/        REJECT Go away, bad guy (126.com).
+/^163\.com$/        REJECT Go away, bad guy (163.com).
+/^sohu\.com$/       REJECT Go away, bad guy (sohu.com).
+/gmail\.com$/       REJECT Go away, bad guy (gmail.com).
+/^google\.com$/     REJECT Go away, bad guy (google.com).
+/^yahoo\.com\.cn$/  REJECT Go away, bad guy (yahoo.com.cn).
 
 #
-# Reject spammers.
+# Spammers.
+#
+/^728154EA470B4AA\.com$/        REJECT Go away, bad guy (728154EA470B4AA.com).
+/^yahoo\.com\.cn$/              REJECT Go away, bad guy (yahoo.com.cn).
+/^dsldevice\.lan$/              REJECT Go away, bad guy (dsldevice.lan).
+/^taj-co\.com$/                 REJECT Go away, bad guy (taj-co.com).
+/^CF8D3DB045C1455\.net$/        REJECT Go away, bad guy (CF8D3DB045C1455.net).
+/^yahoo\.co\.jp$/               REJECT Go away, bad guy (yahoo.co.jp).
+/^dsgsfdg\.com$/                REJECT Go away, bad guy (dsgsfdg.com).
+/^se\.nit7-ngbo\.com$/          REJECT Go away, bad guy (se.nit7-ngbo.com).
+/^mail\.goo\.ne\.jp$/           REJECT Go away, bad guy (mail.goo.ne.jp).
+/^n-ong_an\.com$/               REJECT Go away, bad guy (n-ong_an.com).
+/^e5\.il\.n5tt\.zj\.cn$/        REJECT Go away, bad guy (e5.il.n5tt.zj.cn).
+/^meqail\.teamefs-ine5tl\.com$/ REJECT Go away, bad guy (meqail.teamefs-ine5tl.com).
+/^zzg\.jhf-sp\.com$/            REJECT Go away, bad guy (zzg.jhf-sp.com).
+/^din_glo-ng\.net$/             REJECT Go away, bad guy (din_glo-ng.net).
+/^fda-cnc\.ie\.com$/            REJECT Go away, bad guy (fda-cnc.ie.com).
+/^yrtaj-yrco\.com$/             REJECT Go away, bad guy (yrtaj-yrco.com).
+/^m\.am\.biz\.cn$/              REJECT Go away, bad guy (m.am.biz.cn).
+/^xr_haig\.roup\.com$/          REJECT Go away, bad guy (xr_haig.roup.com).
+/^hjn\.cn$/                     REJECT Go away, bad guy (hjn.cn).
+/^we_blf\.com\.cn$/             REJECT Go away, bad guy (we_blf.com.cn).
+/^netvigator\.com$/             REJECT Go away, bad guy (netvigator.com).
+/^mysam\.biz$/                  REJECT Go away, bad guy (mysam.biz).
+/^mail\.teams-intl\.com$/       REJECT Go away, bad guy (mail.teams-intl.com).
+/^seningbo\.com$/               REJECT Go away, bad guy (seningbo.com).
+/^nblf\.com\.cn$/               REJECT Go away, bad guy (nblf.com.cn).
+/^kdn\.ktguide\.com$/           REJECT Go away, bad guy (kdn.ktguide.com).
+/^zzsp\.com$/                   REJECT Go away, bad guy (zzsp.com).
+/^nblongan\.com$/               REJECT Go away, bad guy (nblongan.com).
+/^dpu\.cn$/                     REJECT Go away, bad guy (dpu.cn).
+/^mail\.nbptt\.zj\.cn$/         REJECT Go away, bad guy (mail.nbptt.zj.cn).
+/^nbalton\.com$/                REJECT Go away, bad guy (nbalton.com).
+/^cncie\.com$/                  REJECT Go away, bad guy (cncie.com).
+/^xinhaigroup\.com$/            REJECT Go away, bad guy (xinhaigroup.com).
+/^system.mail$/             REJECT Go away, bad guy (system.mail).
+/^wz\.com$/                 REJECT Go away, bad guy (wz.com).
+/^speedtouch\.lan$/         REJECT Go away, bad guy (speedtouch.lan).
+/^dsldevice\.lan$/          REJECT Go away, bad guy (dsldevice.lan).
+/\.zj.cn$/                  REJECT Go away, bad guy (.zj.cn).
+/\.kornet$/                 REJECT Go away, bad guy (.kornet).
+/\?/                        REJECT Go away, bad guy (?).
+/\.zj.cn$/                  REJECT Go away, bad guy (.zj.cn).
+/\.local$/                  REJECT Go away, bad guy (.local).
+
+#
+# Reject adsl spammers.
 #
 /dynamic\.163data\.com\.cn/ REJECT Go away, bad guy (dynamic.163data.com.cn).
-/pppoe/ REJECT Go away, bad guy (pppoe).
-/adsl/ REJECT Go away, bad guy (adsl).
-/dialup/ REJECT Go away, bad guy (dialup).
-/dhcp/ REJECT Go away, bad guy (dhcp).
-/dynamic/ REJECT Go away, bad guy (dynamic).
-/\.kornet$/ REJECT Go away, bad guy.
-/\?/ REJECT Go away, bad guy.
+/pppoe/                     REJECT Go away, bad guy (pppoe).
+/adsl/                      REJECT Go away, bad guy (adsl).
+/dialup/                    REJECT Go away, bad guy (dialup).
+/dhcp/                      REJECT Go away, bad guy (dhcp).
+/dynamic/                   REJECT Go away, bad guy (dynamic).
+/pool-/                     REJECT Go away, bad guy (pool-).
+/^cpe-/                     REJECT Go away, bad guy (cpe-).
+/\.cpe\./                   REJECT Go away, bad guy (.cpe.).
