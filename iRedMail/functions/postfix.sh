@@ -663,14 +663,13 @@ ${CONF_MSG}
 #
  
 /var/log/maillog {
-    missingok
     compress
     daily
     rotate 30
     create 0600 root root
+    missingok
     postrotate
-        /bin/kill -HUP \`cat /var/run/syslogd.pid 2> /dev/null\` 2> /dev/null || true
-        /bin/kill -HUP \`cat /var/run/rsyslogd.pid 2> /dev/null\` 2> /dev/null || true
+        /sbin/killall -HUP syslogd
     endscript
 }
 EOF
