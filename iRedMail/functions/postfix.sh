@@ -665,10 +665,6 @@ ${CONF_MSG}
 /var/log/maillog {
     missingok
     compress
-    compresscmd bzip2
-    compressoptions '-9'
-    uncompresscmd bzip2
-    notifempty
     daily
     rotate 30
     create 0600 root root
