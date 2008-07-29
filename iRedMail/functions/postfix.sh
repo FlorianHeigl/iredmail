@@ -30,6 +30,7 @@ EOF
     postconf -e mynetworks="127.0.0.0/8"
     postconf -e receive_override_options='no_address_mappings'
     postconf -e smtpd_data_restrictions='reject_unauth_pipelining'
+    postconf -e smtpd_reject_unlisted_recipient='yes'   # Default
     postconf -e delay_warning_time='4h'
     postconf -e policy_time_limit='3600'
 
