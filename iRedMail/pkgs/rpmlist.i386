@@ -26,10 +26,10 @@ unrar-3.7.4-1.el5.rf.i386.rpm
 zoo-2.10-2.2.el5.rf.i386.rpm
 dovecot-sieve-1.1.5-8.el5.i386.rpm
 amavisd-new-2.6.1-1.ired.i386.rpm
-dovecot-1.1.1-1.ired.i386.rpm
 php-pecl-fileinfo-1.0.4-1.el5.rf.i386.rpm
 perl-Convert-UUlib-1.11-1.ired.i386.rpm
 clamav-0.93.3-1.el5.rf.i386.rpm
 clamav-db-0.93.3-1.el5.rf.i386.rpm
 clamd-0.93.3-1.el5.rf.i386.rpm
 policyd-1.82-5.ired.i386.rpm
+dovecot-1.1.2-2_77.el5.i386.rpm

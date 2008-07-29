@@ -23,10 +23,10 @@ b00545064abb6714ad78a6fd3d51b79e  rpms/perl-NetAddr-IP-4.007-1.el5.rf.i386.rpm
 b202afff9e0d5af2b092d392a75e7a59  rpms/perl-version-0.74-1.el5.rf.i386.rpm
 3ee9ea21a7fad9599d417e931ab2f681  rpms/dovecot-sieve-1.1.5-8.el5.i386.rpm
 f4d04c5cc21515625534c9f557eb11b4  rpms/amavisd-new-2.6.1-1.ired.i386.rpm
-e697bee9a9f9bc7a503c581d9fa0e782  rpms/dovecot-1.1.1-1.ired.i386.rpm
 0e6e9555d4ed671075e8b1f238d02b13  rpms/php-pecl-fileinfo-1.0.4-1.el5.rf.i386.rpm
 e89ad55c67811e700c4e3cba55b097e5  rpms/perl-Convert-UUlib-1.11-1.ired.i386.rpm
 869d6d53b0a0cc467ed88a165ab91be1  rpms/clamav-0.93.3-1.el5.rf.i386.rpm
 01ef550236158761c208d3a63c8e1f4b  rpms/clamav-db-0.93.3-1.el5.rf.i386.rpm
 6defce0dea58190403d02c0d28ba218e  rpms/clamd-0.93.3-1.el5.rf.i386.rpm
 c287f4b1e3562962a24fc0ce039dd7d0  rpms/policyd-1.82-5.ired.i386.rpm
+1fb4af8aa9c2946a61b3a1cbaba1647b  rpms/dovecot-1.1.2-2_77.el5.i386.rpm

@@ -25,7 +25,6 @@ unarj-2.63-0.a.2.el5.rf.x86_64.rpm
 unrar-3.7.4-1.el5.rf.x86_64.rpm
 zoo-2.10-2.2.el5.rf.x86_64.rpm
 amavisd-new-2.6.1-1.ired.x86_64.rpm
-dovecot-1.1.1-1.ired.x86_64.rpm
 dovecot-sieve-1.1.5-8.el5.x86_64.rpm
 php-pecl-fileinfo-1.0.4-1.el5.rf.x86_64.rpm
 perl-Convert-UUlib-1.11-1.ired.x86_64.rpm
@@ -33,3 +32,4 @@ clamav-0.93.3-1.el5.rf.x86_64.rpm
 clamav-db-0.93.3-1.el5.rf.x86_64.rpm
 clamd-0.93.3-1.el5.rf.x86_64.rpm
 policyd-1.82-5.ired.x86_64.rpm
+dovecot-1.1.2-2_77.el5.x86_64.rpm
