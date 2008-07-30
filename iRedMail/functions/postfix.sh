@@ -670,7 +670,8 @@ ${CONF_MSG}
     create 0600 root root
     missingok
     postrotate
-        /sbin/killall -HUP syslogd
+        /bin/kill -HUP \`cat /var/run/syslogd.pid 2> /dev/null\` 2> /dev/null || true
+        /bin/kill -HUP \`cat /var/run/rsyslogd.pid 2> /dev/null\` 2> /dev/null || true
     endscript
 }
 EOF
