@@ -178,7 +178,7 @@ check_status_before_run sa_config
 # -----------------------------------------------
 # Optional components.
 # -----------------------------------------------
-check_status_before_run optional_components
+optional_components
 
 # -----------------------------------------------
 # Clear away.

@@ -53,6 +53,4 @@ optional_components()
     [ X"${USE_EXTMAIL}" == X"YES" ] && \
         check_status_before_run extmail_install && \
         check_status_before_run extmail_config
-
-    echo 'export status_optional_components="DONE"' >> ${STATUS_FILE}
 }
