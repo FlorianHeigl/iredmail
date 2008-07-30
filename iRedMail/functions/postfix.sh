@@ -22,6 +22,8 @@ EOF
     cp -f /etc/hosts ${POSTFIX_CHROOT_DIR}/etc/
     cp -f /etc/resolv.conf ${POSTFIX_CHROOT_DIR}/etc/
 
+    postconf -e mail_name="${PROG_NAME}"
+    postconf -e mail_version="${PROG_VERSION}"
     postconf -e myhostname=$(hostname)
     postconf -e mydomain=$(hostname)
     postconf -e myorigin=$(hostname)
