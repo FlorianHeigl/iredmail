@@ -30,5 +30,5 @@ bf93d00637fb30e832409fbae6b2b481  rpms/perl-Convert-UUlib-1.11-1.ired.x86_64.rpm
 72321283d8ac1b9cb3eefddb98d01a20  rpms/clamav-0.93.3-1.el5.rf.x86_64.rpm
 de15cca52eceb745b3b99e53d668c8fe  rpms/clamav-db-0.93.3-1.el5.rf.x86_64.rpm
 f4c3a965d31724f19c8bc0b69ee1d33e  rpms/clamd-0.93.3-1.el5.rf.x86_64.rpm
-3ae45df2e71b8663da47cc4214c59615  rpms/policyd-1.82-5.ired.x86_64.rpm
 64a13a14fc031a4840c0df401752a5c7  rpms/dovecot-1.1.2-2_77.el5.x86_64.rpm
+fb2574ec5b714b136e4ee4bd85344b1c  rpms/policyd-1.82-4.rhms.x86_64.rpm
