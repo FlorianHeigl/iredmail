@@ -36,6 +36,12 @@ EOF
     postconf -e delay_warning_time='4h'
     postconf -e policy_time_limit='3600'
 
+    #
+    # Restrictions used to restrict what users can send mail to
+    # off-site destinations.
+    #
+    postconf -e smtpd_restriction_classes="local_only"
+
     # We use 'maildir' format, not 'mbox'.
     if [ X"${HOME_MAILBOX}" == X"Maildir" ]; then
         postconf -e home_mailbox="Maildir/"
@@ -150,7 +156,7 @@ postfix_config_ldap()
     postconf -e smtpd_sender_restrictions="permit_sasl_authenticated, permit_mynetworks"
     postconf -e mydestination="\$myhostname, localhost, localhost.localdomain, localhost.\$myhostname, ldap:${ldap_virtual_domains_cf}"
     postconf -e transport_maps="ldap:${ldap_transport_maps_cf}"
-    postconf -e virtual_mailbox_maps="ldap:${ldap_accounts_cf}, ldap:${ldap_accountsmap_cf}"
+    postconf -e virtual_mailbox_maps="ldap:${ldap_accounts_cf}, ldap:${ldap_virtual_mailbox_maps_cf}"
     postconf -e virtual_alias_maps="ldap:${ldap_virtual_alias_maps_cf}"
     postconf -e local_recipient_maps='$alias_maps $virtual_alias_maps $virtual_mailbox_maps'
     postconf -e sender_bcc_maps="ldap:${ldap_sender_bcc_maps_domain_cf}, ldap:${ldap_sender_bcc_maps_user_cf}"
@@ -158,6 +164,12 @@ postfix_config_ldap()
 
     postconf -e smtpd_sender_login_maps="ldap:${ldap_sender_login_maps_cf}"
     postconf -e smtpd_reject_unlisted_sender='yes'
+
+    #
+    # Restrictions used to restrict what users can send mail to
+    # off-site destinations.
+    #
+    postconf -e local_only="ldap:${ldap_local_domains_cf}, reject"
 
     #
     # For mydestination = ldap:virtualdomains
@@ -204,7 +216,7 @@ EOF
     #
     # LDAP Virtual Users.
     #
-    ECHO_INFO "Setting up LDAP virtual users: ${ldap_accounts_cf}, ${ldap_accountsmap_cf}."
+    ECHO_INFO "Setting up LDAP virtual users: ${ldap_accounts_cf}, ${ldap_virtual_mailbox_maps_cf}."
 
     cat > ${ldap_accounts_cf} <<EOF
 ${CONF_MSG}
@@ -222,7 +234,7 @@ result_attribute= mailMessageStore
 debug_level     = 0
 EOF
 
-    cat > ${ldap_accountsmap_cf} <<EOF
+    cat > ${ldap_virtual_mailbox_maps_cf} <<EOF
 ${CONF_MSG}
 server_host     = ${LDAP_SERVER_HOST}
 server_port     = ${LDAP_SERVER_PORT}
@@ -337,41 +349,63 @@ result_attribute= ${LDAP_ATTR_USER_SENDER_BCC_ADDRESS}
 debug_level     = 0
 EOF
 
-    ECHO_INFO "Set file permission: Owner/Group -> root/root, Mode -> 0640."
-    chown root:root ${ldap_virtual_domains_cf} \
-        ${ldap_transport_maps_cf} \
-        ${ldap_accounts_cf} \
-        ${ldap_accountsmap_cf} \
-        ${ldap_virtual_alias_maps_cf} \
-        ${ldap_recipient_bcc_maps_domain_cf} \
-        ${ldap_recipient_bcc_maps_user_cf} \
-        ${ldap_sender_bcc_maps_domain_cf} \
-        ${ldap_sender_bcc_maps_user_cf}
+    cat > ${ldap_restricted_senders_cf} <<EOF
+${CONF_MSG}
+server_host     = ${LDAP_SERVER_HOST}
+server_port     = ${LDAP_SERVER_PORT}
+version         = ${LDAP_BIND_VERSION}
+bind            = ${LDAP_BIND}
+start_tls       = no
+bind_dn         = ${LDAP_BINDDN}
+bind_pw         = ${LDAP_BINDPW}
+search_base     = ${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}
+scope           = sub
+query_filter    = (&(&(${LDAP_ATTR_USER_DN_NAME}=%s)(objectClass=${LDAP_OBJECTCLASS_USER}))(${LDAP_ATTR_USER_STATUS}=active))
+result_attribute= ${LDAP_ATTR_USER_RESTRICTION}
+debug_level     = 0
+EOF
 
-    chmod 0644 ${ldap_virtual_domains_cf} \
-        ${ldap_transport_maps_cf} \
-        ${ldap_accounts_cf} \
-        ${ldap_accountsmap_cf} \
-        ${ldap_virtual_alias_maps_cf} \
-        ${ldap_recipient_bcc_maps_domain_cf} \
-        ${ldap_recipient_bcc_maps_user_cf} \
-        ${ldap_sender_bcc_maps_domain_cf} \
-        ${ldap_sender_bcc_maps_user_cf}
+    cat > ${ldap_local_domains_cf} <<EOF
+${CONF_MSG}
+server_host     = ${LDAP_SERVER_HOST}
+server_port     = ${LDAP_SERVER_PORT}
+version         = ${LDAP_BIND_VERSION}
+bind            = ${LDAP_BIND}
+start_tls       = no
+bind_dn         = ${LDAP_BINDDN}
+bind_pw         = ${LDAP_BINDPW}
+search_base     = ${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}
+scope           = sub
+query_filter    = (&(&(${LDAP_ATTR_USER_DN_NAME}=%s)(objectClass=${LDAP_OBJECTCLASS_USER}))(${LDAP_ATTR_USER_STATUS}=active))
+result_attribute= ${LDAP_ATTR_USER_PERMITDELIVERDOMAIN}
+debug_level     = 0
+EOF
+
+    ECHO_INFO "Set file permission: Owner/Group -> root/root, Mode -> 0640."
 
     cat >> ${TIP_FILE} <<EOF
 Postfix (LDAP):
     * Configuration files:
-        - ${ldap_virtual_domains_cf}
-        - ${ldap_transport_maps_cf}
-        - ${ldap_accounts_cf}
-        - ${ldap_accountsmap_cf}
-        - ${ldap_virtual_alias_maps_cf}
-        - ${ldap_recipient_bcc_maps_domain_cf}
-        - ${ldap_recipient_bcc_maps_user_cf}
-        - ${ldap_sender_bcc_maps_domain_cf}
-        - ${ldap_sender_bcc_maps_user_cf}
-
 EOF
+
+    for i in ${ldap_virtual_domains_cf} \
+        ${ldap_transport_maps_cf} \
+        ${ldap_accounts_cf} \
+        ${ldap_virtual_mailbox_maps_cf} \
+        ${ldap_virtual_alias_maps_cf} \
+        ${ldap_recipient_bcc_maps_domain_cf} \
+        ${ldap_recipient_bcc_maps_user_cf} \
+        ${ldap_sender_bcc_maps_domain_cf} \
+        ${ldap_sender_bcc_maps_user_cf} \
+        ${ldap_restricted_senders_cf} \
+        ${ldap_local_domains_cf}
+    do
+        chown root:root ${i}
+        chmod 0644 ${i}
+        cat >> ${TIP_FILE} <<EOF
+        - ${i}
+EOF
+    done
 
     echo 'export status_postfix_config_ldap="DONE"' >> ${STATUS_FILE}
 }
@@ -395,7 +429,6 @@ postfix_config_mysql()
     #
     # Restricting what users can send mail to off-site destinations.
     #
-    postconf -e smtpd_restriction_classes="local_only"
     postconf -e local_only="mysql:${mysql_local_domains_cf}, reject"
 
     cat > ${mysql_transport_maps_cf} <<EOF
@@ -503,8 +536,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${MYSQL_SERVER}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT permit_domains || "OK" FROM mailbox WHERE username='%s' AND enablesmtp='1'
-
+query       = SELECT permitdeliverdomain || "OK" FROM mailbox WHERE username='%s' AND enablesmtp='1'
 EOF
 
     ECHO_INFO "Set file permission: Owner/Group -> postfix/postfix, Mode -> 0640."
@@ -603,7 +635,7 @@ postfix_config_sasl()
         #
         # Non-SPF.
         #
-        postconf -e smtpd_recipient_restrictions="permit_mynetworks, reject_unknown_sender_domain, reject_unknown_recipient_domain, reject_non_fqdn_sender, reject_non_fqdn_recipient, permit_sasl_authenticated, reject_unauth_destination, reject_non_fqdn_helo_hostname, reject_invalid_helo_hostname, check_policy_service unix:postgrey/socket"
+        postconf -e smtpd_recipient_restrictions="check_sender_access ldap:${ldap_restricted_senders_cf}, permit_mynetworks, reject_unknown_sender_domain, reject_unknown_recipient_domain, reject_non_fqdn_sender, reject_non_fqdn_recipient, permit_sasl_authenticated, reject_unauth_destination, reject_non_fqdn_helo_hostname, reject_invalid_helo_hostname, check_policy_service unix:postgrey/socket"
     elif [ X"${BACKEND}" == X"MySQL" ]; then
         #
         # Policyd, perl-Mail-SPF and non-SPF.
