@@ -376,8 +376,9 @@ bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
 search_base     = ${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}
 scope           = sub
-query_filter    = (&(&(${LDAP_ATTR_USER_DN_NAME}=%s)(objectClass=${LDAP_OBJECTCLASS_USER}))(${LDAP_ATTR_USER_STATUS}=active))
+query_filter    = (&(&(${LDAP_ATTR_USER_PERMITDELIVERDOMAIN}=%s)(objectClass=${LDAP_OBJECTCLASS_USER}))(${LDAP_ATTR_USER_STATUS}=active))
 result_attribute= ${LDAP_ATTR_USER_PERMITDELIVERDOMAIN}
+result_format   = OK
 debug_level     = 0
 EOF
 
@@ -540,7 +541,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${MYSQL_SERVER}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT "OK" FROM mailbox WHERE permitdeliverdomain='%s'
+query       = SELECT "OK" FROM mailbox WHERE permitdeliverdomain='%s' AND active='1' AND enablesmtp='1'
 EOF
 
     ECHO_INFO "Set file permission: Owner/Group -> postfix/postfix, Mode -> 0640."
