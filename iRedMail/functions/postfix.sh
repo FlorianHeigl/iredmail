@@ -169,7 +169,7 @@ postfix_config_ldap()
     # Restrictions used to restrict what users can send mail to
     # off-site destinations.
     #
-    postconf -e local_only="ldap:${ldap_local_domains_cf}, reject"
+    postconf -e local_only="check_recipient_access ldap:${ldap_permit_deliver_domains_cf}, reject"
 
     #
     # For mydestination = ldap:virtualdomains
@@ -365,7 +365,7 @@ result_attribute= ${LDAP_ATTR_USER_RESTRICTION}
 debug_level     = 0
 EOF
 
-    cat > ${ldap_local_domains_cf} <<EOF
+    cat > ${ldap_permit_deliver_domains_cf} <<EOF
 ${CONF_MSG}
 server_host     = ${LDAP_SERVER_HOST}
 server_port     = ${LDAP_SERVER_PORT}
@@ -398,7 +398,7 @@ EOF
         ${ldap_sender_bcc_maps_domain_cf} \
         ${ldap_sender_bcc_maps_user_cf} \
         ${ldap_restricted_senders_cf} \
-        ${ldap_local_domains_cf}
+        ${ldap_permit_deliver_domains_cf}
     do
         chown root:root ${i}
         chmod 0644 ${i}
@@ -429,7 +429,7 @@ postfix_config_mysql()
     #
     # Restricting what users can send mail to off-site destinations.
     #
-    postconf -e local_only="mysql:${mysql_local_domains_cf}, reject"
+    postconf -e local_only="check_recipient_access mysql:${mysql_permit_deliver_domains_cf}, reject"
 
     cat > ${mysql_transport_maps_cf} <<EOF
 user        = ${MYSQL_BIND_USER}
@@ -521,7 +521,7 @@ dbname      = ${VMAIL_DB}
 query       = SELECT bcc_address FROM recipient_bcc_user WHERE username='%s' AND active='1'
 EOF
 
-    cat > ${mysql_local_domains_cf} <<EOF
+    cat > ${mysql_restricted_senders_cf} <<EOF
 user        = ${MYSQL_BIND_USER}
 password    = ${MYSQL_BIND_PW}
 hosts       = ${MYSQL_SERVER}
@@ -530,13 +530,17 @@ dbname      = ${VMAIL_DB}
 query       = SELECT restriction FROM mailbox WHERE username='%s' AND active='1' AND enablesmtp='1'
 EOF
 
-    cat > ${mysql_restricted_senders_cf} <<EOF
+    # Result will be:
+    #   <ACTION>    <domain name>
+    #   OK          example.com
+    #   REJECT      hello.com
+    cat > ${mysql_permit_deliver_domains_cf} <<EOF
 user        = ${MYSQL_BIND_USER}
 password    = ${MYSQL_BIND_PW}
 hosts       = ${MYSQL_SERVER}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT permitdeliverdomain || "OK" FROM mailbox WHERE username='%s' AND enablesmtp='1'
+query       = SELECT "OK" FROM mailbox WHERE permitdeliverdomain='%s'
 EOF
 
     ECHO_INFO "Set file permission: Owner/Group -> postfix/postfix, Mode -> 0640."
@@ -554,7 +558,7 @@ EOF
         ${mysql_sender_bcc_maps_user_cf} \
         ${mysql_recipient_bcc_maps_domain_cf} \
         ${mysql_recipient_bcc_maps_user_cf} \
-        ${mysql_local_domains_cf} \
+        ${mysql_permit_deliver_domains_cf} \
         ${mysql_restricted_senders_cf}
     do
         chown root:root ${i}

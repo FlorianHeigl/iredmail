@@ -58,11 +58,13 @@ INSERT INTO admin (username,password,created) VALUES ("${FIRST_DOMAIN_ADMIN_NAME
 INSERT INTO domain_admins (username,domain,created) VALUES ("${FIRST_DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}","${FIRST_DOMAIN}", NOW());
 
 /* Add domain admin. */
-INSERT INTO mailbox (username,password,maildir,quota,domain,created) VALUES ("${FIRST_DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}","${FIRST_DOMAIN_ADMIN_PASSWD}","${FIRST_DOMAIN}/${FIRST_DOMAIN_ADMIN_NAME}/",0, "${FIRST_DOMAIN}",NOW());
+INSERT INTO mailbox
+(username,password,name,maildir,quota,domain,created) VALUES ("${FIRST_DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}","${FIRST_DOMAIN_ADMIN_PASSWD}","${FIRST_DOMAIN_ADMIN_NAME}","${FIRST_DOMAIN}/${FIRST_DOMAIN_ADMIN_NAME}/",0, "${FIRST_DOMAIN}",NOW());
 INSERT INTO alias (address,goto,domain,created) VALUES ("${FIRST_DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}", "${FIRST_DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}", "${FIRST_DOMAIN}", NOW());
 
 /* Add your first user. */
-INSERT INTO mailbox (username,password,maildir,quota,domain,created) VALUES ("${FIRST_USER}@${FIRST_DOMAIN}","${FIRST_USER_PASSWD}","${FIRST_DOMAIN}/${FIRST_USER}/",10, "${FIRST_DOMAIN}", NOW());
+INSERT INTO mailbox
+(username,password,name,maildir,quota,domain,created) VALUES ("${FIRST_USER}@${FIRST_DOMAIN}","${FIRST_USER_PASSWD}","${FIRST_USER}","${FIRST_DOMAIN}/${FIRST_USER}/",10, "${FIRST_DOMAIN}", NOW());
 INSERT INTO alias (address,goto,domain,created) VALUES ("${FIRST_USER}@${FIRST_DOMAIN}", "${FIRST_USER}@${FIRST_DOMAIN}", "${FIRST_DOMAIN}", NOW());
 EOF
 

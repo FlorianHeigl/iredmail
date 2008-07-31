@@ -33,6 +33,7 @@ enable_dovecot()
 {
     [ X"${ENABLE_DOVECOT}" == X"YES" ] && \
         backup_file ${DOVECOT_CONF} && \
+        chmod 0755 ${DOVECOT_CONF} && \
         ECHO_INFO "Setup dovecot: ${DOVECOT_CONF}." && \
         cat > ${DOVECOT_CONF} <<EOF
 ${CONF_MSG}
