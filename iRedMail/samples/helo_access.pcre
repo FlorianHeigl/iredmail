@@ -33,6 +33,7 @@
 /^sina\.com$/       REJECT Go away, bad guy (sina.com).
 /^126\.com$/        REJECT Go away, bad guy (126.com).
 /^163\.com$/        REJECT Go away, bad guy (163.com).
+/^163\.net$/        REJECT Go away, bad guy (163.net).
 /^sohu\.com$/       REJECT Go away, bad guy (sohu.com).
 /gmail\.com$/       REJECT Go away, bad guy (gmail.com).
 /^google\.com$/     REJECT Go away, bad guy (google.com).
@@ -153,10 +154,10 @@
 /revip2\.asianet\.co\.th$/  REJECT Go away, bad guy
 /telkomadsl\.co\.za$/       REJECT Go away, bad guy
 /tim\.ro$/                  REJECT Go away, bad guy
-/tsi\.tychy\.pl$/           REJECT Go away, bad guy
-/ttnet\.net\.tr$/           REJECT Go away, bad guy
-/tttmaxnet\.com$/           REJECT Go away, bad guy
-/user\.veloxzone\.com\.br$/ REJECT Go away, bad guy
+/tsi\.tychy\.pl/            REJECT Go away, bad guy
+/ttnet\.net\.tr/            REJECT Go away, bad guy
+/tttmaxnet\.com/            REJECT Go away, bad guy
+/user\.veloxzone\.com\.br/  REJECT Go away, bad guy
 /utk\.ru$/                  REJECT Go away, bad guy
 /veloxzone\.com\.br$/       REJECT Go away, bad guy
 /verizon\.net$/             REJECT Go away, bad guy

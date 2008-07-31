@@ -392,6 +392,12 @@ postfix_config_mysql()
     postconf -e smtpd_sender_login_maps="mysql:${mysql_sender_login_maps_cf}"
     postconf -e smtpd_reject_unlisted_sender='yes'
 
+    #
+    # Restricting what users can send mail to off-site destinations.
+    #
+    postconf -e smtpd_restriction_classes="local_only"
+    postconf -e local_only="mysql:${mysql_local_domains_cf}, reject"
+
     cat > ${mysql_transport_maps_cf} <<EOF
 user        = ${MYSQL_BIND_USER}
 password    = ${MYSQL_BIND_PW}
@@ -482,44 +488,50 @@ dbname      = ${VMAIL_DB}
 query       = SELECT bcc_address FROM recipient_bcc_user WHERE username='%s' AND active='1'
 EOF
 
+    cat > ${mysql_local_domains_cf} <<EOF
+user        = ${MYSQL_BIND_USER}
+password    = ${MYSQL_BIND_PW}
+hosts       = ${MYSQL_SERVER}
+port        = ${MYSQL_PORT}
+dbname      = ${VMAIL_DB}
+query       = SELECT restriction FROM mailbox WHERE username='%s' AND active='1' AND enablesmtp='1'
+EOF
+
+    cat > ${mysql_restricted_senders_cf} <<EOF
+user        = ${MYSQL_BIND_USER}
+password    = ${MYSQL_BIND_PW}
+hosts       = ${MYSQL_SERVER}
+port        = ${MYSQL_PORT}
+dbname      = ${VMAIL_DB}
+query       = SELECT permit_domains || "OK" FROM mailbox WHERE username='%s' AND enablesmtp='1'
+
+EOF
+
     ECHO_INFO "Set file permission: Owner/Group -> postfix/postfix, Mode -> 0640."
-    chown root:root ${mysql_virtual_domains_cf} \
-        ${mysql_transport_maps_cf} \
-        ${mysql_virtual_mailbox_maps_cf} \
-        ${mysql_virtual_mailbox_limit_maps_cf} \
-        ${mysql_virtual_alias_maps_cf} \
-        ${mysql_sender_login_maps_cf} \
-        ${mysql_sender_bcc_maps_domain_cf} \
-        ${mysql_sender_bcc_maps_user_cf} \
-        ${mysql_recipient_bcc_maps_domain_cf} \
-        ${mysql_recipient_bcc_maps_user_cf}
-
-    chmod 0644 ${mysql_virtual_domains_cf} \
-        ${mysql_transport_maps_cf} \
-        ${mysql_virtual_mailbox_maps_cf} \
-        ${mysql_virtual_mailbox_limit_maps_cf} \
-        ${mysql_virtual_alias_maps_cf} \
-        ${mysql_sender_login_maps_cf} \
-        ${mysql_sender_bcc_maps_domain_cf} \
-        ${mysql_sender_bcc_maps_user_cf} \
-        ${mysql_recipient_bcc_maps_domain_cf} \
-        ${mysql_recipient_bcc_maps_user_cf}
-
     cat >> ${TIP_FILE} <<EOF
 Postfix (MySQL):
     * Configuration files:
-        - ${mysql_virtual_domains_cf}
-        - ${mysql_transport_maps_cf}
-        - ${mysql_virtual_mailbox_maps_cf}
-        - ${mysql_virtual_mailbox_limit_maps_cf}
-        - ${mysql_virtual_alias_maps_cf}
-        - ${mysql_sender_login_maps_cf}
-        - ${mysql_sender_bcc_maps_domain_cf}
-        - ${mysql_sender_bcc_maps_user_cf}
-        - ${mysql_recipient_bcc_maps_domain_cf}
-        - ${mysql_recipient_bcc_maps_user_cf}
-
 EOF
+    for i in ${mysql_virtual_domains_cf} \
+        ${mysql_transport_maps_cf} \
+        ${mysql_virtual_mailbox_maps_cf} \
+        ${mysql_virtual_mailbox_limit_maps_cf} \
+        ${mysql_virtual_alias_maps_cf} \
+        ${mysql_sender_login_maps_cf} \
+        ${mysql_sender_bcc_maps_domain_cf} \
+        ${mysql_sender_bcc_maps_user_cf} \
+        ${mysql_recipient_bcc_maps_domain_cf} \
+        ${mysql_recipient_bcc_maps_user_cf} \
+        ${mysql_local_domains_cf} \
+        ${mysql_restricted_senders_cf}
+    do
+        chown root:root ${i}
+        chmod 0644 ${i}
+
+        cat >> ${TIP_FILE} <<EOF
+        - $i
+EOF
+    done
 
     echo 'export status_postfix_config_mysql="DONE"' >> ${STATUS_FILE}
 }
@@ -596,7 +608,7 @@ postfix_config_sasl()
         #
         # Policyd, perl-Mail-SPF and non-SPF.
         #
-        postconf -e smtpd_recipient_restrictions="permit_mynetworks, reject_unknown_sender_domain, reject_unknown_recipient_domain, reject_non_fqdn_sender, reject_non_fqdn_recipient, permit_sasl_authenticated, reject_unauth_destination, reject_non_fqdn_helo_hostname, reject_invalid_helo_hostname, check_policy_service inet:127.0.0.1:10031"
+        postconf -e smtpd_recipient_restrictions="check_sender_access mysql:${mysql_restricted_senders_cf}, permit_mynetworks, reject_unknown_sender_domain, reject_unknown_recipient_domain, reject_non_fqdn_sender, reject_non_fqdn_recipient, permit_sasl_authenticated, reject_unauth_destination, reject_non_fqdn_helo_hostname, reject_invalid_helo_hostname, check_policy_service inet:127.0.0.1:10031"
     else
         :
     fi

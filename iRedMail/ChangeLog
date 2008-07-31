@@ -1,4 +1,6 @@
 iRedMail-0.2-rc3:
+    * New feature: Restricting what users can send mail to off-site
+      destinations.
     * Add 'mail_name', 'mail_version' in postfix. Thanks muniao. :)
     * Update dovecot to 1.1.2. Thanks atrpms.net.
     * Update phpMyAdmin to 2.11.8.1.

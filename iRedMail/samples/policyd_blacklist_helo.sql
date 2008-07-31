@@ -25,6 +25,7 @@ USE policyd;
 INSERT INTO blacklist_helo (_helo) VALUES ("sina.com");
 INSERT INTO blacklist_helo (_helo) VALUES ("126.com");
 INSERT INTO blacklist_helo (_helo) VALUES ("163.com");
+INSERT INTO blacklist_helo (_helo) VALUES ("163.net");
 INSERT INTO blacklist_helo (_helo) VALUES ("sohu.com");
 INSERT INTO blacklist_helo (_helo) VALUES ("yahoo.com.cn");
 INSERT INTO blacklist_helo (_helo) VALUES ("yahoo.co.jp");
