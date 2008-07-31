@@ -63,19 +63,3 @@ INSERT INTO blacklist_helo (_helo) VALUES ("cncie.com");
 INSERT INTO blacklist_helo (_helo) VALUES ("xinhaigroup.com");
 INSERT INTO blacklist_helo (_helo) VALUES ("5483e996d84343f.com");
 INSERT INTO blacklist_helo (_helo) VALUES ("yeah.net");
-
-/*
-    Block all dynamic IP client and spammers.
-
-    Note:
-        policyd shipped within iRedMail solution supports
-        wildcard in blacklist_helo.
-*/
-
-INSERT INTO blacklist_helo (_helo) VALUES ("%adsl%");
-INSERT INTO blacklist_helo (_helo) VALUES ("%pppoe%");
-INSERT INTO blacklist_helo (_helo) VALUES ("%ppp%");
-INSERT INTO blacklist_helo (_helo) VALUES ("%dialup%");
-INSERT INTO blacklist_helo (_helo) VALUES ("%dynamic%");
-INSERT INTO blacklist_helo (_helo) VALUES ("%dhcp%");
-INSERT INTO blacklist_helo (_helo) VALUES ("%dynamic.163data.com.cn");

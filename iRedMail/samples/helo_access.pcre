@@ -90,9 +90,81 @@
 /dynamic\.163data\.com\.cn/ REJECT Go away, bad guy (dynamic.163data.com.cn).
 /pppoe/                     REJECT Go away, bad guy (pppoe).
 /adsl/                      REJECT Go away, bad guy (adsl).
-/dialup/                    REJECT Go away, bad guy (dialup).
-/dhcp/                      REJECT Go away, bad guy (dhcp).
-/dynamic/                   REJECT Go away, bad guy (dynamic).
-/pool-/                     REJECT Go away, bad guy (pool-).
-/^cpe-/                     REJECT Go away, bad guy (cpe-).
-/\.cpe\./                   REJECT Go away, bad guy (.cpe.).
+/adsl\.alicedsl\.de/        REJECT Go away, bad guy (adsl.alicedsl.de)
+/adsl\.inetia\.pl/          REJECT Go away, bad guy (adsl.viettel.vn)
+/adsl\.viettel\.vn/         REJECT Go away, bad guy (dsl.brasiltelecom.net.br)
+/dsl\.brasiltelecom\.net\.br/   REJECT Go away, bad guy (dsl.optinet.hr)
+/dsl\.optinet\.hr/          REJECT Go away, bad guy (dsl.telesp.net.br)
+/dsl\.telesp\.net\.br/      REJECT Go away, bad guy (dialog)
+/dialup/                    REJECT Go away, bad guy (dialup)
+/dhcp/                      REJECT Go away, bad guy (dhcp)
+/dhcp\.stls\.mo\.charter\.com/  REJECT Go away, bad guy (dhcp.stls.mo.charter.com)
+/dynamic/                   REJECT Go away, bad guy (dynamic)
+/dynamic\.mts-nn\.ru/       REJECT Go away, bad guy (dynamic.mts-nn.ru)
+/dynamicIP\.rima-tde\.net/  REJECT Go away, bad guy (dynamicIP.rima-tde.net)
+/pool-/                     REJECT Go away, bad guy (pool-)
+/^cpe-/                     REJECT Go away, bad guy (cpe-)
+/\.cpe\./                   REJECT Go away, bad guy (.cpe.)
+
+/speedy\.com\.ar$/          REJECT Go away, bad guy (speedy.com.ar)
+/speedyterra\.com\.br$/     REJECT Go away, bad guy (speedyterra.com.br)
+/static\.sbb\.rs$/          REJECT Go away, bad guy (static.sbb.rs)
+/static\.vsnl\.net\.in$/    REJECT Go away, bad guy (static.vsnl.net.in)
+
+/advance\.com\.ar/          REJECT Go away, bad guy
+/airtelbroadband\.in/       REJECT Go away, bad guy
+/bb\.netvision\.net\.il/    REJECT Go away, bad guy
+/bezeqint\.net/             REJECT Go away, bad guy
+/broadband3\.iol\.cz/       REJECT Go away, bad guy
+/cable\.net\.co/            REJECT Go away, bad guy
+/catv\.broadband\.hu/       REJECT Go away, bad guy
+/chello\.nl/                REJECT Go away, bad guy
+/chello\.sk/                REJECT Go away, bad guy
+/client\.mchsi\.com/        REJECT Go away, bad guy
+/cncdnh\.east\.verizon\.net/    REJECT Go away, bad guy
+/comunitel\.net/            REJECT Go away, bad guy
+/coprosys\.cz/              REJECT Go away, bad guy
+/dclient\.hispeed\.ch/      REJECT Go away, bad guy
+/dfw\.dsl-w\.verizon\.net/  REJECT Go away, bad guy
+/dip0\.t-ipconnect\.de/     REJECT Go away, bad guy
+/domain\.invalid/           REJECT Go away, bad guy
+/dyn\.centurytel\.net/      REJECT Go away, bad guy
+/embarqhsd\.net/            REJECT Go away, bad guy
+/emcali\.net\.co/           REJECT Go away, bad guy
+/epm\.net\.co/              REJECT Go away, bad guy
+/eutelia\.it/               REJECT Go away, bad guy
+/fastwebnet\.it/            REJECT Go away, bad guy
+/fibertel\.com\.ar/         REJECT Go away, bad guy
+/freedom2surf\.net$/        REJECT Go away, bad guy
+/hgcbroadband\.com$/        REJECT Go away, bad guy
+/HINET-IP\.hinet\.net$/     REJECT Go away, bad guy
+/infonet\.by$/              REJECT Go away, bad guy
+/is74\.ru$/                 REJECT Go away, bad guy
+/kievnet\.com\.ua$/         REJECT Go away, bad guy
+/metrotel\.net\.co$/        REJECT Go away, bad guy
+/nw\.nuvox\.net$/           REJECT Go away, bad guy
+/pitbpa\.fios\.verizon\.net$/   REJECT Go away, bad guy
+/pldt\.net$/                REJECT Go away, bad guy
+/pool\.invitel\.hu$/        REJECT Go away, bad guy
+/pool\.ukrtel\.net$/        REJECT Go away, bad guy
+/pools\.arcor-ip\.net$/     REJECT Go away, bad guy
+/pppoe\.avangarddsl\.ru$/   REJECT Go away, bad guy
+/retail\.telecomitalia\.it$/    REJECT Go away, bad guy
+/revip2\.asianet\.co\.th$/  REJECT Go away, bad guy
+/telkomadsl\.co\.za$/       REJECT Go away, bad guy
+/tim\.ro$/                  REJECT Go away, bad guy
+/tsi\.tychy\.pl$/           REJECT Go away, bad guy
+/ttnet\.net\.tr$/           REJECT Go away, bad guy
+/tttmaxnet\.com$/           REJECT Go away, bad guy
+/user\.veloxzone\.com\.br$/ REJECT Go away, bad guy
+/utk\.ru$/                  REJECT Go away, bad guy
+/veloxzone\.com\.br$/       REJECT Go away, bad guy
+/verizon\.net$/             REJECT Go away, bad guy
+/virtua\.com\.br$/          REJECT Go away, bad guy
+/wanamaroc\.com$/           REJECT Go away, bad guy
+/wbt\.ru$/                  REJECT Go away, bad guy
+/wireless\.iaw\.on\.ca$/    REJECT Go away, bad guy
+/zj\.cn$/                   REJECT Go away, bad guy
+/business\.telecomitalia\.it$/  REJECT Go away, bad guy
+/cotas\.com\.bo$/           REJECT Go away, bad guy
+/marunouchi\.tokyo\.ocn\.ne\.jp$/   REJECT Go away, bad guy
