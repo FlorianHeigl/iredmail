@@ -98,9 +98,11 @@ them by your own:
     "SquirrelMail" "WebMail program, written in PHP." "on" \
     "ExtMail" "WebMail program from ExtMail project." "off" \
     "phpLDAPadmin" "Web-based LDAP browser to manage your LDAP server." "on" \
-    "Mailman" "Mailing List Manager." "off" \
     "Mailgraph" "Mail statistics RRDtool frontend for Postfix." "on" \
     2>/tmp/ldap_optional_components
+
+    # Temporary disabled.
+    #"Mailman" "Mailing List Manager." "off" \
 
     LDAP_OPTIONAL_COMPONENTS="$(cat /tmp/ldap_optional_components)"
 
@@ -133,9 +135,11 @@ them by your own:
     "ExtMail" "WebMail program from ExtMail project." "off" \
     "phpMyAdmin" "Web-based MySQL database management." "on" \
     "PostfixAdmin" "Web-based program to manage domains and users stored in MySQL." "on" \
-    "Mailman" "Mailing List Manager." "off" \
     "Mailgraph" "Mail statistics RRDtool frontend for Postfix." "on" \
     2>/tmp/mysql_optional_components
+
+    # Temporary disabled.
+    #"Mailman" "Mailing List Manager." "off" \
 
     MYSQL_OPTIONAL_COMPONENTS="$(cat /tmp/mysql_optional_components)"
 

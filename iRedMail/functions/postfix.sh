@@ -367,19 +367,19 @@ EOF
 
     cat > ${ldap_permit_deliver_domains_cf} <<EOF
 ${CONF_MSG}
-server_host     = ${LDAP_SERVER_HOST}
-server_port     = ${LDAP_SERVER_PORT}
-version         = ${LDAP_BIND_VERSION}
-bind            = ${LDAP_BIND}
-start_tls       = no
-bind_dn         = ${LDAP_BINDDN}
-bind_pw         = ${LDAP_BINDPW}
-search_base     = ${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}
-scope           = sub
-query_filter    = (&(&(${LDAP_ATTR_USER_PERMITDELIVERDOMAIN}=%s)(objectClass=${LDAP_OBJECTCLASS_USER}))(${LDAP_ATTR_USER_STATUS}=active))
-result_attribute= ${LDAP_ATTR_USER_PERMITDELIVERDOMAIN}
-result_format   = OK
-debug_level     = 0
+server_host         = ${LDAP_SERVER_HOST}
+server_port         = ${LDAP_SERVER_PORT}
+version             = ${LDAP_BIND_VERSION}
+bind                = ${LDAP_BIND}
+start_tls           = no
+bind_dn             = ${LDAP_BINDDN}
+bind_pw             = ${LDAP_BINDPW}
+search_base         = ${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}
+scope               = sub
+query_filter        = (&(${LDAP_ATTR_USER_DN_NAME}=%s)(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=active))
+result_attribute    = ${LDAP_ATTR_USER_PERMITDELIVERDOMAIN}
+result_format       = OK
+debug_level         = 0
 EOF
 
     ECHO_INFO "Set file permission: Owner/Group -> root/root, Mode -> 0640."
@@ -532,16 +532,22 @@ query       = SELECT restriction FROM mailbox WHERE username='%s' AND active='1'
 EOF
 
     # Result will be:
-    #   <ACTION>    <domain name>
-    #   OK          example.com
-    #   REJECT      hello.com
+    #   <ACTION>
+    #   OK
+    #   REJECT
+    #
+    # Reference:
+    #   http://www.postfix.org/DATABASE_README.html
+    #   mysql_table(5), ldap_table(5), pgsql_table(5)
+    #
     cat > ${mysql_permit_deliver_domains_cf} <<EOF
-user        = ${MYSQL_BIND_USER}
-password    = ${MYSQL_BIND_PW}
-hosts       = ${MYSQL_SERVER}
-port        = ${MYSQL_PORT}
-dbname      = ${VMAIL_DB}
-query       = SELECT "OK" FROM mailbox WHERE permitdeliverdomain='%s' AND active='1' AND enablesmtp='1'
+user            = ${MYSQL_BIND_USER}
+password        = ${MYSQL_BIND_PW}
+hosts           = ${MYSQL_SERVER}
+port            = ${MYSQL_PORT}
+dbname          = ${VMAIL_DB}
+query           = SELECT permitdeliverdomain FROM mailbox WHERE username='%s' AND active='1' AND enablesmtp='1'
+result_format   = OK
 EOF
 
     ECHO_INFO "Set file permission: Owner/Group -> postfix/postfix, Mode -> 0640."

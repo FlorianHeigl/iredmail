@@ -1,4 +1,5 @@
 iRedMail-0.2-rc3:
+    * Disable mailman, it should be integrated more smoothly.
     * New feature: Restricting what users can send mail to off-site
       destinations.
     * Add 'mail_name', 'mail_version' in postfix. Thanks muniao. :)
