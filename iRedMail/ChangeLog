@@ -1,4 +1,8 @@
 iRedMail-0.2-rc3:
+    * New feature: Protecting internal email addresses, such as mail
+      list addresses.
+    * Remove postfixadmin vacation table in mysql template, disable
+      vacation functions in postfixadmin.
     * Disable mailman, it should be integrated more smoothly.
     * New feature: Restricting what users can send mail to off-site
       destinations.

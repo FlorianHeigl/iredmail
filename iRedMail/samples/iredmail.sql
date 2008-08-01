@@ -71,8 +71,6 @@ CREATE TABLE mailbox (
     active tinyint(1) NOT NULL default '1',
     department varchar(255) NOT NULL default '',
     rank varchar(255) NOT NULL default 'normal',
-    restriction varchar(255) NOT NULL default '',
-    permitdeliverdomain varchar(255) NOT NULL default '',
     enablesmtp tinyint(1) NOT NULL default '1',
     enablepop3 tinyint(1) NOT NULL default '1',
     enableimap tinyint(1) NOT NULL default '1',
@@ -145,30 +143,15 @@ CREATE TABLE log (
 ) TYPE=MyISAM;
 
 #
-# Vacation stuff ...
+# Table structure for table restriction
 #
-CREATE TABLE vacation ( 
-    email varchar(255) NOT NULL default '', 
-    subject varchar(255) NOT NULL default '', 
-    body text NOT NULL, 
-    cache text NOT NULL, 
-    domain varchar(255) NOT NULL default '', 
-    created datetime NOT NULL default '0000-00-00 00:00:00', 
-    modified datetime NOT NULL default '0000-00-00 00:00:00', 
-    active tinyint(4) NOT NULL default '1', 
-    PRIMARY KEY (email), 
-    KEY email (email) 
-) TYPE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
- 
+# Warning: Do *NOT* use primary key here.
 #
-# vacation_notification table 
-#
- 
-CREATE TABLE vacation_notification ( 
-    on_vacation varchar(255) NOT NULL, 
-    notified varchar(255) NOT NULL, 
-    notified_at timestamp NOT NULL default now(), 
-    CONSTRAINT vacation_notification_pkey PRIMARY KEY(on_vacation, notified), 
-    FOREIGN KEY (on_vacation) REFERENCES vacation(email) ON DELETE CASCADE 
-) TYPE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+CREATE TABLE restrictions (
+    username varchar(255) NOT NULL default '',
+    restriction_class varchar(255) NOT NULL default '',
+    restricteddomain varchar(255) NOT NULL default '',
+    created datetime NOT NULL default '0000-00-00 00:00:00',
+    modified datetime NOT NULL default '0000-00-00 00:00:00'
+) TYPE=MyISAM;
 

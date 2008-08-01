@@ -78,6 +78,10 @@ EOF
     perl -pi -e 's#(.*show_footer_text.*=)(.*)(YES)(.*)#${1}"NO";#' config.inc.php
     perl -pi -e 's#(.*emailcheck_resolve_domain.*=)(.*)(YES)(.*)#${1}"NO";#' config.inc.php
 
+    # Disable vacation.
+    perl -pi -e 's#(.*vacation_control.*=)(.*)(YES)(.*)#${1}"NO";#' config.inc.php
+    perl -pi -e 's#(.*vacation_control_admin.*=)(.*)(YES)(.*)#${1}"NO";#' config.inc.php
+
     [ X"${HOME_MAILBOX}" == X"mbox" ] && perl -pi -e 's#(.*maildir.*fDomain.*fUsername.*)(\..*/.*)#${1};#' create-mailbox.php
 
     cat >> ${TIP_FILE} <<EOF
