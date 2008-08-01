@@ -40,7 +40,7 @@ EOF
     # Restrictions used to restrict what users can send mail to
     # off-site destinations.
     #
-    postconf -e smtpd_restriction_classes="local_only"
+    postconf -e smtpd_restriction_classes="internal_deliver_only, internal_recipient_only"
 
     # We use 'maildir' format, not 'mbox'.
     if [ X"${HOME_MAILBOX}" == X"Maildir" ]; then
@@ -169,7 +169,8 @@ postfix_config_ldap()
     # Restrictions used to restrict what users can send mail to
     # off-site destinations.
     #
-    postconf -e local_only="check_recipient_access ldap:${ldap_restrictions_cf}, reject"
+    postconf -e internal_deliver_only="check_recipient_access ldap:${ldap_internal_deliver_only_cf}, reject"
+    postconf -e internal_recipient_only="check_sender_access ldap:${ldap_internal_recipient_only_cf}, reject"
 
     #
     # For mydestination = ldap:virtualdomains
@@ -365,7 +366,7 @@ result_attribute= ${LDAP_ATTR_USER_RESTRICTION}
 debug_level     = 0
 EOF
 
-    cat > ${ldap_restrictions_cf} <<EOF
+    cat > ${ldap_internal_deliver_only_cf} <<EOF
 ${CONF_MSG}
 server_host         = ${LDAP_SERVER_HOST}
 server_port         = ${LDAP_SERVER_PORT}
@@ -379,6 +380,23 @@ scope               = sub
 query_filter        = (&(${LDAP_ATTR_USER_DN_NAME}=%s)(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=active))
 result_attribute    = ${LDAP_ATTR_USER_RESTRICTED_DOMAIN}
 result_format       = OK
+debug_level         = 0
+EOF
+
+    cat > ${ldap_internal_recipient_only_cf} <<EOF
+${CONF_MSG}
+server_host         = ${LDAP_SERVER_HOST}
+server_port         = ${LDAP_SERVER_PORT}
+version             = ${LDAP_BIND_VERSION}
+bind                = ${LDAP_BIND}
+start_tls           = no
+bind_dn             = ${LDAP_BINDDN}
+bind_pw             = ${LDAP_BINDPW}
+search_base         = ${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}
+scope               = sub
+query_filter        = (&(${LDAP_ATTR_USER_DN_NAME}=%s)(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=active))
+result_attribute    = ${LDAP_ATTR_USER_RESTRICTED_DOMAIN}
+result_format       = REJECT
 debug_level         = 0
 EOF
 
@@ -399,7 +417,7 @@ EOF
         ${ldap_sender_bcc_maps_domain_cf} \
         ${ldap_sender_bcc_maps_user_cf} \
         ${ldap_sender_access_cf} \
-        ${ldap_restrictions_cf}
+        ${ldap_internal_deliver_only_cf}
     do
         chown root:root ${i}
         chmod 0644 ${i}
@@ -430,7 +448,8 @@ postfix_config_mysql()
     #
     # Restricting what users can send mail to off-site destinations.
     #
-    postconf -e local_only="check_recipient_access mysql:${mysql_restrictions_cf}, reject"
+    postconf -e internal_deliver_only="check_recipient_access mysql:${mysql_internal_deliver_only_cf}, reject"
+    postconf -e internal_recipient_only="check_sender_access mysql:${mysql_internal_recipient_only_cf}, reject"
 
     cat > ${mysql_transport_maps_cf} <<EOF
 user        = ${MYSQL_BIND_USER}
@@ -528,7 +547,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${MYSQL_SERVER}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT restriction_class FROM restrictions WHERE restricteddomain='%s'
+query       = SELECT restriction_class FROM restrictions WHERE username='%s'
 EOF
 
     # Result will be:
@@ -540,13 +559,24 @@ EOF
     #   http://www.postfix.org/DATABASE_README.html
     #   mysql_table(5), ldap_table(5), pgsql_table(5)
     #
-    cat > ${mysql_restriction_cf} <<EOF
+    cat > ${mysql_internal_deliver_only_cf} <<EOF
 user            = ${MYSQL_BIND_USER}
 password        = ${MYSQL_BIND_PW}
 hosts           = ${MYSQL_SERVER}
 port            = ${MYSQL_PORT}
 dbname          = ${VMAIL_DB}
-query           = SELECT "OK" FROM restriction_class WHERE restricteddomain='%s'
+query           = SELECT restricteddomain FROM restrictions WHERE username='%s' AND restriction_class='internal_deliver_only'
+result_format   = OK
+EOF
+
+    cat > ${mysql_internal_recipient_only_cf} <<EOF
+user            = ${MYSQL_BIND_USER}
+password        = ${MYSQL_BIND_PW}
+hosts           = ${MYSQL_SERVER}
+port            = ${MYSQL_PORT}
+dbname          = ${VMAIL_DB}
+query           = SELECT restricteddomain FROM restrictions WHERE username='%s' AND restriction_class='internal_recipient_only'
+result_format   = OK
 EOF
 
     ECHO_INFO "Set file permission: Owner/Group -> postfix/postfix, Mode -> 0640."
@@ -564,7 +594,8 @@ EOF
         ${mysql_sender_bcc_maps_user_cf} \
         ${mysql_recipient_bcc_maps_domain_cf} \
         ${mysql_recipient_bcc_maps_user_cf} \
-        ${mysql_restrictions_cf} \
+        ${mysql_internal_deliver_only_cf} \
+        ${mysql_internal_recipient_only_cf} \
         ${mysql_sender_access_cf}
     do
         chown root:root ${i}
@@ -645,12 +676,12 @@ postfix_config_sasl()
         #
         # Non-SPF.
         #
-        postconf -e smtpd_recipient_restrictions="check_sender_access ldap:${ldap_sender_access_cf}, permit_mynetworks, reject_unknown_sender_domain, reject_unknown_recipient_domain, reject_non_fqdn_sender, reject_non_fqdn_recipient, permit_sasl_authenticated, reject_unauth_destination, reject_non_fqdn_helo_hostname, reject_invalid_helo_hostname, check_policy_service unix:postgrey/socket"
+        postconf -e smtpd_recipient_restrictions="check_sender_access ldap:${ldap_sender_access_cf}, check_recipient_access ldap:${ldap_sender_access_cf}, permit_mynetworks, reject_unknown_sender_domain, reject_unknown_recipient_domain, reject_non_fqdn_sender, reject_non_fqdn_recipient, permit_sasl_authenticated, reject_unauth_destination, reject_non_fqdn_helo_hostname, reject_invalid_helo_hostname, check_policy_service unix:postgrey/socket"
     elif [ X"${BACKEND}" == X"MySQL" ]; then
         #
         # Policyd, perl-Mail-SPF and non-SPF.
         #
-        postconf -e smtpd_recipient_restrictions="check_sender_access mysql:${mysql_sender_access_cf}, permit_mynetworks, reject_unknown_sender_domain, reject_unknown_recipient_domain, reject_non_fqdn_sender, reject_non_fqdn_recipient, permit_sasl_authenticated, reject_unauth_destination, reject_non_fqdn_helo_hostname, reject_invalid_helo_hostname, check_policy_service inet:127.0.0.1:10031"
+        postconf -e smtpd_recipient_restrictions="check_sender_access mysql:${mysql_sender_access_cf}, check_recipient_access mysql:${mysql_sender_access_cf}, permit_mynetworks, reject_unknown_sender_domain, reject_unknown_recipient_domain, reject_non_fqdn_sender, reject_non_fqdn_recipient, permit_sasl_authenticated, reject_unauth_destination, reject_non_fqdn_helo_hostname, reject_invalid_helo_hostname, check_policy_service inet:127.0.0.1:10031"
     else
         :
     fi
