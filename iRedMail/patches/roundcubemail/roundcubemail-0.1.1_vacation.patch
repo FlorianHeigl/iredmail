@@ -1,6 +1,6 @@
 diff -Naur config/main.inc.php config/main.inc.php
 --- config/main.inc.php	2008-07-26 09:21:12.000000000 +0800
-+++ config/main.inc.php	2008-07-30 11:44:18.000000000 +0800
++++ config/main.inc.php	2008-08-02 21:43:49.000000000 +0800
 @@ -289,5 +289,8 @@
  // mime magic database
  $rcmail_config['mime_magic'] = '/usr/share/misc/magic';
@@ -12,7 +12,7 @@ diff -Naur config/main.inc.php config/main.inc.php
  ?>
 diff -Naur index.php index.php
 --- index.php	2008-07-26 09:21:12.000000000 +0800
-+++ index.php	2008-07-27 16:28:39.000000000 +0800
++++ index.php	2008-07-30 12:00:37.000000000 +0800
 @@ -394,6 +394,9 @@
  
    if (($_action=='forwards') or ($_action=='save-forwards'))
@@ -25,7 +25,7 @@ diff -Naur index.php index.php
  
 diff -Naur program/js/app.js program/js/app.js
 --- program/js/app.js	2008-07-26 09:21:12.000000000 +0800
-+++ program/js/app.js	2008-07-27 11:53:45.000000000 +0800
++++ program/js/app.js	2008-07-30 12:00:37.000000000 +0800
 @@ -283,7 +283,7 @@
  
  
@@ -64,7 +64,7 @@ diff -Naur program/js/app.js program/js/app.js
          break;
 diff -Naur program/localization/en_US/labels.inc program/localization/en_US/labels.inc
 --- program/localization/en_US/labels.inc	2008-07-26 09:21:12.000000000 +0800
-+++ program/localization/en_US/labels.inc	2008-07-26 21:33:20.000000000 +0800
++++ program/localization/en_US/labels.inc	2008-07-30 12:00:37.000000000 +0800
 @@ -210,6 +210,11 @@
  $labels['manageidentities']  = 'Manage identities for this account';
  $labels['newidentity']  = 'New identity';
@@ -79,7 +79,7 @@ diff -Naur program/localization/en_US/labels.inc program/localization/en_US/labe
  
 diff -Naur program/localization/zh_CN/labels.inc program/localization/zh_CN/labels.inc
 --- program/localization/zh_CN/labels.inc	2008-07-26 09:21:12.000000000 +0800
-+++ program/localization/zh_CN/labels.inc	2008-07-30 11:48:05.000000000 +0800
++++ program/localization/zh_CN/labels.inc	2008-07-30 12:00:37.000000000 +0800
 @@ -152,6 +152,10 @@
  $labels['identities'] = '身份';
  $labels['manageidentities'] = '管理此账号的身份';
@@ -93,7 +93,7 @@ diff -Naur program/localization/zh_CN/labels.inc program/localization/zh_CN/labe
  $labels['setdefault'] = '默认值';
 diff -Naur program/steps/settings/vacation.inc program/steps/settings/vacation.inc
 --- program/steps/settings/vacation.inc	1970-01-01 08:00:00.000000000 +0800
-+++ program/steps/settings/vacation.inc	2008-07-30 11:44:02.000000000 +0800
++++ program/steps/settings/vacation.inc	2008-08-02 21:50:24.000000000 +0800
 @@ -0,0 +1,141 @@
 +<?php
 +$ar_username = $USER->get_username();
@@ -188,7 +188,7 @@ diff -Naur program/steps/settings/vacation.inc program/steps/settings/vacation.i
 +  $field_id = 'ar_enable';
 +  $check_enable = new checkbox(array('name' => '_ar_enable', 'id' => $field_id, 'value' => '1'));
 +
-+  $out .= sprintf("<tr><td class=\"title\"><label for=\"%s\">%s</label></td><td>%s</td></tr>\n", $field_id, rep_specialchars_output(rcube_label('ar_enable')), $check_enable->show($ar_enabled));
++  $out .= sprintf("<tr><td class=\"title\" style=\"width:100px;\"><label for=\"%s\">%s</label></td><td>%s</td></tr>\n", $field_id, rep_specialchars_output(rcube_label('ar_enable')), $check_enable->show($ar_enabled));
 +
 +  // auto reply subject
 +  $field_id = 'ar_subject';
@@ -236,43 +236,3 @@ diff -Naur program/steps/settings/vacation.inc program/steps/settings/vacation.i
 +// add some labels to client
 +parse_template('vacation');
 +?>
-diff -Naur skins/default-labels/includes/settingstabs.html skins/default-labels/includes/settingstabs.html
---- skins/default-labels/includes/settingstabs.html	2008-07-26 09:21:12.000000000 +0800
-+++ skins/default-labels/includes/settingstabs.html	2008-07-26 11:30:05.000000000 +0800
-@@ -2,4 +2,5 @@
- <span id="settingstabdefault" class="tablink"><roundcube:button command="preferences" type="link" label="preferences" title="editpreferences" /></span><span id="settingstabfolders" class="tablink"><roundcube:button command="folders" type="link" label="folders" title="managefolders" class="tablink" /></span><span id="settingstabidentities" class="tablink"><roundcube:button command="identities" type="link" label="identities" title="manageidentities" class="tablink" /></span>
- <span id="settingstabpasswd" class="tablink"><roundcube:button command="passwd" type="link" label="password" title="changepasswd" class="tablink" /></span>
- <span id="settingstabforwards" class="tablink"><roundcube:button command="forwards" type="link" label="forwards" title="changeforwards" class="tablink" /></span>
-+<span id="settingstabvacation" class="tablink"><roundcube:button command="vacation" type="link" label="autoreply" title="vacation" class="tablink" /></span>
- </div>
-diff -Naur skins/default-labels/templates/vacation.html skins/default-labels/templates/vacation.html
---- skins/default-labels/templates/vacation.html	1970-01-01 08:00:00.000000000 +0800
-+++ skins/default-labels/templates/vacation.html	2008-07-26 21:30:09.000000000 +0800
-@@ -0,0 +1,27 @@
-+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-+<html xmlns="http://www.w3.org/1999/xhtml">
-+   <head>
-+       <title><roundcube:object name="pagetitle" /></title>
-+       <roundcube:include file="/includes/links.html" />
-+       <link rel="stylesheet" type="text/css" href="/settings.css" />
-+   </head>
-+   <body>
-+
-+       <roundcube:include file="/includes/taskbar.html" />
-+       <roundcube:include file="/includes/header.html" />
-+       <roundcube:include file="/includes/settingstabs.html" />
-+
-+       <div id="userprefs-box">
-+           <div id="userprefs-title"><roundcube:label name="autoreply" /></div>
-+
-+           <div style="padding:15px">
-+               <roundcube:object name="uservacation">
-+
-+               <p><br /><roundcube:button command="save-autoreply" type="input" class="button" label="save" /></p>
-+           </div>
-+       </div>
-+
-+       <roundcube:include file="/includes/settingscripts.html" />
-+
-+   </body>
-+</html>
