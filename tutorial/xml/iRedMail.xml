@@ -17,12 +17,10 @@
 <!ENTITY openldap SYSTEM "openldap.xml">
 <!ENTITY postfix SYSTEM "postfix.xml">
 <!ENTITY courier SYSTEM "courier.xml">
-<!ENTITY maildrop SYSTEM "maildrop.xml">
 <!ENTITY webmail SYSTEM "webmail.xml">
 <!ENTITY spamassassin SYSTEM "spamassassin.xml">
 <!ENTITY clamav SYSTEM "clamav.xml">
 <!ENTITY amavisd-new SYSTEM "amavisd-new.xml">
-<!ENTITY spamd_pf SYSTEM "spamd_pf.xml">
 
 <!ENTITY appendix SYSTEM "appendix.xml">
 <!ENTITY todo SYSTEM "todo.xml">
@@ -44,12 +42,10 @@
     &openldap;
     &postfix;
     &courier;
-    &maildrop;
     &webmail;
     &spamassassin;
     &clamav;
     &amavisd-new;
-    &spamd_pf;
 
     &appendix;
 

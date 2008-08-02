@@ -7,6 +7,10 @@
 #           project.
 # Note:     Works fine on RHEL 5.x.
 
+# Modify lastest update time.
+export UPDATE_TIME="$(/bin/date '+%Y.%m.%d %H:%M')"
+perl -pi -e 's#(.*Lastest update time: )(.*)(\..*)#${1}$ENV{UPDATE_TIME}${3}#' bookinfo.xml
+
 xsltproc \
     --stringparam html.stylesheet docbook.css \
     --stringparam admon.graphics 1 \
