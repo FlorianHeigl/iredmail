@@ -1,14 +1,7 @@
 <chapter id="about_iredmail"><?dbhtml filename="about_iredmail.html"?>
-    <title>About OpenBSD</title>
+    <title>About iRedMail</title>
 
     <para>
-        <itemizedlist>
-            <listitem><para>"Only two remote holes in the default install, in more than 10 years!"</para></listitem>
-            <listitem><para>购买 OpenBSD 光盘是支持 OpenBSD 持续发展的重要途径。</para></listitem>
-            <listitem><para>实践本文档的最佳方法是购买一套 OpenBSD 光盘，使用光盘安装和搭建一个完整的环境。</para></listitem>
-        </itemizedlist>
-
-        欢迎您通过 <ulink url="http://www.openbsd.org/orders.html#china">Ordering(China)</ulink> 页面的联系方式与 <ulink url="mailto:michaelbibby@gmail.com">Bibby（张煌彬）</ulink> 联系购买，或直接参与 <ulink url="https://groups.google.com/group/openbsdonly">Google Group</ulink> 的讨论。
     </para>
 
 </chapter>
