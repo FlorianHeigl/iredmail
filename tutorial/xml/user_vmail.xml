@@ -1,0 +1,58 @@
+<chapter id="user_vmail"><?dbhtml filename="user_vmail.html"?>
+    <title>User: vmail</title>
+    <para>我们将创建一个新的用户 vmail，所有虚拟域的邮件都由它来负责管理，所有邮件都将放在它的 HOME 目录下。</para>
+
+    <para>
+        创建 vmail 用户和组： 
+
+<programlisting><![CDATA[
+# useradd -m -d /home/vmail/domains -s /sbin/nologin -u 1000 -g=uid vmail
+# rm -f /home/vmail/domains/.*]]>
+</programlisting>
+
+        注意这里的三个参数，我们将会用到它：
+        <itemizedlist>
+            <listitem><para>HOME: /home/vmail/domains，用于存放所有虚拟域的邮件。</para></listitem>
+            <listitem><para>UID/GID: 1000。</para></listitem>
+        </itemizedlist>
+
+<important><title>磁盘空间</title>
+    <para>
+    注意这里的 HOME 目录：/home/vmail/domains/。这个目录将用于存放所有域用户的邮件。如果大部分用户都不使用 POP3 将邮件下载到用户本地，则可能需要较大空间，请根据自己的实际情况进行规划。
+    </para>
+</important>
+
+<tip>
+    <title>目录结构</title>
+    <para>
+虚拟域的所有邮件将会存储在各自的目录下，例如：
+<programlisting>
+/home/vmail/domains/
+                 |- openbsdonly.org/
+                                |- user1/           # 对应的 mail 地址为：user1@openbsdonly.org
+                                      |- Maildir/
+
+                                |- user2/
+                                      |- Maildir/
+
+/home/vmail/domains/
+                 |- bsdlife.org/
+                                |- user1/           # 对应的 mail 地址为：user1@bsdlife.org
+                                      |- Maildir/
+
+                                |- user2/
+                                      |- Maildir/
+</programlisting>
+    </para>
+</tip>
+
+<tip><title>修改用户的 $HOME 目录</title>
+    <para>如果需要修改 vmail 用户的 HOME 目录，请使用 vipw 命令修改 /etc/passwd 文件：
+<programlisting>
+# vipw
+</programlisting>
+    </para>
+</tip>
+
+    </para>
+</chapter>

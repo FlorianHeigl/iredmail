@@ -1,0 +1,39 @@
+<bookinfo><?dbhtml filename="bookinfo.html"?>
+    <title>Mail Server Solution for OpenBSD</title>
+    <author>
+        <firstname>Michael</firstname>
+        <othername>Bibby</othername>
+        <surname>(张煌彬, michaelbibby (at) gmail (dot) com)</surname>
+    </author>
+
+    <copyright><year>2007</year><holder>张煌彬</holder></copyright>
+
+    <legalnotice>
+        <para>We Need your Feedback!</para>
+            
+        <para>
+            如果您发现文档中有任何笔误、错误，或者有可改进、可增强的地方，非常欢迎您与我交流。
+            <itemizedlist>
+                <listitem><para>MSN: michaelbibby (at) hotmail (dot) com</para></listitem>
+                <listitem><para>GTalk/Mail: michaelbibby (at) gmail (dot) com</para></listitem>
+            </itemizedlist>
+        </para>
+
+        <para>
+            致谢：
+            <itemizedlist>
+                <listitem><para>严重感谢 <ulink url="mailto:ipostfix@gmail.com">atyu30</ulink>，多次熬夜帮忙测试脚本，修正文档。</para></listitem>
+                <listitem><para><ulink url="http://www.openbsd.org">OpenBSD Project</ulink></para></listitem>
+                <listitem><para><ulink url="http://www.google.com">Google</ulink></para></listitem>
+            </itemizedlist>
+        </para>
+
+        <para>文档最后更新时间：2008.01.23。</para>
+    </legalnotice>
+
+    <!--
+    <abstract>
+    </abstract>
+    -->
+
+</bookinfo>

@@ -1,0 +1,54 @@
+<appendix><?dbhtml filename="appendix.html"?>
+    <title>Appendix</title>
+
+    <section id="resourse_link"><?dbhtml filename="resourse_link.html"?>
+        <title>Resource Links</title>
+
+        <section id="openbsd_related"><?dbhtml filename="resource_link_openbsd_related.html"?>
+            <title>OpenBSD related</title>
+            <para>
+                <itemizedlist>
+                    <listitem><para><ulink url="http://www.openbsd.org">OpenBSD Project</ulink></para></listitem>
+                    <listitem><para><ulink url="http://groups.google.com/group/openbsdonly/">Google Group 中文讨论组：OpenBSDonly</ulink></para></listitem>
+                    <listitem><para><ulink url="http://code.google.com/p/openbsdonly/">Google Code: OpenBSDonly</ulink>。收集、编写 OpenBSD 相关的 Tips, Tricks, Solutions.</para></listitem>
+                    <listitem><para><ulink url=""></ulink></para></listitem>
+                </itemizedlist>
+            </para>
+        </section>
+
+        <section id="postfix_related"><?dbhtml filename="resourse_link_postfix_related.html"?>
+            <title>Postfix related</title>
+            <para>
+                <itemizedlist>
+                    <listitem><para><ulink url="http://www.postfix.org/LDAP_README.html">Postfix LDAP Howto</ulink></para></listitem>
+                </itemizedlist>
+            </para>
+        </section>
+
+        <section id="openldap_related"><?dbhtml filename="resourse_link_openldap_related.html"?>
+            <title>OpenLDAP related</title>
+            <para>
+                <itemizedlist>
+                    <listitem><para><ulink url="http://www.openldap.org">OpenLDAP</ulink></para></listitem>
+                </itemizedlist>
+            </para>
+        </section>
+
+        <section id="squirrelmail_related"><?dbhtml filename="resourse_link_squirrelmail_related.html"?>
+            <title>SquirrelMail related</title>
+            <para>
+                <itemizedlist>
+                    <listitem><para><ulink url="http://www.squirrelmail.org">SquirrelMail</ulink></para></listitem>
+                    <listitem><para><ulink url=""></ulink></para></listitem>
+                    <listitem><para><ulink url=""></ulink></para></listitem>
+                    <listitem><para><ulink url=""></ulink></para></listitem>
+                    <listitem><para><ulink url=""></ulink></para></listitem>
+                </itemizedlist>
+            </para>
+        </section>
+
+
+
+
+    </section>
+</appendix>

@@ -1,0 +1,33 @@
+<chapter><?dbhtml filename="about_this_document.html" ?>
+    <title>About this document</title>
+
+    <section id="author"><?dbhtml filename="author.html"?>
+        <title>文档作者</title>
+        <para>
+            <itemizedlist>
+                <listitem><para>张煌彬</para></listitem>
+                <listitem>
+                    <para>
+                        联系方式：
+                        <itemizedlist>
+                            <listitem><para>MSN: michaelbibby (at) hotmail (dot) com</para></listitem>
+                            <listitem><para>GTalk/Mail: michaelbibby (at) gmail (dot) com</para></listitem>
+                        </itemizedlist>
+                    </para>
+                </listitem>
+            </itemizedlist>
+        </para>
+    </section>
+
+    <section id="credits"><?dbhtml filename="credits.html"?>
+        <title>致谢</title>
+        <para>
+            <itemizedlist>
+                <listitem><para>严重感谢 <ulink url="mailto:ipostfix@gmail.com">atyu30</ulink>，多次熬夜帮忙测试脚本，修正文档。</para></listitem>
+                <listitem><para><ulink url="http://www.openbsd.org">OpenBSD Project</ulink></para></listitem>
+                <listitem><para><ulink url="http://www.google.com">Google</ulink></para></listitem>
+            </itemizedlist>
+        </para>
+    </section>
+
+</chapter>

@@ -1,0 +1,344 @@
+<chapter id="openldap"><?dbhtml filename="openldap.html"?>
+    <title>OpenLDAP</title>
+    <section id="openldap_summary"><?dbhtml filename="openldap_summary.html"?>
+        <title>Summary</title>
+        <para>
+            本邮件服务器方案将使用 OpenLDAP 存储虚拟域和虚拟用户。接下来将安装和配置 OpenLDAP。
+        </para>
+    </section>
+
+    <section id="openldap_installation"><?dbhtml filename="openldap_installation.html"?>
+        <title>安装 OpenLDAP</title>
+        <para>
+            从 OpenBSD 4.2 -release 开始，官方 Ports tree 已经支持 -bdb 这个 FLAVOR，所以可以直接使用 binary package 安装：
+
+<programlisting>
+# pkg_add openldap-server-2.3.33p1-bdb
+
+openldap-server-2.3.33p1-bdb: complete
+</programlisting>
+
+        <note><title>Berkeley DB(bdb)</title>
+            <para>
+                Berkeley DB 是历史悠久的嵌入式数据库系统，主要应用在 Unix/Linux 操作系统上，其设计思想是简单、小巧、可靠、高性能。在性能上比 OpenLDAP 默认支持的 ldbm 数据库要好。推荐使用 bdb。
+            </para>
+        </note>
+        </para>
+    </section>
+
+    <section id="openldap_configuration"><?dbhtml filename="openldap_configuration.html"?>
+        <title>配置 OpenLDAP</title>
+
+        <section id="openldap_qmail_schema"><?dbhtml filename="openldap_qmail_schema.html"?>
+            <title>qmail.schema</title>
+            <para>
+                这里将使用 qmail.schema 用于与 Postfix 的整合。可以从 <ulink url="samples/qmail.schema">这里</ulink> 下载后复制到对应的目录：
+<programlisting>
+# cp qmail.schema /etc/openldap/schema/
+</programlisting>
+            </para>
+        </section>
+
+        <section id="openldap_slapd_conf"><?dbhtml filename="openldap_slapd_conf.html"?>
+            <title>/etc/openldap/slapd.conf</title>
+            <para>
+                OpenLDAP 的主配置文件是 /etc/openldap/slapd.conf。在这里，我们需要添加和修改一些内容：
+<programlisting>
+include         /etc/openldap/schema/core.schema
+
+#
+# 添加以下几个常用的 schema。
+# schema 文件有依赖关系，所以先后顺序非常重要。
+#
+
+include         /etc/openldap/schema/corba.schema
+include         /etc/openldap/schema/cosine.schema
+include         /etc/openldap/schema/inetorgperson.schema
+include         /etc/openldap/schema/nis.schema
+
+#
+# 加入与 Postfix 整合所需要的 qmail.schema。
+#
+
+include         /etc/openldap/schema/qmail.schema
+
+#
+# 注意：这里修改了 PID 文件存放的路径。
+#
+
+pidfile         /var/run/openldap/slapd.pid
+argsfile        /var/run/openldap/slapd.args
+
+#
+# 禁止匿名连接。
+#
+
+disallow    bind_anon
+
+#
+# Version of LDAP Protocol.
+# OpenLDAP 默认只允许使用 LDAP 协议的第三版本（LDAPv3）。
+# 如果需要强制使用 LDAPv3，则可以使用以下参数：
+#
+#require        LDAPv3
+#
+# 如果需要提供 LDAPv2 的支持，需要加入以下参数：
+#
+allow           bind_v2
+
+#
+# 日志级别，用于调试。过多的日志输出需要大量的 I/O 操作，可能会影响性能。
+# 不建议在实际生产服务器上使用过高的日志级别。
+#
+# 以下日志级别将只记录连接(Conns)和查询(Filter)操作。
+#loglevel   Conns Filter
+#
+# -1 级别将产生最多的 debug 信息。
+#loglevel   -1
+#
+# 0 级别除了记录 OpenLDAP 启动时的输出信息外，不记录任何信息。
+#loglevel    0
+
+loglevel        256
+
+#
+# Access control policy.
+#
+# 这里开始定义访问控制策略。
+
+#
+# 这里暂时跳过 ACL 部分的配置。下文中将会加上。
+#
+
+#
+# database 关键字之前的参数都是全局参数。
+# database 关键字开始的地方表示开始定义一个 LDAP Instance。
+#
+
+database       bdb
+
+suffix          "dc=openbsdonly,dc=org"
+rootdn          "cn=Manager,dc=openbsdonly,dc=org"
+rootpw          123456
+
+directory       /var/openldap-data/openbsdonly.org/
+mode            0700
+
+index           objectClass eq
+
+#
+# For mail attrs.
+# 为一些 LDAP 属性维护索引，可以加快查询速度。
+#
+
+index           description,o eq
+index           mail,mailMessageStore,mailForwardingAddress,mailQuota,uid,cn eq
+</programlisting>
+
+            <note><title>pidfile, argsfile</title>
+                <para>
+                    这里的 pidfile 和 argsfile 的路径都没有采用默认的 /var/run/，因为我们将以 _openldap:_openldap 这个用户和用户组的身份来运行 openldap 服务，而 /var/run/ 目录的权限不允许 _openldap 用户创建 pid 文件，所以这里采用新建 /var/run/openldap/ 目录，并将该目录的 owner 设置为 _openldap:_openldap 的方式，使得 _openldap 用户能够将 pid 文件存放在这个目录下。
+                </para>
+            </note>
+
+            <tip><title>OpenLDAP 的日志</title>
+                <para>
+                    OpenLDAP 默认将所有日志信息发送到 syslogd 的 'local4' 这个日志级别。所以，为了便于调试，可以将所有日志单独存放在某个日志文件里，比如：/var/log/openldap。修改 /etc/syslog.conf，增加一行：
+
+<programlisting>
+local4.*                    /var/log/openldap
+</programlisting>
+
+再手动创建 /var/log/openldap 这个文件，并通知 syslog 程序重新读取配置文件：
+
+<programlisting>
+# touch /var/log/openldap
+# chown _openldap:_openldap /var/log/openldap
+# kill -HUP $(cat /var/run/syslog.pid)
+</programlisting>
+
+                </para>
+            </tip>
+
+            <note><title>database</title>
+                <para>
+                    database 用于定义 OpenLDAP 使用哪种数据库作为 backend 存储数据。以下两个版本所使用的 backend 有所不同，请根据自己的需要进行选择： 
+
+                     <itemizedlist>
+                         <listitem><para>openldap-server-2.3.33p1.tgz：只能使用 ldbm 作为 backend。</para></listitem>
+                         <listitem><para>openldap-server-2.3.33p1-bdb.tgz：可以使用 bdb/ldbm 作为 backend。</para></listitem>
+                     </itemizedlist>
+                 </para>
+            </note>
+
+            <note><title>suffix</title>
+                <para>
+                    这是定义 LDAP 树的前缀。 
+
+                    OpenLDAP 支持多个 suffix，这可以通过定义多个 database 来指定。 
+                </para>
+            </note>
+
+            <note><title>rootdn, passwd</title>
+                <para>
+                    rootdn 定义定义的是管理整个 LDAP 的管理员账号。rootpw 则是设定 rootdn 的密码。 
+
+                    <tip><title>密码</title>
+                        <para>
+                            这里的 rootpw 使用的是明文密码。你也可以使用 slappasswd 生成的密码：
+<programlisting>
+# slappasswd
+
+New password: 
+Re-enter new password:
+{SSHA}mHzQL7t4YG/a6g5mt2YPLE/+ErmekI34
+</programlisting>
+
+默认是使用 SSHA 这个加密算法的。将得到的 '{SSHA}mHzQL7t4YG/a6g5mt2YPLE/+ErmekI34' 这一串字符复制到 rootpw 后面就可以了。
+<programlisting>
+passwd      {SSHA}mHzQL7t4YG/a6g5mt2YPLE/+ErmekI34
+</programlisting>
+
+也可以用 -h 参数指定 slappasswd 使用其它的加密算法。比如：
+<programlisting>
+# slappasswd -h {MD5}
+</programlisting>
+                        </para>
+                    </tip>
+                </para>
+            </note>
+
+            <note><title>directory</title>
+                <para>
+                        这是定义 OpenLDAP 的数据存放在哪个目录下。 
+
+创建目录并设置权限：
+
+<programlisting>
+# mkdir /var/run/openldap
+# chown -R _openldap:_openldap /var/run/openldap
+
+# mkdir /var/openldap-data/openbsdonly.org/
+# chown -R _openldap:_openldap /var/openldap-data
+# chmod -R 700 /var/openldap-data
+</programlisting>
+
+                </para>
+            </note>
+            </para>
+        </section>
+
+        <section id="openldap_start"><?dbhtml filename="openldap_start.html"?>
+            <title>启动 OpenLDAP</title>
+            <para>
+                都配置好了，现在可以启动 OpenLDAP 了：
+<programlisting>
+# /usr/local/libexec/slapd -u _openldap -g _openldap -h ldap://127.0.0.1:389/
+</programlisting>
+            <tip><title>参数解释</title>
+                <para>
+                    <itemizedlist>
+                        <listitem><para>-u/-g：以哪个用户的身份执行 slapd daemon。</para></listitem>
+                        <listitem><para>-h：监听哪个 IP 的哪个端口。</para></listitem>
+                    </itemizedlist>
+                </para>
+            </tip>
+
+            这时候在 /var/log/openldap 里应该已经有一些信息了，不妨现在查看一下：
+<programlisting>
+# tail /var/log/openldap
+
+Sep 20 22:07:00 mail slapd[5496]: @(#) $OpenLDAP: slapd 2.3.33 (Mar  6 2007 20:51:09) $
+@i386.ports.openbsd.org:/usr/obj/i386/openldap-2.3.33-bdb/build-i386-bdb/servers/slapd 
+Sep 20 22:07:01 mail slapd[5496]: WARNING: No dynamic config support for database ldbm. 
+Sep 20 22:07:01 mail slapd[5496]: slapd starting
+</programlisting>
+
+如果看到有类似的输出，则表示已经正常运行了。 
+
+            </para>
+        </section>
+
+        <!-- LDAP initialize -->
+        <section id="openldap_initialize"><?dbhtml filename="openldap_initialize.html"?>
+            <title>初始化 LDAP</title>
+
+            <section id="openldap_ldap_tree"><title>LDAP 树结构</title>
+                <para></para>
+            </section>
+
+            <section id="openldap_ldap_root_entry"><title>root entry: dc=openbsdonly,dc=org</title>
+                <para></para>
+            </section>
+
+            <section id="openldap_ldap_domains"><title>o=domains,dc=openbsdonly,dc=org</title>
+                <para></para>
+            </section>
+
+            <section id="openldap_ldap_vmail"><title>cn=vmail/vmailadmin,dc=openbsdonly,dc=org</title>
+                <para></para>
+            </section>
+
+            <section id="openldap_ldap_domainX"><title>o=domainX.com,o=domains,dc=openbsdonly,dc=org</title>
+                <para></para>
+            </section>
+
+            <section id="openldap_ldap_mail_www"><title>mail=www@openbsdonly.org,o=openbsdonly.org,o=domains,dc=openbsdonly,dc=org</title>
+                <para></para>
+            </section>
+
+            <section id="openldap_ldap_mail_admin"><title>mail=admin@openbsdonly.org,o=openbsdonly.org,o=domains,dc=openbsdonly,dc=org</title>
+                <para></para>
+            </section>
+
+        </section>
+        <!-- End LDAP initialize -->
+
+        <section><title>查看数据库的状态</title>
+            <para></para>
+        </section>
+
+        <section><title>ACL(Access Control List)</title>
+            <para></para>
+        </section>
+    </section>
+
+    <section id="openldap_rc_conf_local"><?dbhtml filename="openldap_rc_conf_local.html"?>
+        <title>/etc/rc.conf.local</title>
+        <para></para>
+    </section>
+
+    <section id="openldap_rc_local"><?dbhtml filename="openldap_rc_local.html"?>
+        <title>/etc/rc.local</title>
+        <para></para>
+    </section>
+
+    <!-- phpLDAPadmin -->
+    <section id="phpldapadmin"><?dbhtml filename="phpldapadmin.html"?>
+        <title>phpLDAPadmin</title>
+
+        <section id="phpldapadmin_installation"><?dbhtml filename="phpldapadmin_installation.html"?>
+            <title>安装 phpLDAPadmin</title>
+            <para></para>
+        </section>
+
+        <section id="phpldapadmin_configuration"><?dbhtml filename="phpldapadmin_configuration.html"?>
+            <title>配置 phpLDAPadmin</title>
+            <para></para>
+        </section>
+
+        <section id="phpldapadmin_login"><?dbhtml filename="phpldapadmin_login.html"?>
+            <title>登录 phpLDAPadmin</title>
+            <para></para>
+        </section>
+
+        <section id="phpldapadmin_template"><?dbhtml filename="phpldapadmin_template.html"?>
+            <title>phpLDAPadmin template</title>
+            <para></para>
+        </section>
+
+    </section>
+    <!-- End phpLDAPadmin -->
+
+
+</chapter>

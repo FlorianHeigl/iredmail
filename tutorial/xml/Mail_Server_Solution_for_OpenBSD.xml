@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"-->
+
+<!DOCTYPE book SYSTEM "/usr/share/sgml/docbook/xml-dtd-4.1.2-1.0-30.1/docbookx.dtd"
+
+[
+<!ENTITY version "0.2">
+<!ENTITY supercopy "SUPERCOPYRIGHT &copy;&reg;">
+
+<!ENTITY bookinfo SYSTEM "bookinfo.xml">
+<!ENTITY about_openbsd SYSTEM "about_openbsd.xml">
+<!ENTITY overview SYSTEM "overview.xml">
+<!ENTITY preparation SYSTEM "preparation.xml">
+
+<!ENTITY user_vmail SYSTEM "user_vmail.xml">
+<!ENTITY apache_php SYSTEM "apache_php.xml">
+<!ENTITY openldap SYSTEM "openldap.xml">
+<!ENTITY postfix SYSTEM "postfix.xml">
+<!ENTITY courier SYSTEM "courier.xml">
+<!ENTITY maildrop SYSTEM "maildrop.xml">
+<!ENTITY webmail SYSTEM "webmail.xml">
+<!ENTITY spamassassin SYSTEM "spamassassin.xml">
+<!ENTITY clamav SYSTEM "clamav.xml">
+<!ENTITY amavisd-new SYSTEM "amavisd-new.xml">
+<!ENTITY spamd_pf SYSTEM "spamd_pf.xml">
+
+<!ENTITY appendix SYSTEM "appendix.xml">
+<!ENTITY todo SYSTEM "todo.xml">
+<!ENTITY revision SYSTEM "revision.xml">
+
+]>
+
+<book><?dbhtml dir="../iRedMail-doc-0.2" filename="index.html"?>
+    <title>Mail Server Solution for OpenBSD</title>
+
+    &bookinfo;
+    &about_openbsd;
+    &overview;
+    &preparation;
+
+    &user_vmail;
+    &apache_php;
+    &openldap;
+    &postfix;
+    &courier;
+    &maildrop;
+    &webmail;
+    &spamassassin;
+    &clamav;
+    &amavisd-new;
+    &spamd_pf;
+
+    &appendix;
+
+</book>
