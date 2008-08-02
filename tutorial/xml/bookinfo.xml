@@ -1,39 +1,28 @@
 <bookinfo><?dbhtml filename="bookinfo.html"?>
-    <title>Mail Server Solution for OpenBSD</title>
+    <title>iRedMail：为您打造最好的开源邮件服务解决方案</title>
     <author>
-        <firstname>Michael</firstname>
-        <othername>Bibby</othername>
-        <surname>(张煌彬, michaelbibby (at) gmail (dot) com)</surname>
+        <surname>Zhang Huangbin（张煌彬），michaelbibby (at) gmail.com</surname>
     </author>
 
-    <copyright><year>2007</year><holder>张煌彬</holder></copyright>
+    <copyright><year>2008</year><holder><ulink href="http://iredmail.googlecode.com">iRedMail project</ulink></holder></copyright>
 
     <legalnotice>
-        <para>We Need your Feedback!</para>
-            
-        <para>
-            如果您发现文档中有任何笔误、错误，或者有可改进、可增强的地方，非常欢迎您与我交流。
-            <itemizedlist>
-                <listitem><para>MSN: michaelbibby (at) hotmail (dot) com</para></listitem>
-                <listitem><para>GTalk/Mail: michaelbibby (at) gmail (dot) com</para></listitem>
-            </itemizedlist>
-        </para>
+        <para>要掌握一套邮件服务器解决方案所涉及的知识，需要花费许多时间，所以我们更觉得，知识要分享出去，以使后来者可以少走一些弯路。</para>
 
-        <para>
-            致谢：
-            <itemizedlist>
-                <listitem><para>严重感谢 <ulink url="mailto:ipostfix@gmail.com">atyu30</ulink>，多次熬夜帮忙测试脚本，修正文档。</para></listitem>
-                <listitem><para><ulink url="http://www.openbsd.org">OpenBSD Project</ulink></para></listitem>
-                <listitem><para><ulink url="http://www.google.com">Google</ulink></para></listitem>
-            </itemizedlist>
-        </para>
+        <para>成长自己，成就他人。</para>
 
-        <para>文档最后更新时间：2008.01.23。</para>
+        <para>我们会继续保持 iRedMail 完全开源(Full Open Source)，为大家提供强大而完善的邮件服务解决方案。并且努力营造活跃而高效的社区，为大家提供友好的交流平台。但是，iRedMail 项目也需要您的支持和帮助。</para>
+
+        <para>如果您觉得 iRedMail 还不错，希望您能通过以下途径帮助我们：</para>
+
+        <itemizedlist>
+            <listitem><para>告诉您的朋友，iRedMail 是什么，有什么功能和特性；</para></listitem>
+            <listitem><para>在您的博客(Blog)上发布关于 iRedMail 的信息；</para></listitem>
+            <listitem><para>向需要邮件服务器的网友推荐他们尝试 iRedMail；</para></listitem>
+            <listitem><para>在您常去的论坛的邮件服务相关版块发布关于 iRedMail 的介绍和功能特性等信息； </para></listitem>
+        </itemizedlist>
+
+        <para>感谢您的帮助和支持，iRedMail 因为有你们的帮助才能够更完善。</para>
     </legalnotice>
-
-    <!--
-    <abstract>
-    </abstract>
-    -->
 
 </bookinfo>

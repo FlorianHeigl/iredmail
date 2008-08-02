@@ -1,9 +1,11 @@
 #!/bin/sh
 
-# Author:   Michael Bibby
-# Mail:     michaelbibby (at) gmail (dot) com
-# Date:     2008.01.24
-# Purpose:  Compile 'XML' files to 'html' format.
+# Author:   Zhang Huangbin
+# Mail:     michaelbibby (at) gmail.com
+# Date:     2008.08.02
+# Purpose:  Compile 'XML' files to 'html' format, used for iRedMail
+#           project.
+# Note:     Works fine on RHEL 5.x.
 
 xsltproc \
     --stringparam html.stylesheet docbook.css \
@@ -14,4 +16,7 @@ xsltproc \
     --stringparam section.label.includes.component.label 1 \
     --stringparam toc.section.depth 8 \
     /usr/share/sgml/docbook/xsl-stylesheets-1.69.1-5.1/html/chunk.xsl \
-    Mail_Server_Solution_for_OpenBSD.xml 
+    iRedMail.xml 
+
+# Browse tutorial directly from '/svn/trunk/tutorial/':
+#svn propset svn:mime-type 'text/html' *html
