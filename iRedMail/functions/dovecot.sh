@@ -230,11 +230,11 @@ default_pass_scheme = CRYPT
 EOF
         # Maildir format.
         [ X"${HOME_MAILBOX}" == X"Maildir" ] && cat >> ${DOVECOT_LDAP_CONF} <<EOF
-user_attrs      = homeDirectory=home,=sieve_dir=${VMAIL_USER_HOME_DIR}/%Ld/%Ln/,mailMessageStore=maildir:mail,${LDAP_ATTR_USER_QUOTA}=quota_rule=*:bytes=%\$
+user_attrs      = homeDirectory=home,=sieve_dir=${SIEVE_DIR}/%Ld/%Ln/,mailMessageStore=maildir:mail,${LDAP_ATTR_USER_QUOTA}=quota_rule=*:bytes=%\$
 EOF
         [ X"${HOME_MAILBOX}" == X"mbox" ] && cat >> ${DOVECOT_LDAP_CONF} <<EOF
 #    sieve = /%Lh/%Ld/.%Ln${SIEVE_RULE_FILENAME}
-user_attrs      = homeDirectory=home,=sieve_dir=${VMAIL_USER_HOME_DIR}/%Ld/%Ln/,mailMessageStore=dirsize:mail,${LDAP_ATTR_USER_QUOTA}=quota_rule=*:bytes=%\$
+user_attrs      = homeDirectory=home,=sieve_dir=${SIEVE_DIR}/%Ld/%Ln/,mailMessageStore=dirsize:mail,${LDAP_ATTR_USER_QUOTA}=quota_rule=*:bytes=%\$
 EOF
     else
         cat >> ${DOVECOT_CONF} <<EOF
@@ -253,10 +253,10 @@ password_query = SELECT password FROM mailbox WHERE username='%u' AND active='1'
 EOF
         # Maildir format.
         [ X"${HOME_MAILBOX}" == X"Maildir" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
-user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, "${VMAIL_USER_HOME_DIR}/%Ld/%Ln" AS sieve_dir, maildir, CONCAT('*:bytes=', quota*1048576) AS quota_rule FROM mailbox WHERE username='%u' AND active='1' AND enable%Ls='1'
+user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, "${SIEVE_DIR}/%Ld/%Ln" AS sieve_dir, maildir, CONCAT('*:bytes=', quota*1048576) AS quota_rule FROM mailbox WHERE username='%u' AND active='1' AND enable%Ls='1'
 EOF
         [ X"${HOME_MAILBOX}" == X"mbox" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
-user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, "${VMAIL_USER_HOME_DIR}/%Ld/%Ln/" AS sieve_dir, maildir, CONCAT('*:bytes=', quota*1048576) AS quota_rule FROM mailbox WHERE username='%u' AND active='1' AND enable%Ls='1'
+user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, "${SIEVE_DIR}/%Ld/%Ln/" AS sieve_dir, maildir, CONCAT('*:bytes=', quota*1048576) AS quota_rule FROM mailbox WHERE username='%u' AND active='1' AND enable%Ls='1'
 EOF
     fi
 
@@ -282,6 +282,11 @@ EOF
     cp -f ${SAMPLE_DIR}/dovecot.sieve ${SIEVE_FILTER_FILE}
     chown ${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} ${SIEVE_FILTER_FILE}
     chmod 0500 ${SIEVE_FILTER_FILE}
+
+    ECHO_INFO "Create directory to store user sieve rule files: ${SIEVE_DIR}."
+    mkdir -p ${SIEVE_DIR} && \
+    chown -R apache:${VMAIL_GROUP_NAME} ${SIEVE_DIR} && \
+    chmod -R 0770 ${SIEVE_DIR}
 
     ECHO_INFO "Create dovecot log file: ${DOVECOT_LOG_FILE}, ${SIEVE_LOG_FILE}."
     touch ${DOVECOT_LOG_FILE} ${SIEVE_LOG_FILE}

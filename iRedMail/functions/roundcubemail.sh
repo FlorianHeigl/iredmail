@@ -97,6 +97,16 @@ EOF
     cd ${RCM_HTTPD_ROOT}/skins/default/ && \
     patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_chpwd_forward_skins.patch >/dev/null
 
+    ECHO_INFO "Patch: Vacation plugin."
+    cd ${RCM_HTTPD_ROOT} && \
+    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_vacation.patch >/dev/null
+
+    cd ${RCM_HTTPD_ROOT}/skins/default/ && \
+    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_vacation_skin_default.patch >/dev/null
+
+    cd ${RCM_HTTPD_ROOT}/skins/default-labels/ && \
+    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_vacation_skin_default.patch >/dev/null
+
     ECHO_INFO "Patch: Performance Improvement for Roundcubemail-0.1.1."
     cd ${RCM_HTTPD_ROOT} && \
     patch -p0 < ${PATCH_DIR}/roundcubemail/performance-jh1.diff >/dev/null

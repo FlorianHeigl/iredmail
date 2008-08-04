@@ -1,4 +1,6 @@
 iRedMail-0.2-rc3:
+    * New roundcubemail plugin: vacation. Created by KaraDog <at>
+      gmail.com. Thanks kara :)
     * New feature: Protecting internal email addresses, such as mail
       list addresses.
     * Remove postfixadmin vacation table in mysql template, disable
