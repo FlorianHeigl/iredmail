@@ -174,3 +174,7 @@ pre.programlisting {
     /*font-family: Courier, "Courier New";*/
     font-size: 13px;
 }
+
+div.blockquote {
+    line-height: 1.4em;
+}
