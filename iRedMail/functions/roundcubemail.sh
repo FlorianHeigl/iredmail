@@ -98,13 +98,16 @@ EOF
     patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_chpwd_forward_skins.patch >/dev/null
 
     ECHO_INFO "Patch: Vacation plugin."
+    # Create symbol link to sieve_dir.
+    cd ${RCM_HTTPD_ROOT} && \
+    ln -s ${SIEVE_DIR} sieve
+
+    # Patch core functions.
     cd ${RCM_HTTPD_ROOT} && \
     patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_vacation.patch >/dev/null
 
+    # Patch skins.
     cd ${RCM_HTTPD_ROOT}/skins/default/ && \
-    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_vacation_skin_default.patch >/dev/null
-
-    cd ${RCM_HTTPD_ROOT}/skins/default-labels/ && \
     patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_vacation_skin_default.patch >/dev/null
 
     ECHO_INFO "Patch: Performance Improvement for Roundcubemail-0.1.1."
@@ -120,6 +123,10 @@ EOF
     perl -pi -e 's#(.*rcmail_config.*skin_path.*=).*#${1} "skins/default-labels/";#' ${RCM_HTTPD_ROOT}/config/main.inc.php
     # In Roundcubemail-0.2, option 'skin_path' was replaced by 'skin'!
     #perl -pi -e 's#(.*rcmail_config.*skin.*=).*#${1} "default-labels";#' ${RCM_HTTPD_ROOT}/config/main.inc.php
+
+    # Patch for vacation plugin.
+    cd ${RCM_HTTPD_ROOT}/skins/default-labels/ && \
+    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_vacation_skin_default.patch >/dev/null
 
     ECHO_INFO "Patch: Display Username."
     cd ${RCM_HTTPD_ROOT}/skins/default/ && \
