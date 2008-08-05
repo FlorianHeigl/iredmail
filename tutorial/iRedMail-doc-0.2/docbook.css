@@ -73,13 +73,14 @@ div.refentry div.titlepage h1.title {
 }
 
 body {
-  margin-top: 1em;
+  margin-top: 0px;
   padding-top: 0px;
-  margin-left: 1em;
-  margin-right: 1em;
-  padding-left: 0px;
-  padding-right: 0px;
-  margin-bottom: 1em;
+  margin-left: 0px;
+  margin-right: 0px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 14px;
+  font-family: Georgia, "Times New Roman";
 }
 
 div.navheader {
@@ -149,3 +150,31 @@ div.define-next        { border-top: 0.5pt solid black;
                          margin-top: 0.25in;
                          padding-top: 0.25in;
                        }
+
+div.note, div.tip, div.important {
+    border: 1px dotted #cb0000;
+    margin-top: 0.5em;
+}
+
+div.note table, div.tip table, div.important table {
+    font-size: 12px;
+}
+
+div.itemizedlist, div.orderedlist {
+    line-height: 0.7em;
+}
+
+pre.programlisting {
+    margin-left: 2em;
+    margin-right: 2em;
+    padding-left: 5px;
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+    line-height: 1.5em;
+    /*font-family: Courier, "Courier New";*/
+    font-size: 13px;
+}
+
+div.blockquote {
+    line-height: 1.4em;
+}
