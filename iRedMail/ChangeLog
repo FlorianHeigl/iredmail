@@ -1,4 +1,5 @@
 iRedMail-0.2-rc3:
+    * Update postfixadmin to 2.2.1.1.
     * New roundcubemail plugin: vacation. Created by KaraDog <at>
       gmail.com. Thanks kara :)
     * New feature: Protecting internal email addresses, such as mail
