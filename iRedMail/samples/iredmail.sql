@@ -155,3 +155,34 @@ CREATE TABLE restrictions (
     modified datetime NOT NULL default '0000-00-00 00:00:00'
 ) TYPE=MyISAM;
 
+#
+# WARNING: We do not use postfixadmin style vacation mechanism.
+#
+
+#
+# Vacation stuff.
+#
+CREATE TABLE vacation ( 
+    email varchar(255) NOT NULL default '', 
+    subject varchar(255) NOT NULL default '', 
+    body text NOT NULL, 
+    cache text NOT NULL, 
+    domain varchar(255) NOT NULL default '', 
+    created datetime NOT NULL default '0000-00-00 00:00:00', 
+    modified datetime NOT NULL default '0000-00-00 00:00:00', 
+    active tinyint(4) NOT NULL default '1', 
+    PRIMARY KEY (email), 
+    KEY email (email) 
+) TYPE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+ 
+#
+# vacation_notification table 
+#
+ 
+CREATE TABLE vacation_notification ( 
+    on_vacation varchar(255) NOT NULL, 
+    notified varchar(255) NOT NULL, 
+    notified_at timestamp NOT NULL default now(), 
+    CONSTRAINT vacation_notification_pkey PRIMARY KEY(on_vacation, notified), 
+    FOREIGN KEY (on_vacation) REFERENCES vacation(email) ON DELETE CASCADE 
+) TYPE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;

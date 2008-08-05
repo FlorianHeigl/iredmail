@@ -97,7 +97,15 @@ login_process_per_connection=yes
 
 # Default realm/domain to use if none was specified.
 # This is used for both SASL realms and appending '@domain.ltd' to username in plaintext logins.
-#auth_default_realm = ${FIRST_DOMAIN}
+auth_default_realm = ${FIRST_DOMAIN}
+
+# ---- NFS storage ----
+#dotlock_use_excl = no # only needed with NFSv2, NFSv3+ supports O_EXCL and it's faster
+#mail_nfs_storage = yes # v1.1+ only
+
+# If indexes are on NFS.
+#mail_nfs_index = yes # v1.1+ only
+# ----
 
 EOF
 
