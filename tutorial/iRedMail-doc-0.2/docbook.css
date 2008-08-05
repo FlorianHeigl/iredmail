@@ -151,7 +151,7 @@ div.define-next        { border-top: 0.5pt solid black;
                          padding-top: 0.25in;
                        }
 
-div.note, div.tip, div.important {
+div.note, div.tip, div.important, div.caution {
     border: 1px dotted #cb0000;
     margin-top: 0.5em;
 }
