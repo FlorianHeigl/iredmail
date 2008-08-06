@@ -78,9 +78,9 @@ upload_max_filesize = 12M
 
         <para>现在可以创建一个 PHP 文件，测试 PHP 是否已经可以正确识别。默认的首页是 /var/www/html/index.php：
 <programlisting>
-<?php
-phpinfo();
-?>
+&lt;?php
+    phpinfo();
+?&gt;
 </programlisting>
 </para>
 
@@ -96,12 +96,26 @@ phpinfo();
     <section id="apache_control"><?dbhtml filename="apache_control.html"?>
         <title>Apache 服务的启动与停止</title>
         <para>
+            <itemizedlist>
+                <listitem><para>启动：
 <programlisting>
-# /etc/init.d/httpd stop
 # /etc/init.d/httpd start
+</programlisting>
+                </para></listitem>
+
+                <listitem><para>停止：
+<programlisting>
+# /etc/init.d/httpd start
+</programlisting>
+                </para></listitem>
+
+                <listitem><para>重新启动：
+<programlisting>
 # /etc/init.d/httpd restart
 </programlisting>
-</para>
+                </para></listitem>
+            </itemizedlist>
+        </para>
     </section>
 
 </chapter>
