@@ -1,0 +1,35 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>6.3. &#37197;&#32622; Apache &#19982; PHP</title><link rel="stylesheet" href="docbook.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.69.1"><link rel="start" href="index.html" title="Mail Server Solution for Red Hat Enterprise Linux and CentOS (MySQL)"><link rel="up" href="apache_php.html" title="Chapter 6. Apache, PHP"><link rel="prev" href="apache_php_installation.html" title="6.2. &#23433;&#35013; Apache &#19982; PHP"><link rel="next" href="apache_control.html" title="6.4. Apache &#26381;&#21153;&#30340;&#21551;&#21160;&#19982;&#20572;&#27490;"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">6.3. &#37197;&#32622; Apache &#19982; PHP</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="apache_php_installation.html">Prev</a> </td><th width="60%" align="center">Chapter 6. Apache, PHP</th><td width="20%" align="right"> <a accesskey="n" href="apache_control.html">Next</a></td></tr></table><hr></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="apache_php_configration"></a>6.3. &#37197;&#32622; Apache &#19982; PHP</h2></div></div></div><p>&#35774;&#32622; apache &#22312;&#31995;&#32479;&#21551;&#21160;&#26102;&#36816;&#34892;&#65306;
+</p><pre class="programlisting">
+# chkconfig --level 35 httpd on
+</pre><p>
+        </p><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Tip: Apache &#20027;&#35201;&#30340;&#20960;&#20010;&#30446;&#24405;"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="images/tip.png"></td><th align="left">Apache &#20027;&#35201;&#30340;&#20960;&#20010;&#30446;&#24405;</th></tr><tr><td align="left" valign="top"><pre class="programlisting">
+/etc/httpd/             Apache &#30340;&#25152;&#26377;&#37197;&#32622;&#25991;&#20214;
+    |- conf/        &#20027;&#37197;&#32622;&#25991;&#20214;
+    |- conf.d/      &#38024;&#23545;&#21333;&#29420;&#30340;&#27169;&#22359;&#25110;&#20854;&#20182;&#35774;&#32622;&#30340;&#37197;&#32622;&#25991;&#20214;
+
+/var/
+|- www/             Apache &#40664;&#35748;&#30340; DocumentRoot &#30446;&#24405;
+    |- cgi-bin/     CGI &#31243;&#24207;
+    |- error/
+    |- html/        WEB &#25991;&#20214;
+    |- icons/       &#19968;&#20123;&#22270;&#26631;&#25991;&#20214;
+
+|- log/
+    |- httpd/       Apache &#30340;&#26085;&#24535;&#25991;&#20214;
+</pre></td></tr></table></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="php_configration"></a>6.3.1. &#37197;&#32622; PHP</h3></div></div></div><p>PHP &#30340;&#37197;&#32622;&#25991;&#20214;&#40664;&#35748;&#26159;&#65306;/etc/php.ini</p><div class="itemizedlist"><ul type="disc"><li><p>&#24314;&#35758;&#23558; PHP &#30340; memory_limit &#20540;&#35843;&#22823;&#19968;&#20123;&#65292;&#20363;&#22914; 128M&#65288;&#40664;&#35748;&#26159; 16M&#65289;&#65306;
+</p><pre class="programlisting">
+memory_limit = 128M;
+</pre><p>
+                </p></li><li><p>&#24314;&#35758;&#23558;&#21487;&#19978;&#20256;&#30340;&#25991;&#20214;&#22823;&#23567;&#35843;&#22823;&#20123;&#65292;&#36825;&#26679; Web Mail &#31243;&#24207;&#37324;&#25165;&#21487;&#20197;&#21457;&#36865;&#36739;&#22823;&#30340;&#38468;&#20214;&#65306;
+</p><pre class="programlisting">
+upload_max_filesize = 12M
+</pre><p>
+                </p></li></ul></div></div><p>&#29616;&#22312;&#21487;&#20197;&#21019;&#24314;&#19968;&#20010; PHP &#25991;&#20214;&#65292;&#27979;&#35797; PHP &#26159;&#21542;&#24050;&#32463;&#21487;&#20197;&#27491;&#30830;&#35782;&#21035;&#12290;&#40664;&#35748;&#30340;&#39318;&#39029;&#26159; /var/www/html/index.php&#65306;
+</p><pre class="programlisting">
+
+</pre><p>
+</p><p>&#21551;&#21160; Apache&#65292;&#24182;&#35775;&#38382;&#20320;&#30340;&#26381;&#21153;&#22120;&#39318;&#39029;&#30340; index.php &#25991;&#20214;&#65306; http://your_server_IP/index.php &#65292;&#30475;&#30475;&#26159;&#21542;&#24050;&#32463;&#21487;&#20197;&#27491;&#30830;&#35299;&#26512; PHP &#20195;&#30721;&#65306;
+</p><pre class="programlisting">
+# /etc/init.d/httpd restart
+</pre><p>
+</p></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="apache_php_installation.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="apache_php.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="apache_control.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">6.2. &#23433;&#35013; Apache &#19982; PHP </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 6.4. Apache &#26381;&#21153;&#30340;&#21551;&#21160;&#19982;&#20572;&#27490;</td></tr></table></div></body></html>
