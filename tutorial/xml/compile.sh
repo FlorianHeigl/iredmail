@@ -25,4 +25,4 @@ for flavor in 'mysql' 'openldap'; do
 done
 
 # Browse tutorial directly from '/svn/trunk/tutorial/':
-#svn propset svn:mime-type 'text/html' *html
+#find ../. -iname '*.html' | xargs svn propset svn:mime-type 'text/html' {}

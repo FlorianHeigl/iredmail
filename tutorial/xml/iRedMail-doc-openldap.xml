@@ -14,7 +14,7 @@
 <!ENTITY preparation SYSTEM "preparation.xml">
 
 <!ENTITY user_vmail SYSTEM "user_vmail.xml">
-<!ENTITY apache_php SYSTEM "apache_php.xml">
+<!ENTITY apache_php SYSTEM "openldap/apache_php.xml">
 
 ]>
 
