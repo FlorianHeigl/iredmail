@@ -43,14 +43,14 @@
     |- conf.d/      针对单独的模块或其他设置的配置文件
 
 /var/
-|- www/             Apache 默认的 DocumentRoot 目录
-    |- cgi-bin/     CGI 程序
-    |- error/
-    |- html/        WEB 文件
-    |- icons/       一些图标文件
+    |- www/             Apache 默认的 DocumentRoot 目录
+        |- cgi-bin/     CGI 程序
+        |- error/
+        |- html/        WEB 文件
+        |- icons/       一些图标文件
 
-|- log/
-    |- httpd/       Apache 的日志文件
+    |- log/
+        |- httpd/       Apache 的日志文件
 </programlisting>
 </tip>
 

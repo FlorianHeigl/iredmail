@@ -160,7 +160,7 @@ div.note table, div.tip table, div.important table {
     font-size: 12px;
 }
 
-div.itemizedlist, div.orderedlist {
+div.itemizedlist, div.orderedlist, div.caution {
     line-height: 0.7em;
 }
 
