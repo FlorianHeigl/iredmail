@@ -92,26 +92,31 @@ gpgcheck=0
         </section>
         <!-- END YUM repo file -->
 
-        <para>强烈建议执行 'yum clean all' 命令，将所有 yum metadata 等信息清空，再重新获取最新的仓库信息：
+        <!-- END YUM TESTING -->
+        <section id="preparation_yum_testing"><?dbhtml filename="preparation_yum_testing.html"?>
+            <title>测试 yum 仓库</title>
+            <para>强烈建议执行 'yum clean all' 命令，将所有 yum metadata 等信息清空，再重新获取最新的仓库信息：
 <programlisting>
 # yum clean all
 # yum list
 </programlisting>
 </para>
 
-<para>如果在 'yum list' 命令的输出中能够看到刚才制作的仓库里的软件包的名字，那就是 OK 了。再试着安装一个软件包看是否成功：
+            <para>如果在 'yum list' 命令的输出中能够看到刚才制作的仓库里的软件包的名字，那就是 OK 了。再试着安装一个软件包看是否成功：
 <programlisting>
 # yum install cyrus-sasl.i386
 </programlisting>
 </para>
 
-<para>如果是 x86_64 平台，则将后面的 i386 改为 x86_64：
+            <para>如果是 x86_64 平台，则将后面的 i386 改为 x86_64：
 <programlisting>
 # yum install cyrus-sasl.x86_64
 </programlisting>
 </para>
 
-        <para>如果安装成功，表示 yum 仓库和 RPM 包都没问题。可以继续往下进行配置了。</para>
+            <para>如果安装成功，表示 yum 仓库和 RPM 包都没问题。可以继续往下进行配置了。</para>
+        </section>
+        <!-- END YUM TESTING -->
 
     </section>
 
