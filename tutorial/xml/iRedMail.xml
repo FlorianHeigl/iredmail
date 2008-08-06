@@ -17,7 +17,7 @@
 <!ENTITY apache_php SYSTEM "apache_php.xml">
 <!ENTITY openldap SYSTEM "openldap.xml">
 <!ENTITY postfix SYSTEM "postfix.xml">
-<!ENTITY courier SYSTEM "courier.xml">
+<!ENTITY dovecot_1.1.x SYSTEM "dovecot_1.1.x.xml">
 <!ENTITY webmail SYSTEM "webmail.xml">
 <!ENTITY spamassassin SYSTEM "spamassassin.xml">
 <!ENTITY clamav SYSTEM "clamav.xml">
@@ -42,7 +42,7 @@
     &apache_php;
     &openldap;
     &postfix;
-    &courier;
+    &dovecot_1.1.x;
     &webmail;
     &spamassassin;
     &clamav;

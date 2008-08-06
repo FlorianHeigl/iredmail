@@ -1,5 +1,7 @@
 <chapter id="preparation"><?dbhtml filename="preparation.html"?>
     <title>预备知识</title>
+
+    <!-- YUM -->
     <section id="preparation_yum_repo"><title>Yum 仓库</title>
         <para>为了避免从网络下载软件包可能发生的软件包不完整、下载速度慢、网络故障等问题，我们强烈建议您使用本地的 DVD/CD iso 来创建 yum 仓库，这样在安装的时候速度快， 而且可以保证所有软件包都能顺利安装。</para>
 
@@ -18,6 +20,48 @@
 </tip>
             </para></listitem>
         </itemizedlist>
+
+
+        <!-- Use ISO to create yum repo -->
+        <section id="use_iso_for_createrepo"><title>使用 ISO 文件制作 yum 仓库</title>
+            <para>
+            </para>
+        </section>
+    </section>
+
+
+    <!-- Setting hostname -->
+    <section id="preparation_system_hostname"><?dbhtml filename="preparation_system_hostname"?>
+        <title>系统主机名</title>
+        <para>这里说的 hostname 是指使用 'hostname' 命令打印出来的系统主机名，例如：
+            <programlisting>
+$ hostname
+mail.iredmail.org
+</programlisting>
+</para>
+
+<para>不管您的 Linux 系统是否作为公网服务器，我们都强烈建议您设置一个合适的主机名。</para>
+
+<para>在 RHEL/CentOS 系统中，主机名的设置涉及到两个文件：
+
+    <itemizedlist>
+        <listitem><para>/etc/sysconfig/network</para></listitem>
+        <listitem><para>/etc/hosts</para></listitem>
+    </itemizedlist>
+</para>
+
+<para>在 /etc/sysconfig/network 中设置 HOSTNAME 变量，例如：
+<programlisting>
+HOSTNAME=mail.iredmail.org
+</programlisting>
+</para>
+
+<para>在 /etc/hosts 中将它指向 127.0.0.1 这个地址。例如：
+
+<programlisting>
+127.0.0.1   localhost localhost.localdomain mail.iredmail.org mail
+</programlisting>
+</para>
     </section>
 
 </chapter>
