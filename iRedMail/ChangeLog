@@ -1,3 +1,6 @@
+iRedMail-0.2-rc4:
+    * Make saslauthd disabled while we use dovecot sasl mechanism.
+
 iRedMail-0.2-rc3:
     * Update postfixadmin to 2.2.1.1.
     * New roundcubemail plugin: vacation. Created by KaraDog <at>

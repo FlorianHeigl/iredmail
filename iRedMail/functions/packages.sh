@@ -58,6 +58,9 @@ install_all()
     if [ X"${ENABLE_DOVECOT}" == X"YES" ]; then
         ALL_PKGS="${ALL_PKGS} dovecot.${ARCH} dovecot-sieve.${ARCH}"
         ENABLED_SERVICES="${ENABLED_SERVICES} dovecot"
+        # We will use Dovecot SASL auth mechanism, so 'saslauthd'
+        # is not necessary, should be disabled.
+        DISABLED_SERVICES="${DISABLED_SERVICES} saslauthd"
     else
         ALL_PKGS="procmail.${ARCH}"
         ENABLED_SERVICES="${ENABLED_SERVICES} saslauthd"
