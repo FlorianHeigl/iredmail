@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet href="css/driver.css" type="text/css"?>
+
+<!DOCTYPE book SYSTEM "/usr/share/sgml/docbook/xml-dtd-4.4-1.0-30.1/docbookx.dtd"
+
+[
+<!ENTITY version "0.2">
+<!ENTITY supercopy "SUPERCOPYRIGHT &copy;&reg;">
+
+<!ENTITY bookinfo SYSTEM "bookinfo.xml">
+<!ENTITY features SYSTEM "features.xml">
+<!ENTITY about_iredmail SYSTEM "about_iredmail.xml">
+<!ENTITY overview SYSTEM "overview.xml">
+<!ENTITY preparation SYSTEM "preparation.xml">
+
+<!ENTITY user_vmail SYSTEM "user_vmail.xml">
+<!ENTITY apache_php SYSTEM "apache_php.xml">
+
+]>
+
+<book><?dbhtml dir="../iRedMail-doc-mysql-0.2" filename="index.html"?>
+    <title>Mail Server Solution for Red Hat Enterprise Linux and CentOS (MySQL)</title>
+
+    &bookinfo;
+    &about_iredmail;
+    &features;
+    &overview;
+    &preparation;
+
+    &user_vmail;
+    &apache_php;
+
+</book>
