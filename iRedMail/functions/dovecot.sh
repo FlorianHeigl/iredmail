@@ -100,7 +100,9 @@ login_process_per_connection=yes
 auth_default_realm = ${FIRST_DOMAIN}
 
 # ---- NFS storage ----
-#dotlock_use_excl = no # only needed with NFSv2, NFSv3+ supports O_EXCL and it's faster
+# Set to 'no' For NFSv2. Default is 'yes'.
+#dotlock_use_excl = yes 
+
 #mail_nfs_storage = yes # v1.1+ only
 
 # If indexes are on NFS.

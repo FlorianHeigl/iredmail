@@ -1,5 +1,5 @@
 <chapter id="user_vmail"><?dbhtml filename="user_vmail.html"?>
-    <title>User: vmail（已完成，需要校对）</title>
+    <title>User: vmail（已完成，等待校对）</title>
 
     <para>我们将创建一个新的用户和组 vmail/vmail：
         <itemizedlist>
