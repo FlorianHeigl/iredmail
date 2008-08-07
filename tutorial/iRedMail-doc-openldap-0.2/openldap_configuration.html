@@ -1,0 +1,434 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>7.2. &#37197;&#32622; OpenLDAP</title><link rel="stylesheet" href="docbook.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.69.1"><link rel="start" href="index.html" title="Mail Server Solution for Red Hat Enterprise Linux and CentOS (OpenLDAP)"><link rel="up" href="openldap.html" title="Chapter 7. OpenLDAP"><link rel="prev" href="openldap.html" title="Chapter 7. OpenLDAP"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">7.2. &#37197;&#32622; OpenLDAP</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="openldap.html">Prev</a> </td><th width="60%" align="center">Chapter 7. OpenLDAP</th><td width="20%" align="right"> </td></tr></table><hr></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="openldap_configuration"></a>7.2. &#37197;&#32622; OpenLDAP</h2></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="openldap_iredmail_schema"></a>7.2.1. iredmail.schema</h3></div></div></div><p>&#36825;&#37324;&#23558;&#20351;&#29992; iRedMail &#39033;&#30446;&#33258;&#24049;&#30340; iredmail.schema &#25991;&#20214;&#19982; Postfix &#30340;&#25972;&#21512;&#65292;iredmail.schema &#26159;&#22522;&#20110; qmail.schema &#25193;&#23637;&#24471;&#26469;&#12290;&#21487;&#20197;&#20174;&#20197;&#19979;&#22320;&#22336;&#33719;&#21462; iredmail.schema &#25991;&#20214;&#65306;
+</p><pre class="programlisting">
+http://iredmail.googlecode.com/svn/trunk/iRedMail/samples/iredmail.schema
+</pre><p>
+</p><p>
+&#19979;&#36733;&#21518;&#23558; iredmail.schema &#22797;&#21046;&#21040;&#23545;&#24212;&#30340;&#30446;&#24405;&#65306;
+</p><pre class="programlisting">
+# cp iredmail.schema /etc/openldap/schema/
+</pre><p>
+</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="openldap_slapd_conf"></a>7.2.2. OpenLDAP &#30340;&#20027;&#37197;&#32622;&#25991;&#20214;&#65306;/etc/openldap/slapd.conf</h3></div></div></div><p>OpenLDAP &#30340;&#20027;&#37197;&#32622;&#25991;&#20214;&#26159; /etc/openldap/slapd.conf&#12290;&#22312;&#36825;&#37324;&#65292;&#25105;&#20204;&#38656;&#35201;&#28155;&#21152;&#21644;&#20462;&#25913;&#19968;&#20123;&#20869;&#23481;&#65306;
+</p><pre class="programlisting">
+#
+# File: /etc/openldap/slapd.conf
+#
+
+include         /etc/openldap/schema/core.schema
+include         /etc/openldap/schema/cosine.schema
+include         /etc/openldap/schema/inetorgperson.schema
+include         /etc/openldap/schema/nis.schema
+
+#
+# &#36825;&#26159;&#20026;&#20102;&#19982; Postfix &#25972;&#21512;&#25152;&#38656;&#35201;&#30340; schema
+#
+
+include         /etc/openldap/schema/iredmail.schema
+
+pidfile         /var/run/openldap/slapd.pid
+argsfile        /var/run/openldap/slapd.args
+
+#
+# &#31105;&#27490;&#21311;&#21517;&#36830;&#25509;&#12290;
+#
+
+disallow    bind_anon
+
+#
+# Version of LDAP Protocol.
+# OpenLDAP &#40664;&#35748;&#21482;&#20801;&#35768;&#20351;&#29992; LDAP &#21327;&#35758;&#30340;&#31532;&#19977;&#29256;&#26412;&#65288;LDAPv3&#65289;&#12290;
+# &#22914;&#26524;&#38656;&#35201;&#24378;&#21046;&#20351;&#29992; LDAPv3&#65292;&#21017;&#21487;&#20197;&#20351;&#29992;&#20197;&#19979;&#21442;&#25968;&#65306;
+#
+#require        LDAPv3
+#
+# &#22914;&#26524;&#38656;&#35201;&#25552;&#20379; LDAPv2 &#30340;&#25903;&#25345;&#65292;&#38656;&#35201;&#21152;&#20837;&#20197;&#19979;&#21442;&#25968;&#65306;
+#
+allow           bind_v2
+
+#
+# &#26085;&#24535;&#32423;&#21035;&#65292;&#29992;&#20110;&#35843;&#35797;&#12290;&#36807;&#22810;&#30340;&#26085;&#24535;&#36755;&#20986;&#38656;&#35201;&#22823;&#37327;&#30340; I/O &#25805;&#20316;&#65292;&#21487;&#33021;&#20250;&#24433;&#21709;&#24615;&#33021;&#12290;
+#
+# -1 &#32423;&#21035;&#23558;&#20135;&#29983;&#26368;&#22810;&#30340; debug &#20449;&#24687;&#12290;
+#loglevel   -1
+#
+# 0 &#32423;&#21035;&#38500;&#20102;&#35760;&#24405; OpenLDAP &#21551;&#21160;&#26102;&#30340;&#36755;&#20986;&#20449;&#24687;&#22806;&#65292;&#19981;&#35760;&#24405;&#20219;&#20309;&#20449;&#24687;&#12290;
+#loglevel    0
+
+loglevel        256
+
+#
+# Access control policy.
+#
+# &#36825;&#37324;&#24320;&#22987;&#23450;&#20041;&#35775;&#38382;&#25511;&#21046;&#31574;&#30053;&#12290;
+
+#
+# ... skip many lines here ...
+#
+
+#
+# database &#20851;&#38190;&#23383;&#20043;&#21069;&#30340;&#21442;&#25968;&#37117;&#26159;&#20840;&#23616;&#21442;&#25968;&#12290;
+# database &#20851;&#38190;&#23383;&#24320;&#22987;&#30340;&#22320;&#26041;&#34920;&#31034;&#24320;&#22987;&#23450;&#20041;&#19968;&#20010; LDAP Instance&#12290;
+#
+
+database       bdb
+
+suffix          "dc=osspinc,dc=com"
+rootdn          "cn=Manager,dc=osspinc,dc=com"
+rootpw          passwd
+
+#
+# &#35774;&#32622; LDAP &#25968;&#25454;&#23384;&#25918;&#30340;&#36335;&#24452;&#21644;&#30446;&#24405;&#30340;&#26435;&#38480;&#12290;
+#
+directory       /var/lib/ldap/osspinc.com/
+mode            0700
+
+#
+# &#20026;&#19968;&#20123; LDAP &#23646;&#24615;&#32500;&#25252;&#32034;&#24341;&#65292;&#21487;&#20197;&#21152;&#24555;&#26597;&#35810;&#36895;&#24230;&#12290;
+#
+
+index objectClass                       eq,pres
+index ou,cn,mail,surname,givenname      eq,pres,sub
+index uidNumber,gidNumber,loginShell    eq,pres
+index uid,memberUid                     eq,pres,sub
+index nisMapName,nisMapEntry            eq,pres,sub
+
+#
+# &#36825;&#26159;&#38656;&#35201;&#29992;&#21040;&#30340; iRedMail.schema &#37324;&#30340;&#19968;&#20123;&#23646;&#24615;
+#
+index domainName,mtaTransport,domainStatus,domainMaxQuotaSize,domainMaxUserNumber   eq
+index domainSenderBccAddress,domainRecipientBccAddress  eq
+index homeDirectory,mailMessageStore,mailForwardingAddress,accountStatus eq
+</pre><p>
+</p><p>&#31616;&#21333;&#35299;&#37322;&#65306;
+    </p><div class="itemizedlist"><ul type="disc"><li><p>database&#65306;&#36825;&#26159;&#23450;&#20041; OpenLDAP &#20351;&#29992;&#21738;&#31181;&#25968;&#25454;&#24211;&#20316;&#20026; backend&#65292;&#29992;&#26469;&#23384;&#20648;&#25968;&#25454;&#12290;&#25512;&#33616;&#20351;&#29992; bdb (Berkeley Database)&#12290;</p></li><li><p>suffix&#65306;&#36825;&#26159;&#23450;&#20041; LDAP &#26641;&#30340;&#21069;&#32512;&#12290;</p></li><li><p>rootdn&#65306;&#36825;&#26159;&#23450;&#20041;&#29992;&#26469;&#31649;&#29702;&#25972;&#20010; LDAP &#30340;&#31649;&#29702;&#21592;&#36134;&#21495;&#12290;</p></li><li><p>rootpw&#65306;&#36825;&#26159;&#35774;&#23450; rootdn &#30340;&#23494;&#30721;&#12290;</p></li></ul></div><p>
+</p><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Tip: LDAP suffix"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="images/tip.png"></td><th align="left">LDAP suffix</th></tr><tr><td align="left" valign="top"><p>OpenLDAP &#25903;&#25345;&#22810;&#20010; suffix&#65292;&#36825;&#21487;&#20197;&#36890;&#36807;&#23450;&#20041;&#22810;&#20010; database &#26469;&#25351;&#23450;&#12290;</p></td></tr></table></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note: root password"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/note.png"></td><th align="left">root password</th></tr><tr><td align="left" valign="top"><p>&#36825;&#37324;&#30340; rootpw &#20351;&#29992;&#30340;&#26159;&#26126;&#25991;&#23494;&#30721;&#12290;&#20320;&#20063;&#21487;&#20197;&#20351;&#29992; slappasswd &#29983;&#25104;&#30340;&#23494;&#30721;&#65306;
+</p><pre class="programlisting">
+# slappasswd
+New password: 
+Re-enter new password:
+{SSHA}mHzQL7t4YG/a6g5mt2YPLE/+ErmekI34
+</pre><p>
+
+</p><p>&#40664;&#35748;&#26159;&#20351;&#29992; SSHA &#36825;&#20010;&#21152;&#23494;&#31639;&#27861;&#30340;&#12290;&#23558;&#24471;&#21040;&#30340; '{SSHA}mHzQL7t4YG/a6g5mt2YPLE/+ErmekI34?' &#36825;&#19968;&#20018;&#23383;&#31526;&#22797;&#21046;&#21040; rootpw &#21518;&#38754;&#23601;&#21487;&#20197;&#20102;&#12290;</p><p>
+</p><p>&#20063;&#21487;&#20197;&#29992; -h &#21442;&#25968;&#25351;&#23450; slappasswd &#20351;&#29992;&#20854;&#23427;&#30340;&#21152;&#23494;&#31639;&#27861;&#12290;&#27604;&#22914;&#65306;
+</p><pre class="programlisting">
+# slappasswd -h {MD5}
+</pre><p>
+</p></td></tr></table></div><p>
+</p><div class="itemizedlist"><ul type="disc"><li><p>directory&#65306;&#36825;&#26159;&#23450;&#20041; OpenLDAP &#30340;&#25968;&#25454;&#37117;&#23384;&#25918;&#22312;&#21738;&#20010;&#30446;&#24405;&#19979;&#12290;&#25105;&#20204;&#21019;&#24314;&#36825;&#20123;&#30446;&#24405;&#24182;&#35774;&#32622;&#27491;&#30830;&#30340;&#26435;&#38480;&#65306;
+</p><pre class="programlisting">
+# mkdir /var/lib/ldap/osspinc.com/
+# chown -R ldap:ldap /var/lib/ldap/osspinc.com/
+# chmod -R 700 /var/lib/ldap/osspinc.com/
+</pre><p>
+    </p></li></ul></div><p>
+</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="openldap_log"></a>7.2.3. OpenLDAP &#30340;&#26085;&#24535;</h3></div></div></div><p>OpenLDAP &#40664;&#35748;&#23558;&#25152;&#26377;&#26085;&#24535;&#20449;&#24687;&#21457;&#36865;&#21040; syslogd &#30340; 'local4' &#36825;&#20010;&#26085;&#24535;&#32423;&#21035;&#12290;&#20026;&#20102;&#20415;&#20110;&#35843;&#35797;&#20998;&#26512;&#65292;&#21487;&#20197;&#23558;&#25152;&#26377;&#26085;&#24535;&#21333;&#29420;&#23384;&#25918;&#22312;&#26576;&#20010;&#26085;&#24535;&#25991;&#20214;&#37324;&#65292;&#27604;&#22914;&#65306;/var/log/openldap.log&#12290;&#27493;&#39588;&#22914;&#19979;&#65306;</p><div class="orderedlist"><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/note.png"></td><th align="left">Note</th></tr><tr><td align="left" valign="top"><p>&#36825;&#37324;&#22312; '/var/log/openldap.log' &#21069;&#21152;&#20102;&#19968;&#20010;&#27178;&#32447;&#65292;&#34920;&#31034;&#23545;&#26085;&#24535;&#30340;&#35760;&#24405;&#20351;&#29992; &#24322;&#27493;&#27169;&#24335;&#65288;async&#65289;&#65292;&#36825;&#26679;&#21487;&#20197;&#20943;&#23569;&#25991;&#20214;&#30340; I/O &#25805;&#20316;&#65292;&#19968;&#23450;&#31243;&#24230;&#19978;&#25552;&#39640;&#24615;&#33021;&#12290;</p></td></tr></table></div><ol type="1"><li><p>&#20462;&#25913; /etc/syslog.conf&#65292;&#22686;&#21152;&#19968;&#34892;&#65306;
+</p><pre class="programlisting">
+local4.*                    -/var/log/openldap.log
+</pre><p>
+</p></li><li><p>&#21019;&#24314; /var/log/openldap.log &#36825;&#20010;&#25991;&#20214;&#65292;&#24182;&#35774;&#32622;&#22909;&#26435;&#38480;&#65306;
+</p><pre class="programlisting">
+# touch /var/log/openldap.log
+# chown ldap:ldap /var/log/openldap.log
+# chmod 700 /var/log/openldap.log
+</pre><p>
+</p></li><li><p>&#20026; OpenLDAP &#30340;&#26085;&#24535;&#25991;&#20214;&#35774;&#32622; logrotate&#12290;&#26032;&#24314;&#25991;&#20214; /etc/logrotate.d/openldap&#65292;&#22635;&#20837;&#20197;&#19979;&#20869;&#23481;&#65306;
+</p><pre class="programlisting">
+#
+# File: /etc/logrotate.d/openldap
+#
+
+/var/log/openldap.log {
+    compress
+    weekly
+    rotate 5
+    create 0600 ldap ldap
+    missingok
+    postrotate
+           /sbin/killall -HUP syslogd
+    endscript
+}
+</pre><p>
+</p></li><li><p>&#37325;&#21551; syslog &#26381;&#21153;&#20197;&#20351;&#37197;&#32622;&#29983;&#25928;&#65306;
+</p><pre class="programlisting">
+# /etc/init.d/syslog restart
+</pre><p>
+</p></li></ol></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="openldap_startup"></a>7.2.4. &#21551;&#21160; OpenLDAP</h3></div></div></div><p>&#37117;&#37197;&#32622;&#22909;&#20102;&#65292;&#29616;&#22312;&#21487;&#20197;&#21551;&#21160; OpenLDAP &#20102;&#65306;
+</p><pre class="programlisting">
+# /etc/init.d/ldap restart
+</pre><p>
+</p><p>&#36825;&#26102;&#20505;&#22312; /var/log/openldap.log &#37324;&#24212;&#35813;&#24050;&#32463;&#26377;&#19968;&#20123;&#20449;&#24687;&#20102;&#65292;&#19981;&#22952;&#29616;&#22312;&#26597;&#30475;&#19968;&#19979;&#65306;
+</p><pre class="programlisting">
+# cat /var/log/openldap.log
+</pre><p>
+</p><p>&#22914;&#26524;&#30475;&#21040;&#26377;&#31867;&#20284;&#30340;&#36755;&#20986;&#65292;&#21017;&#34920;&#31034;&#24050;&#32463;&#27491;&#24120;&#36816;&#34892;&#20102;&#65306;
+</p><pre class="programlisting">
+Feb 25 10:58:23 localhost slapd2449?: @(#) $OpenLDAP: slapd 2.3.27 (Jun 27 2007 08:48:26)$
+brewbuilder@ls20-bc1-13.build.redhat.com:/builddir/build/BUILD/openldap-2.3.27/openldap-2.3.27/build-servers/servers/slapd Feb 25 10:58:23
+localhost slapd2450?: slapd starting
+</pre><p>
+</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="openldap_initialize"></a>7.2.5. &#21021;&#22987;&#21270; LDAP</h3></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="openldap_tree"></a>7.2.5.1. LDAP &#26641;&#32467;&#26500;</h4></div></div></div><p>&#36825;&#26159;&#25105;&#20204;&#35268;&#21010;&#22909;&#30340; LDAP &#26641;&#32467;&#26500;&#65292;&#35831;&#26681;&#25454;&#33258;&#24049;&#30340;&#38656;&#35201;&#36827;&#34892;&#35843;&#25972;&#65306;
+</p><pre class="programlisting">
+dc=osspinc,dc=com
+          |- o=domains
+                 |- domainName=iredmail.org
+                       |- mail=postmaster@iredmail.org
+                       |- mail=www@iredmail.org
+
+                 |- domainName=osspinc.com
+                       |- mail=postmaster@osspinc.com
+                       |- mail=www@osspinc.com
+</pre><p>
+</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note: dc=osspinc,dc=com"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/note.png"></td><th align="left">dc=osspinc,dc=com</th></tr><tr><td align="left" valign="top"><p>&#36825;&#26159;&#25351;&#23450; LDAP &#30340;&#26681;&#33410;&#28857;&#65292;&#21517;&#23383;&#21487;&#20197;&#20219;&#24847;&#21462;&#65292;&#20294;&#19968;&#33324;&#37117;&#20197;&#33258;&#24049;&#30340;&#22495;&#21517;&#26469;&#21629;&#21517;&#12290; &#20363;&#22914;&#65306;osspinc.com&#65292;&#21487;&#20197;&#20351;&#29992; 'dc=osspinc,dc=com' &#26469;&#20570;&#20026;&#26681;&#33410;&#28857;&#65292;&#32780; 'example.com.cn' &#21017;&#20064;&#24815;&#20110;&#20351;&#29992; 'dc=example,dc=com.cn' &#20316;&#20026;&#26681;&#33410;&#28857;&#12290;</p></td></tr></table></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note: o=domains"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/note.png"></td><th align="left">o=domains</th></tr><tr><td align="left" valign="top"><p>&#20026;&#20102;&#19981;&#24433;&#21709;&#24744;&#20854;&#20182;&#38656;&#35201;&#29992;&#21040; LDAP &#30340;&#24212;&#29992;&#65292;&#36825;&#37324;&#20351;&#29992;&#21333;&#29420;&#30340; o=domains &#33410;&#28857;&#26469;&#20445;&#23384;&#25152;&#26377;&#34394;&#25311;&#22495;&#21644;&#34394;&#25311;&#29992;&#25143;&#30340;&#20449;&#24687;&#12290;</p></td></tr></table></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note: domainName=osspinc.com"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/note.png"></td><th align="left">domainName=osspinc.com</th></tr><tr><td align="left" valign="top"><p>&#36825;&#37324; domainName &#23646;&#24615;&#29992;&#20110;&#25351;&#23450; Postfix &#37324;&#38656;&#35201;&#29992;&#21040;&#30340;&#34394;&#25311;&#22495;&#30340;&#22495;&#21517;&#30340;&#12290; &#36825;&#37324;&#25351;&#23450;&#20102;&#20004;&#20010;&#34394;&#25311;&#22495;&#65292;&#20998;&#21035;&#26159;&#65306;osspinc.com &#21644; iredmail.org&#12290;</p></td></tr></table></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note: postmaster"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/note.png"></td><th align="left">postmaster</th></tr><tr><td align="left" valign="top"><p>postmaster@osspinc.com &#23558;&#26159; o=osspinc.com &#36825;&#20010;&#22495;&#30340;&#31649;&#29702;&#21592;&#65292;&#21487;&#20197;&#29992;&#20110; &#28155;&#21152;&#12289;&#21024;&#38500;&#21644;&#20462;&#25913;&#26412;&#22495;&#20869;&#30340;&#29992;&#25143;&#12290;&#20855;&#20307;&#30340;&#26435;&#38480;&#25511;&#21046;&#20250;&#22312;&#19979;&#38754;&#30340;&#37096;&#20998;&#36827;&#34892;&#35774;&#32622;&#12290;</p></td></tr></table></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="openldap_initialize_base"></a>7.2.5.2. &#21021;&#22987;&#21270;</h4></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="openldap_tree_root_entry"></a>7.2.5.2.1. dc=osspinc,dc=com</h5></div></div></div><p>&#23558;&#20197;&#19979;&#20195;&#30721;&#20445;&#23384;&#20026;&#19968;&#20010;&#25991;&#20214;&#65292;&#20363;&#22914; root.ldif&#12290;
+</p><pre class="programlisting">
+dn: dc=osspinc,dc=com
+objectclass: dcObject
+objectclass: organization
+dc: osspinc
+o: osspinc
+</pre><p>
+</p><div class="caution" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Caution"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Caution]" src="images/caution.png"></td><th align="left">Caution</th></tr><tr><td align="left" valign="top"><p>&#22914;&#26524;&#20320;&#30340;&#22495;&#21517;&#26159; example.com.cn&#65292;&#24212;&#35813;&#31245;&#21152;&#20462;&#25913;&#65292;&#25104;&#20026;&#20197;&#19979;&#30340;&#20195;&#30721;&#65306;
+</p><pre class="programlisting">
+dn: dc=example,dc=com.cn
+objectclass: dcObject
+objectclass: organization
+dc: example     # &#36825;&#37324;&#30340;&#20540;&#35201;&#21644; dc=example &#30340;&#20540;&#19968;&#33268;
+o: example      # &#36825;&#37324;&#30340;&#20540;&#35201;&#21644; dc=example &#30340;&#20540;&#19968;&#33268;
+</pre><p>
+</p></td></tr></table></div><p>&#35831;&#20808;&#30830;&#35748; OpenLDAP &#24050;&#32463;&#27491;&#22312;&#36816;&#34892;&#65292;&#20877;&#20351;&#29992; OpenLDAP &#25552;&#20379;&#30340; ldapadd &#24037;&#20855;&#23558;&#36825;&#20010; root dn &#28155;&#21152;&#36827;&#21435;&#65292;&#20043;&#21518;&#22312; phpLDAPadmin &#25110; ldapsearch &#37324;&#23601;&#33021;&#30475;&#21040;&#36825;&#20010; dn &#20102;&#65306;
+</p><pre class="programlisting">
+# ldapadd -x -D "cn=Manager,dc=osspinc,dc=com" -W -f root.ldif
+Enter LDAP Password: 
+adding new entry "dc=osspinc,dc=com"
+</pre><p>
+</p><p>&#31616;&#21333;&#35299;&#37322;&#65306;
+    </p><div class="itemizedlist"><ul type="disc"><li><p>-x&#65306;&#20351;&#29992;&#35748;&#35777;&#65307;</p></li><li><p>-D&#65306;&#25351;&#23450;&#20351;&#29992;&#21738;&#20010; dn &#26469;&#25805;&#20316;&#65307;</p></li><li><p>-W&#65306;&#25552;&#31034;&#36755;&#20837;&#23494;&#30721;&#65307;</p></li><li><p>-f&#65306;&#25351;&#23450;&#35201;&#28155;&#21152;&#30340; entry &#30340;&#20869;&#23481;&#20174;&#25991;&#20214;&#20013;&#35835;&#20837;&#65307;</p></li></ul></div><p>
+</p><p>&#29992; ldapsearch &#30475;&#30475;&#32467;&#26524;&#65306;
+</p><pre class="programlisting">
+# ldapsearch -x -D 'cn=Manager,dc=osspinc,dc=com' -b 'dc=osspinc,dc=com' -W
+
+Enter LDAP Password: 
+# extended LDIF
+#
+# LDAPv3
+# base &lt;dc=osspinc,dc=com&gt; with scope subtree
+# filter: (objectclass=*)
+# requesting: ALL
+#
+
+# osspinc.com
+dn: dc=osspinc,dc=com
+objectClass: dcObject
+objectClass: organization
+dc: osspinc
+o: osspinc
+
+# search result
+search: 2
+result: 0 Success
+
+# numResponses: 2
+# numEntries: 1
+# 
+</pre><p>
+</p>
+
+&#30475;&#21040;&#21018;&#25165;&#28155;&#21152;&#30340; dn &#20102;&#21543;&#65311;
+<div class="caution" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Caution: 
+&#31616;&#21333;&#35299;&#37322;&#65306;"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Caution]" src="images/caution.png"></td><th align="left">
+&#31616;&#21333;&#35299;&#37322;&#65306;</th></tr><tr><td align="left" valign="top"><p>
+    * -b*&#65306;&#35201;&#26597;&#25214;&#21738;&#20010; dn &#19979;&#30340;&#20869;&#23481;&#65288;base dn for search&#65289;&#65307; 
+</p></td></tr></table></div><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Tip"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="images/tip.png"></td><th align="left">Tip</th></tr><tr><td align="left" valign="top">&#26356;&#35814;&#32454;&#20449;&#24687;&#35831;&#21442;&#32771;&#65306;ldapadd(1)&#65292;ldapsearch(1) </td></tr></table></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="openldap_tree_domains_entry"></a>7.2.5.2.2. o=domains,dc=osspinc,dc=com</h5></div></div></div><p>&#23558;&#20197;&#19979;&#20869;&#23481;&#20445;&#23384;&#20026; base_dn.ldif &#25991;&#20214;&#21518;&#20351;&#29992; ldapadd &#28155;&#21152;&#65306;
+</p><pre class="programlisting">
+dn: o=domains,dc=osspinc,dc=com
+objectClass: Organization
+o: domains
+</pre><p>
+</p><p>Postfix &#23558;&#20174; o=domains,dc=osspinc,dc=com &#24320;&#22987;&#26597;&#25214;&#37038;&#20214;&#29992;&#25143;&#65292;&#36825;&#20010; LDAP &#33410;&#28857;&#36890;&#24120;&#31216;&#20026; base dn&#12290;</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="openldap_tree_vmail_vmailadmin_entry"></a>7.2.5.2.3. cn=vmail/vmailadmin,dc=osspinc,dc=com</h5></div></div></div><p>cn=vmail,dc=osspinc,dc=com &#36825;&#20010;&#24080;&#21495;&#23558;&#29992;&#20110; saslauthd/postfix &#31561;&#31243;&#24207;&#36830;&#25509; LDAP &#26597;&#35810;&#29992;&#25143;&#20449;&#24687;&#12290;&#23427;&#23545; o=domains,dc=osspinc,dc=com &#19979;&#30340;&#25152;&#26377;&#20869;&#23481;&#37117;&#21482;&#26377;&#21482;&#35835;&#65288;Read&#65289; &#30340;&#26435;&#38480;&#65306;
+</p><pre class="programlisting">
+dn: cn=vmail,dc=osspinc,dc=com
+objectClass: person
+objectClass: top
+cn: vmail
+sn: vmail
+userPassword: vmailpasswd
+</pre><p>
+</p><p>cn=vmailadmin,dc=osspinc,dc=com &#26159;&#25552;&#20379;&#32473;&#31649;&#29702;&#21592;&#31649;&#29702;&#25152;&#26377;&#30340;&#22495;&#21644;&#29992;&#25143;&#30340;&#24080;&#21495;&#65306;
+</p><pre class="programlisting">
+dn: cn=vmailadmin,dc=osspinc,dc=com
+objectClass: person
+objectClass: top
+cn: vmailadmin
+sn: vmailadmin
+userPassword: vmailpasswd
+</pre><p>
+</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="openldap_tree_domainX"></a>7.2.5.2.4. domainName=iredmail.org,o=domains,dc=osspinc,dc=com</h5></div></div></div><p>&#36825;&#26159;&#25105;&#20204;&#35201;&#28155;&#21152;&#19968;&#20010;&#34394;&#25311;&#22495;&#12290;&#23558;&#20197;&#19979;&#20869;&#23481;&#22797;&#21046;&#20445;&#23384;&#21518;&#65292;&#20351;&#29992; ldapadd &#28155;&#21152;&#65306;
+</p><pre class="programlisting">
+dn: domainName=iredmail.org,o=domains,dc=osspinc,dc=com
+objectClass: mailDomain
+domainName: iredmail.org
+mtaTransport: dovecot
+domainStatus: active
+</pre><p>
+</p><p>&#31616;&#21333;&#35299;&#37322;&#65306;
+</p><div class="itemizedlist"><ul type="disc"><li><p>&#36825;&#37324;&#30340;&#23646;&#24615; domainName &#25351;&#23450;&#30340;&#20540;&#23558;&#20250;&#34987;&#30452;&#25509;&#20316;&#20026;&#37038;&#20214;&#22320;&#22336;&#30340;&#21518;&#32512;&#65292;&#27604;&#22914;&#65306;@osspinc.com&#12290;</p></li><li><p>mtaTransport &#23646;&#24615;&#30340;&#20540;&#23558;&#20316;&#20026;&#31867;&#20284; /etc/postfix/transport &#25991;&#20214;&#30340;&#20316;&#29992;&#65292;&#25552;&#20379;&#32473; Postfix &#20316;&#20026; transport&#12290;</p></li><li><p>* domainStatus &#23646;&#24615;&#30340;&#20540;&#23558;&#29992;&#20110;&#35782;&#21035;&#36825;&#20010;&#22495;&#30340;&#29366;&#24577;&#12290;&#22914;&#26524;&#19981;&#26159; 'active'&#65292;&#23558;&#34987;&#35748;&#20026;&#26159;&#24403;&#21069;&#34987;&#31105;&#29992;&#30340;&#22495;&#12290; </p></li></ul></div><p>
+</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="openldap_tree_postmaster"></a>7.2.5.2.5. mail=postmaster@osspinc.com,domainName=osspinc.com,o=domains,dc=osspinc,dc=com</h5></div></div></div><p>&#36825;&#26159;&#22495;&#31649;&#29702;&#21592;&#36134;&#21495;&#65306;
+</p><pre class="programlisting">
+dn: mail=postmaster@osspinc.com,domainName=osspinc.com,o=domains,dc=osspinc,dc=com
+objectClass: inetOrgPerson
+objectClass: mailUser
+objectClass: top
+cn: postmaster
+sn: postmaster
+uid: postmaster
+mail: postmaster@osspinc.com
+accountStatus: active
+homeDirectory: /home/vmail
+mailMessageStore: osspinc.com/postmaster/
+mailQuota: 0
+userPassword: 123456
+</pre><p>
+</p><p>&#31616;&#21333;&#35299;&#37322;&#65306;
+    </p><div class="itemizedlist"><ul type="disc"><li><p>&#36825;&#37324;&#24050;&#32463;&#35774;&#32622;&#20102;&#37038;&#31665;&#30340;&#36335;&#24452;&#65292;&#21363; homeDirectory + mailMessageStore&#65306;
+</p><pre class="programlisting">
+/home/vmail/osspinc.com/www/
+</pre><p>
+</p></li><li><p>&#36825;&#37324;&#30452;&#25509;&#32473;&#29992;&#25143;&#35774;&#32622;&#20102;&#19968;&#20010;&#26126;&#25991;&#23494;&#30721;&#65306;
+
+</p><pre class="programlisting">
+userPassword: 123456
+</pre><p>
+</p></li></ul></div><p>
+</p><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Tip"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="images/tip.png"></td><th align="left">Tip</th></tr><tr><td align="left" valign="top"><p>&#20063;&#21487;&#20197;&#20351;&#29992; slappasswd &#24037;&#20855;&#29983;&#25104;&#21152;&#23494;&#30340;&#23494;&#30721;&#65306;
+              </p><pre class="programlisting">userPassword: {MD5}e41hj20lJ7j0XSksFgCEuw==</pre><p>
+          </p></td></tr></table></div><div class="itemizedlist"><ul type="disc"><li><p>mailQuota &#37324;&#30340; 10240 &#34920;&#31034;&#30340;&#26159; 10M&#12290;</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="openldap_tree_www"></a>7.2.5.2.6. mail=www@osspinc.com,domainName=osspinc.com,o=domains,dc=osspinc,dc=com</h5></div></div></div><p>&#20197;&#19979; LDIF &#25991;&#20214;&#30340;&#20869;&#23481;&#26159;&#23558;&#19968;&#20010;&#29992;&#25143;&#28155;&#21152;&#21040; osspinc.com &#20013;&#65306;
+</p><pre class="programlisting">
+dn: mail=www@osspinc.com,domainName=osspinc.com,o=domains,dc=osspinc,dc=com
+objectClass: inetOrgPerson
+objectClass: mailUser
+objectClass: top
+cn: www
+sn: www
+uid: www
+mail: www@osspinc.com
+accountStatus: active
+homeDirectory: /home/vmail
+mailMessageStore: osspinc.com/www/
+mailQuota: 10240
+userPassword: 123456
+</pre><p>
+</p></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="openldap_acl"></a>7.2.6. OpenLDAP &#35775;&#38382;&#26435;&#38480;&#25511;&#21046;&#65288;ACL, Access Control List&#65289;</h3></div></div></div><p>&#22312;&#20351;&#29992; ldapadd &#28155;&#21152;&#22909;&#21508;&#20010; dn &#20043;&#21518;&#65292;&#25171;&#24320; /etc/openldap/slapd.conf &#25991;&#20214;&#65292;&#22312; 'database bdb' &#36825;&#19968;&#34892;&#20043;&#21069;&#28155;&#21152;&#20197;&#19979;&#20869;&#23481;&#65292;&#29992;&#20110;&#20316;&#35775;&#38382;&#25511;&#21046;&#12290;&#20445;&#23384;&#36864;&#20986;&#21518;&#38656;&#35201;&#37325;&#26032;&#21551;&#21160; OpenLDAP &#20197;&#20351;&#37197;&#32622;&#29983;&#25928;&#65306;
+</p><pre class="programlisting">
+#
+# Part of file: /etc/openldap/slapd.conf
+#
+
+#
+# Access Control List. Used for LDAP bind.
+#
+
+#
+# Every domain have a administrator.
+#   For domain: 'osspinc.com'
+#   Administrator:
+#       mail=postmaster@osspinc.com, domainName=osspinc.com, o=domains, dc=osspinc,dc=com
+#
+
+#
+# Set permission for LDAP attrs.
+#
+access to attrs="userPassword,mailForwardingAddress"
+    by anonymous    auth
+    by self         write
+    by dn.exact="cn=vmail,dc=osspinc,dc=com"   read
+    by dn.exact="cn=vmailadmin,dc=osspinc,dc=com"  write
+    by dn.regex="mail=postmaster@([^,]+),domainName=$1,o=domains, dc=osspinc,dc=com"   write
+    by users        none
+
+access to attrs="cn,sn"
+    by anonymous    auth
+    by self         write
+    by dn.exact="cn=vmail,dc=osspinc,dc=com"   read
+    by dn.exact="cn=vmailadmin,dc=osspinc,dc=com"  write
+    by dn.regex="mail=postmaster@([^,]+),domainName=$1,o=domains, dc=osspinc,dc=com"   write
+    by users        read
+
+# Domain attributes.
+access to attrs="objectclass,domainName,domainStatus,mtaTransport,domainSenderBccAddress,domainRecipientBccAddress"
+    by anonymous    auth
+    by self         read
+    by dn.exact="cn=vmail,dc=osspinc,dc=com"   read
+    by dn.exact="cn=vmailadmin,dc=osspinc,dc=com"  write
+    by dn.regex="mail=postmaster@([^,]+),domainName=$1,o=domains, dc=osspinc,dc=com"    write
+    by users        read
+
+# User attributes.
+access to attrs="mail,mailQuota,homeDirectory,mailMessageStore,mailForwardingAddress,accountStatus,userSenderBccAddress,userRecipientBccAddress"
+    by anonymous    auth
+    by self         read
+    by dn.exact="cn=vmail,dc=osspinc,dc=com"   read
+    by dn.exact="cn=vmailadmin,dc=osspinc,dc=com"  write
+    by dn.regex="mail=postmaster@([^,]+),domainName=$1,o=domains, dc=osspinc,dc=com"    write
+    by users        read
+
+#
+# Set ACL for vmail/vmailadmin.
+#
+access to dn="cn=vmail,dc=osspinc,dc=com"
+    by anonymous                    auth
+    by self                         write
+    by dn.exact="cn=vmailadmin,dc=osspinc,dc=com"  write
+    by users                        none
+
+access to dn="cn=vmailadmin, dc=osspinc,dc=com"
+    by anonymous                    auth
+    by self                         write
+    by users                        none
+
+#
+# Allow users to access their own domain subtree.
+#
+access to dn.regex="domainName=([^,]+), o=domains, dc=osspinc,dc=com$"
+    by anonymous                    auth
+    by self                         write
+    by dn.exact="cn=vmail, dc=osspinc,dc=com"   read
+    by dn.exact="cn=vmailadmin, dc=osspinc,dc=com"  write
+    by dn.regex="mail=postmaster@$1,domainName=$1,o=domains, dc=osspinc,dc=com$" write
+    by dn.regex="mail=[^,]+,domainName=$1,o=domains, dc=osspinc,dc=com$" read
+    by users                        none
+#
+# Enable vmail/vmailadmin. 
+#
+access to dn.subtree="o=domains, dc=osspinc,dc=com"
+    by anonymous                    auth
+    by self                         write
+    by dn.exact="cn=vmail, dc=osspinc,dc=com"   read
+    by dn.exact="cn=vmailadmin, dc=osspinc,dc=com"  write
+    by dn.regex="mail=postmaster@([^,]+),domainName=$1,o=domains, dc=osspinc,dc=com"    write
+    by users                        read
+
+#
+# Set permission for "cn=*,dc=osspinc,dc=com".
+#
+access to dn.regex="cn=[^,]+,dc=osspinc,dc=com"
+    by anonymous                    auth
+    by self                         write
+    by users                        none
+
+#
+# Set default permission.
+#
+access to *
+    by anonymous                    auth
+    by self                         write
+    by users                        read
+</pre><p>
+</p><p>&#37325;&#26032;&#21551;&#21160; OpenLDAP&#65292;&#20197;&#20351;&#37197;&#32622;&#29983;&#25928;&#65306;
+</p><pre class="programlisting">
+# /etc/init.d/ldap restart
+</pre><p>
+</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="openldap_db_status"></a>7.2.7. &#26597;&#30475; OpenLDAP &#25968;&#25454;&#24211;&#29366;&#24577;</h3></div></div></div><p>&#21487;&#20197;&#36890;&#36807; OpenLDAP &#25552;&#20379;&#30340; slapd_db_stat &#24037;&#20855;&#26469;&#26597;&#30475; LDAP &#25968;&#25454;&#24211;&#30340;&#29366;&#24577;&#65306;
+</p><pre class="programlisting">
+# cd /var/lib/ldap/osspinc.com/
+# slapd_db_stat -m
+</pre><p>
+</p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="openldap.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="openldap.html">Up</a></td><td width="40%" align="right"> </td></tr><tr><td width="40%" align="left" valign="top">Chapter 7. OpenLDAP </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div></body></html>

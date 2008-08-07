@@ -16,6 +16,8 @@
 <!ENTITY user_vmail SYSTEM "user_vmail.xml">
 <!ENTITY apache_php SYSTEM "openldap/apache_php.xml">
 
+<!ENTITY openldap SYSTEM "openldap/openldap.xml">
+
 ]>
 
 <book><?dbhtml dir="../iRedMail-doc-openldap-0.2" filename="index.html"?>
@@ -29,5 +31,7 @@
 
     &user_vmail;
     &apache_php;
+
+    &openldap;
 
 </book>
