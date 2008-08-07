@@ -1,4 +1,7 @@
 iRedMail-0.2-rc4:
+    * Change 'virus_admin_maps' and 'spam_admin_maps' to
+      'root@mydomain' in amavisd.conf. Thanks hihihihi <at>
+      'www.osspinc.com/bbs/'.
     * Make saslauthd disabled while we use dovecot sasl mechanism.
 
 iRedMail-0.2-rc3:

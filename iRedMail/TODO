@@ -1,3 +1,4 @@
+* Remove procmail, always use dovecot as SASL auth mechanism. (0.3)
 * Managesieve service (v0.3).
     * Plan to use pysieved.
     * WebMail plugin:
