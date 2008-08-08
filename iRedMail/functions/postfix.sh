@@ -135,6 +135,12 @@ EOF
 #/^Message-ID:.* <!&!/ DUNNO
 #/^Message-ID:.*@(porcupine\.org)/
 #    reject forged domain name in Message-ID: header: $1
+
+# Replace internal IP address by external IP address or whatever you
+# want.
+#if !/(^Received:.*\[)REPLACED_BE_YOUR_IP_ADDRESS(\].*by REPLACED_BE_YOUR_HOSTNAME.*iRedMail.*)/
+#/(^Received:.*\[).*(\].*by REPLACED_BE_YOUR_HOSTNAME.*iRedMail.*)/ REPLACE ${1}REPLACED_BE_YOUR_IP_ADDRESS${2}
+#endif
 EOF
 
     cat >> ${TIP_FILE} <<EOF

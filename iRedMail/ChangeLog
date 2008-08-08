@@ -1,4 +1,7 @@
 iRedMail-0.2-rc4:
+    * Add pcre rule in header_checks(5) for postfix to replace
+      internal IP address by external IP address or whatever you 
+      want. Disabled default. Thanks muniao. :)
     * Change 'virus_admin_maps' and 'spam_admin_maps' to
       'root@mydomain' in amavisd.conf. Thanks hihihihi <at>
       'www.osspinc.com/bbs/'.
