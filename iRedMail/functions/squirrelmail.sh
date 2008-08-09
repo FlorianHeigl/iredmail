@@ -224,7 +224,7 @@ EOF
     chown apache:apache ${PLUGIN_CHANGE_LDAPPASS_CONFIG}
     chmod 644 ${PLUGIN_CHANGE_LDAPPASS_CONFIG}
 
-    echo 'status_sm_plugin_change_ldappass="DONE"' >> ${STATUS_FILE}
+    echo 'export status_sm_plugin_change_ldappass="DONE"' >> ${STATUS_FILE}
 }
 
 #

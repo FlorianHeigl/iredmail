@@ -366,7 +366,7 @@ bind_pw         = ${LDAP_BINDPW}
 search_base     = ${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}
 scope           = sub
 query_filter    = (&(&(${LDAP_ATTR_USER_DN_NAME}=%s)(objectClass=${LDAP_OBJECTCLASS_USER}))(${LDAP_ATTR_USER_STATUS}=active))
-result_attribute= ${LDAP_ATTR_USER_RESTRICTION}
+result_attribute= ${LDAP_ATTR_USER_RESTRICTION_CLASS}
 debug_level     = 0
 EOF
 
@@ -400,7 +400,7 @@ search_base         = ${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}
 scope               = sub
 query_filter        = (&(${LDAP_ATTR_USER_DN_NAME}=%s)(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=active))
 result_attribute    = ${LDAP_ATTR_USER_RESTRICTED_DOMAIN}
-result_format       = REJECT
+result_format       = OK
 debug_level         = 0
 EOF
 

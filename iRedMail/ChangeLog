@@ -1,4 +1,6 @@
 iRedMail-0.2-rc4:
+    * Sync LDAP schema.
+    * Fix postfix sender_access ldap lookup.
     * Add pcre rule in header_checks(5) for postfix to replace
       internal IP address by external IP address or whatever you 
       want. Disabled default. Thanks muniao. :)
