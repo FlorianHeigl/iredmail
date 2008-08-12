@@ -13,7 +13,7 @@ EXAMPLE:
 
     * michaelbibby@gmail.com
 
-" 20 76 2>/tmp/site_admin_name
+" 20 76 "${FIRST_DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}" 2>/tmp/site_admin_name
 
     SITE_ADMIN_NAME="$(cat /tmp/site_admin_name)"
 
