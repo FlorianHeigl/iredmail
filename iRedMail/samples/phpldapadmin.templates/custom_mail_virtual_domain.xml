@@ -19,64 +19,73 @@
 
 <attributes>
     <attribute id="domainName">
-            <description>Domain Name</description>
-            <display>Your domain name</display>
-            <hint>Examples: example.com</hint>
-            <order>1</order>
-            <page>1</page>
+        <description>Domain Name</description>
+        <display>Your domain name</display>
+        <hint>Examples: example.com</hint>
+        <order>1</order>
+        <page>1</page>
     </attribute>
 
     <attribute id="mtaTransport">
-            <description>Transport Map</description>
-            <display>Transport Map</display>
-            <hint>use 'dovecot' as default</hint>
-            <value>dovecot</value>
-            <hidden>1</hidden>
-            <order>2</order>
-            <page>1</page>
+        <description>Transport Map</description>
+        <display>Transport Map</display>
+        <hint>use 'dovecot' as default</hint>
+        <value>dovecot</value>
+        <hidden>1</hidden>
+        <order>2</order>
+        <page>1</page>
     </attribute>
 
     <attribute id="domainStatus">
-            <description>Domain Status</description>
-            <display>Domain Status</display>
-            <option>active</option>
-            <option>disabled</option>
-            <value>active</value>
-            <hidden>1</hidden>
-            <order>3</order>
-            <page>1</page>
+        <description>Domain Status</description>
+        <display>Domain Status</display>
+        <option>active</option>
+        <option>disabled</option>
+        <value>active</value>
+        <hidden>1</hidden>
+        <order>3</order>
+        <page>1</page>
     </attribute>
 
     <attribute id="domainSenderBccAddress">
-            <description>Domain Sender BCC Address</description>
-            <display>Domain Sender BCC Address</display>
-            <hidden>1</hidden>
-            <order>4</order>
-            <page>1</page>
+        <description>Domain Sender BCC Address</description>
+        <display>Domain Sender BCC Address</display>
+        <hidden>1</hidden>
+        <order>4</order>
+        <page>1</page>
     </attribute>
 
     <attribute id="domainRecipientBccAddress">
-            <description>Domain Recipient BCC Address</description>
-            <display>Domain Recipient BCC Address</display>
-            <hidden>1</hidden>
-            <order>5</order>
-            <page>1</page>
+        <description>Domain Recipient BCC Address</description>
+        <display>Domain Recipient BCC Address</display>
+        <hidden>1</hidden>
+        <order>5</order>
+        <page>1</page>
     </attribute>
 
     <attribute id="domainMaxUserNumber">
-            <description>Domain Max User Number</description>
-            <display>Domain Max User Number</display>
-            <hidden>1</hidden>
-            <order>6</order>
-            <page>1</page>
+        <description>Domain Max User Number</description>
+        <display>Domain Max User Number</display>
+        <hidden>1</hidden>
+        <order>6</order>
+        <page>1</page>
     </attribute>
 
     <attribute id="domainMaxQuotaSize">
-            <description>Domain Max Quota Size</description>
-            <display>Domain Max Quota Size</display>
-            <hidden>1</hidden>
-            <order>7</order>
-            <page>1</page>
+        <description>Domain Max Quota Size</description>
+        <display>Domain Max Quota Size</display>
+        <hidden>1</hidden>
+        <order>7</order>
+        <page>1</page>
+    </attribute>
+
+    <attribute id="expiredDate">
+        <description>Expired date</description>
+        <display>Expired date</display>
+        <hidden>1</hidden>
+        <value>99991231000000</value>
+        <order>8</order>
+        <page>1</page>
     </attribute>
 
 </attributes>

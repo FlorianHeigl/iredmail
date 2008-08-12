@@ -154,6 +154,16 @@
         <value>yes</value>
     </attribute>
 
+    <attribute id="expiredDate">
+        <description>Expired date</description>
+        <display>Expired date</display>
+        <hidden>1</hidden>
+        <value>99991231000000</value>
+        <order>14</order>
+        <page>1</page>
+    </attribute>
+
+
 </attributes>
 </template>
 

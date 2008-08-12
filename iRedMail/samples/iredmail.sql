@@ -10,6 +10,7 @@ CREATE TABLE admin (
     username varchar(255) NOT NULL default '',
     password varchar(255) NOT NULL default '',
     created datetime NOT NULL default '0000-00-00 00:00:00',
+    expired datetime NOT NULL default '9999-12-31 00:00:00',
     modified datetime NOT NULL default '0000-00-00 00:00:00',
     active tinyint(1) NOT NULL default '1',
     PRIMARY KEY (username)
@@ -23,6 +24,7 @@ CREATE TABLE alias (
     goto text NOT NULL,
     domain varchar(255) NOT NULL default '',
     created datetime NOT NULL default '0000-00-00 00:00:00',
+    expired datetime NOT NULL default '9999-12-31 00:00:00',
     modified datetime NOT NULL default '0000-00-00 00:00:00',
     active tinyint(1) NOT NULL default '1',
     PRIMARY KEY (address)
@@ -54,6 +56,7 @@ CREATE TABLE domain_admins (
     username varchar(255) NOT NULL default '',
     domain varchar(255) NOT NULL default '',
     created datetime NOT NULL default '0000-00-00 00:00:00',
+    expired datetime NOT NULL default '9999-12-31 00:00:00',
     modified datetime NOT NULL default '0000-00-00 00:00:00',
     active tinyint(1) NOT NULL default '1',
     KEY username (username)
@@ -89,6 +92,7 @@ CREATE TABLE sender_bcc_domain (
     domain varchar(255) NOT NULL default '',
     bcc_address varchar(255) NOT NULL default '',
     created datetime NOT NULL default '0000-00-00 00:00:00',
+    expired datetime NOT NULL default '9999-12-31 00:00:00',
     modified datetime NOT NULL default '0000-00-00 00:00:00',
     active tinyint(1) NOT NULL default '1',
     PRIMARY KEY (domain)
@@ -102,6 +106,7 @@ CREATE TABLE sender_bcc_user (
     bcc_address varchar(255) NOT NULL default '',
     domain varchar(255) NOT NULL default '',
     created datetime NOT NULL default '0000-00-00 00:00:00',
+    expired datetime NOT NULL default '9999-12-31 00:00:00',
     modified datetime NOT NULL default '0000-00-00 00:00:00',
     active tinyint(1) NOT NULL default '1',
     PRIMARY KEY (username)
@@ -114,6 +119,7 @@ CREATE TABLE recipient_bcc_domain (
     domain varchar(255) NOT NULL default '',
     bcc_address varchar(255) NOT NULL default '',
     created datetime NOT NULL default '0000-00-00 00:00:00',
+    expired datetime NOT NULL default '9999-12-31 00:00:00',
     modified datetime NOT NULL default '0000-00-00 00:00:00',
     active tinyint(1) NOT NULL default '1',
     PRIMARY KEY (domain)
@@ -127,6 +133,7 @@ CREATE TABLE recipient_bcc_user (
     bcc_address varchar(255) NOT NULL default '',
     domain varchar(255) NOT NULL default '',
     created datetime NOT NULL default '0000-00-00 00:00:00',
+    expired datetime NOT NULL default '9999-12-31 00:00:00',
     modified datetime NOT NULL default '0000-00-00 00:00:00',
     active tinyint(1) NOT NULL default '1',
     PRIMARY KEY (username)
@@ -154,6 +161,7 @@ CREATE TABLE restrictions (
     restriction_class varchar(255) NOT NULL default '',
     restricteddomain varchar(255) NOT NULL default '',
     created datetime NOT NULL default '0000-00-00 00:00:00',
+    expired datetime NOT NULL default '9999-12-31 00:00:00',
     modified datetime NOT NULL default '0000-00-00 00:00:00'
 ) TYPE=MyISAM;
 
