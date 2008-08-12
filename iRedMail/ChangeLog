@@ -1,4 +1,6 @@
 iRedMail-0.2-rc4:
+    * Add expire plugin in dovecot. Disabled by default.
+    * Enable zlib plugin in dovecot by default.
     * Improve postfixadmin config dialog, fill with default domain
       admin address.
     * Sync LDAP schema.

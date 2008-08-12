@@ -126,6 +126,7 @@ mail_location = maildir:/%Lh/%Ld/%Ln/:INDEX=/%Lh/%Ld/%Ln/
 plugin {
     quota = maildir
 
+    # ---- Quota plugin ----
     # Quota rules.
     quota_rule = *:storage=10M
     #quota_rule2 = Trash:storage=100M
@@ -135,6 +136,18 @@ plugin {
     #   http://wiki.dovecot.org/Quota/1.1#head-03d8c4f6fb28e2e2f1cb63ec623810b45bec1734
     #quota_warning = storage=95%% /usr/bin/quota-warning.sh 95
     #quota_warning2 = storage=80%% /usr/bin/quota-warning.sh 80
+
+    # ---- Expire plugin ----
+    # Expire plugin. Mails are expunged from mailboxes after being there the
+    # configurable time. The first expiration date for each mailbox is stored in
+    # a dictionary so it can be quickly determined which mailboxes contain
+    # expired mails. The actual expunging is done in a nightly cronjob, which
+    # you must set up:
+    #
+    #   1   3   *   *   *   dovecot --exec-mail ext /usr/libexec/dovecot/expire-tool
+    #
+    #expire = Trash 7 Spam 30
+    #expire_dict = db:/var/lib/dovecot/expire.db
 }
 
 #plugin {
@@ -195,7 +208,7 @@ protocol lda {
 
 # IMAP configuration
 protocol imap {
-    mail_plugins = quota imap_quota
+    mail_plugins = quota imap_quota zlib
 
     # number of connections per-user per-IP
     #mail_max_userip_connections = 10
@@ -203,7 +216,7 @@ protocol imap {
 
 # POP3 configuration
 protocol pop3 {
-    mail_plugins = quota
+    mail_plugins = quota zlib
     pop3_uidl_format = %08Xu%08Xv
     pop3_client_workarounds = outlook-no-nuls oe-ns-eoh
 }
