@@ -272,14 +272,28 @@ EOF
 driver = mysql
 default_pass_scheme = CRYPT
 connect = host=${MYSQL_SERVER} dbname=${VMAIL_DB} user=${MYSQL_BIND_USER} password=${MYSQL_BIND_PW}
-password_query = SELECT password FROM mailbox WHERE username='%u' AND active='1'
+password_query = SELECT password FROM mailbox WHERE username='%u' AND active='1' AND expired >= NOW()
 EOF
         # Maildir format.
         [ X"${HOME_MAILBOX}" == X"Maildir" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
-user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, "${SIEVE_DIR}/%Ld/%Ln" AS sieve_dir, maildir, CONCAT('*:bytes=', quota*1048576) AS quota_rule FROM mailbox WHERE username='%u' AND active='1' AND enable%Ls='1'
+user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, \
+    "${SIEVE_DIR}/%Ld/%Ln" AS sieve_dir, \
+    CONCAT('*:bytes=', quota*1048576) AS quota_rule, \
+    maildir FROM mailbox \
+    WHERE username='%u' \
+    AND active='1' \
+    AND enable%Ls='1' \
+    AND expired >= NOW()
 EOF
         [ X"${HOME_MAILBOX}" == X"mbox" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
-user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, "${SIEVE_DIR}/%Ld/%Ln/" AS sieve_dir, maildir, CONCAT('*:bytes=', quota*1048576) AS quota_rule FROM mailbox WHERE username='%u' AND active='1' AND enable%Ls='1'
+user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, \
+    "${SIEVE_DIR}/%Ld/%Ln/" AS sieve_dir, \
+    CONCAT('*:bytes=', quota*1048576) AS quota_rule, \
+    maildir FROM mailbox \
+    WHERE username='%u' \
+    AND active='1' \
+    AND enable%Ls='1' \
+    AND expired >= NOW()
 EOF
     fi
 

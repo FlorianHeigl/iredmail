@@ -470,7 +470,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${MYSQL_SERVER}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT domain FROM domain WHERE domain='%s' AND active='1'
+query       = SELECT domain FROM domain WHERE domain='%s' AND active='1' AND expired >= NOW()
 EOF
 
     cat > ${mysql_virtual_mailbox_maps_cf} <<EOF
@@ -479,7 +479,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${MYSQL_SERVER}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT maildir FROM mailbox WHERE username='%s' AND active='1' AND enabledeliver='1'
+query       = SELECT maildir FROM mailbox WHERE username='%s' AND active='1' AND enabledeliver='1' AND expired >= NOW()
 EOF
 
     cat > ${mysql_virtual_mailbox_limit_maps_cf} <<EOF

@@ -42,6 +42,7 @@ CREATE TABLE domain (
     backupmx tinyint(1) NOT NULL default '0',
     created datetime NOT NULL default '0000-00-00 00:00:00',
     modified datetime NOT NULL default '0000-00-00 00:00:00',
+    expired datetime NOT NULL default '9999-12-31 00:00:00',
     active tinyint(1) NOT NULL default '1',
     PRIMARY KEY (domain)
 ) TYPE=MyISAM;
@@ -76,6 +77,7 @@ CREATE TABLE mailbox (
     enableimap tinyint(1) NOT NULL default '1',
     enabledeliver tinyint(1) NOT NULL default '1',
     created datetime NOT NULL default '0000-00-00 00:00:00',
+    expired datetime NOT NULL default '9999-12-31 00:00:00',
     modified datetime NOT NULL default '0000-00-00 00:00:00',
     PRIMARY KEY (username)
 ) TYPE=MyISAM;

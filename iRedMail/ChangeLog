@@ -1,4 +1,6 @@
 iRedMail-0.2-rc4:
+    * Add 'expired' field in SQL template for per user/domain expire
+      date.
     * Add expire plugin in dovecot. Disabled by default.
     * Enable zlib plugin in dovecot by default.
     * Improve postfixadmin config dialog, fill with default domain
