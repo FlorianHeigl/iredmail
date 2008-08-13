@@ -160,8 +160,12 @@ div.note table, div.tip table, div.important table {
     font-size: 12px;
 }
 
-div.itemizedlist, div.orderedlist, div.caution {
+div.itemizedlist, div.orderedlist {
     line-height: 0.7em;
+}
+
+div.caution {
+    border: 1px solid #cb0000;
 }
 
 pre.programlisting {

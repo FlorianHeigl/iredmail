@@ -19,6 +19,8 @@
 
 <!ENTITY openldap SYSTEM "openldap/openldap.xml">
 
+<!ENTITY clamav SYSTEM "clamav.xml">
+<!ENTITY spamassassin SYSTEM "spamassassin.xml">
 ]>
 
 <book><?dbhtml dir="../iRedMail-doc-openldap-0.2" filename="index.html"?>
@@ -35,4 +37,6 @@
 
     &openldap;
 
+    &clamav;
+    &spamassassin;
 </book>

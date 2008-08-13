@@ -17,6 +17,8 @@
 <!ENTITY user_vmail SYSTEM "user_vmail.xml">
 <!ENTITY apache_php SYSTEM "mysql/apache_php.xml">
 
+<!ENTITY clamav SYSTEM "clamav.xml">
+<!ENTITY spamassassin SYSTEM "spamassassin.xml">
 ]>
 
 <book><?dbhtml dir="../iRedMail-doc-mysql-0.2" filename="index.html"?>
@@ -31,4 +33,6 @@
     &user_vmail;
     &apache_php;
 
+    &clamav;
+    &spamassassin;
 </book>
