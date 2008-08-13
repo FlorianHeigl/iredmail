@@ -1,5 +1,5 @@
 <chapter id="spamassassin"><?dbhtml filename="spamassassin.html"?>
-    <title>安装、配置 SpamAssassin</title>
+    <title>安装、配置 SpamAssassin（已完成，等待校对）</title>
 
     <!-- SpamAssassin introduction -->
     <section id="spamassassin_introduction"><?dbhtml filename="spamassassin_introduction.html"?>
