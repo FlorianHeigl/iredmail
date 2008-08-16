@@ -1,0 +1,86 @@
+<chapter id="Features"><?dbhtml filename="features.html"?>
+    <title>功能列表（已完成，等待校对）</title>
+    <para>
+        <itemizedlist>
+            <listitem><para>支持多平台、多版本
+                <itemizedlist>
+                    <listitem><para>支持 i386, x86_64 平台。</para></listitem>
+                    <listitem><para>支持 Red Hat Enterprise Linux/CentOS 5.0 ~ 5.2 版本。</para></listitem>
+                </itemizedlist>
+            </para></listitem>
+
+            <listitem><para>安全传输
+                <itemizedlist>
+                    <listitem><para>为 Web 访问提供了 TLS/SSL 加密支持，有效保障您的信息安全；</para></listitem>
+                    <listitem><para>提供 SMTP，SMTPS 服务，为您发送的邮件提供加密支持，有效保障您的信息安全。</para></listitem>
+                    <listitem><para>提供 POP3，POP3S，IMAP，IMAPS 服务。您的用户可以使用 OutLook?, Foxmail, Thunderbird 等邮件客户端收发邮件，并且可以选择是否使用加密传输以保证信息安全；</para></listitem>
+                    <listitem><para>灵活的邮件备份与监控机制。可以监控、备份单个用户收发的邮件，也可以对整个域的用户进行监控和备份。</para></listitem>
+                </itemizedlist>
+            </para></listitem>
+
+            <listitem><para>有效抵挡垃圾邮件
+                <itemizedlist>
+                    <listitem><para>使用 SPF 技术识别邮件来源，有效防止假冒邮件。</para></listitem>
+                    <listitem><para>使用 DKIM 签名和校验技术。</para></listitem>
+                    <itemizedlist>
+                        <listitem><para>有效保证您的邮件顺利抵达收件人，并且收件方可以准确识别您的邮件，有效防止邮件被拒收等问题。</para></listitem>
+                        <listitem><para>有效验证接收到的邮件是否缺失来自发件的域，有效防止垃圾邮件、假冒邮件。 </para></listitem>
+                    </itemizedlist>
+
+                    <listitem><para>使用灰名单(greylist)技术，有效抵挡垃圾邮件。有许多系统管理员反馈，使用了灰名单技术后，垃圾邮件减少了 20% - 90%。</para></listitem>
+                    <listitem><para>黑、白名单技术。</para></listitem>
+                    <listitem><para>强大的 spamtrap（垃圾邮件陷阱）机制。
+                        <blockquote>通过设置一个不存在的邮件地址，例如：hr@example.com，来作为陷阱，所有发到这个地址的发件人都将被认为是垃圾邮件发送者，会被列入黑名单。这种方法可以减少你的系统浪费在垃圾邮件识别上的时间和性能。 </blockquote>
+                    </para></listitem>
+                    <listitem><para>灵活的邮件收发频率控制。例如，限制某用户在一分钟内最多只能发送或接收 5 封邮件。</para></listitem>
+                    <listitem><para>灵活的邮件收发总容量控制。例如，限制某用户在一分钟内最多只能发送或接收 10M 的邮件。 </para></listitem>
+                </itemizedlist>
+            </para></listitem>
+
+        <listitem><para>有效的病毒防护机制
+            <itemizedlist>
+                <listitem><para>使用强大的开源查杀毒引擎 ClamAV 为您的邮件提供病毒查杀服务，并且定期更新病毒库，以保障您的邮件安全。 </para></listitem>
+            </itemizedlist>
+        </para></listitem>
+
+        <listitem><para>Web Mail
+            <itemizedlist>
+                <listitem><para>提供基于 AJAX 技术的 Web Mail 程序，易于操作，性能优异，速度快。也为您的移动办公提供极大的便利。</para></listitem>
+                <listitem><para>您还可以选择其它 Web Mail 程序：
+                    <itemizedlist>
+                        <listitem><para>ExtMail</para></listitem>
+                        <listitem><para>Horde WebMail</para></listitem>
+                        <listitem><para>SquirrelMail</para></listitem>
+                    </itemizedlist>
+                </para></listitem>
+            </itemizedlist>
+        </para></listitem>
+
+        <listitem><para>灵活的用户策略控制
+            <itemizedlist>
+                <listitem><para>设置某些用户只能发送邮件到本域和子域。</para></listitem>
+                <listitem><para>设置某些邮件地址只能接收来自本域用户的邮件。</para></listitem>
+                <listitem><para>灵活的邮件收发控制。您可以实现以下策略：
+                    <itemizedlist>
+                        <listitem><para>只能收，不能发。</para></listitem>
+                        <listitem><para>只能发，不能收。</para></listitem>
+                        <listitem><para>不能使用 POP3 服务；</para></listitem>
+                        <listitem><para>不能使用 IMAP 服务。 </para></listitem>
+                    </itemizedlist>
+                </para></listitem>
+                <listitem><para>灵活的单封邮件大小控制；您可以为您的 Boss 设置单封邮件的大小为 20M，30M 等，而其他用户则只能是 10M。</para></listitem>
+                <listitem><para>灵活的收件控制。用户可以屏蔽某个域的所有邮件，但允许接收其中某个用户的邮件。 </para></listitem>
+            </itemizedlist>
+        </para></listitem>
+
+        <listitem><para>管理选项
+            <itemizedlist>
+                <listitem><para>无限量的虚拟域和虚拟用户。</para></listitem>
+                <listitem><para>为管理员提供了方便易用的管理后台，进行域、用户的添加删除等日常管理工作；</para></listitem>
+                <listitem><para>详细的邮件流量分析。以图表的形式为您呈现邮件服务器的活动状况。点击查看截图：邮件收发状况, 垃圾邮件状况, 灰名单状况。 </para></listitem>
+            </itemizedlist>
+        </para></listitem>
+
+        </itemizedlist>
+    </para>
+</chapter>

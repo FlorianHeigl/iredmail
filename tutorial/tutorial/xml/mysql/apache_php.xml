@@ -1,0 +1,121 @@
+<chapter id="apache_php"><?dbhtml filename="apache_php.html"?>
+    <title>Apache, PHP（已完成，等待校对）</title>
+
+    <!-- Summary -->
+    <section id="apache_php_summary"><?dbhtml filename="apache_php_summary.html"?>
+        <title>Apache 与 PHP</title>
+
+        <para>Apache 将用于提供 web 服务，使管理员可以通过基于 web 的管理工具对邮件系统的某些组件进行管理，使用户可以通过 webmail 等工具使用邮件系统。</para>
+    </section>
+
+    <!-- Installation -->
+    <section id="apache_php_installation"><?dbhtml filename="apache_php_installation.html"?>
+        <title>安装 Apache 与 PHP</title>
+        <para>安装 Apache 及 PHP，包括 PHP 的 extensions：
+<programlisting>
+# yum install httpd php php-imap php-mysql
+</programlisting>
+        
+        <para>另外几个可选、但推荐安装的 Extensions 有：
+            <itemizedlist>
+                <listitem><para>php-gd</para></listitem>
+                <listitem><para>php-mbstring</para></listitem>
+                <listitem><para>php-pear</para></listitem>
+            </itemizedlist>
+        </para>
+
+        </para>
+    </section>
+
+    <!-- Configuration -->
+    <section id="apache_php_configration"><?dbhtml filename="apache_php_configration.html"?>
+        <title>配置 Apache 与 PHP</title>
+        <para>设置 apache 在系统启动时运行：
+<programlisting>
+# chkconfig --level 35 httpd on
+</programlisting>
+        </para>
+
+<tip><title>Apache 主要的几个目录</title>
+<programlisting>
+/etc/httpd/             Apache 的所有配置文件
+    |- conf/        主配置文件
+    |- conf.d/      针对单独的模块或其他设置的配置文件
+
+/var/
+    |- www/             Apache 默认的 DocumentRoot 目录
+        |- cgi-bin/     CGI 程序
+        |- error/
+        |- html/        WEB 文件
+        |- icons/       一些图标文件
+
+    |- log/
+        |- httpd/       Apache 的日志文件
+</programlisting>
+</tip>
+
+        <!-- PHP Configuration -->
+        <section id="php_configration"><?dbhtml filename="php_configuration.html"?>
+            <title>配置 PHP</title>
+            <para>PHP 的配置文件默认是：/etc/php.ini</para>
+            <itemizedlist>
+                <listitem><para>建议将 PHP 的 memory_limit 值调大一些，例如 128M（默认是 16M）：
+<programlisting>
+memory_limit = 128M;
+</programlisting>
+                </para></listitem>
+
+                <listitem><para>建议将可上传的文件大小调大些，这样 Web Mail 程序里才可以发送较大的附件：
+<programlisting>
+upload_max_filesize = 12M
+</programlisting>
+                </para></listitem>
+
+
+            </itemizedlist>
+        </section>
+        <!-- END PHP Configuration -->
+
+        <para>现在可以创建一个 PHP 文件，测试 PHP 是否已经可以正确识别。默认的首页是 /var/www/html/index.php：
+<programlisting><![CDATA[
+<?php
+    phpinfo();
+?>
+]]></programlisting>
+</para>
+
+        <para>启动 Apache，并访问你的服务器首页的 index.php 文件： http://your_server_IP/index.php ，看看是否已经可以正确解析 PHP 代码：
+<programlisting>
+# /etc/init.d/httpd restart
+</programlisting>
+</para>
+
+    </section>
+    <!-- END Configuration -->
+
+    <section id="apache_control"><?dbhtml filename="apache_control.html"?>
+        <title>Apache 服务的启动与停止</title>
+        <para>
+            <itemizedlist>
+                <listitem><para>启动：
+<programlisting>
+# /etc/init.d/httpd start
+</programlisting>
+                </para></listitem>
+
+                <listitem><para>停止：
+<programlisting>
+# /etc/init.d/httpd start
+</programlisting>
+                </para></listitem>
+
+                <listitem><para>重新启动：
+<programlisting>
+# /etc/init.d/httpd restart
+</programlisting>
+                </para></listitem>
+            </itemizedlist>
+        </para>
+    </section>
+
+</chapter>

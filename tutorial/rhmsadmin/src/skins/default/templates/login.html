@@ -1,0 +1,47 @@
+# -*- encoding: utf-8 -*-
+## index.html
+
+<%inherit file="site_layout.html"/>
+
+<%def name="import_css()">
+    @import url("/rhmsadmin/static/default/login.css");
+</%def>
+
+<%def name="title()">
+${ _("Login") }
+</%def>
+
+<%def name="header()">
+</%def>
+
+<%def name="body()">
+<div id="wrapper">
+<div id="login">
+<div class="container">
+
+<form name="loginForm" method="post" id="login-form" >
+    <div class="form-title"><h3>${ _("Login") }</h3></div>
+
+    <div class="form-row">
+        <span class="username">${ _("Username") }</span>: <input type="text" name="username" id="username" />
+    </div>
+
+    <div class="form-row">
+
+        <span class="password">${ _("Password") }</span>: <input type="password" name="password" id="password" />
+        <input type="hidden" name="this_is_the_login_form" value="1" />
+        <input type="hidden" name="post_data" value="KGRwMQouMDQ2NTBkMTk0MDM2NGY5MDViZDJiYTkzMzI1ODIyMjk=" /> 
+    </div>
+
+    <div class="submit-row">
+        <input type="submit" value="${ _("Submit") }" />
+    </div>
+</form>
+
+</div>
+</div>
+</div>
+</%def>
+
+<%def name="footer()">
+</%def>

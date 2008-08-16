@@ -1,0 +1,158 @@
+<chapter id="preparation"><?dbhtml filename="preparation.html"?>
+    <title>预备知识（已完成，等待校对）</title>
+
+    <!-- YUM -->
+    <section id="preparation_yum_repo"><title>Yum 仓库</title>
+        <para>为了避免从网络下载软件包可能发生的软件包不完整、下载速度慢、网络故障等问题，我们强烈建议您使用本地的 DVD/CD iso 来创建 yum 仓库，这样在安装的时候速度快， 而且可以保证所有软件包都能顺利安装。</para>
+
+        <para>如果您有局域网内的 yum 仓库，可以直接使用它，就不需要按照以下的步骤重复创建了。</para>
+
+        <para>下面的操作都是在您安装好 RHEL/CentOS 系统后进行的。</para>
+        <itemizedlist>
+            <listitem><para>先从光盘或已有的 YUM 仓库安装 createrepo 工具，以及网络下载工具 wget：
+<programlisting>
+# rpm -ivh createrepo-x.y.z.rpm
+# rpm -ivh wget-x.y.z.rpm
+</programlisting>
+
+<tip>
+    <para>createrepo 命令用于生成 yum 仓库所必须的一些信息，这些信息都存放在 repodata/ 目录底下，您打开看看就会明白它做了些什么事情。</para>
+</tip>
+            </para></listitem>
+        </itemizedlist>
+
+
+        <!-- Use ISO to create yum repo -->
+        <section id="use_iso_for_createrepo"><title>使用 ISO 文件制作 yum 仓库</title>
+
+            <!-- DVD ISO -->
+            <section id="dvd_iso"><title>DVD ISO</title>
+                <para>如果你使用的是 DVD 光盘，可以直接挂载光盘，然后制作 yum 仓库：
+<programlisting>
+# mkdir /mnt/dvd/
+# mount /dev/cdrom /mnt/dvd/
+# cd /mnt
+# createrepo .
+</programlisting>
+                </para>
+
+                <para>如果您使用的是官方的 DVD ISO，则需要将它复制到系统上，挂载后制作 yum 仓库：
+<programlisting>
+# mkdir /mnt/dvd/
+# mount -o loop /root/rhel5.1-dvd.iso /mnt/dvd
+# cd /mnt
+# createrepo .
+</programlisting>
+                </para>
+            </section>
+
+            <!-- CD ISO -->
+            <section id="cd_iso"><title>CD ISO</title>
+                <para>如果您使用的是多个 CD iso 文件，需要先复制到系统上，挂载后制作 yum 仓库。</para>
+                <itemizedlist>
+                    <listitem><para>有几个 ISO 就创建几个目录，并将对应的 ISO 挂载上去：
+
+<programlisting>
+# mkdir -p /mnt/{1,2,3,4,5,6}
+# mount -o loop rhel5.1-disc1.iso /mnt/1
+# mount -o loop rhel5.1-disc2.iso /mnt/2
+# mount -o loop rhel5.1-disc3.iso /mnt/3
+# mount -o loop rhel5.1-disc4.iso /mnt/4
+# mount -o loop rhel5.1-disc5.iso /mnt/5
+</programlisting>
+</para></listitem>
+
+<listitem><para>创建 yum 仓库：
+
+<programlisting>
+# cd /mnt/
+# createrepo .
+</programlisting>
+</para></listitem>
+                </itemizedlist>
+            </section>
+            <!-- END CD ISO -->
+
+        </section>
+
+        <!-- END ISO -->
+
+        <!-- YUM repo file -->
+        <section id="preparation_yum_repo_file"><?dbhtml filename="preparation_yum_repo_file.html"?>
+            <title>定义 yum 仓库</title>
+            <para>创建 yum 仓库的定义文件：/etc/yum.repos.d/dvdiso.repo，然后加入以下内容：
+<programlisting>
+[DVDISO]
+name=DVD ISO
+baseurl=file:///mnt/
+enabled=1
+gpgcheck=0
+</programlisting>
+            </para>
+        </section>
+        <!-- END YUM repo file -->
+
+        <!-- END YUM TESTING -->
+        <section id="preparation_yum_testing"><?dbhtml filename="preparation_yum_testing.html"?>
+            <title>测试 yum 仓库</title>
+            <para>强烈建议执行 'yum clean all' 命令，将所有 yum metadata 等信息清空，再重新获取最新的仓库信息：
+<programlisting>
+# yum clean all
+# yum list
+</programlisting>
+</para>
+
+            <para>如果在 'yum list' 命令的输出中能够看到刚才制作的仓库里的软件包的名字，那就是 OK 了。再试着安装一个软件包看是否成功：
+<programlisting>
+# yum install cyrus-sasl.i386
+</programlisting>
+</para>
+
+            <para>如果是 x86_64 平台，则将后面的 i386 改为 x86_64：
+<programlisting>
+# yum install cyrus-sasl.x86_64
+</programlisting>
+</para>
+
+            <para>如果安装成功，表示 yum 仓库和 RPM 包都没问题。可以继续往下进行配置了。</para>
+        </section>
+        <!-- END YUM TESTING -->
+
+    </section>
+
+
+    <!-- Setting hostname -->
+    <section id="preparation_system_hostname"><?dbhtml filename="preparation_system_hostname.html"?>
+        <title>系统主机名</title>
+        <para>这里说的 hostname 是指使用 'hostname' 命令打印出来的系统主机名，例如：
+            <programlisting>
+$ hostname
+mail.iredmail.org
+</programlisting>
+</para>
+
+<para>不管您的 Linux 系统是否作为公网服务器，我们都强烈建议您设置一个合适的主机名。</para>
+
+<para>在 RHEL/CentOS 系统中，主机名的设置涉及到两个文件：
+
+    <itemizedlist>
+        <listitem><para>/etc/sysconfig/network</para></listitem>
+        <listitem><para>/etc/hosts</para></listitem>
+    </itemizedlist>
+</para>
+
+<para>在 /etc/sysconfig/network 中设置 HOSTNAME 变量，例如：
+<programlisting>
+HOSTNAME=mail.iredmail.org
+</programlisting>
+</para>
+
+<para>在 /etc/hosts 中将它指向 127.0.0.1 这个地址。例如：
+
+<programlisting>
+127.0.0.1   localhost localhost.localdomain mail.iredmail.org mail
+</programlisting>
+</para>
+    </section>
+
+</chapter>

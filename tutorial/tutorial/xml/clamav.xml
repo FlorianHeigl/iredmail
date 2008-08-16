@@ -1,0 +1,147 @@
+<chapter id="clamav"><?dbhtml filename="clamav.html"?>
+    <title>安装、配置 ClamAV（已完成，等待校对）</title>
+
+
+    <!-- ClamAV installation -->
+    <section id="clamav_installation"><?dbhtml filename="clamav_installation.html"?>
+        <title>安装 ClamAV</title>
+
+        <para>安装 ClamAV：
+<programlisting><![CDATA[
+# yum install clamav clamav-db clamd
+]]></programlisting>
+</para>
+
+<para>如果需要用 clamav 扫描 RAR/ARJ 压缩文件，还需要安装 unrar, unarj：
+<programlisting><![CDATA[
+# yum install unrar unarj
+]]></programlisting>
+</para>
+
+<para>启用 clamav：
+<programlisting><![CDATA[
+# chkconfig --level 35 clamd
+]]></programlisting>
+</para>
+
+    </section>
+    <!-- END ClamAV installation -->
+
+    <!-- ClamAV Configuration -->
+    <section id="clamav_configuration"><?dbhtml filename="clamav_configuration.html"?>
+        <title>配置 ClamAV</title>
+
+        <para>clamd 的配置文件是 /etc/clamd.conf，基本上不需要配置，唯一可能要留意的是，你是否需要让 clamd 监听来自其它主机的请求：
+<programlisting><![CDATA[
+#
+# File: /etc/clamd.conf
+#
+
+TCPAddr 127.0.0.1
+]]></programlisting>
+</para>
+
+<para>如果不需要监听来自其它主机的请求，就只使用本地 Unix Socket 的方式，另外将参数 'TCPAddr' 设置为 'no'：
+<programlisting><![CDATA[
+TCPAddr no
+]]></programlisting>
+</para>
+
+<para>clamd 默认的日志文件是：
+<programlisting><![CDATA[
+/var/log/clamav/clamd.log
+]]></programlisting>
+</para>
+    </section>
+    <!-- END ClamAV installation -->
+
+    <!-- freshclam Configuration -->
+    <section id="clamav_freshclam_configuration"><?dbhtml filename="clamav_freshclam_configuration.html"?>
+        <title>配置 freshclam，定时更新病毒库</title>
+
+        <para>freshclam 用于更新病毒库，默认的配置文件是 /etc/freshclam.conf。基本不需要配置。</para>
+
+        <para>freshclam 默认没有 init 启动脚本，只能以手工运行的形式来更新病毒库。
+iRedMail 提供了一个 init 启动脚本，大家可以从下面的地址下载：
+<programlisting><![CDATA[
+http://iredmail.googlecode.com/svn/trunk/iRedMail/samples/freshclam.init
+]]></programlisting>
+</para>
+
+<para>复制到 /etc/init.d/ 目录下，改名为 'freshclam'，并设置为自动启动：
+<programlisting><![CDATA[
+# cp freshclam.init /etc/init.d/freshclam
+# chmod +x /etc/init.d/freshclam
+# chkconfig --level 35 freshclam on
+]]></programlisting>
+</para>
+
+<para>另外还需要修改一下 freshclam 的 PID 文件的位置：
+<programlisting><![CDATA[
+#
+# File: /etc/freshclamd.conf
+#
+
+PidFile /var/run/clamav/freshclam.pid
+]]></programlisting>
+</para>
+
+<para>/etc/init.d/freshclam 默认设置的是每天检查两次病毒库的更新，如果需要修改，请修改 /etc/init.d/freshclam 文件中的 'OPTIONS' 变量里的 '-c' 参数后的整数。例如：
+<programlisting><![CDATA[
+OPTIONS='-d -c 5'   # 5 times per day.
+]]></programlisting>
+</para>
+
+<para>freshclam 默认的日志文件是：
+<programlisting><![CDATA[
+/var/log/clamav/freshclam.log
+]]></programlisting>
+</para>
+
+<para>ClamAV 默认提供了用于 logrotate 的配置文件：/etc/logrotate.d/clamav，但是只包含 clamd 的日志，所以需要加上 freshclam 的日志。</para>
+
+<para>打开 /etc/logrotate.d/clamav，添加 freshclam 的日志文件的路径：
+<programlisting><![CDATA[
+# 原来只有 clamd.log 文件：
+# /var/log/clamav/clamd.log {
+
+# 增加 freshclam.log 文件。以空格隔开。
+/var/log/clamav/clamd.log /var/log/clamav/freshclam.log {
+]]></programlisting>
+</para>
+
+<para>直接运行 freshclam 即可更新病毒库：
+<programlisting><![CDATA[
+# freshclam
+]]></programlisting>
+</para>
+
+<para>病毒库默认的路径是：
+<programlisting><![CDATA[
+/var/clamav/
+]]></programlisting>
+</para>
+    </section>
+    <!-- END freshclam Configuration -->
+
+
+
+    <!-- ClamAV startup -->
+    <section id="clamav_startup"><?dbhtml filename="clamav_startup.html"?>
+        <title>启动 ClamAV</title>
+
+        <para>使用 freshclam 更新了病毒库后就可以启动 ClamAV 了：
+<programlisting><![CDATA[
+# /etc/init.d/clamd start
+]]></programlisting>
+</para>
+
+<para>注意看 ClamAV 的日志，以便了解是否正常启动：
+<programlisting><![CDATA[
+/var/log/clamav/clamd.log
+]]></programlisting>
+</para>
+</section>
+    <!-- END ClamAV startup -->
+
+</chapter>

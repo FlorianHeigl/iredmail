@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE template SYSTEM "template.dtd">
+<!--
+    For rhms (Mail Server Solution for Red Hat series).
+    Project: http://code.google.com/p/redhatsolution/
+    Author: Zhang Huangbin (michaelbibby <at> gmail.com)
+-->
+<template>
+<title>Virtual Domain</title>
+<icon>images/o.png</icon>
+<description>New Virtual Domain</description>
+<askcontainer>0</askcontainer>
+<rdn>o</rdn>
+<visible>1</visible>
+
+<objectClasses>
+    <objectClass id="Organization"></objectClass>
+</objectClasses>
+
+<attributes>
+<attribute id="o">
+        <description>Domain Name</description>
+        <display>Your domain name</display>
+        <hint>Examples: example.com</hint>
+        <order>1</order>
+        <page>1</page>
+</attribute>
+
+<attribute id="destinationIndicator">
+        <description>Transport Map</description>
+        <display>Transport Map</display>
+        <hint>use 'dovecot' as default</hint>
+        <value>dovecot</value>
+        <order>2</order>
+        <page>1</page>
+</attribute>
+
+</attributes>
+</template>

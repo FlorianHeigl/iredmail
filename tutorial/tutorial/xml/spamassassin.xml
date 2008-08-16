@@ -1,0 +1,114 @@
+<chapter id="spamassassin"><?dbhtml filename="spamassassin.html"?>
+    <title>安装、配置 SpamAssassin（已完成，等待校对）</title>
+
+    <!-- SpamAssassin introduction -->
+    <section id="spamassassin_introduction"><?dbhtml filename="spamassassin_introduction.html"?>
+        <title>What SpamAssassin Is</title>
+
+        <para>以下内容引自 <ulink href="http://spamassassin.apache.org/">官方网站</ulink>：
+
+<programlisting><![CDATA[
+SpamAssassin is a mail filter which attempts to identify spam using
+a variety of mechanisms including text analysis, Bayesian filtering,
+DNS blocklists, and collaborative filtering databases.
+
+SpamAssassin is a project of the Apache Software Foundation (ASF).
+]]></programlisting>
+</para>
+    </section>
+    <!-- END SpamAssassin introduction -->
+
+
+    <!-- SpamAssassin Installation -->
+    <section id="spamassassin_installation"><?dbhtml filename="spamassassin_installation.html"?>
+        <title>安装 SpamAssassin</title>
+
+        <para>使用以下命令安装 SpamAssassin：
+<programlisting><![CDATA[
+# yum -y install spamassassin
+]]></programlisting>
+
+在 iRedMail 方案中，SpamAssassin 是由 Amavisd 调用的，不需要启动 spamd 服务，因此需要将它关闭：
+<programlisting><![CDATA[
+# chkconfig --level 345 spamd off
+]]></programlisting>
+</para>
+    </section>
+    <!-- END SpamAssassin Installation -->
+
+
+    <!-- SpamAssassin Configuration -->
+    <section id="spamassassin_configuration"><?dbhtml filename="spamassassin_installation.html"?>
+        <title>配置 SpamAssassin</title>
+
+        <para>SpamAssassin 的主配置文件是：/etc/mail/spamassassin/local.cf。主要修改以下几个参数：
+<programlisting><![CDATA[
+# 注意：以下两个参数都使用在 Amavisd 中定义的，所以下面两行是
+# 无效的。
+required_hits       5.0
+rewrite_header      Subject *** SPAM ***
+
+report_safe         1
+lock_method flock
+
+internal_networks   127.0.0.1
+trusted_networks    127.0.0.1
+
+use_bayes           1
+bayes_auto_learn    1
+]]></programlisting>
+</para>
+
+<para>配置文件里只有几个基本的参数，并且都带有详细的解释。</para>
+
+<para>需要更多说明可以参考 man 文档或阅读 <ulink href="http://spamassassin.apache.org/doc.html">官方文档</ulink>：
+<programlisting><![CDATA[
+# man Mail::SpamAssassin::Conf
+]]></programlisting>
+</para>
+    </section>
+    <!-- END SpamAssassin Configuration -->
+
+
+
+    <!-- SpamAssassin TEST -->
+    <section id="spamassassin_debug"><?dbhtml filename="spamassassin_debug.html"?>
+        <title>测试 SpamAssassin</title>
+
+        <para>使用 SpamAssassin 提供的垃圾邮件模板进行测试，看看屏幕输出的 Subject 是否已经被修改了：
+<programlisting><![CDATA[
+# spamassassin -t < /usr/local/share/doc/SpamAssassin/sample-spam.txt
+]]></programlisting>
+</para>
+    </section>
+    <!-- END SpamAssassin TEST -->
+
+
+
+
+    <!-- SpamAssassin Debug -->
+    <section id="spamassassin_debug"><?dbhtml filename="spamassassin_debug.html"?>
+        <title>调试 SpamAssassin</title>
+
+        <para>要调试 SpamAssassin，只需要在 /etc/amavisd.conf 中打开这两个参数，然后重启 amavisd 服务即可：
+<programlisting><![CDATA[
+$log_level = 5;
+$sa_debug = 1;
+]]></programlisting>
+</para>
+
+<para>注意：只有在设置 $log_level 之后，'$sa_debug = 1;' 才会生效。</para>
+
+<para>重启 Amavisd 服务：
+<programlisting><![CDATA[
+# /etc/init.d/amavisd restart
+]]></programlisting>
+</para>
+
+<caution>
+    <para>Always run 'spamassassin -D --lint' before making your rule changes live. Typos will kick your butt! :)</para>
+</caution>
+    </section>
+    <!-- END SpamAssassin Debug -->
+
+</chapter>
