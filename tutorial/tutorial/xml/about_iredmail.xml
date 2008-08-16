@@ -1,7 +1,0 @@
-<chapter id="about_iredmail"><?dbhtml filename="about_iredmail.html"?>
-    <title>关于 iRedMail（已完成，等待校对）</title>
-
-    <para>iRedMail，中文名为“艾瑞得邮件”，由 <ulink href="http://code.google.com/p/rhms/">rhms 项目</ulink> 更名而来。是针对 Red Hat(R) Enterprise Linux 和 CentOS 平台设计的邮件服务器解决方案，是在操作系统安装好后使用的一套 shell 脚本，用于快速部署一套功能完善的邮件服务器解决方案。
-    </para>
-
-</chapter>

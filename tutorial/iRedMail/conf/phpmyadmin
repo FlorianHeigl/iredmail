@@ -1,2 +1,0 @@
-export PHPMYADMIN_VERSION='2.11.8.1-all-languages'
-export PHPMYADMIN_TARBALL="phpMyAdmin-${PHPMYADMIN_VERSION}.tar.bz2"
