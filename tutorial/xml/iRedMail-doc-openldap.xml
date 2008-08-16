@@ -18,6 +18,7 @@
 <!ENTITY apache_php SYSTEM "openldap/apache_php.xml">
 
 <!ENTITY openldap SYSTEM "openldap/openldap.xml">
+<!ENTITY phpldapadmin SYSTEM "openldap/phpldapadmin.xml">
 
 <!ENTITY clamav SYSTEM "clamav.xml">
 <!ENTITY spamassassin SYSTEM "spamassassin.xml">
@@ -36,6 +37,7 @@
     &apache_php;
 
     &openldap;
+    &phpldapadmin;
 
     &clamav;
     &spamassassin;
