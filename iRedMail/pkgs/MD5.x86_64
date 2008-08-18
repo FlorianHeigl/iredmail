@@ -9,7 +9,6 @@
 41bc7ee94ae3dbc245a2d9c6c9c530b1  rpms/rrdtool-1.2.23-1.el5.rf.x86_64.rpm
 4ca2242458d6be40c4c9143fe289eb70  rpms/libmcrypt-2.5.7-5.el5.x86_64.rpm
 5f5fdfa0a985ef32c33a816bb053201c  rpms/cabextract-1.2-1.el5.rf.x86_64.rpm
-6476fabf3dd80e52a2c63656f5798371  rpms/postfix-2.3.14-1.rhms.x86_64.rpm
 6b39b795a07fe50fc7dbf5c408cbe535  rpms/perl-Digest-SHA-5.47-1.el5.rf.x86_64.rpm
 6e4adbb751b6b9367f9e785d7a6a2368  rpms/nomarch-1.4-1.el5.rf.x86_64.rpm
 9a4ff39758333331da213792186d1220  rpms/php-mhash-5.1.6-4.el5.x86_64.rpm
@@ -32,3 +31,4 @@ de15cca52eceb745b3b99e53d668c8fe  rpms/clamav-db-0.93.3-1.el5.rf.x86_64.rpm
 f4c3a965d31724f19c8bc0b69ee1d33e  rpms/clamd-0.93.3-1.el5.rf.x86_64.rpm
 64a13a14fc031a4840c0df401752a5c7  rpms/dovecot-1.1.2-2_77.el5.x86_64.rpm
 fb2574ec5b714b136e4ee4bd85344b1c  rpms/policyd-1.82-4.rhms.x86_64.rpm
+14781f40c86031d676c0b2462a92fc9e  rpms/postfix-2.3.15-2.ired.x86_64.rpm

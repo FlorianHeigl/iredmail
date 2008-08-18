@@ -3,7 +3,6 @@
 3ca3851c5f12a7d449b4cab9367b716e  rpms/php-mhash-5.1.6-4.el5.i386.rpm
 5875f75b5873cb058700d0a2b917c776  rpms/perl-Unix-Syslog-1.0-1.el5.rf.i386.rpm
 6f0da93aa785bf28549fd06adfd03c08  rpms/libmcrypt-2.5.7-5.el5.i386.rpm
-7ef35a7662a7d7bcb264eb4a1b1974f3  rpms/postfix-2.3.14-1.rhms.i386.rpm
 96304815847ffc139dd8b70dc9f0956d  rpms/mcrypt-2.6.4-3.el5.i386.rpm
 993dae91be09086b9fc441a48d0478a9  rpms/unrar-3.7.4-1.el5.rf.i386.rpm
 99af49e7604c7a312222a4e4decab0c4  rpms/lzo-1.08-4.2.el5.rf.i386.rpm
@@ -30,3 +29,4 @@ e89ad55c67811e700c4e3cba55b097e5  rpms/perl-Convert-UUlib-1.11-1.ired.i386.rpm
 6defce0dea58190403d02c0d28ba218e  rpms/clamd-0.93.3-1.el5.rf.i386.rpm
 1fb4af8aa9c2946a61b3a1cbaba1647b  rpms/dovecot-1.1.2-2_77.el5.i386.rpm
 0e8286982e3cfc33a88fb003c55b366d  rpms/policyd-1.82-4.rhms.i386.rpm
+155cdc7fb2ec5369ca77014ff483c3f4  rpms/postfix-2.3.15-2.ired.i386.rpm

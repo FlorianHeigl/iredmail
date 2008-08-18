@@ -569,7 +569,7 @@ password        = ${MYSQL_BIND_PW}
 hosts           = ${MYSQL_SERVER}
 port            = ${MYSQL_PORT}
 dbname          = ${VMAIL_DB}
-query           = SELECT restricteddomain FROM restrictions WHERE username='%s' AND restriction_class='internal_deliver_only'
+query           = SELECT restricteddomain FROM restrictions WHERE username='%s' AND restriction_class='internal_deliver_only' AND expired >= NOW()
 result_format   = OK
 EOF
 
@@ -579,7 +579,7 @@ password        = ${MYSQL_BIND_PW}
 hosts           = ${MYSQL_SERVER}
 port            = ${MYSQL_PORT}
 dbname          = ${VMAIL_DB}
-query           = SELECT restricteddomain FROM restrictions WHERE username='%s' AND restriction_class='internal_recipient_only'
+query           = SELECT restricteddomain FROM restrictions WHERE username='%s' AND restriction_class='internal_recipient_only' AND expired >= NOW()
 result_format   = OK
 EOF
 

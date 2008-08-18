@@ -1,4 +1,6 @@
 iRedMail-0.2-stable:
+    * Update postfix to 2.3.15. Reference:
+      http://groups.google.com/group/iredmail/t/d38f9d6a8c1e9cf0
     * Add 'expired' field in SQL template for expired date, used for
       per-domain, per-user, alias, domain bcc, user bcc.
     * Add expire plugin in dovecot. Disabled by default.
