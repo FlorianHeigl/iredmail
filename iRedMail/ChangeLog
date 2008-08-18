@@ -1,4 +1,4 @@
-iRedMail-0.2-rc4:
+iRedMail-0.2-stable:
     * Add 'expired' field in SQL template for expired date, used for
       per-domain, per-user, alias, domain bcc, user bcc.
     * Add expire plugin in dovecot. Disabled by default.
