@@ -11,7 +11,7 @@ a8f3f28c1ac63dca9b91057b8111352c  rpms/perl-File-Temp-0.20-1.el5.rf.noarch.rpm
 af375883830dd05725acab8557a90f4f  rpms/perl-IO-Multiplex-1.08-3.el5.rf.noarch.rpm
 b67e4a7fe895754604281d508af9cb6d  rpms/perl-Archive-Zip-1.23-1.el5.rf.noarch.rpm
 ecfac05c6461b9262d739d457cfcbad5  rpms/perl-File-Tail-0.99.3-5.el5.1.noarch.rpm
-66e84851c019c8e0dd6b5d3c034b159a  rpms/postgrey-1.31-1.el5.rf.noarch.rpm
 a0dbc0b4871b2bc68604d244e0827258  rpms/perl-Mail-SPF-Query-1.999.1-2.el5.rf.noarch.rpm
 a3558a91707bb8a62235b50fe755cb0c  rpms/perl-Net-CIDR-Lite-0.20-1.2.el5.rf.noarch.rpm
 1cbcccabd85a23e4bc48a4166a18187e  rpms/perl-Sys-Hostname-Long-1.4-1.2.el5.rf.noarch.rpm
+6cb906e43f7c71424deb36814bc09a6f  rpms/postgrey-1.32-1.ired.noarch.rpm
