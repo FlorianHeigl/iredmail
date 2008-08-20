@@ -1,4 +1,4 @@
-iRedMail-0.2-rc4:
+iRedMail-0.2:
     * Add iRedMail logo in several web-base programs, used to track
       how many users use them.
     * Remove per-user restriction feature.
