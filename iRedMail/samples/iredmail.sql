@@ -152,20 +152,6 @@ CREATE TABLE log (
 ) TYPE=MyISAM;
 
 #
-# Table structure for table restriction
-#
-# Warning: Do *NOT* use primary key here.
-#
-CREATE TABLE restrictions (
-    username varchar(255) NOT NULL default '',
-    restriction_class varchar(255) NOT NULL default '',
-    restricteddomain varchar(255) NOT NULL default '',
-    created datetime NOT NULL default '0000-00-00 00:00:00',
-    expired datetime NOT NULL default '9999-12-31 00:00:00',
-    modified datetime NOT NULL default '0000-00-00 00:00:00'
-) TYPE=MyISAM;
-
-#
 # WARNING: We do not use postfixadmin style vacation mechanism.
 #
 

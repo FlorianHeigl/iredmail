@@ -148,14 +148,6 @@ attributetype ( 1.3.6.1.4.1.7914.1.2.1.27 NAME 'userRank'
     DESC 'Rank: boss, manager, normal'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-attributetype ( 1.3.6.1.4.1.7914.1.2.1.28 NAME 'restrictionClass'
-    DESC 'Restriction: internal_deliver_only, internal_recipient_only'
-    EQUALITY caseIgnoreIA5Match
-    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-attributetype ( 1.3.6.1.4.1.7914.1.2.1.29 NAME 'restrictedDomain'
-    DESC 'Restricted domain'
-    EQUALITY caseIgnoreIA5Match
-    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
 
 # Object Class Definitions
 objectclass ( 1.3.6.1.4.1.7914.1.2.2.1 NAME 'mailUser'
@@ -167,7 +159,7 @@ objectclass ( 1.3.6.1.4.1.7914.1.2.2.1 NAME 'mailUser'
         qmailDotMode $ deliveryMode $ mailReplyText $
         accountStatus $ userRecipientBccAddress $ userSenderBccAddress $
         enableSMTP $ enableDELIVER $ enablePOP3 $ enableIMAP $
-        department $ restrictionClass $ restrictedDomain ) )
+        department ))
 objectclass ( 1.3.6.1.4.1.7914.1.2.2.2 NAME 'mailDomain'
     DESC 'Postfix-LDAP Domain' SUP top STRUCTURAL
     MUST ( domainName $ mtaTransport $ domainStatus )

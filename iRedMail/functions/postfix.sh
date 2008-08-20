@@ -36,12 +36,6 @@ EOF
     postconf -e delay_warning_time='4h'
     postconf -e policy_time_limit='3600'
 
-    #
-    # Restrictions used to restrict what users can send mail to
-    # off-site destinations.
-    #
-    postconf -e smtpd_restriction_classes="internal_deliver_only, internal_recipient_only"
-
     # We use 'maildir' format, not 'mbox'.
     if [ X"${HOME_MAILBOX}" == X"Maildir" ]; then
         postconf -e home_mailbox="Maildir/"
@@ -168,13 +162,6 @@ postfix_config_ldap()
 
     postconf -e smtpd_sender_login_maps="ldap:${ldap_sender_login_maps_cf}"
     postconf -e smtpd_reject_unlisted_sender='yes'
-
-    #
-    # Restrictions used to restrict what users can send mail to
-    # off-site destinations.
-    #
-    postconf -e internal_deliver_only="check_recipient_access ldap:${ldap_internal_deliver_only_cf}, reject"
-    postconf -e internal_recipient_only="check_sender_access ldap:${ldap_internal_recipient_only_cf}, reject"
 
     #
     # For mydestination = ldap:virtualdomains
@@ -370,40 +357,6 @@ result_attribute= ${LDAP_ATTR_USER_RESTRICTION_CLASS}
 debug_level     = 0
 EOF
 
-    cat > ${ldap_internal_deliver_only_cf} <<EOF
-${CONF_MSG}
-server_host         = ${LDAP_SERVER_HOST}
-server_port         = ${LDAP_SERVER_PORT}
-version             = ${LDAP_BIND_VERSION}
-bind                = ${LDAP_BIND}
-start_tls           = no
-bind_dn             = ${LDAP_BINDDN}
-bind_pw             = ${LDAP_BINDPW}
-search_base         = ${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}
-scope               = sub
-query_filter        = (&(${LDAP_ATTR_USER_DN_NAME}=%s)(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=active))
-result_attribute    = ${LDAP_ATTR_USER_RESTRICTED_DOMAIN}
-result_format       = OK
-debug_level         = 0
-EOF
-
-    cat > ${ldap_internal_recipient_only_cf} <<EOF
-${CONF_MSG}
-server_host         = ${LDAP_SERVER_HOST}
-server_port         = ${LDAP_SERVER_PORT}
-version             = ${LDAP_BIND_VERSION}
-bind                = ${LDAP_BIND}
-start_tls           = no
-bind_dn             = ${LDAP_BINDDN}
-bind_pw             = ${LDAP_BINDPW}
-search_base         = ${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}
-scope               = sub
-query_filter        = (&(${LDAP_ATTR_USER_DN_NAME}=%s)(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=active))
-result_attribute    = ${LDAP_ATTR_USER_RESTRICTED_DOMAIN}
-result_format       = OK
-debug_level         = 0
-EOF
-
     ECHO_INFO "Set file permission: Owner/Group -> root/root, Mode -> 0640."
 
     cat >> ${TIP_FILE} <<EOF
@@ -420,8 +373,7 @@ EOF
         ${ldap_recipient_bcc_maps_user_cf} \
         ${ldap_sender_bcc_maps_domain_cf} \
         ${ldap_sender_bcc_maps_user_cf} \
-        ${ldap_sender_access_cf} \
-        ${ldap_internal_deliver_only_cf}
+        ${ldap_sender_access_cf}
     do
         chown root:root ${i}
         chmod 0644 ${i}
@@ -448,12 +400,6 @@ postfix_config_mysql()
 
     postconf -e smtpd_sender_login_maps="mysql:${mysql_sender_login_maps_cf}"
     postconf -e smtpd_reject_unlisted_sender='yes'
-
-    #
-    # Restricting what users can send mail to off-site destinations.
-    #
-    postconf -e internal_deliver_only="check_recipient_access mysql:${mysql_internal_deliver_only_cf}, reject"
-    postconf -e internal_recipient_only="check_sender_access mysql:${mysql_internal_recipient_only_cf}, reject"
 
     cat > ${mysql_transport_maps_cf} <<EOF
 user        = ${MYSQL_BIND_USER}
@@ -554,35 +500,6 @@ dbname      = ${VMAIL_DB}
 query       = SELECT restriction_class FROM restrictions WHERE username='%s'
 EOF
 
-    # Result will be:
-    #   <ACTION>
-    #   OK
-    #   REJECT
-    #
-    # Reference:
-    #   http://www.postfix.org/DATABASE_README.html
-    #   mysql_table(5), ldap_table(5), pgsql_table(5)
-    #
-    cat > ${mysql_internal_deliver_only_cf} <<EOF
-user            = ${MYSQL_BIND_USER}
-password        = ${MYSQL_BIND_PW}
-hosts           = ${MYSQL_SERVER}
-port            = ${MYSQL_PORT}
-dbname          = ${VMAIL_DB}
-query           = SELECT restricteddomain FROM restrictions WHERE username='%s' AND restriction_class='internal_deliver_only' AND expired >= NOW()
-result_format   = OK
-EOF
-
-    cat > ${mysql_internal_recipient_only_cf} <<EOF
-user            = ${MYSQL_BIND_USER}
-password        = ${MYSQL_BIND_PW}
-hosts           = ${MYSQL_SERVER}
-port            = ${MYSQL_PORT}
-dbname          = ${VMAIL_DB}
-query           = SELECT restricteddomain FROM restrictions WHERE username='%s' AND restriction_class='internal_recipient_only' AND expired >= NOW()
-result_format   = OK
-EOF
-
     ECHO_INFO "Set file permission: Owner/Group -> postfix/postfix, Mode -> 0640."
     cat >> ${TIP_FILE} <<EOF
 Postfix (MySQL):
@@ -598,8 +515,6 @@ EOF
         ${mysql_sender_bcc_maps_user_cf} \
         ${mysql_recipient_bcc_maps_domain_cf} \
         ${mysql_recipient_bcc_maps_user_cf} \
-        ${mysql_internal_deliver_only_cf} \
-        ${mysql_internal_recipient_only_cf} \
         ${mysql_sender_access_cf}
     do
         chown root:root ${i}
