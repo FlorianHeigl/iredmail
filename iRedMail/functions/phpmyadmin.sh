@@ -25,6 +25,11 @@ EOF
     perl -pi -e 's#(.*blowfish_secret.*= )(.*)#${1}"$ENV{'COOKIE_STRING'}"; //${2}#' config.inc.php
     perl -pi -e 's#(.*Servers.*host.*=.*)localhost(.*)#${1}127.0.0.1${2}#' config.inc.php
 
+    # Add iRedMail logo in login page, used to track how many user
+    # use Roundcubemail. Thanks for your feedback.
+    cd ${PHPMYADMIN_HTTPD_ROOT} && \
+    patch -p0 < ${PATCH_DIR}/iredmail/phpmyadmin.libraries.auth.cookie.auth.lib.php.patch >/dev/null
+
     cat >> ${TIP_FILE} <<EOF
 phpMyAdmin:
     * Configuration files:

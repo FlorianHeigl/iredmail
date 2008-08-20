@@ -139,10 +139,8 @@ EOF
 
     # Add iRedMail logo in login page, used to track how many user
     # use Roundcubemail. Thanks for your feedback.
-    cd ${RCM_HTTPD_ROOT}/skins/default/ && \
+    cd ${RCM_HTTPD_ROOT}/skins/ && \
     patch -p0 < ${PATCH_DIR}/iredmail/roundcubemail.skins.default.template.login.html.patch >/dev/null
-
-    cd ${RCM_HTTPD_ROOT}/skins/default-labels/ && \
     patch -p0 < ${PATCH_DIR}/iredmail/roundcubemail.skins.default-labels.template.login.html.patch > /dev/null
 
     cat >> ${TIP_FILE} <<EOF
