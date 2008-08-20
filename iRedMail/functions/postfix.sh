@@ -341,22 +341,6 @@ result_attribute= ${LDAP_ATTR_USER_SENDER_BCC_ADDRESS}
 debug_level     = 0
 EOF
 
-    cat > ${ldap_sender_access_cf} <<EOF
-${CONF_MSG}
-server_host     = ${LDAP_SERVER_HOST}
-server_port     = ${LDAP_SERVER_PORT}
-version         = ${LDAP_BIND_VERSION}
-bind            = ${LDAP_BIND}
-start_tls       = no
-bind_dn         = ${LDAP_BINDDN}
-bind_pw         = ${LDAP_BINDPW}
-search_base     = ${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}
-scope           = sub
-query_filter    = (&(&(${LDAP_ATTR_USER_DN_NAME}=%s)(objectClass=${LDAP_OBJECTCLASS_USER}))(${LDAP_ATTR_USER_STATUS}=active))
-result_attribute= ${LDAP_ATTR_USER_RESTRICTION_CLASS}
-debug_level     = 0
-EOF
-
     ECHO_INFO "Set file permission: Owner/Group -> root/root, Mode -> 0640."
 
     cat >> ${TIP_FILE} <<EOF
@@ -372,8 +356,7 @@ EOF
         ${ldap_recipient_bcc_maps_domain_cf} \
         ${ldap_recipient_bcc_maps_user_cf} \
         ${ldap_sender_bcc_maps_domain_cf} \
-        ${ldap_sender_bcc_maps_user_cf} \
-        ${ldap_sender_access_cf}
+        ${ldap_sender_bcc_maps_user_cf}
     do
         chown root:root ${i}
         chmod 0644 ${i}
@@ -491,15 +474,6 @@ dbname      = ${VMAIL_DB}
 query       = SELECT bcc_address FROM recipient_bcc_user WHERE username='%s' AND active='1' AND expired >= NOW()
 EOF
 
-    cat > ${mysql_sender_access_cf} <<EOF
-user        = ${MYSQL_BIND_USER}
-password    = ${MYSQL_BIND_PW}
-hosts       = ${MYSQL_SERVER}
-port        = ${MYSQL_PORT}
-dbname      = ${VMAIL_DB}
-query       = SELECT restriction_class FROM restrictions WHERE username='%s'
-EOF
-
     ECHO_INFO "Set file permission: Owner/Group -> postfix/postfix, Mode -> 0640."
     cat >> ${TIP_FILE} <<EOF
 Postfix (MySQL):
@@ -514,8 +488,7 @@ EOF
         ${mysql_sender_bcc_maps_domain_cf} \
         ${mysql_sender_bcc_maps_user_cf} \
         ${mysql_recipient_bcc_maps_domain_cf} \
-        ${mysql_recipient_bcc_maps_user_cf} \
-        ${mysql_sender_access_cf}
+        ${mysql_recipient_bcc_maps_user_cf}
     do
         chown root:root ${i}
         chmod 0644 ${i}
@@ -595,12 +568,12 @@ postfix_config_sasl()
         #
         # Non-SPF.
         #
-        postconf -e smtpd_recipient_restrictions="check_sender_access ldap:${ldap_sender_access_cf}, check_recipient_access ldap:${ldap_sender_access_cf}, permit_mynetworks, reject_unknown_sender_domain, reject_unknown_recipient_domain, reject_non_fqdn_sender, reject_non_fqdn_recipient, permit_sasl_authenticated, reject_unauth_destination, reject_non_fqdn_helo_hostname, reject_invalid_helo_hostname, check_policy_service unix:postgrey/socket"
+        postconf -e smtpd_recipient_restrictions="permit_mynetworks, reject_unknown_sender_domain, reject_unknown_recipient_domain, reject_non_fqdn_sender, reject_non_fqdn_recipient, permit_sasl_authenticated, reject_unauth_destination, reject_non_fqdn_helo_hostname, reject_invalid_helo_hostname, check_policy_service unix:postgrey/socket"
     elif [ X"${BACKEND}" == X"MySQL" ]; then
         #
         # Policyd, perl-Mail-SPF and non-SPF.
         #
-        postconf -e smtpd_recipient_restrictions="check_sender_access mysql:${mysql_sender_access_cf}, check_recipient_access mysql:${mysql_sender_access_cf}, permit_mynetworks, reject_unknown_sender_domain, reject_unknown_recipient_domain, reject_non_fqdn_sender, reject_non_fqdn_recipient, permit_sasl_authenticated, reject_unauth_destination, reject_non_fqdn_helo_hostname, reject_invalid_helo_hostname, check_policy_service inet:127.0.0.1:10031"
+        postconf -e smtpd_recipient_restrictions="permit_mynetworks, reject_unknown_sender_domain, reject_unknown_recipient_domain, reject_non_fqdn_sender, reject_non_fqdn_recipient, permit_sasl_authenticated, reject_unauth_destination, reject_non_fqdn_helo_hostname, reject_invalid_helo_hostname, check_policy_service inet:127.0.0.1:10031"
     else
         :
     fi

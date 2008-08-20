@@ -5,7 +5,6 @@ postfixadmin_install()
 {
     cd ${MISC_DIR}
 
-    ECHO_INFO "Extract PostfixAdmin: ${POSTFIXADMIN_TARBALL}..."
     extract_pkg ${POSTFIXADMIN_TARBALL} ${HTTPD_SERVERROOT} && \
     cd ${HTTPD_SERVERROOT}/postfixadmin-${POSTFIXADMIN_VERSION}/ && \
     patch -p0 < ${PATCH_DIR}/postfixadmin/create_mailbox.patch >/dev/null
