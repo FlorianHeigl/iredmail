@@ -1,4 +1,6 @@
 iRedMail-0.2-rc4:
+    * Add iRedMail logo in several web-base programs, used to track
+      how many users use them.
     * Remove per-user restriction feature.
     * Update postgrey to 1.32.
     * Update postfix to 2.3.15. Reference:

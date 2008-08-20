@@ -6,18 +6,18 @@ postfixadmin_install()
     cd ${MISC_DIR}
 
     extract_pkg ${POSTFIXADMIN_TARBALL} ${HTTPD_SERVERROOT} && \
-    cd ${HTTPD_SERVERROOT}/postfixadmin-${POSTFIXADMIN_VERSION}/ && \
+    cd ${POSTFIXADMIN_HTTPD_ROOT}/ && \
     patch -p0 < ${PATCH_DIR}/postfixadmin/create_mailbox.patch >/dev/null
 
     ECHO_INFO "Set file permission for PostfixAdmin."
-    chown -R root:root ${HTTPD_SERVERROOT}/postfixadmin-${POSTFIXADMIN_VERSION}/
-    chmod -R 755 ${HTTPD_SERVERROOT}/postfixadmin-${POSTFIXADMIN_VERSION}/
-    mv ${HTTPD_SERVERROOT}/postfixadmin-${POSTFIXADMIN_VERSION}/setup.php ${HTTPD_SERVERROOT}/postfixadmin-${POSTFIXADMIN_VERSION}/setup.php.${DATE}
+    chown -R root:root ${POSTFIXADMIN_HTTPD_ROOT}
+    chmod -R 755 ${POSTFIXADMIN_HTTPD_ROOT}
+    mv ${POSTFIXADMIN_HTTPD_ROOT}/setup.php ${POSTFIXADMIN_HTTPD_ROOT}/setup.php.${DATE}
 
     ECHO_INFO "Create directory alias for PostfixAdmin in Apache."
     cat > ${HTTPD_CONF_DIR}/postfixadmin.conf <<EOF
 ${CONF_MSG}
-Alias /postfixadmin "${HTTPD_SERVERROOT}/postfixadmin-${POSTFIXADMIN_VERSION}/"
+Alias /postfixadmin "${POSTFIXADMIN_HTTPD_ROOT}/"
 EOF
 
     if [ X"${SITE_ADMIN_NAME}" == X"${FIRST_DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}" ]; then
@@ -45,7 +45,7 @@ FLUSH PRIVILEGES;
 EOF
     fi
 
-    cd ${HTTPD_SERVERROOT}/postfixadmin-${POSTFIXADMIN_VERSION}/
+    cd ${POSTFIXADMIN_HTTPD_ROOT}
 
     # Don't show default motd message.
     echo '' > motd.txt
@@ -83,11 +83,16 @@ EOF
 
     [ X"${HOME_MAILBOX}" == X"mbox" ] && perl -pi -e 's#(.*maildir.*fDomain.*fUsername.*)(\..*/.*)#${1};#' create-mailbox.php
 
+    # Add iRedMail logo in login page, used to track how many user
+    # use PostfixAdmin. Thanks for your feedback.
+    cd ${POSTFIXADMIN_HTTPD_ROOT} && \
+    patch -p0 < ${PATCH_DIR}/iredmail/postfixadmin.template.header.php.patch >/dev/null
+
     cat >> ${TIP_FILE} <<EOF
 PostfixAdmin:
     * Configuration files:
-        - ${HTTPD_SERVERROOT}/postfixadmin-${POSTFIXADMIN_VERSION}/
-        - ${HTTPD_SERVERROOT}/postfixadmin-${POSTFIXADMIN_VERSION}/config.inc.php
+        - ${POSTFIXADMIN_HTTPD_ROOT}
+        - ${POSTFIXADMIN_HTTPD_ROOT}/config.inc.php
     * URL:
         - http://$(hostname)/postfixadmin/
     * See also:

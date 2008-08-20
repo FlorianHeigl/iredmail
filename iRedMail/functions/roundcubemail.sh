@@ -86,6 +86,7 @@ EOF
     cd ${RCM_HTTPD_ROOT} && \
     patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_national_imap_folder_name.patch >/dev/null
 
+    # This was fixed in roundcubemail-0.2.
     ECHO_INFO "Patch: Attachment display and save with Chiense characters."
     cd ${RCM_HTTPD_ROOT} && \
     patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_PEAR_Mail_Mail_Mime_addAttachment_basename.patch >/dev/null
@@ -135,6 +136,14 @@ EOF
 
     cd ${RCM_HTTPD_ROOT}/skins/default-labels/ && \
     patch -p0 < ${PATCH_DIR}/roundcubemail/display_username.patch >/dev/null
+
+    # Add iRedMail logo in login page, used to track how many user
+    # use Roundcubemail. Thanks for your feedback.
+    cd ${RCM_HTTPD_ROOT}/skins/default/ && \
+    patch -p0 < ${PATCH_DIR}/iredmail/roundcubemail.skins.default.template.login.html.patch >/dev/null
+
+    cd ${RCM_HTTPD_ROOT}/skins/default-labels/ && \
+    patch -p0 < ${PATCH_DIR}/iredmail/roundcubemail.skins.default-labels.template.login.html.patch > /dev/null
 
     cat >> ${TIP_FILE} <<EOF
 WebMail(Roundcubemail):
