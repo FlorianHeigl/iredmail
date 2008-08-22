@@ -1,5 +1,5 @@
 iRedMail-0.3-beta1:
-
+    * Add 'default-character-set=utf8' in my.cnf.
 
 iRedMail-0.2:
     * Add iRedMail logo in several web-base programs, used to track
