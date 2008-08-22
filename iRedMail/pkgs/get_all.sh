@@ -17,7 +17,7 @@ FETCH_CMD='wget -c'
 # You can find nearest mirror in this page:
 #   http://code.google.com/p/iredmail/wiki/iRedMail_Mirrors
 #
-MIRROR='http://www.osspinc.com/iredmail/packages'
+MIRROR='http://www.iredmail.org/packages'
 
 ROOTDIR="$(pwd)"
 CONF_DIR="${ROOTDIR}/../conf"
