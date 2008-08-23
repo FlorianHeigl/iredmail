@@ -259,24 +259,16 @@ EOF
         :
     fi
 
-    ECHO_INFO "Setting cron job for policyd user: ${POLICYD_USER_NAME}."
-    cp -f ${SAMPLE_DIR}/policyd-cleanup.cron /etc/cron.daily/policyd-cleanup
-    chmod 0755 /etc/cron.daily/policyd-cleanup
-
     # Setup crontab.
+    ECHO_INFO "Setting cron job for policyd user: ${POLICYD_USER_NAME}."
     cat > ${CRON_SPOOL_DIR}/${POLICYD_USER_NAME} <<EOF
-*       */2       *       *       *       /bin/sh /etc/cron.daily/policyd-cleanup
+${CONF_MSG}
+*       */2       *       *       *       /usr/sbin/policyd-cleanup -c /etc/policyd.conf
+*       */2       *       *       *       /usr/sbin/policyd-cleanup -c /etc/policyd_sender_throttle.conf
 EOF
 
-    #policyd_cron="$(rpm -ql policyd | grep 'policyd.cron$')"
-
-    # Generate crontab file for policyd sender throttle instance.
-    #cp ${policyd_cron} /tmp/policyd_sender_throttle.cron
-    #perl -pi -e 's#policyd.conf#$ENV{POLICYD_SENDER_THROTTLE_CONF}#' /tmp/policyd_sender_throttle.cron
-
-    #crontab -u ${POLICYD_USER_NAME} ${policyd_cron}
-    #crontab -u ${POLICYD_USER_NAME} /tmp/policyd_sender_throttle.cron
-    #rm -f /tmp/policyd_sender_throttle.cron
+    # Set cron file permission: root:root, 0600.
+    chmod 0600 ${CRON_SPOOL_DIR}/${POLICYD_USER_NAME}
 
     # Tips.
     cat >> ${TIP_FILE} <<EOF
