@@ -1,4 +1,5 @@
 iRedMail-0.3-beta1:
+    * Add script to backup mysql databases: 'tools/backup_mysql_db.sh'.
     * Fix policyd crontab job, configuration file permission.
     * Add 'default-character-set=utf8' in my.cnf.
 
