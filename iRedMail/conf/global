@@ -72,3 +72,6 @@ export LC_ALL=C
 
 # Arch.
 export ARCH="$(uname -i)"
+
+# Crontab related.
+CRON_SPOOL_DIR="/var/spool/cron"

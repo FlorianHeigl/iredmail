@@ -1,4 +1,5 @@
 iRedMail-0.3-beta1:
+    * Fix policyd crontab job.
     * Add 'default-character-set=utf8' in my.cnf.
 
 iRedMail-0.2:

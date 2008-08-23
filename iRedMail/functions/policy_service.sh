@@ -259,6 +259,11 @@ EOF
     cp -f ${SAMPLE_DIR}/policyd-cleanup.cron /etc/cron.daily/policyd-cleanup
     chmod 0755 /etc/cron.daily/policyd-cleanup
 
+    # Setup crontab.
+    cat > ${CRON_SPOOL_DIR}/${POLICYD_USER_NAME} <<EOF
+*/2       *       *       *       *       /bin/sh /etc/cron.daily/policyd-cleanup
+EOF
+
     #policyd_cron="$(rpm -ql policyd | grep 'policyd.cron$')"
 
     # Generate crontab file for policyd sender throttle instance.
