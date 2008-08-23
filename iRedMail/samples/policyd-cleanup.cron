@@ -11,4 +11,4 @@
 #
 
 /usr/sbin/policyd-cleanup -c /etc/policyd.conf
-/usr/sbin/policyd-cleanup -c /etc/policyd_recipient_throttle.conf
+/usr/sbin/policyd-cleanup -c /etc/policyd_sender_throttle.conf
