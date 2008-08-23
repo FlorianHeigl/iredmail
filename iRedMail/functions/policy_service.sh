@@ -261,7 +261,7 @@ EOF
 
     # Setup crontab.
     cat > ${CRON_SPOOL_DIR}/${POLICYD_USER_NAME} <<EOF
-*/2       *       *       *       *       /bin/sh /etc/cron.daily/policyd-cleanup
+*       */2       *       *       *       /bin/sh /etc/cron.daily/policyd-cleanup
 EOF
 
     #policyd_cron="$(rpm -ql policyd | grep 'policyd.cron$')"
