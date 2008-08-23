@@ -91,6 +91,10 @@ EOF
     # Patch init script.
     patch -p0 < ${PATCH_DIR}/policyd/policyd_init.patch >/dev/null
 
+    # Set correct permission.
+    chown ${POLICYD_USER_NAME}:${POLICYD_GROUP_NAME} ${POLICYD_CONF} ${POLICYD_SENDER_THROTTLE_CONF}
+    chmod 0700 ${POLICYD_CONF} ${POLICYD_SENDER_THROTTLE_CONF}
+
     # Setup postfix for recipient throttle.
     cat >> ${POSTFIX_FILE_MAIN_CF} <<EOF
 #
