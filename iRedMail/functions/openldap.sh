@@ -208,7 +208,7 @@ EOF
     ECHO_INFO "Make OpenLDAP listen on '127.0.0.1' only."
     cp /etc/init.d/ldap /etc/init.d/ldap.bak
     chmod -x /etc/init.d/ldap.bak
-    perl -pi -e 's#(.*ldap.*://)(.*)#${1}127.0.0.1${2}#' /etc/init.d/ldap
+    perl -pi -e 's#(.*ldap.*://)(/)#${1}127.0.0.1${2}#' /etc/init.d/ldap
 
     ECHO_INFO "Restarting syslog."
     /etc/init.d/syslog restart >/dev/null
