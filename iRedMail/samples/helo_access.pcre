@@ -43,7 +43,6 @@
 # Spammers.
 #
 /^728154EA470B4AA\.com$/        REJECT Go away, bad guy (728154EA470B4AA.com).
-/^yahoo\.com\.cn$/              REJECT Go away, bad guy (yahoo.com.cn).
 /^dsldevice\.lan$/              REJECT Go away, bad guy (dsldevice.lan).
 /^taj-co\.com$/                 REJECT Go away, bad guy (taj-co.com).
 /^CF8D3DB045C1455\.net$/        REJECT Go away, bad guy (CF8D3DB045C1455.net).
