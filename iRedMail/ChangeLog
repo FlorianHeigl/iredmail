@@ -1,4 +1,5 @@
 iRedMail-0.3-beta1:
+    * Remove '163data.com.cn' from helo_access.pcre.
     * Fix perl regular expression while modify ldap init script.
       Thanks to ejzhang@www.iredmail.org/bbs/.
     * Add script to backup mysql databases: 'tools/backup_mysql_db.sh'.
