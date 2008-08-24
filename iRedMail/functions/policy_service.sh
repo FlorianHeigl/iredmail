@@ -263,8 +263,8 @@ EOF
     ECHO_INFO "Setting cron job for policyd user: ${POLICYD_USER_NAME}."
     cat > ${CRON_SPOOL_DIR}/${POLICYD_USER_NAME} <<EOF
 ${CONF_MSG}
-*       */2       *       *       *       /usr/sbin/policyd-cleanup -c /etc/policyd.conf
-*       */2       *       *       *       /usr/sbin/policyd-cleanup -c /etc/policyd_sender_throttle.conf
+1       */2       *       *       *       /usr/sbin/policyd-cleanup -c /etc/policyd.conf
+1       */2       *       *       *       /usr/sbin/policyd-cleanup -c /etc/policyd_sender_throttle.conf
 EOF
 
     # Set cron file permission: root:root, 0600.
