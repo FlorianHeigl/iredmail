@@ -384,7 +384,7 @@ enable_sm_plugins()
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
         ENABLED_SM_PLUGINS="${ENABLED_SM_PLUGINS} change_ldappass"
     elif [ X"${BACKEND}" == X"MySQL" ]; then
-        ENABLED_SM_PLUGINS="${ENABLED_SM_PLUGINS}"
+        ENABLED_SM_PLUGINS="${ENABLED_SM_PLUGINS} change_sqlpass"
     else
         :
     fi
