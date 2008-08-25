@@ -1,32 +1,6 @@
 # ---------------------------------------------------------
 # SqruirrelMail.
 # ---------------------------------------------------------
-enable_sm_plugins()
-{
-    # We do *NOT* use 'conf.pl' to enable plugins, because it's not easy to
-    # control in non-interactive mode, so we use 'perl' to modify the config
-    # file directly.
-
-    
-    # Disable all exist plugins first.
-    perl -pi -e 's|(^\$plugins.*)|#${1}|' ${SM_CONFIG}
-
-    if [ ! -z "${ENABLED_SM_PLUGINS}" ]; then
-        ECHO_INFO "Enable SquirrelMail plugins: ${ENABLED_SM_PLUGINS}."
-
-        counter=0
-
-        for i in ${ENABLED_SM_PLUGINS}; do
-            echo "\$plugins[${counter}]='$(echo $i)';" >> ${SM_CONFIG}
-            counter=$((counter+1))
-        done
-    else
-        :
-    fi
-
-    echo 'export status_enable_sm_plugins="DONE"' >> ${STATUS_FILE}
-}
-
 sm_install()
 {
     cd ${MISC_DIR}
@@ -76,7 +50,7 @@ EOF
     echo 'export status_sm_install="DONE"' >> ${STATUS_FILE}
 }
 
-sm_config()
+sm_config_basic()
 {
     ECHO_INFO "Setting up configuration file for SquirrelMail."
     ${SM_CONF_PL} >/dev/null <<EOF
@@ -96,20 +70,6 @@ ${SM_DATA_DIR}
 2
 ${SM_ATTACHMENT_DIR}
 R
-6
-1
-+
-${LDAP_SERVER_HOST}
-${LDAP_BASEDN}
-${LDAP_SERVER_PORT}
-utf-8
-Global LDAP Address Book
-
-${LDAP_BINDDN}
-${LDAP_BINDPW}
-3
-d
-R
 10
 1
 ${SM_DEFAULT_LOCALE}
@@ -124,7 +84,30 @@ S
 Q
 EOF
 
-    echo 'export status_sm_config="DONE"' >> ${STATUS_FILE}
+    echo 'export status_sm_config_basic="DONE"' >> ${STATUS_FILE}
+}
+
+# Configuration for LDAP address book.
+sm_config_ldap_address_book()
+{
+    ECHO_INFO "Setting up configuration file for SquirrelMail."
+    ${SM_CONF_PL} >/dev/null <<EOF
+6
+1
++
+${LDAP_SERVER_HOST}
+${LDAP_BASEDN}
+${LDAP_SERVER_PORT}
+utf-8
+Global LDAP Address Book
+
+${LDAP_BINDDN}
+${LDAP_BINDPW}
+3
+d
+EOF
+
+    echo 'export status_sm_config_ldap_address_book="DONE"' >> ${STATUS_FILE}
 }
 
 #
@@ -191,49 +174,7 @@ sm_translations()
 }
 
 #
-# For squirrelmail plugin: change_ldappass.
-#
-
-sm_plugin_change_ldappass()
-{
-    cd ${MISC_DIR}
-    extract_pkg ${PLUGIN_CHANGE_LDAPPASS_TARBALL}
-
-    ECHO_INFO "Move plugin to: ${SM_PLUGIN_DIR}."
-    mv change_ldappass ${SM_PLUGIN_DIR}
-    chown -R apache:apache ${SM_PLUGIN_DIR}
-    chmod -R 0755 ${SM_PLUGIN_DIR}
-
-    cd ${SM_PLUGIN_DIR}/change_ldappass/
-
-    ECHO_INFO "Generate configration file: ${SM_PLUGIN_DIR}/change_ldappass/config.php."
-    cat >${PLUGIN_CHANGE_LDAPPASS_CONFIG} <<EOF
-<?php
-${CONF_MSG}
-\$ldap_server = 'ldap://${LDAP_SERVER_HOST}:${LDAP_SERVER_PORT}';
-\$ldap_protocol_version = ${LDAP_BIND_VERSION};
-\$ldap_password_field = "${LDAP_ATTR_USER_PASSWD}";
-\$ldap_user_field = "${LDAP_ATTR_USER_DN_NAME}";
-\$ldap_base_dn = '${LDAP_BASEDN}';
-\$ldap_filter = "(&(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=active)(${LDAP_ATTR_USER_ENABLE_IMAP}=yes))";
-\$query_dn="${LDAP_BINDDN}";
-\$query_pw="${LDAP_BINDPW}";
-\$ldap_bind_as_manager = false;
-\$ldap_bind_as_manager = false;
-\$ldap_manager_dn='';
-\$ldap_manager_pw='';
-\$change_smb=false;
-\$debug=false;
-EOF
-
-    chown apache:apache ${PLUGIN_CHANGE_LDAPPASS_CONFIG}
-    chmod 644 ${PLUGIN_CHANGE_LDAPPASS_CONFIG}
-
-    echo 'export status_sm_plugin_change_ldappass="DONE"' >> ${STATUS_FILE}
-}
-
-#
-# For squirrelmail plugin: change_ldappass.
+# For squirrelmail plugin: compatibility.
 #
 
 sm_plugin_compatibility()
@@ -336,21 +277,158 @@ sm_plugin_email_footer()
 }
 
 
+#
+# LDAP backend.
+#
+# For squirrelmail plugin: change_ldappass.
+#
+
+sm_plugin_change_ldappass()
+{
+    cd ${MISC_DIR}
+    extract_pkg ${PLUGIN_CHANGE_LDAPPASS_TARBALL}
+
+    ECHO_INFO "Move plugin to: ${SM_PLUGIN_DIR}."
+    mv change_ldappass ${SM_PLUGIN_DIR}
+    chown -R apache:apache ${SM_PLUGIN_DIR}
+    chmod -R 0755 ${SM_PLUGIN_DIR}
+
+    cd ${SM_PLUGIN_DIR}/change_ldappass/
+
+    ECHO_INFO "Generate configration file: ${SM_PLUGIN_DIR}/change_ldappass/config.php."
+    cat >${PLUGIN_CHANGE_LDAPPASS_CONFIG} <<EOF
+<?php
+${CONF_MSG}
+\$ldap_server = 'ldap://${LDAP_SERVER_HOST}:${LDAP_SERVER_PORT}';
+\$ldap_protocol_version = ${LDAP_BIND_VERSION};
+\$ldap_password_field = "${LDAP_ATTR_USER_PASSWD}";
+\$ldap_user_field = "${LDAP_ATTR_USER_DN_NAME}";
+\$ldap_base_dn = '${LDAP_BASEDN}';
+\$ldap_filter = "(&(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=active)(${LDAP_ATTR_USER_ENABLE_IMAP}=yes))";
+\$query_dn="${LDAP_BINDDN}";
+\$query_pw="${LDAP_BINDPW}";
+\$ldap_bind_as_manager = false;
+\$ldap_bind_as_manager = false;
+\$ldap_manager_dn='';
+\$ldap_manager_pw='';
+\$change_smb=false;
+\$debug=false;
+EOF
+
+    chown apache:apache ${PLUGIN_CHANGE_LDAPPASS_CONFIG}
+    chmod 644 ${PLUGIN_CHANGE_LDAPPASS_CONFIG}
+
+    echo 'export status_sm_plugin_change_ldappass="DONE"' >> ${STATUS_FILE}
+}
+
+#
+# MySQL backend.
+#
+sm_plugin_change_sqlpass()
+{
+    cd ${MISC_DIR}
+    extract_pkg ${PLUGIN_CHANGE_SQLPASS_TARBALL}
+
+    ECHO_INFO "Move plugin to: ${SM_PLUGIN_DIR}."
+    mv change_sqlpass ${SM_PLUGIN_DIR}
+    chown -R apache:apache ${SM_PLUGIN_DIR}
+    chmod -R 0755 ${SM_PLUGIN_DIR}
+
+    cd ${SM_PLUGIN_DIR}/change_sqlpass/
+
+    ECHO_INFO "Generate configration file: ${SM_PLUGIN_DIR}/change_sqlpass/config.php."
+    cat >${PLUGIN_CHANGE_SQLPASS_CONFIG} <<EOF
+<?php
+   global \$csp_dsn, \$password_update_queries, \$lookup_password_query,
+          \$force_change_password_check_query, \$password_encryption,
+          \$csp_salt_query, \$csp_salt_static, \$csp_secure_port,
+          \$csp_non_standard_http_port, \$csp_delimiter, \$csp_debug,
+          \$min_password_length, \$max_password_length, \$include_digit_in_password,
+          \$include_uppercase_letter_in_password, \$include_lowercase_letter_in_password,
+          \$include_nonalphanumeric_in_password;
+
+\$lookup_password_query = 'SELECT count(*) FROM mailbox WHERE username = "%1" AND password = %4';
+\$password_update_queries = array('UPDATE mailbox SET password = %4 WHERE username = "%1"');
+\$force_change_password_check_query = '';
+\$password_encryption = 'MYSQLENCRYPT';
+\$csp_salt_static = 'password';
+\$csp_salt_query = 'SELECT salt FROM users WHERE username = "%1"';
+\$csp_secure_port = 0;
+\$csp_non_standard_http_port = 0;
+\$min_password_length = 6;
+\$max_password_length = 0;
+\$include_digit_in_password = 0;
+\$include_uppercase_letter_in_password = 0;
+\$include_lowercase_letter_in_password = 0;
+\$include_nonalphanumeric_in_password = 0;
+\$csp_delimiter = '@';
+\$csp_debug = 0;
+?>
+EOF
+
+    chown apache:apache ${PLUGIN_CHANGE_SQLPASS_CONFIG}
+    chmod 644 ${PLUGIN_CHANGE_SQLPASS_CONFIG}
+
+    echo 'export status_sm_plugin_change_sqlpass="DONE"' >> ${STATUS_FILE}
+}
+
+# --------------------
+# Enable all plugins.
+# --------------------
+enable_sm_plugins()
+{
+    # We do *NOT* use 'conf.pl' to enable plugins, because it's not easy to
+    # control in non-interactive mode, so we use 'perl' to modify the config
+    # file directly.
+
+    if [ X"${BACKEND}" == X"OpenLDAP" ]; then
+        ENABLED_SM_PLUGINS="${ENABLED_SM_PLUGINS} change_ldappass"
+    elif [ X"${BACKEND}" == X"MySQL" ]; then
+        ENABLED_SM_PLUGINS="${ENABLED_SM_PLUGINS}"
+    else
+        :
+    fi
+
+    # Disable all exist plugins first.
+    perl -pi -e 's|(^\$plugins.*)|#${1}|' ${SM_CONFIG}
+
+    if [ ! -z "${ENABLED_SM_PLUGINS}" ]; then
+        ECHO_INFO "Enable SquirrelMail plugins: ${ENABLED_SM_PLUGINS}."
+
+        counter=0
+
+        for i in ${ENABLED_SM_PLUGINS}; do
+            echo "\$plugins[${counter}]='$(echo $i)';" >> ${SM_CONFIG}
+            counter=$((counter+1))
+        done
+    else
+        :
+    fi
+
+    echo 'export status_enable_sm_plugins="DONE"' >> ${STATUS_FILE}
+}
+
 # --------------------
 # Install all plugins.
 # --------------------
 sm_plugin_all()
 {
     # Install all plugins.
-    check_status_before_run sm_plugin_change_ldappass
     check_status_before_run sm_plugin_compatibility
     check_status_before_run sm_plugin_check_quota
     check_status_before_run sm_plugin_select_language
     check_status_before_run sm_plugin_autosubscribe
     check_status_before_run sm_plugin_email_footer
 
+    # Backend depend.
+    if [ X"${BACKEND}" == X"OpenLDAP" ]; then
+        check_status_before_run sm_plugin_change_ldappass
+    elif [ X"${BACKEND}" == X"MySQL" ]; then
+        check_status_before_run sm_plugin_change_sqlpass
+    else
+        :
+    fi
+
     # Enable all defined plugins.
     check_status_before_run enable_sm_plugins
-
-    echo 'export status_sm_plugin_all="DONE"' >> ${STATUS_FILE}
 }

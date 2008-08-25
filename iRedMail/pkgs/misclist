@@ -12,6 +12,9 @@ ${SM_TARBALL}
 # SquirrelMail plugin: change_ldappass.
 ${PLUGIN_CHANGE_LDAPPASS_TARBALL}
 
+# SquirrelMail plugin: change_sqlpass.
+${PLUGIN_CHANGE_SQLPASS_TARBALL}
+
 # SquirrelMail plugin: compatibiliry.
 ${PLUGIN_COMPATIBILITY_TARBALL}
 

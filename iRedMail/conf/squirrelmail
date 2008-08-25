@@ -16,14 +16,18 @@ export SM_TARBALL="squirrelmail-${SM_VERSION}.tar.bz2"
 
 # These plugins will be enabled by default.
 # The plugin name is the directory name you extract the source tarball.
-export ENABLED_SM_PLUGINS="calendar change_ldappass compatibility check_quota select_language autosubscribe email_footer"
+# Warning: It should only include backend independ plugins.
+export ENABLED_SM_PLUGINS="calendar compatibility check_quota select_language autosubscribe email_footer"
 
 # change_ldappass
 # URL: http://www.squirrelmail.org/plugin_view.php?id=26
 export PLUGIN_CHANGE_LDAPPASS_TARBALL="change_ldappass-2.2-1.4.0.tar.gz"
 
+# change_sqlpass
+export PLUGIN_CHANGE_SQLPASS_TARBALL="change_sqlpass-3.3-1.2.tar.gz"
+
 # Compatibiliry.
-export PLUGIN_COMPATIBILITY_TARBALL='compatibility-2.0.11-1.0.tar.gz'
+export PLUGIN_COMPATIBILITY_TARBALL='compatibility-2.0.13-1.0.tar.gz'
 
 # Check Quota.
 export PLUGIN_CHECK_QUOTA_TARBALL="check_quota-2.2-1.4.0.tar.gz"
@@ -56,5 +60,6 @@ export SM_CONFIG="${SM_HTTPD_ROOT}/config/config.php"
 export SM_PLUGIN_DIR="${SM_HTTPD_ROOT}/plugins/"
 
 export PLUGIN_CHANGE_LDAPPASS_CONFIG="${SM_PLUGIN_DIR}/change_ldappass/config.php"
+export PLUGIN_CHANGE_SQLPASS_CONFIG="${SM_PLUGIN_DIR}/change_sqlpass/config.php"
 export SM_DATA_DIR="${SM_HTTPD_ROOT}/data/"
 export SM_ATTACHMENT_DIR="${SM_HTTPD_ROOT}/attachments/"

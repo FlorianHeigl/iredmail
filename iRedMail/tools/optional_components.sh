@@ -131,6 +131,7 @@ iRedMail provides several optional components for MySQL backend, you can use
 them by your own:
 " 20 76 7 \
     "Roundcubemail" "WebMail program(PHP, XHTML, CSS2, AJAX)." "on" \
+    "SquirrelMail" "WebMail program, written in PHP." "on" \
     "Horde WebMail" "WebMail program." "off" \
     "ExtMail" "WebMail program from ExtMail project." "off" \
     "phpMyAdmin" "Web-based MySQL database management." "on" \
@@ -144,6 +145,9 @@ them by your own:
     MYSQL_OPTIONAL_COMPONENTS="$(cat /tmp/mysql_optional_components)"
 
     rm -f /tmp/mysql_optional_components
+
+    echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'squirrelmail' >/dev/null 2>&1
+    [ X"$?" == X"0" ] && USE_SM='YES' && echo "export USE_SM='YES'" >>${CONFIG_FILE}
 
     echo ${MYSQL_OPTIONAL_COMPONENTS} | grep -i 'extmail' >/dev/null 2>&1
     [ X"$?" == X"0" ] && USE_EXTMAIL='YES' && echo "export USE_EXTMAIL='YES'" >>${CONFIG_FILE}

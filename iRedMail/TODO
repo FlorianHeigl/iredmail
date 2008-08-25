@@ -1,4 +1,7 @@
 * Remove procmail, always use dovecot as SASL auth mechanism. (0.3)
+* Make SquirrelMail support MySQL backend.
+* One domain, one uid, one gid.
+* Upgrade squirrelmail plugin 'compilibity' to 2.0.13.
 * Managesieve service (v0.3).
     * Plan to use pysieved.
     * WebMail plugin:

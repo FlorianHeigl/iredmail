@@ -8,7 +8,13 @@ optional_components()
         # SquirrelMail and plugins.
         # ------------------------------------------------
         check_status_before_run sm_install && \
-        check_status_before_run sm_config
+        check_status_before_run sm_config_basic
+
+        if [ X"${BACKEND}" == X"OpenLDAP" ]; then
+            check_status_before_run sm_config_ldap_address_book
+        else
+            :
+        fi
         
         # SquirrelMail Translations.
         check_status_before_run sm_translations
