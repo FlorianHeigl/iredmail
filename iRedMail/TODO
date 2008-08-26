@@ -1,11 +1,14 @@
 * Remove procmail, always use dovecot as SASL auth mechanism. (0.3)
-* One domain, one uid, one gid.
+* Add one more plugin for SquirrelMail:
+    * login auto: http://www.squirrelmail.org/plugin_view.php?id=33
+
 * Managesieve service (v0.3).
     * Plan to use pysieved.
     * WebMail plugin:
         * SquirrelMail: avelsieve (http://email.uoa.gr/avelsieve/).
         * Roundcubemail: http://alec.pl/roundcube/managesieve/
 
+* One domain, one uid, one gid.
 * Roundcubemail plugin:
     * per-user whitelist/blacklist via policyd (use 'policyd.rcpt'
       table').
