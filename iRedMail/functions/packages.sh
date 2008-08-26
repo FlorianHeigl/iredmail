@@ -27,9 +27,6 @@ install_all()
         # Postgrey.
         ALL_PKGS="${ALL_PKGS} postgrey"
 
-        # For SquirrelMail.
-        [ X"${USE_SM}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} php-pear-db.noarch"
-
         # For ExtMail.
         [ X"${USE_EXTMAIL}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} perl-LDAP"
 
@@ -45,6 +42,9 @@ install_all()
 
         # Policyd.
         ALL_PKGS="${ALL_PKGS} policyd.${ARCH}"
+
+        # For SquirrelMail.
+        [ X"${USE_SM}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} php-pear-db.noarch"
 
         # For ExtMail.
         [ X"${USE_EXTMAIL}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} libdbi-dbd-mysql.${ARCH} perl-DBD-mysql.${ARCH}"

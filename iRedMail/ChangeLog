@@ -1,4 +1,5 @@
 iRedMail-0.3-beta1:
+    * Enable SMTP AUTH while sending email in SquirrelMail.
     * Make SquirrelMail work with MySQL backend.
     * Update SquirrelMail plugin 'compatibility' to '2.0.13-1.0'.
     * Remove '163data.com.cn' from helo_access.pcre.

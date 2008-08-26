@@ -29,6 +29,9 @@ EOF
     chown apache:apache ${SM_DATA_DIR} ${SM_ATTACHMENT_DIR}
     chmod 730 ${SM_ATTACHMENT_DIR}
 
+    # Enable SMTP AUTH while sending email.
+    perl -pi -e 's#(.*smtp_auth_mech.*=)(.*)#${1}"login";#' ${SM_CONFIG}
+
     # Add iRedMail logo in login page, used to track how many user
     # use SquirrelMail. Thanks for your feedback.
     cd ${SM_HTTPD_ROOT} && \
@@ -347,6 +350,7 @@ sm_plugin_change_sqlpass()
           \$include_uppercase_letter_in_password, \$include_lowercase_letter_in_password,
           \$include_nonalphanumeric_in_password;
 
+\$csp_dsn = "mysql://${MYSQL_ADMIN_USER}:${MYSQL_ADMIN_PW}@${MYSQL_SERVER}/${VMAIL_DB}";
 \$lookup_password_query = 'SELECT count(*) FROM mailbox WHERE username = "%1" AND password = %4';
 \$password_update_queries = array('UPDATE mailbox SET password = %4 WHERE username = "%1"');
 \$force_change_password_check_query = '';
