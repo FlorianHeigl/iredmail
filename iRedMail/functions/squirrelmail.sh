@@ -29,9 +29,6 @@ EOF
     chown apache:apache ${SM_DATA_DIR} ${SM_ATTACHMENT_DIR}
     chmod 730 ${SM_ATTACHMENT_DIR}
 
-    # Enable SMTP AUTH while sending email.
-    perl -pi -e 's#(.*smtp_auth_mech.*=)(.*)#${1}"login";#' ${SM_CONFIG}
-
     # Add iRedMail logo in login page, used to track how many user
     # use SquirrelMail. Thanks for your feedback.
     cd ${SM_HTTPD_ROOT} && \
@@ -87,13 +84,16 @@ S
 Q
 EOF
 
+    # Enable SMTP AUTH while sending email.
+    perl -pi -e 's#(.*smtp_auth_mech.*=)(.*)#${1}"login";#' ${SM_CONFIG}
+
     echo 'export status_sm_config_basic="DONE"' >> ${STATUS_FILE}
 }
 
 # Configuration for LDAP address book.
 sm_config_ldap_address_book()
 {
-    ECHO_INFO "Setting up configuration file for SquirrelMail."
+    ECHO_INFO "Setting up global LDAP address book."
     ${SM_CONF_PL} >/dev/null <<EOF
 6
 1
@@ -108,6 +108,9 @@ ${LDAP_BINDDN}
 ${LDAP_BINDPW}
 3
 d
+S
+
+Q
 EOF
 
     echo 'export status_sm_config_ldap_address_book="DONE"' >> ${STATUS_FILE}
