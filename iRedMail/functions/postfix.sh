@@ -22,6 +22,7 @@ EOF
     cp -f /etc/hosts ${POSTFIX_CHROOT_DIR}/etc/
     cp -f /etc/resolv.conf ${POSTFIX_CHROOT_DIR}/etc/
 
+    postconf -e mydestination="\$myhostname, localhost, localhost.localdomain, localhost.\$myhostname"
     postconf -e mail_name="${PROG_NAME}"
     postconf -e mail_version="${PROG_VERSION}"
     postconf -e myhostname=$(hostname)
@@ -30,6 +31,7 @@ EOF
     postconf -e relay_domains='$mydestination'
     postconf -e inet_interfaces="all"
     postconf -e mynetworks="127.0.0.0/8"
+    postconf -e mynetworks_style="subnet"
     postconf -e receive_override_options='no_address_mappings'
     postconf -e smtpd_data_restrictions='reject_unauth_pipelining'
     postconf -e smtpd_reject_unlisted_recipient='yes'   # Default
@@ -152,11 +154,11 @@ postfix_config_ldap()
 {
     ECHO_INFO "Setting up LDAP lookup in Postfix."
     postconf -e smtpd_sender_restrictions="permit_sasl_authenticated, permit_mynetworks"
-    postconf -e mydestination="\$myhostname, localhost, localhost.localdomain, localhost.\$myhostname, ldap:${ldap_virtual_domains_cf}"
     postconf -e transport_maps="ldap:${ldap_transport_maps_cf}"
+    postconf -e virtual_mailbox_domains="ldap:${ldap_virtual_domains_cf}"
     postconf -e virtual_mailbox_maps="ldap:${ldap_accounts_cf}, ldap:${ldap_virtual_mailbox_maps_cf}"
     postconf -e virtual_alias_maps="ldap:${ldap_virtual_alias_maps_cf}"
-    postconf -e local_recipient_maps='$alias_maps $virtual_alias_maps $virtual_mailbox_maps'
+    #postconf -e local_recipient_maps='$alias_maps $virtual_alias_maps $virtual_mailbox_maps'
     postconf -e sender_bcc_maps="ldap:${ldap_sender_bcc_maps_domain_cf}, ldap:${ldap_sender_bcc_maps_user_cf}"
     postconf -e recipient_bcc_maps="ldap:${ldap_recipient_bcc_maps_domain_cf}, ldap:${ldap_recipient_bcc_maps_user_cf}"
 
@@ -372,12 +374,12 @@ postfix_config_mysql()
 {
     ECHO_INFO "Configure Postfix for MySQL lookup."
 
-    postconf -e mydestination="\$myhostname, localhost, localhost.localdomain, localhost.\$myhostname, mysql:${mysql_virtual_domains_cf}"
     postconf -e transport_maps="mysql:${mysql_transport_maps_cf}"
+    postconf -e virtual_mailbox_domains="mysql:${mysql_virtual_domains_cf}"
     postconf -e virtual_mailbox_maps="mysql:${mysql_virtual_mailbox_maps_cf}"
     postconf -e virtual_mailbox_limit_maps="mysql:${mysql_virtual_mailbox_limit_maps_cf}"
     postconf -e virtual_alias_maps="mysql:${mysql_virtual_alias_maps_cf}"
-    postconf -e local_recipient_maps='$alias_maps $virtual_alias_maps $virtual_mailbox_maps'
+    #postconf -e local_recipient_maps='$alias_maps $virtual_alias_maps $virtual_mailbox_maps'
     postconf -e sender_bcc_maps="mysql:${mysql_sender_bcc_maps_domain_cf}, mysql:${mysql_sender_bcc_maps_user_cf}"
     postconf -e recipient_bcc_maps="mysql:${mysql_recipient_bcc_maps_domain_cf}, mysql:${mysql_recipient_bcc_maps_user_cf}"
 
