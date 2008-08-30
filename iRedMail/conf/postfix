@@ -25,7 +25,7 @@ export TRANSPORT='dovecot'
 
 # LDAP/MYSQL lookup configuration files.
 # LDAP lookup.
-export ldap_virtual_domains_cf="${POSTFIX_ROOTDIR}/virtual_domains.ldap"
+export ldap_virtual_mailbox_domains_cf="${POSTFIX_ROOTDIR}/virtual_mailbox_domains.ldap"
 export ldap_transport_maps_cf="${POSTFIX_ROOTDIR}/transport_maps.ldap"
 export ldap_accounts_cf="${POSTFIX_ROOTDIR}/accounts.mysql"
 export ldap_virtual_mailbox_maps_cf="${POSTFIX_ROOTDIR}/virtual_mailbox_maps.ldap"
@@ -37,7 +37,7 @@ export ldap_sender_bcc_maps_domain_cf="${POSTFIX_ROOTDIR}/sender_bcc_maps_domain
 export ldap_sender_bcc_maps_user_cf="${POSTFIX_ROOTDIR}/sender_bcc_maps_user.ldap"
 
 # MySQL lookup.
-export mysql_virtual_domains_cf="${POSTFIX_ROOTDIR}/virtual_domains.mysql"
+export mysql_virtual_mailbox_domains_cf="${POSTFIX_ROOTDIR}/virtual_mailbox_domains.mysql"
 export mysql_transport_maps_cf="${POSTFIX_ROOTDIR}/transport_maps.mysql"
 export mysql_virtual_mailbox_maps_cf="${POSTFIX_ROOTDIR}/virtual_mailbox_maps.mysql"
 export mysql_virtual_mailbox_limit_maps_cf="${POSTFIX_ROOTDIR}/virtual_mailbox_limit_maps.mysql"

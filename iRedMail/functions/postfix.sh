@@ -155,7 +155,7 @@ postfix_config_ldap()
     ECHO_INFO "Setting up LDAP lookup in Postfix."
     postconf -e smtpd_sender_restrictions="permit_sasl_authenticated, permit_mynetworks"
     postconf -e transport_maps="ldap:${ldap_transport_maps_cf}"
-    postconf -e virtual_mailbox_domains="ldap:${ldap_virtual_domains_cf}"
+    postconf -e virtual_mailbox_domains="ldap:${ldap_virtual_mailbox_domains_cf}"
     postconf -e virtual_mailbox_maps="ldap:${ldap_accounts_cf}, ldap:${ldap_virtual_mailbox_maps_cf}"
     postconf -e virtual_alias_maps="ldap:${ldap_virtual_alias_maps_cf}"
     #postconf -e local_recipient_maps='$alias_maps $virtual_alias_maps $virtual_mailbox_maps'
@@ -168,9 +168,9 @@ postfix_config_ldap()
     #
     # For mydestination = ldap:virtualdomains
     #
-    ECHO_INFO "Setting up LDAP virtual domains: ${ldap_virtual_domains_cf}."
+    ECHO_INFO "Setting up LDAP virtual domains: ${ldap_virtual_mailbox_domains_cf}."
 
-    cat > ${ldap_virtual_domains_cf} <<EOF
+    cat > ${ldap_virtual_mailbox_domains_cf} <<EOF
 ${CONF_MSG}
 server_host     = ${LDAP_SERVER_HOST}
 server_port     = ${LDAP_SERVER_PORT}
@@ -350,7 +350,7 @@ Postfix (LDAP):
     * Configuration files:
 EOF
 
-    for i in ${ldap_virtual_domains_cf} \
+    for i in ${ldap_virtual_mailbox_domains_cf} \
         ${ldap_transport_maps_cf} \
         ${ldap_accounts_cf} \
         ${ldap_virtual_mailbox_maps_cf} \
@@ -375,7 +375,7 @@ postfix_config_mysql()
     ECHO_INFO "Configure Postfix for MySQL lookup."
 
     postconf -e transport_maps="mysql:${mysql_transport_maps_cf}"
-    postconf -e virtual_mailbox_domains="mysql:${mysql_virtual_domains_cf}"
+    postconf -e virtual_mailbox_domains="mysql:${mysql_virtual_mailbox_domains_cf}"
     postconf -e virtual_mailbox_maps="mysql:${mysql_virtual_mailbox_maps_cf}"
     postconf -e virtual_mailbox_limit_maps="mysql:${mysql_virtual_mailbox_limit_maps_cf}"
     postconf -e virtual_alias_maps="mysql:${mysql_virtual_alias_maps_cf}"
@@ -395,7 +395,7 @@ dbname      = ${VMAIL_DB}
 query       = SELECT transport FROM domain WHERE domain='%s' AND active='1'
 EOF
 
-    cat > ${mysql_virtual_domains_cf} <<EOF
+    cat > ${mysql_virtual_mailbox_domains_cf} <<EOF
 user        = ${MYSQL_BIND_USER}
 password    = ${MYSQL_BIND_PW}
 hosts       = ${MYSQL_SERVER}
@@ -481,7 +481,7 @@ EOF
 Postfix (MySQL):
     * Configuration files:
 EOF
-    for i in ${mysql_virtual_domains_cf} \
+    for i in ${mysql_virtual_mailbox_domains_cf} \
         ${mysql_transport_maps_cf} \
         ${mysql_virtual_mailbox_maps_cf} \
         ${mysql_virtual_mailbox_limit_maps_cf} \
