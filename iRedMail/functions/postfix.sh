@@ -35,6 +35,7 @@ EOF
     postconf -e receive_override_options='no_address_mappings'
     postconf -e smtpd_data_restrictions='reject_unauth_pipelining'
     postconf -e smtpd_reject_unlisted_recipient='yes'   # Default
+    postconf -e smtpd_sender_restrictions="permit_mynetworks, reject_sender_login_mismatch, permit_sasl_authenticated"
     postconf -e delay_warning_time='4h'
     postconf -e policy_time_limit='3600'
 
@@ -70,8 +71,6 @@ EOF
     # Set maildir overquota. 
     postconf -e virtual_overquota_bounce="yes"
     postconf -e virtual_mailbox_limit_message="${MAILDIR_LIMIT_MESSAGE}"
-
-    postconf -e smtpd_sender_restrictions="reject_authenticated_sender_login_mismatch, reject_sender_login_mismatch, reject_unauthenticated_sender_login_mismatch, permit_sasl_authenticated, permit_mynetworks"
 
     ECHO_INFO "Setting up virtual domain in Postfix."
     postconf -e virtual_minimum_uid="${VMAIL_USER_UID}"
@@ -153,7 +152,6 @@ EOF
 postfix_config_ldap()
 {
     ECHO_INFO "Setting up LDAP lookup in Postfix."
-    postconf -e smtpd_sender_restrictions="permit_sasl_authenticated, permit_mynetworks"
     postconf -e transport_maps="ldap:${ldap_transport_maps_cf}"
     postconf -e virtual_mailbox_domains="ldap:${ldap_virtual_mailbox_domains_cf}"
     postconf -e virtual_mailbox_maps="ldap:${ldap_accounts_cf}, ldap:${ldap_virtual_mailbox_maps_cf}"

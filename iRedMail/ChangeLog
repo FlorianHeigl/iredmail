@@ -1,4 +1,5 @@
 iRedMail-0.3-beta1:
+    * Compaction 'smtpd_sender_login_maps' in postfix. Thanks shing.
     * Correct 'local' and 'virtual' domains in Postfix. Thanks shing.
     * Enable SMTP AUTH while sending email in SquirrelMail.
     * Make SquirrelMail work with MySQL backend.
