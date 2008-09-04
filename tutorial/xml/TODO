@@ -1,9 +1,0 @@
-    * Howto: Seperate 'spamd(8)' log file.
-    * SquirrelMail:
-        * Add figure for change_ldappass
-    * Try to explain why we use squirrelmail as web mail:
-        * use shipped chrooted httpd.
-
-    * Add complete package list:
-        * overview.xml
-        * html/misc/package_list
