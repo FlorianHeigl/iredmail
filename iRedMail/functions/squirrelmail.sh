@@ -29,11 +29,6 @@ EOF
     chown apache:apache ${SM_DATA_DIR} ${SM_ATTACHMENT_DIR}
     chmod 730 ${SM_ATTACHMENT_DIR}
 
-    # Add iRedMail logo in login page, used to track how many user
-    # use SquirrelMail. Thanks for your feedback.
-    cd ${SM_HTTPD_ROOT} && \
-    patch -p0 < ${PATCH_DIR}/iredmail/squirrelmail.src.login.php.patch > /dev/null
-
     cat >> ${TIP_FILE} <<EOF
 WebMail(SquirrelMail):
     * Configuration files:

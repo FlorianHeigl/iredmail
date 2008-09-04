@@ -83,11 +83,6 @@ EOF
 
     [ X"${HOME_MAILBOX}" == X"mbox" ] && perl -pi -e 's#(.*maildir.*fDomain.*fUsername.*)(\..*/.*)#${1};#' create-mailbox.php
 
-    # Add iRedMail logo in login page, used to track how many user
-    # use PostfixAdmin. Thanks for your feedback.
-    cd ${POSTFIXADMIN_HTTPD_ROOT} && \
-    patch -p0 < ${PATCH_DIR}/iredmail/postfixadmin.template.header.php.patch >/dev/null
-
     cat >> ${TIP_FILE} <<EOF
 PostfixAdmin:
     * Configuration files:

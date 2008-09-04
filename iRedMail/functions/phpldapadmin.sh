@@ -7,11 +7,6 @@ pla_install()
 
     extract_pkg ${PLA_TARBALL} ${HTTPD_SERVERROOT}
 
-    # Add iRedMail logo in login page, used to track how many user
-    # use phpLDAPadmin. Thanks for your feedback.
-    cd ${PLA_HTTPD_ROOT} && \
-    patch -p0 < ${PATCH_DIR}/iredmail/phpldapadmin.patch >/dev/null
-
     ECHO_INFO "Create directory alias for phpLDAPadmin."
     cat > ${HTTPD_CONF_DIR}/phpldapadmin.conf <<EOF
 ${CONF_MSG}
