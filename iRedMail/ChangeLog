@@ -1,4 +1,6 @@
 iRedMail-0.3-beta1:
+    * Change official package mirror to 'www.iredmail.org'.
+    * Add one more SquirrelMail plugin: login_auto.
     * Bulk change ldap lookup filenames for postfix.
     * Remove external iRedMail logo link.
     * Update phpMyAdmin to '2.11.9'.

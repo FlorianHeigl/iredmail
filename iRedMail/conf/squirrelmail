@@ -17,7 +17,7 @@ export SM_TARBALL="squirrelmail-${SM_VERSION}.tar.bz2"
 # These plugins will be enabled by default.
 # The plugin name is the directory name you extract the source tarball.
 # Warning: It should only include backend independ plugins.
-export ENABLED_SM_PLUGINS="calendar compatibility check_quota select_language autosubscribe email_footer"
+export ENABLED_SM_PLUGINS="calendar compatibility check_quota autosubscribe email_footer login_auto"
 
 # change_ldappass
 # URL: http://www.squirrelmail.org/plugin_view.php?id=26
@@ -40,6 +40,9 @@ export PLUGIN_AUTOSUBSCRIBE_TARBALL='autosubscribe-1.1-1.4.2.tar.gz'
 
 # Email Footer.
 export PLUGIN_EMAIL_FOOTER_TARBALL='email_footer-0.5-1.4.2.tar.gz'
+
+# login_auto.
+export PLUGIN_LOGIN_AUTO='login_auto-1.1-1.2.tar.gz'
 
 # ----------------------------------------
 # For SquirrelMail Translations.

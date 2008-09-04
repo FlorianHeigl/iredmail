@@ -277,6 +277,23 @@ sm_plugin_email_footer()
     echo 'export status_sm_plugin_email_footer="DONE"' >> ${STATUS_FILE}
 }
 
+#
+# For SquirrelMail plugin: login_auto.
+#
+sm_plugin_login_auto()
+{
+    ECHO_INFO "Install SquirrelMail plugin: login_auto."
+
+    cd ${MISC_DIR}
+    extract_pkg ${PLUGIN_LOGIN_AUTO} ${SM_PLUGIN_DIR}
+    chown -R apache:apache ${SM_PLUGIN_DIR}/login_auto
+    chmod -R 755 ${SM_PLUGIN_DIR}/login_auto
+
+    cd ${SM_PLUGIN_DIR}/login_auto/ && \
+    cp config.php.sample config.php
+
+    echo 'export status_sm_plugin_login_auto="DONE"' >> ${STATUS_FILE}
+}
 
 #
 # LDAP backend.
@@ -421,6 +438,7 @@ sm_plugin_all()
     check_status_before_run sm_plugin_select_language
     check_status_before_run sm_plugin_autosubscribe
     check_status_before_run sm_plugin_email_footer
+    check_status_before_run sm_plugin_login_auto
 
     # Backend depend.
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then

@@ -12,12 +12,14 @@ FETCH_CMD='wget -c'
 #
 #   ${MIRROR}/
 #           |- rpms/
+#               |- 5/
+#               |- 6/ (not present yet)
 #           |- misc/
 #
 # You can find nearest mirror in this page:
-#   http://code.google.com/p/iredmail/wiki/iRedMail_Mirrors
+#   http://code.google.com/p/iredmail/wiki/Mirrors
 #
-MIRROR='http://www.iredmail.org/packages'
+MIRROR='http://www.iredmail.org/yum'
 
 ROOTDIR="$(pwd)"
 CONF_DIR="${ROOTDIR}/../conf"
@@ -52,7 +54,7 @@ fetch_rpms()
 
     for i in $(cat ${RPMLIST} ${NOARCHLIST}); do
         ECHO_INFO "Fetching package: $(eval echo ${i})..."
-        ${FETCH_CMD} ${MIRROR}/rpms/${i}
+        ${FETCH_CMD} ${MIRROR}/rpms/5/${i}
     done
 }
 
