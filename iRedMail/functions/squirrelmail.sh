@@ -291,7 +291,8 @@ sm_plugin_login_auto()
 
     cd ${SM_PLUGIN_DIR}/login_auto/ && \
     cp config.php.sample config.php && \
-    perl -pi -e 's#(.*login_.*=.*)#//${1}#' config.php
+    perl -pi -e 's#(.*login_.*=.*)#//${1}#' config.php && \
+    chmod 0000 *sample INSTALL README version
 
     echo 'export status_sm_plugin_login_auto="DONE"' >> ${STATUS_FILE}
 }
