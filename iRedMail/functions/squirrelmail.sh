@@ -290,7 +290,8 @@ sm_plugin_login_auto()
     chmod -R 755 ${SM_PLUGIN_DIR}/login_auto
 
     cd ${SM_PLUGIN_DIR}/login_auto/ && \
-    cp config.php.sample config.php
+    cp config.php.sample config.php && \
+    perl -pi -e 's#(.*login_.*=.*)#//${1}#' config.php
 
     echo 'export status_sm_plugin_login_auto="DONE"' >> ${STATUS_FILE}
 }
@@ -331,6 +332,7 @@ ${CONF_MSG}
 \$ldap_manager_pw='';
 \$change_smb=false;
 \$debug=false;
+?>
 EOF
 
     chown apache:apache ${PLUGIN_CHANGE_LDAPPASS_CONFIG}
