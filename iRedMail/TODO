@@ -1,7 +1,4 @@
 * Remove procmail, always use dovecot as SASL auth mechanism. (0.3)
-* Add one more plugin for SquirrelMail:
-    * login auto: http://www.squirrelmail.org/plugin_view.php?id=33
-
 * Managesieve service (v0.3).
     * Plan to use pysieved.
     * WebMail plugin:
