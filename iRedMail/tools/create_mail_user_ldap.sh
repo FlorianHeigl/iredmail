@@ -50,7 +50,7 @@ VMAIL_USER_HOME_DIR="/home/vmail"
 #      USERNAME   DOMAIN_NAME          BASE_DN
 #
 
-LDAP_SUFFIX="dc=osspinc,dc=com"
+LDAP_SUFFIX="dc=iredmail,dc=org"
 
 # Setting 'BASE_DN'.
 BASE_DN="o=domains,${LDAP_SUFFIX}"

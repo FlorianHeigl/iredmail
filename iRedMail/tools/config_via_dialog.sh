@@ -30,21 +30,6 @@ NOTE:
     Ctrl-C will abort this wizard.
 " 20 76
 
-# Main features.
-${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-    --title "Main Features" \
-    --msgbox "\
-The mail server contains the following main features:
-
-* Virtual domains/users support.
-* SMTP & SMTPS
-* POP3, POP3S, IMAP, IMAPS
-* SPF & DKIM
-* Anti-Spam
-* Anti-Virus
-* Web Mail: SquirrelMail, RoundcubeMail, Horde, ExtMail.
-" 20 76
-
 # VMAIL_USER_HOME_DIR
 VMAIL_USER_HOME_DIR="/home/vmail"
 ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \

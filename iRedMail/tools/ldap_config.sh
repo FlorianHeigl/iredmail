@@ -13,12 +13,12 @@ EXAMPLE:
     +---------------------+-----------------------+
     | Your domain name    | Recommend LDAP suffix |
     +---------------------+-----------------------+
-    | osspinc.com         | dc=osspinc,dc=com     |
+    | iredmail.org        | dc=iredmail,dc=org    |
     +---------------------+-----------------------+
     | abcde.com.cn        | dc=abcde,dc=com.cn    |
     +---------------------+-----------------------+
 
-" 20 76 "dc=osspinc,dc=com" 2>/tmp/ldap_suffix
+" 20 76 "dc=iredmail,dc=org" 2>/tmp/ldap_suffix
 
 LDAP_SUFFIX="$(cat /tmp/ldap_suffix)"
 LDAP_SUFFIX_MAJOR="$(sed 's/dc=//g' /tmp/ldap_suffix | awk -F',' '{print $1}')"

@@ -7,7 +7,7 @@ Please specify the name of your first virtual domain.
 
 EXAMPLES:
 
-    * osspinc.com
+    * iredmail.org
 
 " 20 76 2>/tmp/first_domain
 
