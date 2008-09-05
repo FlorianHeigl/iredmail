@@ -7,18 +7,20 @@
 
 . /etc/rc.d/init.d/functions
 
+PROG='freshclam'
+FRESHCLAM_BIN='/usr/bin/freshclam'
 OPTIONS='-d -c 2'
 PID='/var/run/clamav/freshclam.pid'
 
 start()
 {
     if [ -e ${PID} ]; then
-        echo -n "freshclam is already running: "
-        echo -n "$(pidof freshclam)" && success
+        echo -n "${PROG} is already running: "
+        echo -n "$(pidof ${PROG})" && success
         echo
     else
-        echo -n "Starting freshclam:"
-        daemon freshclam ${OPTIONS} && success || failure
+        echo -n "Starting ${PROG}:"
+        daemon ${FRESHCLAM_BIN} ${OPTIONS} && success || failure
         echo
     fi
 }
@@ -26,11 +28,11 @@ start()
 stop()
 {
     if [ -e ${PID} ]; then
-        echo -n "Stopping freshclam:"
+        echo -n "Stopping ${PROG}:"
         kill $(cat ${PID}) && success || failure
         echo
     else
-        echo -n "freshclam is already stopped." && success
+        echo -n "${PROG} is already stopped." && success
         echo
     fi
 }
@@ -38,11 +40,11 @@ stop()
 reload()
 {
     if [ -e ${PID} ]; then
-        echo -n "Reloading freshclam:"
+        echo -n "Reloading ${PROG}:"
         kill -HUP $(cat ${PID}) && success || failure
         echo
     else
-        echo -n "freshclam isn't running." && failure
+        echo -n "${PROG} isn't running." && failure
         echo
     fi
 }
@@ -56,7 +58,7 @@ case $1 in
     start) start ;;
     stop) stop ;;
     restart) stop; start ;;
-    status) status freshclam ;;
+    status) status ${PROG};;
     reload) reload ;;
     *) usage ;;
 esac

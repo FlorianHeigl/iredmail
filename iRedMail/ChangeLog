@@ -1,4 +1,5 @@
 iRedMail-0.3-beta1:
+    * Initialize import pysieved-1.0 for managesieve service.
     * Use 'iredmail.org' as example, replace 'osspinc.com'.
     * Update unrar to 3.8.2-1.
     * Update perl-MailTools to 2.03-1.
