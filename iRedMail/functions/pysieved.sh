@@ -22,6 +22,9 @@ userdb  = Virtual
 # Storage back-end to use
 storage = Dovecot
 
+# Bind to what address?  (Ignored with --stdin)
+bindaddr = ${PYSIEVED_BINDADDR}
+
 # Listen on what port?  (Ignored with --stdin)
 port    = ${PYSIEVED_PORT}
 
@@ -56,12 +59,6 @@ scripts = ${PYSIEVED_RULE_DIR}
 uid = ${VMAIL_USER_UID}
 gid = ${VMAIL_USER_GID}
 EOF
-
-    # Make pysieved bind to '127.0.0.1'.
-    pysieved_py_path="$(rpm -ql pysieved | grep 'pysieved.py$')"
-
-    cd $(basedir ${pysieved_py_path}) && \
-    patch -p0 < ${PATCH_DIR}/pysieved/pysieved.py.patch >/dev/null
 
     # Copy init script.
     cp -f ${SAMPLE_DIR}/pysieved.init /etc/init.d/

@@ -2,6 +2,7 @@
 # Variables for pysieved.
 
 export PYSIEVED_INI='/etc/pysieved.ini'
+export PYSIEVED_BINDADDR='127.0.0.1'
 export PYSIEVED_PORT='2000'    # default is '2000'
 
 # Directory to store sieve filter rule files.
