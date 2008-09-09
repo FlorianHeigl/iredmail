@@ -7,7 +7,7 @@ export PYSIEVED_PORT='2000'    # default is '2000'
 # Directory to store sieve filter rule files.
 export PYSIEVED_RULE_DIR='.sieve'
 
-# We will run pysieved service as vmail user/group, but they can write
-# pid file under '/var/run/', so we create a subdirectory for this
-# purpose.
+# We will run pysieved service as vmail user/group, but they can't
+# write pid file under '/var/run/', so we create a subdirectory for
+# this purpose.
 export PYSIEVED_PIDFILE='/var/run/pysieved/pysieved.pid'

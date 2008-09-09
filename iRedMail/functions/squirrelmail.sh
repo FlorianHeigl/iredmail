@@ -311,7 +311,8 @@ sm_plugin_avelsieve()
 
     cd ${SM_PLUGIN_DIR}/avelsieve/ && \
     cp config_sample.php config.php && \
-    perl -pi -e 's#(.*preferred_mech.*=.*)(PLAIN)(";)#${1}LOGIN${3}#' config.php
+    perl -pi -e 's#(.*preferred_mech.*=.*)(PLAIN)(";)#${1}LOGIN${3}#' config.php && \
+    patch -p0 < ${PATCH_DIR}/squirrelmail/sieve-php.lib.php.patch >/dev/null
 
     echo 'export status_sm_plugin_avelsieve="DONE"' >> ${STATUS_FILE}
 }
@@ -461,6 +462,7 @@ sm_plugin_all()
     check_status_before_run sm_plugin_autosubscribe
     check_status_before_run sm_plugin_email_footer
     check_status_before_run sm_plugin_login_auto
+    check_status_before_run sm_plugin_avelsieve
 
     # Backend depend.
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then

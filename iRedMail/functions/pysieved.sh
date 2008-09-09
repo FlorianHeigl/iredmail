@@ -61,7 +61,7 @@ EOF
     pysieved_py_path="$(rpm -ql pysieved | grep 'pysieved.py$')"
 
     cd $(basedir ${pysieved_py_path}) && \
-    patch -p0 < ${SAMPLE_DIR}/pysieved.py.patch
+    patch -p0 < ${PATCH_DIR}/pysieved/pysieved.py.patch >/dev/null
 
     # Copy init script.
     cp -f ${SAMPLE_DIR}/pysieved.init /etc/init.d/
