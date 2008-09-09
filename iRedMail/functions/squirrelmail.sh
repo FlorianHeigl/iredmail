@@ -81,6 +81,9 @@ EOF
 
     # Enable SMTP AUTH while sending email.
     perl -pi -e 's#(.*smtp_auth_mech.*=)(.*)#${1}"login";#' ${SM_CONFIG}
+    
+    # Disable multiple identities.
+    perl -pi -e 's#(.*edit_identity.*)true(.*)#${1}false${2}#' ${SM_CONFIG}
 
     echo 'export status_sm_config_basic="DONE"' >> ${STATUS_FILE}
 }
