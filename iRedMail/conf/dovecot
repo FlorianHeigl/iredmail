@@ -12,10 +12,16 @@ export DOVECOT_MYSQL_CONF='/etc/dovecot-mysql.conf'
 
 export DOVECOT_LOGROTATE_FILE="${LOG_ROTATE_DIR}/dovecot"
 
+# Dovecot auth socket.
+export DOVECOT_SOCKET_MUX='/var/spool/postfix/private/auth'
+export DOVECOT_SOCKET_MASTER='/var/run/dovecot/auth-master'
+
 export DOVECOT_DELIVER='/usr/libexec/dovecot/deliver'
+export DOVECOT_SIEVEC='/usr/libexec/dovecot/sievec'
 export DOVECOT_LOG_FILE='/var/log/dovecot.log'
 
 export SIEVE_LOG_FILE='/var/log/sieve.log'
 export SIEVE_RULE_FILENAME='.dovecot.sieve'
 export SIEVE_FILTER_FILE="${VMAIL_USER_HOME_DIR}/${SIEVE_RULE_FILENAME}"
+
 export SIEVE_DIR="${HTTPD_SERVERROOT}/sieve"

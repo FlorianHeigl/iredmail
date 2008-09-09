@@ -1,0 +1,12 @@
+--- pysieved.py	2007-09-12 13:59:17.000000000 +0800
++++ /root/pysieved.py	2008-09-09 20:57:27.000000000 +0800
+@@ -158,7 +158,8 @@
+     else:
+         import daemon
+ 
+-        s = Server(('', port), handler)
++        #s = Server(('', port), handler)
++        s = Server(('127.0.0.1', port), handler)
+ 
+         if not options.debug:
+             daemon.daemon(pidfile=pidfile)

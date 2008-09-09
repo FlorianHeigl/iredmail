@@ -298,6 +298,25 @@ sm_plugin_login_auto()
 }
 
 #
+# For SquirrelMail plugin: avelsieve.
+#
+sm_plugin_avelsieve()
+{
+    ECHO_INFO "Install SquirrelMail plugin: avelsieve."
+
+    cd ${MISC_DIR}
+    extract_pkg ${PLUGIN_AVELSIEVE} ${SM_PLUGIN_DIR}
+    chown -R apache:apache ${SM_PLUGIN_DIR}/avelsieve
+    chmod -R 755 ${SM_PLUGIN_DIR}/avelsieve
+
+    cd ${SM_PLUGIN_DIR}/avelsieve/ && \
+    cp config_sample.php config.php && \
+    perl -pi -e 's#(.*preferred_mech.*=.*)(PLAIN)(";)#${1}LOGIN${3}#' config.php
+
+    echo 'export status_sm_plugin_avelsieve="DONE"' >> ${STATUS_FILE}
+}
+
+#
 # LDAP backend.
 #
 # For squirrelmail plugin: change_ldappass.

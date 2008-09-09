@@ -307,7 +307,7 @@ EOF
         }
         client {
             path = /var/spool/postfix/private/auth
-            mode = 0660
+            mode = 0666
             user = postfix
             group = postfix
         }

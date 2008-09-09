@@ -15,12 +15,9 @@ require ["fileinto", "reject", "include"];
 # Personal sieve dir is variable 'sieve_dir' which setting in 
 # /etc/dovecot-mysql.conf or /etc/dovecot-ldap.conf.
 # Normally, it's user's maildir.
-
-# Vacation.
-include :personal ".vacation.sieve";
-
+#
 # User defined sieve rules.
-#include :personal ".dovecot.sieve";
+include :personal ".dovecot.sieve";
 
 # You can include other user defined sieve script here.
 #include :personal "sieve_script_name";
