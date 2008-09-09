@@ -309,6 +309,8 @@ sm_plugin_avelsieve()
     chown -R apache:apache ${SM_PLUGIN_DIR}/avelsieve
     chmod -R 755 ${SM_PLUGIN_DIR}/avelsieve
 
+    # Patch file reference:
+    # http://woozle.org/list-archives/pysieved/msg00227.html
     cd ${SM_PLUGIN_DIR}/avelsieve/ && \
     cp config_sample.php config.php && \
     perl -pi -e 's#(.*preferred_mech.*=.*)(PLAIN)(";)#${1}LOGIN${3}#' config.php && \
