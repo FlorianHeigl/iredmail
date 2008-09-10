@@ -85,6 +85,9 @@ EOF
     # Disable multiple identities.
     perl -pi -e 's#(.*edit_identity.*)true(.*)#${1}false${2}#' ${SM_CONFIG}
 
+    # Hide SM version number and other attributions in login page.
+    perl -pi -e 's#(.*hide_sm_attributions.*)false(.*)#${1}false${2}#' ${SM_CONFIG}
+
     echo 'export status_sm_config_basic="DONE"' >> ${STATUS_FILE}
 }
 

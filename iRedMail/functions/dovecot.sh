@@ -150,11 +150,11 @@ plugin {
     #expire_dict = db:/var/lib/dovecot/expire.db
 }
 
-#plugin {
-#    # NOTE: %variable expansion works only with Dovecot v1.0.2+.
-#    # For maildir format.
-#    sieve = /%Lh/%Ld/%Ln/${SIEVE_RULE_FILENAME}
-#}
+plugin {
+    # NOTE: %variable expansion works only with Dovecot v1.0.2+.
+    # For maildir format.
+    sieve = ${SIEVE_DIR}/%Ld/%Ln/${SIEVE_RULE_FILENAME}
+}
 
 EOF
     elif [ X"${HOME_MAILBOX}" == X"mbox" ]; then
@@ -315,11 +315,6 @@ EOF
 }
 EOF
 
-    ECHO_INFO "Generate dovecot sieve rule filter file: ${SIEVE_FILTER_FILE}."
-    cp -f ${SAMPLE_DIR}/dovecot.sieve ${SIEVE_FILTER_FILE}
-    chown ${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} ${SIEVE_FILTER_FILE}
-    chmod 0500 ${SIEVE_FILTER_FILE}
-
     ECHO_INFO "Create directory to store user sieve rule files: ${SIEVE_DIR}."
     mkdir -p ${SIEVE_DIR} && \
     chown -R apache:${VMAIL_GROUP_NAME} ${SIEVE_DIR} && \
@@ -339,6 +334,8 @@ EOF
     postconf -e dovecot_destination_recipient_limit='1'
 
     postconf -e smtpd_sasl_type='dovecot'
+    # if postfix does *NOT* runs under in chroot env, smtpd_sasl_path
+    # should be '/var/spool/postfix/dovecot-auth'.
     postconf -e smtpd_sasl_path='dovecot-auth'
 
     cat >> ${POSTFIX_FILE_MASTER_CF} <<EOF

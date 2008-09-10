@@ -57,7 +57,7 @@ sievec = ${DOVECOT_SIEVEC}
 scripts = ${PYSIEVED_RULE_DIR}
 
 # Filename used for the active SIEVE filter (see README.Dovecot)
-active = .dovecot.sieve
+active = ${SIEVE_RULE_FILENAME}
 
 # What user/group owns the mail storage (-1 to never setuid/setgid)
 uid = ${VMAIL_USER_UID}

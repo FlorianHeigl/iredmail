@@ -1,3 +1,9 @@
+iRedMail-0.3-beta2:
+    * Add plugin section for sieve in dovecot.conf, remove sample
+      sieve filter rule file.
+    * Hide SquirrelMail version number and other attributions in login
+      page.
+
 iRedMail-0.3-beta1:
     * Set default language to English in all webmail program.
     * Update Horde WebMail to 1.1.2.
