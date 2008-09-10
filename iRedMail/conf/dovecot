@@ -13,7 +13,7 @@ export DOVECOT_MYSQL_CONF='/etc/dovecot-mysql.conf'
 export DOVECOT_LOGROTATE_FILE="${LOG_ROTATE_DIR}/dovecot"
 
 # Dovecot auth socket.
-export DOVECOT_SOCKET_MUX='/var/spool/postfix/private/auth'
+export DOVECOT_SOCKET_MUX='/var/spool/postfix/dovecot-auth'
 export DOVECOT_SOCKET_MASTER='/var/run/dovecot/auth-master'
 
 export DOVECOT_DELIVER='/usr/libexec/dovecot/deliver'

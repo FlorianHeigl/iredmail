@@ -88,7 +88,6 @@ install_all()
 
     # pysieved.
     ALL_PKGS="${ALL_PKGS} pysieved.noarch"
-    ENABLED_SERVICES="${ENABLED_SERVICES} pysieved"
 
     # RRDTools.
     [ X"${USE_MAILGRAPH}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} rrdtool.${ARCH} perl-rrdtool.${ARCH} perl-File-Tail.noarch"

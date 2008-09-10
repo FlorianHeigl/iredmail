@@ -277,7 +277,7 @@ EOF
         # Maildir format.
         [ X"${HOME_MAILBOX}" == X"Maildir" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
 user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, \
-    "${SIEVE_DIR}/%Ld/%Ln" AS sieve_dir, \
+    "${SIEVE_DIR}/%Ld/%Ln/" AS sieve_dir, \
     CONCAT('*:bytes=', quota*1048576) AS quota_rule, \
     maildir FROM mailbox \
     WHERE username='%u' \
@@ -300,13 +300,13 @@ EOF
     cat >> ${DOVECOT_CONF} <<EOF
     socket listen {
         master { 
-            path = /var/run/dovecot/auth-master 
-            mode = 0660 
+            path = ${DOVECOT_SOCKET_MASTER}
+            mode = 0666
             user = ${VMAIL_USER_NAME}
             group = ${VMAIL_GROUP_NAME}
         }
         client {
-            path = /var/spool/postfix/private/auth
+            path = ${DOVECOT_SOCKET_MUX}
             mode = 0666
             user = postfix
             group = postfix

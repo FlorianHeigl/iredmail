@@ -585,11 +585,11 @@ postfix_config_tls()
 {
     ECHO_INFO "Generate CA file for Postfix TLS support."
     mkdir -p ${POSTFIX_CERTS_DIR} 2>/dev/null
-    chown root:root ${POSTFIX_CERTS_DIR}/*
-    chmod 400 ${POSTFIX_CERTS_DIR}
 
     cd ${POSTFIX_CERTS_DIR} && \
-    gen_pem_key postfix
+    gen_pem_key postfix && \
+    chown root:root ${POSTFIX_CERTS_DIR}/* && \
+    chmod 400 ${POSTFIX_CERTS_DIR}
 
     cat >> ${POSTFIX_FILE_MAIN_CF} <<EOF
 #

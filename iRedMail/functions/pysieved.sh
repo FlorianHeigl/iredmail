@@ -31,6 +31,7 @@ port    = ${PYSIEVED_PORT}
 # Write a pidfile here
 pidfile = ${PYSIEVED_PIDFILE}
 
+[Virtual]
 # Append username to this for home directories
 base = ${SIEVE_DIR}
 
@@ -55,13 +56,26 @@ sievec = ${DOVECOT_SIEVEC}
 # Where in user directory to store scripts
 scripts = ${PYSIEVED_RULE_DIR}
 
+# Filename used for the active SIEVE filter (see README.Dovecot)
+active = .dovecot.sieve
+
 # What user/group owns the mail storage (-1 to never setuid/setgid)
 uid = ${VMAIL_USER_UID}
 gid = ${VMAIL_USER_GID}
 EOF
 
-    # Copy init script.
-    cp -f ${SAMPLE_DIR}/pysieved.init /etc/init.d/
+    # Modify pysieved source, replace 'os.mkdir' by 'os.makedirs'.
+    perl -pi -e 's#os.mkdir#os.makedirs#' $(rpm -ql pysieved|grep 'dovecot.py$')
+
+    # Create directory to store pid file.
+    pysieved_pid_dir="$(dirname ${PYSIEVED_PIDFILE})"
+    mkdir -p ${pysieved_pid_dir} 2>/dev/null
+    chown ${VMAIL_USER_UID}:${VMAIL_USER_GID} ${pysieved_pid_dir}
+
+    # Copy init script and enable it.
+    cp -f ${SAMPLE_DIR}/pysieved.init /etc/init.d/pysieved
+    chmod +x /etc/init.d/pysieved
+    /sbin/chkconfig --level 345 pysieved on
 
     echo 'export status_pysieved_config="DONE"' >> ${STATUS_FILE}
 }

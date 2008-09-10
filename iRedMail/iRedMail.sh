@@ -34,6 +34,7 @@ check_arch && check_env
 . ${CONF_DIR}/policyd
 . ${CONF_DIR}/pypolicyd-spf
 . ${CONF_DIR}/dovecot
+. ${CONF_DIR}/pysieved
 . ${CONF_DIR}/procmail
 . ${CONF_DIR}/amavisd
 . ${CONF_DIR}/clamav
@@ -80,6 +81,9 @@ check_arch && check_env
 
 # Dovecot.
 . ${FUNCTIONS_DIR}/dovecot.sh
+
+# pysieved.
+. ${FUNCTIONS_DIR}/pysieved.sh
 
 # Procmail.
 . ${FUNCTIONS_DIR}/procmail.sh

@@ -79,6 +79,7 @@ CREATE TABLE mailbox (
     enablepop3 tinyint(1) NOT NULL default '1',
     enableimap tinyint(1) NOT NULL default '1',
     enabledeliver tinyint(1) NOT NULL default '1',
+    enablepysieved tinyint(1) NOT NULL default '1',
     created datetime NOT NULL default '0000-00-00 00:00:00',
     expired datetime NOT NULL default '9999-12-31 00:00:00',
     modified datetime NOT NULL default '0000-00-00 00:00:00',
