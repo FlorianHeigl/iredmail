@@ -10,11 +10,6 @@ horde_install()
     extract_pkg ${HORDE_TARBALL} ${HTTPD_DOCUMENTROOT}
     mv ${HTTPD_DOCUMENTROOT}/horde-webmail-${HORDE_VERSION} ${HORDE_HTTPD_ROOT}
 
-    # Patch file.
-    #cd ${HORDE_HTTPD_ROOT} && \
-    #ECHO_INFO "Patch: Fix incorrect phptype while sending mail in Horde." && \
-    #patch -p0 < ${PATCH_DIR}/horde/horde-webmail-1.1-phptype.patch >/dev/null
-
     ECHO_INFO "Set correct permission for Horde webmail: ${HORDE_HTTPD_ROOT}."
     # Secure config files.
     chown -R apache:root ${HORDE_HTTPD_ROOT}/config

@@ -94,12 +94,12 @@ diff -Naur program/localization/zh_CN/labels.inc program/localization/zh_CN/labe
 diff -Naur program/steps/settings/vacation.inc program/steps/settings/vacation.inc
 --- program/steps/settings/vacation.inc	1970-01-01 08:00:00.000000000 +0800
 +++ program/steps/settings/vacation.inc	2008-08-02 21:50:24.000000000 +0800
-@@ -0,0 +1,141 @@
+@@ -0,0 +1,140 @@
 +<?php
 +$ar_username = $USER->get_username();
 +list($ar_user, $ar_domain) = explode('@', $ar_username);
 +
-+$vacation_sieve = $CONFIG['vmail_base'].'/'.$ar_domain.'/'.$ar_user.'/.vacation.sieve';
++$vacation_sieve = $CONFIG['vmail_base'].'/'.$ar_domain.'/'.$ar_user.'/.dovecot.sieve';
 +
 +$ar_mime_charset = rcube_language_prop($sess_user_lang, 'charset');
 +

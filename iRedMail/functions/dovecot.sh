@@ -339,7 +339,7 @@ EOF
     postconf -e dovecot_destination_recipient_limit='1'
 
     postconf -e smtpd_sasl_type='dovecot'
-    postconf -e smtpd_sasl_path='private/auth'
+    postconf -e smtpd_sasl_path='dovecot-auth'
 
     cat >> ${POSTFIX_FILE_MASTER_CF} <<EOF
 dovecot unix    -       n       n       -       -      pipe
