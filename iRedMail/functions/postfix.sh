@@ -55,10 +55,10 @@ EOF
     postconf -e allow_min_user='no'
 
     if [ ! -z ${MAIL_ALIAS_ROOT} ]; then
-        echo "root: ${MAIL_ALIAS_ROOT}" >> /etc/postfix/aliases
-        postconf -e alias_maps="hash:/etc/postfix/aliases"
-        postconf -e alias_database="hash:/etc/postfix/aliases"
-        postalias hash:/etc/postfix/aliases
+        echo "root: ${MAIL_ALIAS_ROOT}" >> ${POSTFIX_FILE_ALIASES}
+        postconf -e alias_maps="hash:${POSTFIX_FILE_ALIASES}"
+        postconf -e alias_database="hash:${POSTFIX_FILE_ALIASES}"
+        postalias hash:${POSTFIX_FILE_ALIASES}
         newaliases
     else
         :
@@ -584,13 +584,12 @@ postfix_config_sasl()
 postfix_config_tls()
 {
     ECHO_INFO "Generate CA file for Postfix TLS support."
-    mkdir -p ${POSTFIX_ROOTDIR}/certs/
-    cd ${POSTFIX_ROOTDIR}/certs/
+    mkdir -p ${POSTFIX_CERTS_DIR} 2>/dev/null
+    chown root:root ${POSTFIX_CERTS_DIR}/*
+    chmod 400 ${POSTFIX_CERTS_DIR}
 
+    cd ${POSTFIX_CERTS_DIR} && \
     gen_pem_key postfix
-
-    chown root:root ${POSTFIX_ROOTDIR}/certs/*
-    chmod 400 ${POSTFIX_ROOTDIR}/certs/
 
     cat >> ${POSTFIX_FILE_MAIN_CF} <<EOF
 #
@@ -606,9 +605,9 @@ postfix_config_tls()
 smtpd_tls_security_level = may
 smtpd_enforce_tls = no
 smtpd_tls_loglevel = 0
-smtpd_tls_key_file = /etc/postfix/certs/postfixKey.pem
-smtpd_tls_cert_file = /etc/postfix/certs/postfixCert.pem
-#smtpd_tls_CAfile = /etc/postfix/certs/cacert.pem
+smtpd_tls_key_file = ${POSTFIX_CERTS_DIR}/postfixKey.pem
+smtpd_tls_cert_file = ${POSTFIX_CERTS_DIR}/postfixCert.pem
+#smtpd_tls_CAfile = ${POSTFIX_CERTS_DIR}/cacert.pem
 tls_random_source = dev:/dev/urandom
 tls_daemon_random_source = dev:/dev/urandom
 EOF

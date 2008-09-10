@@ -28,7 +28,7 @@ EOF
     ECHO_INFO "Setting up Postfix for Mailman."
     postconf -e recipient_delimiter='+'
     postconf -e unknown_local_recipient_reject_code='550'
-    postconf -e alias_maps='hash:/etc/postfix/aliases, hash:/etc/mailman/aliases'
+    postconf -e alias_maps="hash:${POSTFIX_FILE_ALIASES}, hash:/etc/mailman/aliases"
 
     echo "RedirectMatch ^/mailman[/]*$ http://$(hostname)/mailman/listinfo" >> ${HTTPD_CONF_DIR}/mailman.conf
 

@@ -263,18 +263,22 @@ EOF
     ECHO_INFO "Setting cron job for policyd user: ${POLICYD_USER_NAME}."
     cat > ${CRON_SPOOL_DIR}/${POLICYD_USER_NAME} <<EOF
 ${CONF_MSG}
-1       */2       *       *       *       /usr/sbin/policyd-cleanup -c /etc/policyd.conf
-1       */2       *       *       *       /usr/sbin/policyd-cleanup -c /etc/policyd_sender_throttle.conf
+1       */2       *       *       *       /usr/sbin/policyd-cleanup -c ${POLICYD_CONF}
+1       */2       *       *       *       /usr/sbin/policyd-cleanup -c ${POLICYD_SENDER_THROTTLE_CONF}
 EOF
 
     # Set cron file permission: root:root, 0600.
     chmod 0600 ${CRON_SPOOL_DIR}/${POLICYD_USER_NAME}
 
+    # Add postfix alias.
+    echo "policyd: ${MAIL_ALIAS_ROOT}" >> ${POSTFIX_FILE_ALIASES}
+    postalias hash:${POSTFIX_FILE_ALIASES}
+
     # Tips.
     cat >> ${TIP_FILE} <<EOF
 Policyd:
     * Configuration files:
-        - /etc/policyd.conf
+        - ${POLICYD_CONF}
     * RC script:
         - /etc/init.d/policyd
     * Misc:
