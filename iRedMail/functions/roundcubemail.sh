@@ -120,8 +120,10 @@ EOF
     extract_pkg ${MISC_DIR}/roundcubemail-0.1.1-buttons-zh_CN.tar.bz2 ${RCM_HTTPD_ROOT}/skins/default-labels/images/ && \
     cd ${RCM_HTTPD_ROOT}/skins/default-labels/ && \
     patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_chpwd_forward_skins.patch >/dev/null && \
-    cp -f ${RCM_HTTPD_ROOT}/skins/default/{colorpicker,editor_ui,editor_content}.css ${RCM_HTTPD_ROOT}/skins/default-labels/ && \
-    perl -pi -e 's#(.*rcmail_config.*skin_path.*=).*#${1} "skins/default-labels/";#' ${RCM_HTTPD_ROOT}/config/main.inc.php
+    cp -f ${RCM_HTTPD_ROOT}/skins/default/{colorpicker,editor_ui,editor_content}.css ${RCM_HTTPD_ROOT}/skins/default-labels/
+
+    #perl -pi -e 's#(.*rcmail_config.*skin_path.*=).*#${1} "skins/default-labels/";#' ${RCM_HTTPD_ROOT}/config/main.inc.php
+
     # In Roundcubemail-0.2, option 'skin_path' was replaced by 'skin'!
     #perl -pi -e 's#(.*rcmail_config.*skin.*=).*#${1} "default-labels";#' ${RCM_HTTPD_ROOT}/config/main.inc.php
 

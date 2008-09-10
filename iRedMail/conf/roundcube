@@ -14,4 +14,4 @@ export RCM_DB_PASSWD="$(echo $RANDOM\$$RANDOM\@$RANDOM\!$RANDOM\&$RANDOM\*$RANDO
 # Default language of user interface.
 #   en: English(US)
 #   zh_TW: Tradition Chinese.
-export RCM_DEFAULT_LOCALE='zh_CN'
+export RCM_DEFAULT_LOCALE='en'

@@ -14,6 +14,7 @@ export HORDE_DB_PASSWD="$(echo $RANDOM\$$RANDOM\@$RANDOM\!$RANDOM\&$RANDOM\*$RAN
 export HORDE_DB_TEMPLATE="${HORDE_HTTPD_ROOT}/scripts/sql/groupware.mysql.sql"
 
 # Default language of user interface.
-#   en: English(US)
+#   en_US: English(US)
+#   zh_CN: Simp Chinese.
 #   zh_TW: Tradition Chinese.
-export HORDE_DEFAULT_LANGUAGE='zh_CN'
+export HORDE_DEFAULT_LANGUAGE='en_US'
