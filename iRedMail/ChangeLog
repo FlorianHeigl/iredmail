@@ -1,4 +1,5 @@
 iRedMail-0.3-beta2:
+    * Re-enable select_language plugin in SquirrelMail.
     * Make managesieve as an optional component.
 
 iRedMail-0.3-beta1:
