@@ -77,5 +77,14 @@ EOF
     chmod +x /etc/init.d/pysieved
     /sbin/chkconfig --level 345 pysieved on
 
+    cat >> ${TIP_FILE} <<EOF
+pysieved:
+    * Configuration files:
+        - ${PYSIEVED_INI}
+    * RC script:
+        - /etc/init.d/pysieved
+
+EOF
+
     echo 'export status_pysieved_config="DONE"' >> ${STATUS_FILE}
 }

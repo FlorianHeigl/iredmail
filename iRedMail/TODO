@@ -1,13 +1,7 @@
-* Remove procmail, always use dovecot as SASL auth mechanism. (0.3)
-* Managesieve service (v0.3).
-    * Plan to use pysieved.
-    * WebMail plugin:
-        * SquirrelMail: avelsieve (http://email.uoa.gr/avelsieve/).
-        * Roundcubemail: http://alec.pl/roundcube/managesieve/
+* Make pysieved optional.
 
-* One domain, one uid, one gid.
 * Roundcubemail plugin:
     * per-user whitelist/blacklist via policyd (use 'policyd.rcpt'
       table').
-    * Migrate current plugin (change password, forward setting) to
-      roundcubemail-0.2.
+
+* One domain, one uid, one gid.

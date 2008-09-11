@@ -78,10 +78,8 @@ if [ X"${USE_POP3}" == X"YES" -o X"${USE_POP3S}" == X"YES" \
 
 else
     # Disable Dovecot.
-    export ENABLE_DOVECOT="NO"
-    export ENABLE_DOVECOT_SSL="NO"
-    echo 'export ENABLE_DOVECOT="NO"' >> ${CONFIG_FILE}
-    echo 'export ENABLE_DOVECOT_SSL="NO"' >> ${CONFIG_FILE}
+    export ENABLE_DOVECOT="NO" && echo 'export ENABLE_DOVECOT="NO"' >> ${CONFIG_FILE}
+    export ENABLE_DOVECOT_SSL="NO" && echo 'export ENABLE_DOVECOT_SSL="NO"' >> ${CONFIG_FILE}
 fi
 
 # -------------------------
