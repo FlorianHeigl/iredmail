@@ -52,7 +52,7 @@ EOF
     echo '' > motd-users.txt
 
     perl -pi -e 's#(.*configured.*=)(.*)#${1}"true";#' config.inc.php
-    perl -pi -e 's#(.*default_language.*=)(.*)#${1}"cn";#' config.inc.php
+    #perl -pi -e 's#(.*default_language.*=)(.*)#${1}"cn";#' config.inc.php
 
     perl -pi -e 's#(.*database_host.*)localhost(.*)#${1}127.0.0.1${2}#' config.inc.php
     perl -pi -e 's#(.*database_user.*=)(.*)#${1}"$ENV{'MYSQL_ADMIN_USER'}";#' config.inc.php
