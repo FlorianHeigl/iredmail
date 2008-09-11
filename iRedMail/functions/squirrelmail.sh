@@ -470,7 +470,13 @@ sm_plugin_all()
     check_status_before_run sm_plugin_autosubscribe
     check_status_before_run sm_plugin_email_footer
     check_status_before_run sm_plugin_login_auto
-    check_status_before_run sm_plugin_avelsieve
+
+    # Enable avelsieve plugin.
+    if [ X"${USE_MANAGESIEVE}" == X"YES" ]; then
+        check_status_before_run sm_plugin_avelsieve
+    else
+        :
+    fi
 
     # Backend depend.
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then

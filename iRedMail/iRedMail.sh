@@ -34,7 +34,7 @@ check_arch && check_env
 . ${CONF_DIR}/policyd
 . ${CONF_DIR}/pypolicyd-spf
 . ${CONF_DIR}/dovecot
-. ${CONF_DIR}/pysieved
+. ${CONF_DIR}/managesieve
 . ${CONF_DIR}/procmail
 . ${CONF_DIR}/amavisd
 . ${CONF_DIR}/clamav
@@ -82,8 +82,8 @@ check_arch && check_env
 # Dovecot.
 . ${FUNCTIONS_DIR}/dovecot.sh
 
-# pysieved.
-. ${FUNCTIONS_DIR}/pysieved.sh
+# Managesieve.
+. ${FUNCTIONS_DIR}/managesieve.sh
 
 # Procmail.
 . ${FUNCTIONS_DIR}/procmail.sh
@@ -168,9 +168,9 @@ check_status_before_run policy_service_config
 check_status_before_run dovecot_config
 
 # ------------------------------------------------
-# pysieved. 
+# Managesieve. 
 # ------------------------------------------------
-check_status_before_run pysieved_config
+check_status_before_run managesieve_config
 
 # -----------------------------------------------
 # ClamAV.

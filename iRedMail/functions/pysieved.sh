@@ -3,7 +3,6 @@
 # Author:   Zhang Huangbin <michaelbibby (at) gmail.com>
 
 # Configure pysieved.
-
 pysieved_config()
 {
     backup_file ${PYSIEVED_INI}
@@ -87,4 +86,18 @@ pysieved:
 EOF
 
     echo 'export status_pysieved_config="DONE"' >> ${STATUS_FILE}
+}
+
+managesieve_config()
+{
+    if [ X"${USE_MANAGESIEVE}" == X"YES" ]; then
+        # Use pysieved.
+        if [ X"${USE_PYSIEVED}" == X"YES" ]; then
+            check_status_before_run pysieved_config
+        else
+            :
+        fi
+    else
+        :
+    fi
 }
