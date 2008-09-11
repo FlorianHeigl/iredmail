@@ -41,19 +41,21 @@ server without the need for direct file system access by the users.
     "pysieved" "Python Managesieve Server." "on" \
     2>/tmp/managesieve
 
-USE_MANAGESIEVE="$(cat /tmp/managesieve)"
+MANAGESIEVE="$(cat /tmp/managesieve)"
 rm -f /tmp/managesieve
 
-if [ ! -z ${USE_MANAGESIEVE} ]; then
+if [ ! -z ${MANAGESIEVE} ]; then
     export USE_MANAGESIEVE='YES'
     echo "export USE_MANAGESIEVE='YES'" >> ${CONFIG_FILE}
-else
-    :
-fi
 
-echo ${USE_MANAGESIEVE} | grep -i 'pysieved' >/dev/null 2>&1
-if [ X"$?" == X"0" ]; then
-    export USE_PYSIEVED='YES' && echo "export USE_PYSIEVED='YES'" >> ${CONFIG_FILE}
+    # pysieved.
+    echo ${MANAGESIEVE} | grep -i 'pysieved' >/dev/null 2>&1
+    if [ X"$?" == X"0" ]; then
+        export USE_PYSIEVED='YES'
+        echo "export USE_PYSIEVED='YES'" >> ${CONFIG_FILE}
+    else
+        :
+    fi
 else
     :
 fi

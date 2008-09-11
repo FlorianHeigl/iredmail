@@ -6,10 +6,7 @@ sm_install()
     cd ${MISC_DIR}
 
     # Extract source tarball.
-    extract_pkg ${SM_TARBALL}
-
-    ECHO_INFO "Move squirrelmail to httpd SERVERROOT: ${SM_HTTPD_ROOT}."
-    mv squirrelmail-${SM_VERSION} ${SM_HTTPD_ROOT}
+    extract_pkg ${SM_TARBALL} ${SM_HTTPD_ROOT}
 
     ECHO_INFO "Set correct permission for squirrelmail: ${SM_HTTPD_ROOT}."
     chown -R apache:apache ${SM_HTTPD_ROOT}

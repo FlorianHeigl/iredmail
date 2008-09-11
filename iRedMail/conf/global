@@ -63,7 +63,9 @@ export CONF_MSG="#
 #
 # Version:  ${PROG_VERSION}
 # Project:  http://iRedMail.googlecode.com/
-# Forum:    http://www.iredmail.org/bbs/
+# Forum:
+#   * International: http://groups.google.com/group/iredmail/
+#   * Chinese only: http://www.iredmail.org/bbs/
 #
 "
 
