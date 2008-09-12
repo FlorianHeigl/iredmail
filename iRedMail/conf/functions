@@ -183,12 +183,16 @@ check_env()
                     echo '' > ${STATUS_FILE}
                 fi
 
-                cat > ${TIP_FILE} <<EOF
+                if [ ! -e ${TIP_FILE} ]; then
+                    cat > ${TIP_FILE} <<EOF
 ${CONF_MSG}
 If you consider here should be put some more infomation, please contact us:
     - http://${PROG_NAME}.googlecode.com/
 
 EOF
+                else
+                    :
+                fi
                 ;;
             N|n|* )
                 echo "Skip configuration file: ${CONFIG_FILE}."
