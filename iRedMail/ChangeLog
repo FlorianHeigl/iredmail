@@ -1,4 +1,5 @@
 iRedMail-0.3-beta2:
+    * Update phpMyAdmin to '2.11.9.1'.
     * Re-enable select_language plugin in SquirrelMail.
     * Make managesieve as an optional component.
 
