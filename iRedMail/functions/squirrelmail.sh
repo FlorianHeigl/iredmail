@@ -301,6 +301,22 @@ sm_plugin_login_auto()
 }
 
 #
+# For squirrelmail plugin: add_address.
+#
+
+sm_plugin_add_address()
+{
+    ECHO_INFO "Install SquirrelMail plugin: add_address."
+
+    cd ${MISC_DIR}
+    extract_pkg ${PLUGIN_ADD_ADDRESS} ${SM_PLUGIN_DIR}
+    chown -R apache:apache ${SM_PLUGIN_DIR}/add_address/
+    chmod -R 0755 ${SM_PLUGIN_DIR}/add_address/
+
+    echo 'export status_sm_plugin_address="DONE"' >> ${STATUS_FILE}
+}
+
+#
 # For SquirrelMail plugin: avelsieve.
 #
 sm_plugin_avelsieve()
@@ -467,6 +483,7 @@ sm_plugin_all()
     check_status_before_run sm_plugin_autosubscribe
     check_status_before_run sm_plugin_email_footer
     check_status_before_run sm_plugin_login_auto
+    check_status_before_run sm_plugin_add_address
 
     # Enable avelsieve plugin.
     if [ X"${USE_MANAGESIEVE}" == X"YES" ]; then

@@ -150,6 +150,7 @@ plugin {
     #expire_dict = db:/var/lib/dovecot/expire.db
 }
 
+# Per-user sieve mail filter.
 plugin {
     # NOTE: %variable expansion works only with Dovecot v1.0.2+.
     # For maildir format.
