@@ -69,6 +69,9 @@ EOF
     # Set useragent, add project info.
     perl -pi -e 's#(.*rcmail_config.*useragent.*=).*#${1} "RoundCube WebMail";#' main.inc.php
 
+    # Disable multiple identities. roundcube-0.2 only.
+    #perl -pi -e 's#(.*multiple_identities.*=).*true;#${1} false;#' main.inc.php
+
     ECHO_INFO "Create directory alias for Roundcubemail."
     cat > ${HTTPD_CONF_DIR}/roundcubemail.conf <<EOF
 ${CONF_MSG}

@@ -20,8 +20,6 @@ export POSTFIX_FILE_MAIN_CF="${POSTFIX_ROOTDIR}/main.cf"
 export POSTFIX_FILE_MASTER_CF="${POSTFIX_ROOTDIR}/master.cf"
 export POSTFIX_FILE_ALIASES="${POSTFIX_ROOTDIR}/aliases"
 
-export SMTPD_CONF='/usr/lib/sasl2/smtpd.conf'
-
 # If you use courier-maildrop, transport should be 'maildrop'
 # We use dovecot here.
 export TRANSPORT='dovecot'
