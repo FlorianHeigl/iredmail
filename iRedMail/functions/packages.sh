@@ -102,18 +102,29 @@ install_all()
     ENABLED_SERVICES="${ENABLED_SERVICES} crond"
 
     # Install all packages.
-    install_pkg ${ALL_PKGS}
+    install_all_pkgs()
+    {
+        install_pkg ${ALL_PKGS}
+        echo 'export status_install_all_pkgs="DONE"' >> ${STATUS_FILE}
+    }
 
-    # Enable services.
-    for i in ${ENABLED_SERVICES}; do
-        chkconfig --level 345 $i on
-    done
 
-    # Disable services.
-    for i in ${DISABLED_SERVICES}
-    do
-        chkconfig --level 345 $i off
-    done
+    # Enable/Disable services.
+    enable_all_services()
+    {
+        # Enable services.
+        for i in ${ENABLED_SERVICES}; do
+            chkconfig --level 345 $i on
+        done
+
+        # Disable services.
+        for i in ${DISABLED_SERVICES}
+        do
+            chkconfig --level 345 $i off
+        done
+
+        echo 'export status_enable_all_services="DONE"' >> ${STATUS_FILE}
+    }
 
     echo 'export status_install_all="DONE"' >> ${STATUS_FILE}
 }
