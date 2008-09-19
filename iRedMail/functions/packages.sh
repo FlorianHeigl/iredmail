@@ -126,5 +126,8 @@ install_all()
         echo 'export status_enable_all_services="DONE"' >> ${STATUS_FILE}
     }
 
+    check_status_before_run install_all_pkgs
+    check_status_before_run enable_all_services
+
     echo 'export status_install_all="DONE"' >> ${STATUS_FILE}
 }
