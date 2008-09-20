@@ -1,4 +1,5 @@
 iRedMail-0.3-beta2:
+    * Hide Apache + PHP version.
     * Fix smtpd.conf file location on x86_64.
     * Add SquirrelMail plugin: add_address.
     * Update phpMyAdmin to '2.11.9.1'.
