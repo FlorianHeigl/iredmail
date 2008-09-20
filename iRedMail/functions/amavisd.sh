@@ -112,6 +112,12 @@ amavisd_config()
     # Remove the content from '@av_scanners' to the end of file.
     new_conf="$(sed '/\@av_scanners/,$d' ${AMAVISD_CONF})"
 
+    # Allow clients on my internal network to bypass scanning.
+    perl -pi -e 's#(.*policy_bank.*MYNETS.*\{)(.*)#${1} bypass_spam_checks_maps => [1], bypass_banned_checks_maps => [1], bypass_header_checks_maps => [1], ${2}#' ${AMAVISD_CONF}
+
+    # Allow all authenticated virtual users to bypass scanning.
+    perl -pi -e 's#(.*policy_bank.*ORIGINATING.*\{)(.*)#${1} bypass_spam_checks_maps => [1], bypass_banned_checks_maps => [1], bypass_header_checks_maps => [1], ${2}#' ${AMAVISD_CONF}
+
     # Generate new configration file(Part).
     echo -e "${new_conf}" > ${AMAVISD_CONF}
 

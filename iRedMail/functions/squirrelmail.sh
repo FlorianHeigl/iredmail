@@ -16,10 +16,17 @@ sm_install()
     ECHO_INFO "Create directory alias for squirrelmail in Apache: ${HTTPD_DOCUMENTROOT}/mail/."
     cat > ${HTTPD_CONF_DIR}/squirrelmail.conf <<EOF
 ${CONF_MSG}
-Alias /mail "${HTTPD_SERVERROOT}/squirrelmail-${SM_VERSION}/"
-Alias /webmail "${HTTPD_SERVERROOT}/squirrelmail-${SM_VERSION}/"
 Alias /squirrelmail "${HTTPD_SERVERROOT}/squirrelmail-${SM_VERSION}/"
 EOF
+
+    if [ X"${USE_RCM}" == X"YES" -o X"${USE_EXTMAIL}" == X"YES" ]; then
+        :
+    else
+        cat >> ${HTTPD_CONF_DIR}/squirrelmail.conf <<EOF
+Alias /mail "${HTTPD_SERVERROOT}/squirrelmail-${SM_VERSION}/"
+Alias /webmail "${HTTPD_SERVERROOT}/squirrelmail-${SM_VERSION}/"
+EOF
+    fi
 
     ECHO_INFO "Create directories to storage squirrelmail data and attachments: ${SM_DATA_DIR}, ${SM_ATTACHMENT_DIR}."
 
