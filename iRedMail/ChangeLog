@@ -1,4 +1,5 @@
 iRedMail-0.3-beta2:
+    * Bypass checks for internally generated mail: master.cf.
     * Hide Apache + PHP version.
     * Fix smtpd.conf file location on x86_64.
     * Add SquirrelMail plugin: add_address.

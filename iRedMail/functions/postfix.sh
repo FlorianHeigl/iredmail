@@ -19,6 +19,17 @@ EOF
     backup_file ${POSTFIX_FILE_MASTER_CF}
     perl -pi -e 's/^(smtp.*inet)(.*)(n)(.*)(n)(.*smtpd)$/${1}${2}${3}${4}-${6}/' ${POSTFIX_FILE_MASTER_CF}
 
+    ECHO_INFO "Bypass checks for internally generated mail: ${POSTFIX_FILE_MASTER_CF}."
+    # comment out
+    perl -pi -e 's/^(pickup.*)/#${1}/' ${POSTFIX_FILE_MASTER_CF}
+    # Add new option to 'pickup' daemon.
+    cat >> ${POSTFIX_FILE_MASTER_CF} <<EOF
+# Bypass checks for internally generated mail.
+pickup    fifo  n       -       n       60      1       pickup
+  -o content_filter=
+EOF
+
+
     ECHO_INFO "Copy /etc/hosts file to chrooted postfix."
     mkdir -p "${POSTFIX_CHROOT_DIR}/etc/"
     cp -f /etc/hosts ${POSTFIX_CHROOT_DIR}/etc/
