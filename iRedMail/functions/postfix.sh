@@ -626,10 +626,17 @@ tls_daemon_random_source = dev:/dev/urandom
 EOF
 
     cat >> ${POSTFIX_FILE_MASTER_CF} <<EOF
+submission inet n       -       n       -       -       smtpd
+  -o smtpd_enforce_tls=yes
+  -o smtpd_sasl_auth_enable=yes
+  -o smtpd_client_restrictions=permit_sasl_authenticated,reject
+  -o content_filter=smtp-amavis:[${AMAVISD_SERVER}]:10026
+
 smtps     inet  n       -       n       -       -       smtpd
   -o smtpd_tls_wrappermode=yes
   -o smtpd_sasl_auth_enable=yes
   -o smtpd_client_restrictions=permit_sasl_authenticated,reject
+  -o content_filter=smtp-amavis:[${AMAVISD_SERVER}]:10026
 EOF
 
     echo 'export status_postfix_config_tls="DONE"' >> ${STATUS_FILE}

@@ -1,4 +1,7 @@
 iRedMail-0.3-beta2:
+    * Allow SASL authenticated users via submission or smtps to bypass
+      scanning.
+    * Enable submission in postfix.
     * Bypass checks for internally generated mail: master.cf.
     * Hide Apache + PHP version.
     * Fix smtpd.conf file location on x86_64.

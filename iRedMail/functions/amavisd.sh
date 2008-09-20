@@ -93,6 +93,10 @@ amavisd_config()
     #perl -pi -e 's/(.*)(sa_tag2_level_deflt)(.*)/${1}${2} = 6; #${3}/' ${AMAVISD_CONF}
     #perl -pi -e 's/(.*)(sa_kill_level_deflt)(.*)/${1}${2} = 10; #${3}/' ${AMAVISD_CONF}
 
+    # Make Amavisd listen on multiple TCP ports.
+    perl -pi -e 's/(.*inet_socket_port.*=.*10024;.*)/#${1}/' ${AMAVISD_CONF}
+    perl -pi -e 's/^#(.*inet_socket_port.*=.*10024.*10026.*)/${1}/' ${AMAVISD_CONF}
+
     # Set admin address.
     perl -pi -e 's#(virus_admin.*= ")(virusalert)(.*)#${1}root${3}#' ${AMAVISD_CONF}
     perl -pi -e 's#(mailfrom_notify_admin.*= ")(virusalert)(.*)#${1}root${3}#' ${AMAVISD_CONF}
@@ -141,6 +145,24 @@ amavisd_config()
     "--stdout --disable-summary -r --tempdir=$TEMPBASE {}", [0], [1],
     qr/^.*?: (?!Infected Archive)(.*) FOUND$/ ],
 );
+
+# This policyd will perform virus checks only.
+$interface_policy{'10026'} = 'VIRUSONLY';
+$policy_bank{'VIRUSONLY'} = { # mail from the pickup daemon
+    bypass_spam_checks_maps   => [1],  # don't spam-check this mail
+    bypass_banned_checks_maps => [1],  # don't banned-check this mail
+    bypass_header_checks_maps => [1],  # don't header-check this mail
+};
+
+# Allow SASL authenticated users to bypass scanning. Typically SASL
+# users already submit messages to the submission port (587) or the
+# smtps port (465):
+$interface_policy{'10026'} = 'SASLBYPASS';
+$policy_bank{'SASLBYPASS'} = {  # mail from submission and smtps ports
+    bypass_spam_checks_maps   => [1],  # don't spam-check this mail
+    bypass_banned_checks_maps => [1],  # don't banned-check this mail
+    bypass_header_checks_maps => [1],  # don't header-check this mail
+};
 
 # SpamAssassin debugging. Default if off(0).
 # Note: '\$log_level' variable above is required for SA debug.
@@ -213,7 +235,7 @@ smtp-amavis unix -  -   -   -   2  smtp
     -o disable_dns_lookups=yes
     -o max_use=20
 
-${SMTP_SERVER}:10025 inet n  -   -   -   -  smtpd
+${AMAVISD_SERVER}:10025 inet n  -   -   -   -  smtpd
     -o content_filter=
     -o local_recipient_maps=
     -o relay_recipient_maps=
