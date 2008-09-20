@@ -1,15 +1,16 @@
 *) Check if this is the lastest version before you run any script:
    http://code.google.com/p/iredmail/downloads/list
 
-*) Wiki page (include step-by-step tutorial):
-   http://code.google.com/p/iredmail/wiki/RHEL_Mail_Server_Solution
-
 *) Please do read the installation guide before you run any script
    shipped within iRedMail:
-   http://code.google.com/p/iredmail/wiki/Installation
+   - English: http://code.google.com/p/iredmail/wiki/Installation
+   - Chinese: http://code.google.com/p/iredmail/wiki/Installation_zh
 
 *) Issue tracker & bug report:
    http://code.google.com/p/iredmail/issues/list
+
+*) Wiki page (include step-by-step tutorial):
+   http://www.iredmail.org/wiki/
 
 *) Community:
    Chinese: http://www.iredmail.org/bbs/
