@@ -18,6 +18,7 @@ sm_install()
 ${CONF_MSG}
 Alias /mail "${HTTPD_SERVERROOT}/squirrelmail-${SM_VERSION}/"
 Alias /webmail "${HTTPD_SERVERROOT}/squirrelmail-${SM_VERSION}/"
+Alias /squirrelmail "${HTTPD_SERVERROOT}/squirrelmail-${SM_VERSION}/"
 EOF
 
     ECHO_INFO "Create directories to storage squirrelmail data and attachments: ${SM_DATA_DIR}, ${SM_ATTACHMENT_DIR}."

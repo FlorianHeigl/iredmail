@@ -147,8 +147,8 @@ amavisd_config()
 );
 
 # This policyd will perform virus checks only.
-$interface_policy{'10026'} = 'VIRUSONLY';
-$policy_bank{'VIRUSONLY'} = { # mail from the pickup daemon
+\$interface_policy{'10026'} = 'VIRUSONLY';
+\$policy_bank{'VIRUSONLY'} = { # mail from the pickup daemon
     bypass_spam_checks_maps   => [1],  # don't spam-check this mail
     bypass_banned_checks_maps => [1],  # don't banned-check this mail
     bypass_header_checks_maps => [1],  # don't header-check this mail
@@ -157,8 +157,8 @@ $policy_bank{'VIRUSONLY'} = { # mail from the pickup daemon
 # Allow SASL authenticated users to bypass scanning. Typically SASL
 # users already submit messages to the submission port (587) or the
 # smtps port (465):
-$interface_policy{'10026'} = 'SASLBYPASS';
-$policy_bank{'SASLBYPASS'} = {  # mail from submission and smtps ports
+\$interface_policy{'10026'} = 'SASLBYPASS';
+\$policy_bank{'SASLBYPASS'} = {  # mail from submission and smtps ports
     bypass_spam_checks_maps   => [1],  # don't spam-check this mail
     bypass_banned_checks_maps => [1],  # don't banned-check this mail
     bypass_header_checks_maps => [1],  # don't header-check this mail

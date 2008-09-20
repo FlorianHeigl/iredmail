@@ -75,10 +75,17 @@ EOF
     ECHO_INFO "Create directory alias for Roundcubemail."
     cat > ${HTTPD_CONF_DIR}/roundcubemail.conf <<EOF
 ${CONF_MSG}
-Alias /mail "${HTTPD_SERVERROOT}/roundcubemail-${RCM_VERSION}/"
-Alias /webmail "${HTTPD_SERVERROOT}/roundcubemail-${RCM_VERSION}/"
 Alias /roundcube "${HTTPD_SERVERROOT}/roundcubemail-${RCM_VERSION}/"
 EOF
+
+    if [ X"${USE_SM}" != X"YES" -o X"${USE_EXTMAIL}" != X"YES" ]; then
+        cat >> ${HTTPD_CONF_DIR}/roundcubemail.conf <<EOF
+Alias /mail "${HTTPD_SERVERROOT}/roundcubemail-${RCM_VERSION}/"
+Alias /webmail "${HTTPD_SERVERROOT}/roundcubemail-${RCM_VERSION}/"
+EOF
+    else
+        :
+    fi
 
     # Roundcubemail-0.1.1 only.
     ECHO_INFO "Patch: Add missing localization items for zh_CN."
