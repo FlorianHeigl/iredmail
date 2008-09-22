@@ -1,4 +1,5 @@
 iRedMail-0.3-beta2:
+    * Update ExtMail to 1.0.5.
     * Enable submission in postfix.
     * Bypass checks for internally generated mail: master.cf.
     * Hide Apache + PHP version.

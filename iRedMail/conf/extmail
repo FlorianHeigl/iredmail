@@ -3,9 +3,11 @@
 #
 # ExtMail project:
 #   - http://www.extmail.org/forum/
+# Download link:
+#   - http://mirror3.extmail.net/dist/
 #
 
-export EXTMAIL_VERSION='1.0.4'
+export EXTMAIL_VERSION='1.0.5'
 export EXTMAIL_TARBALL="extmail-${EXTMAIL_VERSION}.tar.gz"
 export SYS_USER_LANG='zh_CN'
 
