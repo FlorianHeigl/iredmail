@@ -135,15 +135,15 @@ Configuration completed.
 *************************************************************************
 EOF
 
-echo -en "\n${OUTPUT_FLAG} Continue? [y|N]"
+echo -en "\n${OUTPUT_FLAG} Continue? [Y|n]"
 read ANSWER
 
 case ${ANSWER} in
-    Y|y )
-        :
-        ;;
-    N|n|* )
+    N|n)
         echo "${OUTPUT_FLAG} Canceled, Exit."
         exit 255
+        ;;
+    Y|y|*)
+        :
         ;;
 esac

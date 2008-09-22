@@ -58,7 +58,7 @@ backup_file()
 install_pkg()
 {
     ECHO_INFO "Installing package(s): $@"
-    yum -d 2 -y install $@
+    ${YUM} -y install $@
     if [ X"$?" != X"0" ]; then
         echo -e "Installation failed, please check the terminal output."
         exit 255
@@ -70,7 +70,7 @@ install_pkg()
 remove_pkg()
 {
     ECHO_INFO "Removing package(s): $@"
-    yum -d 2 -y remove $@
+    ${YUM} -y remove $@
     [ X"$?" != X"0" ] && ECHO_INFO "Package removed failed, please check the terminal output."
 }
 

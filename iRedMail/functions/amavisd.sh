@@ -94,8 +94,8 @@ amavisd_config()
     #perl -pi -e 's/(.*)(sa_kill_level_deflt)(.*)/${1}${2} = 10; #${3}/' ${AMAVISD_CONF}
 
     # Make Amavisd listen on multiple TCP ports.
-    perl -pi -e 's/(.*inet_socket_port.*=.*10024;.*)/#${1}/' ${AMAVISD_CONF}
-    perl -pi -e 's/^#(.*inet_socket_port.*=.*10024.*10026.*)/${1}/' ${AMAVISD_CONF}
+    #perl -pi -e 's/(.*inet_socket_port.*=.*10024;.*)/#${1}/' ${AMAVISD_CONF}
+    #perl -pi -e 's/^#(.*inet_socket_port.*=.*10024.*10026.*)/${1}/' ${AMAVISD_CONF}
 
     # Set admin address.
     perl -pi -e 's#(virus_admin.*= ")(virusalert)(.*)#${1}root${3}#' ${AMAVISD_CONF}
@@ -109,15 +109,14 @@ amavisd_config()
     # Disable defang banned mail.
     perl -pi -e 's#(.*defang_banned = )1(;.*)#${1}0${2}#' ${AMAVISD_CONF}
 
-    # Remove the content from '@av_scanners' to the end of file.
-    new_conf="$(sed '/\@av_scanners/,$d' ${AMAVISD_CONF})"
-
     # Allow clients on my internal network to bypass scanning.
-    perl -pi -e 's#(.*policy_bank.*MYNETS.*\{)(.*)#${1} bypass_spam_checks_maps => [1], bypass_banned_checks_maps => [1], bypass_header_checks_maps => [1], ${2}#' ${AMAVISD_CONF}
+    #perl -pi -e 's#(.*policy_bank.*MYNETS.*\{)(.*)#${1} bypass_spam_checks_maps => [1], bypass_banned_checks_maps => [1], bypass_header_checks_maps => [1], ${2}#' ${AMAVISD_CONF}
 
     # Allow all authenticated virtual users to bypass scanning.
-    perl -pi -e 's#(.*policy_bank.*ORIGINATING.*\{)(.*)#${1} bypass_spam_checks_maps => [1], bypass_banned_checks_maps => [1], bypass_header_checks_maps => [1], ${2}#' ${AMAVISD_CONF}
+    #perl -pi -e 's#(.*policy_bank.*ORIGINATING.*\{)(.*)#${1} bypass_spam_checks_maps => [1], bypass_banned_checks_maps => [1], bypass_header_checks_maps => [1], ${2}#' ${AMAVISD_CONF}
 
+    # Remove the content from '@av_scanners' to the end of file.
+    new_conf="$(sed '/\@av_scanners/,$d' ${AMAVISD_CONF})"
     # Generate new configration file(Part).
     echo -e "${new_conf}" > ${AMAVISD_CONF}
 
@@ -153,22 +152,22 @@ amavisd_config()
 );
 
 # This policyd will perform virus checks only.
-\$interface_policy{'10026'} = 'VIRUSONLY';
-\$policy_bank{'VIRUSONLY'} = { # mail from the pickup daemon
-    bypass_spam_checks_maps   => [1],  # don't spam-check this mail
-    bypass_banned_checks_maps => [1],  # don't banned-check this mail
-    bypass_header_checks_maps => [1],  # don't header-check this mail
-};
+#\$interface_policy{'10026'} = 'VIRUSONLY';
+#\$policy_bank{'VIRUSONLY'} = { # mail from the pickup daemon
+#    bypass_spam_checks_maps   => [1],  # don't spam-check this mail
+#    bypass_banned_checks_maps => [1],  # don't banned-check this mail
+#    bypass_header_checks_maps => [1],  # don't header-check this mail
+#};
 
 # Allow SASL authenticated users to bypass scanning. Typically SASL
 # users already submit messages to the submission port (587) or the
 # smtps port (465):
-\$interface_policy{'10026'} = 'SASLBYPASS';
-\$policy_bank{'SASLBYPASS'} = {  # mail from submission and smtps ports
-    bypass_spam_checks_maps   => [1],  # don't spam-check this mail
-    bypass_banned_checks_maps => [1],  # don't banned-check this mail
-    bypass_header_checks_maps => [1],  # don't header-check this mail
-};
+#\$interface_policy{'10026'} = 'SASLBYPASS';
+#\$policy_bank{'SASLBYPASS'} = {  # mail from submission and smtps ports
+#    bypass_spam_checks_maps   => [1],  # don't spam-check this mail
+#    bypass_banned_checks_maps => [1],  # don't banned-check this mail
+#    bypass_header_checks_maps => [1],  # don't header-check this mail
+#};
 
 # SpamAssassin debugging. Default if off(0).
 # Note: '\$log_level' variable above is required for SA debug.

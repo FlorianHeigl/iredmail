@@ -17,6 +17,12 @@ export HOME_MAILBOX='Maildir'
 export IMAP_SERVER='127.0.0.1'
 export SMTP_SERVER='127.0.0.1'
 
+if [ X"${YUM}" == X"" ]; then
+    export YUM='yum -d 2'
+else
+    export YUM=${YUM}
+fi
+
 # vmail user.
 export VMAIL_USER_NAME='vmail'
 export VMAIL_GROUP_NAME='vmail'
