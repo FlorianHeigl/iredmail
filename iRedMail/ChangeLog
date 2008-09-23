@@ -1,4 +1,8 @@
-iRedMail-0.3-beta2:
+iRedMail-0.3.1:
+    * Fix 'killall' command path in dovecot logrotate file. Thanks
+      chenwei <at> gmail.com.
+
+iRedMail-0.3:
     * Update ExtMail to 1.0.5.
     * Enable submission in postfix.
     * Bypass checks for internally generated mail: master.cf.

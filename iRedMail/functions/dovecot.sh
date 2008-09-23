@@ -354,7 +354,7 @@ ${DOVECOT_LOG_FILE} ${SIEVE_LOG_FILE} {
     create 0600 ${VMAIL_USER_NAME} ${VMAIL_GROUP_NAME}
     missingok
     postrotate
-        /sbin/killall -HUP syslogd
+        /usr/bin/killall -HUP syslogd
     endscript
 }
 EOF
