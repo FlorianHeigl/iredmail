@@ -22,14 +22,14 @@ EOF
     ECHO_INFO "Setup logrotate for procmail log file: ${PROCMAIL_LOGFILE}."
     cat >> ${PROCMAIL_LOGROTATE_FILE} <<EOF
 ${PROCMAIL_LOGFILE} {
-compress
-weekly
-rotate 10
-create 0600 vmail vmail
-missingok
-postrotate
-    /sbin/killall -HUP syslogd
-endscript
+    compress
+    weekly
+    rotate 10
+    create 0600 vmail vmail
+    missingok
+    postrotate
+        /bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null || true
+    endscript
 }
 EOF
 

@@ -204,7 +204,7 @@ ${OPENLDAP_LOGFILE} {
     create 0600 ldap ldap
     missingok
     postrotate
-        /sbin/killall -HUP syslogd
+        /usr/bin/killall -HUP syslogd
     endscript
 }
 EOF

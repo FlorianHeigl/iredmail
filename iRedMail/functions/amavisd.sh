@@ -279,7 +279,7 @@ ${AMAVISD_LOGFILE} {
     create 0600 amavis amavis
     missingok
     postrotate
-        /sbin/killall -HUP syslogd
+        /usr/bin/killall -HUP syslogd
     endscript
 }
 EOF
