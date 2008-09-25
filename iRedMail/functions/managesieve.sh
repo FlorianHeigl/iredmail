@@ -76,6 +76,9 @@ EOF
     chmod +x /etc/init.d/pysieved
     /sbin/chkconfig --level 345 pysieved on
 
+    # Disable pysieved in xinetd.
+    perl -pi -e 's#(.*disable.*=).*#${1} yes#' $(rpm -ql pysieved | grep 'xinetd' | grep 'pysieved$')
+
     cat >> ${TIP_FILE} <<EOF
 pysieved:
     * Configuration files:
