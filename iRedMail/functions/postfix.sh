@@ -52,6 +52,9 @@ EOF
     postconf -e delay_warning_time='4h'
     postconf -e policy_time_limit='3600'
 
+    # Avoid duplicate recipient messages. Default is 'yes'.
+    postconf -e enable_original_recipient="no"
+
     # We use 'maildir' format, not 'mbox'.
     if [ X"${HOME_MAILBOX}" == X"Maildir" ]; then
         postconf -e home_mailbox="Maildir/"
@@ -537,7 +540,6 @@ postfix_config_sasl()
     postconf -e smtpd_sasl_local_domain=''
     postconf -e smtpd_sasl_security_options="noanonymous"
     postconf -e broken_sasl_auth_clients="yes"
-    postconf -e enable_original_recipient="no" # Default is 'yes'. refer to postconf(5).
     postconf -e smtpd_helo_required="yes"
 
     # Report the SASL authenticated user name in Received message header.
