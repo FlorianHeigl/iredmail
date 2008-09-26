@@ -1,3 +1,7 @@
+#!/bin/sh
+
+# Author: Zhang Huangbin (michaelbibby <at> gmail.com)
+
 export AMAVISD_SERVER='127.0.0.1'
 export AMAVISD_CONF='/etc/amavisd.conf'
 export AMAVISD_LOGFILE='/var/log/amavisd.log'

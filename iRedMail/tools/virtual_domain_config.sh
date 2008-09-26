@@ -1,3 +1,7 @@
+#!/bin/sh
+
+# Author:   Zhang Huangbin <michaelbibby (at) gmail.com>
+
 # First domain name.
 while : ; do
     ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \

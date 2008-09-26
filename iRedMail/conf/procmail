@@ -1,3 +1,7 @@
+#!/bin/sh
+
+# Author: Zhang Huangbin (michaelbibby <at> gmail.com)
+
 export PROCMAIL_BIN='/usr/bin/procmail'
 export PROCMAILRC='/etc/procmailrc'
 export PROCMAIL_LOGFILE='/var/log/procmail.log'

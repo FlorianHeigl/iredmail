@@ -1,3 +1,7 @@
+#!/bin/sh
+
+# Author: Zhang Huangbin <michaelbibby (at) gmail.com>
+
 # -------------------------------------------
 # Functions to install and configure ExtMail.
 # -------------------------------------------

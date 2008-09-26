@@ -1,3 +1,7 @@
+#!/bin/sh
+
+# Author: Zhang Huangbin (michaelbibby <at> gmail.com)
+
 # For phpLDAPadmin.
 export PLA_VERSION='1.1.0.5'
 export PLA_TARBALL="phpldapadmin-${PLA_VERSION}.tar.gz"

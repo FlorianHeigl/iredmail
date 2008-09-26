@@ -1,4 +1,7 @@
+#!/bin/sh
+
 # Author: Zhang Huangbin (michaelbibby <at> gmail.com)
+
 # Variables for pysieved.
 
 export PYSIEVED_INI='/etc/pysieved.ini'

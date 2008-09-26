@@ -1,4 +1,7 @@
+#!/bin/sh
+
 # Author: Zhang Huangbin (michaelbibby <at> gmail.com)
+
 # Variables for Postfix and related.
 
 # Set 'message_size_limit', in 'byte'. Default is 10M.

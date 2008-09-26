@@ -1,4 +1,7 @@
+#!/bin/sh
+
 # Author: Zhang Huangbin (michaelbibby <at> gmail.com)
+
 # Variables for OpenLDAP and related.
 
 export OPENLDAP_ROOTDIR="/etc/openldap"

@@ -1,4 +1,7 @@
+#!/bin/sh
+
 # Author: Zhang Huangbin (michaelbibby <at> gmail.com)
+
 # Variables for MySQL database server and related.
 
 export MYSQL_FRESH_INSTALLATION='YES'

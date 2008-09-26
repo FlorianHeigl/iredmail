@@ -1,10 +1,9 @@
 #!/bin/sh
 
-# File: create_mail_ldap_user.sh
-# $Revision: 451 $
-
 # Author: Bibby(michaelbibby#gmail.com)
-# Date: $LastChangedDate: 2008-02-28 12:15:49 +0800 (Thu, 28 Feb 2008) $.
+
+# File: create_mail_ldap_user.sh
+# Date: 2008.02.28
 # Purpose: Add new LDAP user for postfix mail server.
 
 # ----------------------------------------------

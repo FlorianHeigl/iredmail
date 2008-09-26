@@ -1,4 +1,7 @@
+#!/bin/sh
+
 # Author: Zhang Huangbin (michaelbibby <at> gmail.com)
+
 # Variables for horde-webmail and related.
 
 # ---- Horde WebMail ----

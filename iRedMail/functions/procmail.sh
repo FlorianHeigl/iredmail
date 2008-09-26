@@ -1,3 +1,7 @@
+#!/bin/sh
+
+# Author: Zhang Huangbin <michaelbibby (at) gmail.com>
+
 enable_procmail()
 {
     ECHO_INFO "Setup procmail as Mail Deliver Agent(MDA)."
