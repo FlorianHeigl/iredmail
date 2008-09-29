@@ -128,6 +128,8 @@ check_arch && check_env
 # Install all packages.
 check_status_before_run install_all || (ECHO_INFO "Package installation error, please check the output log."; exit 255)
 
+# Create SSL/TLS cert file.
+check_status_before_run gen_pem_key
 # ------------------------------------------------
 # User/Group: vmail
 # ------------------------------------------------
