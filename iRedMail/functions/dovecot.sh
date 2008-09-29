@@ -9,16 +9,7 @@
 # For dovecot SSL support.
 enable_dovecot_ssl()
 {
-    ECHO_INFO "Generate CA file for dovecot: /etc/pki/dovecot/*."
-    rm -f /etc/pki/dovecot/{certs,private}/dovecot.pem
-    cd /etc/pki/dovecot/
-    gen_pem_key dovecot
-
-    mv /etc/pki/dovecot/dovecotCert.pem /etc/pki/dovecot/certs/
-    mv /etc/pki/dovecot/dovecotKey.pem /etc/pki/dovecot/private/
-
-    chown root:root /etc/pki/dovecot/{certs,private}/*
-    chmod 0400 /etc/pki/dovecot/{certs,private}/*
+    ECHO_INFO "Enable TLS support in Dovecot."
 
     [ X"${ENABLE_DOVECOT_SSL}" == X"YES" ] && cat >> ${DOVECOT_CONF} <<EOF
 # SSL support.
@@ -26,8 +17,8 @@ enable_dovecot_ssl()
 #   * http://wiki.dovecot.org/SSL/DovecotConfiguration
 ssl_disable = no
 verbose_ssl = no
-ssl_key_file = /etc/pki/dovecot/private/dovecotKey.pem
-ssl_cert_file = /etc/pki/dovecot/certs/dovecotCert.pem
+ssl_key_file = ${SSL_KEY_FILE}
+ssl_cert_file = ${SSL_CERT_FILE}
 EOF
 
     echo 'export status_enable_dovecot_ssl="DONE"' >> ${STATUS_FILE}

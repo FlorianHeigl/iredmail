@@ -602,13 +602,7 @@ postfix_config_sasl()
 
 postfix_config_tls()
 {
-    ECHO_INFO "Generate CA file for Postfix TLS support."
-    mkdir -p ${POSTFIX_CERTS_DIR} 2>/dev/null
-
-    cd ${POSTFIX_CERTS_DIR} && \
-    gen_pem_key postfix && \
-    chown root:root ${POSTFIX_CERTS_DIR}/* && \
-    chmod 400 ${POSTFIX_CERTS_DIR}
+    ECHO_INFO "Enable TLS/SSL support in Dovecot."
 
     cat >> ${POSTFIX_FILE_MAIN_CF} <<EOF
 #
@@ -624,9 +618,9 @@ postfix_config_tls()
 smtpd_tls_security_level = may
 smtpd_enforce_tls = no
 smtpd_tls_loglevel = 0
-smtpd_tls_key_file = ${POSTFIX_CERTS_DIR}/postfixKey.pem
-smtpd_tls_cert_file = ${POSTFIX_CERTS_DIR}/postfixCert.pem
-#smtpd_tls_CAfile = ${POSTFIX_CERTS_DIR}/cacert.pem
+smtpd_tls_key_file = ${SSL_KEY_FILE}
+smtpd_tls_cert_file = ${SSL_CERT_FILE}
+#smtpd_tls_CAfile = 
 tls_random_source = dev:/dev/urandom
 tls_daemon_random_source = dev:/dev/urandom
 EOF

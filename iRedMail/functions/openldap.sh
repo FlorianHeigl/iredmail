@@ -10,6 +10,9 @@ openldap_config()
 {
     backup_file ${OPENLDAP_SLAPD_CONF} ${OPENLDAP_LDAP_CONF}
 
+    ECHO_INFO "Set file permission on TLS cert key file: ${SSL_KEY_FILE}."
+    setfacl -m u:ldap:r-- ${SSL_KEY_FILE}
+
     # Copy ${PROG_NAME}.schema.
     cp -f ${SAMPLE_DIR}/${PROG_NAME_LOWERCASE}.schema ${OPENLDAP_SCHEMA_DIR}
 
@@ -27,9 +30,9 @@ include     ${OPENLDAP_SCHEMA_DIR}/${PROG_NAME_LOWERCASE}.schema
 pidfile     /var/run/openldap/slapd.pid
 argsfile    /var/run/openldap/slapd.args
 
-TLSCACertificateFile ${OPENLDAP_CACERT_DIR}/slapdCert.pem
-TLSCertificateFile ${OPENLDAP_CACERT_DIR}/slapdCert.pem
-TLSCertificateKeyFile ${OPENLDAP_CACERT_DIR}/slapdKey.pem
+TLSCACertificateFile ${SSL_CERT_FILE}
+TLSCertificateFile ${SSL_CERT_FILE}
+TLSCertificateKeyFile ${SSL_KEY_FILE}
 
 #
 # Disallow bind as anonymous.
@@ -218,15 +221,6 @@ EOF
     /etc/init.d/syslog restart >/dev/null
 
     echo 'export status_openldap_config="DONE"' >> ${STATUS_FILE}
-}
-
-openldap_tls_config()
-{
-    ECHO_INFO "Generate PEM files."
-    [ -d ${OPENLDAP_CACERT_DIR} ] || mkdir -p ${OPENLDAP_CACERT_DIR}
-    cd ${OPENLDAP_CACERT_DIR} && gen_pem_key slapd
-
-    echo 'export status_openldap_tls_config="DONE"' >> ${STATUS_FILE}
 }
 
 openldap_data_initialize()

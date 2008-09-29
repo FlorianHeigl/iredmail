@@ -230,16 +230,3 @@ gen_ldap_passwd()
 {
     slappasswd -h {MD5} -s ${1}
 }
-
-gen_pem_key()
-{
-    openssl req -newkey rsa:1024 -x509 -nodes -out ${1}Cert.pem -keyout ${1}Key.pem >/dev/null 2>&1 <<EOF
-${TLS_COUNTRY}
-${TLS_STATE}
-${TLS_CITY}
-${TLS_COMPANY}
-${TLS_DEPARTMENT}
-${TLS_HOSTNAME}
-${TLS_ADMIN}
-EOF
-}
