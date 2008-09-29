@@ -130,6 +130,7 @@ check_status_before_run install_all || (ECHO_INFO "Package installation error, p
 
 # Create SSL/TLS cert file.
 check_status_before_run gen_pem_key
+
 # ------------------------------------------------
 # User/Group: vmail
 # ------------------------------------------------
