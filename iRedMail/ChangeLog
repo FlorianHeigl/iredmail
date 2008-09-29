@@ -1,4 +1,5 @@
 iRedMail-0.3.1:
+    * Update SquirrelMail to 1.4.16.
     * Update phpMyAdmin to 2.11.9.2.
     * Disable pysieved service in xinetd.
     * Fix 'killall' command path in dovecot logrotate file. Thanks

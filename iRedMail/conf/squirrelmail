@@ -7,7 +7,7 @@
 # ----------------------------------------
 
 # Version number for core program: SquirrelMail.
-export SM_VERSION='1.4.15'
+export SM_VERSION='1.4.16'
 export SM_TARBALL="squirrelmail-${SM_VERSION}.tar.bz2"
 
 # ----------------------------------------
