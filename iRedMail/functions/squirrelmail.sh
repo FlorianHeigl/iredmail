@@ -57,40 +57,34 @@ EOF
 sm_config_basic()
 {
     ECHO_INFO "Setting up configuration file for SquirrelMail."
-    ${SM_CONF_PL} >/dev/null <<EOF
-2
-1
-$(hostname)
-A
-4
-127.0.0.1
-B
-4
-127.0.0.1
-R
-4
-1
-${SM_DATA_DIR}
-2
-${SM_ATTACHMENT_DIR}
-R
-10
-1
-${SM_DEFAULT_LOCALE}
-2
-${SM_DEFAULT_CHARSET}
-R
-D
-dovecot
 
-S
+    # Set domain name displayed in squirrelmail.
+    perl -pi -e 's#(.*domain.*=)(.*)#${1}"$ENV{HOSTNAME}";#' ${SM_CONFIG}
 
-Q
-EOF
+    # IMAP server address.
+    perl -pi -e 's#(.*imapServerAddress.*=)(.*)#${1}"$ENV{IMAP_SERVER}";#' ${SM_CONFIG}
+
+    # IMAP server type: dovecot.
+    perl -pi -e 's#(.*imap_server_type.*=)(.*)#${1}"dovecot";#' ${SM_CONFIG}
+
+    # SMTP server address.
+    perl -pi -e 's#(.*smtpServerAddress.*=)(.*)#${1}"$ENV{SMTP_SERVER}";#' ${SM_CONFIG}
 
     # Enable SMTP AUTH while sending email.
     perl -pi -e 's#(.*smtp_auth_mech.*=)(.*)#${1}"login";#' ${SM_CONFIG}
+
+    # attachment_dir
+    perl -pi -e 's#(.*attachment_dir.*=)(.*)#${1}"$ENV{SM_ATTACHMENT_DIR}";#' ${SM_CONFIG}
+
+    # data_dir
+    perl -pi -e 's#(.*data_dir.*=)(.*)#${1}"$ENV{SM_DATA_DIR}";#' ${SM_CONFIG}
     
+    # squirrelmail_default_language
+    perl -pi -e 's#(.*squirrelmail_default_language.*=)(.*)#${1}"$ENV{SM_DEFAULT_LOCALE}";#' ${SM_CONFIG}
+
+    # default_charset
+    perl -pi -e 's#(.*default_charset.*=)(.*)#${1}"$ENV{SM_DEFAULT_CHARSET}";#' ${SM_CONFIG}
+
     # Disable multiple identities.
     perl -pi -e 's#(.*edit_identity.*)true(.*)#${1}false${2}#' ${SM_CONFIG}
 
