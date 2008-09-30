@@ -140,7 +140,7 @@ gen_pem_key()
     mkdir -p $(dirname ${SSL_CERT_FILE}) 2>/dev/null
     mkdir -p $(dirname ${SSL_KEY_FILE}) 2>/dev/null
 
-    openssl req -newkey rsa:1024 -x509 -nodes -out iRedMailCert.pem -keyout ${1}Key.pem >/dev/null 2>&1 <<EOF
+    openssl req -newkey rsa:1024 -x509 -nodes -out ${SSL_CERT_FILE} -keyout ${SSL_KEY_FILE} >/dev/null 2>&1 <<EOF
 ${TLS_COUNTRY}
 ${TLS_STATE}
 ${TLS_CITY}
@@ -152,5 +152,5 @@ EOF
 
     # Set correct file permission.
     chmod 0444 ${SSL_CERT_FILE}
-    chmod 0400 ${SSL_CERT_FILE}
+    chmod 0400 ${SSL_KEY_FILE}
 }

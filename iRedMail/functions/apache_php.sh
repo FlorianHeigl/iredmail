@@ -20,6 +20,10 @@ apache_php_config()
     ECHO_INFO "Disable 'AddDefaultCharset' in Apache: ${HTTPD_CONF}."
     perl -pi -e 's/^(AddDefaultCharset UTF-8)/#${1}/' ${HTTPD_CONF}
 
+    # SSL Cert/Key file.
+    perl -pi -e 's#^(SSLCertificateFile)(.*)#${1} $ENV{SSL_CERT_FILE}#' ${HTTPD_SSL_CONF}
+    perl -pi -e 's#^(SSLCertificateKeyFile)(.*)#${1} $ENV{SSL_KEY_FILE}#' ${HTTPD_SSL_CONF}
+
     if [ X"${HTTPD_PORT}" != X"80" ]; then
         ECHO_INFO "Change Apache listen port to: ${HTTPD_PORT}."
         perl -pi -e 's#^(Listen )(80)$#${1}$ENV{HTTPD_PORT}#' ${HTTPD_CONF}

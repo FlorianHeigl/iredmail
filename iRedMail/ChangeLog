@@ -1,5 +1,6 @@
 iRedMail-0.3.1:
-    * Use unique SSL cert file: /etc/pki/iRedMail{Key,Cert}.pem.
+    * Use unique SSL cert file in Postfix, Dovecot, Apache, OpenLDAP:
+      /etc/pki/iRedMail{Key,Cert}.pem.
     * Update SquirrelMail to 1.4.16.
     * Update phpMyAdmin to 2.11.9.2.
     * Disable pysieved service in xinetd.
