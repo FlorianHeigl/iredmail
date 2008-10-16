@@ -33,3 +33,5 @@ clamd-0.94-1.el5.rf.i386.rpm
 perl-BerkeleyDB-0.34-1.el5.rf.i386.rpm
 unrar-3.8.2-1.el5.rf.i386.rpm
 dovecot-1.1.4-0_81.el5.i386.rpm
+perl-DBD-mysql-4.008-1.el5.rf.i386.rpm
+perl-DBI-1.607-1.el5.rf.i386.rpm

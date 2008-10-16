@@ -32,3 +32,5 @@ daecf7bbb0dc95abfa2cda213f07f355  rpms/clamd-0.94-1.el5.rf.x86_64.rpm
 4c55f4bc685598784b921713f7bd63b6  rpms/perl-BerkeleyDB-0.34-1.el5.rf.x86_64.rpm
 d8f67576d493fc3f814bb7b57d96ee71  rpms/unrar-3.8.2-1.el5.rf.x86_64.rpm
 22c49fd961d1357b7e74a2c5316abf46  rpms/dovecot-1.1.4-0_81.el5.x86_64.rpm
+99b250aade27a35b84b15f3ac1be34f5  rpms/perl-DBD-mysql-4.008-1.el5.rf.x86_64.rpm
+6607470d1e7a31b3182bb025804ef262  rpms/perl-DBI-1.607-1.el5.rf.x86_64.rpm
