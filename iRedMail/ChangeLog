@@ -1,8 +1,7 @@
 iRedMail-0.3.1:
-    * Replace original perl-DBI-1.605 shipped within RedHat/CentOS
-      by 1.607-1 which provided by rpmforge.
-    * Replace original perl-DBD-mysql-3.0007 shipped within
-      RedHat/CentOS by 4.008-1 which provided by rpmforge.
+    * Update perl-Error to 0.17015-1.
+    * Update perl-Compress-Raw-Zlib to 2.015-1.
+    * Update perl-BerkeleyDB to 0.36-1.
     * Update perl-IO-Multiplex to 1.10-1.
     * Update perl-MailTools to 2.04-1.
     * Update perl-Mail-SPF to 2.006-1.

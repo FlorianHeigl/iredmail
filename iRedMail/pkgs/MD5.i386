@@ -27,8 +27,7 @@ e89ad55c67811e700c4e3cba55b097e5  rpms/perl-Convert-UUlib-1.11-1.ired.i386.rpm
 0cb0fa279287dc293ccf5bb461d61c82  rpms/clamav-0.94-1.el5.rf.i386.rpm
 99d09fb7be84c2996c4127f4c1cf277d  rpms/clamav-db-0.94-1.el5.rf.i386.rpm
 5130e3cc9226b8fe56de25d674cbf41a  rpms/clamd-0.94-1.el5.rf.i386.rpm
-f902899999d24b0fe5e703509dff24c0  rpms/perl-BerkeleyDB-0.34-1.el5.rf.i386.rpm
 38b63120bbcbfa94b74bcc28751e77dc  rpms/unrar-3.8.2-1.el5.rf.i386.rpm
 8e0f9117df9f64d83922cd9f2bb8d7fc  rpms/dovecot-1.1.4-0_81.el5.i386.rpm
-28b9b1161c8f57c34606b56076071dc1  rpms/perl-DBD-mysql-4.008-1.el5.rf.i386.rpm
-2ea8b80a9e09f8fa1f74f63ee6a68c5e  rpms/perl-DBI-1.607-1.el5.rf.i386.rpm
+73a4835924c0a22fa52fa7d2b8f5577e  rpms/perl-BerkeleyDB-0.36-1.el5.rf.i386.rpm
+9f001e591572d88c6e035bd525f772fe  rpms/perl-Compress-Raw-Zlib-2.015-1.el5.rf.i386.rpm
