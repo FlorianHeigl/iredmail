@@ -26,9 +26,9 @@ aaec6805b06a16f241333037553b0c42  rpms/php-pecl-fileinfo-1.0.4-1.el5.rf.x86_64.r
 bf93d00637fb30e832409fbae6b2b481  rpms/perl-Convert-UUlib-1.11-1.ired.x86_64.rpm
 fb2574ec5b714b136e4ee4bd85344b1c  rpms/policyd-1.82-4.rhms.x86_64.rpm
 14781f40c86031d676c0b2462a92fc9e  rpms/postfix-2.3.15-2.ired.x86_64.rpm
-a0192ff95bdef9b0878af069bee8b796  rpms/dovecot-1.1.3-0_80.el5.x86_64.rpm
 749199e13a34460a23eda882f4e328fe  rpms/clamav-0.94-1.el5.rf.x86_64.rpm
 629706dc84282653a5149df6b0a4ab13  rpms/clamav-db-0.94-1.el5.rf.x86_64.rpm
 daecf7bbb0dc95abfa2cda213f07f355  rpms/clamd-0.94-1.el5.rf.x86_64.rpm
 4c55f4bc685598784b921713f7bd63b6  rpms/perl-BerkeleyDB-0.34-1.el5.rf.x86_64.rpm
 d8f67576d493fc3f814bb7b57d96ee71  rpms/unrar-3.8.2-1.el5.rf.x86_64.rpm
+22c49fd961d1357b7e74a2c5316abf46  rpms/dovecot-1.1.4-0_81.el5.x86_64.rpm

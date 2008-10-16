@@ -24,9 +24,9 @@ f4d04c5cc21515625534c9f557eb11b4  rpms/amavisd-new-2.6.1-1.ired.i386.rpm
 e89ad55c67811e700c4e3cba55b097e5  rpms/perl-Convert-UUlib-1.11-1.ired.i386.rpm
 0e8286982e3cfc33a88fb003c55b366d  rpms/policyd-1.82-4.rhms.i386.rpm
 155cdc7fb2ec5369ca77014ff483c3f4  rpms/postfix-2.3.15-2.ired.i386.rpm
-e93c374f50dbaf9289371495e09de1db  rpms/dovecot-1.1.3-0_80.el5.i386.rpm
 0cb0fa279287dc293ccf5bb461d61c82  rpms/clamav-0.94-1.el5.rf.i386.rpm
 99d09fb7be84c2996c4127f4c1cf277d  rpms/clamav-db-0.94-1.el5.rf.i386.rpm
 5130e3cc9226b8fe56de25d674cbf41a  rpms/clamd-0.94-1.el5.rf.i386.rpm
 f902899999d24b0fe5e703509dff24c0  rpms/perl-BerkeleyDB-0.34-1.el5.rf.i386.rpm
 38b63120bbcbfa94b74bcc28751e77dc  rpms/unrar-3.8.2-1.el5.rf.i386.rpm
+8e0f9117df9f64d83922cd9f2bb8d7fc  rpms/dovecot-1.1.4-0_81.el5.i386.rpm
