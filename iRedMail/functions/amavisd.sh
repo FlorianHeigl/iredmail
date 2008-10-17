@@ -291,6 +291,13 @@ EOF
         :
     fi
 
+    # Add crontab job to delete virus mail.
+    ECHO_INFO "Setting cron job for vmail user to delete virus mail per month."
+    cat > ${CRON_SPOOL_DIR}/${VMAIL_USER_NAME} <<EOF
+${CONF_MSG}
+1   5   *   *   *   find /var/virusmails -ctime +30
+EOF
+
     cat >> ${TIP_FILE} <<EOF
 Amavisd-new:
     * Configuration files:
