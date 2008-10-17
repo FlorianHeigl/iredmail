@@ -1,6 +1,6 @@
 iRedMail-0.3.1:
-    * Add crontab job to delete amavisd virus mail per month. Thanks
-      xcrossbow <at> gmail.
+    * Add crontab job for vmail user to delete amavisd virus mail per
+      month. Thanks xcrossbow <at> gmail.
     * Update perl-Error to 0.17015-1.
     * Update perl-Compress-Raw-Zlib to 2.015-1.
     * Update perl-BerkeleyDB to 0.36-1.
