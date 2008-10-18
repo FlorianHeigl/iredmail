@@ -43,7 +43,7 @@ EOF
 
     rm -f ${horde_db_template}
 
-    php ${HORDE_HTTPD_ROOT}/scripts/setup.php >/dev/null <<EOF
+    php ${HORDE_HTTPD_ROOT}/scripts/setup.php >/dev/null 2>&1 <<EOF
 /horde
 1
 mysql

@@ -4,17 +4,18 @@ iRedMail-0.3.1:
       ipostfix <at> gmail.com
     * Add crontab job for vmail user to delete amavisd virus mail per
       month. Thanks xcrossbow <at> gmail.
-    * Update perl-Error to 0.17015-1.
-    * Update perl-Compress-Raw-Zlib to 2.015-1.
-    * Update perl-BerkeleyDB to 0.36-1.
-    * Update perl-IO-Multiplex to 1.10-1.
-    * Update perl-MailTools to 2.04-1.
-    * Update perl-Mail-SPF to 2.006-1.
-    * Update perl-Archive-Zip to 1.26-1.
-    * Update Horde WebMail to 1.2.
-    * Update Dovecot to 1.1.4.
-    * Update SquirrelMail to 1.4.16.
-    * Update phpMyAdmin to 2.11.9.2.
+    * Update packages:
+        - perl-Error => 0.17015-1.
+        - perl-Compress-Raw-Zlib => 2.015-1.
+        - perl-BerkeleyDB => 0.36-1.
+        - perl-IO-Multiplex => 1.10-1.
+        - perl-MailTools => 2.04-1.
+        - perl-Mail-SPF => 2.006-1.
+        - perl-Archive-Zip => 1.26-1.
+        - Horde WebMail => 1.2.
+        - Dovecot => 1.1.4.
+        - SquirrelMail => 1.4.16.
+        - phpMyAdmin => 2.11.9.2.
     * Use unique SSL cert file in Postfix, Dovecot, Apache, OpenLDAP:
       /etc/pki/iRedMail{Key,Cert}.pem.
     * Disable pysieved service in xinetd.

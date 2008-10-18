@@ -36,6 +36,9 @@ apache_php_config()
     # --------------------------
     backup_file ${PHP_INI}
 
+    #ECHO_INFO "Setting error_reporting to 'E_ERROR': ${PHP_INI}."
+    #perl -pi -e 's#^(error_reporting.*=)#${1} E_ERROR;#' ${PHP_INI}
+
     ECHO_INFO "Hide PHP Version in Apache from remote users requests: ${PHP_INI}."
     perl -pi -e 's#^(expose_php.*=)#${1} Off;#' ${PHP_INI}
 
