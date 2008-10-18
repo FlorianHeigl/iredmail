@@ -11,6 +11,7 @@ sm_install()
 
     # Extract source tarball.
     extract_pkg ${SM_TARBALL} ${HTTPD_SERVERROOT}
+    cp -f ${SM_HTTPD_ROOT}/config/config_default.php ${SM_HTTPD_ROOT}/config/config.php
 
     ECHO_INFO "Set correct permission for squirrelmail: ${SM_HTTPD_ROOT}."
     chown -R apache:apache ${SM_HTTPD_ROOT}
@@ -90,6 +91,11 @@ sm_config_basic()
 
     # Hide SM version number and other attributions in login page.
     perl -pi -e 's#(.*hide_sm_attributions.*)false(.*)#${1}true${2}#' ${SM_CONFIG}
+
+    # Folder name.
+    perl -pi -e 's#(.*trash_folder.*)INBOX.Trash(.*)#${1}Trash${2}#' ${SM_CONFIG}
+    perl -pi -e 's#(.*sent_folder.*)INBOX.Sent(.*)#${1}Sent${2}#' ${SM_CONFIG}
+    perl -pi -e 's#(.*draft_folder.*)INBOX.Draft(.*)#${1}Draft${2}#' ${SM_CONFIG}
 
     echo 'export status_sm_config_basic="DONE"' >> ${STATUS_FILE}
 }

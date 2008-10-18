@@ -1,4 +1,7 @@
 iRedMail-0.3.1:
+    * Remove folder prefix in SquirrelMail.
+    * Remove non-exist function call: openldap_tls_config. Thanks
+      ipostfix <at> gmail.com
     * Add crontab job for vmail user to delete amavisd virus mail per
       month. Thanks xcrossbow <at> gmail.
     * Update perl-Error to 0.17015-1.

@@ -10,7 +10,6 @@ backend_install()
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
         # Install, config and initialize OpenLDAP.
         check_status_before_run openldap_config && \
-        check_status_before_run openldap_tls_config && \
         check_status_before_run openldap_data_initialize
     else
         # Initialize MySQL.
