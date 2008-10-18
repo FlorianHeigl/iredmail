@@ -11,18 +11,18 @@ phpmyadmin_install()
 
     extract_pkg ${PHPMYADMIN_TARBALL} ${HTTPD_SERVERROOT}
 
+    ECHO_INFO "Set file permission for phpMyAdmin: ${PHPMYADMIN_HTTPD_ROOT}."
+    chown -R root:root ${PHPMYADMIN_HTTPD_ROOT}
+    chmod -R 0755 ${PHPMYADMIN_HTTPD_ROOT}
+
     ECHO_INFO "Create directory alias for phpMyAdmin in Apache: ${HTTPD_CONF_DIR}/phpmyadmin.conf."
     cat > ${HTTPD_CONF_DIR}/phpmyadmin.conf <<EOF
 ${CONF_MSG}
-Alias /phpmyadmin "${HTTPD_SERVERROOT}/phpMyAdmin-${PHPMYADMIN_VERSION}/"
+Alias /phpmyadmin "${PHPMYADMIN_HTTPD_ROOT}/"
 EOF
 
-    ECHO_INFO "Set file permission for phpMyAdmin: ${HTTPD_SERVERROOT}/phpMyAdmin-${PHPMYADMIN_VERSION}."
-    chown root:root ${HTTPD_SERVERROOT}/phpMyAdmin-${PHPMYADMIN_VERSION}
-    chown -R apache:apache ${HTTPD_SERVERROOT}/phpMyAdmin-${PHPMYADMIN_VERSION}/*
-
-    ECHO_INFO "Config phpMyAdmin: ${HTTPD_SERVERROOT}/phpMyAdmin-${PHPMYADMIN_VERSION}/config.inc.php."
-    cd ${HTTPD_SERVERROOT}/phpMyAdmin-${PHPMYADMIN_VERSION}/
+    ECHO_INFO "Config phpMyAdmin: ${PHPMYADMIN_HTTPD_ROOT}/config.inc.php."
+    cd ${PHPMYADMIN_HTTPD_ROOT}
     cp config.sample.inc.php config.inc.php
 
     export COOKIE_STRING="$(openssl passwd -1 ${PROG_NAME_LOWERCASE})"
@@ -32,8 +32,8 @@ EOF
     cat >> ${TIP_FILE} <<EOF
 phpMyAdmin:
     * Configuration files:
-        - ${HTTPD_SERVERROOT}/phpMyAdmin-${PHPMYADMIN_VERSION}/
-        - ${HTTPD_SERVERROOT}/phpMyAdmin-${PHPMYADMIN_VERSION}/config.inc.php
+        - ${PHPMYADMIN_HTTPD_ROOT}
+        - ${PHPMYADMIN_HTTPD_ROOT}/config.inc.php
     * URL:
         - http://$(hostname)/phpmyadmin
     * See also:

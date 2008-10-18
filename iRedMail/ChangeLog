@@ -1,4 +1,6 @@
 iRedMail-0.3.1:
+    * Set file permission for phpldapadmin. Thanks ipostfix <at>
+      gmail.com
     * Set TERM to 'pcconsole'.
     * Remove folder prefix in SquirrelMail.
     * Remove non-exist function call: openldap_tls_config. Thanks

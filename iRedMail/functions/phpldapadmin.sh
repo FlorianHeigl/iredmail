@@ -11,6 +11,9 @@ pla_install()
 
     extract_pkg ${PLA_TARBALL} ${HTTPD_SERVERROOT}
 
+    chown -R root:root ${PLA_HTTPD_ROOT}
+    chmod -R 0755 ${PLA_HTTPD_ROOT}
+
     ECHO_INFO "Create directory alias for phpLDAPadmin."
     cat > ${HTTPD_CONF_DIR}/phpldapadmin.conf <<EOF
 ${CONF_MSG}
