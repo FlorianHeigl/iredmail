@@ -80,6 +80,9 @@ export CONF_MSG="#
 # For perl and run-time locale setting.
 export LC_ALL=C
 
+# TERM.
+export TERM='pcconsole'
+
 # Arch.
 export ARCH="$(uname -i)"
 
