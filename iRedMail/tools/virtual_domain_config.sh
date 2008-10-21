@@ -65,9 +65,10 @@ rm -f /tmp/first_domain_admin_passwd
 #FIRST_USER
 FIRST_USER='www'
 
-${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-    --title "Add a user for your domain" \
-    --inputbox "\
+while : ; do
+    ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
+        --title "Add a user for your domain" \
+        --inputbox "\
 Please specify the username of your first domain: ${FIRST_DOMAIN}.
 
 EXAMPLE:
@@ -76,7 +77,10 @@ EXAMPLE:
 
 " 20 76 "${FIRST_USER}" 2>/tmp/first_user
 
-FIRST_USER="$(cat /tmp/first_user)"
+    FIRST_USER="$(cat /tmp/first_user)"
+    [ X"${FIRST_USER_PASSWD}" != X"" ] && break
+done
+
 echo "export FIRST_USER='${FIRST_USER}'" >>${CONFIG_FILE}
 rm -f /tmp/first_user
 

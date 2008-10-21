@@ -1,4 +1,6 @@
 iRedMail-0.3.1:
+    * Do not allow empty username while create first user. Thanks
+      edisonwang2007 <at> gmail.
     * Make sieve.log logrotate setting file standalone. Thanks
       chenwei1973 <at> gmail.
     * Set file permission for phpldapadmin. Thanks ipostfix <at>
