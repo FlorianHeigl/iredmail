@@ -342,11 +342,25 @@ EOF
     ECHO_INFO "Setting logrotate for dovecot log file."
     cat > ${DOVECOT_LOGROTATE_FILE} <<EOF
 ${CONF_MSG}
-${DOVECOT_LOG_FILE} ${SIEVE_LOG_FILE} {
+${DOVECOT_LOG_FILE} {
     compress
     weekly
     rotate 10
     create 0600 ${VMAIL_USER_NAME} ${VMAIL_GROUP_NAME}
+    missingok
+    postrotate
+        /usr/bin/killall -HUP syslogd
+    endscript
+}
+EOF
+
+    cat > ${SIEVE_LOGROTATE_FILE} <<EOF
+${CONF_MSG}
+${SIEVE_LOG_FILE} {
+    compress
+    weekly
+    rotate 10
+    create 0777 ${VMAIL_USER_NAME} ${VMAIL_GROUP_NAME}
     missingok
     postrotate
         /usr/bin/killall -HUP syslogd

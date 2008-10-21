@@ -1,4 +1,6 @@
 iRedMail-0.3.1:
+    * Make sieve.log logrotate setting file standalone. Thanks
+      chenwei1973 <at> gmail.
     * Set file permission for phpldapadmin. Thanks ipostfix <at>
       gmail.com
     * Set TERM to 'pcconsole'.
