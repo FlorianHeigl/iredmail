@@ -34,11 +34,11 @@ MISC_DIR="${ROOTDIR}/misc"
 REPO_FILE="/etc/yum.repos.d/${LOCAL_REPO_NAME}.repo"
 
 # RPM file list and misc file list.
-RPMLIST="${ROOTDIR}/rpmlist.$(uname -i)"
+RPMLIST="${ROOTDIR}/rpmlist.${ARCH}"
 NOARCHLIST="${ROOTDIR}/rpmlist.noarch"
 MISCLIST="${ROOTDIR}/misclist"
 
-MD5_FILES="MD5.$(uname -i) MD5.noarch MD5.misc"
+MD5_FILES="MD5.${ARCH} MD5.noarch MD5.misc"
 
 prepare_dirs()
 {
