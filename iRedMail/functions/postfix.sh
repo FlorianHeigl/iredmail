@@ -8,7 +8,7 @@
 
 postfix_config_basic()
 {
-    backup_file ${SMTPD_CONF}
+    backup_file ${SMTPD_CONF} ${POSTFIX_FILE_MAIN_CF}
 
     ECHO_INFO "Create saslauthd user auth lookup file: ${SMTPD_CONF}."
 

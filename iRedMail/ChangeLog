@@ -1,3 +1,7 @@
+iRedMail-0.3.2:
+    * Add missing backup of postfix main.cf file.
+    * Remove 'tools/backup_mysql_db.sh'.
+
 iRedMail-0.3.1:
     * Do not allow empty username while create first user. Thanks
       edisonwang2007 <at> gmail.
