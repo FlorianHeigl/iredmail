@@ -1,4 +1,5 @@
 iRedMail-0.3.2:
+    * Remove some tool script.
     * Improve support for exist amp.
     * Add missing backup of postfix main.cf file.
     * Remove 'tools/backup_mysql_db.sh'.
