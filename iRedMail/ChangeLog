@@ -1,4 +1,6 @@
 iRedMail-0.3.2:
+    * Fix issue of TERM variable. Thanks yao.xu at
+      http://bbs.iredmail.org.
     * Remove some tool script.
     * Improve support for exist amp.
     * Add missing backup of postfix main.cf file.

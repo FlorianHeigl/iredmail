@@ -88,7 +88,11 @@ export CONF_MSG="#
 export LC_ALL=C
 
 # TERM.
-export TERM='pcconsole'
+if [ X"${TERM}" == X"xterm" ];
+    export TERM='xterm'
+else
+    export TERM='pcconsole'
+fi
 
 # Arch.
 export ARCH="$(uname -i)"
