@@ -8,11 +8,16 @@ install_all()
     ENABLED_SERVICES=''
     DISABLED_SERVICES=''
 
-    # Apache.
-    ALL_PKGS="${ALL_PKGS} httpd.${ARCH} mod_ssl.${ARCH}"
+    # Apache and PHP.
+    if [ X"${USE_EXIST_AMP}" != X"YES" ]; then
+        # Apache.
+        ALL_PKGS="${ALL_PKGS} httpd.${ARCH} mod_ssl.${ARCH}"
 
-    # PHP.
-    ALL_PKGS="${ALL_PKGS} php.${ARCH} php-imap.${ARCH} php-gd.${ARCH} php-mbstring.${ARCH} libmcrypt.${ARCH} php-mcrypt.${ARCH} php-pear.noarch php-xml.${ARCH} php-pecl-fileinfo.${ARCH}"
+        # PHP.
+        ALL_PKGS="${ALL_PKGS} php.${ARCH} php-imap.${ARCH} php-gd.${ARCH} php-mbstring.${ARCH} libmcrypt.${ARCH} php-mcrypt.${ARCH} php-pear.noarch php-xml.${ARCH} php-pecl-fileinfo.${ARCH}"
+    else
+        :
+    fi
 
     # Postfix.
     ALL_PKGS="${ALL_PKGS} postfix.${ARCH}"
@@ -25,8 +30,12 @@ install_all()
         # OpenLDAP server & client.
         ALL_PKGS="${ALL_PKGS} openldap.${ARCH} openldap-clients.${ARCH} openldap-servers.${ARCH}"
 
-        # PHP extensions.
-        ALL_PKGS="${ALL_PKGS} php-ldap.${ARCH}"
+        if [ X"${USE_EXIST_AMP}" != X"YES" ]; then
+            # PHP extensions.
+            ALL_PKGS="${ALL_PKGS} php-ldap.${ARCH}"
+        else
+            :
+        fi
 
         # Postgrey.
         ALL_PKGS="${ALL_PKGS} postgrey"
@@ -41,8 +50,12 @@ install_all()
         [ X"${MYSQL_FRESH_INSTALLATION}" == X'YES' ] && \
             ALL_PKGS="${ALL_PKGS} mysql-server.${ARCH} mysql.${ARCH}"
 
-        # PHP extensions.
-        ALL_PKGS="${ALL_PKGS} php-mysql.${ARCH}"
+        if [ X"${USE_EXIST_AMP}" != X"YES" ]; then
+            # PHP extensions.
+            ALL_PKGS="${ALL_PKGS} php-mysql.${ARCH}"
+        else
+            :
+        fi
 
         # Policyd.
         ALL_PKGS="${ALL_PKGS} policyd.${ARCH}"
