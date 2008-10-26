@@ -99,6 +99,9 @@ MySQL:
         - /etc/init.d/mysqld
     * Log file:
         - /var/log/mysqld.log
+    * SSL Cert keys:
+        - ${SSL_CERT_FILE}
+        - ${SSL_KEY_FILE}
     * See also:
         - ${MYSQL_INIT_SQL}
         - ${SAMPLE_SQL}

@@ -92,6 +92,10 @@ replace_mysql_config()
                 backup_file /etc/my.cnf
                 ECHO_INFO "Copy MySQL sample file: /etc/my.cnf."
                 cp ${SAMPLE_DIR}/my.cnf /etc/my.cnf
+
+                ECHO_INFO "Enable SSL support for MySQL server."
+                perl -pi -e 's/^#(ssl-cert = )(.*)/${1} ${SSL_CERT_FILE}/' /etc/my.cnf
+                perl -pi -e 's/^#(ssl-key = )(.*)/${1} ${SSL_KEY_FILE}/' /etc/my.cnf
                 ;;
         esac
     else
