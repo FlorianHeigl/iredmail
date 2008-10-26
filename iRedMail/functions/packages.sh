@@ -153,15 +153,10 @@ gen_pem_key()
     mkdir -p $(dirname ${SSL_CERT_FILE}) 2>/dev/null
     mkdir -p $(dirname ${SSL_KEY_FILE}) 2>/dev/null
 
-    openssl req -newkey rsa:1024 -x509 -nodes -out ${SSL_CERT_FILE} -keyout ${SSL_KEY_FILE} >/dev/null 2>&1 <<EOF
-${TLS_COUNTRY}
-${TLS_STATE}
-${TLS_CITY}
-${TLS_COMPANY}
-${TLS_DEPARTMENT}
-${TLS_HOSTNAME}
-${TLS_ADMIN}
-EOF
+    openssl req \
+        -x509 -nodes -days 3650 -newkey rsa:1024 \
+        -subj "/C=${TLS_COUNTRY}/ST=${TLS_STATE}/L=${TLS_CITY}/O=${TLS_COMPANY}/OU=${TLS_DEPARTMENT}/CN=${TLS_HOSTNAME}/emailAddress=${TLS_ADMIN}/" \
+        -out ${SSL_CERT_FILE} -keyout ${SSL_KEY_FILE} >/dev/null 2>&1
 
     # Set correct file permission.
     chmod 0444 ${SSL_CERT_FILE}
