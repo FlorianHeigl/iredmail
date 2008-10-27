@@ -33,10 +33,10 @@ ${PROCMAIL_LOGFILE} {
     missingok
 
     # Use bzip2 for compress.
-    #compresscmd $(which bzip2)
-    #uncompresscmd $(which bunzip2)
-    #compressoptions -9
-    #compressext .bz2 
+    compresscmd $(which bzip2)
+    uncompresscmd $(which bunzip2)
+    compressoptions -9
+    compressext .bz2 
 
     postrotate
         /bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null || true

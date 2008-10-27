@@ -350,6 +350,18 @@ EOF
     # should be '/var/spool/postfix/dovecot-auth'.
     postconf -e smtpd_sasl_path='dovecot-auth'
 
+    ECHO_INFO "Create directory for Dovecot plugin: Expire."
+    dovecot_expire_dict_dir="$(dirname ${DOVECOT_EXPIRE_DICT_BDB})"
+    mkdir -p ${dovecot_expire_dict_dir} && \
+    chown -R dovecot:dovecot ${dovecot_expire_dict_dir} && \
+    chmod -R 0750 ${dovecot_expire_dict_dir}
+
+    ECHO_INFO "Setting cronjob for Dovecot plugin: Expire."
+    cat >> ${CRON_SPOOL_DIR}/root <<EOF
+${CONF_MSG}
+1   5   *   *   *   dovecot --exec-mail ext $(rpm -ql dovecot | grep 'expire-tool$')
+EOF
+
     cat >> ${POSTFIX_FILE_MASTER_CF} <<EOF
 dovecot unix    -       n       n       -       -      pipe
   flags=DRhu user=${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} argv=${DOVECOT_DELIVER} -d \${recipient} -f \${sender}
@@ -366,10 +378,10 @@ ${DOVECOT_LOG_FILE} {
     missingok
 
     # Use bzip2 for compress.
-    #compresscmd $(which bzip2)
-    #uncompresscmd $(which bunzip2)
-    #compressoptions -9
-    #compressext .bz2 
+    compresscmd $(which bzip2)
+    uncompresscmd $(which bunzip2)
+    compressoptions -9
+    compressext .bz2 
 
     postrotate
         /usr/bin/killall -HUP syslogd
@@ -383,7 +395,7 @@ ${SIEVE_LOG_FILE} {
     compress
     weekly
     rotate 10
-    create 0777 ${VMAIL_USER_NAME} ${VMAIL_GROUP_NAME}
+    create 0666 ${VMAIL_USER_NAME} ${VMAIL_GROUP_NAME}
     missingok
     postrotate
         /usr/bin/killall -HUP syslogd
