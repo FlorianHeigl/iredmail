@@ -26,3 +26,7 @@ export SIEVE_RULE_FILENAME='.dovecot.sieve'
 export SIEVE_FILTER_FILE="${VMAIL_USER_HOME_DIR}/${SIEVE_RULE_FILENAME}"
 
 export SIEVE_DIR="${HTTPD_SERVERROOT}/sieve"
+
+# Dovecot plugin: Expire.
+export DOVECOT_EXPIRE_DICT_BDB='/var/lib/dovecot/expire.db'
+

@@ -131,7 +131,14 @@ plugin {
     #   http://wiki.dovecot.org/Quota/1.1#head-03d8c4f6fb28e2e2f1cb63ec623810b45bec1734
     #quota_warning = storage=95%% /usr/bin/quota-warning.sh 95
     #quota_warning2 = storage=80%% /usr/bin/quota-warning.sh 80
+}
 
+dict {
+    # NOTE: dict process currently runs as root, so this file will be owned as root.
+    expire = db:${DOVECOT_EXPIRE_DICT_BDB}
+}
+
+plugin {
     # ---- Expire plugin ----
     # Expire plugin. Mails are expunged from mailboxes after being there the
     # configurable time. The first expiration date for each mailbox is stored in
@@ -141,8 +148,14 @@ plugin {
     #
     #   1   3   *   *   *   dovecot --exec-mail ext /usr/libexec/dovecot/expire-tool
     #
-    #expire = Trash 7 Spam 30
-    #expire_dict = db:/var/lib/dovecot/expire.db
+    # Trash: 7 days
+    # Trash's children directories: 7 days
+    # Junk: 30 days
+    expire = Trash 7 Trash/* 7 Junk 30
+    expire_dict = proxy::expire
+
+    # If you have a non-default path to auth-master, set also:
+    auth_socket_path = ${DOVECOT_SOCKET_MASTER}
 }
 
 # Per-user sieve mail filter.
@@ -196,14 +209,16 @@ EOF
 # LDA: Local Deliver Agent
 protocol lda { 
     postmaster_address = root
-    auth_socket_path = /var/run/dovecot/auth-master
-    mail_plugins = cmusieve quota 
+    auth_socket_path = ${DOVECOT_SOCKET_MASTER}
+    #mail_plugins = cmusieve quota expire
+    mail_plugins = cmusieve quota
     sieve_global_path = ${SIEVE_FILTER_FILE}
     log_path = ${SIEVE_LOG_FILE}
 }
 
 # IMAP configuration
 protocol imap {
+    #mail_plugins = quota imap_quota zlib expire
     mail_plugins = quota imap_quota zlib
 
     # number of connections per-user per-IP
@@ -212,6 +227,7 @@ protocol imap {
 
 # POP3 configuration
 protocol pop3 {
+    #mail_plugins = quota zlib expire
     mail_plugins = quota zlib
     pop3_uidl_format = %08Xu%08Xv
     pop3_client_workarounds = outlook-no-nuls oe-ns-eoh
