@@ -1,4 +1,5 @@
 iRedMail-0.3.2:
+    * Add bzip2 as compress command in logrotate. Commented by default.
     * Integrate expire plugin support for Dovecot.
     * Enable SSL support for MySQL.
     * Fix issue of TERM variable. Thanks yao.xu at

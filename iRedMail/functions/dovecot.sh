@@ -364,6 +364,13 @@ ${DOVECOT_LOG_FILE} {
     rotate 10
     create 0600 ${VMAIL_USER_NAME} ${VMAIL_GROUP_NAME}
     missingok
+
+    # Use bzip2 for compress.
+    #compresscmd $(which bzip2)
+    #uncompresscmd $(which bunzip2)
+    #compressoptions -9
+    #compressext .bz2 
+
     postrotate
         /usr/bin/killall -HUP syslogd
     endscript
