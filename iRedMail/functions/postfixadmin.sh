@@ -55,42 +55,48 @@ EOF
     echo '' > motd.txt
     echo '' > motd-users.txt
 
-    perl -pi -e 's#(.*configured.*=)(.*)#${1}"true";#' config.inc.php
-    #perl -pi -e 's#(.*default_language.*=)(.*)#${1}"cn";#' config.inc.php
+    cat > ${POSTFIXADMIN_CONF_LOCAL} <<EOF
+<?php
+\$CONF['configured'] = true;
+\$CONF['default_language'] = "${POSTFIXADMIN_DEFAULT_LANGUAGE}";
+\$CONF['database_host'] = "${MYSQL_SERVER}";
+\$CONF['database_user'] = "${MYSQL_ADMIN_USER}";
+\$CONF['database_password'] = "${MYSQL_ADMIN_PW}";
+\$CONF['database_name'] = "${VMAIL_DB}";
+\$CONF['smtp_server'] = "${SMTP_SERVER}";
 
-    perl -pi -e 's#(.*database_host.*)localhost(.*)#${1}127.0.0.1${2}#' config.inc.php
-    perl -pi -e 's#(.*database_user.*=)(.*)#${1}"$ENV{'MYSQL_ADMIN_USER'}";#' config.inc.php
-    export MYSQL_ADMIN_PW
-    perl -pi -e 's#(.*database_password.*=)(.*)#${1}"$ENV{'MYSQL_ADMIN_PW'}";#' config.inc.php
-    perl -pi -e 's#(.*database_name.*=)(.*)#${1}"$ENV{'VMAIL_DB'}";#' config.inc.php
-    perl -pi -e 's#(.*smtp_server.*)localhost(.*)#${1}$ENV{SMTP_SERVER}${2}#' config.inc.php
+\$CONF['domain_path'] = "YES";
+\$CONF['domain_in_mailbox'] = "NO";
+\$CONF['quota'] = "YES";
+\$CONF['quota_multiplier'] = 1;
+\$CONF['transport'] = "YES";
+\$CONF['transport_options'] = array ('dovecot', 'virtual', 'local', 'relay');
+\$CONF['transport_default'] = "dovecot";
 
-    [ ! -z ${MAIL_ALIAS_ROOT} ] && perl -pi -e 's#(.*admin_email.*=)(.*)#${1}"$ENV{'MAIL_ALIAS_ROOT'}";#' config.inc.php
+\$CONF['backup'] = "NO";
+\$CONF['fetchmail'] = "NO";
+\$CONF['sendmail'] = "NO";
+\$CONF['show_footer_text'] = "NO";
+\$CONF['emailcheck_resolve_domain'] = "NO";
 
-    perl -pi -e 's#(.*domain_path.*=)(.*)#${1}"YES";#' config.inc.php
-    perl -pi -e 's#(.*domain_in_mailbox.*=)(.*)#${1}"NO";#' config.inc.php
-    perl -pi -e 's#(.*quota.*=)(.*)(NO)(.*)#${1}"YES";#' config.inc.php
-    perl -pi -e 's#(.*quota_multiplier.*)1024000(.*)#${1}1${2}#' config.inc.php
-    perl -pi -e 's#(.*transport.*=)(.*)(NO)(.*)#${1}"YES";#' config.inc.php
-    perl -pi -e 's#(.*virtual.*,)#${1}"dovecot",#' config.inc.php
-    perl -pi -e 's#(.*transport_default.*=)(.*)#${1}"dovecot";#' config.inc.php
+# Disable vacation.
+\$CONF['vacation_control'] = "NO";
+\$CONF['vacation_control_admin = "NO";
+EOF
 
-    perl -pi -e 's#(.*backup.*=)(.*)(YES)(.*)#${1}"NO";#' config.inc.php
-    perl -pi -e 's#(.*fetchmail.*=)(.*)(YES)(.*)#${1}"NO";#' config.inc.php
-    perl -pi -e 's#(.*sendmail.*=)(.*)(YES)(.*)#${1}"NO";#' config.inc.php
-    perl -pi -e 's#(.*show_footer_text.*=)(.*)(YES)(.*)#${1}"NO";#' config.inc.php
-    perl -pi -e 's#(.*emailcheck_resolve_domain.*=)(.*)(YES)(.*)#${1}"NO";#' config.inc.php
+    [ ! -z ${MAIL_ALIAS_ROOT} ] && \
+        echo "\$CONF['admin_email'] = \"${MAIL_ALIAS_ROOT}\";" >> ${POSTFIXADMIN_CONF_LOCAL}
 
-    # Disable vacation.
-    perl -pi -e 's#(.*vacation_control.*=)(.*)(YES)(.*)#${1}"NO";#' config.inc.php
-    perl -pi -e 's#(.*vacation_control_admin.*=)(.*)(YES)(.*)#${1}"NO";#' config.inc.php
+    echo '?>' >> ${POSTFIXADMIN_CONF_LOCAL}
 
-    [ X"${HOME_MAILBOX}" == X"mbox" ] && perl -pi -e 's#(.*maildir.*fDomain.*fUsername.*)(\..*/.*)#${1};#' create-mailbox.php
+    [ X"${HOME_MAILBOX}" == X"mbox" ] && \
+        perl -pi -e 's#(.*maildir.*fDomain.*fUsername.*)(\..*/.*)#${1};#' ${POSTFIXADMIN_HTTPD_ROOT}/create-mailbox.php
 
     cat >> ${TIP_FILE} <<EOF
 PostfixAdmin:
     * Configuration files:
         - ${POSTFIXADMIN_HTTPD_ROOT}
+        - ${POSTFIXADMIN_CONF_LOCAL}
         - ${POSTFIXADMIN_HTTPD_ROOT}/config.inc.php
     * URL:
         - http://$(hostname)/postfixadmin/
