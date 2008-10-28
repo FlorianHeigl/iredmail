@@ -58,7 +58,7 @@ EOF
 
     ECHO_INFO "Fix incorrect quota display."
     cd ${EXTSUITE_HTTPD_ROOT}/extmail/libs/Ext/
-    perl -pi -e 's#(.*mailQuota})(.*0S.*)#${1}*1024${2}#' App.pm
+    perl -pi -e 's#(.*mailQuota})(.*0S.*)#${1}*1024000${2}#' App.pm
 
     #ECHO_INFO "Enable USER_LANG."
     #perl -pi -e 's/#(.*lang.*usercfg.*lang.*USER_LANG.*)/${1}/' App.pm
@@ -85,9 +85,6 @@ extmail_config_mysql()
 
 extmail_config_ldap()
 {
-    ECHO_INFO "Install dependences for LDAP support in perl."
-    install_pkg perl-LDAP
-
     ECHO_INFO "Configure ExtMail for LDAP support."
     cd ${EXTSUITE_HTTPD_ROOT}/extmail/
 
