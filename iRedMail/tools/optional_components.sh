@@ -119,9 +119,9 @@ else
     export ENABLE_DOVECOT_SSL="NO" && echo 'export ENABLE_DOVECOT_SSL="NO"' >> ${CONFIG_FILE}
 fi
 
-# -------------------------
-# Optional components for backend..
-# -------------------------
+# ----------------------------------------
+# Optional components for special backend.
+# ----------------------------------------
 
 if [ X"${BACKEND}" == X"OpenLDAP" ]; then
     ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \

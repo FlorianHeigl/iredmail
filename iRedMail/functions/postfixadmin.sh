@@ -81,7 +81,7 @@ EOF
 
 # Disable vacation.
 \$CONF['vacation_control'] = "NO";
-\$CONF['vacation_control_admin = "NO";
+\$CONF['vacation_control_admin'] = "NO";
 EOF
 
     [ ! -z ${MAIL_ALIAS_ROOT} ] && \

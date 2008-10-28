@@ -78,7 +78,20 @@ export CONF_MSG="#
 #
 # Version:  ${PROG_VERSION}
 # Project:  http://iRedMail.googlecode.com/
-# Forum:
+#
+# If you deploy ${PROG_VERSION} in product environment, we suggest
+# you list your information in 'Success Stories' page to help us
+# generalization ${PROG_VERSION}, and you can join iredmailsupport@
+# mail list for further technique support, such as bug/issue fix,
+# event response, software update, etc.
+#
+# Success Stories:
+#   http://www.iredmail.org/wiki/index.php/IRedMail_Success_Stories
+#
+# Mail list address:
+#   http://groups.google.com/group/iredmailsupport/
+#
+# Genernal Forum:
 #   * International: http://groups.google.com/group/iredmail/
 #   * Chinese only: http://www.iredmail.org/bbs/
 #
