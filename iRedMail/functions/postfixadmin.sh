@@ -11,7 +11,8 @@ postfixadmin_install()
 
     extract_pkg ${POSTFIXADMIN_TARBALL} ${HTTPD_SERVERROOT} && \
     cd ${POSTFIXADMIN_HTTPD_ROOT}/ && \
-    patch -p0 < ${PATCH_DIR}/postfixadmin/create_mailbox.patch >/dev/null
+    patch -p0 < ${PATCH_DIR}/postfixadmin/create_mailbox.patch >/dev/null && \
+    patch -p0 < ${PATCH_DIR}/postfixadmin/login-security-issue.patch >/dev/null
 
     ECHO_INFO "Set file permission for PostfixAdmin."
     chown -R root:root ${POSTFIXADMIN_HTTPD_ROOT}
