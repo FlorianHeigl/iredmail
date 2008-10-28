@@ -104,6 +104,23 @@ auth_default_realm = ${FIRST_DOMAIN}
 #mail_nfs_index = yes # v1.1+ only
 # ----
 
+plugin {
+    # Quota warning.
+    #
+    # You can find sample script from iRedMail Support mail list:
+    #   http://groups.google.com/group/iredmailsupport/
+    #
+    # Or you can find sample script from Dovecot wiki:
+    #   http://wiki.dovecot.org/Quota/1.1#head-03d8c4f6fb28e2e2f1cb63ec623810b45bec1734
+    #
+    # If user suddenly receives a huge mail and the quota jumps from
+    # 85% to 95%, only the 95% script is executed.
+    #
+    #quota_warning = storage=95%% /usr/bin/dovecot-quota-warning.sh 95
+    #quota_warning2 = storage=80%% /usr/bin/dovecot-quota-warning.sh 90
+    #quota_warning3 = storage=80%% /usr/bin/dovecot-quota-warning.sh 85
+}
+
 EOF
 
     # Enable SSL support.
@@ -126,11 +143,6 @@ plugin {
     quota_rule = *:storage=10M
     #quota_rule2 = Trash:storage=100M
     #quota_rule3 = Junk:ignore
-
-    # Quota warning. Sample File:
-    #   http://wiki.dovecot.org/Quota/1.1#head-03d8c4f6fb28e2e2f1cb63ec623810b45bec1734
-    #quota_warning = storage=95%% /usr/bin/quota-warning.sh 95
-    #quota_warning2 = storage=80%% /usr/bin/quota-warning.sh 80
 }
 
 dict {
@@ -188,18 +200,13 @@ plugin {
     quota_rule = *:storage=10M
     #quota_rule2 = Trash:storage=100M
     #quota_rule3 = Junk:ignore
-
-    # Quota warning. Sample File:
-    #   http://dovecot.org/list/dovecot/2008-June/031456.html
-    #quota_warning = storage=95%% /usr/bin/quota-warning.sh 95
-    #quota_warning2 = storage=80%% /usr/bin/quota-warning.sh 80
 }
 
-#plugin {
-#    # NOTE: %variable expansion works only with Dovecot v1.0.2+.
-#    # For mbox format.
-#    sieve = /%Lh/%Ld/.%Ln${SIEVE_RULE_FILENAME}
-#}
+plugin {
+    # NOTE: %variable expansion works only with Dovecot v1.0.2+.
+    # For mbox format.
+    sieve = ${SIEVE_DIR}/%Ld/.%Ln${SIEVE_RULE_FILENAME}
+}
 EOF
     else
         :

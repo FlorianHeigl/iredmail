@@ -1,4 +1,5 @@
 iRedMail-0.3.2:
+    * Improve dovecot quota warning support.
     * Add bzip2 as compress command in logrotate. Enabled by default.
     * Integrate expire plugin support for Dovecot.
     * Enable SSL support for MySQL.
