@@ -53,6 +53,9 @@ EOF
 
     perl -pi -e 's#(SYS_USER_LANG.*)en_US#${1}$ENV{'SYS_USER_LANG'}#' webmail.cf
 
+    # Set mail attachment size.
+    perl -pi -e 's#^(SYS_MESSAGE_SIZE_LIMIT.*=)(.*)#${1} $ENV{'MESSAGE_SIZE_LIMIT'}#' webmail.cf
+
     export VMAIL_USER_HOME_DIR
     perl -pi -e 's#(SYS_MAILDIR_BASE.*)/home/domains#${1}$ENV{VMAIL_USER_HOME_DIR}#' webmail.cf
 
