@@ -4,26 +4,6 @@
 # Date:     2008.04.07
 
 # ---------------------------------------------
-# Postgrey.
-# ---------------------------------------------
-postgrey_config()
-{
-    # Modify initialize script.
-    perl -pi -e 's#^(OPTIONS=".*)(")#${1} --greylist-text=Spammer --delay=30${2}#' /etc/init.d/postgrey
-
-    cat >> ${TIP_FILE} <<EOF
-Postgrey:
-    * Configuration files:
-        - ${POSTFIX_ROOTDIR}/postgrey*
-    * RC script:
-        - /etc/init.d/postgrey
-
-EOF
-
-    echo 'export status_postgrey_config="DONE"' >> ${STATUS_FILE}
-}
-
-# ---------------------------------------------
 # pypolicyd-spf.
 # ---------------------------------------------
 pypolicyd_spf_config()
@@ -318,14 +298,8 @@ policy_service_config()
     [ X"${ENABLE_SPF}" == X"YES" -a X"${SPF_PROGRAM}" == X"pypolicyd-spf" ] && \
         check_status_before_run pypolicyd_spf_config
 
-    if [ X"${BACKEND}" == X"OpenLDAP" ]; then
-        check_status_before_run postgrey_config
-    elif [ X"${BACKEND}" == X"MySQL" ]; then
-        check_status_before_run policyd_user
-        check_status_before_run policyd_config
-    else
-        :
-    fi
+    check_status_before_run policyd_user
+    check_status_before_run policyd_config
 
     echo 'export status_policy_service_config="DONE"' >> ${STATUS_FILE}
 }

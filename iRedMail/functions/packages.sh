@@ -37,13 +37,10 @@ install_all()
             :
         fi
 
-        # Postgrey.
-        ALL_PKGS="${ALL_PKGS} postgrey"
-
         # For ExtMail.
         [ X"${USE_EXTMAIL}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} perl-LDAP"
 
-        ENABLED_SERVICES="${ENABLED_SERVICES} ldap postgrey"
+        ENABLED_SERVICES="${ENABLED_SERVICES} ldap"
 
     elif [ X"${BACKEND}" == X"MySQL" ]; then
         # MySQL server & client.

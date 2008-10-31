@@ -76,7 +76,7 @@ check_arch && check_env
 # Postfix.
 . ${FUNCTIONS_DIR}/postfix.sh
 
-# Policy service: Postgrey & Policyd & pypolicyd-spf.
+# Policy service: Policyd & pypolicyd-spf.
 . ${FUNCTIONS_DIR}/policy_service.sh
 
 # Dovecot.
@@ -161,7 +161,7 @@ check_status_before_run postfix_config_tls && \
 check_status_before_run postfix_config_syslog
 
 # ------------------------------------------------
-# Policy service for Postfix: Postgrey & Policyd.
+# Policy service for Postfix: Policyd.
 # ------------------------------------------------
 check_status_before_run policy_service_config
 
