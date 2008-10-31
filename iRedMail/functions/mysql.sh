@@ -2,6 +2,8 @@
 
 # Author: Zhang Huangbin <michaelbibby (at) gmail.com>
 
+# Please refer another file: functions/backend.sh
+
 # -------------------------------------------------------
 # -------------------- MySQL ----------------------------
 # -------------------------------------------------------
@@ -36,6 +38,34 @@ EOF
         :
     fi
 
+    ECHO_INFO -n "Initialize MySQL database."
+    mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWD} <<EOF
+SOURCE ${MYSQL_INIT_SQL};
+FLUSH PRIVILEGES;
+EOF
+
+    cat >> ${TIP_FILE} <<EOF
+MySQL:
+    * Data directory:
+        - /var/lib/mysql
+    * RC script:
+        - /etc/init.d/mysqld
+    * Log file:
+        - /var/log/mysqld.log
+    * SSL Cert keys:
+        - ${SSL_CERT_FILE}
+        - ${SSL_KEY_FILE}
+    * See also:
+        - ${MYSQL_INIT_SQL}
+
+EOF
+
+    echo 'export status_mysql_initialize="DONE"' >> ${STATUS_FILE}
+}
+
+# It's used only when backend is MySQL.
+mysql_import_vmail_users()
+{
     ECHO_INFO "Generating SQL template for postfix virtual hosts: ${MYSQL_INIT_SQL}."
     export FIRST_DOMAIN_ADMIN_PASSWD="$(openssl passwd -1 ${FIRST_DOMAIN_ADMIN_PASSWD})"
     export FIRST_USER_PASSWD="$(openssl passwd -1 ${FIRST_USER_PASSWD})"
@@ -92,21 +122,11 @@ EOF
     fi
 
     cat >> ${TIP_FILE} <<EOF
-MySQL:
-    * Data directory:
-        - /var/lib/mysql
-    * RC script:
-        - /etc/init.d/mysqld
-    * Log file:
-        - /var/log/mysqld.log
-    * SSL Cert keys:
-        - ${SSL_CERT_FILE}
-        - ${SSL_KEY_FILE}
-    * See also:
-        - ${MYSQL_INIT_SQL}
-        - ${SAMPLE_SQL}
+Virtual Users:
+    - ${MYSQL_INIT_SQL}
+    - ${SAMPLE_SQL}
 
 EOF
 
-    echo 'export status_mysql_initialize="DONE"' >> ${STATUS_FILE}
+    echo 'export status_mysql_import_vmail_users="DONE"' >> ${STATUS_FILE}
 }

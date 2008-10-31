@@ -1,6 +1,9 @@
 iRedMail-0.3.2:
     * Make Roundcube WebMail work while use OpenLDAP as backend.
+      Note: All plugins are disabled yet.
     * Remove postgrey, it's replaced by policyd.
+      Note: Due to this change, MySQL will be installed if you choose OpenLDAP
+      as backend.
     * Fix mail attachment size in ExtMail. Thanks tongds@gmail.
     * Add patch to fix login security issue. Reference:
       https://sourceforge.net/mailarchive/forum.php?thread_name=49057E07.3060806%40gmail.com&forum_name=postfixadmin-devel

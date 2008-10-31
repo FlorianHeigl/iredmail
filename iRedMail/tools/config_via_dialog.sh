@@ -2,6 +2,8 @@
 
 # Author: Zhang Huangbin (michaelbibby <at> gmail.com)
 
+# Note: config file will be sourced in 'conf/functions', check_env().
+
 . ./conf/global
 . ./conf/functions
 

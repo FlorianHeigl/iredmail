@@ -34,6 +34,12 @@ GRANT SELECT,INSERT,UPDATE,DELETE ON ${RCM_DB}.* TO ${RCM_DB_USER}@localhost IDE
 USE ${RCM_DB};
 SOURCE ${RCM_HTTPD_ROOT}/SQL/mysql5.initial.sql;
 
+FLUSH PRIVILEGES;
+EOF
+
+    # Do not grant privileges while backend is not MySQL.
+    if [ X"${BACKEND}" == X"MySQL" ]; then
+        mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWD} <<EOF
 /*
   Grant privileges for Roundcubemail, so that user can change
   their own password and setting mail forwarding.
@@ -43,6 +49,9 @@ GRANT INSERT,UPDATE,SELECT ON ${VMAIL_DB}.alias TO ${RCM_DB_USER}@localhost;
 
 FLUSH PRIVILEGES;
 EOF
+    else
+        :
+    fi
 
     ECHO_INFO "Configure database for Roundcubemail: ${RCM_HTTPD_ROOT}/config/*."
     cd ${RCM_HTTPD_ROOT}/config/
@@ -50,9 +59,10 @@ EOF
     cp -f main.inc.php.dist main.inc.php
 
     cd ${RCM_HTTPD_ROOT}/config/
-    if [ X"${BACKEND}" == X"MySQL" ]; then
+    if [ X"${USE_MYSQL}" == X"YES" ]; then
         perl -pi -e 's#(.*db_dsnw.*= )(.*)#${1}"mysql://$ENV{'RCM_DB_USER'}:$ENV{'RCM_DB_PASSWD'}\@$ENV{'MYSQL_SERVER'}/$ENV{'RCM_DB'}";#' db.inc.php
     else
+        # PostgreySQL or SQLite.
         :
     fi
 
@@ -105,12 +115,20 @@ EOF
     cd ${RCM_HTTPD_ROOT} && \
     patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_PEAR_Mail_Mail_Mime_addAttachment_basename.patch >/dev/null
 
-    ECHO_INFO "Patch: Change Password and Setting Mail Forwarding."
-    cd ${RCM_HTTPD_ROOT} && \
-    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_chpwd_forward.patch >/dev/null
+    if [ X"${BACKEND}" == X"MySQL" ]; then
+        ECHO_INFO "Patch: Change Password and Setting Mail Forwarding."
+        cd ${RCM_HTTPD_ROOT} && \
+        patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_chpwd_forward.patch >/dev/null
 
-    cd ${RCM_HTTPD_ROOT}/skins/default/ && \
-    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_chpwd_forward_skins.patch >/dev/null
+        cd ${RCM_HTTPD_ROOT}/skins/default/ && \
+        patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_chpwd_forward_skins.patch >/dev/null
+
+        cd ${RCM_HTTPD_ROOT}/skins/default-labels/ && \
+        patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_chpwd_forward_skins.patch >/dev/null && \
+        cp -f ${RCM_HTTPD_ROOT}/skins/default/{colorpicker,editor_ui,editor_content}.css ${RCM_HTTPD_ROOT}/skins/default-labels/
+    else
+        :
+    fi
 
     ECHO_INFO "Patch: Vacation plugin."
     # Create symbol link to sieve_dir.
@@ -131,15 +149,8 @@ EOF
 
     ECHO_INFO "Add another skin and icon set: default-labels."
     extract_pkg ${MISC_DIR}/roundcubemail-0.1.1-skin-default-labels.tar.bz2 ${RCM_HTTPD_ROOT}/skins/ && \
-    extract_pkg ${MISC_DIR}/roundcubemail-0.1.1-buttons-zh_CN.tar.bz2 ${RCM_HTTPD_ROOT}/skins/default-labels/images/ && \
-    cd ${RCM_HTTPD_ROOT}/skins/default-labels/ && \
-    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_chpwd_forward_skins.patch >/dev/null && \
-    cp -f ${RCM_HTTPD_ROOT}/skins/default/{colorpicker,editor_ui,editor_content}.css ${RCM_HTTPD_ROOT}/skins/default-labels/
-
+    extract_pkg ${MISC_DIR}/roundcubemail-0.1.1-buttons-zh_CN.tar.bz2 ${RCM_HTTPD_ROOT}/skins/default-labels/images/
     #perl -pi -e 's#(.*rcmail_config.*skin_path.*=).*#${1} "skins/default-labels/";#' ${RCM_HTTPD_ROOT}/config/main.inc.php
-
-    # In Roundcubemail-0.2, option 'skin_path' was replaced by 'skin'!
-    #perl -pi -e 's#(.*rcmail_config.*skin.*=).*#${1} "default-labels";#' ${RCM_HTTPD_ROOT}/config/main.inc.php
 
     # Patch for vacation plugin.
     cd ${RCM_HTTPD_ROOT}/skins/default-labels/ && \

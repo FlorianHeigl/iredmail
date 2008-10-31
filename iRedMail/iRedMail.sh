@@ -5,14 +5,14 @@
 # ------------------------------
 # Define some global variables.
 # ------------------------------
-ROOTDIR="$(pwd)"
-CONF_DIR="${ROOTDIR}/conf"
-FUNCTIONS_DIR="${ROOTDIR}/functions"
-TOOLS_DIR="${ROOTDIR}/tools"
-PKG_DIR="${ROOTDIR}/pkgs/rpms"
-MISC_DIR="${ROOTDIR}/pkgs/misc"
-SAMPLE_DIR="${ROOTDIR}/samples"
-PATCH_DIR="${ROOTDIR}/patches"
+export ROOTDIR="$(pwd)"
+export CONF_DIR="${ROOTDIR}/conf"
+export FUNCTIONS_DIR="${ROOTDIR}/functions"
+export TOOLS_DIR="${ROOTDIR}/tools"
+export PKG_DIR="${ROOTDIR}/pkgs/rpms"
+export MISC_DIR="${ROOTDIR}/pkgs/misc"
+export SAMPLE_DIR="${ROOTDIR}/samples"
+export PATCH_DIR="${ROOTDIR}/patches"
 
 . ${CONF_DIR}/global
 . ${CONF_DIR}/functions

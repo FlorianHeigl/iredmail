@@ -143,7 +143,10 @@ use them by your own:
     LDAP_OPTIONAL_COMPONENTS="$(cat /tmp/ldap_optional_components)"
 
     echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'roundcubemail' >/dev/null 2>&1
-    [ X"$?" == X"0" ] && USE_RCM='YES' && echo "export USE_RCM='YES'" >>${CONFIG_FILE}
+    [ X"$?" == X"0" ] && \
+        export USE_RCM='YES' && export USE_MYSQL='YES' && \
+        echo "export USE_RCM='YES'" >> ${CONFIG_FILE} && \
+        echo "export USE_MYSQL='YES'" >> ${CONFIG_FILE}
 
     echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'squirrelmail' >/dev/null 2>&1
     [ X"$?" == X"0" ] && USE_SM='YES' && echo "export USE_SM='YES'" >>${CONFIG_FILE}
@@ -212,5 +215,6 @@ else
     :
 fi
 
+[ X"${USE_MYSQL}" == X"YES" ] && . ${TOOLS_DIR}/mysql_config.sh
 [ X"${USE_POSTFIXADMIN}" == X"YES" ] && . ${TOOLS_DIR}/postfixadmin_config.sh
 [ X"${USE_MAILMAN}" == X"YES" ] && . ${TOOLS_DIR}/mailman_config.sh

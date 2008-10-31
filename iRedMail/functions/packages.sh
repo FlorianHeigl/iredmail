@@ -27,9 +27,6 @@ install_all()
     # Backend: OpenLDAP or MySQL.
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
 
-        # OpenLDAP server & client.
-        ALL_PKGS="${ALL_PKGS} openldap.${ARCH} openldap-clients.${ARCH} openldap-servers.${ARCH}"
-
         if [ X"${USE_EXIST_AMP}" != X"YES" ]; then
             # PHP extensions.
             ALL_PKGS="${ALL_PKGS} php-ldap.${ARCH}"
@@ -37,10 +34,22 @@ install_all()
             :
         fi
 
+        # OpenLDAP server & client.
+        ALL_PKGS="${ALL_PKGS} openldap.${ARCH} openldap-clients.${ARCH} openldap-servers.${ARCH}"
+
+        # MySQL server. Used to store extra data, such as policyd, roundcube webmail.
+        ALL_PKGS="${ALL_PKGS} mysql-server.${ARCH} mysql.${ARCH}"
+
+        # Policyd.
+        ALL_PKGS="${ALL_PKGS} policyd.${ARCH}"
+
+        # For Roundcube WebMail.
+        [ X"${USE_RCM}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} php-mysql"
+
         # For ExtMail.
         [ X"${USE_EXTMAIL}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} perl-LDAP"
 
-        ENABLED_SERVICES="${ENABLED_SERVICES} ldap"
+        ENABLED_SERVICES="${ENABLED_SERVICES} ldap mysqld policyd"
 
     elif [ X"${BACKEND}" == X"MySQL" ]; then
         # MySQL server & client.
