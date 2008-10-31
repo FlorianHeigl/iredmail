@@ -16,6 +16,7 @@ export RCM_DB_USER="roundcube"
 export RCM_DB_PASSWD="$(echo $RANDOM\$$RANDOM\@$RANDOM\!$RANDOM\&$RANDOM\*$RANDOM\)$RANDOM)"
 
 # Default language of user interface.
-#   en: English(US)
+#   en: English(US).
+#   zh_CN: Simp Chinese.
 #   zh_TW: Tradition Chinese.
-export RCM_DEFAULT_LOCALE='en'
+export RCM_DEFAULT_LOCALE='zh_CN'

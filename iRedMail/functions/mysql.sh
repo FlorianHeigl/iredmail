@@ -38,7 +38,7 @@ EOF
         :
     fi
 
-    ECHO_INFO -n "Initialize MySQL database."
+    ECHO_INFO "Initialize MySQL database."
     mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWD} <<EOF
 SOURCE ${MYSQL_INIT_SQL};
 FLUSH PRIVILEGES;

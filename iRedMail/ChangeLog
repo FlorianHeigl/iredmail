@@ -1,6 +1,8 @@
 iRedMail-0.3.2:
-    * Make Roundcube WebMail work while use OpenLDAP as backend.
-      Note: All plugins are disabled yet.
+    * Set default language to zh_CN in horde, roundcube, squirrelmail.
+    * Make Roundcube WebMail work while use OpenLDAP as backend, use OpenLDAP
+      as global ldap address book.
+      Note: Change password and forwarding setting are disabled yet.
     * Remove postgrey, it's replaced by policyd.
       Note: Due to this change, MySQL will be installed if you choose OpenLDAP
       as backend.

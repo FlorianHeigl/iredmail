@@ -20,4 +20,4 @@ export HORDE_DB_TEMPLATE="${HORDE_HTTPD_ROOT}/scripts/sql/groupware.mysql.sql"
 #   en_US: English(US)
 #   zh_CN: Simp Chinese.
 #   zh_TW: Tradition Chinese.
-export HORDE_DEFAULT_LANGUAGE='en_US'
+export HORDE_DEFAULT_LANGUAGE='zh_CN'

@@ -130,10 +130,11 @@ if [ X"${BACKEND}" == X"OpenLDAP" ]; then
 iRedMail provides several optional components for LDAP backend, you can
 use them by your own:
 " 20 76 7 \
-    "Roundcubemail" "WebMail program(PHP, XHTML, CSS2, AJAX)." "on" \
-    "SquirrelMail" "WebMail program, written in PHP." "off" \
+    "SquirrelMail" "WebMail program, written in PHP." "on" \
+    "Roundcubemail" "WebMail program(PHP, XHTML, CSS2, AJAX)." "off" \
     "ExtMail" "WebMail program from ExtMail project." "off" \
     "phpLDAPadmin" "Web-based LDAP browser to manage your LDAP server." "on" \
+    "phpMyAdmin" "Web-based MySQL database management." "on" \
     "Mailgraph" "Mail statistics RRDtool frontend for Postfix." "on" \
     2>/tmp/ldap_optional_components
 
@@ -156,6 +157,9 @@ use them by your own:
 
     echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'phpldapadmin' >/dev/null 2>&1
     [ X"$?" == X"0" ] && USE_PHPLDAPADMIN='YES' && echo "export USE_PHPLDAPADMIN='YES'" >>${CONFIG_FILE}
+
+    echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'phpmyadmin' >/dev/null 2>&1
+    [ X"$?" == X"0" ] && USE_PHPMYADMIN='YES' && echo "export USE_PHPMYADMIN='YES'" >>${CONFIG_FILE}
 
     echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'mailman' >/dev/null 2>&1
     [ X"$?" == X"0" ] && USE_MAILMAN='YES' && echo "export USE_MAILMAN='YES'" >>${CONFIG_FILE}

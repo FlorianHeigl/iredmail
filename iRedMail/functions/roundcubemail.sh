@@ -94,15 +94,8 @@ Alias /webmail "${HTTPD_SERVERROOT}/roundcubemail-${RCM_VERSION}/"
 Alias /roundcube "${HTTPD_SERVERROOT}/roundcubemail-${RCM_VERSION}/"
 EOF
 
-    if [ X"${USE_SM}" == X"YES" -o X"${USE_EXTMAIL}" == X"YES" ]; then
-        :
-    else
-        cat >> ${HTTPD_CONF_DIR}/roundcubemail.conf <<EOF
-EOF
-    fi
-
     # Roundcubemail-0.1.1 only.
-    ECHO_INFO "Patch: Add missing localization items for zh_CN."
+    ECHO_INFO "Patch: Add missing localization items and fix incorrect items for zh_CN."
     cd ${RCM_HTTPD_ROOT} && \
     patch -p0 < ${PATCH_DIR}/roundcubemail/zh_CN.labels.inc.patch >/dev/null
 
@@ -115,31 +108,23 @@ EOF
     cd ${RCM_HTTPD_ROOT} && \
     patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_PEAR_Mail_Mail_Mime_addAttachment_basename.patch >/dev/null
 
-    if [ X"${BACKEND}" == X"MySQL" ]; then
-        ECHO_INFO "Patch: Change Password and Setting Mail Forwarding."
-        cd ${RCM_HTTPD_ROOT} && \
-        patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_chpwd_forward.patch >/dev/null
+    ECHO_INFO "Patch: Change Password and Setting Mail Forwarding."
+    cd ${RCM_HTTPD_ROOT} && \
+    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_chpwd_forward.patch >/dev/null
 
-        cd ${RCM_HTTPD_ROOT}/skins/default/ && \
-        patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_chpwd_forward_skins.patch >/dev/null
-
-        cd ${RCM_HTTPD_ROOT}/skins/default-labels/ && \
-        patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_chpwd_forward_skins.patch >/dev/null && \
-        cp -f ${RCM_HTTPD_ROOT}/skins/default/{colorpicker,editor_ui,editor_content}.css ${RCM_HTTPD_ROOT}/skins/default-labels/
-    else
-        :
-    fi
+    cd ${RCM_HTTPD_ROOT}/skins/default/ && \
+    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_chpwd_forward_skins.patch >/dev/null
 
     ECHO_INFO "Patch: Vacation plugin."
     # Create symbol link to sieve_dir.
     cd ${RCM_HTTPD_ROOT} && \
     ln -s ${SIEVE_DIR} sieve
 
-    # Patch core functions.
+    # Function patch: vacation.
     cd ${RCM_HTTPD_ROOT} && \
     patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_vacation.patch >/dev/null
 
-    # Patch skins.
+    # Skin patch: vacation.
     cd ${RCM_HTTPD_ROOT}/skins/default/ && \
     patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_vacation_skin_default.patch >/dev/null
 
@@ -150,6 +135,11 @@ EOF
     ECHO_INFO "Add another skin and icon set: default-labels."
     extract_pkg ${MISC_DIR}/roundcubemail-0.1.1-skin-default-labels.tar.bz2 ${RCM_HTTPD_ROOT}/skins/ && \
     extract_pkg ${MISC_DIR}/roundcubemail-0.1.1-buttons-zh_CN.tar.bz2 ${RCM_HTTPD_ROOT}/skins/default-labels/images/
+
+    cd ${RCM_HTTPD_ROOT}/skins/default-labels/ && \
+    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_chpwd_forward_skins.patch >/dev/null && \
+    cp -f ${RCM_HTTPD_ROOT}/skins/default/{colorpicker,editor_ui,editor_content}.css ${RCM_HTTPD_ROOT}/skins/default-labels/
+
     #perl -pi -e 's#(.*rcmail_config.*skin_path.*=).*#${1} "skins/default-labels/";#' ${RCM_HTTPD_ROOT}/config/main.inc.php
 
     # Patch for vacation plugin.
@@ -163,6 +153,44 @@ EOF
 
     cd ${RCM_HTTPD_ROOT}/skins/default-labels/ && \
     patch -p0 < ${PATCH_DIR}/roundcubemail/display_username.patch >/dev/null
+
+    if [ X"${BACKEND}" == X"OpenLDAP" ]; then
+        ECHO_INFO "Disable change password and mail forwarding featues."
+        cd ${RCM_HTTPD_ROOT} && \
+        perl -pi -e 's#(.*save-passwd.*)#//${1}#' index.php
+        perl -pi -e 's#(.*include.*passwd.*)#//${1}#' index.php
+
+        perl -pi -e 's#(.*save-forwards.*)#//${1}#' index.php
+        perl -pi -e 's#(.*include.*forwards.*)#//${1}#' index.php
+
+        ECHO_INFO "Setting global LDAP address book in Roundcube."
+        cd ${RCM_HTTPD_ROOT}/config/ && \
+        perl -pi -e 's#\?\>##' main.inc.php
+        cat >> main.inc.php <<EOF
+# Global LDAP Address Book.
+\$rcmail_config['ldap_public']["${PROG_NAME}"] = array(
+    'name'          => 'Global Address Book',
+    'hosts'         => array("${LDAP_SERVER_HOST}"),
+    'port'          => ${LDAP_SERVER_PORT},
+    'base_dn'       => "${LDAP_ATTR_DOMAIN_DN_NAME}=${FIRST_DOMAIN},${LDAP_BASEDN}",
+    'bind_dn'       => "${LDAP_BINDDN}",
+    'bind_pass'     => "${LDAP_BINDPW}",
+    'ldap_version'  => "${LDAP_BIND_VERSION}",       // using LDAPv3
+    'search_fields' => array('mail', 'cn'),  // fields to search in
+    'name_field'    => 'cn',    // this field represents the contact's name
+    'email_field'   => 'mail',  // this field represents the contact's e-mail
+    'surname_field' => 'sn',    // this field represents the contact's last name
+    'firstname_field' => 'gn',  // this field represents the contact's first name
+    'scope'         => 'sub',   // search mode: sub|base|list
+    'filter'        => "(&(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=active))",      // used for basic listing (if not empty) and will be &'d with search queries. example: status=act
+    'fuzzy_search'  => true);   // server allows wildcard search
+
+// end of config file
+?>
+EOF
+    else
+        :
+    fi
 
     cat >> ${TIP_FILE} <<EOF
 WebMail(Roundcubemail):
