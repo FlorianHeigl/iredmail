@@ -2,6 +2,6 @@
 
 # Author: Zhang Huangbin (michaelbibby <at> gmail.com)
 
-export PHPMYADMIN_VERSION='2.11.9.2-all-languages'
+export PHPMYADMIN_VERSION='2.11.9.3-all-languages'
 export PHPMYADMIN_TARBALL="phpMyAdmin-${PHPMYADMIN_VERSION}.tar.bz2"
 export PHPMYADMIN_HTTPD_ROOT="${HTTPD_SERVERROOT}/phpMyAdmin-${PHPMYADMIN_VERSION}"
