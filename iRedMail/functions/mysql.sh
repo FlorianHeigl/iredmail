@@ -66,13 +66,13 @@ EOF
 # It's used only when backend is MySQL.
 mysql_import_vmail_users()
 {
-    ECHO_INFO "Generating SQL template for postfix virtual hosts: ${MYSQL_INIT_SQL}."
+    ECHO_INFO "Generating SQL template for postfix virtual hosts: ${MYSQL_VMAIL_SQL}."
     export FIRST_DOMAIN_ADMIN_PASSWD="$(openssl passwd -1 ${FIRST_DOMAIN_ADMIN_PASSWD})"
     export FIRST_USER_PASSWD="$(openssl passwd -1 ${FIRST_USER_PASSWD})"
 
     # Generate SQL.
     # Mailbox format is 'Maildir/' by default.
-    cat >> ${MYSQL_INIT_SQL} <<EOF
+    cat >> ${MYSQL_VMAIL_SQL} <<EOF
 /* Create database for virtual hosts. */
 CREATE DATABASE IF NOT EXISTS ${VMAIL_DB} CHARACTER SET utf8;
 
@@ -106,12 +106,12 @@ EOF
     export FIRST_DOMAIN
     export FIRST_DOMAIN_ADMIN_NAME
     export FIRST_USER
-    [ X"${HOME_MAILBOX}" == X"mbox" ] && perl -pi -e 's#(.*$ENV{FIRST_DOMAIN}/$ENV{FIRST_DOMAIN_ADMIN_NAME})/(.*)#${1}${2}#' ${MYSQL_INIT_SQL}
-    [ X"${HOME_MAILBOX}" == X"mbox" ] && perl -pi -e 's#(.*$ENV{FIRST_DOMAIN}/$ENV{FIRST_USER})/(.*)#${1}${2}#' ${MYSQL_INIT_SQL}
+    [ X"${HOME_MAILBOX}" == X"mbox" ] && perl -pi -e 's#(.*$ENV{FIRST_DOMAIN}/$ENV{FIRST_DOMAIN_ADMIN_NAME})/(.*)#${1}${2}#' ${MYSQL_VMAIL_SQL}
+    [ X"${HOME_MAILBOX}" == X"mbox" ] && perl -pi -e 's#(.*$ENV{FIRST_DOMAIN}/$ENV{FIRST_USER})/(.*)#${1}${2}#' ${MYSQL_VMAIL_SQL}
 
-    ECHO_INFO -n "Import postfix virtual hosts/users: ${MYSQL_INIT_SQL}."
+    ECHO_INFO -n "Import postfix virtual hosts/users: ${MYSQL_VMAIL_SQL}."
     mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWD} <<EOF
-SOURCE ${MYSQL_INIT_SQL};
+SOURCE ${MYSQL_VMAIL_SQL};
 FLUSH PRIVILEGES;
 EOF
 
@@ -123,7 +123,7 @@ EOF
 
     cat >> ${TIP_FILE} <<EOF
 Virtual Users:
-    - ${MYSQL_INIT_SQL}
+    - ${MYSQL_VMAIL_SQL}
     - ${SAMPLE_SQL}
 
 EOF

@@ -18,6 +18,7 @@ postfixadmin_install()
     chown -R root:root ${POSTFIXADMIN_HTTPD_ROOT}
     chmod -R 755 ${POSTFIXADMIN_HTTPD_ROOT}
     mv ${POSTFIXADMIN_HTTPD_ROOT}/setup.php ${POSTFIXADMIN_HTTPD_ROOT}/setup.php.${DATE}
+    chmod 0000 ${POSTFIXADMIN_HTTPD_ROOT}/setup.php.${DATE}
 
     ECHO_INFO "Create directory alias for PostfixAdmin in Apache."
     cat > ${HTTPD_CONF_DIR}/postfixadmin.conf <<EOF
@@ -60,6 +61,7 @@ EOF
 <?php
 \$CONF['configured'] = true;
 \$CONF['default_language'] = "${POSTFIXADMIN_DEFAULT_LANGUAGE}";
+\$CONF['database_type'] = 'mysqli';
 \$CONF['database_host'] = "${MYSQL_SERVER}";
 \$CONF['database_user'] = "${MYSQL_ADMIN_USER}";
 \$CONF['database_password'] = "${MYSQL_ADMIN_PW}";

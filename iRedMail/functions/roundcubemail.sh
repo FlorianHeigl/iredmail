@@ -59,7 +59,12 @@ EOF
     cp -f main.inc.php.dist main.inc.php
 
     cd ${RCM_HTTPD_ROOT}/config/
-    if [ X"${USE_MYSQL}" == X"YES" ]; then
+
+    export RCM_DB_USER
+    export RCM_DB_PASSWD
+    export MYSQL_SERVER
+    export RCM_DB
+    if [ X"${BACKEND}" == X"MySQL" -o X"${USE_MYSQL}" == X"YES" ]; then
         perl -pi -e 's#(.*db_dsnw.*= )(.*)#${1}"mysql://$ENV{'RCM_DB_USER'}:$ENV{'RCM_DB_PASSWD'}\@$ENV{'MYSQL_SERVER'}/$ENV{'RCM_DB'}";#' db.inc.php
     else
         # PostgreySQL or SQLite.

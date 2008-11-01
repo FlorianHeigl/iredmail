@@ -49,15 +49,15 @@ EOF
 
     ECHO_INFO "Basic configuration for ExtMail."
     cd ${EXTSUITE_HTTPD_ROOT}/extmail/
-    cp webmail.cf.default webmail.cf
+    cp webmail.cf.default ${EXTMAIL_CONF}
 
-    perl -pi -e 's#(SYS_USER_LANG.*)en_US#${1}$ENV{'SYS_USER_LANG'}#' webmail.cf
+    perl -pi -e 's#(SYS_USER_LANG.*)en_US#${1}$ENV{'SYS_USER_LANG'}#' ${EXTMAIL_CONF}
 
     # Set mail attachment size.
-    perl -pi -e 's#^(SYS_MESSAGE_SIZE_LIMIT.*=)(.*)#${1} $ENV{'MESSAGE_SIZE_LIMIT'}#' webmail.cf
+    perl -pi -e 's#^(SYS_MESSAGE_SIZE_LIMIT.*=)(.*)#${1} $ENV{'MESSAGE_SIZE_LIMIT'}#' ${EXTMAIL_CONF}
 
     export VMAIL_USER_HOME_DIR
-    perl -pi -e 's#(SYS_MAILDIR_BASE.*)/home/domains#${1}$ENV{VMAIL_USER_HOME_DIR}#' webmail.cf
+    perl -pi -e 's#(SYS_MAILDIR_BASE.*)/home/domains#${1}$ENV{VMAIL_USER_HOME_DIR}#' ${EXTMAIL_CONF}
 
     ECHO_INFO "Fix incorrect quota display."
     cd ${EXTSUITE_HTTPD_ROOT}/extmail/libs/Ext/
@@ -78,10 +78,14 @@ extmail_config_mysql()
     ECHO_INFO "Configure ExtMail for MySQL support.."
     cd ${EXTSUITE_HTTPD_ROOT}/extmail/
 
-    perl -pi -e 's#(SYS_MYSQL_USER.*)db_user#${1}$ENV{'MYSQL_ADMIN_USER'}#' webmail.cf
-    perl -pi -e 's#(SYS_MYSQL_PASS.*)db_pass#${1}$ENV{'MYSQL_ADMIN_PW'}#' webmail.cf
-    perl -pi -e 's#(SYS_MYSQL_DB.*)extmail#${1}$ENV{'VMAIL_DB'}#' webmail.cf
-    perl -pi -e 's/^(SYS_MYSQL_ATTR_CLEARPW.*)/#${1}/' webmail.cf
+    export MYSQL_SERVER
+    export MYSQL_ADMIN_PW
+    perl -pi -e 's#(SYS_MYSQL_USER.*)db_user#${1}$ENV{'MYSQL_ADMIN_USER'}#' ${EXTMAIL_CONF}
+    perl -pi -e 's#(SYS_MYSQL_PASS.*)db_pass#${1}$ENV{'MYSQL_ADMIN_PW'}#' ${EXTMAIL_CONF}
+    perl -pi -e 's#(SYS_MYSQL_DB.*)extmail#${1}$ENV{'VMAIL_DB'}#' ${EXTMAIL_CONF}
+    perl -pi -e 's#(SYS_MYSQL_HOST.*)localhost#${1}$ENV{'MYSQL_SERVER'}#' ${EXTMAIL_CONF}
+    perl -pi -e 's/^(SYS_MYSQL_ATTR_CLEARPW.*)/#${1}/' ${EXTMAIL_CONF}
+    perl -pi -e 's#(SYS_MYSQL_ATTR_DISABLEWEBMAIL.*)disablewebmail#${1}disableimap#' ${EXTMAIL_CONF}
 
     echo 'export status_extmail_config_mysql="DONE"' >> ${STATUS_FILE}
 }
@@ -91,21 +95,21 @@ extmail_config_ldap()
     ECHO_INFO "Configure ExtMail for LDAP support."
     cd ${EXTSUITE_HTTPD_ROOT}/extmail/
 
-    perl -pi -e 's#(SYS_AUTH_TYPE.*)mysql#${1}ldap#' webmail.cf
-    perl -pi -e 's#(SYS_LDAP_BASE)(.*)#${1} = $ENV{'LDAP_BASEDN'}#' webmail.cf
-    perl -pi -e 's#(SYS_LDAP_RDN)(.*)#${1} = $ENV{'LDAP_ADMIN_DN'}#' webmail.cf
-    perl -pi -e 's#(SYS_LDAP_PASS.*=)(.*)#${1} $ENV{'LDAP_ADMIN_PW'}#' webmail.cf
-    perl -pi -e 's#(SYS_LDAP_HOST.*=)(.*)#${1} $ENV{'LDAP_SERVER_HOST'}#' webmail.cf
+    perl -pi -e 's#(SYS_AUTH_TYPE.*)mysql#${1}ldap#' ${EXTMAIL_CONF}
+    perl -pi -e 's#(SYS_LDAP_BASE)(.*)#${1} = $ENV{'LDAP_BASEDN'}#' ${EXTMAIL_CONF}
+    perl -pi -e 's#(SYS_LDAP_RDN)(.*)#${1} = $ENV{'LDAP_ADMIN_DN'}#' ${EXTMAIL_CONF}
+    perl -pi -e 's#(SYS_LDAP_PASS.*=)(.*)#${1} $ENV{'LDAP_ADMIN_PW'}#' ${EXTMAIL_CONF}
+    perl -pi -e 's#(SYS_LDAP_HOST.*=)(.*)#${1} $ENV{'LDAP_SERVER_HOST'}#' ${EXTMAIL_CONF}
 
-    perl -pi -e 's#(SYS_LDAP_ATTR_DOMAIN.*=)(.*)#${1} o#' webmail.cf
+    perl -pi -e 's#(SYS_LDAP_ATTR_DOMAIN.*=)(.*)#${1} o#' ${EXTMAIL_CONF}
 
-    perl -pi -e 's/^(SYS_LDAP_ATTR_CLEARPW.*)/#${1}/' webmail.cf
-    #perl -pi -e 's/^(SYS_LDAP_ATTR_NDQUOTA.*)/#${1}/' webmail.cf
-    perl -pi -e 's/^(SYS_LDAP_ATTR_DISABLEWEBMAIL.*)/#${1}/' webmail.cf
-    perl -pi -e 's/^(SYS_LDAP_ATTR_DISABLENETDISK.*)/#${1}/' webmail.cf
-    perl -pi -e 's/^(SYS_LDAP_ATTR_DISABLEPWDCHANGE.*)/#${1}/' webmail.cf
+    perl -pi -e 's/^(SYS_LDAP_ATTR_CLEARPW.*)/#${1}/' ${EXTMAIL_CONF}
+    #perl -pi -e 's/^(SYS_LDAP_ATTR_NDQUOTA.*)/#${1}/' ${EXTMAIL_CONF}
+    perl -pi -e 's#^(SYS_LDAP_ATTR_DISABLEWEBMAIL.*)disablewebmail#${1}disableIMAP#' ${EXTMAIL_CONF}
+    perl -pi -e 's/^(SYS_LDAP_ATTR_DISABLENETDISK.*)/#${1}/' ${EXTMAIL_CONF}
+    perl -pi -e 's/^(SYS_LDAP_ATTR_DISABLEPWDCHANGE.*)/#${1}/' ${EXTMAIL_CONF}
 
-    perl -pi -e 's#(SYS_LDAP_ATTR_ACTIVE.*=)(.*)#${1} accountStatus#' webmail.cf
+    perl -pi -e 's#(SYS_LDAP_ATTR_ACTIVE.*=)(.*)#${1} $ENV{'LDAP_ATTR_USER_STATUS'}#' ${EXTMAIL_CONF}
 
     echo 'export status_extmail_config_ldap="DONE"' >> ${STATUS_FILE}
 }
@@ -125,7 +129,7 @@ extmail_config()
     cat >> ${TIP_FILE} <<EOF
 ExtMail:
     * Configuration files:
-        - ${EXTSUITE_HTTPD_ROOT}/extmail/webmail.cf
+        - ${EXTMAIL_CONF}
     * Reference:
         - ${HTTPD_CONF_DIR}/extmail.conf
     * URL:

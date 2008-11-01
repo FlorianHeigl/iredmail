@@ -84,18 +84,20 @@ replace_mysql_config()
 {
     if [ X"${BACKEND}" == X"MySQL" -o X"${USE_MYSQL}" == X"YES" ]; then
         ECHO_QUESTION "Would you like to use MySQL configuration file shipped within iRedMail now?"
-        ECHO_QUESTION -n "File: /etc/my.cnf. [Y|n]"
+        ECHO_QUESTION -n "File: ${MYSQL_MY_CNF}. [Y|n]"
         read ANSWER
         case $ANSWER in
-            N|n ) ECHO_INFO "Skip iptable rules." ;;
+            N|n ) ECHO_INFO "Skip copy and modify MySQL config file." ;;
             Y|y|* )
-                backup_file /etc/my.cnf
-                ECHO_INFO "Copy MySQL sample file: /etc/my.cnf."
-                cp -f ${SAMPLE_DIR}/my.cnf /etc/my.cnf
+                backup_file ${MYSQL_MY_CNF}
+                ECHO_INFO "Copy MySQL sample file: ${MYSQL_MY_CNF}."
+                cp -f ${SAMPLE_DIR}/my.cnf ${MYSQL_MY_CNF}
 
                 ECHO_INFO "Enable SSL support for MySQL server."
-                perl -pi -e 's/^#(ssl-cert = )(.*)/${1} $ENV{'SSL_CERT_FILE'}/' /etc/my.cnf
-                perl -pi -e 's/^#(ssl-key = )(.*)/${1} $ENV{'SSL_KEY_FILE'}/' /etc/my.cnf
+                perl -pi -e 's/^#(ssl-cert.*=)(.*)/${1} $ENV{'SSL_CERT_FILE'}/' ${MYSQL_MY_CNF}
+                perl -pi -e 's/^#(ssl-key.*=)(.*)/${1} $ENV{'SSL_KEY_FILE'}/' ${MYSQL_MY_CNF}
+                perl -pi -e 's/^#(ssl-cipher.*}/${1}/' ${MYSQL_MY_CNF}
+                #ssl-cipher = ALL
                 ;;
         esac
     else
