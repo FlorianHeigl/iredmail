@@ -1,0 +1,75 @@
+postfixadmin (2.2.1.1) unstable; urgency=low
+
+  * Various bug fixes (MySQL charset issue(s))
+  * Updated translations (pl, bg, ru, nb, tw etc)
+  * added quota parameter to mailbox_postcreation hook
+  * new hook to update the quota after editing a mailbox
+    ($CONF['mailbox_postedi
+t_script'])
+  * fixed subfolder creation order and timing
+  * allow smtp server to be specified in vacation.pl
+  * fixed MySQL charset issues
+  * several small bugfixes
+  * Norwegian (bokmal) translation added
+  * Subversion revision 412 (from branches/postfixadmin-2.2.1)
+  * THIS IS EFFECTIVELY THE SAME AS 2.2.1 (which should probably be ignored)
+
+ -- David Goodwin <david.goodwin@palepurple.co.uk>  Wed, 23 Jul 2008 12:37:00 +0000
+
+postfixadmin (2.2.1) unstable; urgency=low
+
+  * Various bug fixes (MySQL charset issue(s))
+  * Updated translations (pl, bg, ru, nb, tw etc)
+  * Subversion revision 408
+
+ -- David Goodwin <david.goodwin@palepurple.co.uk>  Mon, 21 Jul 2008 22:44:00 +0000
+postfixadmin (2.2.0) unstable; urgency=low
+
+  * 2.2.0 Released. 
+  * Fix fetchmail script to work with PostgreSQL
+  * Fix fetchmail table creation in MySQL and PostgreSQL
+  * Documentation fixups 
+  * Subversion revision 356
+
+ -- David Goodwin <david.goodwin@palepurple.co.uk>  Thu, 29 Apr 2008 15:47:00 +0000
+
+postfixadmin (2.2.0-rc5) unstable; urgency=low
+
+  * Fix MySQL installation issues (schema not being created!)
+  * Fix MySQL vacation_notification timestamp issue
+  * SVN revision: 340
+
+ -- David Goodwin <david.goodwin@palepurple.co.uk>  Wed, 23 Apr 2008 16:27:00 +0000
+
+postfixadmin (2.2.0-1rc4) unstable; urgency=low
+
+  * Removal of standalone database schema files (see upgrade.php)
+  * Various bug fixes
+  * Better/Move documentation on installation
+  * setup.php/upgrade.php works for PostgreSQL and MySQL
+  * MySQL Unicode problems fixed
+  * I think this is effectively v2.2.0
+  * SVN revision: 336
+
+ -- David Goodwin <david.goodwin@palepurple.co.uk>  Sun, 20 Apr 2008 20:19:00 +0000
+
+postfixadmin (2.2.0-1rc3) unstable; urgency=low
+
+  * Various bug fixes
+
+ -- David Goodwin <david.goodwin@palepurple.co.uk>  Thu, 28 Feb 2008 12:00:00 +0000
+
+postfixadmin (2.2.0-1rc2) unstable; urgency=low
+
+  * Improved CSS
+  * Improved upgrade procedure (should work for PGSQL) (see upgrade.php)
+  * Various bug fixes
+
+ -- David Goodwin <david.goodwin@palepurple.co.uk>  Sat, 29 Dec 2007 21:14:00 +0000
+
+postfixadmin (2.2.0-1rc1) unstable; urgency=low
+
+  * Initial Release (via dpkg)
+
+ -- David Goodwin <david.goodwin@palepurple.co.uk>  Sun, 04 Nov 2007 15:36:00 +0000
+
