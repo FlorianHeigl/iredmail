@@ -18,6 +18,10 @@ amavisd_dkim()
     amavisd genrsa ${pem_file} >/dev/null 2>&1 && \
     setfacl -m u:amavis:r-- ${pem_file}
 
+    # Use OpenSSL to generate CA files.
+    #openssl genrsa -out domain.tld.private.key 1024
+    #openssl rsa -in domain.tld.private.key -pubout -out domain.tld.public.key
+
     cat >> ${AMAVISD_CONF} <<EOF
 # The default set of header fields to be signed can be controlled
 # by setting %signed_header_fields elements to true (to sign) or

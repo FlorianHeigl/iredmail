@@ -43,8 +43,9 @@ export VMAIL_USER_GID='2000'
 export SPF_PROGRAM='perl-Mail-SPF'
 
 # SSL/TLS support.
-export SSL_CERT_FILE="/etc/pki/${PROG_NAME}Cert.pem"
-export SSL_KEY_FILE="/etc/pki/${PROG_NAME}Key.pem"
+export SSL_FILE_DIR="/etc/pki/iRedMail"
+export SSL_CERT_FILE="${SSL_FILE_DIR}/SSL_Cert.pem"
+export SSL_KEY_FILE="${SSL_FILE_DIR}/SSL_Key.pem"
 export TLS_COUNTRY='CN'
 export TLS_STATE='GuangDong'
 export TLS_CITY='ShenZhen'
