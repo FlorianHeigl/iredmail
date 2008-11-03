@@ -1,4 +1,8 @@
+iRedAdmin is based on PostfixAdmin (2.2.1.1), publiced under GPL v2.
 
+Below is original license info of PostfixAdmin:
+
+----<-- file in PostfixAdmin: LICENSE.TXT ----
     Postfix Admin is a Web Based Management tool created for Postfix. It is
     a PHP based application that handles Postfix Style Virtual Domains and
     Users that are stored in MySQL.
