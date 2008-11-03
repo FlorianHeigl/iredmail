@@ -22,7 +22,7 @@ if (ereg ("functions.inc.php", $_SERVER['PHP_SELF']))
    exit;
 }
 
-$version = '2.2.1.1';
+$version = '0.1 beta1';
 
 /**
  * check_session
@@ -34,8 +34,10 @@ function authentication_get_username()
 {
    global $CONF;
    if (!isset($_SESSION['sessid'])) {
-      header ("Location: " . $CONF['postfix_admin_url'] . "/login.php");
-      exit(0);
+       /** [Li, HouYu@iRedAdmin] Now we don't need the value if no user logged in **/
+      //header ("Location: " . $CONF['postfix_admin_url'] . "/login.php");
+      //exit(0);
+      return false;
    }
    $SESSID_USERNAME = $_SESSION['sessid']['username'];
    return $SESSID_USERNAME;

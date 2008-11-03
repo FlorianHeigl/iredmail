@@ -27,7 +27,6 @@
  *  fPassword
  *  lang
  */
-
 require_once('common.php');
 
 # force user to delete setup.php (allows creation of superadmins!)
@@ -44,9 +43,10 @@ if (file_exists (realpath ("./setup.php"))) {
 
 if ($_SERVER['REQUEST_METHOD'] == "GET")
 {
-    include ("./templates/header.php");
-    include ("./templates/login.php");
-    include ("./templates/footer.php");
+    //include ("./templates/header.php");
+    //include ("./templates/login.php");
+    //include ("./templates/footer.php");
+    $smarty->display('login.php');
 }
 
 if ($_SERVER['REQUEST_METHOD'] == "POST")

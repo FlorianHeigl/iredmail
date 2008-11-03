@@ -22,6 +22,12 @@ if(!defined('POSTFIXADMIN')) {
 }
 define('POSTFIXADMIN', 1); # checked in included files
 
+/** [Li, HouYu@iRedAdmin] Some system path **/
+define('ROOT', dirname(__FILE__));
+define('LIB', ROOT.'/libraries');
+define('TMP', ROOT.'/tmp');
+/***/
+
 function incorrect_setup() {
     global $incpath;
     # we ask the user to delete setup.php, which makes a blind redirect a bad idea
@@ -59,5 +65,27 @@ require_once("$incpath/languages/language.php");
 require_once("$incpath/functions.inc.php");
 require_once("$incpath/languages/" . check_language () . ".lang");
 
+/** [Li, HouYu@iRedAdmin] Load Smarty Template Enging **/
+define('SMARTY_DIR', LIB.'/smarty/libs/');
+
+require_once(SMARTY_DIR.'/Smarty.class.php');
+$smarty = new Smarty();
+$smarty->template_dir = ROOT.'/templates';
+$smarty->compile_dir = TMP.'/templates_c';
+$smarty->config_dir = TMP.'/configs';
+$smarty->cache_dir = TMP.'/cache';
+
+// Use different delimiter
+$smarty->left_delimiter = '<[[';
+$smarty->right_delimiter = ']]>';
+
+// Set system variables
+$smarty->assign('LANG', $PALANG);
+$smarty->assign('CONF', $CONF);
+
+$smarty->assign('version', $version);
+$logged_in_as = sprintf($PALANG['pFooter_logged_as'], authentication_get_username());
+$smarty->assign('logged_in_as', $logged_in_as);
+/***/
 
 /* vim: set expandtab softtabstop=4 tabstop=4 shiftwidth=4: */

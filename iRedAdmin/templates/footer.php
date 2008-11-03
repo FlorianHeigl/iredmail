@@ -1,22 +1,14 @@
-<?php if( !defined('POSTFIXADMIN') ) die( "This file cannot be used standalone." ); ?>
 <div id="footer">
-<a target="_blank" href="http://postfixadmin.com/">Postfix Admin <?php print $version; ?></a>
+<a target="_blank" href="http://www.iredmail.org/">iRedAdmin <[[$version]]></a>
 &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-<?php 
-if(isset($_SESSION['sessid']['username'])) {
-    printf($PALANG['pFooter_logged_as'], authentication_get_username());
-}
-?> 
+<[[if isset($smarty.session.sessid.username)]]>
+<[[$logged_in_as]]>
+<[[/if]]>
 &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-<a target="_blank" href="http://postfixadmin.sf.net/update-check.php?version=<?php print $version; ?>"><?php print $PALANG['check_update']; ?></a>
-<?php
-if (($CONF['show_footer_text'] == "YES") and ($CONF['footer_link']))
-{
-   print "&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;";
-   print "<a href=\"" . $CONF['footer_link'] . "\">" . $CONF['footer_text'] . "</a>\n";
-}
-
-?>
+<[[if $CONF.show_footer_text == 'YES' and !empty($CONF.footer_link)]]>
+&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+<a href="<[[$CONF.footer_link]]>"><[[$CONF.footer_text]]></a>
+<[[/if]]>
 </div>
 </body>
 </html>
