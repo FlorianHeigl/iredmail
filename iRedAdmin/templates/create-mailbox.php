@@ -45,7 +45,8 @@
    <?php if ($CONF['quota'] == 'YES') { ?>
    <tr>
       <td><?php print $PALANG['pCreate_mailbox_quota'] . ":"; ?></td>
-      <td><input class="flat" type="text" name="fQuota" value="<?php print $tQuota; ?>" /></td>
+      <!--<td><input class="flat" type="text" name="fQuota" value="<?php print $tQuota; ?>" /></td>-->
+      <td><input class="flat" type="text" name="fQuota" value="10" /></td>
       <td><?php print $pCreate_mailbox_quota_text; ?></td>
    </tr>
    <?php } ?>
@@ -54,11 +55,14 @@
       <td><input class="flat" type="checkbox" name="fActive" checked /></td>
       <td>&nbsp;</td>
    </tr>
+<!--
    <tr>
       <td><?php print $PALANG['pCreate_mailbox_mail'] . ":"; ?></td>
-      <td><input class="flat" type="checkbox" name="fMail" <?php print (isset($CONF['create_mailbox_subdirs'])) ? '' : 'checked'; ?> /></td>
+<td><input class="flat" type="checkbox" name="fMail" <?php print (isset($CONF['create_mailbox_subdirs'])) ? '' : 'checked'; ?> /></td>
+      <td><input class="flat" type="checkbox" name="fMail" /></td>
       <td>&nbsp;</td>
    </tr>
+-->
    <tr>
       <td colspan="3" class="hlp_center"><input class="button" type="submit" name="submit" value="<?php print $PALANG['pCreate_mailbox_button']; ?>" /></td>
    </tr>
