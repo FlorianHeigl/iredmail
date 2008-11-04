@@ -12,8 +12,6 @@ mailgraph_setup()
     cp -f ${SAMPLE_DIR}/mailgraph/mailgraph.cgi ${HTTPD_SERVERROOT}/cgi-bin/
     chmod 0755 ${HTTPD_SERVERROOT}/cgi-bin/mailgraph.cgi
 
-    cp -f ${SAMPLE_DIR}/mailgraph/mailgraph.css ${HTTPD_DOCUMENTROOT}/mailgraph.css
-
     cp -f ${SAMPLE_DIR}/mailgraph/mailgraph.pl /usr/local/bin/
     chmod 0755 /usr/local/bin/mailgraph.pl
 
@@ -40,7 +38,6 @@ mailgraph:
     * See also:
         - /etc/init.d/mailgraph
         - /usr/local/bin/mailgraph.pl
-        - ${HTTPD_DOCUMENTROOT}/mailgraph.css
         - /var/lib/mailgraph/
 
 EOF

@@ -382,7 +382,7 @@ my $rrd_virus = "mailgraph_virus.rrd";
 my $rrd_greylist = "mailgraph_greylist.rrd";
 my $year;
 my $this_minute;
-my %sum = ( sent => 0, received => 0, bounced => 0, rejected => 0, virus => 0, spam => 0, greylisted => 0, delayed => 0);
+my %sum = ( sent => 0, received => 0, bounced => 0, rejected => 0, virus => 0, spam => 0, greylisted => 0, helo_rejected => 0);
 my $rrd_inited=0;
 
 my %opt = ();
@@ -397,7 +397,7 @@ sub event_rejected($);
 sub event_virus($);
 sub event_spam($);
 sub event_greylisted($);
-sub event_delayed($);
+sub event_helo_rejected($);
 sub init_rrd($);
 sub update($);
 
@@ -570,7 +570,7 @@ sub init_rrd($)
         if(! -f $rrd_greylist and ! $opt{'no-greylist-rrd'}) {
                         RRDs::create($rrd_greylist, '--start', $m, '--step', $rrdstep,
                                 'DS:greylisted:ABSOLUTE:'.($rrdstep*2).':0:U',
-                                'DS:delayed:ABSOLUTE:'.($rrdstep*2).':0:U',
+                                'DS:helo_rejected:ABSOLUTE:'.($rrdstep*2).':0:U',
                                 "RRA:AVERAGE:0.5:$day_steps:$realrows",   # day
                                 "RRA:AVERAGE:0.5:$week_steps:$realrows",  # week
                                 "RRA:AVERAGE:0.5:$month_steps:$realrows", # month
@@ -597,10 +597,8 @@ sub process_line($)
 	my $text = $sl->[4];
 
 	if($prog =~ /^postfix\/(.*)/) {
-		if($text =~ /reject:/) {
-			event($time, 'rejected');
-		}
 		my $prog = $1;
+
 		if($prog eq 'smtp') {
 			if($text =~ /\bstatus=sent\b/) {
 				return if $opt{'ignore-localhost'} and
@@ -631,18 +629,22 @@ sub process_line($)
 					$client =~ /$opt{'ignore-host'}/oi;
 				event($time, 'received');
 			}
-			elsif($text =~ /NOQUEUE: reject: /i) {
-				event($time, 'rejected');
-			}
+            elsif ($text =~ /Helo command rejected/) {
+                event($time, 'helo_rejected');
+            }
+
+            #elsif($text =~ /NOQUEUE: reject: /i) {
+            #	event($time, 'rejected');
+            #}
 			elsif($opt{'virbl-is-virus'} and $text =~ /^(?:[0-9A-Z]+: |NOQUEUE: )?reject: .*: 554.* blocked using virbl.dnsbl.bit.nl/) {
 				event($time, 'virus');
 			}
 			elsif($opt{'rbl-is-spam'} and $text    =~ /^(?:[0-9A-Z]+: |NOQUEUE: )?reject: .*: 554.* blocked using/) {
 				event($time, 'spam');
 			}
-                        elsif($text =~ /Greylisted/) {
-                                event($time, 'greylisted');
-                        }
+            elsif($text =~ /Greylisted/) {
+                event($time, 'greylisted');
+            }
 			#elsif($text =~ /^(?:[0-9A-Z]+: |NOQUEUE: )?reject: /) {
 			#	event($time, 'rejected');
 			#}
@@ -697,16 +699,16 @@ sub process_line($)
 		       event($time, 'badh');
 		}
 	}
-        elsif($prog eq 'postgrey') {
-                # Old versions (up to 1.27)
-                if($text =~ /delayed [0-9]+ seconds: client/) {
-                        event($time, 'delayed');
-                }
-                # New versions (from 1.28)
-                if($text =~ /delay=[0-9]+/) {
-                        event($time, 'delayed');
-                }
-        }
+    #elsif($prog eq 'postgrey') {
+    #            # Old versions (up to 1.27)
+    #            if($text =~ /helo_rejected [0-9]+ seconds: client/) {
+    #                    event($time, 'helo_rejected');
+    #            }
+    #            # New versions (from 1.28)
+    #            if($text =~ /delay=[0-9]+/) {
+    #                    event($time, 'helo_rejected');
+    #            }
+    #    }
         elsif($prog eq 'policyd') {
                 if($text =~ /greylist=/) {
                         event($time, 'greylisted');
@@ -738,10 +740,10 @@ sub update($)
 	return 1 if $m == $this_minute;
 	return 0 if $m < $this_minute;
 
-	print "update $this_minute:$sum{sent}:$sum{received}:$sum{bounced}:$sum{rejected}:$sum{virus}:$sum{spam}:$sum{greylisted}:$sum{delayed}\n" if $opt{verbose};
+	print "update $this_minute:$sum{sent}:$sum{received}:$sum{bounced}:$sum{rejected}:$sum{virus}:$sum{spam}:$sum{greylisted}:$sum{helo_rejected}\n" if $opt{verbose};
 	RRDs::update $rrd, "$this_minute:$sum{sent}:$sum{received}:$sum{bounced}:$sum{rejected}" unless $opt{'no-mail-rrd'};
 	RRDs::update $rrd_virus, "$this_minute:$sum{virus}:$sum{spam}" unless $opt{'no-virus-rrd'};
-	RRDs::update $rrd_greylist, "$this_minute:$sum{greylisted}:$sum{delayed}" unless $opt{'no-greylist-rrd'};
+	RRDs::update $rrd_greylist, "$this_minute:$sum{greylisted}:$sum{helo_rejected}" unless $opt{'no-greylist-rrd'};
 	if($m > $this_minute+$rrdstep) {
 		for(my $sm=$this_minute+$rrdstep;$sm<$m;$sm+=$rrdstep) {
 			print "update $sm:0:0:0:0:0:0:0:0 (SKIP)\n" if $opt{verbose};
@@ -758,7 +760,7 @@ sub update($)
 	$sum{virus}=0;
 	$sum{spam}=0;
         $sum{greylisted}=0;
-        $sum{delayed}=0;
+        $sum{helo_rejected}=0;
 	return 1;
 }
 

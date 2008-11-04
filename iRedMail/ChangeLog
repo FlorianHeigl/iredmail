@@ -1,4 +1,6 @@
 iRedMail-0.3.2:
+    * Improve mailgraph, it can display greylist counter now. Merge css code
+      to mailgraph.cgi.
     * Update phpMyAdmin to 2.11.9.3.
     * Set default language to zh_CN in horde, roundcube, squirrelmail.
     * Make Roundcube WebMail work while use OpenLDAP as backend, use OpenLDAP
