@@ -24,7 +24,7 @@ define('POSTFIXADMIN', 1); # checked in included files
 
 /** [Li, HouYu@iRedAdmin] Some system path **/
 define('ROOT', dirname(__FILE__));
-define('LIB', ROOT.'/libraries');
+define('LIB', ROOT.'/libs');
 define('TMP', ROOT.'/tmp');
 /***/
 
