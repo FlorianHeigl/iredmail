@@ -31,6 +31,6 @@ clamav-0.94-1.el5.rf.i386.rpm
 clamav-db-0.94-1.el5.rf.i386.rpm
 clamd-0.94-1.el5.rf.i386.rpm
 unrar-3.8.2-1.el5.rf.i386.rpm
-dovecot-1.1.4-0_81.el5.i386.rpm
 perl-BerkeleyDB-0.36-1.el5.rf.i386.rpm
 perl-Compress-Raw-Zlib-2.015-1.el5.rf.i386.rpm
+dovecot-1.1.6-0_83.el5.i386.rpm

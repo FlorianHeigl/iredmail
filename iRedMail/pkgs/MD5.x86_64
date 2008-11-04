@@ -30,6 +30,6 @@ fb2574ec5b714b136e4ee4bd85344b1c  rpms/policyd-1.82-4.rhms.x86_64.rpm
 629706dc84282653a5149df6b0a4ab13  rpms/clamav-db-0.94-1.el5.rf.x86_64.rpm
 daecf7bbb0dc95abfa2cda213f07f355  rpms/clamd-0.94-1.el5.rf.x86_64.rpm
 d8f67576d493fc3f814bb7b57d96ee71  rpms/unrar-3.8.2-1.el5.rf.x86_64.rpm
-22c49fd961d1357b7e74a2c5316abf46  rpms/dovecot-1.1.4-0_81.el5.x86_64.rpm
 37bf80e1e94d257bdcfda4fd3b4a0a41  rpms/perl-BerkeleyDB-0.36-1.el5.rf.x86_64.rpm
 cb6045d305d3d837b82b92462160f8a9  rpms/perl-Compress-Raw-Zlib-2.015-1.el5.rf.x86_64.rpm
+c0dd99df5579a75b0ab729a228b3204f  rpms/dovecot-1.1.6-0_83.el5.x86_64.rpm
