@@ -231,10 +231,14 @@ else
     :
 fi
 
-# Used for OpenLDAP backend.
+# Used when you use OpenLDAP as backend.
 [ X"${USE_MYSQL}" == X"YES" ] && . ${TOOLS_DIR}/mysql_config.sh
 
-# Used for MySQL backend.
+# Used when you use MySQL as backend.
 [ X"${USE_POSTFIXADMIN}" == X"YES" ] && . ${TOOLS_DIR}/postfixadmin_config.sh
 
+# Used when you use awstats.
+[ X"${USE_AWSTATS}" == X"YES" ] && . ${TOOLS_DIR}/awstats_config.sh
+
+# Used when you use mailman.
 [ X"${USE_MAILMAN}" == X"YES" ] && . ${TOOLS_DIR}/mailman_config.sh

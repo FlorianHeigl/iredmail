@@ -30,8 +30,8 @@ ScriptAlias /awstats/ /var/www/awstats/
 </Directory>
 EOF
 
-    # Use 'iredmail' as default username and password.
-    htpasswd -bcm ${AWSTATS_HTPASSWD_FILE} ${PROG_NAME_LOWERCASE} ${PROG_NAME_LOWERCASE}
+    # Set username, password for web access.
+    htpasswd -bcm ${AWSTATS_HTPASSWD_FILE} ${AWSTATS_USERNAME} ${AWSTATS_PASSWD}
 
     echo 'export status_awstats_config_basic="DONE"' >> ${STATUS_FILE}
 }
