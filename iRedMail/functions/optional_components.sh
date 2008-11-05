@@ -59,7 +59,8 @@ optional_components()
     [ X"${USE_AWSTATS}" == X"YES" ] && \
         check_status_before_run awstats_config_basic && \
         check_status_before_run awstats_config_weblog && \
-        check_status_before_run awstats_config_maillog
+        check_status_before_run awstats_config_maillog && \
+        check_status_before_run awstats_config_crontab
 
     # Mailgraph.
     [ X"${USE_MAILGRAPH}" == X"YES" ] && \
