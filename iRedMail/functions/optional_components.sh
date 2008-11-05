@@ -55,6 +55,12 @@ optional_components()
     [ X"${USE_MAILMAN}" == X"YES" ] && \
         check_status_before_run mailman_config
 
+    # Awstats.
+    [ X"${USE_AWSTATS}" == X"YES" ] && \
+        check_status_before_run awstats_config_basic && \
+        check_status_before_run awstats_config_weblog && \
+        check_status_before_run awstats_config_maillog
+
     # Mailgraph.
     [ X"${USE_MAILGRAPH}" == X"YES" ] && \
         check_status_before_run mailgraph_setup

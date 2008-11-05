@@ -112,6 +112,9 @@ install_all()
     # pysieved.
     ALL_PKGS="${ALL_PKGS} pysieved.noarch"
 
+    # Awstats.
+    [ X"${USE_AWSTATS}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} awstats.noarch"
+
     # RRDTools.
     [ X"${USE_MAILGRAPH}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} rrdtool.${ARCH} perl-rrdtool.${ARCH} perl-File-Tail.noarch"
 
@@ -121,7 +124,7 @@ install_all()
         ENABLED_SERVICES="${ENABLED_SERVICES} mailman"
 
     # Misc.
-    ALL_PKGS="${ALL_PKGS} bzip2.${ARCH} acl.${ARCH} mailx.${ARCH} patch.${ARCH} crontabs.noarch"
+    ALL_PKGS="${ALL_PKGS} bzip2.${ARCH} acl.${ARCH} mailx.${ARCH} patch.${ARCH} crontabs.noarch dos2unix.${ARCH}"
     ENABLED_SERVICES="${ENABLED_SERVICES} crond"
 
     # Install all packages.

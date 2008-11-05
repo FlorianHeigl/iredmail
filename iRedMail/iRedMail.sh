@@ -25,7 +25,7 @@ check_arch && check_env
 # ------------------------------
 # Import variables.
 # ------------------------------
-. ${CONF_DIR}/httpd
+. ${CONF_DIR}/httpd_php
 . ${CONF_DIR}/openldap
 . ${CONF_DIR}/phpldapadmin
 . ${CONF_DIR}/mysql
@@ -114,6 +114,9 @@ check_arch && check_env
 
 # Mailgraph.
 . ${FUNCTIONS_DIR}/mailgraph.sh
+
+# Awstats.
+. ${FUNCTIONS_DIR}/awstats.sh
 
 # Optional components.
 . ${FUNCTIONS_DIR}/optional_components.sh

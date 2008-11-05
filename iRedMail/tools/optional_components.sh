@@ -16,8 +16,9 @@ Note:
 
 Please refer to the following file for more details after
 installation completed:
+
     * ${TIP_FILE}
-" 20 76 6 \
+" 20 76 4 \
     "SPF" "Sender Policy Framework." "on" \
     "DKIM" "DomainKeys Identified Mail (DKIM)." "on" \
     2>/tmp/spf_dkim
@@ -41,7 +42,8 @@ Do you want to use managesieve service?
 
 The ManageSieve protocol was proposed to manage sieve scripts on the
 server without the need for direct file system access by the users.
-" 20 76 6 \
+
+" 20 76 3 \
     "pysieved" "Python Managesieve Server." "on" \
     2>/tmp/managesieve
 
@@ -135,7 +137,8 @@ use them by your own:
     "ExtMail" "WebMail program from ExtMail project." "off" \
     "phpLDAPadmin" "Web-based LDAP browser to manage your LDAP server." "on" \
     "phpMyAdmin" "Web-based MySQL database management." "on" \
-    "Mailgraph" "Mail statistics RRDtool frontend for Postfix." "on" \
+    "Awstats" "Advanced web and mail log analyzer." "on" \
+    "Mailgraph" "Mail statistics RRDtool frontend for Postfix." "off" \
     2>/tmp/ldap_optional_components
 
     # Temporary disabled.
@@ -164,6 +167,9 @@ use them by your own:
     echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'mailman' >/dev/null 2>&1
     [ X"$?" == X"0" ] && USE_MAILMAN='YES' && echo "export USE_MAILMAN='YES'" >>${CONFIG_FILE}
 
+    echo ${MYSQL_OPTIONAL_COMPONENTS} | grep -i 'awstats' >/dev/null 2>&1
+    [ X"$?" == X"0" ] && USE_AWSTATS='YES' && echo "export USE_AWSTATS='YES'" >>${CONFIG_FILE}
+
     echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'mailgraph' >/dev/null 2>&1
     [ X"$?" == X"0" ] && USE_MAILGRAPH='YES' && echo "export USE_MAILGRAPH='YES'" >>${CONFIG_FILE}
 
@@ -182,7 +188,8 @@ them by your own:
     "ExtMail" "WebMail program from ExtMail project." "off" \
     "phpMyAdmin" "Web-based MySQL database management." "on" \
     "PostfixAdmin" "Web-based program to manage domains and users stored in MySQL." "on" \
-    "Mailgraph" "Mail statistics RRDtool frontend for Postfix." "on" \
+    "Awstats" "Advanced web and mail log analyzer." "on" \
+    "Mailgraph" "Mail statistics RRDtool frontend for Postfix." "off" \
     2>/tmp/mysql_optional_components
 
     # Temporary disabled.
@@ -213,12 +220,21 @@ them by your own:
     echo ${MYSQL_OPTIONAL_COMPONENTS} | grep -i 'mailman' >/dev/null 2>&1
     [ X"$?" == X"0" ] && USE_MAILMAN='YES' && echo "export USE_MAILMAN='YES'" >>${CONFIG_FILE}
 
+    echo ${MYSQL_OPTIONAL_COMPONENTS} | grep -i 'awstats' >/dev/null 2>&1
+    [ X"$?" == X"0" ] && USE_AWSTATS='YES' && echo "export USE_AWSTATS='YES'" >>${CONFIG_FILE}
+
     echo ${MYSQL_OPTIONAL_COMPONENTS} | grep -i 'mailgraph' >/dev/null 2>&1
     [ X"$?" == X"0" ] && USE_MAILGRAPH='YES' && echo "export USE_MAILGRAPH='YES'" >>${CONFIG_FILE}
+
 else
+    # No hook for other backend yet.
     :
 fi
 
+# Used for OpenLDAP backend.
 [ X"${USE_MYSQL}" == X"YES" ] && . ${TOOLS_DIR}/mysql_config.sh
+
+# Used for MySQL backend.
 [ X"${USE_POSTFIXADMIN}" == X"YES" ] && . ${TOOLS_DIR}/postfixadmin_config.sh
+
 [ X"${USE_MAILMAN}" == X"YES" ] && . ${TOOLS_DIR}/mailman_config.sh
