@@ -13,12 +13,10 @@ perl-DBD-SQLite-1.14-1.el5.rf.x86_64.rpm
 perl-Digest-SHA-5.47-1.el5.rf.x86_64.rpm
 perl-NetAddr-IP-4.007-1.el5.rf.x86_64.rpm
 perl-version-0.74-1.el5.rf.x86_64.rpm
-perl-rrdtool-1.2.23-1.el5.rf.x86_64.rpm
 perl-Unix-Syslog-1.0-1.el5.rf.x86_64.rpm
 php-mcrypt-5.1.6-4.el5.x86_64.rpm
 php-mhash-5.1.6-4.el5.x86_64.rpm
 ripole-0.2.0-1.2.el5.rf.x86_64.rpm
-rrdtool-1.2.23-1.el5.rf.x86_64.rpm
 unarj-2.63-0.a.2.el5.rf.x86_64.rpm
 zoo-2.10-2.2.el5.rf.x86_64.rpm
 amavisd-new-2.6.1-1.ired.x86_64.rpm
@@ -34,3 +32,5 @@ unrar-3.8.2-1.el5.rf.x86_64.rpm
 perl-BerkeleyDB-0.36-1.el5.rf.x86_64.rpm
 perl-Compress-Raw-Zlib-2.015-1.el5.rf.x86_64.rpm
 dovecot-1.1.6-0_83.el5.x86_64.rpm
+perl-rrdtool-1.2.28-1.el5.rf.x86_64.rpm
+rrdtool-1.2.28-1.el5.rf.x86_64.rpm

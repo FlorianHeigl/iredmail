@@ -5,7 +5,6 @@
 1c5fd7f0b133e720afab31ee539b0de6  rpms/lzop-1.01-2.el5.rf.x86_64.rpm
 3089bd0a7ab8489ced0e25553aea1505  rpms/freeze-2.5.0-1.2.el5.rf.x86_64.rpm
 3ff06fc2ae6308c0485b52931666e4fe  rpms/php-mcrypt-5.1.6-4.el5.x86_64.rpm
-41bc7ee94ae3dbc245a2d9c6c9c530b1  rpms/rrdtool-1.2.23-1.el5.rf.x86_64.rpm
 4ca2242458d6be40c4c9143fe289eb70  rpms/libmcrypt-2.5.7-5.el5.x86_64.rpm
 5f5fdfa0a985ef32c33a816bb053201c  rpms/cabextract-1.2-1.el5.rf.x86_64.rpm
 6b39b795a07fe50fc7dbf5c408cbe535  rpms/perl-Digest-SHA-5.47-1.el5.rf.x86_64.rpm
@@ -15,7 +14,6 @@ a3e550f92a31ae342f41ddd4aaa1565a  rpms/unarj-2.63-0.a.2.el5.rf.x86_64.rpm
 ba25deb11c0d6f2081af381b58ddae96  rpms/lha-1.14i-19.2.2.el5.rf.x86_64.rpm
 bcafee6dec064dcb08fe0d0999f59c0d  rpms/perl-Crypt-OpenSSL-RSA-0.25-1.el5.rf.x86_64.rpm
 ce59f309a9e7780e9a025935979b36ea  rpms/perl-Unix-Syslog-1.0-1.el5.rf.x86_64.rpm
-d2094601c7b5184c7bbd1b2b458c06d3  rpms/perl-rrdtool-1.2.23-1.el5.rf.x86_64.rpm
 efc9e8f5324a253334150b33823dd654  rpms/arc-5.21o-1.el5.rf.x86_64.rpm
 f9a0ba7c14714e971c63c0028c1088b7  rpms/mhash-0.9.2-6.el5.x86_64.rpm
 887f7631927c5acedcdc1a2077cac371  rpms/perl-NetAddr-IP-4.007-1.el5.rf.x86_64.rpm
@@ -33,3 +31,5 @@ d8f67576d493fc3f814bb7b57d96ee71  rpms/unrar-3.8.2-1.el5.rf.x86_64.rpm
 37bf80e1e94d257bdcfda4fd3b4a0a41  rpms/perl-BerkeleyDB-0.36-1.el5.rf.x86_64.rpm
 cb6045d305d3d837b82b92462160f8a9  rpms/perl-Compress-Raw-Zlib-2.015-1.el5.rf.x86_64.rpm
 c0dd99df5579a75b0ab729a228b3204f  rpms/dovecot-1.1.6-0_83.el5.x86_64.rpm
+01e20b41902cfed0e59f58e33c17d16b  rpms/perl-rrdtool-1.2.28-1.el5.rf.x86_64.rpm
+9dade94564003b4ca6df6681482ebb30  rpms/rrdtool-1.2.28-1.el5.rf.x86_64.rpm
