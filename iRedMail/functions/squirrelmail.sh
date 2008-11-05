@@ -325,7 +325,7 @@ sm_plugin_add_address()
     chown -R apache:apache ${SM_PLUGIN_DIR}/add_address/
     chmod -R 0755 ${SM_PLUGIN_DIR}/add_address/
 
-    echo 'export status_sm_plugin_address="DONE"' >> ${STATUS_FILE}
+    echo 'export status_sm_plugin_add_address="DONE"' >> ${STATUS_FILE}
 }
 
 #

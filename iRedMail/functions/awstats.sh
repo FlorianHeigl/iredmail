@@ -4,7 +4,7 @@
 
 awstats_config_basic()
 {
-    dos2unix ${AWSTATS_CONF_SAMPLE} > /dev/null
+    [ -f ${AWSTATS_CONF_SAMPLE} ] && dos2unix ${AWSTATS_CONF_SAMPLE} > /dev/null
 
     ECHO_INFO "Generate apache config file for awstats: ${AWSTATS_HTTPD_CONF}."
     backup_file ${AWSTATS_HTTPD_CONF}

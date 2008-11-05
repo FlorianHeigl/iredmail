@@ -45,6 +45,7 @@ check_arch && check_env
 . ${CONF_DIR}/phpmyadmin
 . ${CONF_DIR}/extmail
 . ${CONF_DIR}/horde
+. ${CONF_DIR}/awstats
 
 # ------------------------------
 # Import functions.
