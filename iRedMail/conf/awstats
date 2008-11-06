@@ -12,6 +12,13 @@ export AWSTATS_HTTPD_CONF="${HTTPD_CONF_DIR}/awstats.conf"
 # Used for apache directory access list. Generated via 'htpasswd' command.
 export AWSTATS_HTPASSWD_FILE="${HTTPD_CONF_DIR}/awstats.users"
 
+# Config files.
 export AWSTATS_CONF_SAMPLE="${AWSTATS_CONF_DIR}/awstats.localhost.localdomain.conf"
 export AWSTATS_CONF_WEB="${AWSTATS_CONF_DIR}/awstats.${HOSTNAME}.conf"
 export AWSTATS_CONF_MAIL="${AWSTATS_CONF_DIR}/awstats.mail.conf"
+
+# Default language.
+#   English:        en
+#   Simp Chinese:   cn
+#   Trad Chinese:   tw
+export AWSTATS_LANGUAGE="cn"

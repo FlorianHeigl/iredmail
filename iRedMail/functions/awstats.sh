@@ -42,7 +42,9 @@ awstats_config_weblog()
     cd ${AWSTATS_CONF_DIR} && \
     cp -f ${AWSTATS_CONF_SAMPLE} ${AWSTATS_CONF_WEB}
 
-    perl -pi -e 's#^(SiteDomain=)(.*)#${1}"$ENV{'HOSTNAME'}"#' ${AWSTATS_CONF_MAIL}
+    perl -pi -e 's#^(SiteDomain=)(.*)#${1}"$ENV{'HOSTNAME'}"#' ${AWSTATS_CONF_WEB}
+
+    perl -pi -e 's#^(Lang=)(.*)#${1}$ENV{'AWSTATS_LANGUAGE'}#' ${AWSTATS_CONF_WEB}
 
     echo 'export status_awstats_config_weblog="DONE"' >> ${STATUS_FILE}
 }
@@ -89,6 +91,8 @@ awstats_config_maillog()
     perl -pi -e 's#^(ShowMiscStats=)(.*)#${1}0#' ${AWSTATS_CONF_MAIL}
     perl -pi -e 's#^(ShowHTTPErrorsStats=)(.*)#${1}0#' ${AWSTATS_CONF_MAIL}
     perl -pi -e 's#^(ShowSMTPErrorsStats=)(.*)#${1}1#' ${AWSTATS_CONF_MAIL}
+
+    perl -pi -e 's#^(Lang=)(.*)#${1}$ENV{'AWSTATS_LANGUAGE'}#' ${AWSTATS_CONF_MAIL}
 
     echo 'export status_awstats_config_maillog="DONE"' >> ${STATUS_FILE}
 }
