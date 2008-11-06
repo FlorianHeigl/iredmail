@@ -24,12 +24,12 @@ aaec6805b06a16f241333037553b0c42  rpms/php-pecl-fileinfo-1.0.4-1.el5.rf.x86_64.r
 bf93d00637fb30e832409fbae6b2b481  rpms/perl-Convert-UUlib-1.11-1.ired.x86_64.rpm
 fb2574ec5b714b136e4ee4bd85344b1c  rpms/policyd-1.82-4.rhms.x86_64.rpm
 14781f40c86031d676c0b2462a92fc9e  rpms/postfix-2.3.15-2.ired.x86_64.rpm
-749199e13a34460a23eda882f4e328fe  rpms/clamav-0.94-1.el5.rf.x86_64.rpm
-629706dc84282653a5149df6b0a4ab13  rpms/clamav-db-0.94-1.el5.rf.x86_64.rpm
-daecf7bbb0dc95abfa2cda213f07f355  rpms/clamd-0.94-1.el5.rf.x86_64.rpm
 d8f67576d493fc3f814bb7b57d96ee71  rpms/unrar-3.8.2-1.el5.rf.x86_64.rpm
 37bf80e1e94d257bdcfda4fd3b4a0a41  rpms/perl-BerkeleyDB-0.36-1.el5.rf.x86_64.rpm
 cb6045d305d3d837b82b92462160f8a9  rpms/perl-Compress-Raw-Zlib-2.015-1.el5.rf.x86_64.rpm
 c0dd99df5579a75b0ab729a228b3204f  rpms/dovecot-1.1.6-0_83.el5.x86_64.rpm
 01e20b41902cfed0e59f58e33c17d16b  rpms/perl-rrdtool-1.2.28-1.el5.rf.x86_64.rpm
 9dade94564003b4ca6df6681482ebb30  rpms/rrdtool-1.2.28-1.el5.rf.x86_64.rpm
+5788b6a9da6bb24880893e2e90ad344d  rpms/clamav-0.94.1-1.el5.rf.x86_64.rpm
+05086a339e8f84f15aa7c27accec6c8c  rpms/clamav-db-0.94.1-1.el5.rf.x86_64.rpm
+4d9ca7e5b0e94ea951b70319f4c1f6fd  rpms/clamd-0.94.1-1.el5.rf.x86_64.rpm

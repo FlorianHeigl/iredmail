@@ -24,12 +24,12 @@ f4d04c5cc21515625534c9f557eb11b4  rpms/amavisd-new-2.6.1-1.ired.i386.rpm
 e89ad55c67811e700c4e3cba55b097e5  rpms/perl-Convert-UUlib-1.11-1.ired.i386.rpm
 0e8286982e3cfc33a88fb003c55b366d  rpms/policyd-1.82-4.rhms.i386.rpm
 155cdc7fb2ec5369ca77014ff483c3f4  rpms/postfix-2.3.15-2.ired.i386.rpm
-0cb0fa279287dc293ccf5bb461d61c82  rpms/clamav-0.94-1.el5.rf.i386.rpm
-99d09fb7be84c2996c4127f4c1cf277d  rpms/clamav-db-0.94-1.el5.rf.i386.rpm
-5130e3cc9226b8fe56de25d674cbf41a  rpms/clamd-0.94-1.el5.rf.i386.rpm
 38b63120bbcbfa94b74bcc28751e77dc  rpms/unrar-3.8.2-1.el5.rf.i386.rpm
 73a4835924c0a22fa52fa7d2b8f5577e  rpms/perl-BerkeleyDB-0.36-1.el5.rf.i386.rpm
 9f001e591572d88c6e035bd525f772fe  rpms/perl-Compress-Raw-Zlib-2.015-1.el5.rf.i386.rpm
 013666b96440e3af63aa5fbaa6d5449b  rpms/dovecot-1.1.6-0_83.el5.i386.rpm
 ffbc575f583df6335f7e4a10738a70d9  rpms/perl-rrdtool-1.2.28-1.el5.rf.i386.rpm
 a2a32ad4ad05ff263bca79cece9fa91a  rpms/rrdtool-1.2.28-1.el5.rf.i386.rpm
+c661c0b3ce5a89ccb3abedf54e22a083  rpms/clamav-0.94.1-1.el5.rf.i386.rpm
+e3d21d966adfbacb9fb3129e199cbef3  rpms/clamav-db-0.94.1-1.el5.rf.i386.rpm
+9e18ca478bcfd3bde413cc3a2eb779ee  rpms/clamd-0.94.1-1.el5.rf.i386.rpm
