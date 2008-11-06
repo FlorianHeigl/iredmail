@@ -33,3 +33,4 @@ c0dd99df5579a75b0ab729a228b3204f  rpms/dovecot-1.1.6-0_83.el5.x86_64.rpm
 5788b6a9da6bb24880893e2e90ad344d  rpms/clamav-0.94.1-1.el5.rf.x86_64.rpm
 05086a339e8f84f15aa7c27accec6c8c  rpms/clamav-db-0.94.1-1.el5.rf.x86_64.rpm
 4d9ca7e5b0e94ea951b70319f4c1f6fd  rpms/clamd-0.94.1-1.el5.rf.x86_64.rpm
+b763f87639929cc513f8176f0b8b23b2  rpms/php-eaccelerator-5.1.6_0.9.5.2-4.el5.rf.x86_64.rpm
