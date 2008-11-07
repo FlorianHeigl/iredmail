@@ -1,4 +1,4 @@
-{include file='header.php'}
+{include file='header.tpl'}
 <div id="login">
 <form name="login" method="post">
 <table id="login_table" cellspacing="10">
@@ -41,4 +41,4 @@
 {/literal}
 
 </div>
-{include file='footer.php'}
+{include file='footer.tpl'}

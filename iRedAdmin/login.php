@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET")
     //include ("./templates/header.php");
     //include ("./templates/login.php");
     //include ("./templates/footer.php");
-    $smarty->display('login.php');
+    $smarty->display('login.tpl');
 }
 
 if ($_SERVER['REQUEST_METHOD'] == "POST")
