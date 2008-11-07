@@ -75,10 +75,6 @@ $smarty->compile_dir = TMP.'/templates_c';
 $smarty->config_dir = TMP.'/configs';
 $smarty->cache_dir = TMP.'/cache';
 
-// Use different delimiter
-$smarty->left_delimiter = '<[[';
-$smarty->right_delimiter = ']]>';
-
 // Set system variables
 $smarty->assign('LANG', $PALANG);
 $smarty->assign('CONF', $CONF);
