@@ -3,7 +3,6 @@ iRedMail-0.3.2:
     * Update clamav to 0.94.1. Thanks to chenwei for his remind.
     * Update php-rrdtool, rrdtool to 1.2.28.
     * Initialize import awstats as web and mail log analyzer.
-    * Update dovecot to 1.1.6.
     * Improve mailgraph, it can display greylist counter now. Merge css code
       to mailgraph.cgi.
     * Update phpMyAdmin to 2.11.9.3.

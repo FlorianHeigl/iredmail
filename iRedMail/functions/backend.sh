@@ -26,6 +26,4 @@ backend_install()
     else
         :
     fi
-
-    echo 'export status_backend_install="DONE"' >> ${STATUS_FILE}
 }
