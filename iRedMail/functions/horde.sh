@@ -35,7 +35,10 @@ horde_config()
     ECHO_INFO "Import MySQL database for Horde webmail."
     horde_db_template="/tmp/horde_db_template.sql"
     cp -f ${HORDE_DB_TEMPLATE} ${horde_db_template}
+    # Set database user password.
     perl -pi -e 's#(.*PASSWORD.*)horde(.*)#${1}$ENV{HORDE_DB_PASSWD}${2}#' ${horde_db_template}
+    # Set charset.
+    perl -pi -e 's#^(CREATE DATABASE horde)(.*)#${1} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;#' ${horde_db_template}
 
     mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWD} <<EOF
 SOURCE ${horde_db_template};
