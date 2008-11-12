@@ -136,8 +136,10 @@ EOF
 horde_config_turba()
 {
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
+        ECHO_INFO "Setting up global LDAP address book for Horde (Turba)."
+
         cat >> ${HORDE_TURBA_CONFIG_DIR}/sources.php <<EOF
-$cfgSources['localldap'] = array('title' => _("Global Address Book."),
+\$cfgSources['localldap'] = array('title' => _("Global Address Book."),
                                  'type' => 'ldap',
                                  'params' => array('server'    => "${LDAP_SERVER_HOST}",
                                                    'port'      => "${LDAP_SERVER_PORT}",
@@ -159,6 +161,41 @@ $cfgSources['localldap'] = array('title' => _("Global Address Book."),
                                  'admin' => array(),
                                  'export' => true,
                                  'browse' => true);
+EOF
+    else
+        :
+    fi
+}
+
+# Ingo is Email Filter Rules Manager.
+horde_config_ingo()
+{
+    if [ X"${USE_MANAGESIEVE}" == X"YES" ]; then
+        ECHO_INFO "Setting up managesieve service (pysieved) for Horde (Ingo)."
+
+        backup_file ${HORDE_INGO_CONFIG_DIR}/backends.php
+        cat > ${HORDE_INGO_CONFIG_DIR}/backends.php <<EOF
+<?php
+\$backends['sieve'] = array(
+    'driver' => 'timsieved',
+    'preferred' => "${FIRST_DOMAIN}",
+    'hordeauth' => false,
+    'params' => array(
+        // Hostname of the timsieved server
+        'hostspec' => "${PYSIEVED_BINDADDR}",
+        // Login type of the server
+        'logintype' => 'LOGIN',
+        // Enable/disable TLS encryption
+        'usetls' => false,
+        // Port number of the timsieved server
+        'port' => ${PYSIEVED_PORT},
+        // Name of the sieve script
+        'scriptname' => "${SIEVE_RULE_FILENAME}",
+    ),
+    'script' => 'sieve',
+    'scriptparams' => array(),
+    'shares' => false
+);
 EOF
     else
         :

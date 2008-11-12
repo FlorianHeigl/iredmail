@@ -16,8 +16,11 @@ export HORDE_DB_USER="horde"
 export HORDE_DB_PASSWD="$(echo $RANDOM\$$RANDOM\@$RANDOM\!$RANDOM\&$RANDOM\*$RANDOM\)$RANDOM)"
 export HORDE_DB_TEMPLATE="${HORDE_HTTPD_ROOT}/scripts/sql/groupware.mysql.sql"
 
-# Horde Address Book Program: Turba.
+# Turba: Horde Contact Management Application.
 export HORDE_TURBA_CONFIG_DIR="${HORDE_HTTPD_ROOT}/turba/config"
+
+# Ingo: Horde Email Filter Rules Manager.
+export HORDE_INGO_CONFIG_DIR="${HORDE_HTTPD_ROOT}/ingo/config"
 
 # Default language of user interface.
 #   en_US: English(US)
