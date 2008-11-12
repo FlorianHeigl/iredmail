@@ -128,3 +128,36 @@ EOF
 
     echo 'export status_horde_config="DONE"' >> ${STATUS_FILE}
 }
+
+# Turba is an address book program.
+horde_config_turba()
+{
+    if [ X"${BACKEND}" == X"OpenLDAP" ]; then
+        cat >> ${HORDE_TURBA_CONFIG_DIR}/sources.php <<EOF
+$cfgSources['localldap'] = array('title' => _("Global Address Book."),
+                                 'type' => 'ldap',
+                                 'params' => array('server'    => "${LDAP_SERVER_HOST}",
+                                                   'port'      => "${LDAP_SERVER_PORT}",
+                                                   'tls'       => false,
+                                                   'root'      => "${LDAP_ATTR_DOMAIN_DN_NAME}=${FIRST_DOMAIN},${LDAP_BASEDN}",
+                                                   'bind_dn'   => "${LDAP_BINDDN}",
+                                                   'bind_password' => "${LDAP_BINDPW}",
+                                                   'version'   => ${LDAP_BIND_VERSION},
+                                                   'scope'     => 'one',
+                                                   'charset'   => 'utf-8',
+                                                   'sizelimit' => 200),
+                                 'map'    => array('__key'     => 'dn',
+                                                   'name'      => 'cn',
+                                                   'email'     => 'mail'),
+                                 'search' => array('name', 'email'),
+                                 'strict' => array('dn'),
+                                 'public' => true,
+                                 'readonly' => true,
+                                 'admin' => array(),
+                                 'export' => true,
+                                 'browse' => true);
+EOF
+    else
+        :
+    fi
+}

@@ -16,6 +16,9 @@ export HORDE_DB_USER="horde"
 export HORDE_DB_PASSWD="$(echo $RANDOM\$$RANDOM\@$RANDOM\!$RANDOM\&$RANDOM\*$RANDOM\)$RANDOM)"
 export HORDE_DB_TEMPLATE="${HORDE_HTTPD_ROOT}/scripts/sql/groupware.mysql.sql"
 
+# Horde Address Book Program: Turba.
+export HORDE_TURBA_CONFIG_DIR="${HORDE_HTTPD_ROOT}/turba/config"
+
 # Default language of user interface.
 #   en_US: English(US)
 #   zh_CN: Simp Chinese.

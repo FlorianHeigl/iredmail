@@ -1,4 +1,6 @@
 iRedMail-0.3.2:
+    * Add global ldap address book for horde when use OpenLDAP as backend.
+      Thanks bruce.16899@gmail for this remind.
     * Initialize import php-eaccelerator.
     * Update clamav to 0.94.1. Thanks to chenwei for his remind.
     * Update php-rrdtool, rrdtool to 1.2.28.

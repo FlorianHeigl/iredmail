@@ -37,7 +37,8 @@ optional_components()
     # Horde WebMail.
     [ X"${USE_HORDE}" == X"YES" ] && \
         check_status_before_run horde_install && \
-        check_status_before_run horde_config
+        check_status_before_run horde_config && \
+        check_status_before_run horde_config_turba
 
     # phpLDAPadmin.
     [ X"${USE_PHPLDAPADMIN}" == X"YES" ] && \

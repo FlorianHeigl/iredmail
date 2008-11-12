@@ -131,10 +131,11 @@ if [ X"${BACKEND}" == X"OpenLDAP" ]; then
     --checklist "\
 iRedMail provides several optional components for LDAP backend, you can
 use them by your own:
-" 20 76 7 \
+" 20 76 8 \
     "SquirrelMail" "WebMail program, written in PHP." "on" \
     "Roundcubemail" "WebMail program(PHP, XHTML, CSS2, AJAX)." "off" \
     "ExtMail" "WebMail program from ExtMail project." "off" \
+    "Horde WebMail" "WebMail program." "off" \
     "phpLDAPadmin" "Web-based LDAP browser to manage your LDAP server." "on" \
     "phpMyAdmin" "Web-based MySQL database management." "on" \
     "Awstats" "Advanced web and mail log analyzer." "on" \
@@ -158,6 +159,9 @@ use them by your own:
     echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'extmail' >/dev/null 2>&1
     [ X"$?" == X"0" ] && USE_EXTMAIL='YES' && echo "export USE_EXTMAIL='YES'" >>${CONFIG_FILE}
 
+    echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'Horde' >/dev/null 2>&1
+    [ X"$?" == X"0" ] && USE_HORDE='YES' && echo "export USE_HORDE='YES'" >>${CONFIG_FILE}
+
     echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'phpldapadmin' >/dev/null 2>&1
     [ X"$?" == X"0" ] && USE_PHPLDAPADMIN='YES' && echo "export USE_PHPLDAPADMIN='YES'" >>${CONFIG_FILE}
 
@@ -167,7 +171,7 @@ use them by your own:
     echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'mailman' >/dev/null 2>&1
     [ X"$?" == X"0" ] && USE_MAILMAN='YES' && echo "export USE_MAILMAN='YES'" >>${CONFIG_FILE}
 
-    echo ${MYSQL_OPTIONAL_COMPONENTS} | grep -i 'awstats' >/dev/null 2>&1
+    echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'awstats' >/dev/null 2>&1
     [ X"$?" == X"0" ] && USE_AWSTATS='YES' && echo "export USE_AWSTATS='YES'" >>${CONFIG_FILE}
 
     echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'mailgraph' >/dev/null 2>&1
