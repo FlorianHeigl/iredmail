@@ -392,6 +392,14 @@ postfix_config_mysql()
 {
     ECHO_INFO "Configure Postfix for MySQL lookup."
 
+    # Postfix doesn't work while mysql server is 'localhost', should be
+    # changed to '127.0.0.1'.
+    if [ X"${MYSQL_SERVER}" == X"localhost" ]; then
+        export mysql_server='127.0.0.1'
+    else
+        export mysql_server="${MYSQL_SERVER}"
+    fi
+
     postconf -e transport_maps="mysql:${mysql_transport_maps_cf}"
     postconf -e virtual_mailbox_domains="mysql:${mysql_virtual_mailbox_domains_cf}"
     postconf -e virtual_mailbox_maps="mysql:${mysql_virtual_mailbox_maps_cf}"
@@ -407,7 +415,7 @@ postfix_config_mysql()
     cat > ${mysql_transport_maps_cf} <<EOF
 user        = ${MYSQL_BIND_USER}
 password    = ${MYSQL_BIND_PW}
-hosts       = ${MYSQL_SERVER}
+hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
 query       = SELECT transport FROM domain WHERE domain='%s' AND active='1'
@@ -416,7 +424,7 @@ EOF
     cat > ${mysql_virtual_mailbox_domains_cf} <<EOF
 user        = ${MYSQL_BIND_USER}
 password    = ${MYSQL_BIND_PW}
-hosts       = ${MYSQL_SERVER}
+hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
 query       = SELECT domain FROM domain WHERE domain='%s' AND active='1' AND expired >= NOW()
@@ -425,7 +433,7 @@ EOF
     cat > ${mysql_virtual_mailbox_maps_cf} <<EOF
 user        = ${MYSQL_BIND_USER}
 password    = ${MYSQL_BIND_PW}
-hosts       = ${MYSQL_SERVER}
+hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
 query       = SELECT maildir FROM mailbox WHERE username='%s' AND active='1' AND enabledeliver='1' AND expired >= NOW()
@@ -434,7 +442,7 @@ EOF
     cat > ${mysql_virtual_mailbox_limit_maps_cf} <<EOF
 user        = ${MYSQL_BIND_USER}
 password    = ${MYSQL_BIND_PW}
-hosts       = ${MYSQL_SERVER}
+hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
 query       = SELECT quota FROM mailbox WHERE username='%s' AND active='1'
@@ -443,7 +451,7 @@ EOF
     cat > ${mysql_virtual_alias_maps_cf} <<EOF
 user        = ${MYSQL_BIND_USER}
 password    = ${MYSQL_BIND_PW}
-hosts       = ${MYSQL_SERVER}
+hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
 query       = SELECT goto FROM alias WHERE address='%s' AND active='1' AND expired >= NOW()
@@ -452,7 +460,7 @@ EOF
     cat > ${mysql_sender_login_maps_cf} <<EOF
 user        = ${MYSQL_BIND_USER}
 password    = ${MYSQL_BIND_PW}
-hosts       = ${MYSQL_SERVER}
+hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
 query       = SELECT username FROM mailbox WHERE username='%s' AND active='1' AND enablesmtp='1' AND expired >= NOW()
@@ -461,7 +469,7 @@ EOF
     cat > ${mysql_sender_bcc_maps_domain_cf} <<EOF
 user        = ${MYSQL_BIND_USER}
 password    = ${MYSQL_BIND_PW}
-hosts       = ${MYSQL_SERVER}
+hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
 query       = SELECT bcc_address FROM sender_bcc_domain WHERE domain='%d' AND active='1' AND expired >= NOW()
@@ -470,7 +478,7 @@ EOF
     cat > ${mysql_sender_bcc_maps_user_cf} <<EOF
 user        = ${MYSQL_BIND_USER}
 password    = ${MYSQL_BIND_PW}
-hosts       = ${MYSQL_SERVER}
+hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
 query       = SELECT bcc_address FROM sender_bcc_user WHERE username='%s' AND active='1' AND expired >= NOW()
@@ -479,7 +487,7 @@ EOF
     cat > ${mysql_recipient_bcc_maps_domain_cf} <<EOF
 user        = ${MYSQL_BIND_USER}
 password    = ${MYSQL_BIND_PW}
-hosts       = ${MYSQL_SERVER}
+hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
 query       = SELECT bcc_address FROM recipient_bcc_domain WHERE domain='%d' AND active='1' AND expired >= NOW()
@@ -488,7 +496,7 @@ EOF
     cat > ${mysql_recipient_bcc_maps_user_cf} <<EOF
 user        = ${MYSQL_BIND_USER}
 password    = ${MYSQL_BIND_PW}
-hosts       = ${MYSQL_SERVER}
+hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
 query       = SELECT bcc_address FROM recipient_bcc_user WHERE username='%s' AND active='1' AND expired >= NOW()

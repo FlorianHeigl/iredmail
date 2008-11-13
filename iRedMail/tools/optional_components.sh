@@ -233,8 +233,8 @@ else
     :
 fi
 
-# Used when you use OpenLDAP as backend.
-. ${TOOLS_DIR}/mysql_config.sh
+# Used when you use OpenLDAP as backend, only prompt for MySQL root password.
+[ X"${BACKEND}" == X"OpenLDAP" ] && . ${TOOLS_DIR}/mysql_config.sh
 
 # Used when you use MySQL as backend.
 [ X"${USE_POSTFIXADMIN}" == X"YES" ] && . ${TOOLS_DIR}/postfixadmin_config.sh

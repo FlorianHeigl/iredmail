@@ -89,8 +89,15 @@ EOF
     # Policyd config for normal feature exclude recipient throttle.
     # -------------------------------------------------------------
     # ---- DATABASE CONFIG ----
-    export MYSQL_SERVER
-    perl -pi -e 's#^(MYSQLHOST=)(.*)#${1}"$ENV{MYSQL_SERVER}"#' ${POLICYD_CONF}
+
+    # Policyd doesn't work while mysql server is 'localhost', should be
+    # changed to '127.0.0.1'.
+    if [ X"${MYSQL_SERVER}" == X"localhost" ]; then
+        export mysql_server='127.0.0.1'
+    else
+        export mysql_server="${MYSQL_SERVER}"
+    fi
+    perl -pi -e 's#^(MYSQLHOST=)(.*)#${1}"$ENV{mysql_server}"#' ${POLICYD_CONF}
     perl -pi -e 's#^(MYSQLDBASE=)(.*)#${1}"$ENV{POLICYD_DB_NAME}"#' ${POLICYD_CONF}
     perl -pi -e 's#^(MYSQLUSER=)(.*)#${1}"$ENV{POLICYD_DB_USER}"#' ${POLICYD_CONF}
     perl -pi -e 's#^(MYSQLPASS=)(.*)#${1}"$ENV{POLICYD_DB_PASSWD}"#' ${POLICYD_CONF}
@@ -159,7 +166,7 @@ EOF
     # Policyd config for recipient throttle only.
     # -------------------------------------------------------------
     # ---- DATABASE CONFIG ----
-    perl -pi -e 's#^(MYSQLHOST=)(.*)#${1}"$ENV{MYSQL_SERVER}"#' ${POLICYD_SENDER_THROTTLE_CONF}
+    perl -pi -e 's#^(MYSQLHOST=)(.*)#${1}"$ENV{mysql_server}"#' ${POLICYD_SENDER_THROTTLE_CONF}
     perl -pi -e 's#^(MYSQLDBASE=)(.*)#${1}"$ENV{POLICYD_SENDER_THROTTLE_DB_NAME}"#' ${POLICYD_SENDER_THROTTLE_CONF}
     perl -pi -e 's#^(MYSQLUSER=)(.*)#${1}"$ENV{POLICYD_SENDER_THROTTLE_DB_USER}"#' ${POLICYD_SENDER_THROTTLE_CONF}
     perl -pi -e 's#^(MYSQLPASS=)(.*)#${1}"$ENV{POLICYD_SENDER_THROTTLE_DB_PASSWD}"#' ${POLICYD_SENDER_THROTTLE_CONF}
