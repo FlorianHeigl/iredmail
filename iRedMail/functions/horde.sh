@@ -63,8 +63,13 @@ EOF
 
     # Hack configuration file. 
     # Cookie setting.
-    cd ${HORDE_HTTPD_ROOT}/config/ && \
+    cd ${HORDE_HTTPD_ROOT}/config/
     perl -pi -e 's#(.*conf.*cookie.*domain.*=).*#${1} "";#' conf.php
+
+    # Set Horde default administrator.
+    perl -pi -e 's#(.*conf.*auth.*admins.*=).*#${1} array\("${FIRST_DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}"\);#' conf.php
+
+    # Set default language.
     perl -pi -e 's#(.*nls.*defaults.*language.*=).*#${1} "$ENV{HORDE_DEFAULT_LANGUAGE}";#' nls.php
 
     # Empty default email footer msg.
