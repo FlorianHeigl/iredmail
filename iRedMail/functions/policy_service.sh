@@ -92,11 +92,7 @@ EOF
 
     # Policyd doesn't work while mysql server is 'localhost', should be
     # changed to '127.0.0.1'.
-    if [ X"${MYSQL_SERVER}" == X"localhost" ]; then
-        export mysql_server='127.0.0.1'
-    else
-        export mysql_server="${MYSQL_SERVER}"
-    fi
+
     perl -pi -e 's#^(MYSQLHOST=)(.*)#${1}"$ENV{mysql_server}"#' ${POLICYD_CONF}
     perl -pi -e 's#^(MYSQLDBASE=)(.*)#${1}"$ENV{POLICYD_DB_NAME}"#' ${POLICYD_CONF}
     perl -pi -e 's#^(MYSQLUSER=)(.*)#${1}"$ENV{POLICYD_DB_USER}"#' ${POLICYD_CONF}

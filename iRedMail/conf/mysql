@@ -14,6 +14,13 @@ export MYSQL_PORT='3306'
 export MYSQL_SOCKET='/var/lib/mysql/mysql.sock'
 export MYSQL_ROOT_USER='root'
 
+# Use lowercase variable name for IP address.
+if [ X"${MYSQL_SERVER}" == X"localhost" ]; then
+    export mysql_server='127.0.0.1'
+else
+    export mysql_server="${MYSQL_SERVER}"
+fi
+
 # MySQL config file.
 export MYSQL_MY_CNF='/etc/my.cnf'
 

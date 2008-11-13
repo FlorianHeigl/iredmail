@@ -394,11 +394,6 @@ postfix_config_mysql()
 
     # Postfix doesn't work while mysql server is 'localhost', should be
     # changed to '127.0.0.1'.
-    if [ X"${MYSQL_SERVER}" == X"localhost" ]; then
-        export mysql_server='127.0.0.1'
-    else
-        export mysql_server="${MYSQL_SERVER}"
-    fi
 
     postconf -e transport_maps="mysql:${mysql_transport_maps_cf}"
     postconf -e virtual_mailbox_domains="mysql:${mysql_virtual_mailbox_domains_cf}"
