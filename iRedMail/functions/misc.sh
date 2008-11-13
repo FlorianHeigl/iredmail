@@ -82,7 +82,9 @@ replace_iptables_rule()
 
 replace_mysql_config()
 {
-    if [ X"${BACKEND}" == X"MySQL" -o X"${USE_MYSQL}" == X"YES" ]; then
+    if [ X"${BACKEND}" == X"MySQL" -o X"${BACKEND}" == X"OpenLDAP" ]; then
+        # Both MySQL and OpenLDAP will need MySQL database server, so prompt
+        # this config file replacement.
         ECHO_QUESTION "Would you like to use MySQL configuration file shipped within iRedMail now?"
         ECHO_QUESTION -n "File: ${MYSQL_MY_CNF}. [Y|n]"
         read ANSWER

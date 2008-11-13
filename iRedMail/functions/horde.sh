@@ -67,7 +67,7 @@ EOF
     perl -pi -e 's#(.*conf.*cookie.*domain.*=).*#${1} "";#' conf.php
 
     # Set Horde default administrator.
-    perl -pi -e 's#(.*conf.*auth.*admins.*=).*#${1} array\("${FIRST_DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}"\);#' conf.php
+    perl -pi -e 's#(.*conf.*auth.*admins.*=).*#${1} array\("$ENV{'FIRST_DOMAIN_ADMIN_NAME'}@$ENV{'FIRST_DOMAIN'}"\);#' conf.php
 
     # Set default language.
     perl -pi -e 's#(.*nls.*defaults.*language.*=).*#${1} "$ENV{HORDE_DEFAULT_LANGUAGE}";#' nls.php
@@ -143,8 +143,18 @@ horde_config_turba()
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
         ECHO_INFO "Setting up global LDAP address book for Horde (Turba)."
 
-        cat >> ${HORDE_TURBA_CONFIG_DIR}/sources.php <<EOF
-\$cfgSources['localldap'] = array('title' => _("Global Address Book."),
+        # Ensure global ldap address book is first address book.
+        tmp_file="/tmp/turba_sources.php" 
+        cp -f ${HORDE_TURBA_CONFIG_DIR}/sources.php ${tmp_file}
+        perl -pi -e 's#\<\?php##' ${tmp_file}
+
+        cat > ${HORDE_TURBA_CONFIG_DIR}/sources.php <<EOF
+<?php
+
+//
+// Global LDAP Address Book.
+//
+\$cfgSources['localldap'] = array('title' => _("Global LDAP Address Book."),
                                  'type' => 'ldap',
                                  'params' => array('server'    => "${LDAP_SERVER_HOST}",
                                                    'port'      => "${LDAP_SERVER_PORT}",
@@ -155,18 +165,21 @@ horde_config_turba()
                                                    'version'   => ${LDAP_BIND_VERSION},
                                                    'scope'     => 'one',
                                                    'charset'   => 'utf-8',
-                                                   'sizelimit' => 200),
+                                                   'sizelimit' => 1000),
                                  'map'    => array('__key'     => 'dn',
                                                    'name'      => 'cn',
                                                    'email'     => 'mail'),
                                  'search' => array('name', 'email'),
                                  'strict' => array('dn'),
+                                 'admin' => array(),
                                  'public' => true,
                                  'readonly' => true,
-                                 'admin' => array(),
                                  'export' => true,
                                  'browse' => true);
 EOF
+
+        cat ${tmp_file} >> ${HORDE_TURBA_CONFIG_DIR}/sources.php
+        rm -f ${tmp_file} >/dev/null 2>&1
     else
         :
     fi

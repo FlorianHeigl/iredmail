@@ -4,17 +4,17 @@
 
 awstats_config_basic()
 {
-    [ -f ${AWSTATS_CONF_SAMPLE} ] && dos2unix ${AWSTATS_CONF_SAMPLE} > /dev/null
+    [ -f ${AWSTATS_CONF_SAMPLE} ] && dos2unix ${AWSTATS_CONF_SAMPLE} >/dev/null 2>&1
 
     ECHO_INFO "Generate apache config file for awstats: ${AWSTATS_HTTPD_CONF}."
     backup_file ${AWSTATS_HTTPD_CONF}
 
     cat > ${AWSTATS_HTTPD_CONF} <<EOF
 ${CONF_MSG}
-Alias /awstats/icon/ /var/www/awstats/icon/
-ScriptAlias /awstats/ /var/www/awstats/
-#Alias /css/ /var/www/awstats/css/
-#Alias /js/ /var/www/awstats/js/
+Alias /awstats/icon /var/www/awstats/icon/
+ScriptAlias /awstats /var/www/awstats/
+#Alias /css /var/www/awstats/css/
+#Alias /js /var/www/awstats/js/
 <Directory /var/www/awstats/>
     DirectoryIndex awstats.pl
     Options ExecCGI
@@ -31,7 +31,7 @@ ScriptAlias /awstats/ /var/www/awstats/
 EOF
 
     # Set username, password for web access.
-    htpasswd -bcm ${AWSTATS_HTPASSWD_FILE} ${AWSTATS_USERNAME} ${AWSTATS_PASSWD}
+    htpasswd -bcm ${AWSTATS_HTPASSWD_FILE} ${AWSTATS_USERNAME} ${AWSTATS_PASSWD} >/dev/null 2>&1
 
     echo 'export status_awstats_config_basic="DONE"' >> ${STATUS_FILE}
 }
@@ -101,8 +101,8 @@ awstats_config_crontab()
 {
     ECHO_INFO "Setting cronjob for awstats."
     cat >> ${CRON_SPOOL_DIR}/root <<EOF
-1   */1   *   *   *   perl /var/www/atstats/awstats.pl -config=$(hostname) -update >/dev/null
-1   */1   *   *   *   perl /var/www/atstats/awstats.pl -config=mail -update >/dev/null
+1   */1   *   *   *   perl /var/www/awstats/awstats.pl -config=$(hostname) -update >/dev/null
+1   */1   *   *   *   perl /var/www/awstats/awstats.pl -config=mail -update >/dev/null
 EOF
 
     echo 'export status_awstats_config_crontab="DONE"' >> ${STATUS_FILE}

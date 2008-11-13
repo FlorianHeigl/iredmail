@@ -47,10 +47,10 @@ Warnning:
 
         [ X"${MYSQL_ADMIN_PW}" != X"" ] && break
     done
+
+    echo "export MYSQL_ADMIN_USER='${MYSQL_ADMIN_USER}'" >> ${CONFIG_FILE}
+    echo "export MYSQL_ADMIN_PW='${MYSQL_ADMIN_PW}'" >> ${CONFIG_FILE}
+    rm -f /tmp/mysql_user_and_passwd
 else
     :
 fi
-
-echo "export MYSQL_ADMIN_USER='${MYSQL_ADMIN_USER}'" >> ${CONFIG_FILE}
-echo "export MYSQL_ADMIN_PW='${MYSQL_ADMIN_PW}'" >> ${CONFIG_FILE}
-rm -f /tmp/mysql_user_and_passwd

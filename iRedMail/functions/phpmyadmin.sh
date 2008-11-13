@@ -21,25 +21,26 @@ ${CONF_MSG}
 Alias /phpmyadmin "${PHPMYADMIN_HTTPD_ROOT}/"
 EOF
 
-    ECHO_INFO "Config phpMyAdmin: ${PHPMYADMIN_HTTPD_ROOT}/config.inc.php."
-    cd ${PHPMYADMIN_HTTPD_ROOT}
-    cp config.sample.inc.php config.inc.php
+    ECHO_INFO "Config phpMyAdmin: ${PHPMYADMIN_CONFIG_FILE}."
+    cd ${PHPMYADMIN_HTTPD_ROOT} && cp config.sample.inc.php ${PHPMYADMIN_CONFIG_FILE}
 
     export COOKIE_STRING="$(openssl passwd -1 ${PROG_NAME_LOWERCASE})"
-    perl -pi -e 's#(.*blowfish_secret.*= )(.*)#${1}"$ENV{'COOKIE_STRING'}"; //${2}#' config.inc.php
+    perl -pi -e 's#(.*blowfish_secret.*= )(.*)#${1}"$ENV{'COOKIE_STRING'}"; //${2}#' ${PHPMYADMIN_CONFIG_FILE}
+    perl -pi -e 's#(.*Servers.*host.*=.*)localhost(.*)#${1}$ENV{'MYSQL_SERVER'}${2}#' ${PHPMYADMIN_CONFIG_FILE}
 
-    # Refer to phpMyAdmin FAQ 2.6:
-    # http://www.phpmyadmin.net/documentation/#faq2_6
-    # If your host is "localhost" MySQL (the commandline tool 'mysql' as well)
-    # always tries to use the socket connection for speeding up things. If you
-    # enter "127.0.0.1" as hostname, MySQL uses the TCP connection.
-    perl -pi -e 's#(.*Servers.*host.*=.*)localhost(.*)#${1}127.0.0.1${2}#' config.inc.php
+    if [ X"${MYSQL_SERVER}" == X"localhost" ]; then
+        # Use unix socket.
+        perl -pi -e 's#(.*Servers.*connect_type.*=).*#${1}"socket";#' ${PHPMYADMIN_CONFIG_FILE}
+    else
+        # Use TCP/IP.
+        perl -pi -e 's#(.*Servers.*connect_type.*=).*#${1}"tcp";#' ${PHPMYADMIN_CONFIG_FILE}
+    fi
 
     cat >> ${TIP_FILE} <<EOF
 phpMyAdmin:
     * Configuration files:
         - ${PHPMYADMIN_HTTPD_ROOT}
-        - ${PHPMYADMIN_HTTPD_ROOT}/config.inc.php
+        - ${PHPMYADMIN_CONFIG_FILE}
     * URL:
         - http://$(hostname)/phpmyadmin
     * See also:

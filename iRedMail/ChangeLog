@@ -1,4 +1,5 @@
 iRedMail-0.3.2:
+    * Use unix socket to connect mysql server by default.
     * Make Horde Ingo mail filter rules manager works with pysieved.
     * Make horde sql database use utf8 as default charset. Thanks
       bruce.16899@gmail for his remind.

@@ -60,16 +60,9 @@ EOF
 
     cd ${RCM_HTTPD_ROOT}/config/
 
-    export RCM_DB_USER
-    export RCM_DB_PASSWD
-    export MYSQL_SERVER
-    export RCM_DB
-    if [ X"${BACKEND}" == X"MySQL" -o X"${USE_MYSQL}" == X"YES" ]; then
-        perl -pi -e 's#(.*db_dsnw.*= )(.*)#${1}"mysql://$ENV{'RCM_DB_USER'}:$ENV{'RCM_DB_PASSWD'}\@$ENV{'MYSQL_SERVER'}/$ENV{'RCM_DB'}";#' db.inc.php
-    else
-        # PostgreySQL or SQLite.
-        :
-    fi
+    export RCM_DB_USER RCM_DB_PASSWD RCMD_DB MYSQL_SERVER 
+
+    perl -pi -e 's#(.*db_dsnw.*= )(.*)#${1}"mysql://$ENV{'RCM_DB_USER'}:$ENV{'RCM_DB_PASSWD'}\@$ENV{'MYSQL_SERVER'}/$ENV{'RCM_DB'}";#' db.inc.php
 
     perl -pi -e 's#(.*default_host.*= )(.*)#${1}"$ENV{'IMAP_SERVER'}";#' main.inc.php
     perl -pi -e 's#(.*smtp_server.*= )(.*)#${1}"$ENV{'SMTP_SERVER'}";#' main.inc.php

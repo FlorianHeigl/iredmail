@@ -46,6 +46,8 @@ policyd_user()
 policyd_config()
 {
     ECHO_INFO "Initialize MySQL database for policyd."
+
+    export MYSQL_SERVER MYSQL_PORT MYSQL_ROOT_USER MYSQL_ROOT_PASSWD
     mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWD} <<EOF
 # Import SQL structure.
 SOURCE $(rpm -ql policyd | grep 'DATABASE.mysql');
