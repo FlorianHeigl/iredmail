@@ -121,7 +121,7 @@ ${CONF_MSG}
 EOF
 
     cat >> ${TIP_FILE} <<EOF
-WebMail(Horde WebMail(${HORDE_VERSION}):
+Horde WebMail (${HORDE_VERSION}):
     * Configuration files:
         - ${HTTPD_CONF_DIR}/horde.conf
         - ${HORDE_HTTPD_ROOT}/
@@ -165,6 +165,14 @@ EOF
     else
         :
     fi
+
+    cat >> ${TIP_FILE} <<EOF
+Horde Turba Address Book:
+    * Configuration files:
+        - ${HORDE_TURBA_CONFIG_DIR}/sources.php
+EOF
+
+    echo 'status_horde_config_turba="YES"' >> ${STATUS_FILE}
 }
 
 # Ingo is Email Filter Rules Manager.
@@ -200,4 +208,12 @@ EOF
     else
         :
     fi
+
+    cat >> ${TIP_FILE} <<EOF
+Horde Ingo Mail Filter Rule Manager:
+    * Configuration files:
+        - ${HORDE_INGO_CONFIG_DIR}/backends.php
+EOF
+
+    echo 'status_horde_config_ingo="YES"' >> ${STATUS_FILE}
 }
