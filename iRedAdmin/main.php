@@ -27,6 +27,11 @@ $SESSID_USERNAME = authentication_get_username();
 
 authentication_require_role('admin');
 
+$smarty->assign('is_global_admin', authentication_has_role('global-admin'));
+
+// TODO:  What does it do? Shall we remove it?
+authentication_has_role('global-admin');
+
 //include ("./templates/header.php");
 //include ("./templates/menu.php");
 //include ("./templates/main.php");

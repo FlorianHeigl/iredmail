@@ -3,68 +3,67 @@ function _menulink ($href, $title, $submenu = "") {
    if ($submenu != "") $submenu = "<ul><li><a target='_top' href='$href'>$title</a>$submenu</li></ul>";
    return "<li><a target='_top' href='$href'>$title</a>$submenu</li>";
 } 
+{/php}
 
-authentication_has_role('global-admin');
+<div id='menu'>
+<ul>
 
-echo "<div id='menu'>\n";
-echo "<ul>\n";
+{IRA_domainlink var="c_mbox" href="create-mailbox.php"}
+{IRA_menulink href=$c_mbox text=$LANG.pMenu_create_mailbox}
 
-$url = "create-mailbox.php"; if (isset ($_GET['domain'])) $url .= "?domain=" . $_GET['domain'];
-$submenu_virtual = _menulink($url, $PALANG['pMenu_create_mailbox']);
+{IRA_domainlink var="c_alias" href="create-alias.php"}
+{IRA_menulink href=$c_alias text=$LANG.pMenu_create_alias}
 
-$url = "create-alias.php"; if (isset ($_GET['domain'])) $url .= "?domain=" . $_GET['domain'];
-$submenu_virtual .=  _menulink($url, $PALANG['pMenu_create_alias']);
+{IRA_vmenulink var="submenu_admin" href="create_admin.php", text=$LANG.pAdminMenu_create_admin}
+{IRA_vmenulink var="submenu_fetchmail" href="fetchmail.php?new=1" text=$LANG.pFetchmail_new_entry}
 
-$submenu_admin = _menulink("create-admin.php", $PALANG['pAdminMenu_create_admin']);
+{if $is_global_admin}
+    {IRA_vmenulink var="submenu_domain" href="create_domain.php" text=$LANG.pAdminMenu_create_domain}
+    {IRA_vmenulink var="submenu_sendmail" href="broadcast-message.php" text=$LANG.pAdminMenu_broadcast_message}
+{else}
+    {assign var="submenu_domain" value=""}
+    {assign var="submenu_sendmail" value=""}
+{/if}
 
-$submenu_fetchmail = _menulink("fetchmail.php?new=1", $PALANG['pFetchmail_new_entry']);
+{if $is_global_admin}
+    {IRA_menulink href="list-admin.php" text=$LANG.pAdminMenu_list_admin submenu=$submenu_admin}
+{else}
+    {IRA_menulink href="main.php" text=$LANG.pMenu_main}
+{/if}
 
+{IRA_menulink href="list-domain.php" text=$LANG.pAdminMenu_list_domain submenu=$submenu_domain}
+{IRA_menulink href="list-virtual.php" text=$LANG.pAdminMenu_list_virtual submenu=$submenu_virtual}
 
-if (authentication_has_role('global-admin')) {
-   $submenu_domain = _menulink("create-domain.php", $PALANG['pAdminMenu_create_domain']);
-   $submenu_sendmail = _menulink("broadcast-message.php", $PALANG['pAdminMenu_broadcast_message']);
-} else {
-   $submenu_domain = "";
-   $submenu_sendmail = "";
-}
+{if $CONF.fetchmail == "YES"}
+    {IRA_menulink href="fetchmail.php" text=$LANG.pMenu_fetchmail submenu=$submenu_fetchmail}
+{/if}
+{if $CONF.sendmail == "YES"}
+    {IRA_menulink href="sendmail.php" text=$LANG.pMenu_sendmail submenu=$submenu_sendmail}
+{/if}
 
-if (authentication_has_role('global-admin')) {
-   print _menulink("list-admin.php", $PALANG['pAdminMenu_list_admin'], $submenu_admin);
-} else {
-   print _menulink("main.php", $PALANG['pMenu_main']);
-}
-
-print _menulink("list-domain.php", $PALANG['pAdminMenu_list_domain'], $submenu_domain);
-print _menulink("list-virtual.php", $PALANG['pAdminMenu_list_virtual'], $submenu_virtual);
-
-if ($CONF['fetchmail'] == 'YES') {
-   print _menulink("fetchmail.php", $PALANG['pMenu_fetchmail'], $submenu_fetchmail);
-}
-
-if ($CONF['sendmail'] == 'YES') {
-   print _menulink("sendmail.php", $PALANG['pMenu_sendmail'], $submenu_sendmail);
-} 
-
+{php}
 # not really useful in the admin menu
 #if ($CONF['vacation'] == 'YES') {
 #   print _menulink("edit-vacation.php", $PALANG['pUsersMenu_vacation']);
 #}
+{/php}
 
-print _menulink("password.php", $PALANG['pMenu_password']);
+{IRA_menulink href="password.php" text=$LANG.pMenu_password}
 
-if (authentication_has_role('global-admin') && 'pgsql'!=$CONF['database_type'] && $CONF['backup'] == 'YES') {
-   print _menulink("backup.php", $PALANG['pAdminMenu_backup']);
-}
+{if $is_global_admin and "pgsql" != $CONF.database_type and $CONF.backup == "YES"}
+    {IRA_menulink href="backup.php" text=$LANG.pAdminMenu_backup}
+{/if}
 
-print _menulink("viewlog.php", $PALANG['pMenu_viewlog']);
+{IRA_menulink href="viewlog.php" text=$LANG.pMenu_viewlog}
+{IRA_menulink href="logout.php" text=$LANG.pMenu_logout}
 
-print _menulink("logout.php", $PALANG['pMenu_logout']);
+</ul>
+</div>
 
-echo "</ul>\n";
-echo "</div>\n";
+<br clear='all' /><br>
 
-print "<br clear='all' /><br>"; # TODO
-
+{php}
+/*
 if (authentication_has_role('global-admin')) {
    $motd_file = "motd-admin.txt";
 } else {
@@ -78,10 +77,10 @@ if (file_exists (realpath ($motd_file)))
    print "</div>";
 }
 
-
-
 # IE can't handle :hover dropdowns correctly. It needs some JS instead.
+*/
 {/php}
+
 {literal}
 <script type='text/javascript'>
 sfHover = function() {
