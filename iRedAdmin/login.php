@@ -101,8 +101,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
         exit(0);
     }
 
-    include ("./templates/header.php");
-    include ("./templates/login.php");
-    include ("./templates/footer.php");
+    //include ("./templates/header.php");
+    //include ("./templates/login.php");
+    //include ("./templates/footer.php");
+    $smarty->display('login.tpl');
 }
 ?>

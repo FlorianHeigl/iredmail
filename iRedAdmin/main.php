@@ -27,8 +27,10 @@ $SESSID_USERNAME = authentication_get_username();
 
 authentication_require_role('admin');
 
-include ("./templates/header.php");
-include ("./templates/menu.php");
-include ("./templates/main.php");
-include ("./templates/footer.php");
+//include ("./templates/header.php");
+//include ("./templates/menu.php");
+//include ("./templates/main.php");
+//include ("./templates/footer.php");
+
+$smarty->display('main.tpl');
 ?>

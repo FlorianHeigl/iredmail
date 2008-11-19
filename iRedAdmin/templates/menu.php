@@ -1,5 +1,4 @@
-<?php if( !defined('POSTFIXADMIN') ) die( "This file cannot be used standalone." ); ?>
-<?php
+{php}
 function _menulink ($href, $title, $submenu = "") {
    if ($submenu != "") $submenu = "<ul><li><a target='_top' href='$href'>$title</a>$submenu</li></ul>";
    return "<li><a target='_top' href='$href'>$title</a>$submenu</li>";
@@ -82,7 +81,8 @@ if (file_exists (realpath ($motd_file)))
 
 
 # IE can't handle :hover dropdowns correctly. It needs some JS instead.
-?>
+{/php}
+{literal}
 <script type='text/javascript'>
 sfHover = function() {
    var sfEls = document.getElementById("menu").getElementsByTagName("LI");
@@ -97,7 +97,4 @@ sfHover = function() {
 }
 if (window.attachEvent) window.attachEvent("onload", sfHover);
 </script>
-
-<?php
-/* vim: set ft=php expandtab softtabstop=3 tabstop=3 shiftwidth=3: */
-?>
+{/literal}
