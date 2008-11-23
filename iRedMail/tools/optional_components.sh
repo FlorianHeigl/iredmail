@@ -121,6 +121,33 @@ else
     export ENABLE_DOVECOT_SSL="NO" && echo 'export ENABLE_DOVECOT_SSL="NO"' >> ${CONFIG_FILE}
 fi
 
+${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
+    --title "WebMail Program" \
+    --checklist "\
+Please choose your favorite webmail program.
+" 20 76 5 \
+    "SquirrelMail" "WebMail program, written in PHP." "on" \
+    "Roundcubemail" "WebMail program (PHP, XHTML, CSS2, AJAX)." "off" \
+    "ExtMail" "WebMail program from ExtMail project." "off" \
+    "Horde WebMail" "WebMail program." "off" \
+    2> /tmp/webmail
+
+    webmail="$(cat /tmp/webmail)"
+    rm -f /tmp/webmail
+
+    echo ${webmail} | grep -i 'roundcubemail' >/dev/null 2>&1
+    [ X"$?" == X"0" ] && \
+        export USE_RCM='YES' && echo "export USE_RCM='YES'" >> ${CONFIG_FILE}
+
+    echo ${webmail} | grep -i 'squirrelmail' >/dev/null 2>&1
+    [ X"$?" == X"0" ] && USE_SM='YES' && echo "export USE_SM='YES'" >>${CONFIG_FILE}
+
+    echo ${webmail} | grep -i 'extmail' >/dev/null 2>&1
+    [ X"$?" == X"0" ] && USE_EXTMAIL='YES' && echo "export USE_EXTMAIL='YES'" >>${CONFIG_FILE}
+
+    echo ${webmail} | grep -i 'Horde' >/dev/null 2>&1
+    [ X"$?" == X"0" ] && USE_HORDE='YES' && echo "export USE_HORDE='YES'" >>${CONFIG_FILE}
+
 # ----------------------------------------
 # Optional components for special backend.
 # ----------------------------------------
@@ -132,10 +159,6 @@ if [ X"${BACKEND}" == X"OpenLDAP" ]; then
 iRedMail provides several optional components for LDAP backend, you can
 use them by your own:
 " 20 76 8 \
-    "SquirrelMail" "WebMail program, written in PHP." "on" \
-    "Roundcubemail" "WebMail program(PHP, XHTML, CSS2, AJAX)." "off" \
-    "ExtMail" "WebMail program from ExtMail project." "off" \
-    "Horde WebMail" "WebMail program." "off" \
     "phpLDAPadmin" "Web-based LDAP browser to manage your LDAP server." "on" \
     "phpMyAdmin" "Web-based MySQL database management." "on" \
     "Awstats" "Advanced web and mail log analyzer." "on" \
@@ -146,19 +169,6 @@ use them by your own:
     #"Mailman" "Mailing List Manager." "off" \
 
     LDAP_OPTIONAL_COMPONENTS="$(cat /tmp/ldap_optional_components)"
-
-    echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'roundcubemail' >/dev/null 2>&1
-    [ X"$?" == X"0" ] && \
-        export USE_RCM='YES' && echo "export USE_RCM='YES'" >> ${CONFIG_FILE}
-
-    echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'squirrelmail' >/dev/null 2>&1
-    [ X"$?" == X"0" ] && USE_SM='YES' && echo "export USE_SM='YES'" >>${CONFIG_FILE}
-
-    echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'extmail' >/dev/null 2>&1
-    [ X"$?" == X"0" ] && USE_EXTMAIL='YES' && echo "export USE_EXTMAIL='YES'" >>${CONFIG_FILE}
-
-    echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'Horde' >/dev/null 2>&1
-    [ X"$?" == X"0" ] && USE_HORDE='YES' && echo "export USE_HORDE='YES'" >>${CONFIG_FILE}
 
     echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'phpldapadmin' >/dev/null 2>&1
     [ X"$?" == X"0" ] && USE_PHPLDAPADMIN='YES' && echo "export USE_PHPLDAPADMIN='YES'" >>${CONFIG_FILE}
@@ -183,11 +193,7 @@ elif [ X"${BACKEND}" == X"MySQL" ]; then
     --checklist "\
 iRedMail provides several optional components for MySQL backend, you can use
 them by your own:
-" 20 76 8 \
-    "Roundcubemail" "WebMail program(PHP, XHTML, CSS2, AJAX)." "on" \
-    "SquirrelMail" "WebMail program, written in PHP." "off" \
-    "Horde WebMail" "WebMail program." "off" \
-    "ExtMail" "WebMail program from ExtMail project." "off" \
+" 20 76 5 \
     "phpMyAdmin" "Web-based MySQL database management." "on" \
     "PostfixAdmin" "Web-based program to manage domains and users stored in MySQL." "on" \
     "Awstats" "Advanced web and mail log analyzer." "on" \
@@ -198,20 +204,7 @@ them by your own:
     #"Mailman" "Mailing List Manager." "off" \
 
     MYSQL_OPTIONAL_COMPONENTS="$(cat /tmp/mysql_optional_components)"
-
     rm -f /tmp/mysql_optional_components
-
-    echo ${MYSQL_OPTIONAL_COMPONENTS} | grep -i 'roundcubemail' >/dev/null 2>&1
-    [ X"$?" == X"0" ] && USE_RCM='YES' && echo "export USE_RCM='YES'" >>${CONFIG_FILE}
-
-    echo ${MYSQL_OPTIONAL_COMPONENTS} | grep -i 'squirrelmail' >/dev/null 2>&1
-    [ X"$?" == X"0" ] && USE_SM='YES' && echo "export USE_SM='YES'" >>${CONFIG_FILE}
-
-    echo ${MYSQL_OPTIONAL_COMPONENTS} | grep -i 'extmail' >/dev/null 2>&1
-    [ X"$?" == X"0" ] && USE_EXTMAIL='YES' && echo "export USE_EXTMAIL='YES'" >>${CONFIG_FILE}
-
-    echo ${MYSQL_OPTIONAL_COMPONENTS} | grep -i 'Horde' >/dev/null 2>&1
-    [ X"$?" == X"0" ] && USE_HORDE='YES' && echo "export USE_HORDE='YES'" >>${CONFIG_FILE}
 
     echo ${MYSQL_OPTIONAL_COMPONENTS} | grep -i 'phpmyadmin' >/dev/null 2>&1
     [ X"$?" == X"0" ] && USE_PHPMYADMIN='YES' && echo "export USE_PHPMYADMIN='YES'" >>${CONFIG_FILE}
