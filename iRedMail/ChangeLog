@@ -1,4 +1,6 @@
 iRedMail-0.3.2:
+    * Add LDAP attrubites for service control: enableMailService,
+      enableFTPService, enableIMService.
     * Add hooks for pureftpd and openfire support.
     * Split dialog config, make webmail program in a standlone page.
     * Use unix socket to connect mysql server by default.

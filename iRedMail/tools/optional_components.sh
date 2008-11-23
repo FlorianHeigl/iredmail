@@ -158,7 +158,7 @@ if [ X"${BACKEND}" == X"OpenLDAP" ]; then
     --checklist "\
 iRedMail provides several optional components for LDAP backend, you can
 use them by your own:
-" 20 76 8 \
+" 20 76 5 \
     "phpLDAPadmin" "Web-based LDAP browser to manage your LDAP server." "on" \
     "phpMyAdmin" "Web-based MySQL database management." "on" \
     "Awstats" "Advanced web and mail log analyzer." "on" \

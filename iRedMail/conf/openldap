@@ -30,6 +30,12 @@ export LDAP_BINDPW="$(echo $RANDOM\$$RANDOM\@$RANDOM\!$RANDOM\&$RANDOM\*$RANDOM\
 # objectClass
 export LDAP_OBJECTCLASS_DOMAIN='mailDomain'
 export LDAP_OBJECTCLASS_USER='mailUser'
+
+# service related attrubites.
+export LDAP_ATTR_ENABLE_MAIL_SERVICE='enableMailService'
+export LDAP_ATTR_ENABLE_IM_SERVICE='enableIMService'
+export LDAP_ATTR_ENABLE_FTP_SERVICE='enableFTPService'
+
 # Domain related.
 export LDAP_ATTR_DOMAIN_DN_NAME='domainName'
 export LDAP_ATTR_DOMAIN_TRANSPORT='mtaTransport'
@@ -38,6 +44,7 @@ export LDAP_ATTR_DOMAIN_QUOTA='domainMaxQuotaSize'
 export LDAP_ATTR_DOMAIN_USER_NUMBER='domainMaxUserNumber'
 export LDAP_ATTR_DOMAIN_SENDER_BCC_ADDRESS='domainSenderBccAddress'
 export LDAP_ATTR_DOMAIN_RECIPIENT_BCC_ADDRESS='domainRecipientBccAddress'
+
 # User related.
 export LDAP_ATTR_USER_DN_NAME='mail'
 export LDAP_ATTR_USER_PASSWD='userPassword'
