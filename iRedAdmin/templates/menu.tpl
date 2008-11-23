@@ -1,10 +1,3 @@
-{php}
-function _menulink ($href, $title, $submenu = "") {
-   if ($submenu != "") $submenu = "<ul><li><a target='_top' href='$href'>$title</a>$submenu</li></ul>";
-   return "<li><a target='_top' href='$href'>$title</a>$submenu</li>";
-} 
-{/php}
-
 <div id='menu'>
 <ul>
 
@@ -62,26 +55,8 @@ function _menulink ($href, $title, $submenu = "") {
 
 <br clear='all' /><br>
 
-{php}
-/*
-if (authentication_has_role('global-admin')) {
-   $motd_file = "motd-admin.txt";
-} else {
-   $motd_file = "motd.txt";
-}
-
-if (file_exists (realpath ($motd_file)))
-{
-   print "<div id=\"motd\">\n";
-   include ($motd_file);
-   print "</div>";
-}
-
-# IE can't handle :hover dropdowns correctly. It needs some JS instead.
-*/
-{/php}
-
 {literal}
+<!-- # IE can't handle :hover dropdowns correctly. It needs some JS instead. -->
 <script type='text/javascript'>
 sfHover = function() {
    var sfEls = document.getElementById("menu").getElementsByTagName("LI");

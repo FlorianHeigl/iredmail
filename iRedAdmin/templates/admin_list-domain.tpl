@@ -1,4 +1,5 @@
-<?php if( !defined('POSTFIXADMIN') ) die( "This file cannot be used standalone." ); ?>
+{include file="header.tpl"}
+{include file="menu.tpl"}
 <div id="overview">
 <form name="overview" method="post">
 <select name="fUsername" onChange="this.form.submit();">
@@ -19,7 +20,7 @@ if (!empty ($list_admins))
 }
 ?>
 </select>
-<input class="button" type="submit" name="go" value="<?php print $PALANG['pOverview_button']; ?>" />
+<input class="button" type="submit" name="go" value="{$LANG.pOverview_button}" />
 </form>
 <form name="search" method="post" action="search.php">
 <input type="textbox" name="search" size="10" />
@@ -85,3 +86,4 @@ if (sizeof ($list_domains) > 0)
 }
 echo "<p><a href='create-domain.php'>{$PALANG['pAdminMenu_create_domain']}</a>";
 ?>
+{include file="footer.tpl"}
