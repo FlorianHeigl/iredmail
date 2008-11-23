@@ -2,7 +2,7 @@
 <!DOCTYPE template SYSTEM "template.dtd">
 <!--
     For iRedMail (Mail Server Solution for Red Hat series).
-    Project: http://iRedMail.googlecode.com/
+    Project: http://code.google.com/p/iredmail/
     Author: Zhang Huangbin (michaelbibby <at> gmail.com)
 -->
 <template>
@@ -47,11 +47,21 @@
         <page>1</page>
     </attribute>
 
+    <attribute id="enableMailService">
+        <display>Permit to use mail service</display>
+        <option>yes</option>
+        <option>no</option>
+        <value>yes</value>
+        <hidden>1</hidden>
+        <order>4</order>
+        <page>1</page>
+    </attribute>
+
     <attribute id="domainSenderBccAddress">
         <description>Domain Sender BCC Address</description>
         <display>Domain Sender BCC Address</display>
         <hidden>1</hidden>
-        <order>4</order>
+        <order>5</order>
         <page>1</page>
     </attribute>
 
@@ -59,7 +69,7 @@
         <description>Domain Recipient BCC Address</description>
         <display>Domain Recipient BCC Address</display>
         <hidden>1</hidden>
-        <order>5</order>
+        <order>6</order>
         <page>1</page>
     </attribute>
 
@@ -67,7 +77,7 @@
         <description>Domain Max User Number</description>
         <display>Domain Max User Number</display>
         <hidden>1</hidden>
-        <order>6</order>
+        <order>7</order>
         <page>1</page>
     </attribute>
 
@@ -75,7 +85,7 @@
         <description>Domain Max Quota Size</description>
         <display>Domain Max Quota Size</display>
         <hidden>1</hidden>
-        <order>7</order>
+        <order>8</order>
         <page>1</page>
     </attribute>
 
@@ -84,7 +94,7 @@
         <display>Expired date</display>
         <hidden>1</hidden>
         <value>99991231000000</value>
-        <order>8</order>
+        <order>9</order>
         <page>1</page>
     </attribute>
 

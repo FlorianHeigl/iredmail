@@ -8,7 +8,8 @@
 # Based on original qmail.schema, modified by Zhang Huangbin:
 # <michaelbibby (at) gmail.com>
 #
-# The offical iredmail OID assigned by IANA is 32349.
+# The offical iredmail OID assigned by IANA is 32349, you can find it in url:
+# http://www.iana.org/assignments/enterprise-numbers
 #
 # This schema depends on:
 #       - core.schema
