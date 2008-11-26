@@ -14,7 +14,7 @@ install_all()
         ALL_PKGS="${ALL_PKGS} httpd.${ARCH} mod_ssl.${ARCH}"
 
         # PHP.
-        ALL_PKGS="${ALL_PKGS} php.${ARCH} php-imap.${ARCH} php-gd.${ARCH} php-mbstring.${ARCH} libmcrypt.${ARCH} php-mcrypt.${ARCH} php-pear.noarch php-xml.${ARCH} php-pecl-fileinfo.${ARCH} php-eaccelerator.${ARCH}"
+        ALL_PKGS="${ALL_PKGS} php.${ARCH} php-imap.${ARCH} php-gd.${ARCH} php-mbstring.${ARCH} libmcrypt.${ARCH} php-mcrypt.${ARCH} php-pear.noarch php-xml.${ARCH} php-pecl-fileinfo.${ARCH} php-eaccelerator.${ARCH} php-mysql.${ARCH} php-ldap.${ARCH}"
     else
         :
     fi
@@ -26,14 +26,6 @@ install_all()
 
     # Backend: OpenLDAP or MySQL.
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
-
-        if [ X"${USE_EXIST_AMP}" != X"YES" ]; then
-            # PHP extensions.
-            ALL_PKGS="${ALL_PKGS} php-ldap.${ARCH}"
-        else
-            :
-        fi
-
         # OpenLDAP server & client.
         ALL_PKGS="${ALL_PKGS} openldap.${ARCH} openldap-clients.${ARCH} openldap-servers.${ARCH}"
 
@@ -60,22 +52,6 @@ install_all()
         [ X"${USE_EXTMAIL}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} libdbi-dbd-mysql.${ARCH} perl-DBD-mysql.${ARCH}"
 
         ENABLED_SERVICES="${ENABLED_SERVICES} mysqld policyd"
-    else
-        :
-    fi
-
-    if [ X"${USE_EXIST_AMP}" != X"YES" ]; then
-        # PHP extensions.
-        ALL_PKGS="${ALL_PKGS} php-mysql.${ARCH}"
-
-        # For Roundcube WebMail.
-        [ X"${USE_RCM}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} php-mysql.${ARCH}"
-
-        # For PostfixAdmin.
-        [ X"${USE_POSTFIXADMIN}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} php-mysql.${ARCH}"
-
-        # For phpMyAdmin.
-        [ X"${USE_PHPMYADMIN}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} php-mysql.${ARCH}"
     else
         :
     fi
