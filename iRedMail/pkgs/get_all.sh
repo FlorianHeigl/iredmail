@@ -4,6 +4,9 @@
 # Date:     $LastChangedDate: 2008-03-02 21:11:40 +0800 (Sun, 02 Mar 2008) $
 # Purpose:  Fetch all extra packages we need to build mail server.
 
+ROOTDIR="$(pwd)"
+CONF_DIR="${ROOTDIR}/../conf"
+
 . ${CONF_DIR}/global
 . ${CONF_DIR}/functions
 
@@ -23,9 +26,6 @@ FETCH_CMD="wget -c --referer ${PROG_NAME}-${PROG_VERSION}"
 #   http://code.google.com/p/iredmail/wiki/Mirrors
 #
 MIRROR='http://www.iredmail.org/yum'
-
-ROOTDIR="$(pwd)"
-CONF_DIR="${ROOTDIR}/../conf"
 
 # Where to store packages and software source tarball.
 PKG_DIR="${ROOTDIR}/rpms"
