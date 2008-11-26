@@ -1,7 +1,7 @@
 iRedMail-0.3.2:
+    * Fix missing php-mysql installation. Thanks webyuhang@hotmail.
     * Add LDAP attrubites for service control: enableMailService,
       enableFTPService, enableIMService.
-    * Add hooks for pureftpd and openfire support.
     * Split dialog config, make webmail program in a standlone page.
     * Use unix socket to connect mysql server by default.
     * Make Horde Ingo mail filter rules manager works with pysieved.

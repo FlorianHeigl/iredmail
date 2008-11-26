@@ -121,6 +121,7 @@ else
     export ENABLE_DOVECOT_SSL="NO" && echo 'export ENABLE_DOVECOT_SSL="NO"' >> ${CONFIG_FILE}
 fi
 
+# WebMail.
 ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --title "WebMail Program" \
     --checklist "\

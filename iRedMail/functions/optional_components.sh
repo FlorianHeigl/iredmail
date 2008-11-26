@@ -72,12 +72,4 @@ optional_components()
     [ X"${USE_EXTMAIL}" == X"YES" ] && \
         check_status_before_run extmail_install && \
         check_status_before_run extmail_config
-
-    # ------------------------------------------------
-    # For non-email-related software.
-    [ X"${USE_PUREFTPD}" == X"YES" ] && \
-        check_status_before_run pureftpd_install
-    [ X"${USE_OPENFIRE}" == X"YES" ] && \
-        check_status_before_run openfire_install
-    # ------------------------------------------------
 }

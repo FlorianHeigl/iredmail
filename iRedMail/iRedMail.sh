@@ -47,12 +47,6 @@ check_arch && check_env
 . ${CONF_DIR}/horde
 . ${CONF_DIR}/awstats
 
-# --------------------------------------------------------
-# For non-email-related software.
-[ -f ${CONF_DIR}/pureftpd ] && . ${CONF_DIR}/pureftpd
-[ -f ${CONF_DIR}/openfire ] && . ${CONF_DIR}/openfire
-# --------------------------------------------------------
-
 # ------------------------------
 # Import functions.
 # ------------------------------
@@ -130,12 +124,6 @@ check_arch && check_env
 
 # Misc.
 . ${FUNCTIONS_DIR}/misc.sh
-
-# -------------------------------------------------------------
-# For non-email-related software.
-[ -f ${FUNCTIONS_DIR}/pureftpd ] && . ${FUNCTIONS_DIR}/pureftpd
-[ -f ${FUNCTIONS_DIR}/openfire ] && . ${FUNCTIONS_DIR}/openfire
-# -------------------------------------------------------------
 
 # ************************************************************************
 # *************************** Script Main ********************************

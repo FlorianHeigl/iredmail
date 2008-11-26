@@ -43,25 +43,12 @@ install_all()
         # Policyd.
         ALL_PKGS="${ALL_PKGS} policyd.${ARCH}"
 
-        # For Roundcube WebMail.
-        [ X"${USE_RCM}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} php-mysql"
-
-        # For ExtMail.
-        [ X"${USE_EXTMAIL}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} perl-LDAP"
-
         ENABLED_SERVICES="${ENABLED_SERVICES} ldap mysqld policyd"
 
     elif [ X"${BACKEND}" == X"MySQL" ]; then
         # MySQL server & client.
         [ X"${MYSQL_FRESH_INSTALLATION}" == X'YES' ] && \
             ALL_PKGS="${ALL_PKGS} mysql-server.${ARCH} mysql.${ARCH}"
-
-        if [ X"${USE_EXIST_AMP}" != X"YES" ]; then
-            # PHP extensions.
-            ALL_PKGS="${ALL_PKGS} php-mysql.${ARCH}"
-        else
-            :
-        fi
 
         # Policyd.
         ALL_PKGS="${ALL_PKGS} policyd.${ARCH}"
@@ -76,6 +63,25 @@ install_all()
     else
         :
     fi
+
+    if [ X"${USE_EXIST_AMP}" != X"YES" ]; then
+        # PHP extensions.
+        ALL_PKGS="${ALL_PKGS} php-mysql.${ARCH}"
+
+        # For Roundcube WebMail.
+        [ X"${USE_RCM}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} php-mysql.${ARCH}"
+
+        # For PostfixAdmin.
+        [ X"${USE_POSTFIXADMIN}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} php-mysql.${ARCH}"
+
+        # For phpMyAdmin.
+        [ X"${USE_PHPMYADMIN}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} php-mysql.${ARCH}"
+    else
+        :
+    fi
+
+    # For ExtMail.
+    [ X"${USE_EXTMAIL}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} perl-LDAP"
 
     # Cyrus-SASL.
     ALL_PKGS="${ALL_PKGS} cyrus-sasl.${ARCH} cyrus-sasl-lib.${ARCH} cyrus-sasl-plain.${ARCH} cyrus-sasl-md5.${ARCH}"

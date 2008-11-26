@@ -99,12 +99,6 @@ fi
 #
 . ${TOOLS_DIR}/optional_components.sh
 
-# ------------------------------------------------
-# For non-email-related software.
-# -----------------------------------------------------------------
-[ -f ${TOOLS_DIR}/pureftpd_config.sh && . ${TOOLS_DIR}/pureftpd_config.sh
-[ -f ${TOOLS_DIR}/openfire_config.sh && . ${TOOLS_DIR}/openfire_config.sh
-
 #
 # Set mail alias for root.
 #
