@@ -40,6 +40,21 @@ MISCLIST="${ROOTDIR}/misclist"
 
 MD5_FILES="MD5.${ARCH} MD5.noarch MD5.misc"
 
+mirror_notify()
+{
+    cat <<EOF
+*********************************************************************
+**************************** Mirrors ********************************
+*********************************************************************
+* If you can't fetch packages, please try to use another mirror site
+* listed in below url:
+*
+*   - http://code.google.com/p/iredmail/wiki/Mirrors
+*
+*********************************************************************
+EOF
+}
+
 prepare_dirs()
 {
     for i in ${PKG_DIR} ${MISC_DIR}
@@ -132,6 +147,7 @@ EOF
 }
 
 check_user root && \
+mirror_notify && \
 prepare_dirs && \
 check_arch && \
 fetch_rpms && \
