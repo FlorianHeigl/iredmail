@@ -21,14 +21,6 @@ extmail_install()
     chmod -R 0755 ${EXTSUITE_HTTPD_ROOT}
     chmod 0000 ${EXTMAIL_HTTPD_ROOT}/{AUTHORS,ChangeLog,CREDITS,dispatch.*,INSTALL,README.*}
 
-    # For ExtMail-1.0.5. We don't have 'question/answer' field in SQL template, add it.
-    ECHO_INFO "Add missing SQL columns for ExtMail: mailbox.question, mailbox.answer."
-    mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWD} <<EOF
-USE ${VMAIL_DB};
-
-ALTER TABLE `mailbox` ADD `question` text NOT NULL default '';
-ALTER TABLE `mailbox` ADD `answer` text NOT NULL default '';
-EOF
     echo 'export status_extmail_install="DONE"' >> ${STATUS_FILE}
 }
 
@@ -73,9 +65,21 @@ EOF
     #ECHO_INFO "Enable USER_LANG."
     #perl -pi -e 's/#(.*lang.*usercfg.*lang.*USER_LANG.*)/${1}/' App.pm
 
+    ECHO_INFO "Clear default account in global address book."
+    echo '' > ${EXTMAIL_HTTPD_ROOT}/globabook.cf
+
     ECHO_INFO "Disable some functions we don't support yet."
     cd ${EXTMAIL_HTTPD_ROOT}/html/default/
     perl -pi -e 's#(.*filter.cgi.*)#\<\!--${1}--\>#' OPTION_NAV.html
+
+    # For ExtMail-1.0.5. We don't have 'question/answer' field in SQL template, add it.
+    ECHO_INFO "Add missing SQL columns for ExtMail: mailbox.question, mailbox.answer."
+    mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWD} <<EOF
+USE ${VMAIL_DB};
+
+ALTER TABLE `mailbox` ADD `question` text NOT NULL default '';
+ALTER TABLE `mailbox` ADD `answer` text NOT NULL default '';
+EOF
 
     echo 'export status_extmail_config_basic="DONE"' >> ${STATUS_FILE}
 }

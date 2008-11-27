@@ -1,4 +1,5 @@
 iRedMail-0.3.2:
+    * Clear default account in ExtMail global address book.
     * Fix change password issue in ExtMail-1.0.5. Thanks ilovell.pan@gmail.
 
 iRedMail-0.3.2-beta1:
