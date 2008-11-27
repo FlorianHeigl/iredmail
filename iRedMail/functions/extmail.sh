@@ -21,9 +21,14 @@ extmail_install()
     chmod -R 0755 ${EXTSUITE_HTTPD_ROOT}
     chmod 0000 ${EXTMAIL_HTTPD_ROOT}/{AUTHORS,ChangeLog,CREDITS,dispatch.*,INSTALL,README.*}
 
-    # For ExtMail-1.0.5. We don't have 'question/answer' field in SQL template. disable it.
-    perl -pi -e 's/(.*sth.*execute.*opt.*question.*opt.*answer.*)/#${1}/' ${EXTMAIL_HTTPD_ROOT}/libs/Ext/Auth/MySQL.pm
+    # For ExtMail-1.0.5. We don't have 'question/answer' field in SQL template, add it.
+    ECHO_INFO "Add missing SQL columns for ExtMail: mailbox.question, mailbox.answer."
+    mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWD} <<EOF
+USE ${VMAIL_DB};
 
+ALTER TABLE `mailbox` ADD `question` text NOT NULL default '';
+ALTER TABLE `mailbox` ADD `answer` text NOT NULL default '';
+EOF
     echo 'export status_extmail_install="DONE"' >> ${STATUS_FILE}
 }
 
