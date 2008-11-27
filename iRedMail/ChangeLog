@@ -32,10 +32,16 @@ iRedMail-0.3.2:
     * Enable SSL support for MySQL.
     * Fix issue of TERM variable. Thanks yao.xu at
       http://bbs.iredmail.org.
-    * Remove some tool script.
     * Improve support for exist amp.
     * Add missing backup of postfix main.cf file.
-    * Remove 'tools/backup_mysql_db.sh'.
+    * Remove some scripts:
+        - tools/backup_mysql_db.sh
+        - tools/convert_winmail_mailbox.sh
+        - tools/create_mail_user_ldap.sh
+        - tools/create_mail_user_mysql.sh
+        - tools/get_helo_count.sh
+        - tools/migrate_extmail_mailbox.sh
+        - tools/sysreport.sh
 
 iRedMail-0.3.1:
     * Do not allow empty username while create first user. Thanks
