@@ -16,4 +16,5 @@ export EXTMAIL_TARBALL="extmail-${EXTMAIL_VERSION}.tar.gz"
 export SYS_USER_LANG='zh_CN'
 
 export EXTSUITE_HTTPD_ROOT="${HTTPD_SERVERROOT}/extsuite"
-export EXTMAIL_CONF="${EXTSUITE_HTTPD_ROOT}/extmail/webmail.cf"
+export EXTMAIL_HTTPD_ROOT="${EXTSUITE_HTTPD_ROOT}/extmail"
+export EXTMAIL_CONF="${EXTMAIL_HTTPD_ROOT}/webmail.cf"

@@ -1,4 +1,7 @@
 iRedMail-0.3.2:
+    * Fix change password issue in ExtMail-1.0.5. Thanks ilove.pan@gmail.
+
+iRedMail-0.3.2-beta1:
     * Fix missing php-mysql installation. Thanks webyuhang@hotmail.
     * Add LDAP attrubites for service control: enableMailService,
       enableFTPService, enableIMService.

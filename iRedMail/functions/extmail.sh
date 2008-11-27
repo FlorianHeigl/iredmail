@@ -17,9 +17,12 @@ extmail_install()
 
     ECHO_INFO "Set correct permission for ExtMail: ${EXTSUITE_HTTPD_ROOT}."
     chown root:root ${EXTSUITE_HTTPD_ROOT}
-    chown -R ${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} ${EXTSUITE_HTTPD_ROOT}/extmail/
+    chown -R ${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} ${EXTMAIL_HTTPD_ROOT}
     chmod -R 0755 ${EXTSUITE_HTTPD_ROOT}
-    chmod 0000 ${EXTSUITE_HTTPD_ROOT}/extmail/{AUTHORS,ChangeLog,CREDITS,dispatch.*,INSTALL,README.*}
+    chmod 0000 ${EXTMAIL_HTTPD_ROOT}/{AUTHORS,ChangeLog,CREDITS,dispatch.*,INSTALL,README.*}
+
+    # For ExtMail-1.0.5. We don't have 'question/answer' field in SQL template. disable it.
+    perl -pi -e 's/(.*sth.*execute.*opt.*question.*opt.*answer.*)/#${1}/' ${EXTMAIL_HTTPD_ROOT}/libs/Ext/Auth/MySQL.pm
 
     echo 'export status_extmail_install="DONE"' >> ${STATUS_FILE}
 }
@@ -35,22 +38,22 @@ ${CONF_MSG}
 <VirtualHost *:80>
 ServerName $(hostname)
 
-DocumentRoot /var/www/html/
+DocumentRoot ${HTTPD_DOCUMENTROOT}
 
-ScriptAlias /extmail/cgi /var/www/extsuite/extmail/cgi
-Alias /extmail /var/www/extsuite/extmail/html
+ScriptAlias /extmail/cgi ${EXTMAIL_HTTPD_ROOT}/cgi
+Alias /extmail ${EXTMAIL_HTTPD_ROOT}/html
 
-#Alias /mail /var/www/extsuite/extmail/html
-#Alias /webmail /var/www/extsuite/extmail/html
+#Alias /mail ${EXTMAIL_HTTPD_ROOT}/html
+#Alias /webmail ${EXTMAIL_HTTPD_ROOT}/html
 
 SuexecUserGroup ${VMAIL_USER_NAME} ${VMAIL_GROUP_NAME}
 </VirtualHost>
 EOF
 
     ECHO_INFO "Basic configuration for ExtMail."
-    cd ${EXTSUITE_HTTPD_ROOT}/extmail/
-    cp webmail.cf.default ${EXTMAIL_CONF}
+    cd ${EXTMAIL_HTTPD_ROOT} && cp -f webmail.cf.default ${EXTMAIL_CONF}
 
+    # Set default user language.
     perl -pi -e 's#(SYS_USER_LANG.*)en_US#${1}$ENV{'SYS_USER_LANG'}#' ${EXTMAIL_CONF}
 
     # Set mail attachment size.
@@ -60,14 +63,13 @@ EOF
     perl -pi -e 's#(SYS_MAILDIR_BASE.*)/home/domains#${1}$ENV{VMAIL_USER_HOME_DIR}#' ${EXTMAIL_CONF}
 
     ECHO_INFO "Fix incorrect quota display."
-    cd ${EXTSUITE_HTTPD_ROOT}/extmail/libs/Ext/
-    perl -pi -e 's#(.*mailQuota})(.*0S.*)#${1}*1024000${2}#' App.pm
+    perl -pi -e 's#(.*mailQuota})(.*0S.*)#${1}*1024000${2}#' ${EXTMAIL_HTTPD_ROOT}/libs/Ext/App.pm
 
     #ECHO_INFO "Enable USER_LANG."
     #perl -pi -e 's/#(.*lang.*usercfg.*lang.*USER_LANG.*)/${1}/' App.pm
 
     ECHO_INFO "Disable some functions we don't support yet."
-    cd ${EXTSUITE_HTTPD_ROOT}/extmail/html/default/
+    cd ${EXTMAIL_HTTPD_ROOT}/html/default/
     perl -pi -e 's#(.*filter.cgi.*)#\<\!--${1}--\>#' OPTION_NAV.html
 
     echo 'export status_extmail_config_basic="DONE"' >> ${STATUS_FILE}
@@ -76,7 +78,7 @@ EOF
 extmail_config_mysql()
 {
     ECHO_INFO "Configure ExtMail for MySQL support.."
-    cd ${EXTSUITE_HTTPD_ROOT}/extmail/
+    cd ${EXTMAIL_HTTPD_ROOT}
 
     export MYSQL_SERVER
     export MYSQL_ADMIN_PW
@@ -93,7 +95,7 @@ extmail_config_mysql()
 extmail_config_ldap()
 {
     ECHO_INFO "Configure ExtMail for LDAP support."
-    cd ${EXTSUITE_HTTPD_ROOT}/extmail/
+    cd ${EXTMAIL_HTTPD_ROOT}
 
     perl -pi -e 's#(SYS_AUTH_TYPE.*)mysql#${1}ldap#' ${EXTMAIL_CONF}
     perl -pi -e 's#(SYS_LDAP_BASE)(.*)#${1} = $ENV{'LDAP_BASEDN'}#' ${EXTMAIL_CONF}
