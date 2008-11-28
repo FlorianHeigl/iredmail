@@ -1,0 +1,31 @@
+# English (United States) translations for PROJECT.
+# Copyright (C) 2008 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: michaelbibby@gmail.com\n"
+"POT-Creation-Date: 2008-11-28 23:07+0800\n"
+"PO-Revision-Date: 2008-11-28 23:09+0800\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: en_US <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 0.9.4\n"
+
+#: ../templates/default/index.html:5
+msgid "Message"
+msgstr "消息"
+
+#: ../templates/default/index.html:6
+msgid "Message2"
+msgstr "消息2"
+
+#: ../templates/default/index.html:7
+msgid "Message3"
+msgstr "消息3"
+
