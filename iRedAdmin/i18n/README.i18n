@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# Author:	Zhang Huangbin <michaelbibby (at) gmail.com>
+
+DOMAIN='iredadmin'
+POTFILE='./iredadmin.pot'
+BUGADDR='michaelbibby@gmail.com'
+
+# Extract localizable messages from a collection of source files.
+#pybabel extract --sort-output --msgid-bugs-address=${BUGADDR} -o ${POTFILE} -F setup.cfg ..
+
+# Create a new translations catalog based on a PO template file.
+#pybabel init -D ${DOMAIN} -i ${POTFILE} -l en_US -d .
+
+# Update an existing new translations catalog based on a PO template file.
+#pybabel update -i ${POTFILE} -l en_US -d .
+
+# Translated.
+#pybabel compile -D iredadmin -l zh_CN -i zh_CN/LC_MESSAGES/iredadmin.po -o zh_CN/LC_MESSAGES/iredadmin.mo
+
+# Use pygettext.py.
+python pygettext.py -a -v \
+    -d ${DOMAIN} \
+    -o ${DOMAIN}.po \
+    ../*.py ../libs/*.py ../templates/default/*.html
+
+#msgfmt -o zh_CN/LC_MESSAGES/${DOMAIN}.mo \
+#   -d zh_CN/LC_MESSAGES/ \
+#   zh_CN/LC_MESSAGES/${DOMAIN}.po

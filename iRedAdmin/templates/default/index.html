@@ -1,8 +1,8 @@
-## File: index.html
-<% import mako.ext.babelplugin %> 
+$def with (name)
+
 <html>
-    <head><title>Hello</title></head>
+    <head><title>_("Hello"), ${name}</title></head>
     <body>
-        Message: ${msg}
+        $_("World"): ${name}
     </body>
 </html>

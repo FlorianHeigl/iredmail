@@ -6,3 +6,4 @@
 PROG = 'iRedAdmin'
 
 SKIN = 'default'
+LANG = 'zh_CN'

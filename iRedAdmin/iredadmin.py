@@ -5,10 +5,10 @@
 
 import os
 import sys
+import gettext
 
 # webpy.
 import web
-from web.contrib.template import render_mako
 
 urls = (
     '/.*', 'hello',
@@ -21,22 +21,22 @@ curdir = os.path.dirname(__file__)
 for libdir in ['libs', 'config']:
     sys.path.append(curdir + '/' + libdir)
 
+# Import iRedAdmin config file.
 import iredconf
+
+render = web.template.render(curdir + '/templates/' + iredconf.SKIN)
 
 os.environ['PYTHON_EGG_CACHE'] = '/tmp/.iredadmin-eggs'
 
-# input_encoding and output_encoding is important for unicode
-# template file. Reference:
-# http://www.makotemplates.org/docs/documentation.html#unicode
-render = render_mako(
-        directories=[os.path.join(curdir, 'templates/' + iredconf.SKIN).replace('\\','/'),],
-        input_encoding='utf-8',
-        output_encoding='utf-8',
-        )
+# Python i18n support.
+gettext.translation('iredadmin', localedir=curdir + '/i18n', languages=[iredconf.LANG]).install(True)
+
+# i18n support in webpy template file.
+web.template.Template.globals['_'] = gettext.gettext 
 
 class hello:
     def GET(self):
-        return render.index(msg=curdir)
+        return render.index(name=_("Message"))
 
 # Run with buildin http server.
 #app = web.application(urls, globals())
