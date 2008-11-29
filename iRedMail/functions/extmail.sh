@@ -21,6 +21,13 @@ extmail_install()
     chmod -R 0755 ${EXTSUITE_HTTPD_ROOT}
     chmod 0000 ${EXTMAIL_HTTPD_ROOT}/{AUTHORS,ChangeLog,CREDITS,dispatch.*,INSTALL,README.*}
 
+    ECHO_INFO "Patch ExtMail, make it create user maildir automatic."
+    cd ${EXTMAIL_HTTPD_ROOT} && \
+    patch -p0 < ${PATCH_DIR}/extmail/auto_create_maildir.patch
+
+    ECHO_INFO "Fix incorrect quota display."
+    perl -pi -e 's#(.*ENV.*QUOTA.*mailQuota})(.*0S.*)#${1}*1024000${2}#' ${EXTMAIL_HTTPD_ROOT}/libs/Ext/App.pm
+
     echo 'export status_extmail_install="DONE"' >> ${STATUS_FILE}
 }
 
@@ -59,9 +66,6 @@ EOF
     export VMAIL_USER_HOME_DIR
     perl -pi -e 's#(SYS_MAILDIR_BASE.*)/home/domains#${1}$ENV{VMAIL_USER_HOME_DIR}#' ${EXTMAIL_CONF}
 
-    ECHO_INFO "Fix incorrect quota display."
-    perl -pi -e 's#(.*mailQuota})(.*0S.*)#${1}*1024000${2}#' ${EXTMAIL_HTTPD_ROOT}/libs/Ext/App.pm
-
     #ECHO_INFO "Enable USER_LANG."
     #perl -pi -e 's/#(.*lang.*usercfg.*lang.*USER_LANG.*)/${1}/' App.pm
 
@@ -77,8 +81,8 @@ EOF
     mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWD} <<EOF
 USE ${VMAIL_DB};
 
-ALTER TABLE `mailbox` ADD `question` text NOT NULL default '';
-ALTER TABLE `mailbox` ADD `answer` text NOT NULL default '';
+ALTER TABLE mailbox ADD question text NOT NULL DEFAULT '';
+ALTER TABLE mailbox ADD answer text NOT NULL DEFAULT '';
 EOF
 
     echo 'export status_extmail_config_basic="DONE"' >> ${STATUS_FILE}
