@@ -1,9 +1,9 @@
 iRedOS-0.1.2:
-    * 2008.11.30: Fix kickstart issue, you can install in interactive mode.
-                  Add missing package: at, binutils.
-    * 2008.11.29: Remove pm-utils.
-    * 2008.11.11: Add missing packages: openldap-clients, openldap-servers,
-                  php-ldap. Thanks bruce.16899@gmail.
-    * 2008.11.05: Add missing package: dos2unix.
+    * Fix kickstart issue, you can install in interactive mode. Add missing
+      package: at, binutils.
+    * Remove pm-utils.
+    * Add missing packages: openldap-clients, openldap-servers, php-ldap.
+      Thanks bruce.16899@gmail.
+    * Add missing package: dos2unix.
     * Add missing package: tmpwatch. Thanks westgo@bbs.iredmail.org.
     * Add missing package: iptables. Thanks EdisonWang2007@gmail.

@@ -5,10 +5,18 @@
 # Date: 2008.09.20
 # Purpose: Create customized iso with mkisofs.
 
-# Directory structure:
+# CDROM directory structure:
 #
+#   /
 #   |- createiso.sh
 #   |- i386/
+#       |- Server/              # CentOS base system (rpm packages).
+#       |- iRedMail/            # iRedMail script set, includes rpm packages.
+#       |- isolinux/
+#           |- isolinux.cfg     # Used to customize boot parameters.
+#       |- repodata/            # Yum repo data, created by 'createrepo' command.
+#           |- comps.xml        # Yum group definition.
+#       |- iredmail.cfg         # Kickstart file.
 #   |- x86_64/
 
 # Usage:
