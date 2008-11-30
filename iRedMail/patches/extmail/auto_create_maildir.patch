@@ -1,5 +1,5 @@
---- libs/Ext/Storage/Maildir.pm 2008-09-20 12:46:27.000000000 +0800
-+++ /root/Maildir.pm.new    2008-11-29 10:16:59.000000000 +0800
+--- libs/Ext/Storage/Maildir.pm	2008-09-20 12:46:27.000000000 +0800
++++ /home/michaelz/Maildir.pm	2008-11-30 23:28:30.000000000 +0800
 @@ -12,6 +12,10 @@
  package Ext::Storage::Maildir;
  use strict;
@@ -11,7 +11,7 @@
  # Maildir++ specification
  # see http://www.inter7.com/courierimap/README.maildirquota.html
  #
-@@ -84,6 +88,13 @@
+@@ -84,6 +88,12 @@
      $CFG{mode} = $mode ? $mode : "O_RW";
      $CFG{warnlv} = $warnlv ? $warnlv : "0.9"; # 90% default
  
