@@ -5,6 +5,8 @@
 # Date: 2008.09.20
 # Purpose: Create customized iso with mkisofs.
 
+# Provided by iRedMail project: http://code.google.com/p/iredmail/
+
 # CDROM directory structure:
 #
 #   /
