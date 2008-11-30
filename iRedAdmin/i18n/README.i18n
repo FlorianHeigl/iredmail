@@ -24,6 +24,10 @@ python pygettext.py -a -v \
     -o ${DOMAIN}.po \
     ../*.py ../libs/*.py ../templates/default/*.html
 
-#msgfmt -o zh_CN/LC_MESSAGES/${DOMAIN}.mo \
-#   -d zh_CN/LC_MESSAGES/ \
-#   zh_CN/LC_MESSAGES/${DOMAIN}.po
+for lang in en_US zh_CN
+do
+    perl -pi -e 's#CHARSET#utf-8#' $lang/LC_MESSAGES/${DOMAIN}.po
+    perl -pi -e 's#ENCODING#utf-8#' $lang/LC_MESSAGES/${DOMAIN}.po
+    msgfmt -o ${lang}/LC_MESSAGES/${DOMAIN}.mo \
+       ${lang}/LC_MESSAGES/${DOMAIN}.po
+done

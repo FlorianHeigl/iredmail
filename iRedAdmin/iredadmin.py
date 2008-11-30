@@ -17,6 +17,9 @@ urls = (
 # File location directory.
 curdir = os.path.dirname(__file__)
 
+# i18n directory.
+localedir = curdir + '/i18n'
+
 # Append current file localtion to sys path.
 for libdir in ['libs', 'config']:
     sys.path.append(curdir + '/' + libdir)
@@ -24,15 +27,13 @@ for libdir in ['libs', 'config']:
 # Import iRedAdmin config file.
 import iredconf
 
-render = web.template.render(curdir + '/templates/' + iredconf.SKIN)
+# i18n support in Python script and webpy template file.
+gettext.install('iredadmin', localedir, unicode=True)   
+gettext.translation('iredadmin', localedir, languages=[iredconf.LANG]).install(True)
 
 os.environ['PYTHON_EGG_CACHE'] = '/tmp/.iredadmin-eggs'
 
-# Python i18n support.
-gettext.translation('iredadmin', localedir=curdir + '/i18n', languages=[iredconf.LANG]).install(True)
-
-# i18n support in webpy template file.
-web.template.Template.globals['_'] = gettext.gettext 
+render = web.template.render(curdir + '/templates/' + iredconf.SKIN, globals={'_': _})
 
 class hello:
     def GET(self):
