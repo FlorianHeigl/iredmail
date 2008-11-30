@@ -30,8 +30,8 @@ perl-BerkeleyDB-0.36-1.el5.rf.i386.rpm
 perl-Compress-Raw-Zlib-2.015-1.el5.rf.i386.rpm
 perl-rrdtool-1.2.28-1.el5.rf.i386.rpm
 rrdtool-1.2.28-1.el5.rf.i386.rpm
-clamav-0.94.1-1.el5.rf.i386.rpm
-clamav-db-0.94.1-1.el5.rf.i386.rpm
-clamd-0.94.1-1.el5.rf.i386.rpm
 php-eaccelerator-5.1.6_0.9.5.2-4.el5.rf.i386.rpm
 dovecot-1.1.4-0_81.el5.i386.rpm
+clamav-0.94.2-1.el5.rf.i386.rpm
+clamav-db-0.94.2-1.el5.rf.i386.rpm
+clamd-0.94.2-1.el5.rf.i386.rpm

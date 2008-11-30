@@ -1,4 +1,5 @@
 iRedMail-0.3.2:
+    * Update clamav to 0.94.2.
     * Add patch for ExtMail to make it create user maildir automatic.
     * Clear default account in ExtMail global address book.
     * Fix change password issue in ExtMail-1.0.5. Thanks ilovell.pan@gmail.
