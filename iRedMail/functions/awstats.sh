@@ -11,11 +11,11 @@ awstats_config_basic()
 
     cat > ${AWSTATS_HTTPD_CONF} <<EOF
 ${CONF_MSG}
-Alias /awstats/icon /var/www/awstats/icon/
-ScriptAlias /awstats /var/www/awstats/
-#Alias /css /var/www/awstats/css/
-#Alias /js /var/www/awstats/js/
-<Directory /var/www/awstats/>
+Alias /awstats/icon ${AWSTATS_HTTPD_ROOT}/icon/
+ScriptAlias /awstats ${AWSTATS_HTTPD_ROOT}/
+#Alias /css ${AWSTATS_HTTPD_ROOT}/css/
+#Alias /js ${AWSTATS_HTTPD_ROOT}/js/
+<Directory ${AWSTATS_HTTPD_ROOT}/>
     DirectoryIndex awstats.pl
     Options ExecCGI
     order deny,allow
@@ -32,6 +32,22 @@ EOF
 
     # Set username, password for web access.
     htpasswd -bcm ${AWSTATS_HTPASSWD_FILE} ${AWSTATS_USERNAME} ${AWSTATS_PASSWD} >/dev/null 2>&1
+
+    cat >> ${TIP_FILE} <<EOF
+Awstats:
+    * Configuration files:
+        - ${AWSTATS_CONF_DIR}
+        - ${AWSTATS_CONF_SAMPLE}
+        - ${AWSTATS_CONF_WEB}
+        - ${AWSTATS_CONF_MAIL}
+        - ${AWSTATS_HTTPD_CONF}
+    * URL:
+        - http://$(hostname)/awstats/awstats.pl
+        - http://$(hostname)/awstats/awstats.pl?config=mail
+    * Crontab job:
+        shell> crontab -l root
+    
+EOF
 
     echo 'export status_awstats_config_basic="DONE"' >> ${STATUS_FILE}
 }
