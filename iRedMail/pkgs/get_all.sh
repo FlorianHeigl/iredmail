@@ -67,9 +67,14 @@ fetch_rpms()
 {
     cd ${PKG_DIR}
 
+    rpm_total=$(cat ${RPMLIST} ${NOARCHLIST} | wc -l | awk '{print $1}')
+    rpm_count=1
+
     for i in $(cat ${RPMLIST} ${NOARCHLIST}); do
-        ECHO_INFO "Fetching package: $(eval echo ${i})..."
+        ECHO_INFO "Fetching package: (${rpm_count}/${rpm_total}) $(eval echo ${i})..."
         ${FETCH_CMD} ${MIRROR}/rpms/5/${i}
+
+        rpm_count=$((rpm_count+1))
     done
 }
 
