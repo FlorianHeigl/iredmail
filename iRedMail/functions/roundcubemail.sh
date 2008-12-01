@@ -130,27 +130,10 @@ EOF
     cd ${RCM_HTTPD_ROOT} && \
     patch -p0 < ${PATCH_DIR}/roundcubemail/performance-jh1.diff >/dev/null
 
-    ECHO_INFO "Add another skin and icon set: default-labels."
-    extract_pkg ${MISC_DIR}/roundcubemail-0.1.1-skin-default-labels.tar.bz2 ${RCM_HTTPD_ROOT}/skins/ && \
-    extract_pkg ${MISC_DIR}/roundcubemail-0.1.1-buttons-zh_CN.tar.bz2 ${RCM_HTTPD_ROOT}/skins/default-labels/images/
-
-    cd ${RCM_HTTPD_ROOT}/skins/default-labels/ && \
-    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_chpwd_forward_skins.patch >/dev/null && \
-    cp -f ${RCM_HTTPD_ROOT}/skins/default/{colorpicker,editor_ui,editor_content}.css ${RCM_HTTPD_ROOT}/skins/default-labels/
-
-    #perl -pi -e 's#(.*rcmail_config.*skin_path.*=).*#${1} "skins/default-labels/";#' ${RCM_HTTPD_ROOT}/config/main.inc.php
-
-    # Patch for vacation plugin.
-    cd ${RCM_HTTPD_ROOT}/skins/default-labels/ && \
-    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_vacation_skin_default.patch >/dev/null
-
     ECHO_INFO "Patch: Display Username."
     cd ${RCM_HTTPD_ROOT}/skins/default/ && \
     patch -p0 < ${PATCH_DIR}/roundcubemail/display_username.patch >/dev/null && \
     patch -p0 < ${PATCH_DIR}/roundcubemail/display_username_skin_default.patch >/dev/null
-
-    cd ${RCM_HTTPD_ROOT}/skins/default-labels/ && \
-    patch -p0 < ${PATCH_DIR}/roundcubemail/display_username.patch >/dev/null
 
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
         ECHO_INFO "Disable change password and mail forwarding featues."

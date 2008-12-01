@@ -46,8 +46,6 @@ ${SM_TRANSLATIONS_TARBALL}
 # Roundcube.
 # --------------------------
 ${RCM_TARBALL}
-roundcubemail-0.1.1-buttons-zh_CN.tar.bz2
-roundcubemail-0.1.1-skin-default-labels.tar.bz2
 
 # --------------------------
 # PostfixAdmin.
