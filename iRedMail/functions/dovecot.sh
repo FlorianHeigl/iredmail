@@ -334,6 +334,12 @@ EOF
 }
 EOF
 
+    ECHO_INFO "Generate dovecot sieve global filter rule file: ${SIEVE_FILTER_FILE}.sample."
+    cp -f ${SAMPLE_DIR}/dovecot.sieve ${SIEVE_FILTER_FILE}.sample
+    chown ${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} ${SIEVE_FILTER_FILE}.sample
+    chmod 0500 ${SIEVE_FILTER_FILE}.sample
+
+
     ECHO_INFO "Create directory to store user sieve rule files: ${SIEVE_DIR}."
     mkdir -p ${SIEVE_DIR} && \
     chown -R apache:${VMAIL_GROUP_NAME} ${SIEVE_DIR} && \
