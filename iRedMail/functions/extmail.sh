@@ -23,7 +23,7 @@ extmail_install()
 
     ECHO_INFO "Patch ExtMail, make it create user maildir automatic."
     cd ${EXTMAIL_HTTPD_ROOT} && \
-    patch -p0 < ${PATCH_DIR}/extmail/auto_create_maildir.patch
+    patch -p0 < ${PATCH_DIR}/extmail/auto_create_maildir.patch >/dev/null 2>&1
 
     ECHO_INFO "Fix incorrect quota display."
     perl -pi -e 's#(.*ENV.*QUOTA.*mailQuota})(.*0S.*)#${1}*1024000${2}#' ${EXTMAIL_HTTPD_ROOT}/libs/Ext/App.pm
