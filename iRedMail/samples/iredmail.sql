@@ -10,8 +10,8 @@ CREATE TABLE admin (
     username varchar(255) NOT NULL default '',
     password varchar(255) NOT NULL default '',
     created datetime NOT NULL default '0000-00-00 00:00:00',
-    expired datetime NOT NULL default '9999-12-31 00:00:00',
     modified datetime NOT NULL default '0000-00-00 00:00:00',
+    expired datetime NOT NULL default '9999-12-31 00:00:00',
     active tinyint(1) NOT NULL default '1',
     PRIMARY KEY (username)
 ) TYPE=MyISAM;
@@ -24,8 +24,8 @@ CREATE TABLE alias (
     goto text NOT NULL,
     domain varchar(255) NOT NULL default '',
     created datetime NOT NULL default '0000-00-00 00:00:00',
-    expired datetime NOT NULL default '9999-12-31 00:00:00',
     modified datetime NOT NULL default '0000-00-00 00:00:00',
+    expired datetime NOT NULL default '9999-12-31 00:00:00',
     active tinyint(1) NOT NULL default '1',
     PRIMARY KEY (address)
 ) TYPE=MyISAM;
@@ -56,8 +56,8 @@ CREATE TABLE domain_admins (
     username varchar(255) NOT NULL default '',
     domain varchar(255) NOT NULL default '',
     created datetime NOT NULL default '0000-00-00 00:00:00',
-    expired datetime NOT NULL default '9999-12-31 00:00:00',
     modified datetime NOT NULL default '0000-00-00 00:00:00',
+    expired datetime NOT NULL default '9999-12-31 00:00:00',
     active tinyint(1) NOT NULL default '1',
     KEY username (username)
 ) TYPE=MyISAM;
@@ -72,7 +72,6 @@ CREATE TABLE mailbox (
     maildir varchar(255) NOT NULL default '',
     quota bigint(20) NOT NULL default '0',
     domain varchar(255) NOT NULL default '',
-    active tinyint(1) NOT NULL default '1',
     department varchar(255) NOT NULL default '',
     rank varchar(255) NOT NULL default 'normal',
     enablesmtp tinyint(1) NOT NULL default '1',
@@ -81,8 +80,9 @@ CREATE TABLE mailbox (
     enabledeliver tinyint(1) NOT NULL default '1',
     enablepysieved tinyint(1) NOT NULL default '1',
     created datetime NOT NULL default '0000-00-00 00:00:00',
-    expired datetime NOT NULL default '9999-12-31 00:00:00',
     modified datetime NOT NULL default '0000-00-00 00:00:00',
+    expired datetime NOT NULL default '9999-12-31 00:00:00',
+    active tinyint(1) NOT NULL default '1',
     PRIMARY KEY (username)
 ) TYPE=MyISAM;
 
@@ -93,8 +93,8 @@ CREATE TABLE sender_bcc_domain (
     domain varchar(255) NOT NULL default '',
     bcc_address varchar(255) NOT NULL default '',
     created datetime NOT NULL default '0000-00-00 00:00:00',
-    expired datetime NOT NULL default '9999-12-31 00:00:00',
     modified datetime NOT NULL default '0000-00-00 00:00:00',
+    expired datetime NOT NULL default '9999-12-31 00:00:00',
     active tinyint(1) NOT NULL default '1',
     PRIMARY KEY (domain)
 ) TYPE=MyISAM;
@@ -107,8 +107,8 @@ CREATE TABLE sender_bcc_user (
     bcc_address varchar(255) NOT NULL default '',
     domain varchar(255) NOT NULL default '',
     created datetime NOT NULL default '0000-00-00 00:00:00',
-    expired datetime NOT NULL default '9999-12-31 00:00:00',
     modified datetime NOT NULL default '0000-00-00 00:00:00',
+    expired datetime NOT NULL default '9999-12-31 00:00:00',
     active tinyint(1) NOT NULL default '1',
     PRIMARY KEY (username)
 ) TYPE=MyISAM;
@@ -120,8 +120,8 @@ CREATE TABLE recipient_bcc_domain (
     domain varchar(255) NOT NULL default '',
     bcc_address varchar(255) NOT NULL default '',
     created datetime NOT NULL default '0000-00-00 00:00:00',
-    expired datetime NOT NULL default '9999-12-31 00:00:00',
     modified datetime NOT NULL default '0000-00-00 00:00:00',
+    expired datetime NOT NULL default '9999-12-31 00:00:00',
     active tinyint(1) NOT NULL default '1',
     PRIMARY KEY (domain)
 ) TYPE=MyISAM;
@@ -134,8 +134,8 @@ CREATE TABLE recipient_bcc_user (
     bcc_address varchar(255) NOT NULL default '',
     domain varchar(255) NOT NULL default '',
     created datetime NOT NULL default '0000-00-00 00:00:00',
-    expired datetime NOT NULL default '9999-12-31 00:00:00',
     modified datetime NOT NULL default '0000-00-00 00:00:00',
+    expired datetime NOT NULL default '9999-12-31 00:00:00',
     active tinyint(1) NOT NULL default '1',
     PRIMARY KEY (username)
 ) TYPE=MyISAM;

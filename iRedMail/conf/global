@@ -42,6 +42,9 @@ export VMAIL_USER_GID='2000'
 # pypolicyd-spf is *NOT* recommended.
 export SPF_PROGRAM='perl-Mail-SPF'
 
+# Hostname.
+export HOSTNAME="$(grep 'HOSTNAME' /etc/sysconfig/network | awk -F'=' '{print $2}')"
+
 # SSL/TLS support.
 export SSL_FILE_DIR="/etc/pki/${PROG_NAME}"
 export SSL_CERT_FILE="${SSL_FILE_DIR}/SSL_Cert.pem"
@@ -57,7 +60,6 @@ export TLS_ADMIN="root@$(hostname)"
 # ----------------------------------
 # You do *NOT* need to modify them.
 # ----------------------------------
-export HOSTNAME="$(hostname)"
 export DATE="$(/bin/date +%Y.%m.%d_%H.%M.%S)"
 
 # Tools.
