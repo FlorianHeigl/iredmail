@@ -49,6 +49,7 @@ Awstats:
         - ${AWSTATS_CONF_MAIL}
         - ${AWSTATS_HTTPD_CONF}
     * URL:
+        - http://$(hostname)/awstats/awstats.pl
         - http://$(hostname)/awstats/awstats.pl?config=${HOSTNAME}
         - http://$(hostname)/awstats/awstats.pl?config=mail
     * Crontab job:
@@ -78,6 +79,9 @@ awstats_config_maillog()
 
     cd ${AWSTATS_CONF_DIR} && \
     cp -f ${AWSTATS_CONF_SAMPLE} ${AWSTATS_CONF_MAIL}
+
+    # Create a default config file.
+    cp -f ${AWSTATS_CONF_MAIL} ${AWSTATS_CONF_DIR}/awstats.conf
 
     export maillogconvert_pl="$(which maillogconvert.pl)"
     perl -pi -e 's#^(LogFile=)(.*)#${1}"perl $ENV{'maillogconvert_pl'} standard < /var/log/maillog |"#' ${AWSTATS_CONF_MAIL}

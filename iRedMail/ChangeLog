@@ -1,4 +1,5 @@
 iRedMail-0.3.2:
+    * Use mail log config in awstats as default config file.
     * Fix file permission for awstats if we use ExtMail at the same time.
     * Remove two extra packages: roundcubemail-0.1.1-buttons-zh_CN.tar.bz2,
       roundcubemail-0.1.1-skin-default-labels.tar.bz2.
