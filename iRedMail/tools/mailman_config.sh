@@ -37,7 +37,7 @@ Please specify the *E-Mail* address of the person running the list:
 EXAMPLE:
 
     * michaelbibby@gmail.com
-" 20 76 "root@$(hostname)" 2>/tmp/first_mailing_list_owner
+" 20 76 "root@${HOSTNAME}" 2>/tmp/first_mailing_list_owner
 
 FIRST_MAILING_LIST_OWNER="$(cat /tmp/first_mailing_list_owner)"
 rm -f /tmp/first_mailing_list_owner

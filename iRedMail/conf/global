@@ -52,10 +52,10 @@ export SSL_KEY_FILE="${SSL_FILE_DIR}/SSL_Key.pem"
 export TLS_COUNTRY='CN'
 export TLS_STATE='GuangDong'
 export TLS_CITY='ShenZhen'
-export TLS_COMPANY="$(hostname)"
+export TLS_COMPANY="${HOSTNAME}"
 export TLS_DEPARTMENT='IT'
-export TLS_HOSTNAME="$(hostname)"
-export TLS_ADMIN="root@$(hostname)"
+export TLS_HOSTNAME="${HOSTNAME}"
+export TLS_ADMIN="root@${HOSTNAME}"
 
 # ----------------------------------
 # You do *NOT* need to modify them.

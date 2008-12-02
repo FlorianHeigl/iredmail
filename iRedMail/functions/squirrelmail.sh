@@ -45,8 +45,8 @@ WebMail(SquirrelMail):
         - ${HTTPD_SERVERROOT}/squirrelmail-${SM_VERSION}/
         - ${HTTPD_SERVERROOT}/squirrelmail-${SM_VERSION}/config/config.php
     * URL:
-        - http://$(hostname)/mail/
-        - http://$(hostname)/webmail/
+        - http://${HOSTNAME}/mail/
+        - http://${HOSTNAME}/webmail/
     * See also:
         - ${HTTPD_CONF_DIR}/squirrelmail.conf
 

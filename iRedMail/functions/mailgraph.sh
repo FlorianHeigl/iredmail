@@ -34,7 +34,7 @@ mailgraph_setup()
     cat >> ${TIP_FILE} <<EOF
 mailgraph:
     * URL:
-        - http://$(hostname)/cgi-bin/mailgraph.cgi"
+        - http://${HOSTNAME}/cgi-bin/mailgraph.cgi"
     * See also:
         - /etc/init.d/mailgraph
         - /usr/local/bin/mailgraph.pl

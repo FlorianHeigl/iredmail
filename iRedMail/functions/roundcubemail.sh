@@ -179,8 +179,8 @@ WebMail(Roundcubemail):
         - ${HTTPD_SERVERROOT}/roundcubemail-${RCM_VERSION}/
         - ${HTTPD_SERVERROOT}/roundcubemail-${RCM_VERSION}/config/
     * URL:
-        - http://$(hostname)/mail/
-        - http://$(hostname)/webmail/
+        - http://${HOSTNAME}/mail/
+        - http://${HOSTNAME}/webmail/
     * See also:
         - ${HTTPD_CONF_DIR}/roundcubemail.conf
         - ${RCM_HTTPD_ROOT}/skins/${rcm_skin_cn}

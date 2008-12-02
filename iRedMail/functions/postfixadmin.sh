@@ -102,7 +102,7 @@ PostfixAdmin:
         - ${POSTFIXADMIN_CONF_LOCAL}
         - ${POSTFIXADMIN_HTTPD_ROOT}/config.inc.php
     * URL:
-        - http://$(hostname)/postfixadmin/
+        - http://${HOSTNAME}/postfixadmin/
     * See also:
         - ${HTTPD_CONF_DIR}/postfixadmin.conf
 

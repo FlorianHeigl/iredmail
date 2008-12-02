@@ -42,7 +42,7 @@ phpMyAdmin:
         - ${PHPMYADMIN_HTTPD_ROOT}
         - ${PHPMYADMIN_CONFIG_FILE}
     * URL:
-        - http://$(hostname)/phpmyadmin
+        - http://${HOSTNAME}/phpmyadmin
     * See also:
         - ${HTTPD_CONF_DIR}/phpmyadmin.conf
 

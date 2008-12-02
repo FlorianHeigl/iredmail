@@ -49,9 +49,9 @@ Awstats:
         - ${AWSTATS_CONF_MAIL}
         - ${AWSTATS_HTTPD_CONF}
     * URL:
-        - http://$(hostname)/awstats/awstats.pl
-        - http://$(hostname)/awstats/awstats.pl?config=${HOSTNAME}
-        - http://$(hostname)/awstats/awstats.pl?config=mail
+        - http://${HOSTNAME}/awstats/awstats.pl
+        - http://${HOSTNAME}/awstats/awstats.pl?config=${HOSTNAME}
+        - http://${HOSTNAME}/awstats/awstats.pl?config=mail
     * Crontab job:
         shell> crontab -l root
     
@@ -128,7 +128,7 @@ awstats_config_crontab()
 {
     ECHO_INFO "Setting cronjob for awstats."
     cat >> ${CRON_SPOOL_DIR}/root <<EOF
-1   */1   *   *   *   perl /var/www/awstats/awstats.pl -config=$(hostname) -update >/dev/null
+1   */1   *   *   *   perl /var/www/awstats/awstats.pl -config=${HOSTNAME} -update >/dev/null
 1   */1   *   *   *   perl /var/www/awstats/awstats.pl -config=mail -update >/dev/null
 EOF
 

@@ -40,7 +40,7 @@ extmail_config_basic()
     cat > ${HTTPD_CONF_DIR}/extmail.conf <<EOF
 ${CONF_MSG}
 <VirtualHost *:80>
-ServerName $(hostname)
+ServerName ${HOSTNAME}
 
 DocumentRoot ${HTTPD_DOCUMENTROOT}
 
@@ -148,7 +148,7 @@ ExtMail:
     * Reference:
         - ${HTTPD_CONF_DIR}/extmail.conf
     * URL:
-        - $(hostname)/extmail
+        - ${HOSTNAME}/extmail
 EOF
 
     echo 'export status_extmail_config="DONE"' >> ${STATUS_FILE}

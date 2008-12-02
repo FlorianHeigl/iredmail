@@ -36,8 +36,8 @@ phpLDAPadmin:
         - ${PLA_HTTPD_ROOT}/config/config.php
     * URL:
         - ${PLA_HTTPD_ROOT}
-        - http://$(hostname)/phpldapadmin/
-        - http://$(hostname)/ldap/
+        - http://${HOSTNAME}/phpldapadmin/
+        - http://${HOSTNAME}/ldap/
     * See also:
         - ${HTTPD_CONF_DIR}/phpldapadmin.conf
         - ${PLA_HTTPD_ROOT}/templates/creation/custom_*.xml

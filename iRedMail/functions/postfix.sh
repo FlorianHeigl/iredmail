@@ -42,9 +42,9 @@ EOF
     postconf -e mydestination="\$myhostname, localhost, localhost.localdomain, localhost.\$myhostname"
     postconf -e mail_name="${PROG_NAME}"
     postconf -e mail_version="${PROG_VERSION}"
-    postconf -e myhostname=$(hostname)
-    postconf -e mydomain=$(hostname)
-    postconf -e myorigin=$(hostname)
+    postconf -e myhostname="${HOSTNAME}"
+    postconf -e mydomain="${HOSTNAME}"
+    postconf -e myorigin="${HOSTNAME}"
     postconf -e relay_domains='$mydestination'
     postconf -e inet_interfaces="all"
     postconf -e mynetworks="127.0.0.0/8"
