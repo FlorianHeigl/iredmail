@@ -4,6 +4,13 @@
 
 awstats_config_basic()
 {
+    # Change file owner and permission if we use ExtMail at the same time.
+    if [ X"${USE_EXTMAIL}" == X"YES" ]; then
+        chown -R ${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} ${AWSTATS_HTTPD_ROOT}
+    else
+        :
+    fi
+
     [ -f ${AWSTATS_CONF_SAMPLE} ] && dos2unix ${AWSTATS_CONF_SAMPLE} >/dev/null 2>&1
 
     ECHO_INFO "Generate apache config file for awstats: ${AWSTATS_HTTPD_CONF}."
@@ -42,7 +49,7 @@ Awstats:
         - ${AWSTATS_CONF_MAIL}
         - ${AWSTATS_HTTPD_CONF}
     * URL:
-        - http://$(hostname)/awstats/awstats.pl
+        - http://$(hostname)/awstats/awstats.pl?config=${HOSTNAME}
         - http://$(hostname)/awstats/awstats.pl?config=mail
     * Crontab job:
         shell> crontab -l root
