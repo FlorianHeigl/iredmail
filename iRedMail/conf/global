@@ -30,12 +30,11 @@ else
     export YUM=${YUM}
 fi
 
-# vmail user.
+# vmail user. uid and gid should be export after user added. Reference:
+# functions/user_vmail.sh
 export VMAIL_USER_NAME='vmail'
 export VMAIL_GROUP_NAME='vmail'
 export VMAIL_ADMIN_USER_NAME="${VMAIL_USER_NAME}admin"
-export VMAIL_USER_UID='2000'
-export VMAIL_USER_GID='2000'
 
 # SPF.
 # Either 'pypolicyd-spf' or 'perl-Mail-SPF'

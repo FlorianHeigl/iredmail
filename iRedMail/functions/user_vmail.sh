@@ -21,8 +21,12 @@ adduser_vmail()
         :
     fi
 
-    useradd -m -d ${VMAIL_USER_HOME_DIR} -s /sbin/nologin -u ${VMAIL_USER_UID} -g ${VMAIL_USER_GID} ${VMAIL_USER_NAME}
+    useradd -m -d ${VMAIL_USER_HOME_DIR} -s /sbin/nologin ${VMAIL_USER_NAME}
     rm -f ${VMAIL_USER_HOME_DIR}/.* 2>/dev/null
+
+    # Export vmail user uid/gid.
+    export VMAIL_USER_UID="$(id -u ${VMAIL_USER_NAME})"
+    export VMAIL_USER_GID="$(id -g ${VMAIL_USER_NAME})"
 
     cat >> ${TIP_FILE} <<EOF
 Mail Storage:

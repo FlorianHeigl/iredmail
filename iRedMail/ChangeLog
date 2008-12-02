@@ -1,4 +1,5 @@
 iRedMail-0.3.2:
+    * Don't specify vmail uid/gid.
     * Generate sieve global filter rule sample file.
     * Use mail log config in awstats as default config file.
     * Fix file permission for awstats if we use ExtMail at the same time.

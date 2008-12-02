@@ -55,7 +55,7 @@ check_arch && check_env
 # All packages.
 . ${FUNCTIONS_DIR}/packages.sh
 
-# User/Group: vmail.
+# User/Group: vmail. We will export vmail uid/gid here.
 . ${FUNCTIONS_DIR}/user_vmail.sh
 
 # Apache & PHP.
