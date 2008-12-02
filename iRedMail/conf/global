@@ -43,7 +43,7 @@ export VMAIL_USER_GID='2000'
 export SPF_PROGRAM='perl-Mail-SPF'
 
 # Hostname.
-export HOSTNAME="$(grep 'HOSTNAME' /etc/sysconfig/network | awk -F'=' '{print $2}')"
+export HOSTNAME="$(grep '^HOSTNAME' /etc/sysconfig/network | awk -F'=' '{print $2}')"
 
 # SSL/TLS support.
 export SSL_FILE_DIR="/etc/pki/${PROG_NAME}"
