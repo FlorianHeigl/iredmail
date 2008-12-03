@@ -1,4 +1,5 @@
 iRedOS-0.1.2:
+    * Improve kickstart %post macro.
     * Add missing package: dos2unix, at, binutils, libtool-ltdl, gettext,
       libXi, libXext, libX11, libXau, libSM, libICE, pax, cups, ed, m4,
       libXt, libXdmcp, xorg-x11-filesystem.
