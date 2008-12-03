@@ -1,5 +1,7 @@
 iRedOS-0.1.2:
-    * Improve kickstart %post macro.
+    * Use iptables rule file and mysql config file which shipped within
+      iRedMail by default.
+    * Improve kickstart %post macro, speed up system installation.
     * Add missing package: dos2unix, at, binutils, libtool-ltdl, gettext,
       libXi, libXext, libX11, libXau, libSM, libICE, pax, cups, ed, m4,
       libXt, libXdmcp, xorg-x11-filesystem.
