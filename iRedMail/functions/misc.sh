@@ -167,6 +167,14 @@ EOF
     check_status_before_run run_freshclam_now
     check_status_before_run start_postfix_now
 
+    cat <<EOF
+
+************************************************************
+* NOTE: Please refer to tip file for more information:
+*   - ${TIP_FILE}
+************************************************************
+
+EOF
     echo 'export status_clear_away="DONE"' >> ${STATUS_FILE}
 }
 
