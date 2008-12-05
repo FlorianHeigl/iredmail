@@ -1,4 +1,5 @@
 iRedOS-0.1.2:
+    * Make language customized.
     * Use iptables rule file and mysql config file which shipped within
       iRedMail by default.
     * Improve kickstart %post macro, speed up system installation.
