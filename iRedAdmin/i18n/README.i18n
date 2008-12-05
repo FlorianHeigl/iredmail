@@ -3,31 +3,27 @@
 # Author:	Zhang Huangbin <michaelbibby (at) gmail.com>
 
 DOMAIN='iredadmin'
-POTFILE='./iredadmin.pot'
+POTFILE='./iredadmin.po'
 BUGADDR='michaelbibby@gmail.com'
-
-# Extract localizable messages from a collection of source files.
-#pybabel extract --sort-output --msgid-bugs-address=${BUGADDR} -o ${POTFILE} -F setup.cfg ..
-
-# Create a new translations catalog based on a PO template file.
-#pybabel init -D ${DOMAIN} -i ${POTFILE} -l en_US -d .
-
-# Update an existing new translations catalog based on a PO template file.
-#pybabel update -i ${POTFILE} -l en_US -d .
-
-# Translated.
-#pybabel compile -D iredadmin -l zh_CN -i zh_CN/LC_MESSAGES/iredadmin.po -o zh_CN/LC_MESSAGES/iredadmin.mo
 
 # Use pygettext.py.
 python pygettext.py -a -v \
     -d ${DOMAIN} \
-    -o ${DOMAIN}.po \
-    ../*.py ../libs/*.py ../templates/default/*.html
+    -o ${POTFILE} \
+    ../*.py ../libs/*.py ../static/* ../templates/default/*.html
+
+perl -pi -e 's#CHARSET#utf-8#' ${POTFILE}
+perl -pi -e 's#ENCODING#utf-8#' ${POTFILE}
 
 for lang in en_US zh_CN
 do
     perl -pi -e 's#CHARSET#utf-8#' $lang/LC_MESSAGES/${DOMAIN}.po
     perl -pi -e 's#ENCODING#utf-8#' $lang/LC_MESSAGES/${DOMAIN}.po
+
+    echo -n "Converting ${lang}/LC_MESSAGES/${POTFILE}..."
+
     msgfmt -o ${lang}/LC_MESSAGES/${DOMAIN}.mo \
        ${lang}/LC_MESSAGES/${DOMAIN}.po
+
+    [ X"$?" == X"0" ] && echo -e "\t\t[DONE]"
 done
