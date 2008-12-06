@@ -30,7 +30,7 @@ cb6045d305d3d837b82b92462160f8a9  rpms/perl-Compress-Raw-Zlib-2.015-1.el5.rf.x86
 01e20b41902cfed0e59f58e33c17d16b  rpms/perl-rrdtool-1.2.28-1.el5.rf.x86_64.rpm
 9dade94564003b4ca6df6681482ebb30  rpms/rrdtool-1.2.28-1.el5.rf.x86_64.rpm
 b763f87639929cc513f8176f0b8b23b2  rpms/php-eaccelerator-5.1.6_0.9.5.2-4.el5.rf.x86_64.rpm
-22c49fd961d1357b7e74a2c5316abf46  rpms/dovecot-1.1.4-0_81.el5.x86_64.rpm
 fad9eb7250e85d1f852e5315ba337a79  rpms/clamav-0.94.2-1.el5.rf.x86_64.rpm
 ace23160b624a6153e8ff29c30437921  rpms/clamav-db-0.94.2-1.el5.rf.x86_64.rpm
 ade9ce32de8fcfd5fa5d9a093c09368e  rpms/clamd-0.94.2-1.el5.rf.x86_64.rpm
+d295a6a6c3b877351d43a28eac234ebe  rpms/dovecot-1.1.7-0_84.el5.x86_64.rpm
