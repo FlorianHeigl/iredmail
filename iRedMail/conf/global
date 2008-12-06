@@ -25,7 +25,7 @@ export IMAP_SERVER='127.0.0.1'
 export SMTP_SERVER='127.0.0.1'
 
 if [ X"${YUM}" == X"" ]; then
-    export YUM='yum -d 1'
+    export YUM='yum -d 2'
 else
     export YUM=${YUM}
 fi
@@ -116,3 +116,18 @@ export KERNEL_NAME="$(uname -s)"
 
 # Crontab related.
 CRON_SPOOL_DIR="/var/spool/cron"
+
+# Make some command operating system independent.
+if [ X"${KERNEL_NAME}" == X"Linux" -a -f /etc/redhat-release ]; then
+    # RHEL/CentOS
+    export LIST_FILES_IN_PKG='rpm -ql'
+else
+    :
+fi
+
+if [ X"${KERNEL_NAME}" == X"Linux" -a -f /etc/redhat-release ]; then
+    # RHEL/CentOS
+    export LIST_ALL_PKGS='rpm -qa'
+else
+    :
+fi

@@ -128,7 +128,7 @@ ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
 Please choose your favorite webmail program.
 " 20 76 5 \
     "SquirrelMail" "WebMail program, written in PHP." "on" \
-    "Roundcubemail" "WebMail program (PHP, XHTML, CSS2, AJAX)." "off" \
+    "Roundcubemail" "WebMail program (PHP, XHTML, CSS2, AJAX)." "on" \
     "ExtMail" "WebMail program from ExtMail project." "off" \
     "Horde WebMail" "WebMail program." "off" \
     2> /tmp/webmail
@@ -163,7 +163,7 @@ use them by your own:
     "phpLDAPadmin" "Web-based LDAP browser to manage your LDAP server." "on" \
     "phpMyAdmin" "Web-based MySQL database management." "on" \
     "Awstats" "Advanced web and mail log analyzer." "on" \
-    "Mailgraph" "Mail statistics RRDtool frontend for Postfix." "off" \
+    "Mailgraph" "Mail statistics RRDtool frontend for Postfix." "on" \
     2>/tmp/ldap_optional_components
 
     # Temporary disabled.

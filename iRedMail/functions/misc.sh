@@ -16,7 +16,7 @@ disable_selinux()
 remove_sendmail()
 {
     # Remove sendmail.
-    ${LIST_ALL_PKGS} | grep sendmail >/dev/null 2>&1
+    eval ${LIST_ALL_PKGS} | grep sendmail >/dev/null 2>&1
 
     if [ X"$?" == X"0" ]; then
         echo -n "Would you like to *REMOVE* sendmail now? [Y|n]"

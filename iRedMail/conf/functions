@@ -226,27 +226,6 @@ check_status_before_run()
     fi
 }
 
-# Make some command system independ.
-list_all_pkgs()
-{
-    if [ X"${KERNEL_NAME}" == X"Linux" -a -f /etc/redhat-release ]; then
-        # RHEL/CentOS
-        export LIST_ALL_PKGS='rpm -qa'
-    else
-        :
-    fi
-}
-
-list_files_in_pkg()
-{
-    if [ X"${KERNEL_NAME}" == X"Linux" -a -f /etc/redhat-release ]; then
-        # RHEL/CentOS
-        export LIST_FILES_IN_PKG='rpm -ql'
-    else
-        :
-    fi
-}
-
 gen_ldap_passwd()
 {
     slappasswd -h {MD5} -s ${1}

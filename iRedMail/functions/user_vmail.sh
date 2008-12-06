@@ -11,7 +11,7 @@ adduser_vmail()
     [ -d ${homedir} ] || mkdir -p ${homedir}
 
     ECHO_INFO "Add user/group: vmail."
-    groupadd -g ${VMAIL_USER_GID} ${VMAIL_GROUP_NAME}
+    groupadd ${VMAIL_GROUP_NAME}
 
     # Set permission for exist home directory.
     if [ -d ${VMAIL_USER_HOME_DIR} ]; then

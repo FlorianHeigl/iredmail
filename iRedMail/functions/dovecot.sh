@@ -372,7 +372,7 @@ EOF
     ECHO_INFO "Setting cronjob for Dovecot plugin: Expire."
     cat >> ${CRON_SPOOL_DIR}/root <<EOF
 ${CONF_MSG}
-1   5   *   *   *   dovecot --exec-mail ext $(${LIST_FILES_IN_PKG} dovecot | grep 'expire-tool$')
+1   5   *   *   *   dovecot --exec-mail ext $(eval ${LIST_FILES_IN_PKG} dovecot | grep 'expire-tool$')
 EOF
 
     cat >> ${POSTFIX_FILE_MASTER_CF} <<EOF

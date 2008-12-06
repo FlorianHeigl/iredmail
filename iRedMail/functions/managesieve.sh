@@ -64,7 +64,8 @@ gid = ${VMAIL_USER_GID}
 EOF
 
     # Modify pysieved source, replace 'os.mkdir' by 'os.makedirs'.
-    perl -pi -e 's#os.mkdir#os.makedirs#' $(${LIST_FILES_IN_PKG} pysieved|grep 'dovecot.py$')
+    pysieved_dovecot_py="$(eval ${LIST_FILES_IN_PKG} pysieved|grep 'dovecot.py$')"
+    [ ! -z ${pysieved_dovecot_py} ] && perl -pi -e 's#os.mkdir#os.makedirs#' ${pysieved_dovecot_py}
 
     # Create directory to store pid file.
     pysieved_pid_dir="$(dirname ${PYSIEVED_PIDFILE})"
@@ -77,7 +78,8 @@ EOF
     /sbin/chkconfig --level 345 pysieved on
 
     # Disable pysieved in xinetd.
-    perl -pi -e 's#(.*disable.*=).*#${1} yes#' $(${LIST_FILES_IN_PKG} pysieved | grep 'xinetd' | grep 'pysieved$')
+    pysieved_xinetd_conf="$(eval ${LIST_FILES_IN_PKG} pysieved | grep 'xinetd' | grep 'pysieved$')"
+    [ ! -z ${pysieved_xinetd_conf} ] && perl -pi -e 's#(.*disable.*=).*#${1} yes#' ${pysieved_xinetd_conf}
 
     cat >> ${TIP_FILE} <<EOF
 pysieved:

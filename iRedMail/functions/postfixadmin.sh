@@ -28,7 +28,7 @@ EOF
 
     if [ X"${SITE_ADMIN_NAME}" == X"${FIRST_DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}" ]; then
         # We need update domain list, not insert a new record.
-        mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWD} <<EOF
+        mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
 USE ${VMAIL_DB};
 
 /* Update domain list. */
@@ -40,7 +40,7 @@ EOF
         ECHO_INFO "Add site admin in SQL database."
         SITE_ADMIN_PASSWD="$(openssl passwd -1 ${SITE_ADMIN_PASSWD})"
 
-        mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWD} <<EOF
+        mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
 /* Add whole site admin. */
 USE ${VMAIL_DB};
 
