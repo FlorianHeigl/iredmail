@@ -50,14 +50,14 @@ policyd_config()
     export MYSQL_SERVER MYSQL_PORT MYSQL_ROOT_USER MYSQL_ROOT_PASSWD
     mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWD} <<EOF
 # Import SQL structure.
-SOURCE $(rpm -ql policyd | grep 'DATABASE.mysql');
+SOURCE $(${LIST_FILES_IN_PKG} policyd | grep 'DATABASE.mysql');
 
 # Grant privileges.
 GRANT SELECT,INSERT,UPDATE,DELETE ON ${POLICYD_DB_NAME}.* TO ${POLICYD_DB_USER}@localhost IDENTIFIED BY "${POLICYD_DB_PASSWD}";
 
 # Please do 'GRANT' before all other actions for fail-safe.
-SOURCE $(rpm -ql policyd | grep 'whitelist.sql');
-SOURCE $(rpm -ql policyd | grep 'blacklist_helo.sql');
+SOURCE $(${LIST_FILES_IN_PKG} policyd | grep 'whitelist.sql');
+SOURCE $(${LIST_FILES_IN_PKG} policyd | grep 'blacklist_helo.sql');
 SOURCE ${SAMPLE_DIR}/policyd_blacklist_helo.sql;
 
 FLUSH PRIVILEGES;
@@ -279,7 +279,7 @@ Policyd:
         - /etc/init.d/policyd
     * Misc:
         - /etc/cron.daily/policyd-cleanup
-        - $(rpm -ql policyd | grep 'policyd.cron$')
+        - $(${LIST_FILES_IN_PKG} policyd | grep 'policyd.cron$')
         - crontab -l ${POLICYD_USER_NAME}
 EOF
 

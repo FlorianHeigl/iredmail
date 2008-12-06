@@ -112,6 +112,7 @@ fi
 
 # Arch.
 export ARCH="$(uname -i)"
+export KERNEL_NAME="$(uname -s)"
 
 # Crontab related.
 CRON_SPOOL_DIR="/var/spool/cron"

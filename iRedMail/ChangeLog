@@ -1,4 +1,5 @@
 iRedMail-0.3.2:
+    * Make some command operating system independent.
     * Update Dovecot to 1.1.7.
     * Update SquirrelMail to 1.4.17.
     * Don't specify vmail uid/gid.
