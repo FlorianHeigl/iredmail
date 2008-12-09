@@ -123,7 +123,7 @@ check_md5()
     done
 }
 
-create_yum_repo()
+check_createrepo()
 {
     which createrepo >/dev/null 2>&1
 
@@ -133,7 +133,10 @@ create_yum_repo()
     else
         :
     fi
+}
 
+create_yum_repo()
+{
     # createrepo
     ECHO_INFO -n "Generating yum repository..."
     cd ${ROOTDIR} && createrepo . >/dev/null 2>&1 && echo -e "\t[ OK ]"
@@ -158,6 +161,7 @@ check_arch && \
 fetch_rpms && \
 fetch_misc && \
 check_md5 && \
+check_createrepo && \
 create_yum_repo && \
 check_dialog && \
 cat <<EOF

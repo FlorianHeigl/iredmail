@@ -377,7 +377,7 @@ ${CONF_MSG}
 \$ldap_password_field = "${LDAP_ATTR_USER_PASSWD}";
 \$ldap_user_field = "${LDAP_ATTR_USER_DN_NAME}";
 \$ldap_base_dn = '${LDAP_BASEDN}';
-\$ldap_filter = "(&(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=active)(${LDAP_ATTR_USER_ENABLE_IMAP}=yes))";
+\$ldap_filter = "(&(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=active)(${LDAP_ATTR_ENABLE_MAIL_SERVICE}=yes))";
 \$query_dn="${LDAP_BINDDN}";
 \$query_pw="${LDAP_BINDPW}";
 \$ldap_bind_as_manager = false;

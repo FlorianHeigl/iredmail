@@ -308,7 +308,7 @@ bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
 search_base     = ${LDAP_BASEDN}
 scope           = one
-query_filter    = (&(&(${LDAP_ATTR_DOMAIN_DN_NAME}=%d)(objectClass=${LDAP_OBJECTCLASS_DOMAIN}))(${LDAP_ATTR_DOMAIN_STATUS}=active)(${LDAP_ATTR_ENABLE_MAIL_SERVICE}=yes))
+query_filter    = (&(${LDAP_ATTR_DOMAIN_DN_NAME}=%d)(objectClass=${LDAP_OBJECTCLASS_DOMAIN})(${LDAP_ATTR_DOMAIN_STATUS}=active)(${LDAP_ATTR_ENABLE_MAIL_SERVICE}=yes))
 result_attribute= ${LDAP_ATTR_DOMAIN_RECIPIENT_BCC_ADDRESS}
 debug_level     = 0
 EOF
@@ -324,7 +324,7 @@ bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
 search_base     = ${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}
 scope           = sub
-query_filter    = (&(&(${LDAP_ATTR_USER_DN_NAME}=%s)(objectClass=${LDAP_OBJECTCLASS_USER}))(${LDAP_ATTR_USER_STATUS}=active)(${LDAP_ATTR_ENABLE_MAIL_SERVICE}=yes))
+query_filter    = (&(${LDAP_ATTR_USER_DN_NAME}=%s)(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=active)(${LDAP_ATTR_ENABLE_MAIL_SERVICE}=yes))
 result_attribute= ${LDAP_ATTR_USER_RECIPIENT_BCC_ADDRESS}
 debug_level     = 0
 EOF
@@ -340,7 +340,7 @@ bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
 search_base     = ${LDAP_BASEDN}
 scope           = one
-query_filter    = (&(&(${LDAP_ATTR_DOMAIN_DN_NAME}=%d)(objectClass=${LDAP_OBJECTCLASS_DOMAIN}))(${LDAP_ATTR_DOMAIN_STATUS}=active)(${LDAP_ATTR_ENABLE_MAIL_SERVICE}=yes))
+query_filter    = (&(${LDAP_ATTR_DOMAIN_DN_NAME}=%d)(objectClass=${LDAP_OBJECTCLASS_DOMAIN})(${LDAP_ATTR_DOMAIN_STATUS}=active)(${LDAP_ATTR_ENABLE_MAIL_SERVICE}=yes))
 result_attribute= ${LDAP_ATTR_DOMAIN_SENDER_BCC_ADDRESS}
 debug_level     = 0
 EOF
@@ -356,7 +356,7 @@ bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
 search_base     = ${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}
 scope           = sub
-query_filter    = (&(&(${LDAP_ATTR_USER_DN_NAME}=%s)(objectClass=${LDAP_OBJECTCLASS_USER}))(${LDAP_ATTR_USER_STATUS}=active)(${LDAP_ATTR_ENABLE_MAIL_SERVICE}=yes))
+query_filter    = (&(${LDAP_ATTR_USER_DN_NAME}=%s)(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=active)(${LDAP_ATTR_ENABLE_MAIL_SERVICE}=yes))
 result_attribute= ${LDAP_ATTR_USER_SENDER_BCC_ADDRESS}
 debug_level     = 0
 EOF
