@@ -1,7 +1,10 @@
-* Update dovecot to 1.1.7.
 * SRS.
 * Roundcubemail plugin:
+    * Add recipient to address book and policyd_rcpt (per-user whitelist)
+      by default.
     * per-user whitelist/blacklist via policyd (use 'policyd.rcpt'
       table').
 
 * One domain, one uid, one gid.
+* Apache in Jail (chrooted).
+* MySQL in Jail (chrooted).

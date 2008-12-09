@@ -38,7 +38,7 @@ ScriptAlias /awstats ${AWSTATS_HTTPD_ROOT}/
 EOF
 
     # Set username, password for web access.
-    htpasswd -bcm ${AWSTATS_HTPASSWD_FILE} ${AWSTATS_USERNAME} ${AWSTATS_PASSWD} >/dev/null 2>&1
+    htpasswd -bcm ${AWSTATS_HTPASSWD_FILE} "${AWSTATS_USERNAME}" "${AWSTATS_PASSWD}" >/dev/null 2>&1
 
     cat >> ${TIP_FILE} <<EOF
 Awstats:
