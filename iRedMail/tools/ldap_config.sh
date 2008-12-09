@@ -50,7 +50,7 @@ while : ; do
     ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --title "Password for LDAP rootdn: ${LDAP_ROOTDN}" \
     --insecure --passwordbox "\
-Please specify password for LDAP 'rootdn':
+Please specify password for LDAP rootdn:
 
     * ${LDAP_ROOTDN}
 

@@ -19,8 +19,8 @@ installation completed:
 
     * ${TIP_FILE}
 " 20 76 4 \
-    "SPF" "Sender Policy Framework." "on" \
-    "DKIM" "DomainKeys Identified Mail (DKIM)." "on" \
+    "SPF Validation" "Sender Policy Framework" "on" \
+    "DKIM signing and verification" "DomainKeys Identified Mail" "on" \
     2>/tmp/spf_dkim
 
 SPF_DKIM="$(cat /tmp/spf_dkim)"

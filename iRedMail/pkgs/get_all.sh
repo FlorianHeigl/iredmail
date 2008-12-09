@@ -61,6 +61,8 @@ prepare_dirs()
     do
         [ -d "${i}" ] || mkdir -p "${i}"
     done
+
+    echo 'export status_prepare_dirs="DONE"' >> ${STATUS_FILE}
 }
 
 fetch_rpms()
@@ -119,6 +121,9 @@ check_md5()
             exit 255
         else
             echo -e "\t[ OK ]"
+            echo 'export status_fetch_rpms="DONE"' >> ${STATUS_FILE}
+            echo 'export status_fetch_misc="DONE"' >> ${STATUS_FILE}
+            echo 'export status_check_md5="DONE"' >> ${STATUS_FILE}
         fi
     done
 }
@@ -131,7 +136,7 @@ check_createrepo()
         install_pkg createrepo.noarch
         [ X"$?" != X"0" ] && ECHO_INFO "Please install 'createrepo' first." && exit 255
     else
-        :
+        echo 'export status_check_createrepo="DONE"' >> ${STATUS_FILE}
     fi
 }
 
@@ -152,17 +157,25 @@ baseurl=file://${ROOTDIR}
 enabled=1
 gpgcheck=0
 EOF
+
+    echo 'export status_create_yum_repo="DONE"' >> ${STATUS_FILE}
 }
+
+if [ -e ${STATUS_FILE} ]; then
+    . ${STATUS_FILE}
+else
+    echo '' > ${STATUS_FILE}
+fi
 
 check_user root && \
 mirror_notify && \
-prepare_dirs && \
-check_arch && \
-fetch_rpms && \
-fetch_misc && \
-check_md5 && \
-check_createrepo && \
-create_yum_repo && \
+check_status_before_run prepare_dirs && \
+check_status_before_run check_arch && \
+check_status_before_run fetch_rpms && \
+check_status_before_run fetch_misc && \
+check_status_before_run check_md5 && \
+check_status_before_run check_createrepo && \
+check_status_before_run create_yum_repo && \
 check_dialog && \
 cat <<EOF
 
