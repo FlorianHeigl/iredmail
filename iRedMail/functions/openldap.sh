@@ -155,7 +155,7 @@ suffix      "${LDAP_SUFFIX}"
 directory   ${LDAP_DATA_DIR}
 
 rootdn      "${LDAP_ROOTDN}"
-rootpw      $(gen_ldap_passwd ${LDAP_ROOTPW})
+rootpw      $(gen_ldap_passwd "${LDAP_ROOTPW}")
 
 #
 # Set directory permission.
@@ -268,14 +268,14 @@ objectClass: person
 objectClass: top
 cn: ${VMAIL_USER_NAME}
 sn: ${VMAIL_USER_NAME}
-${LDAP_ATTR_USER_PASSWD}: $(gen_ldap_passwd ${LDAP_BINDPW})
+${LDAP_ATTR_USER_PASSWD}: $(gen_ldap_passwd "${LDAP_BINDPW}")
 
 dn: ${LDAP_ADMIN_DN}
 objectClass: person
 objectClass: top
 cn: ${VMAIL_ADMIN_USER_NAME}
 sn: ${VMAIL_ADMIN_USER_NAME}
-${LDAP_ATTR_USER_PASSWD}: $(gen_ldap_passwd ${LDAP_ADMIN_PW})
+${LDAP_ATTR_USER_PASSWD}: $(gen_ldap_passwd "${LDAP_ADMIN_PW}")
 
 dn: ${LDAP_ATTR_DOMAIN_DN_NAME}=${FIRST_DOMAIN},${LDAP_BASEDN}
 objectClass: ${LDAP_OBJECTCLASS_DOMAIN}
@@ -296,7 +296,7 @@ ${LDAP_ATTR_USER_STATUS}: active
 homeDirectory: ${VMAIL_USER_HOME_DIR}
 mailMessageStore: ${FIRST_DOMAIN}/${FIRST_USER}/
 ${LDAP_ATTR_USER_QUOTA}: 10485760
-${LDAP_ATTR_USER_PASSWD}: $(gen_ldap_passwd ${FIRST_USER_PASSWD})
+${LDAP_ATTR_USER_PASSWD}: $(gen_ldap_passwd "${FIRST_USER_PASSWD}")
 ${LDAP_ATTR_ENABLE_MAIL_SERVICE}: yes
 ${LDAP_ATTR_USER_ENABLE_SMTP}: yes
 ${LDAP_ATTR_USER_ENABLE_DELIVER}: yes
@@ -315,7 +315,7 @@ ${LDAP_ATTR_USER_STATUS}: active
 homeDirectory: ${VMAIL_USER_HOME_DIR}
 mailMessageStore: ${FIRST_DOMAIN}/${FIRST_DOMAIN_ADMIN_NAME}/
 ${LDAP_ATTR_USER_QUOTA}: 0
-${LDAP_ATTR_USER_PASSWD}: $(gen_ldap_passwd ${FIRST_DOMAIN_ADMIN_PASSWD})
+${LDAP_ATTR_USER_PASSWD}: $(gen_ldap_passwd "${FIRST_DOMAIN_ADMIN_PASSWD}")
 ${LDAP_ATTR_ENABLE_MAIL_SERVICE}: yes
 ${LDAP_ATTR_USER_ENABLE_SMTP}: yes
 ${LDAP_ATTR_USER_ENABLE_DELIVER}: yes
