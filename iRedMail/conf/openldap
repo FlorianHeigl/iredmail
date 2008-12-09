@@ -11,6 +11,7 @@ export OPENLDAP_SLAPD_CONF="${OPENLDAP_ROOTDIR}/slapd.conf"
 export OPENLDAP_LDAP_CONF="${OPENLDAP_ROOTDIR}/ldap.conf"
 export OPENLDAP_LOGFILE='/var/log/openldap.log'
 export OPENLDAP_DATA_DIR='/var/lib/ldap' # Do *NOT* end with '/'.
+export OPENLDAP_SYSCONFIG_CONF="${ETC_SYSCONFIG_DIR}/ldap"
 export OPENLDAP_LOGROTATE_FILE="${LOG_ROTATE_DIR}/openldap"
 
 # Setting for one instance. You can edit ${OPENLDAP_SLAPD_CONF} manually to hold

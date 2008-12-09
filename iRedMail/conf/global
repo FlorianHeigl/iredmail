@@ -41,8 +41,14 @@ export VMAIL_ADMIN_USER_NAME="${VMAIL_USER_NAME}admin"
 # pypolicyd-spf is *NOT* recommended.
 export SPF_PROGRAM='perl-Mail-SPF'
 
+# Directory /etc/sysconfig/ on RHEL/CentOS.
+export ETC_SYSCONFIG_DIR='/etc/sysconfig'
+
+# Iptables rule file.
+export IPTABLES_CONFIG="${ETC_SYSCONFIG_DIR}/iptables"
+
 # Hostname.
-export HOSTNAME="$(grep '^HOSTNAME' /etc/sysconfig/network | awk -F'=' '{print $2}')"
+export HOSTNAME="$(grep '^HOSTNAME' ${ETC_SYSCONFIG_DIR}/network | awk -F'=' '{print $2}')"
 
 # SSL/TLS support.
 export SSL_FILE_DIR="/etc/pki/${PROG_NAME}"

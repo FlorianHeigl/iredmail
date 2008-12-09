@@ -188,6 +188,7 @@ BASE    ${LDAP_SUFFIX}
 URI     ldap://${LDAP_SERVER_HOST}:${LDAP_SERVER_PORT}
 TLS_CACERT ${OPENLDAP_CACERT_DIR}/slapdCert.pem
 EOF
+    chown ldap:ldap ${OPENLDAP_LDAP_CONF}
 
     ECHO_INFO "Setting up syslog configration file for openldap: /etc/syslog.conf"
     echo -e "local4.*\t\t\t\t\t\t-${OPENLDAP_LOGFILE}" >>/etc/syslog.conf

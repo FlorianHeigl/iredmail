@@ -2,7 +2,7 @@
 
 # Author: Zhang Huangbin (michaelbibby <at> gmail.com)
 
-export SASLAUTHD_CONF='/etc/sysconfig/saslauthd'
+export SASLAUTHD_CONF="${ETC_SYSCONFIG_DIR}/saslauthd"
 export ETC_SASLAUTHD_CONF='/etc/saslauthd.conf'
 export SASLAUTHD_MUX='/var/run/saslauthd/mux'
 export SASLAUTHD_SOCKETDIR='/var/spool/postfix/var/run/saslauthd/'

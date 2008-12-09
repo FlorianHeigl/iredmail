@@ -47,17 +47,17 @@ disable_iredmail_repo()
 replace_iptables_rule()
 {
     ECHO_QUESTION "Would you like to use iptables rules shipped within iRedMail now?"
-    ECHO_QUESTION -n "File: /etc/sysconfig/iptables. [Y|n]"
+    ECHO_QUESTION -n "File: ${IPTABLES_CONFIG}. [Y|n]"
     read ANSWER
     case $ANSWER in
         N|n ) ECHO_INFO "Skip iptable rules." ;;
         Y|y|* ) 
-            ECHO_INFO "Copy iptables sample rules: /etc/sysconfig/iptables."
-            backup_file /etc/sysconfig/iptables
-            cp ${SAMPLE_DIR}/iptables /etc/sysconfig/iptables
+            ECHO_INFO "Copy iptables sample rules: ${IPTABLES_CONFIG}."
+            backup_file ${IPTABLES_CONFIG}
+            cp ${SAMPLE_DIR}/iptables ${IPTABLES_CONFIG}
 
             if [ X"${HTTPD_PORT}" != X"80" ]; then
-                perl -pi -e 's#(.*)80(,.*)#${1}$ENV{HTTPD_PORT}${2}#' /etc/sysconfig/iptables
+                perl -pi -e 's#(.*)80(,.*)#${1}$ENV{HTTPD_PORT}${2}#' ${IPTABLES_CONFIG}
             else
                 :
             fi

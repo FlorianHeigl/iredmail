@@ -117,6 +117,9 @@ amavisd_config()
     # Disable defang banned mail.
     perl -pi -e 's#(.*defang_banned = )1(;.*)#${1}0${2}#' ${AMAVISD_CONF}
 
+    # Reset $sa_spam_subject_tag, default is '***SPAM***'.
+    perl -pi -e 's#(.*sa_spam_subject_tag.*=)(.*SPAM.*)#${1} "[SPAM] ";#' ${AMAVISD_CONF}
+
     # Allow clients on my internal network to bypass scanning.
     #perl -pi -e 's#(.*policy_bank.*MYNETS.*\{)(.*)#${1} bypass_spam_checks_maps => [1], bypass_banned_checks_maps => [1], bypass_header_checks_maps => [1], ${2}#' ${AMAVISD_CONF}
 
@@ -159,7 +162,7 @@ amavisd_config()
     qr/^.*?: (?!Infected Archive)(.*) FOUND$/ ],
 );
 
-# This policyd will perform virus checks only.
+# This policy will perform virus checks only.
 #\$interface_policy{'10026'} = 'VIRUSONLY';
 #\$policy_bank{'VIRUSONLY'} = { # mail from the pickup daemon
 #    bypass_spam_checks_maps   => [1],  # don't spam-check this mail
