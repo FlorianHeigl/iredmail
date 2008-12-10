@@ -1,4 +1,5 @@
 iRedMail-0.3.2:
+    * Update phpMyAdmin to 2.11.9.4.
     * Fix MySQL password issue while contains special characters. Thanks
       xcrossbow@gmail.
     * Make some command operating system independent.
