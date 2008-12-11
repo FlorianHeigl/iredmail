@@ -77,13 +77,17 @@ EOF
     perl -pi -e 's#(.*filter.cgi.*)#\<\!--${1}--\>#' OPTION_NAV.html
 
     # For ExtMail-1.0.5. We don't have 'question/answer' field in SQL template, add it.
-    ECHO_INFO "Add missing SQL columns for ExtMail: mailbox.question, mailbox.answer."
-    mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
+    if [ X"${BACKEND}" == X"MySQL" ]; then
+        ECHO_INFO "Add missing SQL columns for ExtMail: mailbox.question, mailbox.answer."
+        mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
 USE ${VMAIL_DB};
 
 ALTER TABLE mailbox ADD question text NOT NULL DEFAULT '';
 ALTER TABLE mailbox ADD answer text NOT NULL DEFAULT '';
 EOF
+    else
+        :
+    fi
 
     echo 'export status_extmail_config_basic="DONE"' >> ${STATUS_FILE}
 }
