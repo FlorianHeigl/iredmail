@@ -168,12 +168,12 @@ fi
 check_user root && \
 mirror_notify && \
 prepare_dirs && \
-check_status_before_run check_arch && \
-check_status_before_run fetch_rpms && \
-check_status_before_run fetch_misc && \
-check_status_before_run check_md5 && \
-check_status_before_run check_createrepo && \
-check_status_before_run create_yum_repo && \
+check_arch && \
+fetch_rpms && \
+fetch_misc && \
+check_md5 && \
+check_createrepo && \
+create_yum_repo && \
 check_dialog && \
 cat <<EOF
 
