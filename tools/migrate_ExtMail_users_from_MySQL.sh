@@ -20,10 +20,10 @@
 #            > FROM mailbox;
 #   * Run this script:
 #       # sh migrate_extmail_mailbox.sh /tmp/mailbox.sql
-#     It will create a new file: /tmp/mailbox.sql.new
+#     It will create a new file: /tmp/mailbox.sql.iredmail.
 #   * Import this new file in MySQL command line:
 #       mysql> USE vmail;
-#       mysql> SOURCE /tmp/mailbox.sql.new;
+#       mysql> SOURCE /tmp/mailbox.sql.iredmail;
 
 usage()
 {
@@ -32,7 +32,7 @@ usage()
 
 [ X"$#" != X"1" ] && usage && exit 255 
 
-OUTPUT_SQL="$1.iRedMail"
+OUTPUT_SQL="$1.iredmail"
 echo ''> ${OUTPUT_SQL}
 
 while read line; do
