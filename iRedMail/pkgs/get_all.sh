@@ -61,8 +61,6 @@ prepare_dirs()
     do
         [ -d "${i}" ] || mkdir -p "${i}"
     done
-
-    echo 'export status_prepare_dirs="DONE"' >> ${STATUS_FILE}
 }
 
 fetch_rpms()
@@ -169,7 +167,7 @@ fi
 
 check_user root && \
 mirror_notify && \
-check_status_before_run prepare_dirs && \
+prepare_dirs && \
 check_status_before_run check_arch && \
 check_status_before_run fetch_rpms && \
 check_status_before_run fetch_misc && \
