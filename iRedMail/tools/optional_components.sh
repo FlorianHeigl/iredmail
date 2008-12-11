@@ -198,7 +198,7 @@ them by your own:
     "phpMyAdmin" "Web-based MySQL database management." "on" \
     "PostfixAdmin" "Web-based program to manage domains and users stored in MySQL." "on" \
     "Awstats" "Advanced web and mail log analyzer." "on" \
-    "Mailgraph" "Mail statistics RRDtool frontend for Postfix." "off" \
+    "Mailgraph" "Mail statistics RRDtool frontend for Postfix." "on" \
     2>/tmp/mysql_optional_components
 
     # Temporary disabled.
