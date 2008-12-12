@@ -121,7 +121,11 @@ check_user()
         ECHO_INFO "Please run this script as user: ${1}."
         exit 255
     else
-        :
+        if [ X"$(id -u)" == X"0" ]; then
+            export PATH="/usr/kerberos/sbin:/usr/kerberos/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin"
+        else
+            :
+        fi
     fi
 }
 
