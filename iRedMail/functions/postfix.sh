@@ -39,12 +39,22 @@ EOF
     cp -f /etc/hosts ${POSTFIX_CHROOT_DIR}/etc/
     cp -f /etc/resolv.conf ${POSTFIX_CHROOT_DIR}/etc/
 
+    # Normally, myhostname is the same as myorigin.
+    postconf -e myhostname="${HOSTNAME}"
+    postconf -e myorigin="${HOSTNAME}"
+
+    # Remove the characters before first dot in myhostname is mydomain.
+    echo "${HOSTNAME}" | grep '\..*\.' >/dev/null 2>&1
+    if [ X"$?" == X"0" ]; then
+        mydomain="$(echo "${HOSTNAME}" | awk -F'.' '{print $2 "." $3}')"
+        postconf -e mydomain="${mydomain}"
+    else
+        postconf -e mydomain="${HOSTNAME}"
+    fi
+
     postconf -e mydestination="\$myhostname, localhost, localhost.localdomain, localhost.\$myhostname"
     postconf -e mail_name="${PROG_NAME}"
     postconf -e mail_version="${PROG_VERSION}"
-    postconf -e myhostname="${HOSTNAME}"
-    postconf -e mydomain="${HOSTNAME}"
-    postconf -e myorigin="${HOSTNAME}"
     postconf -e relay_domains='$mydestination'
     postconf -e inet_interfaces="all"
     postconf -e mynetworks="127.0.0.0/8"

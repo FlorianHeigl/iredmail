@@ -98,7 +98,7 @@ INSERT INTO alias (address,goto,domain,created) VALUES ("${FIRST_DOMAIN_ADMIN_NA
 
 /* Add your first user. */
 INSERT INTO mailbox
-(username,password,name,maildir,quota,domain,created) VALUES ("${FIRST_USER}@${FIRST_DOMAIN}","${FIRST_USER_PASSWD}","${FIRST_USER}","${FIRST_DOMAIN}/${FIRST_USER}/",10, "${FIRST_DOMAIN}", NOW());
+(username,password,name,maildir,quota,domain,created) VALUES ("${FIRST_USER}@${FIRST_DOMAIN}","${FIRST_USER_PASSWD}","${FIRST_USER}","${FIRST_DOMAIN}/${FIRST_USER}/",100, "${FIRST_DOMAIN}", NOW());
 INSERT INTO alias (address,goto,domain,created) VALUES ("${FIRST_USER}@${FIRST_DOMAIN}", "${FIRST_USER}@${FIRST_DOMAIN}", "${FIRST_DOMAIN}", NOW());
 EOF
 
