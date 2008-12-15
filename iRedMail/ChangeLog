@@ -1,3 +1,6 @@
+iRedMail-0.3.3:
+    * Fix postfix aliases file.
+
 iRedMail-0.3.2:
     * Export PATH variable while switch to root user. Thanks xcrossbow@gmail.
     * Update phpMyAdmin to 2.11.9.4.

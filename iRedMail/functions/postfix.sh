@@ -55,6 +55,7 @@ EOF
     postconf -e mydestination="\$myhostname, localhost, localhost.localdomain, localhost.\$myhostname"
     postconf -e mail_name="${PROG_NAME}"
     postconf -e mail_version="${PROG_VERSION}"
+    postconf -e biff="no"   # Do not notify local user.
     postconf -e relay_domains='$mydestination'
     postconf -e inet_interfaces="all"
     postconf -e mynetworks="127.0.0.0/8"
@@ -84,15 +85,14 @@ EOF
     # Allow recipient address start with '-'.
     postconf -e allow_min_user='no'
 
-    if [ ! -z ${MAIL_ALIAS_ROOT} ]; then
-        echo "root: ${MAIL_ALIAS_ROOT}" >> ${POSTFIX_FILE_ALIASES}
-        postconf -e alias_maps="hash:${POSTFIX_FILE_ALIASES}"
-        postconf -e alias_database="hash:${POSTFIX_FILE_ALIASES}"
-        postalias hash:${POSTFIX_FILE_ALIASES}
-        newaliases
-    else
-        :
-    fi
+    # Postfix aliases file.
+    [ ! -f ${POSTFIX_FILE_ALIASES} ] && cp -f /etc/aliases ${POSTFIX_FILE_ALIASES}
+    [ ! -z ${MAIL_ALIAS_ROOT} ] && echo "root: ${MAIL_ALIAS_ROOT}" >> ${POSTFIX_FILE_ALIASES}
+
+    postconf -e alias_maps="hash:${POSTFIX_FILE_ALIASES}"
+    postconf -e alias_database="hash:${POSTFIX_FILE_ALIASES}"
+    postalias hash:${POSTFIX_FILE_ALIASES}
+    newaliases
 
     # Set message_size_limit.
     postconf -e mailbox_size_limit="${MESSAGE_SIZE_LIMIT}"
