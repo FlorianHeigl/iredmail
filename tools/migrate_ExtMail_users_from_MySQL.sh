@@ -15,7 +15,7 @@
 #   * Run into MySQL command line with privilege user, e.g. root.
 #       # mysql -uroot -p extmail
 #   * Select some column from mailbox table:
-#       mysql> SELECT username,password,name,maildir,quota,netdiskquota,domain,createdate,active
+#       mysql> SELECT username,password,maildir,quota,netdiskquota,domain,createdate,active,name
 #            > INTO OUTFILE '/tmp/mailbox.sql'
 #            > FROM mailbox;
 #   * Run this script:
@@ -35,6 +35,8 @@ usage()
 OUTPUT_SQL="$1.iredmail"
 echo ''> ${OUTPUT_SQL}
 
+echo "Converting..."
+
 while read line; do
     username="$(echo $line | awk '{print $1}')"
     password="$(echo $line | awk '{print $2}')"
@@ -44,6 +46,7 @@ while read line; do
     domain="$(echo $line | awk '{print $6}')"
     createdate="$(echo $line | awk '{print $7, $8}')"
     active="$(echo $line | awk '{print $9}')"
+    name="$(echo $line | awk '{print $10}')"
 
     echo $quota | grep -i 'S$' >/dev/null 2>&1
     if [ X"$?" == X"0" ]; then
@@ -53,7 +56,11 @@ while read line; do
         :
     fi
 
+    echo " * ${username}"
+
     cat >> ${OUTPUT_SQL} <<EOF
-INSERT INTO mailbox (username, password, maildir, quota, netdiskquota, domain, created, active) values ("$username", "$password", "$maildir", $quota, "$domain", "$createdate", "$active");
+INSERT INTO mailbox (username, password, maildir, quota, netdiskquota, domain, created, active, name) values ("${username}", "${password}", "${maildir}", ${quota}, "${domain}", "${createdate}", "${active}", "${name}");
 EOF
 done < $1
+
+echo -e "\nDone. Please check output file: ${OUTPUT_SQL}.\n"
