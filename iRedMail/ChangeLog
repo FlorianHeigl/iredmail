@@ -1,4 +1,7 @@
 iRedMail-0.3.3:
+    * Fix incorrect filename while attachment file with Chinese (non-ascii)
+      characters in Roundcube-0.1.1-stable. Thanks bruce.16899@gmail and
+      tao.xu.man@gmail.
     * Fix postfix aliases file.
 
 iRedMail-0.3.2:

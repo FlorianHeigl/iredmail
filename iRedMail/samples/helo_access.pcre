@@ -168,3 +168,5 @@
 /business\.telecomitalia\.it$/  REJECT Go away, bad guy
 /cotas\.com\.bo$/           REJECT Go away, bad guy
 /marunouchi\.tokyo\.ocn\.ne\.jp$/   REJECT Go away, bad guy
+/amedex\.com$/              REJECT Go away, bad guy.
+/aageneva\.com$/            REJECT Go away, bad guy.
