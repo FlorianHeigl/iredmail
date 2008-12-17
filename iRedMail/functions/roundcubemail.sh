@@ -136,6 +136,10 @@ EOF
     patch -p0 < ${PATCH_DIR}/roundcubemail/display_username.patch >/dev/null && \
     patch -p0 < ${PATCH_DIR}/roundcubemail/display_username_skin_default.patch >/dev/null
 
+    ECHO_INFO "Patch: Incorrect filename while download attachment with Chinese (non-ascii) characters."
+    cd ${RCM_HTTPD_ROOT} && \
+    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_incorrect_filename_after_download.patch >/dev/null
+
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
         ECHO_INFO "Disable change password and mail forwarding featues."
         cd ${RCM_HTTPD_ROOT} && \
