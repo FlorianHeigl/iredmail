@@ -1,4 +1,6 @@
 iRedMail-0.3.3:
+    * Set maximal_queue_lifetime and bounce_queue_lifetime to '1d'. Thanks
+      muniao@gmail.
     * Fix incorrect filename while attachment file with Chinese (non-ascii)
       characters in Roundcube-0.1.1-stable. Thanks bruce.16899@gmail and
       tao.xu.man@gmail.
