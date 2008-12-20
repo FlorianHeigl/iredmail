@@ -1,4 +1,5 @@
 iRedMail-0.3.3:
+    * Fix incorrect crontab job for vmail user. Thanks xcrossbow@gmail.
     * Set maximal_queue_lifetime and bounce_queue_lifetime to '1d'. Thanks
       muniao@gmail.
     * Fix incorrect filename while attachment file with Chinese (non-ascii)

@@ -309,7 +309,7 @@ EOF
     ECHO_INFO "Setting cron job for vmail user to delete virus mail per month."
     cat > ${CRON_SPOOL_DIR}/${VMAIL_USER_NAME} <<EOF
 ${CONF_MSG}
-1   5   *   *   *   find /var/virusmails -ctime +30
+#1   5   *   *   *   find /var/virusmails -ctime +30 | xargs rm -rf {}
 EOF
 
     cat >> ${TIP_FILE} <<EOF
