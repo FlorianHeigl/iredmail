@@ -88,11 +88,9 @@
 # Reject adsl spammers.
 #
 /dynamic\.163data\.com\.cn/ REJECT Go away, bad guy (dynamic.163data.com.cn).
+/\d{1,3}-\d{1,3}-\d{1,3}-\d{1,3}/   REJECT Go away  (dynamic).
 /pppoe/                     REJECT Go away, bad guy (pppoe).
 /adsl/                      REJECT Go away, bad guy (adsl).
-/adsl\.alicedsl\.de/        REJECT Go away, bad guy (adsl.alicedsl.de)
-/adsl\.inetia\.pl/          REJECT Go away, bad guy (adsl.viettel.vn)
-/adsl\.viettel\.vn/         REJECT Go away, bad guy (dsl.brasiltelecom.net.br)
 /dsl\.brasiltelecom\.net\.br/   REJECT Go away, bad guy (dsl.optinet.hr)
 /dsl\.optinet\.hr/          REJECT Go away, bad guy (dsl.telesp.net.br)
 /dsl\.telesp\.net\.br/      REJECT Go away, bad guy (dialog)
@@ -100,8 +98,6 @@
 /dhcp/                      REJECT Go away, bad guy (dhcp)
 /dhcp\.stls\.mo\.charter\.com/  REJECT Go away, bad guy (dhcp.stls.mo.charter.com)
 /dynamic/                   REJECT Go away, bad guy (dynamic)
-/dynamic\.mts-nn\.ru/       REJECT Go away, bad guy (dynamic.mts-nn.ru)
-/dynamicIP\.rima-tde\.net/  REJECT Go away, bad guy (dynamicIP.rima-tde.net)
 /pool-/                     REJECT Go away, bad guy (pool-)
 /^cpe-/                     REJECT Go away, bad guy (cpe-)
 /\.cpe\./                   REJECT Go away, bad guy (.cpe.)
