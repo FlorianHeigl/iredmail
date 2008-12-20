@@ -147,7 +147,6 @@
 /pppoe\.avangarddsl\.ru$/   REJECT Go away, bad guy
 /retail\.telecomitalia\.it$/    REJECT Go away, bad guy
 /revip2\.asianet\.co\.th$/  REJECT Go away, bad guy
-/telkomadsl\.co\.za$/       REJECT Go away, bad guy
 /tim\.ro$/                  REJECT Go away, bad guy
 /tsi\.tychy\.pl/            REJECT Go away, bad guy
 /ttnet\.net\.tr/            REJECT Go away, bad guy

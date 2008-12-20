@@ -1,4 +1,6 @@
 iRedMail-0.3.3:
+    * Add one more pcre expression for smtpd helo restriction to block client
+      which use dynamic ip address. Thanks muniao@gmail.
     * Fix incorrect crontab job for vmail user. Thanks xcrossbow@gmail.
     * Set maximal_queue_lifetime and bounce_queue_lifetime to '1d'. Thanks
       muniao@gmail.
