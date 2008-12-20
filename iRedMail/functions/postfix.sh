@@ -69,6 +69,11 @@ EOF
     postconf -e maximal_queue_lifetime='1d'
     postconf -e bounce_queue_lifetime='1d'
 
+    # Reduce queue run delay time.
+    postconf -e queue_run_delay='300s'          # default '300s' in postfix-2.4.
+    postconf -e minimal_backoff_time='300s'     # default '300s' in postfix-2.4.
+    postconf -e maximal_backoff_time='1800s'    # default '4000s' in postfix-2.4.
+
     # Avoid duplicate recipient messages. Default is 'yes'.
     postconf -e enable_original_recipient="no"
 
