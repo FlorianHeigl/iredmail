@@ -88,7 +88,7 @@
 # Reject adsl spammers.
 #
 /dynamic\.163data\.com\.cn/ REJECT Go away, bad guy (dynamic.163data.com.cn).
-/\d{1,3}-\d{1,3}-\d{1,3}-\d{1,3}/   REJECT Go away  (dynamic).
+/\d{1,3}-\d{1,3}-\d{1,3}-\d{1,3}/   REJECT Go away (dynamic).
 /pppoe/                     REJECT Go away, bad guy (pppoe).
 /adsl/                      REJECT Go away, bad guy (adsl).
 /dsl\.brasiltelecom\.net\.br/   REJECT Go away, bad guy (dsl.optinet.hr)
