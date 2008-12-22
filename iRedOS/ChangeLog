@@ -1,4 +1,8 @@
+iRedOS-0..3:
+    * Add 'unzip' in ks file. Thanks shake.chen@gmail.
+
 iRedOS-0.1.2:
+    * Add new package: mod_authz_ldap.
     * Make language customized.
     * Use iptables rule file and mysql config file which shipped within
       iRedMail by default.
