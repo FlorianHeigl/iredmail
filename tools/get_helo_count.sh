@@ -20,7 +20,7 @@
 #    # wget http://iredmail.googlecode.com/svn/trunk/tools/get_helo_count.sh -O /root/get_helo_count.sh
 #    # crontab -e -u root
 #
-#    1   4   *   *   *   /bin/sh /root/get_helo_count.sh | head -50 | mail -s "HELO count" iredmail.helo@gmail.com
+#    1   4   *   *   *   /bin/sh /root/get_helo_count.sh | mail -s "HELO count" iredmail.helo@gmail.com
 #
 # It will run '/root/get_helo_count.sh' at 04:01 every day, and mail the top 50
 # entries to iredmail.helo@gmail.com.
