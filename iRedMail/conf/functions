@@ -40,6 +40,7 @@ ECHO_QUESTION()
 
 backup_file()
 {
+    # Usage: backup_file file1 [file2 file3 ... fileN]
     for conf_file in $@; do
         if [ -f ${conf_file} ]; then
             if [ X"${TERM}" == X"xterm" -o X"${TERM}" == X"linux" -o X"${TERM}" == X"pcconsole" ]; then

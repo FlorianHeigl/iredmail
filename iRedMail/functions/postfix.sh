@@ -146,8 +146,8 @@ EOF
     postmap hash:${POSTFIX_ROOTDIR}/sender_access
 
     # Simple backscatter block method.
-    postconf -e header_checks="pcre:${POSTFIX_ROOTDIR}/header_checks"
-    cat >> ${POSTFIX_ROOTDIR}/header_checks <<EOF
+    postconf -e header_checks="pcre:${POSTFIX_FILE_HEADER_CHECKS}"
+    cat >> ${POSTFIX_FILE_HEADER_CHECKS} <<EOF
 # *******************************************************************
 # Below rules is wrote in pcre syntax, shipped within ${PROG_NAME} project:
 #   http://${PROG_NAME}.googlecode.com
@@ -579,8 +579,9 @@ postfix_config_sasl()
     #
     # Standalone smtpd_helo_restrictions.
     #
-    postconf -e smtpd_helo_restrictions="permit_mynetworks,permit_sasl_authenticated, check_helo_access pcre:${POSTFIX_ROOTDIR}/helo_access.pcre"
-    cp -f ${SAMPLE_DIR}/helo_access.pcre ${POSTFIX_ROOTDIR}/
+    postconf -e smtpd_helo_restrictions="permit_mynetworks,permit_sasl_authenticated, check_helo_access pcre:${POSTFIX_FILE_HELO_ACCESS}"
+    backup_file ${POSTFIX_FILE_HELO_ACCESS}
+    cp -f ${SAMPLE_DIR}/helo_access.pcre ${POSTFIX_FILE_HELO_ACCESS}
 
     # smtpd_recipient_restrictions reference:
     #   http://www.postfix.org/SASL_README.html

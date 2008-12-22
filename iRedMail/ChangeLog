@@ -1,4 +1,5 @@
 iRedMail-0.3.3:
+    * Fix crontab job for expire mail in dovecot. Thanks xcrossbow@gmail.
     * Reduce postfix queue run retry time to '300s'.
     * Add one more pcre expression for smtpd helo restriction to block client
       which use dynamic ip address. Thanks muniao@gmail.

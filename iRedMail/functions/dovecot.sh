@@ -158,7 +158,7 @@ plugin {
     # expired mails. The actual expunging is done in a nightly cronjob, which
     # you must set up:
     #
-    #   1   3   *   *   *   dovecot --exec-mail ext /usr/libexec/dovecot/expire-tool
+    #   1   3   *   *   *   ${DOVECOT_BIN} --exec-mail ext /usr/libexec/dovecot/expire-tool
     #
     # Trash: 7 days
     # Trash's children directories: 7 days
@@ -372,7 +372,7 @@ EOF
     ECHO_INFO "Setting cronjob for Dovecot plugin: Expire."
     cat >> ${CRON_SPOOL_DIR}/root <<EOF
 ${CONF_MSG}
-1   5   *   *   *   dovecot --exec-mail ext $(eval ${LIST_FILES_IN_PKG} dovecot | grep 'expire-tool$')
+#1   5   *   *   *   ${DOVECOT_BIN} --exec-mail ext $(eval ${LIST_FILES_IN_PKG} dovecot | grep 'expire-tool$')
 EOF
 
     cat >> ${POSTFIX_FILE_MASTER_CF} <<EOF
