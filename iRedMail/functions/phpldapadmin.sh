@@ -11,24 +11,24 @@ pla_install()
 
     extract_pkg ${PLA_TARBALL} ${HTTPD_SERVERROOT}
 
+    ECHO_INFO "Copy example config file."
+    cd ${PLA_HTTPD_ROOT}/config/ && \
+    cp -f config.php.example config.php
+
+    ECHO_INFO "Add phpLDAPadmin templates for create virtual domains/users."
+    cp -f ${SAMPLE_DIR}/phpldapadmin.templates/*xml \
+        ${PLA_HTTPD_ROOT}/templates/creation/
+
+    ECHO_INFO "Set file permission."
     chown -R root:root ${PLA_HTTPD_ROOT}
     chmod -R 0755 ${PLA_HTTPD_ROOT}
 
     ECHO_INFO "Create directory alias for phpLDAPadmin."
     cat > ${HTTPD_CONF_DIR}/phpldapadmin.conf <<EOF
 ${CONF_MSG}
-Alias /phpldapadmin "/var/www/phpldapadmin-${PLA_VERSION}/"
-Alias /ldap "/var/www/phpldapadmin-${PLA_VERSION}/"
+Alias /phpldapadmin "${PLA_HTTPD_ROOT}/"
+Alias /ldap "${PLA_HTTPD_ROOT}/"
 EOF
-
-    ECHO_INFO "Copy example config file."
-    cd ${HTTPD_SERVERROOT}/phpldapadmin-${PLA_VERSION}/config/
-    cd ${PLA_HTTPD_ROOT}/config/
-    cp config.php.example config.php
-
-    ECHO_INFO "Add phpLDAPadmin templates for create virtual domains/users."
-    cp -f ${SAMPLE_DIR}/phpldapadmin.templates/*xml \
-        ${PLA_HTTPD_ROOT}/templates/creation/
 
     cat >> ${TIP_FILE} <<EOF
 phpLDAPadmin:

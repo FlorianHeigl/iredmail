@@ -292,12 +292,12 @@ sub _next_metalog($)
     my ($self) = @_;
     my $file = $self->{file};
     line: while(my $str = $self->_next_line) {
-	# date, time and host 
-	$str =~ /^
+    # date, time and host 
+    $str =~ /^
             (\S{3})\s+(\d+)   # date  -- 1, 2
             \s
             (\d+):(\d+):(\d+) # time  -- 3, 4, 5
-	                      # host is not logged
+                          # host is not logged
             \s+
             (.*)              # text  -- 6
             $/x or do
@@ -310,15 +310,15 @@ sub _next_metalog($)
         $self->_year_increment($mon);
         # convert to unix time
         my $time = $self->str2time($5,$4,$3,$2,$mon,$self->{year}-1900,$self->{GMT});
-	my $text = $6;
+    my $text = $6;
         $text =~ /^
             \[(.*?)\]        # program   -- 1
-           	             # no PID
-	    \s+
+                         # no PID
+        \s+
             (.*)             # text      -- 2
             $/x or do
         {
-	    warn "WARNING: text line not in metalog format: $text ($str)";
+        warn "WARNING: text line not in metalog format: $text ($str)";
             next line;
         };
         if($self->{arrayref}) {
@@ -403,169 +403,169 @@ sub update($);
 
 sub usage
 {
-	print "usage: mailgraph [*options*]\n\n";
-	print "  -h, --help         display this help and exit\n";
-	print "  -v, --verbose      be verbose about what you do\n";
-	print "  -V, --version      output version information and exit\n";
-	print "  -c, --cat          causes the logfile to be only read and not monitored\n";
-	print "  -l, --logfile f    monitor logfile f instead of /var/log/syslog\n";
-	print "  -t, --logtype t    set logfile's type (default: syslog)\n";
-	print "  -y, --year         starting year of the log file (default: current year)\n";
-	print "      --host=HOST    use only entries for HOST (regexp) in syslog\n";
-	print "  -d, --daemon       start in the background\n";
-	print "  --daemon-pid=FILE  write PID to FILE instead of /var/run/mailgraph.pid\n";
-	print "  --daemon-rrd=DIR   write RRDs to DIR instead of /var/log\n";
-	print "  --daemon-log=FILE  write verbose-log to FILE instead of /var/log/mailgraph.log\n";
-	print "  --ignore-localhost ignore mail to/from localhost (used for virus scanner)\n";
-	print "  --ignore-host=HOST ignore mail to/from HOST regexp (used for virus scanner)\n";
-	print "  --no-mail-rrd      no update mail rrd\n";
-	print "  --no-virus-rrd     no update virus rrd\n";
-	print "  --no-greylist-rrd  no update greylist rrd\n";
-	print "  --rrd-name=NAME    use NAME.rrd and NAME_virus.rrd for the rrd files\n";
-	print "  --rbl-is-spam      count rbl rejects as spam\n";
-	print "  --virbl-is-virus   count virbl rejects as viruses\n";
+    print "usage: mailgraph [*options*]\n\n";
+    print "  -h, --help         display this help and exit\n";
+    print "  -v, --verbose      be verbose about what you do\n";
+    print "  -V, --version      output version information and exit\n";
+    print "  -c, --cat          causes the logfile to be only read and not monitored\n";
+    print "  -l, --logfile f    monitor logfile f instead of /var/log/syslog\n";
+    print "  -t, --logtype t    set logfile's type (default: syslog)\n";
+    print "  -y, --year         starting year of the log file (default: current year)\n";
+    print "      --host=HOST    use only entries for HOST (regexp) in syslog\n";
+    print "  -d, --daemon       start in the background\n";
+    print "  --daemon-pid=FILE  write PID to FILE instead of /var/run/mailgraph.pid\n";
+    print "  --daemon-rrd=DIR   write RRDs to DIR instead of /var/log\n";
+    print "  --daemon-log=FILE  write verbose-log to FILE instead of /var/log/mailgraph.log\n";
+    print "  --ignore-localhost ignore mail to/from localhost (used for virus scanner)\n";
+    print "  --ignore-host=HOST ignore mail to/from HOST regexp (used for virus scanner)\n";
+    print "  --no-mail-rrd      no update mail rrd\n";
+    print "  --no-virus-rrd     no update virus rrd\n";
+    print "  --no-greylist-rrd  no update greylist rrd\n";
+    print "  --rrd-name=NAME    use NAME.rrd and NAME_virus.rrd for the rrd files\n";
+    print "  --rbl-is-spam      count rbl rejects as spam\n";
+    print "  --virbl-is-virus   count virbl rejects as viruses\n";
 
-	exit;
+    exit;
 }
 
 sub main
 {
-	Getopt::Long::Configure('no_ignore_case');
-	GetOptions(\%opt, 'help|h', 'cat|c', 'logfile|l=s', 'logtype|t=s', 'version|V',
-		'year|y=i', 'host=s', 'verbose|v', 'daemon|d!',
-		'daemon_pid|daemon-pid=s', 'daemon_rrd|daemon-rrd=s',
-		'daemon_log|daemon-log=s', 'ignore-localhost!', 'ignore-host=s@',
-		'no-mail-rrd', 'no-virus-rrd', 'no-greylist-rrd', 'rrd_name|rrd-name=s',
-		'rbl-is-spam', 'virbl-is-virus'
-		) or exit(1);
-	usage if $opt{help};
+    Getopt::Long::Configure('no_ignore_case');
+    GetOptions(\%opt, 'help|h', 'cat|c', 'logfile|l=s', 'logtype|t=s', 'version|V',
+        'year|y=i', 'host=s', 'verbose|v', 'daemon|d!',
+        'daemon_pid|daemon-pid=s', 'daemon_rrd|daemon-rrd=s',
+        'daemon_log|daemon-log=s', 'ignore-localhost!', 'ignore-host=s@',
+        'no-mail-rrd', 'no-virus-rrd', 'no-greylist-rrd', 'rrd_name|rrd-name=s',
+        'rbl-is-spam', 'virbl-is-virus'
+        ) or exit(1);
+    usage if $opt{help};
 
-	if($opt{version}) {
-		print "mailgraph $VERSION by david\@schweikert.ch\n";
-		exit;
-	}
+    if($opt{version}) {
+        print "mailgraph $VERSION by david\@schweikert.ch\n";
+        exit;
+    }
 
-	$daemon_pidfile = $opt{daemon_pid} if defined $opt{daemon_pid};
-	$daemon_logfile = $opt{daemon_log} if defined $opt{daemon_log};
-	$daemon_rrd_dir = $opt{daemon_rrd} if defined $opt{daemon_rrd};
-	$rrd		= $opt{rrd_name}.".rrd" if defined $opt{rrd_name};
-	$rrd_virus	= $opt{rrd_name}."_virus.rrd" if defined $opt{rrd_name};
-	$rrd_virus	= $opt{rrd_name}."_greylist.rrd" if defined $opt{rrd_name};
+    $daemon_pidfile = $opt{daemon_pid} if defined $opt{daemon_pid};
+    $daemon_logfile = $opt{daemon_log} if defined $opt{daemon_log};
+    $daemon_rrd_dir = $opt{daemon_rrd} if defined $opt{daemon_rrd};
+    $rrd        = $opt{rrd_name}.".rrd" if defined $opt{rrd_name};
+    $rrd_virus  = $opt{rrd_name}."_virus.rrd" if defined $opt{rrd_name};
+    $rrd_virus  = $opt{rrd_name}."_greylist.rrd" if defined $opt{rrd_name};
 
-	# compile --ignore-host regexps
-	if(defined $opt{'ignore-host'}) {
-		for my $ih (@{$opt{'ignore-host'}}) {
-			push @{$opt{'ignore-host-re'}}, qr{\brelay=[^\s,]*$ih}i;
-		}
-	}
+    # compile --ignore-host regexps
+    if(defined $opt{'ignore-host'}) {
+        for my $ih (@{$opt{'ignore-host'}}) {
+            push @{$opt{'ignore-host-re'}}, qr{\brelay=[^\s,]*$ih}i;
+        }
+    }
 
-	if($opt{daemon} or $opt{daemon_rrd}) {
-		chdir $daemon_rrd_dir or die "mailgraph: can't chdir to $daemon_rrd_dir: $!";
-		-w $daemon_rrd_dir or die "mailgraph: can't write to $daemon_rrd_dir\n";
-	}
+    if($opt{daemon} or $opt{daemon_rrd}) {
+        chdir $daemon_rrd_dir or die "mailgraph: can't chdir to $daemon_rrd_dir: $!";
+        -w $daemon_rrd_dir or die "mailgraph: can't write to $daemon_rrd_dir\n";
+    }
 
-	daemonize if $opt{daemon};
+    daemonize if $opt{daemon};
 
-	my $logfile = defined $opt{logfile} ? $opt{logfile} : '/var/log/syslog';
-	my $file;
-	if($opt{cat}) {
-		$file = $logfile;
-	}
-	else {
-		$file = File::Tail->new(name=>$logfile, tail=>-1);
-	}
-	my $parser = new Parse::Syslog($file, year => $opt{year}, arrayref => 1,
-		type => defined $opt{logtype} ? $opt{logtype} : 'syslog');
+    my $logfile = defined $opt{logfile} ? $opt{logfile} : '/var/log/syslog';
+    my $file;
+    if($opt{cat}) {
+        $file = $logfile;
+    }
+    else {
+        $file = File::Tail->new(name=>$logfile, tail=>-1);
+    }
+    my $parser = new Parse::Syslog($file, year => $opt{year}, arrayref => 1,
+        type => defined $opt{logtype} ? $opt{logtype} : 'syslog');
 
-	if(not defined $opt{host}) {
-		while(my $sl = $parser->next) {
-			process_line($sl);
-		}
-	}
-	else {
-		my $host = qr/^$opt{host}$/i;
-		while(my $sl = $parser->next) {
-			process_line($sl) if $sl->[1] =~ $host;
-		}
-	}
+    if(not defined $opt{host}) {
+        while(my $sl = $parser->next) {
+            process_line($sl);
+        }
+    }
+    else {
+        my $host = qr/^$opt{host}$/i;
+        while(my $sl = $parser->next) {
+            process_line($sl) if $sl->[1] =~ $host;
+        }
+    }
 }
 
 sub daemonize()
 {
-	open STDIN, '/dev/null' or die "mailgraph: can't read /dev/null: $!";
-	if($opt{verbose}) {
-		open STDOUT, ">>$daemon_logfile"
-			or die "mailgraph: can't write to $daemon_logfile: $!";
-	}
-	else {
-		open STDOUT, '>/dev/null'
-			or die "mailgraph: can't write to /dev/null: $!";
-	}
-	defined(my $pid = fork) or die "mailgraph: can't fork: $!";
-	if($pid) {
-		# parent
-		open PIDFILE, ">$daemon_pidfile"
-			or die "mailgraph: can't write to $daemon_pidfile: $!\n";
-		print PIDFILE "$pid\n";
-		close(PIDFILE);
-		exit;
-	}
-	# child
-	setsid			or die "mailgraph: can't start a new session: $!";
-	open STDERR, '>&STDOUT' or die "mailgraph: can't dup stdout: $!";
+    open STDIN, '/dev/null' or die "mailgraph: can't read /dev/null: $!";
+    if($opt{verbose}) {
+        open STDOUT, ">>$daemon_logfile"
+            or die "mailgraph: can't write to $daemon_logfile: $!";
+    }
+    else {
+        open STDOUT, '>/dev/null'
+            or die "mailgraph: can't write to /dev/null: $!";
+    }
+    defined(my $pid = fork) or die "mailgraph: can't fork: $!";
+    if($pid) {
+        # parent
+        open PIDFILE, ">$daemon_pidfile"
+            or die "mailgraph: can't write to $daemon_pidfile: $!\n";
+        print PIDFILE "$pid\n";
+        close(PIDFILE);
+        exit;
+    }
+    # child
+    setsid          or die "mailgraph: can't start a new session: $!";
+    open STDERR, '>&STDOUT' or die "mailgraph: can't dup stdout: $!";
 }
 
 sub init_rrd($)
 {
-	my $m = shift;
-	my $rows = $xpoints/$points_per_sample;
-	my $realrows = int($rows*1.1); # ensure that the full range is covered
-	my $day_steps = int(3600*24 / ($rrdstep*$rows));
-	# use multiples, otherwise rrdtool could choose the wrong RRA
-	my $week_steps = $day_steps*7;
-	my $month_steps = $week_steps*5;
-	my $year_steps = $month_steps*12;
+    my $m = shift;
+    my $rows = $xpoints/$points_per_sample;
+    my $realrows = int($rows*1.1); # ensure that the full range is covered
+    my $day_steps = int(3600*24 / ($rrdstep*$rows));
+    # use multiples, otherwise rrdtool could choose the wrong RRA
+    my $week_steps = $day_steps*7;
+    my $month_steps = $week_steps*5;
+    my $year_steps = $month_steps*12;
 
-	# mail rrd
-	if(! -f $rrd and ! $opt{'no-mail-rrd'}) {
-		RRDs::create($rrd, '--start', $m, '--step', $rrdstep,
-				'DS:sent:ABSOLUTE:'.($rrdstep*2).':0:U',
-				'DS:recv:ABSOLUTE:'.($rrdstep*2).':0:U',
-				'DS:bounced:ABSOLUTE:'.($rrdstep*2).':0:U',
-				'DS:rejected:ABSOLUTE:'.($rrdstep*2).':0:U',
-				"RRA:AVERAGE:0.5:$day_steps:$realrows",   # day
-				"RRA:AVERAGE:0.5:$week_steps:$realrows",  # week
-				"RRA:AVERAGE:0.5:$month_steps:$realrows", # month
-				"RRA:AVERAGE:0.5:$year_steps:$realrows",  # year
-				"RRA:MAX:0.5:$day_steps:$realrows",   # day
-				"RRA:MAX:0.5:$week_steps:$realrows",  # week
-				"RRA:MAX:0.5:$month_steps:$realrows", # month
-				"RRA:MAX:0.5:$year_steps:$realrows",  # year
-				);
-		$this_minute = $m;
-	}
-	elsif(-f $rrd) {
-		$this_minute = RRDs::last($rrd) + $rrdstep;
-	}
+    # mail rrd
+    if(! -f $rrd and ! $opt{'no-mail-rrd'}) {
+        RRDs::create($rrd, '--start', $m, '--step', $rrdstep,
+                'DS:sent:ABSOLUTE:'.($rrdstep*2).':0:U',
+                'DS:recv:ABSOLUTE:'.($rrdstep*2).':0:U',
+                'DS:bounced:ABSOLUTE:'.($rrdstep*2).':0:U',
+                'DS:rejected:ABSOLUTE:'.($rrdstep*2).':0:U',
+                "RRA:AVERAGE:0.5:$day_steps:$realrows",   # day
+                "RRA:AVERAGE:0.5:$week_steps:$realrows",  # week
+                "RRA:AVERAGE:0.5:$month_steps:$realrows", # month
+                "RRA:AVERAGE:0.5:$year_steps:$realrows",  # year
+                "RRA:MAX:0.5:$day_steps:$realrows",   # day
+                "RRA:MAX:0.5:$week_steps:$realrows",  # week
+                "RRA:MAX:0.5:$month_steps:$realrows", # month
+                "RRA:MAX:0.5:$year_steps:$realrows",  # year
+                );
+        $this_minute = $m;
+    }
+    elsif(-f $rrd) {
+        $this_minute = RRDs::last($rrd) + $rrdstep;
+    }
 
-	# virus rrd
-	if(! -f $rrd_virus and ! $opt{'no-virus-rrd'}) {
-		RRDs::create($rrd_virus, '--start', $m, '--step', $rrdstep,
-				'DS:virus:ABSOLUTE:'.($rrdstep*2).':0:U',
-				'DS:spam:ABSOLUTE:'.($rrdstep*2).':0:U',
-				"RRA:AVERAGE:0.5:$day_steps:$realrows",   # day
-				"RRA:AVERAGE:0.5:$week_steps:$realrows",  # week
-				"RRA:AVERAGE:0.5:$month_steps:$realrows", # month
-				"RRA:AVERAGE:0.5:$year_steps:$realrows",  # year
-				"RRA:MAX:0.5:$day_steps:$realrows",   # day
-				"RRA:MAX:0.5:$week_steps:$realrows",  # week
-				"RRA:MAX:0.5:$month_steps:$realrows", # month
-				"RRA:MAX:0.5:$year_steps:$realrows",  # year
-				);
-	}
-	elsif(-f $rrd_virus and ! defined $rrd_virus) {
-		$this_minute = RRDs::last($rrd_virus) + $rrdstep;
-	}
+    # virus rrd
+    if(! -f $rrd_virus and ! $opt{'no-virus-rrd'}) {
+        RRDs::create($rrd_virus, '--start', $m, '--step', $rrdstep,
+                'DS:virus:ABSOLUTE:'.($rrdstep*2).':0:U',
+                'DS:spam:ABSOLUTE:'.($rrdstep*2).':0:U',
+                "RRA:AVERAGE:0.5:$day_steps:$realrows",   # day
+                "RRA:AVERAGE:0.5:$week_steps:$realrows",  # week
+                "RRA:AVERAGE:0.5:$month_steps:$realrows", # month
+                "RRA:AVERAGE:0.5:$year_steps:$realrows",  # year
+                "RRA:MAX:0.5:$day_steps:$realrows",   # day
+                "RRA:MAX:0.5:$week_steps:$realrows",  # week
+                "RRA:MAX:0.5:$month_steps:$realrows", # month
+                "RRA:MAX:0.5:$year_steps:$realrows",  # year
+                );
+    }
+    elsif(-f $rrd_virus and ! defined $rrd_virus) {
+        $this_minute = RRDs::last($rrd_virus) + $rrdstep;
+    }
         # greylist rrd
         if(! -f $rrd_greylist and ! $opt{'no-greylist-rrd'}) {
                         RRDs::create($rrd_greylist, '--start', $m, '--step', $rrdstep,
@@ -586,119 +586,126 @@ sub init_rrd($)
                 $this_minute = RRDs::last($rrd_greylist) + $rrdstep;
         }
 
-	$rrd_inited=1;
+    $rrd_inited=1;
 }
 
 sub process_line($)
 {
-	my $sl = shift;
-	my $time = $sl->[0];
-	my $prog = $sl->[2];
-	my $text = $sl->[4];
+    my $sl = shift;
+    my $time = $sl->[0];
+    my $prog = $sl->[2];
+    my $text = $sl->[4];
 
-	if($prog =~ /^postfix\/(.*)/) {
-		my $prog = $1;
+    if($prog =~ /^postfix\/(.*)/) {
+        my $prog = $1;
 
-		if($prog eq 'smtp') {
-			if($text =~ /\bstatus=sent\b/) {
-				return if $opt{'ignore-localhost'} and
-					$text =~ /\brelay=[^\s\[]*\[127\.0\.0\.1\]/;
-				if(defined $opt{'ignore-host-re'}) {
-					for my $ih (@{$opt{'ignore-host-re'}}) {
-						warn "MATCH! $text\n" if $text =~ $ih;
-						return if $text =~ $ih;
-					}
-				}
-				event($time, 'sent');
-			}
-			elsif($text =~ /\bstatus=bounced\b/) {
-				event($time, 'bounced');
-			}
-		}
-		elsif($prog eq 'local') {
-			if($text =~ /\bstatus=bounced\b/) {
-				event($time, 'bounced');
-			}
-		}
-		elsif($prog eq 'smtpd') {
-			if($text =~ /^[0-9A-Z]+: client=(\S+)/) {
-				my $client = $1;
-				return if $opt{'ignore-localhost'} and
-					$client =~ /\[127\.0\.0\.1\]$/;
-				return if $opt{'ignore-host'} and
-					$client =~ /$opt{'ignore-host'}/oi;
-				event($time, 'received');
-			}
-            elsif ($text =~ /Helo command rejected/) {
+        if($prog eq 'smtp') {
+            if($text =~ /\bstatus=sent\b/) {
+                return if $opt{'ignore-localhost'} and
+                    $text =~ /\brelay=[^\s\[]*\[127\.0\.0\.1\]/;
+                if(defined $opt{'ignore-host-re'}) {
+                    for my $ih (@{$opt{'ignore-host-re'}}) {
+                        warn "MATCH! $text\n" if $text =~ $ih;
+                        return if $text =~ $ih;
+                    }
+                }
+                event($time, 'sent');
+            }
+            elsif($text =~ /\bstatus=bounced\b/) {
+                event($time, 'bounced');
+            }
+        }
+        elsif($prog eq 'local') {
+            if($text =~ /\bstatus=bounced\b/) {
+                event($time, 'bounced');
+            }
+        }
+        elsif($prog eq 'smtpd')
+        {
+            if($text =~ /^[0-9A-Z]+: client=(\S+)/)
+            {
+                my $client = $1;
+                return if $opt{'ignore-localhost'} and
+                    $client =~ /\[127\.0\.0\.1\]$/;
+                return if $opt{'ignore-host'} and
+                    $client =~ /$opt{'ignore-host'}/oi;
+                event($time, 'received');
+            }
+            elsif ($text =~ /Helo command rejected/)
+            {
                 event($time, 'helo_rejected');
             }
 
             #elsif($text =~ /NOQUEUE: reject: /i) {
-            #	event($time, 'rejected');
+            #   event($time, 'rejected');
             #}
-			elsif($opt{'virbl-is-virus'} and $text =~ /^(?:[0-9A-Z]+: |NOQUEUE: )?reject: .*: 554.* blocked using virbl.dnsbl.bit.nl/) {
-				event($time, 'virus');
-			}
-			elsif($opt{'rbl-is-spam'} and $text    =~ /^(?:[0-9A-Z]+: |NOQUEUE: )?reject: .*: 554.* blocked using/) {
-				event($time, 'spam');
-			}
-            elsif($text =~ /Greylisted/) {
+            elsif($opt{'virbl-is-virus'} and $text =~ /^(?:[0-9A-Z]+: |NOQUEUE: )?reject: .*: 554.* blocked using virbl.dnsbl.bit.nl/)
+            {
+                event($time, 'virus');
+            }
+            elsif($opt{'rbl-is-spam'} and $text    =~ /^(?:[0-9A-Z]+: |NOQUEUE: )?reject: .*: 554.* blocked using/)
+            {
+                event($time, 'spam');
+            }
+            elsif($text =~ /Greylisted/)
+            {
                 event($time, 'greylisted');
             }
-			#elsif($text =~ /^(?:[0-9A-Z]+: |NOQUEUE: )?reject: /) {
-			#	event($time, 'rejected');
-			#}
-			elsif($text =~ /^(?:[0-9A-Z]+: |NOQUEUE: )?milter-reject: /) {
-				if($text =~ /Blocked by SpamAssassin/) {
-					event($time, 'spam');
-				}
-				else {
-					event($time, 'rejected');
-				}
-			}
-		}
-		elsif($prog eq 'pipe') {
-			if($text =~ /delivered via dovecot service/) {
-				event($time, 'received');
-			}
-		}
-		elsif($prog eq 'error') {
-			if($text =~ /\bstatus=bounced\b/) {
-				event($time, 'bounced');
-			}
-		}
-		elsif($prog eq 'cleanup') {
-			if($text =~ /^[0-9A-Z]+: (?:reject|discard): /) {
-				event($time, 'rejected');
-			}
-		}
-	}
-	elsif($prog eq 'amavis' || $prog eq 'amavisd') {
-		if(   $text =~ /^\([\w-]+\) (Passed|Blocked) SPAM(?:MY)?\b/) {
-			if($text !~ /\btag2=/) { # ignore new per-recipient log entry (2.2.0)
-				event($time, 'spam'); # since amavisd-new-2004xxxx
-			}
-		}
-		elsif($text =~ /^\([\w-]+\) (Passed|Not-Delivered)\b.*\bquarantine spam/) {
-			event($time, 'spam'); # amavisd-new-20030616 and earlier
-		}
-		elsif($text =~ /^\([\w-]+\) (Passed |Blocked )?INFECTED\b/) {
-			if($text !~ /\btag2=/) {
-				event($time, 'virus');# Passed|Blocked inserted since 2004xxxx
-			}
-		}
-		elsif($text =~ /^\([\w-]+\) (Passed |Blocked )?BANNED\b/) {
-			if($text !~ /\btag2=/) {
-			       event($time, 'virus');
-			}
-		}
-		elsif($text =~ /^Virus found\b/) {
-			event($time, 'virus');# AMaViS 0.3.12 and amavisd-0.1
-		}
-		elsif($text =~ /^\([\w-]+\) Passed|Blocked BAD-HEADER\b/) {
-		       event($time, 'badh');
-		}
-	}
+            #elsif($text =~ /^(?:[0-9A-Z]+: |NOQUEUE: )?reject: /) {
+            #   event($time, 'rejected');
+            #}
+            elsif($text =~ /^(?:[0-9A-Z]+: |NOQUEUE: )?milter-reject: /)
+            {
+                if($text =~ /Blocked by SpamAssassin/)
+                {
+                    event($time, 'spam');
+                } else {
+                    event($time, 'rejected');
+                }
+            }
+        }
+        elsif($prog eq 'pipe') {
+            if($text =~ /delivered via dovecot service/) {
+                event($time, 'received');
+            }
+        }
+        elsif($prog eq 'error') {
+            if($text =~ /\bstatus=bounced\b/) {
+                event($time, 'bounced');
+            }
+        }
+        elsif($prog eq 'cleanup') {
+            if($text =~ /^[0-9A-Z]+: (?:reject|discard): /) {
+                event($time, 'rejected');
+            }
+        }
+    }
+    elsif($prog eq 'amavis' || $prog eq 'amavisd') {
+        if(   $text =~ /^\([\w-]+\) (Passed|Blocked) SPAM(?:MY)?\b/) {
+            if($text !~ /\btag2=/) { # ignore new per-recipient log entry (2.2.0)
+                event($time, 'spam'); # since amavisd-new-2004xxxx
+            }
+        }
+        elsif($text =~ /^\([\w-]+\) (Passed|Not-Delivered)\b.*\bquarantine spam/) {
+            event($time, 'spam'); # amavisd-new-20030616 and earlier
+        }
+        elsif($text =~ /^\([\w-]+\) (Passed |Blocked )?INFECTED\b/) {
+            if($text !~ /\btag2=/) {
+                event($time, 'virus');# Passed|Blocked inserted since 2004xxxx
+            }
+        }
+        elsif($text =~ /^\([\w-]+\) (Passed |Blocked )?BANNED\b/) {
+            if($text !~ /\btag2=/) {
+                   event($time, 'virus');
+            }
+        }
+        elsif($text =~ /^Virus found\b/) {
+            event($time, 'virus');# AMaViS 0.3.12 and amavisd-0.1
+        }
+        elsif($text =~ /^\([\w-]+\) Passed|Blocked BAD-HEADER\b/) {
+               event($time, 'badh');
+        }
+    }
     #elsif($prog eq 'postgrey') {
     #            # Old versions (up to 1.27)
     #            if($text =~ /helo_rejected [0-9]+ seconds: client/) {
@@ -722,46 +729,46 @@ sub process_line($)
                 elsif($text =~ /throttle_rcpt=/) {
                         event($time, 'greylisted');
                 }
-	}
+    }
 }
 
 sub event($$)
 {
-	my ($t, $type) = @_;
-	update($t) and $sum{$type}++;
+    my ($t, $type) = @_;
+    update($t) and $sum{$type}++;
 }
 
 # returns 1 if $sum should be updated
 sub update($)
 {
-	my $t = shift;
-	my $m = $t - $t%$rrdstep;
-	init_rrd($m) unless $rrd_inited;
-	return 1 if $m == $this_minute;
-	return 0 if $m < $this_minute;
+    my $t = shift;
+    my $m = $t - $t%$rrdstep;
+    init_rrd($m) unless $rrd_inited;
+    return 1 if $m == $this_minute;
+    return 0 if $m < $this_minute;
 
-	print "update $this_minute:$sum{sent}:$sum{received}:$sum{bounced}:$sum{rejected}:$sum{virus}:$sum{spam}:$sum{greylisted}:$sum{helo_rejected}\n" if $opt{verbose};
-	RRDs::update $rrd, "$this_minute:$sum{sent}:$sum{received}:$sum{bounced}:$sum{rejected}" unless $opt{'no-mail-rrd'};
-	RRDs::update $rrd_virus, "$this_minute:$sum{virus}:$sum{spam}" unless $opt{'no-virus-rrd'};
-	RRDs::update $rrd_greylist, "$this_minute:$sum{greylisted}:$sum{helo_rejected}" unless $opt{'no-greylist-rrd'};
-	if($m > $this_minute+$rrdstep) {
-		for(my $sm=$this_minute+$rrdstep;$sm<$m;$sm+=$rrdstep) {
-			print "update $sm:0:0:0:0:0:0:0:0 (SKIP)\n" if $opt{verbose};
-			RRDs::update $rrd, "$sm:0:0:0:0" unless $opt{'no-mail-rrd'};
-			RRDs::update $rrd_virus, "$sm:0:0" unless $opt{'no-virus-rrd'};
-			RRDs::update $rrd_greylist, "$sm:0:0" unless $opt{'no-greylist-rrd'};
-		}
-	}
-	$this_minute = $m;
-	$sum{sent}=0;
-	$sum{received}=0;
-	$sum{bounced}=0;
-	$sum{rejected}=0;
-	$sum{virus}=0;
-	$sum{spam}=0;
+    print "update $this_minute:$sum{sent}:$sum{received}:$sum{bounced}:$sum{rejected}:$sum{virus}:$sum{spam}:$sum{greylisted}:$sum{helo_rejected}\n" if $opt{verbose};
+    RRDs::update $rrd, "$this_minute:$sum{sent}:$sum{received}:$sum{bounced}:$sum{rejected}" unless $opt{'no-mail-rrd'};
+    RRDs::update $rrd_virus, "$this_minute:$sum{virus}:$sum{spam}" unless $opt{'no-virus-rrd'};
+    RRDs::update $rrd_greylist, "$this_minute:$sum{greylisted}:$sum{helo_rejected}" unless $opt{'no-greylist-rrd'};
+    if($m > $this_minute+$rrdstep) {
+        for(my $sm=$this_minute+$rrdstep;$sm<$m;$sm+=$rrdstep) {
+            print "update $sm:0:0:0:0:0:0:0:0 (SKIP)\n" if $opt{verbose};
+            RRDs::update $rrd, "$sm:0:0:0:0" unless $opt{'no-mail-rrd'};
+            RRDs::update $rrd_virus, "$sm:0:0" unless $opt{'no-virus-rrd'};
+            RRDs::update $rrd_greylist, "$sm:0:0" unless $opt{'no-greylist-rrd'};
+        }
+    }
+    $this_minute = $m;
+    $sum{sent}=0;
+    $sum{received}=0;
+    $sum{bounced}=0;
+    $sum{rejected}=0;
+    $sum{virus}=0;
+    $sum{spam}=0;
         $sum{greylisted}=0;
         $sum{helo_rejected}=0;
-	return 1;
+    return 1;
 }
 
 main;
