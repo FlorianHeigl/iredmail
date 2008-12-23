@@ -45,6 +45,9 @@ spf_timeout         5
 score SPF_PASS -10.000
 score SPF_FAIL 5.00
 
+# Many mail servers use numeric in HELO.
+score RCVD_NUMERIC_HELO 0
+
 #whitelist_from_spf     joe@example.com fred@example.com
 whitelist_from_spf      *@gmail.com
 whitelist_from_spf      *@126.com *@163.com
