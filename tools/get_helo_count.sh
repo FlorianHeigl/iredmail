@@ -30,4 +30,4 @@ export LC_ALL=C
 
 MAILLOG='/var/log/maillog'
 
-grep 'helo=' ${MAILLOG} | awk -F'helo=<' '{print $2}' | awk -F'>' '{print $1}' | sort | uniq -c | sort -nr
+grep 'helo=' ${MAILLOG} | grep 'postfix/smtpd' | awk '{print $6, $11, $NF}' | awk -F':' '{print $1,$2}' | awk -F'helo=<' '{print $1,$2}' | awk -F'>' '{print $1}' | sort | uniq -c | sort -nr
