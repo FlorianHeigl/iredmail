@@ -9,6 +9,9 @@
 #   * muniao <at> gamil.
 #
 
+# Prepend HELO identifier anti-spam analytics.
+/(.*)/ PREPEND X-Original-Helo: $1 (iRedMail)
+
 #*******************************************
 # IP address: (([0-9]){3}-){2}
 #*******************************************

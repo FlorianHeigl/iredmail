@@ -35,3 +35,4 @@ clamav-0.94.2-1.el5.rf.x86_64.rpm
 clamav-db-0.94.2-1.el5.rf.x86_64.rpm
 clamd-0.94.2-1.el5.rf.x86_64.rpm
 dovecot-1.1.7-0_84.el5.x86_64.rpm
+perl-Encode-Detect-1.01-1.el5.rf.x86_64.rpm

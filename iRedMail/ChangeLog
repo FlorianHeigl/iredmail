@@ -1,4 +1,6 @@
 iRedMail-0.3.3:
+    * Add one more helo pcre rule, prepend helo identifier in mail header.
+    * Add missing package 'perl-Encode-Detect', required by sa-update.
     * Update phpLDAPadmin to 1.1.0.6.
     * Fix crontab job for expire mail in dovecot. Thanks xcrossbow@gmail.
     * Reduce postfix queue run retry time to '300s'.
