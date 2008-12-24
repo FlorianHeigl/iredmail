@@ -9,7 +9,7 @@
 #   * muniao <at> gamil.
 #
 
-# Prepend HELO identifier anti-spam analytics.
+# Prepend HELO identifier for anti-spam analytics.
 /(.*)/ PREPEND X-Original-Helo: $1 (iRedMail)
 
 #*******************************************
