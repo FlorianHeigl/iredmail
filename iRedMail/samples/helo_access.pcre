@@ -10,7 +10,7 @@
 #
 
 # Prepend HELO identifier for anti-spam analytics.
-/(.*)/ PREPEND X-Original-Helo: $1 (iRedMail)
+/(.*)/ PREPEND X-Original-Helo: $1 (iRedMail: http://code.google.com/p/iredmail/)
 
 #*******************************************
 # IP address: (([0-9]){3}-){2}

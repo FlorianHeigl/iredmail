@@ -77,6 +77,10 @@ EOF
     # Avoid duplicate recipient messages. Default is 'yes'.
     postconf -e enable_original_recipient="no"
 
+    # Disable the SMTP VRFY command. This stops some techniques used to
+    # harvest email addresses.
+    disable_vrfy_command = yes
+
     # We use 'maildir' format, not 'mbox'.
     if [ X"${HOME_MAILBOX}" == X"Maildir" ]; then
         postconf -e home_mailbox="Maildir/"
