@@ -32,8 +32,8 @@ install_all()
         # MySQL server. Used to store extra data, such as policyd, roundcube webmail.
         ALL_PKGS="${ALL_PKGS} mysql-server.${ARCH} mysql.${ARCH}"
 
-        # Policyd.
-        ALL_PKGS="${ALL_PKGS} policyd.${ARCH}"
+        # For ExtMail.
+        [ X"${USE_EXTMAIL}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} perl-LDAP"
 
         ENABLED_SERVICES="${ENABLED_SERVICES} ldap mysqld policyd"
 
@@ -41,9 +41,6 @@ install_all()
         # MySQL server & client.
         [ X"${MYSQL_FRESH_INSTALLATION}" == X'YES' ] && \
             ALL_PKGS="${ALL_PKGS} mysql-server.${ARCH} mysql.${ARCH}"
-
-        # Policyd.
-        ALL_PKGS="${ALL_PKGS} policyd.${ARCH}"
 
         # For SquirrelMail.
         [ X"${USE_SM}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} php-pear-db.noarch"
@@ -56,8 +53,8 @@ install_all()
         :
     fi
 
-    # For ExtMail.
-    [ X"${USE_EXTMAIL}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} perl-LDAP"
+    # Policyd.
+    ALL_PKGS="${ALL_PKGS} policyd.${ARCH}"
 
     # Cyrus-SASL.
     ALL_PKGS="${ALL_PKGS} cyrus-sasl.${ARCH} cyrus-sasl-lib.${ARCH} cyrus-sasl-plain.${ARCH} cyrus-sasl-md5.${ARCH}"
