@@ -34,4 +34,4 @@ ace23160b624a6153e8ff29c30437921  rpms/clamav-db-0.94.2-1.el5.rf.x86_64.rpm
 ade9ce32de8fcfd5fa5d9a093c09368e  rpms/clamd-0.94.2-1.el5.rf.x86_64.rpm
 d295a6a6c3b877351d43a28eac234ebe  rpms/dovecot-1.1.7-0_84.el5.x86_64.rpm
 49356f67173dc13170e058f8a81c6324  rpms/perl-Encode-Detect-1.01-1.el5.rf.x86_64.rpm
-861dfd88e5c783bef3504198f72c28d8  rpms/postfix-2.5.5-3.ired.x86_64.rpm
+d7d73662664b9dbffeed94aa61c1725c  rpms/postfix-2.5.5-3.ired.x86_64.rpm

@@ -79,7 +79,7 @@ EOF
 
     # Disable the SMTP VRFY command. This stops some techniques used to
     # harvest email addresses.
-    disable_vrfy_command = yes
+    postconf -e disable_vrfy_command = yes
 
     # We use 'maildir' format, not 'mbox'.
     if [ X"${HOME_MAILBOX}" == X"Maildir" ]; then

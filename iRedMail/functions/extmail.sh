@@ -114,21 +114,26 @@ extmail_config_ldap()
     ECHO_INFO "Configure ExtMail for LDAP support."
     cd ${EXTMAIL_HTTPD_ROOT}
 
+    export LDAP_BASEDN LDAP_ADMIN_DN LDAP_ADMIN_PW LDAP_SERVER_HOST 
     perl -pi -e 's#(SYS_AUTH_TYPE.*)mysql#${1}ldap#' ${EXTMAIL_CONF}
     perl -pi -e 's#(SYS_LDAP_BASE)(.*)#${1} = $ENV{'LDAP_BASEDN'}#' ${EXTMAIL_CONF}
     perl -pi -e 's#(SYS_LDAP_RDN)(.*)#${1} = $ENV{'LDAP_ADMIN_DN'}#' ${EXTMAIL_CONF}
     perl -pi -e 's#(SYS_LDAP_PASS.*=)(.*)#${1} $ENV{'LDAP_ADMIN_PW'}#' ${EXTMAIL_CONF}
     perl -pi -e 's#(SYS_LDAP_HOST.*=)(.*)#${1} $ENV{'LDAP_SERVER_HOST'}#' ${EXTMAIL_CONF}
 
-    perl -pi -e 's#(SYS_LDAP_ATTR_DOMAIN.*=)(.*)#${1} o#' ${EXTMAIL_CONF}
+    export LDAP_ATTR_DOMAIN_DN_NAME LDAP_ATTR_USER_STATUS 
+    perl -pi -e 's#(SYS_LDAP_ATTR_DOMAIN.*=)(.*)#${1} $ENV{'LDAP_ATTR_DOMAIN_DN_NAME'}#' ${EXTMAIL_CONF}
 
     perl -pi -e 's/^(SYS_LDAP_ATTR_CLEARPW.*)/#${1}/' ${EXTMAIL_CONF}
     #perl -pi -e 's/^(SYS_LDAP_ATTR_NDQUOTA.*)/#${1}/' ${EXTMAIL_CONF}
-    perl -pi -e 's#^(SYS_LDAP_ATTR_DISABLEWEBMAIL.*)disablewebmail#${1}disableIMAP#' ${EXTMAIL_CONF}
+    perl -pi -e 's/^(SYS_LDAP_ATTR_DISABLEWEBMAIL.*)/#${1}/' ${EXTMAIL_CONF}
     perl -pi -e 's/^(SYS_LDAP_ATTR_DISABLENETDISK.*)/#${1}/' ${EXTMAIL_CONF}
     perl -pi -e 's/^(SYS_LDAP_ATTR_DISABLEPWDCHANGE.*)/#${1}/' ${EXTMAIL_CONF}
-
     perl -pi -e 's#(SYS_LDAP_ATTR_ACTIVE.*=)(.*)#${1} $ENV{'LDAP_ATTR_USER_STATUS'}#' ${EXTMAIL_CONF}
+
+    # Disable password retrieve attributes.
+    perl -pi -e 's/^(SYS_LDAP_ATTR_PWD_QUESTION.*)/#${1}/' ${EXTMAIL_CONF}
+    perl -pi -e 's/^(SYS_LDAP_ATTR_PWD_ANSWER.*)/#${1}/' ${EXTMAIL_CONF}
 
     echo 'export status_extmail_config_ldap="DONE"' >> ${STATUS_FILE}
 }
