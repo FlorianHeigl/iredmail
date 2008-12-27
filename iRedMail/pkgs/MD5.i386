@@ -23,7 +23,6 @@ f4d04c5cc21515625534c9f557eb11b4  rpms/amavisd-new-2.6.1-1.ired.i386.rpm
 0e6e9555d4ed671075e8b1f238d02b13  rpms/php-pecl-fileinfo-1.0.4-1.el5.rf.i386.rpm
 e89ad55c67811e700c4e3cba55b097e5  rpms/perl-Convert-UUlib-1.11-1.ired.i386.rpm
 0e8286982e3cfc33a88fb003c55b366d  rpms/policyd-1.82-4.rhms.i386.rpm
-155cdc7fb2ec5369ca77014ff483c3f4  rpms/postfix-2.3.15-2.ired.i386.rpm
 38b63120bbcbfa94b74bcc28751e77dc  rpms/unrar-3.8.2-1.el5.rf.i386.rpm
 73a4835924c0a22fa52fa7d2b8f5577e  rpms/perl-BerkeleyDB-0.36-1.el5.rf.i386.rpm
 9f001e591572d88c6e035bd525f772fe  rpms/perl-Compress-Raw-Zlib-2.015-1.el5.rf.i386.rpm
@@ -35,3 +34,4 @@ ced6000f91e2f64a92753bee0236ff67  rpms/php-eaccelerator-5.1.6_0.9.5.2-4.el5.rf.i
 2e12b383ab4d84976c8789bc2b824f60  rpms/clamd-0.94.2-1.el5.rf.i386.rpm
 84f2e6c6179d6ddcb00d36680a60d041  rpms/dovecot-1.1.7-0_84.el5.i386.rpm
 96cada2fe843226ba531a60058810189  rpms/perl-Encode-Detect-1.01-1.el5.rf.i386.rpm
+0c0995f182015a9a784f9a544b8954bc  rpms/postfix-2.5.5-3.ired.i386.rpm

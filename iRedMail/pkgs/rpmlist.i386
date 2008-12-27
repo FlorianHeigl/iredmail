@@ -24,7 +24,6 @@ amavisd-new-2.6.1-1.ired.i386.rpm
 php-pecl-fileinfo-1.0.4-1.el5.rf.i386.rpm
 perl-Convert-UUlib-1.11-1.ired.i386.rpm
 policyd-1.82-4.rhms.i386.rpm
-postfix-2.3.15-2.ired.i386.rpm
 unrar-3.8.2-1.el5.rf.i386.rpm
 perl-BerkeleyDB-0.36-1.el5.rf.i386.rpm
 perl-Compress-Raw-Zlib-2.015-1.el5.rf.i386.rpm
@@ -36,3 +35,4 @@ clamav-db-0.94.2-1.el5.rf.i386.rpm
 clamd-0.94.2-1.el5.rf.i386.rpm
 dovecot-1.1.7-0_84.el5.i386.rpm
 perl-Encode-Detect-1.01-1.el5.rf.i386.rpm
+postfix-2.5.5-3.ired.i386.rpm

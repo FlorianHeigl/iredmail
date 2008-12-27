@@ -1,4 +1,5 @@
 iRedMail-0.3.3:
+    * Update Postfix to 2.5.5.
     * Add one more helo pcre rule, prepend helo identifier in mail header.
     * Add missing package 'perl-Encode-Detect', required by sa-update.
     * Update phpLDAPadmin to 1.1.0.6.
