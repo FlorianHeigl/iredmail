@@ -1,0 +1,414 @@
+diff -ruNb roundcubemail-0.2-beta2.orig/index.php roundcubemail-0.2-beta2/index.php
+--- roundcubemail-0.2-beta2.orig/index.php	2008-09-21 20:04:43.000000000 +0800
++++ roundcubemail-0.2-beta2/index.php	2008-12-21 19:29:04.000000000 +0800
+@@ -202,6 +202,7 @@
+     'subscribe'     => 'manage_folders.inc',
+     'unsubscribe'   => 'manage_folders.inc',
+     'add-identity'  => 'edit_identity.inc',
++    'save-passwd'   => 'passwd.inc',
+   )
+ );
+ 
+diff -ruNb roundcubemail-0.2-beta2.orig/program/js/app.js roundcubemail-0.2-beta2/program/js/app.js
+--- roundcubemail-0.2-beta2.orig/program/js/app.js	2008-09-20 00:14:10.000000000 +0800
++++ roundcubemail-0.2-beta2/program/js/app.js	2008-12-21 19:31:42.000000000 +0800
+@@ -287,7 +287,7 @@
+ 
+ 
+       case 'settings':
+-        this.enable_command('preferences', 'identities', 'save', 'folders', true);
++        this.enable_command('preferences', 'identities', 'save', 'folders', 'passwd', true);
+         
+         if (this.env.action=='identities' || this.env.action=='edit-identity' || this.env.action=='add-identity') {
+           this.enable_command('add', 'delete', this.env.multiple_identities);
+@@ -300,6 +300,19 @@
+         if (this.env.action=='folders')
+           this.enable_command('subscribe', 'unsubscribe', 'create-folder', 'rename-folder', 'delete-folder', true);
+ 
++        if (this.env.action=='passwd' || this.env.action=='save-passwd')
++          {
++          var input_curpasswd = rcube_find_object('_curpasswd');
++          var input_newpasswd = rcube_find_object('_newpasswd');
++          var input_confpasswd = rcube_find_object('_confpasswd');
++          if (input_curpasswd && input_curpasswd.value=='')
++              input_curpasswd.focus();
++          else if (input_confpasswd)
++              input_confpasswd.focus();
++
++          this.enable_command('save-passwd', true);
++          }
++
+         if (this.gui_objects.identitieslist)
+           {
+           this.identity_list = new rcube_list_widget(this.gui_objects.identitieslist, {multiselect:false, draggable:false, keyboard:false});
+@@ -1067,6 +1080,33 @@
+         this.delete_folder(props);
+         break;
+ 
++      case 'passwd':
++        this.goto_url('passwd');
++      break;
++
++      case 'save-passwd':
++        var input_curpasswd = rcube_find_object('_curpasswd');
++        var input_newpasswd = rcube_find_object('_newpasswd');
++        var input_confpasswd = rcube_find_object('_confpasswd');
++        if ((input_newpasswd && input_newpasswd.value=='') && (input_confpasswd && input_confpasswd.value=='') || (input_curpasswd && input_curpasswd.value==''))
++            {
++                alert(this.get_label('nopassword'));
++                input_curpasswd.value='';
++                input_newpasswd.value='';
++                input_confpasswd.value='';
++                input_curpasswd.focus();
++            }
++        else if ((input_newpasswd && input_confpasswd) && ( input_newpasswd.value != input_confpasswd.value))
++            {
++                alert(this.get_label('passwordinconsistency'));
++                input_newpasswd.value='';
++                input_confpasswd.value='';
++                input_newpasswd.focus();
++            }
++        else
++                this.gui_objects.editform.submit();
++        break;
++
+       }
+ 
+     return obj ? false : true;
+diff -ruNb roundcubemail-0.2-beta2.orig/program/localization/de_DE/labels.inc roundcubemail-0.2-beta2/program/localization/de_DE/labels.inc
+--- roundcubemail-0.2-beta2.orig/program/localization/de_DE/labels.inc	2008-09-12 20:27:46.000000000 +0800
++++ roundcubemail-0.2-beta2/program/localization/de_DE/labels.inc	2008-12-21 19:29:42.000000000 +0800
+@@ -245,4 +245,11 @@
+ $labels['sortasc'] = 'Aufsteigend sortieren';
+ $labels['sortdesc'] = 'Absteigend sortieren';
+ 
++// Plesk Change Password
++$labels['changepasswd']  = 'Passwort ändern';
++$labels['curpasswd']  = 'Altes Passwort';
++$labels['newpasswd']  = 'Neues Passwort';
++$labels['confpasswd']  = 'Neues Passwort wiederholen';
++
++
+ ?>
+diff -ruNb roundcubemail-0.2-beta2.orig/program/localization/de_DE/messages.inc roundcubemail-0.2-beta2/program/localization/de_DE/messages.inc
+--- roundcubemail-0.2-beta2.orig/program/localization/de_DE/messages.inc	2008-09-15 22:53:57.000000000 +0800
++++ roundcubemail-0.2-beta2/program/localization/de_DE/messages.inc	2008-12-21 19:29:42.000000000 +0800
+@@ -87,4 +87,12 @@
+ $messages['importconfirm'] = 'Es wurden $inserted Adressen erfolgreich importiert und $skipped bestehende Einträge übersprungen:$names';
+ $messages['opnotpermitted'] = 'Operation nicht erlaubt!';
+ 
++//Plesk Password Change
++$messages['nopassword'] = "Bitte das neue Passwort angeben.";
++$messages['passwordinconsistency'] = "Das neue Passwort stimmt nicht überein";
++$messages['passwordtooshort'] = 'Das neue Passwort ist zu kurz';
++$messages['passwordtoolong'] = 'Das neue Passwort ist zu lang';
++$messages['curpasswordincorrect'] = 'Das  alte Passwort ist falsch';
++
++
+ ?>
+diff -ruNb roundcubemail-0.2-beta2.orig/program/localization/en_US/labels.inc roundcubemail-0.2-beta2/program/localization/en_US/labels.inc
+--- roundcubemail-0.2-beta2.orig/program/localization/en_US/labels.inc	2008-09-19 16:17:05.000000000 +0800
++++ roundcubemail-0.2-beta2/program/localization/en_US/labels.inc	2008-12-21 19:29:32.000000000 +0800
+@@ -302,4 +302,10 @@
+ $labels['sortasc']  = 'Sort ascending';
+ $labels['sortdesc'] = 'Sort descending';
+ 
++// Plesk Change Password
++$labels['changepasswd']  = 'Change Password';
++$labels['curpasswd']  = 'Current Password';
++$labels['newpasswd']  = 'New Password';
++$labels['confpasswd']  = 'Confirm New Password';
++
+ ?>
+diff -ruNb roundcubemail-0.2-beta2.orig/program/localization/en_US/messages.inc roundcubemail-0.2-beta2/program/localization/en_US/messages.inc
+--- roundcubemail-0.2-beta2.orig/program/localization/en_US/messages.inc	2008-09-19 16:17:05.000000000 +0800
++++ roundcubemail-0.2-beta2/program/localization/en_US/messages.inc	2008-12-21 19:29:32.000000000 +0800
+@@ -91,4 +91,12 @@
+ $messages['importconfirm'] = '<b>Successfully imported $inserted contacts, $skipped existing entries skipped</b>:<p><em>$names</em></p>';
+ $messages['opnotpermitted'] = 'Operation not permitted!';
+ 
++//Plesk Password Change
++$messages['nopassword'] = "Please input new password.";
++$messages['passwordinconsistency'] = "New Passwords Do Not Match";
++$messages['passwordtooshort'] = 'New Password Too Short';
++$messages['passwordtoolong'] = 'New Password Too Long';
++$messages['curpasswordincorrect'] = 'Current Password Incorrect';
++
++
+ ?>
+\ No newline at end of file
+diff -ruNb roundcubemail-0.2-beta2.orig/program/localization/zh_CN/labels.inc roundcubemail-0.2-beta2/program/localization/zh_CN/labels.inc
+--- roundcubemail-0.2-beta2.orig/program/localization/zh_CN/labels.inc	2008-09-19 00:53:49.000000000 +0800
++++ roundcubemail-0.2-beta2/program/localization/zh_CN/labels.inc	2008-12-27 12:57:54.000000000 +0800
+@@ -246,4 +246,9 @@
+ $labels['sortasc'] = '递增排序';
+ $labels['sortdesc'] = '递减排序';
+ 
++$labels['changepasswd']  = '修改密码';
++$labels['curpasswd']  = '当前密码';
++$labels['newpasswd']  = '新密码';
++$labels['confpasswd']  = '再次输入新密码';
++
+ ?>
+diff -ruNb roundcubemail-0.2-beta2.orig/program/localization/zh_CN/messages.inc roundcubemail-0.2-beta2/program/localization/zh_CN/messages.inc
+--- roundcubemail-0.2-beta2.orig/program/localization/zh_CN/messages.inc	2008-09-19 00:53:49.000000000 +0800
++++ roundcubemail-0.2-beta2/program/localization/zh_CN/messages.inc	2008-12-27 12:57:50.000000000 +0800
+@@ -92,4 +92,11 @@
+ $messages['importconfirm'] = '成功导入 $inserted 联系人，$skipped 乎略已存在的联系人:$names';
+ $messages['opnotpermitted'] = '不允许的操作';
+ 
++//Plesk Password Change
++$messages['nopassword'] = '没有输入密码';
++$messages['passwordinconsistency'] = '新密碼不匹配';
++$messages['passwordtooshort'] = '密码太短';
++$messages['passwordtoolong'] = '密码太长';
++$messages['curpasswordincorrect'] = '密码错误';
++
+ ?>
+diff -ruNb roundcubemail-0.2-beta2.orig/program/localization/zh_TW/labels.inc roundcubemail-0.2-beta2/program/localization/zh_TW/labels.inc
+--- roundcubemail-0.2-beta2.orig/program/localization/zh_TW/labels.inc	2008-04-10 18:01:46.000000000 +0800
++++ roundcubemail-0.2-beta2/program/localization/zh_TW/labels.inc	2008-12-27 12:57:43.000000000 +0800
+@@ -190,4 +190,9 @@
+ $labels['sortasc'] = '遞增排序';
+ $labels['sortdesc'] = '遞減排序';
+ 
++$labels['changepasswd']  = '更改密碼';
++$labels['curpasswd']  = '目前密碼';
++$labels['newpasswd']  = '新密碼';
++$labels['confpasswd']  = '再次輸入新密碼';
++
+ ?>
+\ No newline at end of file
+diff -ruNb roundcubemail-0.2-beta2.orig/program/localization/zh_TW/messages.inc roundcubemail-0.2-beta2/program/localization/zh_TW/messages.inc
+--- roundcubemail-0.2-beta2.orig/program/localization/zh_TW/messages.inc	2008-02-15 13:43:32.000000000 +0800
++++ roundcubemail-0.2-beta2/program/localization/zh_TW/messages.inc	2008-12-27 12:57:47.000000000 +0800
+@@ -80,4 +80,11 @@
+ $messages['nodeletelastidentity'] = '你不能刪除此身份，因為只剩一個身份。';
+ $messages['addsubfolderhint'] = '此資料夾會成為目前所選資料夾的子資料夾';
+ 
++//Plesk Password Change
++$messages['nopassword'] = '請填入新密碼';
++$messages['passwordinconsistency'] = '新密碼不匹配';
++$messages['passwordtooshort'] = '新密碼太短';
++$messages['passwordtoolong'] = '新密碼太長';
++$messages['curpasswordincorrect'] = '密碼錯誤';
++
+ ?>
+\ No newline at end of file
+diff -ruNb roundcubemail-0.2-beta2.orig/program/steps/settings/func.inc roundcubemail-0.2-beta2/program/steps/settings/func.inc
+--- roundcubemail-0.2-beta2.orig/program/steps/settings/func.inc	2008-09-15 22:53:57.000000000 +0800
++++ roundcubemail-0.2-beta2/program/steps/settings/func.inc	2008-12-21 19:30:06.000000000 +0800
+@@ -372,7 +372,8 @@
+ $OUTPUT->add_handlers(array(
+   'userprefs' => 'rcmail_user_prefs_form',
+   'identitieslist' => 'rcmail_identities_list',
+-  'itentitieslist' => 'rcmail_identities_list'  // keep this for backward compatibility
++  'itentitieslist' => 'rcmail_identities_list',  // keep this for backward compatibility
++  'userpasswd' => 'rcmail_passwd_form'
+ ));
+ 
+ 
+diff -ruNb roundcubemail-0.2-beta2.orig/program/steps/settings/passwd.inc roundcubemail-0.2-beta2/program/steps/settings/passwd.inc
+--- roundcubemail-0.2-beta2.orig/program/steps/settings/passwd.inc	1970-01-01 08:00:00.000000000 +0800
++++ roundcubemail-0.2-beta2/program/steps/settings/passwd.inc	2008-12-27 12:50:10.000000000 +0800
+@@ -0,0 +1,159 @@
++<?php
++
++/*
++ -----------------------------------------------------------------------
++ | program/steps/settings/passwd.inc                                   |
++ |                                                                     |
++ | This file is part of the RoundCube Webmail client                   |
++ | Copyright (C) 2007, RoundCube Dev. - Switzerland                    |
++ |                                                                     |
++ | Passwd_Driver_poppassd Class (C) 2000-2007 Horde Project            |
++ |                                                                     |
++ | Licensed under the GNU GPL                                          |
++ |                                                                     |
++ | PURPOSE:                                                            |
++ |   Change IMAP user password for Plesk and other poppassd servers    |
++ |                                                                     |
++ | REQUIREMENTS:                                                       |
++ |   PHP, and Plesk or other poppassd server                           |
++ |                                                                     |
++ | Passwd_Driver_poppassd adopted from Horde Webmail                   |
++ |                                                                     |
++ -----------------------------------------------------------------------
++ | LDAP Version for 0.2-Beta2 Author: Billy <shing6326@yahoo.com.hk>   | 
++ | cPanel Version Author: Danny Herran <danny@ingeniarte.com>          |
++ | LDAP Version Author: Danny Herran <danny@ingeniarte.com>            | 
++ | Passwd_Driver_poppassd Author: Eric Jon Rostetter                   |
++ |                                <eric.rostetter@physics.utexas.edu>  |
++ | Modifications Made By: Mark Romero <mromero@simplewebworks.com>     |
++ | Update for RC 0.2-Beta2 By: Samuel Barabas <samuel@owee.de>         |
++ -----------------------------------------------------------------------
++
++ $Id: passwd.inc,v 0.2 2008/04/08 23:19:03 roundcube Exp $
++
++*/
++
++// The MIN length of a password for your serveras defined in /etc/login.defs
++// -1 for no min/max
++define("POPPASSD_MIN_LENGTH", 5); 
++define("POPPASSD_MAX_LENGTH", -1);
++
++function rcmail_save_passwd($curpasswd, $newpasswd){
++  global $CONFIG, $_SESSION, $OUTPUT, $RCMAIL;
++  
++  //$driver = new Passwd_Driver_poppassd(array('host'=>'localhost', 'port'=> '106'));
++  //$return = $driver->changePassword($_SESSION['username'], $curpasswd, $newpasswd);
++  $return = update_pass($_SESSION['username'], $curpasswd, $newpasswd);  
++
++  //If we didn't encountry a problem ($return[0] == true)
++  if ($return[0]) {
++	  //We update the password for the $this->encrypt_passwd($pass)current session
++	  $_SESSION['password'] = $RCMAIL->encrypt_passwd($newpasswd);
++  }
++  return $return;
++} 
++
++function update_pass($username, $old_password, $new_password) {
++  $ldap_host = "localhost";
++  list($user,$domain) = split("@", $username);
++  $dc_array = split('\\.', $domain);
++  foreach ($dc_array as $value)
++    $dc.="dc=".$value.",";
++  $dc=substr($dc, 0, -1);
++
++  $ldap_user = "mail=$username,domainName=$domain,o=domains,$dc";
++  $ldap_pass = $old_password;
++  if (!($connect = ldap_connect($ldap_host)))
++    die("Cannot connect to LDAP server");
++  ldap_set_option($connect, LDAP_OPT_PROTOCOL_VERSION, 3);
++  ldap_set_option($connect, LDAP_OPT_REFERRALS, 0);
++
++  if (!ldap_bind($connect, $ldap_user, $ldap_pass))
++    return array(false, "Incorrect Password");
++  $info['userPassword']="{MD5}".base64_encode(pack("H*",md5($new_password)));
++  if (ldap_modify($connect, $ldap_user, $info)) {
++    ldap_close($connect);
++    return array(true, "Success");
++  }
++  ldap_close($connect);
++  die("Cannot update new password");
++}
++
++function rcmail_passwd_form($attrib){
++  global $CONFIG, $OUTPUT;
++														    
++  list($form_start, $form_end) = get_form_tags($attrib, 'save-passwd');
++  unset($attrib['form']);
++														        
++  if (!$attrib['id'])
++    $attrib['id'] = 'rcmSavepassword';
++
++  // allow the following attributes to be added to the <table> tag
++  $attrib_str = create_attrib_string($attrib, array('style', 'class', 'id', 'cellpadding', 'cellspacing', 'border', 'summary'));
++
++  // return the complete edit form as table
++  $out = "$form_start<table" . $attrib_str . ">\n\n";
++
++  $a_show_cols = array('curpasswd'   => array('type' => 'text'), 'newpasswd'   => array('type' => 'text'), 'confpasswd'   => array('type' => 'text'));
++
++  // show current password field
++  $field_id = 'curpasswd';
++  $input_curpasswd = new html_passwordfield(array('name' => '_curpasswd', 'id' => $field_id, 'size' => 30));
++
++  $out .= sprintf("<tr><td class=\"title\"><label for=\"%s\">%s</label></td><td>%s</td></tr>\n", $field_id, rep_specialchars_output(rcube_label('curpasswd')), $input_curpasswd->show($CONFIG['curpasswd']));
++
++  // show new password selection
++  $field_id = 'newpasswd';
++  $input_newpasswd = new html_passwordfield(array('name' => '_newpasswd', 'id' => $field_id, 'size' => 30));
++
++  $out .= sprintf("<tr><td class=\"title\"><label for=\"%s\">%s</label></td><td>%s</td></tr>\n", $field_id, rep_specialchars_output(rcube_label('newpasswd')), $input_newpasswd->show($CONFIG['newpasswd']));
++
++  // show confirm password selection
++  $field_id = 'confpasswd';
++  $input_confpasswd = new html_passwordfield(array('name' => '_confpasswd', 'id' => $field_id, 'size' => 30));
++
++  $out .= sprintf("<tr><td class=\"title\"><label for=\"%s\">%s</label></td><td>%s</td></tr>\n", $field_id, rep_specialchars_output(rcube_label('confpasswd')), $input_confpasswd->show($CONFIG['confpasswd']));
++
++  $out .= "\n</table>$form_end";
++
++  return $out;  
++}
++
++// Handle user request
++if ($RCMAIL->action=='save-passwd'){
++
++  if (!isset($_POST['_newpasswd']) || !isset($_POST['_curpasswd']))
++    $OUTPUT->show_message('errorsaving', 'error');
++  elseif(POPPASSD_MIN_LENGTH != -1 && (strlen($_POST['_newpasswd']) < POPPASSD_MIN_LENGTH)) 
++    $OUTPUT->show_message('passwordtooshort', 'error');
++  elseif(POPPASSD_MIN_LENGTH != -1 && (strlen($_POST['_newpasswd']) < POPPASSD_MIN_LENGTH)) 
++    $OUTPUT->show_message('passwordtooshort', 'error');
++  elseif($_POST['_newpasswd'] != $_POST['_confpasswd'])
++    $OUTPUT->show_message('passwordinconsistency', 'error');
++  else
++  {
++    $return = rcmail_save_passwd(get_input_value('_curpasswd', RCUBE_INPUT_POST), get_input_value('_newpasswd', RCUBE_INPUT_POST));
++    if($return[0])
++      $OUTPUT->show_message('successfullysaved', 'confirmation');
++    else
++    {
++      if($return[1] == "Incorrect Password")
++        $OUTPUT->show_message('curpasswordincorrect', 'error');
++      else
++        $OUTPUT->show_message('errorsaving', 'error');
++    }
++  }
++
++  // overwrite action variable
++  rcmail_overwrite_action('passwd');
++
++}
++
++// add some labels to client
++rcube_add_label('nopassword');
++rcube_add_label('passwordtooshort');
++rcube_add_label('passwordtoolong');
++rcube_add_label('passwordinconsistency');
++rcube_add_label('curpasswordincorrect');
++$OUTPUT->send('passwd');
++?>
+diff -ruNb roundcubemail-0.2-beta2.orig/skins/default/includes/settingstabs.html roundcubemail-0.2-beta2/skins/default/includes/settingstabs.html
+--- roundcubemail-0.2-beta2.orig/skins/default/includes/settingstabs.html	2008-05-20 21:33:47.000000000 +0800
++++ roundcubemail-0.2-beta2/skins/default/includes/settingstabs.html	2008-12-21 19:30:50.000000000 +0800
+@@ -2,4 +2,5 @@
+ <span id="settingstabdefault" class="tablink"><roundcube:button command="preferences" type="link" label="preferences" title="editpreferences" /></span>
+ <span id="settingstabfolders" class="tablink"><roundcube:button command="folders" type="link" label="folders" title="managefolders" class="tablink" /></span>
+ <span id="settingstabidentities" class="tablink"><roundcube:button command="identities" type="link" label="identities" title="manageidentities" class="tablink" /></span>
++<span id="settingstabpasswd" class="tablink"><roundcube:button command="passwd" type="link" label="password" title="changepasswd" class="tablink" /></span>
+ </div>
+diff -ruNb roundcubemail-0.2-beta2.orig/skins/default/templates/passwd.html roundcubemail-0.2-beta2/skins/default/templates/passwd.html
+--- roundcubemail-0.2-beta2.orig/skins/default/templates/passwd.html	1970-01-01 08:00:00.000000000 +0800
++++ roundcubemail-0.2-beta2/skins/default/templates/passwd.html	2008-12-21 19:31:04.000000000 +0800
+@@ -0,0 +1,27 @@
++<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
++<html xmlns="http://www.w3.org/1999/xhtml">
++	<head>
++		<title><roundcube:object name="pagetitle" /></title>
++		<roundcube:include file="/includes/links.html" />
++		<link rel="stylesheet" type="text/css" href="/settings.css" />
++	</head>
++	<body>
++
++		<roundcube:include file="/includes/taskbar.html" />
++		<roundcube:include file="/includes/header.html" />
++		<roundcube:include file="/includes/settingstabs.html" />
++
++		<div id="userprefs-box">
++			<div id="userprefs-title"><roundcube:label name="changepasswd" /></div>
++
++			<div style="padding:15px">
++				<roundcube:object name="userpasswd">
++
++				<p><br /><roundcube:button command="save-passwd" type="input" class="button" label="save" /></p>
++			</div>
++		</div>
++
++		<roundcube:include file="/includes/settingscripts.html" />
++
++	</body>
++</html>
+\ No newline at end of file
