@@ -21,15 +21,15 @@ sm_install()
     ECHO_INFO "Create directory alias for squirrelmail in Apache: ${HTTPD_DOCUMENTROOT}/mail/."
     cat > ${HTTPD_CONF_DIR}/squirrelmail.conf <<EOF
 ${CONF_MSG}
-Alias /squirrelmail "${HTTPD_SERVERROOT}/squirrelmail-${SM_VERSION}/"
+Alias /squirrelmail "${SM_HTTPD_ROOT}/"
 EOF
 
     if [ X"${USE_RCM}" == X"YES" -o X"${USE_EXTMAIL}" == X"YES" ]; then
         :
     else
         cat >> ${HTTPD_CONF_DIR}/squirrelmail.conf <<EOF
-Alias /mail "${HTTPD_SERVERROOT}/squirrelmail-${SM_VERSION}/"
-Alias /webmail "${HTTPD_SERVERROOT}/squirrelmail-${SM_VERSION}/"
+Alias /mail "${SM_HTTPD_ROOT}/"
+Alias /webmail "${SM_HTTPD_ROOT}/"
 EOF
     fi
 
@@ -42,13 +42,12 @@ EOF
     cat >> ${TIP_FILE} <<EOF
 WebMail(SquirrelMail):
     * Configuration files:
-        - ${HTTPD_SERVERROOT}/squirrelmail-${SM_VERSION}/
-        - ${HTTPD_SERVERROOT}/squirrelmail-${SM_VERSION}/config/config.php
+        - ${SM_HTTPD_ROOT}
+        - ${SM_HTTPD_ROOT}/config/config.php
+        - ${HTTPD_CONF_DIR}/squirrelmail.conf
     * URL:
         - http://${HOSTNAME}/mail/
         - http://${HOSTNAME}/webmail/
-    * See also:
-        - ${HTTPD_CONF_DIR}/squirrelmail.conf
 
 EOF
 
