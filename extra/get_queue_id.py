@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys
+import sys, re, cStringIO
 
-#saveerr = sys.stderr
-#ferr= open('output.log', 'a')
-sys.stderr = open('output.log', 'w')
+output = cStringIO.StringIO()
+
+# Redirect sys.stderr to StringIO.
+# Note: Must redirect before import smtplib.
+sys.stderr = output
 
 import smtplib
 
@@ -22,6 +24,13 @@ server.set_debuglevel(1)
 #sys.stderr = open('output.log', 'a')
 server.sendmail(fromaddr, toaddrs, msg)
 
+# Restore sys.stderr.
 sys.stderr = sys.__stderr__
 
 server.quit()
+
+#print output.getvalue()
+
+r = re.compile('data:.*queued as (.*)\'.*send.*', re.DOTALL)
+queueid = r.findall(output.getvalue())
+print "Queue ID:", queueid[0]
