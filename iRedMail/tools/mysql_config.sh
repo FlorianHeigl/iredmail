@@ -15,7 +15,7 @@ while : ; do
     --insecure --passwordbox "\
 Please specify password for MySQL administrator: root
 
-Warnning:
+Warning:
 
     * EMPTY password is *NOT* permit.
 " 20 76 2>/tmp/mysql_rootpw
@@ -37,7 +37,7 @@ Please specify password for virtual hosts database admin user:
 
     * ${VMAIL_DB} admin user: ${MYSQL_ADMIN_USER}
 
-Warnning:
+Warning:
 
     * EMPTY password in *NOT* permit.
 

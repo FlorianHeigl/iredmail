@@ -39,7 +39,7 @@ Please specify the password of site admin in PostfixAdmin:
 
     * ${SITE_ADMIN_NAME}
 
-Warnning:
+Warning:
 
     * EMPTY password in *NOT* permit.
 

@@ -54,7 +54,7 @@ Please specify password for LDAP rootdn:
 
     * ${LDAP_ROOTDN}
 
-Warnning:
+Warning:
 
     * EMPTY password is *NOT* permit.
 " 20 76 2>/tmp/ldap_rootpw
@@ -77,7 +77,7 @@ Please specify password for vmail LDAP admin user:
 
     * admin dn: ${LDAP_ADMIN_DN}
 
-Warnning:
+Warning:
 
     * EMPTY password in *NOT* permit.
 

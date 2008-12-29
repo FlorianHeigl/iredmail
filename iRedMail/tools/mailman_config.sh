@@ -51,7 +51,7 @@ Please specify password for the person runing 'mailman' list:
 
     * ${FIRST_MAILING_LIST_OWNER}
 
-Warnning:
+Warning:
 
     * EMPTY password is *NOT* permit.
 " 20 76 2>/tmp/mailman_running_person_passwd

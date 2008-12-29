@@ -35,7 +35,7 @@ while : ; do
     --insecure --passwordbox "\
 Please specify password for awstats user: ${AWSTATS_USERNAME}
 
-Warnning:
+Warning:
 
     * EMPTY password is *NOT* permit.
 

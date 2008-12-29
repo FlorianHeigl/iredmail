@@ -41,6 +41,7 @@
 /gmail\.com$/       REJECT Go away, bad guy (gmail.com).
 /^google\.com$/     REJECT Go away, bad guy (google.com).
 /^yahoo\.com\.cn$/  REJECT Go away, bad guy (yahoo.com.cn).
+/^yahoo\.co\.jp$/               REJECT Go away, bad guy (yahoo.co.jp).
 
 #
 # Spammers.
@@ -49,7 +50,6 @@
 /^dsldevice\.lan$/              REJECT Go away, bad guy (dsldevice.lan).
 /^taj-co\.com$/                 REJECT Go away, bad guy (taj-co.com).
 /^CF8D3DB045C1455\.net$/        REJECT Go away, bad guy (CF8D3DB045C1455.net).
-/^yahoo\.co\.jp$/               REJECT Go away, bad guy (yahoo.co.jp).
 /^dsgsfdg\.com$/                REJECT Go away, bad guy (dsgsfdg.com).
 /^se\.nit7-ngbo\.com$/          REJECT Go away, bad guy (se.nit7-ngbo.com).
 /^mail\.goo\.ne\.jp$/           REJECT Go away, bad guy (mail.goo.ne.jp).

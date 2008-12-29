@@ -48,7 +48,7 @@ Please specify password for the administrator user:
 
     * ${FIRST_DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}
 
-Warnning:
+Warning:
 
     * EMPTY password is *NOT* permit.
 
@@ -91,7 +91,7 @@ Please specify password for your first user:
 
     * ${FIRST_USER}@${FIRST_DOMAIN}
 
-Warnning:
+Warning:
 
     * EMPTY password is *NOT* permit.
 
