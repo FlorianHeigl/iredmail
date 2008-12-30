@@ -40,17 +40,23 @@ extmail_config_basic()
     cat > ${HTTPD_CONF_DIR}/extmail.conf <<EOF
 ${CONF_MSG}
 <VirtualHost *:80>
-ServerName ${HOSTNAME}
+    ServerName ${HOSTNAME}
+    DocumentRoot ${HTTPD_DOCUMENTROOT}
 
-DocumentRoot ${HTTPD_DOCUMENTROOT}
+    ScriptAlias /extmail/cgi ${EXTMAIL_HTTPD_ROOT}/cgi
+    Alias /extmail ${EXTMAIL_HTTPD_ROOT}/html
 
-ScriptAlias /extmail/cgi ${EXTMAIL_HTTPD_ROOT}/cgi
-Alias /extmail ${EXTMAIL_HTTPD_ROOT}/html
+    #Alias /mail ${EXTMAIL_HTTPD_ROOT}/html
+    #Alias /webmail ${EXTMAIL_HTTPD_ROOT}/html
 
-#Alias /mail ${EXTMAIL_HTTPD_ROOT}/html
-#Alias /webmail ${EXTMAIL_HTTPD_ROOT}/html
+    SuexecUserGroup ${VMAIL_USER_NAME} ${VMAIL_GROUP_NAME}
 
-SuexecUserGroup ${VMAIL_USER_NAME} ${VMAIL_GROUP_NAME}
+    <Directory "${EXTMAIL_HTTPD_ROOT}/">
+        Options -Indexes
+    </Directory>
+    <Directory "${EXTMAIL_HTTPD_ROOT}/html/">
+        Options -Indexes
+    </Directory>
 </VirtualHost>
 EOF
 

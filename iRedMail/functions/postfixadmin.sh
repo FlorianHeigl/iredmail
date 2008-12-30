@@ -24,6 +24,9 @@ postfixadmin_install()
     cat > ${HTTPD_CONF_DIR}/postfixadmin.conf <<EOF
 ${CONF_MSG}
 Alias /postfixadmin "${POSTFIXADMIN_HTTPD_ROOT}/"
+<Directory "${POSTFIXADMIN_HTTPD_ROOT}/">
+    Options -Indexes
+</Directory>
 EOF
 
     if [ X"${SITE_ADMIN_NAME}" == X"${FIRST_DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}" ]; then

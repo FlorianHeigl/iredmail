@@ -1,4 +1,6 @@
 iRedMail-0.3.3:
+    * Add <Directory> container to disable autoindex in apache. Thanks
+      muniao@gmail.
     * Update Postfix to 2.5.5.
     * Add one more helo pcre rule, prepend helo identifier in mail header.
     * Add missing package 'perl-Encode-Detect', required by sa-update.

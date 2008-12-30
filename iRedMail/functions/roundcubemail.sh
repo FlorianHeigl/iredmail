@@ -88,9 +88,12 @@ EOF
     ECHO_INFO "Create directory alias for Roundcubemail."
     cat > ${HTTPD_CONF_DIR}/roundcubemail.conf <<EOF
 ${CONF_MSG}
-Alias /mail "${HTTPD_SERVERROOT}/roundcubemail-${RCM_VERSION}/"
-Alias /webmail "${HTTPD_SERVERROOT}/roundcubemail-${RCM_VERSION}/"
-Alias /roundcube "${HTTPD_SERVERROOT}/roundcubemail-${RCM_VERSION}/"
+Alias /mail "${RCM_HTTPD_ROOT}/"
+Alias /webmail "${RCM_HTTPD_ROOT}/"
+Alias /roundcube "${RCM_HTTPD_ROOT}/"
+<Directory "${RCM_HTTPD_ROOT}/">
+    Options -Indexes
+</Directory>
 EOF
 
     # Roundcubemail-0.1.1 only.

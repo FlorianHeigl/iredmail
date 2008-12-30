@@ -19,6 +19,9 @@ phpmyadmin_install()
     cat > ${HTTPD_CONF_DIR}/phpmyadmin.conf <<EOF
 ${CONF_MSG}
 Alias /phpmyadmin "${PHPMYADMIN_HTTPD_ROOT}/"
+<Directory "${PHPMYADMIN_HTTPD_ROOT}/">
+    Options -Indexes
+</Directory>
 EOF
 
     ECHO_INFO "Config phpMyAdmin: ${PHPMYADMIN_CONFIG_FILE}."

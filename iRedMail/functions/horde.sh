@@ -79,7 +79,7 @@ EOF
     cat > ${HTTPD_CONF_DIR}/horde.conf <<EOF
 ${CONF_MSG}
 <Directory ${HORDE_HTTPD_ROOT}>
-    Options +FollowSymLinks
+    Options +FollowSymLinks -Indexes
 
     # horde.org's recommended PHP settings:
     php_admin_flag safe_mode off

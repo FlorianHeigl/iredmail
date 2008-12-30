@@ -22,6 +22,9 @@ sm_install()
     cat > ${HTTPD_CONF_DIR}/squirrelmail.conf <<EOF
 ${CONF_MSG}
 Alias /squirrelmail "${SM_HTTPD_ROOT}/"
+<Directory "${SM_HTTPD_ROOT}/">
+    Options -Indexes
+</Directory>
 EOF
 
     if [ X"${USE_RCM}" == X"YES" -o X"${USE_EXTMAIL}" == X"YES" ]; then

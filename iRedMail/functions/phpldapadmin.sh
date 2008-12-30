@@ -28,6 +28,9 @@ pla_install()
 ${CONF_MSG}
 Alias /phpldapadmin "${PLA_HTTPD_ROOT}/"
 Alias /ldap "${PLA_HTTPD_ROOT}/"
+<Directory "${PLA_HTTPD_ROOT}/">
+    Options -Indexes
+</Directory>
 EOF
 
     cat >> ${TIP_FILE} <<EOF
