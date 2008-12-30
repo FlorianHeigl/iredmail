@@ -157,7 +157,7 @@ if [ X"${BACKEND}" == X"OpenLDAP" ]; then
     ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --title "Optional Components for ${BACKEND} backend" \
     --checklist "\
-iRedMail provides several optional components for LDAP backend, you can
+${PROG_NAME} provides several optional components for LDAP backend, you can
 use them by your own:
 " 20 76 5 \
     "phpLDAPadmin" "Web-based LDAP browser to manage your LDAP server." "on" \
@@ -192,7 +192,7 @@ elif [ X"${BACKEND}" == X"MySQL" ]; then
     ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --title "Optional Components for ${BACKEND} backend" \
     --checklist "\
-iRedMail provides several optional components for MySQL backend, you can use
+${PROG_NAME} provides several optional components for MySQL backend, you can use
 them by your own:
 " 20 76 5 \
     "phpMyAdmin" "Web-based MySQL database management." "on" \

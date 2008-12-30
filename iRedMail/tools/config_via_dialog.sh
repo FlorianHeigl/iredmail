@@ -12,16 +12,16 @@ trap "exit 255" 2
 check_arch
 
 DIALOG='dialog --no-collapse'
-DIALOG_BACKTITLE='iRedMail: Mail Server Installation Wizard for RHEL/CentOS 5.x'
+DIALOG_BACKTITLE="${PROG_NAME}: Mail Server Installation Wizard for RHEL/CentOS 5.x"
 
 # Welcome message.
 ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --title "Welcome and thanks for use" \
     --msgbox "\
-Thanks for your use of iRedMail.
+Thanks for your use of ${PROG_NAME}.
 Feedback, bug report, communication are all welcome.
 
-Contact me if you need help for iRedMail or RHEL/CentOS:
+Contact me if you need help for ${PROG_NAME} or RHEL/CentOS:
 
     * Author:       Bibby
     * Mail/GTalk:   michaelbibby (at) gmail.com
