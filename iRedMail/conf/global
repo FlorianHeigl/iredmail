@@ -125,6 +125,9 @@ export CRON_SPOOL_DIR="/var/spool/cron"
 # Logrotate configuration directory.
 export LOG_ROTATE_DIR='/etc/logrotate.d'
 
+# Yum repos.d directory.
+export YUM_REPOS_DIR='/etc/yum.repos.d'
+
 # Make some command operating system independent.
 if [ X"${KERNEL_NAME}" == X"Linux" -a -f /etc/redhat-release ]; then
     # RHEL/CentOS

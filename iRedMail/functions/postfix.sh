@@ -69,6 +69,15 @@ EOF
     postconf -e maximal_queue_lifetime='1d'
     postconf -e bounce_queue_lifetime='1d'
 
+    #
+    # Standalone smtpd_helo_restrictions.
+    #
+    postconf -e smtpd_helo_required="yes"
+    postconf -e smtpd_helo_restrictions="permit_mynetworks,permit_sasl_authenticated, check_helo_access pcre:${POSTFIX_FILE_HELO_ACCESS}"
+
+    backup_file ${POSTFIX_FILE_HELO_ACCESS}
+    cp -f ${SAMPLE_DIR}/helo_access.pcre ${POSTFIX_FILE_HELO_ACCESS}
+
     # Reduce queue run delay time.
     postconf -e queue_run_delay='300s'          # default '300s' in postfix-2.4.
     postconf -e minimal_backoff_time='300s'     # default '300s' in postfix-2.4.
@@ -79,7 +88,7 @@ EOF
 
     # Disable the SMTP VRFY command. This stops some techniques used to
     # harvest email addresses.
-    postconf -e disable_vrfy_command = yes
+    postconf -e disable_vrfy_command='yes'
 
     # We use 'maildir' format, not 'mbox'.
     if [ X"${HOME_MAILBOX}" == X"Maildir" ]; then
@@ -103,7 +112,7 @@ EOF
     postconf -e alias_maps="hash:${POSTFIX_FILE_ALIASES}"
     postconf -e alias_database="hash:${POSTFIX_FILE_ALIASES}"
     postalias hash:${POSTFIX_FILE_ALIASES}
-    newaliases
+    newaliases >/dev/null 2>&1
 
     # Set message_size_limit.
     postconf -e mailbox_size_limit="${MESSAGE_SIZE_LIMIT}"
@@ -568,7 +577,6 @@ postfix_config_sasl()
     postconf -e smtpd_sasl_local_domain=''
     postconf -e smtpd_sasl_security_options="noanonymous"
     postconf -e broken_sasl_auth_clients="yes"
-    postconf -e smtpd_helo_required="yes"
 
     # Report the SASL authenticated user name in Received message header.
     # Used to reject backscatter.
@@ -579,13 +587,6 @@ postfix_config_sasl()
     # ----8<----
     # Default is 'no'.
     postconf -e smtpd_sasl_authenticated_header="no"
-
-    #
-    # Standalone smtpd_helo_restrictions.
-    #
-    postconf -e smtpd_helo_restrictions="permit_mynetworks,permit_sasl_authenticated, check_helo_access pcre:${POSTFIX_FILE_HELO_ACCESS}"
-    backup_file ${POSTFIX_FILE_HELO_ACCESS}
-    cp -f ${SAMPLE_DIR}/helo_access.pcre ${POSTFIX_FILE_HELO_ACCESS}
 
     # smtpd_recipient_restrictions reference:
     #   http://www.postfix.org/SASL_README.html
@@ -618,7 +619,7 @@ postfix_config_sasl()
 
 postfix_config_tls()
 {
-    ECHO_INFO "Enable TLS/SSL support in Dovecot."
+    ECHO_INFO "Enable TLS/SSL support in Postfix."
 
     cat >> ${POSTFIX_FILE_MAIN_CF} <<EOF
 #
