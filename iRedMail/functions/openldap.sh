@@ -44,10 +44,11 @@ disallow    bind_anon
 #require     LDAPv3
 allow       bind_v2
 
-# For debug
-#loglevel   -1
-#loglevel   64
-#loglevel   256
+# Log level.
+#   -1:     enable all debugging
+#    0:     no debugging
+#   128:    access control list processing
+#   256:    stats log connections/operations/results
 loglevel    0
 
 #

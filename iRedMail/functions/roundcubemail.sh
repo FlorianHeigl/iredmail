@@ -64,6 +64,10 @@ EOF
 
     perl -pi -e 's#(.*db_dsnw.*= )(.*)#${1}"mysql://$ENV{'RCM_DB_USER'}:$ENV{'RCM_DB_PASSWD'}\@$ENV{'MYSQL_SERVER'}/$ENV{'RCM_DB'}";#' db.inc.php
 
+    # Disable installer.
+    perl -pi -e 's#(.*enable_installer.*= )(.*)#${1}FALSE;#' main.inc.php
+    perl -pi -e 's#(.*check_all_folders.*= )(.*)#${1}TRUE;#' main.inc.php
+
     perl -pi -e 's#(.*default_host.*= )(.*)#${1}"$ENV{'IMAP_SERVER'}";#' main.inc.php
     perl -pi -e 's#(.*smtp_server.*= )(.*)#${1}"$ENV{'SMTP_SERVER'}";#' main.inc.php
     perl -pi -e 's#(.*smtp_user.*= )(.*)#${1}"%u";#' main.inc.php

@@ -1,4 +1,6 @@
 iRedMail-0.3.3:
+    * Fix incorrect parameter in postfix ldap lookup table: debug_level =>
+      debuglevel.
     * Add <Directory> container to disable autoindex in apache. Thanks
       muniao@gmail.
     * Update Postfix to 2.5.5.

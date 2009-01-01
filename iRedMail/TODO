@@ -1,3 +1,5 @@
+* Add directory alias to ssl.conf.
+* Make phpldapadmin, postfixadmin, phpmyadmin ssl only.
 * SRS.
 * Roundcubemail plugin:
     * Add recipient to address book and policyd_rcpt (per-user whitelist)
@@ -6,5 +8,3 @@
       table').
 
 * One domain, one uid, one gid.
-* Apache in Jail (chrooted).
-* MySQL in Jail (chrooted).

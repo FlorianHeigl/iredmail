@@ -148,6 +148,14 @@ start_postfix_now()
 
 clear_away()
 {
+    cat <<EOF
+
+*************************************************************************
+* ${PROG_NAME}-${PROG_VERSION} installation and configuration complete.
+*************************************************************************
+
+EOF
+
     check_status_before_run disable_selinux
     check_status_before_run remove_sendmail
     check_status_before_run disable_iredmail_repo
@@ -159,8 +167,8 @@ clear_away()
     cat <<EOF
 
 ********************************************************************
-* Congratulations, mail server installation complete. Please refer *
-* to tip file for more information:
+* Congratulations, mail server setup complete. Please refer to tip
+* file for more information:
 *
 *   - ${TIP_FILE}
 *
