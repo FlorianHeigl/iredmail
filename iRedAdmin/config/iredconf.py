@@ -5,9 +5,17 @@
 
 PROG = 'iRedAdmin'
 
+# Default skin: default.
 SKIN = 'default'
-LANG = 'zh_CN'
 
+# Default language: en_US, zh_CN.
+LANG = 'en_US'
+
+# Backend you used to store virtual domains and users: mysql, ldap.
+BACKEND = 'ldap'
+
+# Session store: shelf, mysql, disk.
+SESSION_STORE = 'disk'
 
 # MySQL configure.
 DB_SERVER_ADDR = 'localhost'
@@ -15,7 +23,10 @@ DB_SERVER_PORT = 3306
 
 # Session relate config.
 SESSION_DB_DBN = 'mysql'
-SESSION_DB_NAME = 'vmail'
-SESSION_DB_USER = 'vmailadmin'
+SESSION_DB_NAME = 'iredadmin'
+SESSION_DB_USER = 'iredadmin'
 SESSION_DB_PASSWD = 'passwd'
 SESSION_DB_TABLE_SESSION = 'sessions'
+
+# Run webpy in debug mode: True, False.
+DEBUG = True

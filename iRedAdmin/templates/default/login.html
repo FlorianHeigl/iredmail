@@ -1,12 +1,11 @@
-$def with(form)
+$def with(form, msg)
 
-<html>
-    <head>
-        <title>$_('Login')</title>
-    </head>
-    <body>
+$var title: $_('Login')
+
 <h1>$_('Login')</h1>
+
 <form method="POST">
+    $if msg != None:
+        <strong>$msg</strong>
     $:form.render()
 </form>
-</body>

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2008-12-05 21:33+HKT\n"
+"POT-Creation-Date: 2008-12-18 21:47+HKT\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,20 +15,52 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: ../iredadmin.py:95
-msgid "Must be a valid email address"
+#: ../iredadmin.py:98
+msgid "Sorry, Page not found."
 msgstr ""
 
-#: ../iredadmin.py:97
+#: ../iredadmin.py:102
+msgid "Empty is not allowed."
+msgstr ""
+
+#: ../iredadmin.py:103
+msgid "Username must be a valid email address"
+msgstr ""
+
+#: ../iredadmin.py:106
 msgid "Username:"
 msgstr ""
 
-#: ../iredadmin.py:98
+#: ../iredadmin.py:107
 msgid "Password:"
 msgstr ""
 
-#: ../iredadmin.py:99 ../templates/default/login.html:5
-#: ../templates/default/login.html:8
+#: ../iredadmin.py:108 ../templates/default/login.html:3
+#: ../templates/default/login.html:5
 msgid "Login"
+msgstr ""
+
+#: ../iredadmin.py:110
+msgid "Username must be a valid email address."
+msgstr ""
+
+#: ../iredadmin.py:163
+msgid "Username or password is incorrect"
+msgstr ""
+
+#: ../templates/default/dashboard.html:1 ../templates/default/layout.html:12
+msgid "Dashboard"
+msgstr ""
+
+#: ../templates/default/domains.html:1 ../templates/default/layout.html:12
+msgid "Domains"
+msgstr ""
+
+#: ../templates/default/layout.html:12
+msgid "Logout"
+msgstr ""
+
+#: ../templates/default/notfound.html:1
+msgid "Page not found."
 msgstr ""
 
