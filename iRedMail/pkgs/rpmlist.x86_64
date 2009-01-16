@@ -27,12 +27,12 @@ policyd-1.82-4.rhms.x86_64.rpm
 unrar-3.8.2-1.el5.rf.x86_64.rpm
 perl-BerkeleyDB-0.36-1.el5.rf.x86_64.rpm
 perl-Compress-Raw-Zlib-2.015-1.el5.rf.x86_64.rpm
-perl-rrdtool-1.2.28-1.el5.rf.x86_64.rpm
-rrdtool-1.2.28-1.el5.rf.x86_64.rpm
 php-eaccelerator-5.1.6_0.9.5.2-4.el5.rf.x86_64.rpm
 clamav-0.94.2-1.el5.rf.x86_64.rpm
 clamav-db-0.94.2-1.el5.rf.x86_64.rpm
 clamd-0.94.2-1.el5.rf.x86_64.rpm
-dovecot-1.1.7-0_84.el5.x86_64.rpm
 perl-Encode-Detect-1.01-1.el5.rf.x86_64.rpm
 postfix-2.5.5-3.ired.x86_64.rpm
+dovecot-1.1.8-0_85.el5.x86_64.rpm
+perl-rrdtool-1.2.29-1.el5.rf.x86_64.rpm
+rrdtool-1.2.29-1.el5.rf.x86_64.rpm
