@@ -1,4 +1,5 @@
 iRedMail-0.3.3:
+    * Remove pysieved. nobody use it.
     * Update packages: Dovecot => 1.1.8, rrdtool => 1.2.29.
     * Fix incorrect parameter in postfix ldap lookup table: debug_level =>
       debuglevel.
