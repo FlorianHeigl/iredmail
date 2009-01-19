@@ -1,7 +1,8 @@
 #
 # Sample dovecot sieve global rules. It should be localted at:
 #   /home/vmail/.dovecot.sieve
-# Replace /home/vmail/ by your mail store directory.
+# Refer to 'sieve_global_path' parameter for the file localtion on
+# your server.
 #
 # Shipped within iRedMail project:
 #   * http://code.google.com/p/iredmail/
@@ -15,11 +16,14 @@ require ["fileinto", "reject", "include"];
 # -------------------------------------------------
 # --------------- Global sieve rules --------------
 # -------------------------------------------------
+
+# Spam control.
 if header :matches ["X-Spam-Flag"] ["YES"] {
-    # If you want to copy this spam mail to another person, uncomment
-    # the below line. More then one people should use another 'redirect'
-    # command.
-    #redirect "user@domain.ltd";
+    # If you want to copy this spam mail to other people, uncomment
+    # the below line.
+    # Note: one person, one command.
+    #redirect "user1@domain.ltd";
+    #redirect "user2@domain.ltd";
 
     # Keep this mail in INBOX.
     keep;
@@ -34,21 +38,3 @@ if header :matches ["X-Spam-Flag"] ["YES"] {
     # If you ensure they are spam, you can discard it.
     #discard;
 }
-
-#
-# Mail size control.
-#
-
-# Single line.
-#if size :over 1M {
-#    reject "Mail size is larger than 1MB. Please contact michaelbibby <at> gmail to solve this issue.";
-#}
-
-# Multi lines.
-#if size: over 2M {
-#    reject text:
-#Mail size is larger than 1MB.
-#Please contact michaelbibby <at> gmail to solve this issue.
-#.
-#;
-#}
