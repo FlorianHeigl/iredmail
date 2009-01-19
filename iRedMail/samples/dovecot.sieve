@@ -1,8 +1,8 @@
 #
 # Sample dovecot sieve global rules. It should be localted at:
 #   /home/vmail/.dovecot.sieve
-# Refer to 'sieve_global_path' parameter for the file localtion on
-# your server.
+# Refer to 'sieve_global_path' parameter for the file localtion
+# in dovecot.conf on your server.
 #
 # Shipped within iRedMail project:
 #   * http://code.google.com/p/iredmail/
