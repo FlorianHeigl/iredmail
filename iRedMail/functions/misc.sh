@@ -62,6 +62,9 @@ replace_iptables_rule()
                 :
             fi
 
+            # Mark iptables as enabled service.
+            chkconfig --level 345 iptables on
+
             # Prompt to restart iptables.
             ECHO_QUESTION -n "Restart iptables now? [y|N]"
             read ANSWER
