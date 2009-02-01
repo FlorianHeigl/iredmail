@@ -33,6 +33,40 @@ echo ${SPF_DKIM} | grep -i '\<DKIM\>' >/dev/null 2>&1
 [ X"$?" == X"0" ] && ENABLE_DKIM='YES' && echo "export ENABLE_DKIM='YES'" >>${CONFIG_FILE}
 
 # --------------------------------------------------
+# ------------- pysieved: managesieve service ------
+# --------------------------------------------------
+${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
+    --title "Managesieve Server" \
+    --radiolist "\
+Do you want to use managesieve service?
+
+The ManageSieve protocol was proposed to manage sieve scripts on the
+server without the need for direct file system access by the users.
+
+" 20 76 3 \
+    "pysieved" "Python Managesieve Server." "on" \
+    2>/tmp/managesieve
+
+MANAGESIEVE="$(cat /tmp/managesieve)"
+rm -f /tmp/managesieve
+
+if [ ! -z ${MANAGESIEVE} ]; then
+    export USE_MANAGESIEVE='YES'
+    echo "export USE_MANAGESIEVE='YES'" >> ${CONFIG_FILE}
+
+    # pysieved.
+    echo ${MANAGESIEVE} | grep -i 'pysieved' >/dev/null 2>&1
+    if [ X"$?" == X"0" ]; then
+        export USE_PYSIEVED='YES'
+        echo "export USE_PYSIEVED='YES'" >> ${CONFIG_FILE}
+    else
+        :
+    fi
+else
+    :
+fi
+
+# --------------------------------------------------
 # ------------- POP3(s)/IMAP(s) --------------------
 # --------------------------------------------------
 ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \

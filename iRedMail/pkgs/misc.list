@@ -33,6 +33,9 @@ ${PLUGIN_EMAIL_FOOTER_TARBALL}
 # SquirrelMail plugin: Email Footer.
 ${PLUGIN_LOGIN_AUTO}
 
+# SquirrelMail plugin: Avelsieve.
+${PLUGIN_AVELSIEVE}
+
 # SquirrelMail plugin: add_address.
 ${PLUGIN_ADD_ADDRESS}
 

@@ -331,6 +331,28 @@ sm_plugin_add_address()
 }
 
 #
+# For SquirrelMail plugin: avelsieve.
+#
+sm_plugin_avelsieve()
+{
+    ECHO_INFO "Install SquirrelMail plugin: avelsieve."
+
+    cd ${MISC_DIR}
+    extract_pkg ${PLUGIN_AVELSIEVE} ${SM_PLUGIN_DIR}
+    chown -R apache:apache ${SM_PLUGIN_DIR}/avelsieve
+    chmod -R 755 ${SM_PLUGIN_DIR}/avelsieve
+
+    # Patch file reference:
+    # http://woozle.org/list-archives/pysieved/msg00227.html
+    cd ${SM_PLUGIN_DIR}/avelsieve/ && \
+    cp config_sample.php config.php && \
+    perl -pi -e 's#(.*preferred_mech.*=.*)(PLAIN)(";)#${1}LOGIN${3}#' config.php && \
+    patch -p0 < ${PATCH_DIR}/squirrelmail/sieve-php.lib.php.patch >/dev/null
+
+    echo 'export status_sm_plugin_avelsieve="DONE"' >> ${STATUS_FILE}
+}
+
+#
 # LDAP backend.
 #
 # For squirrelmail plugin: change_ldappass.
@@ -476,6 +498,13 @@ sm_plugin_all()
     check_status_before_run sm_plugin_email_footer
     check_status_before_run sm_plugin_login_auto
     check_status_before_run sm_plugin_add_address
+
+    # Enable avelsieve plugin.
+    if [ X"${USE_MANAGESIEVE}" == X"YES" ]; then
+        check_status_before_run sm_plugin_avelsieve
+    else
+        :
+    fi
 
     # Backend depend.
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then

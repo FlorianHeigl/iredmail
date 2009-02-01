@@ -193,3 +193,45 @@ EOF
     echo 'status_horde_config_turba="YES"' >> ${STATUS_FILE}
 }
 
+# Ingo is Email Filter Rules Manager.
+horde_config_ingo()
+{
+    if [ X"${USE_MANAGESIEVE}" == X"YES" ]; then
+        ECHO_INFO "Setting up managesieve service (pysieved) for Horde (Ingo)."
+
+        backup_file ${HORDE_INGO_CONFIG_DIR}/backends.php
+        cat > ${HORDE_INGO_CONFIG_DIR}/backends.php <<EOF
+<?php
+\$backends['sieve'] = array(
+    'driver' => 'timsieved',
+    'preferred' => "${FIRST_DOMAIN}",
+    'hordeauth' => false,
+    'params' => array(
+        // Hostname of the timsieved server
+        'hostspec' => "${PYSIEVED_BINDADDR}",
+        // Login type of the server
+        'logintype' => 'LOGIN',
+        // Enable/disable TLS encryption
+        'usetls' => false,
+        // Port number of the timsieved server
+        'port' => ${PYSIEVED_PORT},
+        // Name of the sieve script
+        'scriptname' => "${SIEVE_RULE_FILENAME}",
+    ),
+    'script' => 'sieve',
+    'scriptparams' => array(),
+    'shares' => false
+);
+EOF
+    else
+        :
+    fi
+
+    cat >> ${TIP_FILE} <<EOF
+Horde Ingo Mail Filter Rule Manager:
+    * Configuration files:
+        - ${HORDE_INGO_CONFIG_DIR}/backends.php
+EOF
+
+    echo 'status_horde_config_ingo="YES"' >> ${STATUS_FILE}
+}

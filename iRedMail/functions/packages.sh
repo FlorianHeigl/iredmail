@@ -88,6 +88,9 @@ install_all()
         :
     fi
 
+    # pysieved.
+    ALL_PKGS="${ALL_PKGS} pysieved.noarch"
+
     # Awstats.
     [ X"${USE_AWSTATS}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} awstats.noarch"
 

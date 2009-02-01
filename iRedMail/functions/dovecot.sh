@@ -169,6 +169,14 @@ plugin {
     # If you have a non-default path to auth-master, set also:
     auth_socket_path = ${DOVECOT_SOCKET_MASTER}
 }
+
+# Per-user sieve mail filter.
+plugin {
+    # NOTE: %variable expansion works only with Dovecot v1.0.2+.
+    # For maildir format.
+    sieve = ${SIEVE_DIR}/%Ld/%Ln/${SIEVE_RULE_FILENAME}
+}
+
 EOF
     elif [ X"${HOME_MAILBOX}" == X"mbox" ]; then
         cat >> ${DOVECOT_CONF} <<EOF
@@ -192,6 +200,12 @@ plugin {
     quota_rule = *:storage=10M
     #quota_rule2 = Trash:storage=100M
     #quota_rule3 = Junk:ignore
+}
+
+plugin {
+    # NOTE: %variable expansion works only with Dovecot v1.0.2+.
+    # For mbox format.
+    sieve = ${SIEVE_DIR}/%Ld/.%Ln${SIEVE_RULE_FILENAME}
 }
 EOF
     else
@@ -258,10 +272,11 @@ default_pass_scheme = CRYPT
 EOF
         # Maildir format.
         [ X"${HOME_MAILBOX}" == X"Maildir" ] && cat >> ${DOVECOT_LDAP_CONF} <<EOF
-user_attrs      = homeDirectory=home,mailMessageStore=maildir:mail,${LDAP_ATTR_USER_QUOTA}=quota_rule=*:bytes=%\$
+user_attrs      = homeDirectory=home,=sieve_dir=${SIEVE_DIR}/%Ld/%Ln/,mailMessageStore=maildir:mail,${LDAP_ATTR_USER_QUOTA}=quota_rule=*:bytes=%\$
 EOF
         [ X"${HOME_MAILBOX}" == X"mbox" ] && cat >> ${DOVECOT_LDAP_CONF} <<EOF
-user_attrs      = homeDirectory=home,mailMessageStore=dirsize:mail,${LDAP_ATTR_USER_QUOTA}=quota_rule=*:bytes=%\$
+#    sieve = /%Lh/%Ld/.%Ln${SIEVE_RULE_FILENAME}
+user_attrs      = homeDirectory=home,=sieve_dir=${SIEVE_DIR}/%Ld/%Ln/,mailMessageStore=dirsize:mail,${LDAP_ATTR_USER_QUOTA}=quota_rule=*:bytes=%\$
 EOF
     else
         cat >> ${DOVECOT_CONF} <<EOF
@@ -281,6 +296,7 @@ EOF
         # Maildir format.
         [ X"${HOME_MAILBOX}" == X"Maildir" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
 user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, \
+    "${SIEVE_DIR}/%Ld/%Ln/" AS sieve_dir, \
     CONCAT('*:bytes=', quota*1048576) AS quota_rule, \
     maildir FROM mailbox \
     WHERE username='%u' \
@@ -290,6 +306,7 @@ user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, \
 EOF
         [ X"${HOME_MAILBOX}" == X"mbox" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
 user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, \
+    "${SIEVE_DIR}/%Ld/%Ln/" AS sieve_dir, \
     CONCAT('*:bytes=', quota*1048576) AS quota_rule, \
     maildir FROM mailbox \
     WHERE username='%u' \
