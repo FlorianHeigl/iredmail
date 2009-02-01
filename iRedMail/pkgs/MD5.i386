@@ -18,7 +18,6 @@ f23703534d9982812245a75454d062ea  rpms/cabextract-1.2-1.el5.rf.i386.rpm
 fa2d06450fbe3f9b0dedba655133f2fb  rpms/unarj-2.63-0.a.2.el5.rf.i386.rpm
 b00545064abb6714ad78a6fd3d51b79e  rpms/perl-NetAddr-IP-4.007-1.el5.rf.i386.rpm
 b202afff9e0d5af2b092d392a75e7a59  rpms/perl-version-0.74-1.el5.rf.i386.rpm
-3ee9ea21a7fad9599d417e931ab2f681  rpms/dovecot-sieve-1.1.5-8.el5.i386.rpm
 f4d04c5cc21515625534c9f557eb11b4  rpms/amavisd-new-2.6.1-1.ired.i386.rpm
 0e6e9555d4ed671075e8b1f238d02b13  rpms/php-pecl-fileinfo-1.0.4-1.el5.rf.i386.rpm
 e89ad55c67811e700c4e3cba55b097e5  rpms/perl-Convert-UUlib-1.11-1.ired.i386.rpm
@@ -35,3 +34,4 @@ ced6000f91e2f64a92753bee0236ff67  rpms/php-eaccelerator-5.1.6_0.9.5.2-4.el5.rf.i
 0469a32b09827b90b29ea02c6c3f349e  rpms/perl-rrdtool-1.2.29-1.el5.rf.i386.rpm
 ab2357d2743ecb89019f88b62e5b679b  rpms/rrdtool-1.2.29-1.el5.rf.i386.rpm
 8101eb702e6e05b14a153aa54b553174  rpms/postfix-2.5.6-4.ired.i386.rpm
+959211ca749f17da9219b916b00654d9  rpms/dovecot-sieve-1.1.6-9.el5.i386.rpm

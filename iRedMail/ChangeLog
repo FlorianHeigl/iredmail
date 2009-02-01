@@ -1,4 +1,5 @@
 iRedMail-0.3.3:
+    * Update dovecot-sieve to 1.1.6.
     * Use variable to control whether download packages from official yum
       repository or not.
     * Hardcode CONFIG_FILE and TIP_FILE location, under '/root'.

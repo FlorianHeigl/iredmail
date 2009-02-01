@@ -20,7 +20,6 @@ ripole-0.2.0-1.2.el5.rf.x86_64.rpm
 unarj-2.63-0.a.2.el5.rf.x86_64.rpm
 zoo-2.10-2.2.el5.rf.x86_64.rpm
 amavisd-new-2.6.1-1.ired.x86_64.rpm
-dovecot-sieve-1.1.5-8.el5.x86_64.rpm
 php-pecl-fileinfo-1.0.4-1.el5.rf.x86_64.rpm
 perl-Convert-UUlib-1.11-1.ired.x86_64.rpm
 policyd-1.82-4.rhms.x86_64.rpm
@@ -36,3 +35,4 @@ dovecot-1.1.8-0_85.el5.x86_64.rpm
 perl-rrdtool-1.2.29-1.el5.rf.x86_64.rpm
 rrdtool-1.2.29-1.el5.rf.x86_64.rpm
 postfix-2.5.6-4.ired.x86_64.rpm
+dovecot-sieve-1.1.6-9.el5.x86_64.rpm
