@@ -32,7 +32,7 @@ clamav-0.94.2-1.el5.rf.i386.rpm
 clamav-db-0.94.2-1.el5.rf.i386.rpm
 clamd-0.94.2-1.el5.rf.i386.rpm
 perl-Encode-Detect-1.01-1.el5.rf.i386.rpm
-postfix-2.5.5-3.ired.i386.rpm
 dovecot-1.1.8-0_85.el5.i386.rpm
 perl-rrdtool-1.2.29-1.el5.rf.i386.rpm
 rrdtool-1.2.29-1.el5.rf.i386.rpm
+postfix-2.5.6-4.ired.i386.rpm
