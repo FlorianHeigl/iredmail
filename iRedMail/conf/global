@@ -18,7 +18,10 @@ export HOME_MAILBOX='Maildir'
 # Such as:
 #   - MySQL server address and root user acount (conf/mysql).
 #   - Path of apache/php config file path (conf/httpd).
-USE_EXIST_AMP="NO"
+export USE_EXIST_AMP='NO'
+
+# Download packages from iredmail yum repository or not.
+export DOWNLOAD_PKGS='YES'
 
 # For distribute deployment.
 export IMAP_SERVER='127.0.0.1'
@@ -69,9 +72,9 @@ export DATE="$(/bin/date +%Y.%m.%d_%H.%M.%S)"
 
 # Tools.
 export CONFIG_VIA_DIALOG="${TOOLS_DIR}/config_via_dialog.sh"
-# Note: config file will be sourced in 'conf/functions', check_env().
-export CONFIG_FILE="${ROOTDIR}/config"
-export TIP_FILE="${ROOTDIR}/${PROG_NAME}.tips"
+# Note: config file will be sourced in file 'conf/functions', function 'check_env()'.
+export CONFIG_FILE="/root/${PROG_NAME}.config"
+export TIP_FILE="/root/${PROG_NAME}.tips"
 export STATUS_FILE="${ROOTDIR}/.${PROG_NAME}.installation.status"
 
 # Output flag.

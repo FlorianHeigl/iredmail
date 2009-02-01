@@ -65,45 +65,54 @@ prepare_dirs()
 
 fetch_rpms()
 {
-    cd ${PKG_DIR}
+    if [ X"${DOWNLOAD_PKGS}" == X"YES" ]; then
+        cd ${PKG_DIR}
 
-    rpm_total=$(cat ${RPMLIST} ${NOARCHLIST} | wc -l | awk '{print $1}')
-    rpm_count=1
+        rpm_total=$(cat ${RPMLIST} ${NOARCHLIST} | wc -l | awk '{print $1}')
+        rpm_count=1
 
-    for i in $(cat ${RPMLIST} ${NOARCHLIST}); do
-        ECHO_INFO "Fetching package: (${rpm_count}/${rpm_total}) $(eval echo ${i})..."
-        ${FETCH_CMD} ${MIRROR}/rpms/5/${i}
+        for i in $(cat ${RPMLIST} ${NOARCHLIST}); do
+            ECHO_INFO "Fetching package: (${rpm_count}/${rpm_total}) $(eval echo ${i})..."
+            ${FETCH_CMD} ${MIRROR}/rpms/5/${i}
 
-        rpm_count=$((rpm_count+1))
-    done
+            rpm_count=$((rpm_count+1))
+        done
+    else
+        :
+    fi
 }
 
 fetch_misc()
 {
-    . ${CONF_DIR}/pypolicyd-spf
-    . ${CONF_DIR}/squirrelmail
-    . ${CONF_DIR}/phpldapadmin
-    . ${CONF_DIR}/roundcube
-    . ${CONF_DIR}/postfixadmin
-    . ${CONF_DIR}/phpmyadmin
-    . ${CONF_DIR}/extmail
-    . ${CONF_DIR}/horde
+    if [ X"${DOWNLOAD_PKGS}" == X"YES" ]; then
+        # Source relate config files.
+        . ${CONF_DIR}/pypolicyd-spf
+        . ${CONF_DIR}/squirrelmail
+        . ${CONF_DIR}/phpldapadmin
+        . ${CONF_DIR}/roundcube
+        . ${CONF_DIR}/postfixadmin
+        . ${CONF_DIR}/phpmyadmin
+        . ${CONF_DIR}/extmail
+        . ${CONF_DIR}/horde
 
-    # Fetch all misc packages.
-    cd ${MISC_DIR}
-
-    misc_total=$(cat ${MISCLIST} | grep '^[a-z0-9A-Z\$]' | wc -l | awk '{print $1}')
-    misc_count=1
-
-    for i in $(cat ${MISCLIST} | grep '^[a-z0-9A-Z\$]' )
-    do
-        ECHO_INFO "Fetching (${misc_count}/${misc_total}): $(eval echo ${i})..."
-
+        # Fetch all misc packages.
         cd ${MISC_DIR}
-        eval ${FETCH_CMD} ${MIRROR}/misc/${i}
 
-        misc_count=$((misc_count + 1))
-    done
+        misc_total=$(cat ${MISCLIST} | grep '^[a-z0-9A-Z\$]' | wc -l | awk '{print $1}')
+        misc_count=1
+
+        for i in $(cat ${MISCLIST} | grep '^[a-z0-9A-Z\$]' )
+        do
+            ECHO_INFO "Fetching (${misc_count}/${misc_total}): $(eval echo ${i})..."
+
+            cd ${MISC_DIR}
+            eval ${FETCH_CMD} ${MIRROR}/misc/${i}
+
+            misc_count=$((misc_count + 1))
+        done
+    else
+        :
+    fi
 }
 
 check_md5()
