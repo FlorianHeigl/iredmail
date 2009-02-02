@@ -75,37 +75,6 @@ diff -ruNb roundcubemail-0.2-beta2.orig/program/js/app.js roundcubemail-0.2-beta
        }
  
      return obj ? false : true;
-diff -ruNb roundcubemail-0.2-beta2.orig/program/localization/de_DE/labels.inc roundcubemail-0.2-beta2/program/localization/de_DE/labels.inc
---- roundcubemail-0.2-beta2.orig/program/localization/de_DE/labels.inc	2008-09-12 20:27:46.000000000 +0800
-+++ roundcubemail-0.2-beta2/program/localization/de_DE/labels.inc	2008-12-21 19:29:42.000000000 +0800
-@@ -245,4 +245,11 @@
- $labels['sortasc'] = 'Aufsteigend sortieren';
- $labels['sortdesc'] = 'Absteigend sortieren';
- 
-+// Plesk Change Password
-+$labels['changepasswd']  = 'Passwort ändern';
-+$labels['curpasswd']  = 'Altes Passwort';
-+$labels['newpasswd']  = 'Neues Passwort';
-+$labels['confpasswd']  = 'Neues Passwort wiederholen';
-+
-+
- ?>
-diff -ruNb roundcubemail-0.2-beta2.orig/program/localization/de_DE/messages.inc roundcubemail-0.2-beta2/program/localization/de_DE/messages.inc
---- roundcubemail-0.2-beta2.orig/program/localization/de_DE/messages.inc	2008-09-15 22:53:57.000000000 +0800
-+++ roundcubemail-0.2-beta2/program/localization/de_DE/messages.inc	2008-12-21 19:29:42.000000000 +0800
-@@ -87,4 +87,12 @@
- $messages['importconfirm'] = 'Es wurden $inserted Adressen erfolgreich importiert und $skipped bestehende Einträge übersprungen:$names';
- $messages['opnotpermitted'] = 'Operation nicht erlaubt!';
- 
-+//Plesk Password Change
-+$messages['nopassword'] = "Bitte das neue Passwort angeben.";
-+$messages['passwordinconsistency'] = "Das neue Passwort stimmt nicht überein";
-+$messages['passwordtooshort'] = 'Das neue Passwort ist zu kurz';
-+$messages['passwordtoolong'] = 'Das neue Passwort ist zu lang';
-+$messages['curpasswordincorrect'] = 'Das  alte Passwort ist falsch';
-+
-+
- ?>
 diff -ruNb roundcubemail-0.2-beta2.orig/program/localization/en_US/labels.inc roundcubemail-0.2-beta2/program/localization/en_US/labels.inc
 --- roundcubemail-0.2-beta2.orig/program/localization/en_US/labels.inc	2008-09-19 16:17:05.000000000 +0800
 +++ roundcubemail-0.2-beta2/program/localization/en_US/labels.inc	2008-12-21 19:29:32.000000000 +0800
@@ -134,64 +103,6 @@ diff -ruNb roundcubemail-0.2-beta2.orig/program/localization/en_US/messages.inc 
 +$messages['passwordtoolong'] = 'New Password Too Long';
 +$messages['curpasswordincorrect'] = 'Current Password Incorrect';
 +
-+
- ?>
-\ No newline at end of file
-diff -ruNb roundcubemail-0.2-beta2.orig/program/localization/zh_CN/labels.inc roundcubemail-0.2-beta2/program/localization/zh_CN/labels.inc
---- roundcubemail-0.2-beta2.orig/program/localization/zh_CN/labels.inc	2008-09-19 00:53:49.000000000 +0800
-+++ roundcubemail-0.2-beta2/program/localization/zh_CN/labels.inc	2008-12-27 12:57:54.000000000 +0800
-@@ -246,4 +246,9 @@
- $labels['sortasc'] = '递增排序';
- $labels['sortdesc'] = '递减排序';
- 
-+$labels['changepasswd']  = '修改密码';
-+$labels['curpasswd']  = '当前密码';
-+$labels['newpasswd']  = '新密码';
-+$labels['confpasswd']  = '再次输入新密码';
-+
- ?>
-diff -ruNb roundcubemail-0.2-beta2.orig/program/localization/zh_CN/messages.inc roundcubemail-0.2-beta2/program/localization/zh_CN/messages.inc
---- roundcubemail-0.2-beta2.orig/program/localization/zh_CN/messages.inc	2008-09-19 00:53:49.000000000 +0800
-+++ roundcubemail-0.2-beta2/program/localization/zh_CN/messages.inc	2008-12-27 12:57:50.000000000 +0800
-@@ -92,4 +92,11 @@
- $messages['importconfirm'] = '成功导入 $inserted 联系人，$skipped 乎略已存在的联系人:$names';
- $messages['opnotpermitted'] = '不允许的操作';
- 
-+//Plesk Password Change
-+$messages['nopassword'] = '没有输入密码';
-+$messages['passwordinconsistency'] = '新密碼不匹配';
-+$messages['passwordtooshort'] = '密码太短';
-+$messages['passwordtoolong'] = '密码太长';
-+$messages['curpasswordincorrect'] = '密码错误';
-+
- ?>
-diff -ruNb roundcubemail-0.2-beta2.orig/program/localization/zh_TW/labels.inc roundcubemail-0.2-beta2/program/localization/zh_TW/labels.inc
---- roundcubemail-0.2-beta2.orig/program/localization/zh_TW/labels.inc	2008-04-10 18:01:46.000000000 +0800
-+++ roundcubemail-0.2-beta2/program/localization/zh_TW/labels.inc	2008-12-27 12:57:43.000000000 +0800
-@@ -190,4 +190,9 @@
- $labels['sortasc'] = '遞增排序';
- $labels['sortdesc'] = '遞減排序';
- 
-+$labels['changepasswd']  = '更改密碼';
-+$labels['curpasswd']  = '目前密碼';
-+$labels['newpasswd']  = '新密碼';
-+$labels['confpasswd']  = '再次輸入新密碼';
-+
- ?>
-\ No newline at end of file
-diff -ruNb roundcubemail-0.2-beta2.orig/program/localization/zh_TW/messages.inc roundcubemail-0.2-beta2/program/localization/zh_TW/messages.inc
---- roundcubemail-0.2-beta2.orig/program/localization/zh_TW/messages.inc	2008-02-15 13:43:32.000000000 +0800
-+++ roundcubemail-0.2-beta2/program/localization/zh_TW/messages.inc	2008-12-27 12:57:47.000000000 +0800
-@@ -80,4 +80,11 @@
- $messages['nodeletelastidentity'] = '你不能刪除此身份，因為只剩一個身份。';
- $messages['addsubfolderhint'] = '此資料夾會成為目前所選資料夾的子資料夾';
- 
-+//Plesk Password Change
-+$messages['nopassword'] = '請填入新密碼';
-+$messages['passwordinconsistency'] = '新密碼不匹配';
-+$messages['passwordtooshort'] = '新密碼太短';
-+$messages['passwordtoolong'] = '新密碼太長';
-+$messages['curpasswordincorrect'] = '密碼錯誤';
 +
  ?>
 \ No newline at end of file
