@@ -13,7 +13,7 @@ export POLICYD_BINDPORT='10031' # Default value in policyd.conf.
 
 export POLICYD_DB_NAME='policyd'
 export POLICYD_DB_USER='policyd'
-export POLICYD_DB_PASSWD="$(echo $RANDOM\$$RANDOM\@$RANDOM\!$RANDOM\&$RANDOM\*$RANDOM\)$RANDOM)"
+export POLICYD_DB_PASSWD="$(${GENERATE_MD5_PASSWD} $RANDOM\$$RANDOM\@$RANDOM\!$RANDOM\&$RANDOM\*$RANDOM\)$RANDOM)"
 
 export POLICYD_USER_NAME='policyd'
 export POLICYD_GROUP_NAME='policyd'

@@ -30,7 +30,7 @@ Alias /postfixadmin "${POSTFIXADMIN_HTTPD_ROOT}/"
 EOF
 
     # Import hardcoded site admin name and password.
-    POSTFIXADMIN_ADMIN_PASSWD="$(openssl passwd -1 ${POSTFIXADMIN_ADMIN_PASSWD})"
+    POSTFIXADMIN_ADMIN_PASSWD="$(${GENERATE_MD5_PASSWD} ${POSTFIXADMIN_ADMIN_PASSWD})"
 
     mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
 /* Add whole site admin. */
