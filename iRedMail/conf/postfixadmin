@@ -11,3 +11,7 @@ export POSTFIXADMIN_CONF_LOCAL="${POSTFIXADMIN_HTTPD_ROOT}/config.local.php"
 
 # Default Language.
 export POSTFIXADMIN_DEFAULT_LANGUAGE='en'
+
+# Site admin name and password.
+export POSTFIXADMIN_ADMIN_NAME='admin'
+export POSTFIXADMIN_ADMIN_PASSWD='admin'

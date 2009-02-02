@@ -29,31 +29,18 @@ Alias /postfixadmin "${POSTFIXADMIN_HTTPD_ROOT}/"
 </Directory>
 EOF
 
-    # FIXME: we should hardcode site admin name and password.
-    if [ X"${SITE_ADMIN_NAME}" == X"${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}" ]; then
-        # We need update domain list, not insert a new record.
-        mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
-USE ${VMAIL_DB};
+    # Import hardcoded site admin name and password.
+    POSTFIXADMIN_ADMIN_PASSWD="$(openssl passwd -1 ${POSTFIXADMIN_ADMIN_PASSWD})"
 
-/* Update domain list. */
-UPDATE domain_admins SET domain='ALL' WHERE username="${SITE_ADMIN_NAME}";
-
-FLUSH PRIVILEGES;
-EOF
-    else
-        ECHO_INFO "Add site admin in SQL database."
-        SITE_ADMIN_PASSWD="$(openssl passwd -1 ${SITE_ADMIN_PASSWD})"
-
-        mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
+    mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
 /* Add whole site admin. */
 USE ${VMAIL_DB};
 
-INSERT INTO admin (username, password) VALUES("${SITE_ADMIN_NAME}","${SITE_ADMIN_PASSWD}");
-INSERT INTO domain_admins (username,domain) VALUES ("${SITE_ADMIN_NAME}","ALL");
+INSERT INTO admin (username, password) VALUES("${POSTFIXADMIN_ADMIN_NAME}","${POSTFIXADMIN_ADMIN_PASSWD}");
+INSERT INTO domain_admins (username,domain) VALUES ("${POSTFIXADMIN_ADMIN_NAME}","ALL");
 
 FLUSH PRIVILEGES;
 EOF
-    fi
 
     cd ${POSTFIXADMIN_HTTPD_ROOT}
 
