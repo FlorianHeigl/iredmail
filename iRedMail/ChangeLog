@@ -1,4 +1,5 @@
 iRedMail-0.3.3:
+    * Do not import domain admin and first normail user of first domain.
     * Update dovecot-sieve to 1.1.6.
     * Use variable to control whether download packages from official yum
       repository or not.

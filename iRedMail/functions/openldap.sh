@@ -54,10 +54,9 @@ loglevel    0
 #
 # Access Control List. Used for LDAP bind.
 #
-# NOTE: Every domain have a administrator.
-#   For domain: '${FIRST_DOMAIN}'
-#   Administrator:
-#       ${LDAP_ATTR_USER_DN_NAME}=${FIRST_DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}, ${LDAP_ATTR_DOMAIN_DN_NAME}=${FIRST_DOMAIN}, ${LDAP_BASEDN}
+# NOTE: Every domain have a administrator. e.g.
+#   Domain Name: ${FIRST_DOMAIN}
+#   Admin Name: ${LDAP_ATTR_USER_DN_NAME}=${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}, ${LDAP_ATTR_DOMAIN_DN_NAME}=${FIRST_DOMAIN}, ${LDAP_BASEDN}
 #
 
 #
@@ -68,7 +67,7 @@ access to attrs="${LDAP_ATTR_USER_PASSWD},${LDAP_ATTR_USER_ALIAS}"
     by self         write
     by dn.exact="${LDAP_BINDDN}"   read
     by dn.exact="${LDAP_ADMIN_DN}"  write
-    by dn.regex="${LDAP_ATTR_USER_DN_NAME}=${FIRST_DOMAIN_ADMIN_NAME}@([^,]+),${LDAP_ATTR_DOMAIN_DN_NAME}=\$1,${LDAP_BASEDN}"   write
+    by dn.regex="${LDAP_ATTR_USER_DN_NAME}=${DOMAIN_ADMIN_NAME}@([^,]+),${LDAP_ATTR_DOMAIN_DN_NAME}=\$1,${LDAP_BASEDN}"   write
     by users        none
 
 access to attrs="cn,sn"
@@ -76,7 +75,7 @@ access to attrs="cn,sn"
     by self         write
     by dn.exact="${LDAP_BINDDN}"   read
     by dn.exact="${LDAP_ADMIN_DN}"  write
-    by dn.regex="${LDAP_ATTR_USER_DN_NAME}=${FIRST_DOMAIN_ADMIN_NAME}@([^,]+),${LDAP_ATTR_DOMAIN_DN_NAME}=\$1,${LDAP_BASEDN}"   write
+    by dn.regex="${LDAP_ATTR_USER_DN_NAME}=${DOMAIN_ADMIN_NAME}@([^,]+),${LDAP_ATTR_DOMAIN_DN_NAME}=\$1,${LDAP_BASEDN}"   write
     by users        read
 
 # Domain attrs.
@@ -85,7 +84,7 @@ access to attrs="objectclass,${LDAP_ATTR_DOMAIN_DN_NAME},${LDAP_ATTR_DOMAIN_TRAN
     by self         read
     by dn.exact="${LDAP_BINDDN}"   read
     by dn.exact="${LDAP_ADMIN_DN}"  write
-    by dn.regex="${LDAP_ATTR_USER_DN_NAME}=${FIRST_DOMAIN_ADMIN_NAME}@([^,]+),${LDAP_ATTR_DOMAIN_DN_NAME}=\$1,${LDAP_BASEDN}"    write
+    by dn.regex="${LDAP_ATTR_USER_DN_NAME}=${DOMAIN_ADMIN_NAME}@([^,]+),${LDAP_ATTR_DOMAIN_DN_NAME}=\$1,${LDAP_BASEDN}"    write
     by users        read
 
 # User attrs.
@@ -94,7 +93,7 @@ access to attrs="${LDAP_ATTR_USER_DN_NAME},${LDAP_ATTR_USER_STATUS},${LDAP_ATTR_
     by self         read
     by dn.exact="${LDAP_BINDDN}"   read
     by dn.exact="${LDAP_ADMIN_DN}"  write
-    by dn.regex="${LDAP_ATTR_USER_DN_NAME}=${FIRST_DOMAIN_ADMIN_NAME}@([^,]+),${LDAP_ATTR_DOMAIN_DN_NAME}=\$1,${LDAP_BASEDN}"    write
+    by dn.regex="${LDAP_ATTR_USER_DN_NAME}=${DOMAIN_ADMIN_NAME}@([^,]+),${LDAP_ATTR_DOMAIN_DN_NAME}=\$1,${LDAP_BASEDN}"    write
     by users        read
 
 #
@@ -118,7 +117,7 @@ access to dn.regex="${LDAP_ATTR_DOMAIN_DN_NAME}=([^,]+),${LDAP_BASEDN}\$"
     by self                         write
     by dn.exact="${LDAP_BINDDN}"   read
     by dn.exact="${LDAP_ADMIN_DN}"  write
-    by dn.regex="${LDAP_ATTR_USER_DN_NAME}=${FIRST_DOMAIN_ADMIN_NAME}@\$1,${LDAP_ATTR_DOMAIN_DN_NAME}=\$1,${LDAP_BASEDN}\$" write
+    by dn.regex="${LDAP_ATTR_USER_DN_NAME}=${DOMAIN_ADMIN_NAME}@\$1,${LDAP_ATTR_DOMAIN_DN_NAME}=\$1,${LDAP_BASEDN}\$" write
     by dn.regex="${LDAP_ATTR_USER_DN_NAME}=[^,]+,${LDAP_ATTR_DOMAIN_DN_NAME}=\$1,${LDAP_BASEDN}\$" read
     by users                        none
 #
@@ -285,44 +284,6 @@ ${LDAP_ATTR_DOMAIN_DN_NAME}: ${FIRST_DOMAIN}
 ${LDAP_ATTR_DOMAIN_TRANSPORT}: ${TRANSPORT}
 ${LDAP_ATTR_DOMAIN_STATUS}: active
 ${LDAP_ATTR_ENABLE_MAIL_SERVICE}: yes
-
-dn: ${LDAP_ATTR_USER_DN_NAME}=${FIRST_USER}@${FIRST_DOMAIN},${LDAP_ATTR_DOMAIN_DN_NAME}=${FIRST_DOMAIN},${LDAP_BASEDN}
-objectClass: inetOrgPerson
-objectClass: ${LDAP_OBJECTCLASS_USER}
-objectClass: top
-cn: ${FIRST_USER}
-sn: ${FIRST_USER}
-uid: ${FIRST_USER}
-${LDAP_ATTR_USER_DN_NAME}: ${FIRST_USER}@${FIRST_DOMAIN}
-${LDAP_ATTR_USER_STATUS}: active
-homeDirectory: ${VMAIL_USER_HOME_DIR}
-mailMessageStore: ${FIRST_DOMAIN}/${FIRST_USER}/
-${LDAP_ATTR_USER_QUOTA}: 104857600
-${LDAP_ATTR_USER_PASSWD}: $(gen_ldap_passwd "${FIRST_USER_PASSWD}")
-${LDAP_ATTR_ENABLE_MAIL_SERVICE}: yes
-${LDAP_ATTR_USER_ENABLE_SMTP}: yes
-${LDAP_ATTR_USER_ENABLE_DELIVER}: yes
-${LDAP_ATTR_USER_ENABLE_POP3}: yes
-${LDAP_ATTR_USER_ENABLE_IMAP}: yes
-
-dn: ${LDAP_ATTR_USER_DN_NAME}=${FIRST_DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN},${LDAP_ATTR_DOMAIN_DN_NAME}=${FIRST_DOMAIN},${LDAP_BASEDN}
-objectClass: inetOrgPerson
-objectClass: ${LDAP_OBJECTCLASS_USER}
-objectClass: top
-cn: ${FIRST_DOMAIN_ADMIN_NAME}
-sn: ${FIRST_DOMAIN_ADMIN_NAME}
-uid: ${FIRST_DOMAIN_ADMIN_NAME}
-${LDAP_ATTR_USER_DN_NAME}: ${FIRST_DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}
-${LDAP_ATTR_USER_STATUS}: active
-homeDirectory: ${VMAIL_USER_HOME_DIR}
-mailMessageStore: ${FIRST_DOMAIN}/${FIRST_DOMAIN_ADMIN_NAME}/
-${LDAP_ATTR_USER_QUOTA}: 0
-${LDAP_ATTR_USER_PASSWD}: $(gen_ldap_passwd "${FIRST_DOMAIN_ADMIN_PASSWD}")
-${LDAP_ATTR_ENABLE_MAIL_SERVICE}: yes
-${LDAP_ATTR_USER_ENABLE_SMTP}: yes
-${LDAP_ATTR_USER_ENABLE_DELIVER}: yes
-${LDAP_ATTR_USER_ENABLE_POP3}: yes
-${LDAP_ATTR_USER_ENABLE_IMAP}: yes
 EOF
 
     # Maildir format.

@@ -166,24 +166,9 @@ EOF
     echo 'export status_create_yum_repo="DONE"' >> ${STATUS_FILE}
 }
 
-if [ -e ${STATUS_FILE} ]; then
-    . ${STATUS_FILE}
-else
-    echo '' > ${STATUS_FILE}
-fi
-
-check_user root && \
-mirror_notify && \
-prepare_dirs && \
-check_arch && \
-fetch_rpms && \
-fetch_misc && \
-check_md5 && \
-check_createrepo && \
-create_yum_repo && \
-check_dialog && \
-cat <<EOF
-
+echo_end_msg()
+{
+    cat <<EOF
 ********************************************************
 * All tasks had been finished Successfully. Next step:
 *
@@ -193,3 +178,24 @@ cat <<EOF
 ********************************************************
 
 EOF
+
+    echo 'export status_echo_end_msg="DONE"' >> ${STATUS_FILE}
+}
+
+if [ -e ${STATUS_FILE} ]; then
+    . ${STATUS_FILE}
+else
+    echo '' > ${STATUS_FILE}
+fi
+
+check_user root && \
+check_status_before_run mirror_notify && \
+prepare_dirs && \
+check_arch && \
+fetch_rpms && \
+fetch_misc && \
+check_md5 && \
+check_createrepo && \
+create_yum_repo && \
+check_dialog && \
+check_status_before_run echo_end_msg

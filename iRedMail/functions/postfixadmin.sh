@@ -29,7 +29,8 @@ Alias /postfixadmin "${POSTFIXADMIN_HTTPD_ROOT}/"
 </Directory>
 EOF
 
-    if [ X"${SITE_ADMIN_NAME}" == X"${FIRST_DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}" ]; then
+    # FIXME: we should hardcode site admin name and password.
+    if [ X"${SITE_ADMIN_NAME}" == X"${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}" ]; then
         # We need update domain list, not insert a new record.
         mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
 USE ${VMAIL_DB};

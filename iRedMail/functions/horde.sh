@@ -67,7 +67,7 @@ EOF
     perl -pi -e 's#(.*conf.*cookie.*domain.*=).*#${1} "";#' conf.php
 
     # Set Horde default administrator.
-    perl -pi -e 's#(.*conf.*auth.*admins.*=).*#${1} array\("$ENV{'FIRST_DOMAIN_ADMIN_NAME'}@$ENV{'FIRST_DOMAIN'}"\);#' conf.php
+    perl -pi -e 's#(.*conf.*auth.*admins.*=).*#${1} array\("$ENV{'DOMAIN_ADMIN_NAME'}@$ENV{'FIRST_DOMAIN'}"\);#' conf.php
 
     # Set default language.
     perl -pi -e 's#(.*nls.*defaults.*language.*=).*#${1} "$ENV{HORDE_DEFAULT_LANGUAGE}";#' nls.php
