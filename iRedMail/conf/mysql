@@ -26,7 +26,7 @@ export MYSQL_MY_CNF='/etc/my.cnf'
 
 # For virtual user query in Postfix, Dovecot.
 export MYSQL_BIND_USER="${VMAIL_USER_NAME}"
-export MYSQL_BIND_PW="$(${GENERATE_MD5_PASSWD} $RANDOM\$$RANDOM\@$RANDOM\!$RANDOM\&$RANDOM\*$RANDOM\)$RANDOM)"
+export MYSQL_BIND_PW="$(${RANDOM_STRING})"
 
 # For vmail database management.
 export MYSQL_ADMIN_USER="${VMAIL_ADMIN_USER_NAME}"

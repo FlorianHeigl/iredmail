@@ -30,13 +30,11 @@ Alias /postfixadmin "${POSTFIXADMIN_HTTPD_ROOT}/"
 EOF
 
     # Import hardcoded site admin name and password.
-    POSTFIXADMIN_ADMIN_PASSWD="$(${GENERATE_MD5_PASSWD} ${POSTFIXADMIN_ADMIN_PASSWD})"
-
     mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
 /* Add whole site admin. */
 USE ${VMAIL_DB};
 
-INSERT INTO admin (username, password) VALUES("${POSTFIXADMIN_ADMIN_NAME}","${POSTFIXADMIN_ADMIN_PASSWD}");
+INSERT INTO admin (username, password) VALUES("${POSTFIXADMIN_ADMIN_NAME}",password("${POSTFIXADMIN_ADMIN_PASSWD}"));
 INSERT INTO domain_admins (username,domain) VALUES ("${POSTFIXADMIN_ADMIN_NAME}","ALL");
 
 FLUSH PRIVILEGES;

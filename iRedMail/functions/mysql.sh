@@ -67,8 +67,6 @@ EOF
 mysql_import_vmail_users()
 {
     ECHO_INFO "Generating SQL template for postfix virtual hosts: ${MYSQL_VMAIL_SQL}."
-    export FIRST_DOMAIN_ADMIN_PASSWD="$(${GENERATE_MD5_PASSWD} ${FIRST_DOMAIN_ADMIN_PASSWD})"
-    export FIRST_USER_PASSWD="$(${GENERATE_MD5_PASSWD} ${FIRST_USER_PASSWD})"
 
     # Generate SQL.
     # Mailbox format is 'Maildir/' by default.

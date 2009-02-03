@@ -27,7 +27,7 @@ EOF
     ECHO_INFO "Config phpMyAdmin: ${PHPMYADMIN_CONFIG_FILE}."
     cd ${PHPMYADMIN_HTTPD_ROOT} && cp config.sample.inc.php ${PHPMYADMIN_CONFIG_FILE}
 
-    export COOKIE_STRING="$(${GENERATE_MD5_PASSWD} ${PROG_NAME_LOWERCASE})"
+    export COOKIE_STRING="$(${RANDOM_STRING})"
     perl -pi -e 's#(.*blowfish_secret.*= )(.*)#${1}"$ENV{'COOKIE_STRING'}"; //${2}#' ${PHPMYADMIN_CONFIG_FILE}
     perl -pi -e 's#(.*Servers.*host.*=.*)localhost(.*)#${1}$ENV{'MYSQL_SERVER'}${2}#' ${PHPMYADMIN_CONFIG_FILE}
 

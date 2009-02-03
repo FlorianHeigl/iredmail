@@ -136,10 +136,10 @@ export LOCAL_REPO_NAME="${PROG_NAME}"
 export LOCAL_REPO_FILE="${YUM_REPOS_DIR}/${LOCAL_REPO_NAME}.repo"
 export YUM_UPDATE_REPO='http://www.iredmail.org/yum/rpms/5/'
 
-# Use openssl to generate MD5 password. 
-# Usage: 
-#   crypted_passwd="$(${GENERATE_MD5_PASSWD} plain_passwd)" 
-export GENERATE_MD5_PASSWD='openssl passwd -1'
+# Genrate a random string.
+# Usage:
+#   str="$(${RANDOM_STRING})"
+export RANDOM_STRING='eval </dev/urandom tr -dc A-Za-z0-9| (head -c $1 > /dev/null 2>&1 || head -c 30)'
 
 # Make some command operating system independent.
 if [ X"${KERNEL_NAME}" == X"Linux" -a -f /etc/redhat-release ]; then

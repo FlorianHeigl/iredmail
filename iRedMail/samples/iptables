@@ -32,6 +32,9 @@
 # imap/imaps
 #-A INPUT -p tcp -m multiport --dport 143,993 -j ACCEPT
 
+# ldap/ldaps
+#-A INPUT -p tcp -m multiport --dport 389,636 -j ACCEPT
+
 # ftp.
 #-A INPUT -p tcp -m multiport --dport 21,20 -j ACCEPT
 

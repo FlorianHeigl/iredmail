@@ -7,7 +7,8 @@ while : ; do
     ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --title "Your first virtual domain" \
     --inputbox "\
-Please specify the name of your first virtual domain.
+Please specify the name of your first virtual domain. You can
+add mail users and more domains after installation completed.
 
 EXAMPLES:
 

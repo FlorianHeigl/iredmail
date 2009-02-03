@@ -62,7 +62,7 @@ EOF
 
     export RCM_DB_USER RCM_DB_PASSWD RCMD_DB MYSQL_SERVER 
 
-    perl -pi -e 's#(.*db_dsnw.*= )(.*)#${1}"mysql://$ENV{'RCM_DB_USER'}:$ENV{'RCM_DB_PASSWD'}\@$ENV{'MYSQL_SERVER'}/$ENV{'RCM_DB'}";#' db.inc.php
+    perl -pi -e 's#(.*db_dsnw.*= )(.*)#${1}"mysqli://$ENV{'RCM_DB_USER'}:$ENV{'RCM_DB_PASSWD'}\@$ENV{'MYSQL_SERVER'}/$ENV{'RCM_DB'}";#' db.inc.php
 
     # Disable installer.
     perl -pi -e 's#(.*enable_installer.*= )(.*)#${1}FALSE;#' main.inc.php
@@ -87,7 +87,7 @@ EOF
     perl -pi -e 's#(.*rcmail_config.*useragent.*=).*#${1} "RoundCube WebMail";#' main.inc.php
 
     # Disable multiple identities. roundcube-0.2 only.
-    #perl -pi -e 's#(.*multiple_identities.*=).*true;#${1} false;#' main.inc.php
+    #perl -pi -e 's#(.*identities_level.*=).*#${1} 3;#' main.inc.php
 
     ECHO_INFO "Create directory alias for Roundcubemail."
     cat > ${HTTPD_CONF_DIR}/roundcubemail.conf <<EOF
@@ -195,7 +195,6 @@ WebMail(Roundcubemail):
         - http://${HOSTNAME}/webmail/
     * See also:
         - ${HTTPD_CONF_DIR}/roundcubemail.conf
-        - ${RCM_HTTPD_ROOT}/skins/${rcm_skin_cn}
 
 EOF
 

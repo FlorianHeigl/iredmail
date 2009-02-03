@@ -187,7 +187,7 @@ EOF
     cat > ${OPENLDAP_LDAP_CONF} <<EOF
 BASE    ${LDAP_SUFFIX}
 URI     ldap://${LDAP_SERVER_HOST}:${LDAP_SERVER_PORT}
-TLS_CACERT ${OPENLDAP_CACERT_DIR}/slapdCert.pem
+TLS_CACERT ${SSL_CERT_FILE}
 EOF
     chown ldap:ldap ${OPENLDAP_LDAP_CONF}
 
@@ -220,11 +220,6 @@ ${OPENLDAP_LOGFILE} {
     endscript
 }
 EOF
-
-    ECHO_INFO "Make OpenLDAP listen on '127.0.0.1' only."
-    cp /etc/init.d/ldap /etc/init.d/ldap.bak
-    chmod -x /etc/init.d/ldap.bak
-    perl -pi -e 's#(.*ldap.*://)(/)#${1}127.0.0.1${2}#' /etc/init.d/ldap
 
     ECHO_INFO "Restarting syslog."
     /etc/init.d/syslog restart >/dev/null

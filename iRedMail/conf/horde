@@ -13,7 +13,7 @@ export HORDE_HTTPD_ROOT='/var/www/html/horde'
 # Database setting.
 export HORDE_DB_NAME="horde"
 export HORDE_DB_USER="horde"
-export HORDE_DB_PASSWD="$(${GENERATE_MD5_PASSWD} $RANDOM\$$RANDOM\@$RANDOM\!$RANDOM\&$RANDOM\*$RANDOM\)$RANDOM)"
+export HORDE_DB_PASSWD="$(${RANDOM_STRING})"
 export HORDE_DB_TEMPLATE="${HORDE_HTTPD_ROOT}/scripts/sql/groupware.mysql.sql"
 
 # Turba: Horde Contact Management Application.
