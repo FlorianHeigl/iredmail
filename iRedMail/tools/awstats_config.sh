@@ -8,11 +8,14 @@
 
 . ${CONF_DIR}/awstats
 
-# Set username for awstats access.
-while : ; do
-    ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-    --title "Specify username for access awstats from web browser" \
-    --inputbox "\
+if [ X"${BACKEND}" == X"OpenLDAP" ]; then
+    :
+else
+    # Set username for awstats access.
+    while : ; do
+        ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
+        --title "Specify username for access awstats from web browser" \
+        --inputbox "\
 Please specify username for access awstats from web browser.
 
 Example:
@@ -21,18 +24,18 @@ Example:
 
 " 20 76 2>/tmp/awstats_username
 
-    AWSTATS_USERNAME="$(cat /tmp/awstats_username)"
-    [ X"${AWSTATS_USERNAME}" != X"" ] && break
-done
+        AWSTATS_USERNAME="$(cat /tmp/awstats_username)"
+        [ X"${AWSTATS_USERNAME}" != X"" ] && break
+    done
 
-echo "export AWSTATS_USERNAME='${AWSTATS_USERNAME}'" >>${CONFIG_FILE}
-rm -f /tmp/awstats_username
+    echo "export AWSTATS_USERNAME='${AWSTATS_USERNAME}'" >>${CONFIG_FILE}
+    rm -f /tmp/awstats_username
 
-# Set password for awstats user.
-while : ; do
-    ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-    --title "Password for awstats user: ${AWSTATS_USERNAME}" \
-    --insecure --passwordbox "\
+    # Set password for awstats user.
+    while : ; do
+        ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
+        --title "Password for awstats user: ${AWSTATS_USERNAME}" \
+        --insecure --passwordbox "\
 Please specify password for awstats user: ${AWSTATS_USERNAME}
 
 Warning:
@@ -41,9 +44,10 @@ Warning:
 
 " 20 76 2>/tmp/awstats_passwd
 
-    AWSTATS_PASSWD="$(cat /tmp/awstats_passwd)"
-    [ X"${AWSTATS_PASSWD}" != X"" ] && break
-done
+        AWSTATS_PASSWD="$(cat /tmp/awstats_passwd)"
+        [ X"${AWSTATS_PASSWD}" != X"" ] && break
+    done
 
-echo "export AWSTATS_PASSWD='${AWSTATS_PASSWD}'" >>${CONFIG_FILE}
-rm -f /tmp/awstats_passwd
+    echo "export AWSTATS_PASSWD='${AWSTATS_PASSWD}'" >>${CONFIG_FILE}
+    rm -f /tmp/awstats_passwd
+fi

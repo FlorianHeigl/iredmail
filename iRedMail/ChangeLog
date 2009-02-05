@@ -1,5 +1,7 @@
 iRedMail-0.3.3:
-    * Use crypted MD5 password string as random password. 
+    * Improve LDAP schema, use 'enabledService=XXX' instead of
+      enableXXXService.
+    * Make awstats use LDAP user auth if use OpenLDAP as backend.
     * Hardcode PostfixAdmin admin user name and password (conf/postfixadmin).
     * Do not import domain admin and first normail user of first domain.
     * Update dovecot-sieve to 1.1.6.

@@ -51,6 +51,8 @@ mirror_notify()
 *
 *********************************************************************
 EOF
+
+    echo 'export status_mirror_notify="DONE"' >> ${STATUS_FILE}
 }
 
 prepare_dirs()

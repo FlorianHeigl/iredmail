@@ -20,7 +20,7 @@ export HOME_MAILBOX='Maildir'
 #   - Path of apache/php config file path (conf/httpd).
 export USE_EXIST_AMP='NO'
 
-# Download packages from iredmail yum repository or not.
+# Download packages from official yum repository or not, used in 'pkgs/get_all.sh'.
 export DOWNLOAD_PKGS='YES'
 
 # For distribute deployment.

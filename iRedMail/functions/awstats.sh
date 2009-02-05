@@ -22,6 +22,35 @@ Alias /awstats/icon ${AWSTATS_HTTPD_ROOT}/icon/
 ScriptAlias /awstats ${AWSTATS_HTTPD_ROOT}/
 #Alias /css ${AWSTATS_HTTPD_ROOT}/css/
 #Alias /js ${AWSTATS_HTTPD_ROOT}/js/
+EOF
+
+    if [ X"${BACKEND}" == X"OpenLDAP" ]; then
+        # Use LDAP auth.
+        cat >> ${AWSTATS_HTTPD_CONF} <<EOF
+<Directory ${AWSTATS_HTTPD_ROOT}/>
+    DirectoryIndex awstats.pl
+    Options ExecCGI
+    order deny,allow
+    allow from all
+    #allow from 127.0.0.1
+
+    AuthType Basic
+    AuthName "Authorization Realm"
+
+    AuthBasicProvider ldap
+    AuthzLDAPAuthoritative   Off
+
+    AuthLDAPUrl   ldap://${LDAP_SERVER_HOST}:${LDAP_SERVER_PORT}/${LDAP_BASEDN}?${LDAP_ATTR_USER_DN_NAME}?sub?(&(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=awstats))
+
+    AuthLDAPBindDN "${LDAP_BINDDN}"
+    AuthLDAPBindPassword "${LDAP_BINDPW}"
+
+    Require valid-user
+</Directory>
+EOF
+    else
+        # Use basic auth mech.
+        cat >> ${AWSTATS_HTTPD_CONF} <<EOF
 <Directory ${AWSTATS_HTTPD_ROOT}/>
     DirectoryIndex awstats.pl
     Options ExecCGI
@@ -36,6 +65,7 @@ ScriptAlias /awstats ${AWSTATS_HTTPD_ROOT}/
     Require valid-user
 </Directory>
 EOF
+    fi
 
     # Set username, password for web access.
     htpasswd -bcm ${AWSTATS_HTPASSWD_FILE} "${AWSTATS_USERNAME}" "${AWSTATS_PASSWD}" >/dev/null 2>&1

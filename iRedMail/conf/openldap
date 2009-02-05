@@ -32,10 +32,15 @@ export LDAP_BINDPW="$(${RANDOM_STRING})"
 export LDAP_OBJECTCLASS_DOMAIN='mailDomain'
 export LDAP_OBJECTCLASS_USER='mailUser'
 
-# service related attrubites.
-export LDAP_ATTR_ENABLE_MAIL_SERVICE='enableMailService'
-export LDAP_ATTR_ENABLE_IM_SERVICE='enableIMService'
-export LDAP_ATTR_ENABLE_FTP_SERVICE='enableFTPService'
+# Common attribute.
+export LDAP_ENABLED_SERVICE='enabledService'
+# Values of service name.
+export LDAP_SERVICE_MAIL='mail'
+export LDAP_SERVICE_SMTP='smtp'
+export LDAP_SERVICE_POP3='pop3'
+export LDAP_SERVICE_IMAP='imap'
+export LDAP_SERVICE_DELIVER='deliver'
+export LDAP_SERVICE_WEBMAIL='webmail'   # Not used yet.
 
 # Domain related.
 export LDAP_ATTR_DOMAIN_DN_NAME='domainName'
@@ -54,9 +59,7 @@ export LDAP_ATTR_USER_RECIPIENT_BCC_ADDRESS='userRecipientBccAddress'
 export LDAP_ATTR_USER_STATUS='accountStatus'
 export LDAP_ATTR_USER_QUOTA='mailQuota'
 export LDAP_ATTR_USER_ALIAS='mailForwardingAddress'
-export LDAP_ATTR_USER_ENABLE_SMTP='enableSMTP'
-export LDAP_ATTR_USER_ENABLE_POP3='enablePOP3'
-export LDAP_ATTR_USER_ENABLE_IMAP='enableIMAP'
-export LDAP_ATTR_USER_ENABLE_DELIVER='enableDELIVER'
 export LDAP_ATTR_USER_RESTRICTION_CLASS='restrictionClass'
 export LDAP_ATTR_USER_RESTRICTED_DOMAIN='restrictedDomain'
+# Values of user related attributes.
+export LDAP_STATUS_ACTIVE='active'

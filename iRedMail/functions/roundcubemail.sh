@@ -175,7 +175,7 @@ EOF
     'surname_field' => 'sn',    // this field represents the contact's last name
     'firstname_field' => 'gn',  // this field represents the contact's first name
     'scope'         => 'sub',   // search mode: sub|base|list
-    'filter'        => "(&(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=active)(${LDAP_ATTR_ENABLE_MAIL_SERVICE}=yes)(${LDAP_ATTR_USER_ENABLE_DELIVER}=yes))",
+    'filter'        => "(&(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DELIVER}))",
     'fuzzy_search'  => true);   // server allows wildcard search
 
 // end of config file

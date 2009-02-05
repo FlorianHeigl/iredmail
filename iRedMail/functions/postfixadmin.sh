@@ -33,7 +33,6 @@ EOF
     mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
 /* Add whole site admin. */
 USE ${VMAIL_DB};
-
 INSERT INTO admin (username, password) VALUES("${POSTFIXADMIN_ADMIN_NAME}",password("${POSTFIXADMIN_ADMIN_PASSWD}"));
 INSERT INTO domain_admins (username,domain) VALUES ("${POSTFIXADMIN_ADMIN_NAME}","ALL");
 

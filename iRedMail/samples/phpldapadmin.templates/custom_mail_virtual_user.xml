@@ -110,59 +110,14 @@
         <page>1</page>
     </attribute>
 
-    <attribute id="enableMailService">
-        <display>Permit to use mail service</display>
-        <hint>Example: yes</hint>
+    <attribute id="enabledService">
+        <display>Enabled service.</display>
+        <hint>Example: mail, smtp, pop3, imap, deliver.</hint>
         <images>images/uid.png</images>
+        <hidden>1</hidden>
         <order>10</order>
         <page>1</page>
-        <option>yes</option>
-        <option>no</option>
-        <value>yes</value>
-    </attribute>
-
-    <attribute id="enablePOP3">
-        <display>Permit to use POP3 service</display>
-        <hint>Example: yes</hint>
-        <images>images/uid.png</images>
-        <order>11</order>
-        <page>1</page>
-        <option>yes</option>
-        <option>no</option>
-        <value>yes</value>
-    </attribute>
-
-    <attribute id="enableIMAP">
-        <display>Permit to use IMAP service</display>
-        <hint>Example: yes</hint>
-        <images>images/uid.png</images>
-        <order>12</order>
-        <page>1</page>
-        <option>yes</option>
-        <option>no</option>
-        <value>yes</value>
-    </attribute>
-
-    <attribute id="enableSMTP">
-        <display>Permit to use SMTP service</display>
-        <hint>Example: yes</hint>
-        <images>images/uid.png</images>
-        <order>13</order>
-        <page>1</page>
-        <option>yes</option>
-        <option>no</option>
-        <value>yes</value>
-    </attribute>
-
-    <attribute id="enableDELIVER">
-        <display>Permit to receive email</display>
-        <hint>Example: yes</hint>
-        <images>images/uid.png</images>
-        <order>14</order>
-        <page>1</page>
-        <option>yes</option>
-        <option>no</option>
-        <value>yes</value>
+        <value>mail</value>
     </attribute>
 
     <attribute id="expiredDate">
@@ -170,7 +125,7 @@
         <display>Expired date</display>
         <hidden>1</hidden>
         <value>99991231000000</value>
-        <order>15</order>
+        <order>11</order>
         <page>1</page>
     </attribute>
 

@@ -47,11 +47,10 @@
         <page>1</page>
     </attribute>
 
-    <attribute id="enableMailService">
-        <display>Permit to use mail service</display>
-        <option>yes</option>
-        <option>no</option>
-        <value>yes</value>
+    <attribute id="enabledService">
+        <display>Enabled services.</display>
+        <option>mail</option>
+        <value>mail</value>
         <hidden>1</hidden>
         <order>4</order>
         <page>1</page>

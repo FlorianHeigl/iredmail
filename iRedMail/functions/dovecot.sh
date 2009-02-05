@@ -265,8 +265,8 @@ dnpass          = ${LDAP_BINDPW}
 base            = ${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}
 scope           = subtree
 deref           = never
-user_filter     = (&(mail=%u)(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=active)(${LDAP_ATTR_ENABLE_MAIL_SERVICE}=yes)(enable%Us=yes))
-pass_filter     = (mail=%u)
+user_filter     = (&(${LDAP_ATTR_USER_DN_NAME}=%u)(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=%Ls))
+pass_filter     = (${LDAP_ATTR_USER_DN_NAME}=%u)
 pass_attrs      = ${LDAP_ATTR_USER_PASSWD}=password
 default_pass_scheme = CRYPT
 EOF
