@@ -23,11 +23,13 @@ postfixadmin_install()
     ECHO_INFO "Create directory alias for PostfixAdmin in Apache."
     cat > ${HTTPD_CONF_DIR}/postfixadmin.conf <<EOF
 ${CONF_MSG}
-Alias /postfixadmin "${POSTFIXADMIN_HTTPD_ROOT}/"
 <Directory "${POSTFIXADMIN_HTTPD_ROOT}/">
     Options -Indexes
 </Directory>
 EOF
+
+    # Make PostfixAdmin can be accessed via HTTPS only.
+    sed -i 's#\(</VirtualHost>\)#Alias /postfixadmin '${POSTFIXADMIN_HTTPD_ROOT}'\n\1#' ${HTTPD_SSL_CONF}
 
     # Import hardcoded site admin name and password.
     mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF

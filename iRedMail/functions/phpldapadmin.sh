@@ -26,12 +26,15 @@ pla_install()
     ECHO_INFO "Create directory alias for phpLDAPadmin."
     cat > ${HTTPD_CONF_DIR}/phpldapadmin.conf <<EOF
 ${CONF_MSG}
-Alias /phpldapadmin "${PLA_HTTPD_ROOT}/"
-Alias /ldap "${PLA_HTTPD_ROOT}/"
 <Directory "${PLA_HTTPD_ROOT}/">
     Options -Indexes
 </Directory>
 EOF
+
+    # Make phpldapadmin can be accessed via HTTPS only.
+    sed -i 's#\(</VirtualHost>\)#Alias /phpldapadmin '${PLA_HTTPD_ROOT}'\nAlias /ldap '${PLA_HTTPD_ROOT}'\n\1#' ${HTTPD_SSL_CONF}
+
+${HTTPD_SSL_CONF}
 
     cat >> ${TIP_FILE} <<EOF
 phpLDAPadmin:

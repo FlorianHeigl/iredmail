@@ -18,11 +18,13 @@ phpmyadmin_install()
     ECHO_INFO "Create directory alias for phpMyAdmin in Apache: ${HTTPD_CONF_DIR}/phpmyadmin.conf."
     cat > ${HTTPD_CONF_DIR}/phpmyadmin.conf <<EOF
 ${CONF_MSG}
-Alias /phpmyadmin "${PHPMYADMIN_HTTPD_ROOT}/"
 <Directory "${PHPMYADMIN_HTTPD_ROOT}/">
     Options -Indexes
 </Directory>
 EOF
+
+    # Make phpMyAdmin can be accessed via HTTPS only.
+    sed -i 's#\(</VirtualHost>\)#Alias /phpmyadmin '${PHPMYADMIN_HTTPD_ROOT}'\n\1#' ${HTTPD_SSL_CONF}
 
     ECHO_INFO "Config phpMyAdmin: ${PHPMYADMIN_CONFIG_FILE}."
     cd ${PHPMYADMIN_HTTPD_ROOT} && cp config.sample.inc.php ${PHPMYADMIN_CONFIG_FILE}

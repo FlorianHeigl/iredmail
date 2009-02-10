@@ -41,7 +41,7 @@
 /gmail\.com$/       REJECT Go away, bad guy (gmail.com).
 /^google\.com$/     REJECT Go away, bad guy (google.com).
 /^yahoo\.com\.cn$/  REJECT Go away, bad guy (yahoo.com.cn).
-/^yahoo\.co\.jp$/               REJECT Go away, bad guy (yahoo.co.jp).
+/^yahoo\.co\.jp$/   REJECT Go away, bad guy (yahoo.co.jp).
 
 #
 # Spammers.

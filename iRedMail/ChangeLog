@@ -1,4 +1,6 @@
 iRedMail-0.3.3:
+    * Make phpLDAPadmin, phMyAdmin, PostfixAdmin can be accessed via HTTPS
+      only.
     * Improve LDAP schema, use 'enabledService=XXX' instead of
       enableXXXService.
     * Make awstats use LDAP user auth if use OpenLDAP as backend.
