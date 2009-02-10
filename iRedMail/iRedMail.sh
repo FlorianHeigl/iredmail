@@ -8,7 +8,7 @@
 export ROOTDIR="$(pwd)"
 export CONF_DIR="${ROOTDIR}/conf"
 export FUNCTIONS_DIR="${ROOTDIR}/functions"
-export TOOLS_DIR="${ROOTDIR}/dialog"
+export DIALOG_DIR="${ROOTDIR}/dialog"
 export PKG_DIR="${ROOTDIR}/pkgs/rpms"
 export MISC_DIR="${ROOTDIR}/pkgs/misc"
 export SAMPLE_DIR="${ROOTDIR}/samples"

@@ -82,9 +82,9 @@ echo "export BACKEND='${BACKEND}'" >> ${CONFIG_FILE}
 rm -f /tmp/backend
 
 if [ X"${BACKEND}" == X"OpenLDAP" ]; then
-    . ${TOOLS_DIR}/ldap_config.sh
+    . ${DIALOG_DIR}/ldap_config.sh
 elif [ X"${BACKEND}" == X"MySQL" ]; then
-    . ${TOOLS_DIR}/mysql_config.sh
+    . ${DIALOG_DIR}/mysql_config.sh
 else
     :
 fi
@@ -92,12 +92,12 @@ fi
 #
 # Virtual domain configuration.
 #
-. ${TOOLS_DIR}/virtual_domain_config.sh
+. ${DIALOG_DIR}/virtual_domain_config.sh
 
 #
 # For optional components.
 #
-. ${TOOLS_DIR}/optional_components.sh
+. ${DIALOG_DIR}/optional_components.sh
 
 #
 # Set mail alias for root.

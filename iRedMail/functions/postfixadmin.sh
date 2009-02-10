@@ -30,7 +30,7 @@ ${CONF_MSG}
 EOF
 
     # Make PostfixAdmin can be accessed via HTTPS only.
-    sed -i 's#\(</VirtualHost>\)#Alias /postfixadmin '${POSTFIXADMIN_HTTPD_ROOT}'\n\1#' ${HTTPD_SSL_CONF}
+    sed -i 's#\(</VirtualHost>\)#Alias /postfixadmin '${POSTFIXADMIN_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
 
     # Import hardcoded site admin name and password.
     mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
@@ -93,7 +93,7 @@ PostfixAdmin:
         - ${POSTFIXADMIN_CONF_LOCAL}
         - ${POSTFIXADMIN_HTTPD_ROOT}/config.inc.php
     * URL:
-        - http://${HOSTNAME}/postfixadmin/
+        - https://${HOSTNAME}/postfixadmin/
     * See also:
         - ${HTTPD_CONF_DIR}/postfixadmin.conf
 

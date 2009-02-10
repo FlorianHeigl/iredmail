@@ -228,10 +228,10 @@ else
 fi
 
 # Used when you use OpenLDAP as backend, only prompt for MySQL root password.
-[ X"${BACKEND}" == X"OpenLDAP" ] && . ${TOOLS_DIR}/mysql_config.sh
+[ X"${BACKEND}" == X"OpenLDAP" ] && . ${DIALOG_DIR}/mysql_config.sh
 
 # Used when you use awstats.
-[ X"${USE_AWSTATS}" == X"YES" ] && . ${TOOLS_DIR}/awstats_config.sh
+[ X"${USE_AWSTATS}" == X"YES" ] && . ${DIALOG_DIR}/awstats_config.sh
 
 # Used when you use mailman.
-[ X"${USE_MAILMAN}" == X"YES" ] && . ${TOOLS_DIR}/mailman_config.sh
+[ X"${USE_MAILMAN}" == X"YES" ] && . ${DIALOG_DIR}/mailman_config.sh

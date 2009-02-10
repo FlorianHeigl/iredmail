@@ -34,9 +34,7 @@ ${CONF_MSG}
 EOF
 
     # Make phpldapadmin can be accessed via HTTPS only.
-    sed -i 's#\(</VirtualHost>\)#Alias /phpldapadmin '${PLA_HTTPD_ROOT}'\nAlias /ldap '${PLA_HTTPD_ROOT}'\n\1#' ${HTTPD_SSL_CONF}
-
-${HTTPD_SSL_CONF}
+    sed -i 's#\(</VirtualHost>\)#Alias /phpldapadmin '${PLA_HTTPD_ROOT}'/\nAlias /ldap '${PLA_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
 
     cat >> ${TIP_FILE} <<EOF
 phpLDAPadmin:
@@ -44,8 +42,8 @@ phpLDAPadmin:
         - ${PLA_HTTPD_ROOT}/config/config.php
     * URL:
         - ${PLA_HTTPD_ROOT}
-        - http://${HOSTNAME}/phpldapadmin/
-        - http://${HOSTNAME}/ldap/
+        - https://${HOSTNAME}/phpldapadmin/
+        - https://${HOSTNAME}/ldap/
     * See also:
         - ${HTTPD_CONF_DIR}/phpldapadmin.conf
         - ${PLA_HTTPD_ROOT}/templates/creation/custom_*.xml

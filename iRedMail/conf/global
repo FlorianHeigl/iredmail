@@ -74,7 +74,7 @@ export TLS_ADMIN="root@${HOSTNAME}"
 export DATE="$(/bin/date +%Y.%m.%d_%H.%M.%S)"
 
 # Tools.
-export CONFIG_VIA_DIALOG="${TOOLS_DIR}/config_via_dialog.sh"
+export CONFIG_VIA_DIALOG="${DIALOG_DIR}/config_via_dialog.sh"
 # Note: config file will be sourced in file 'conf/functions', function 'check_env()'.
 export CONFIG_FILE="/root/${PROG_NAME}.config"
 export TIP_FILE="/root/${PROG_NAME}.tips"
@@ -90,10 +90,10 @@ export CONF_MSG="#
 # Mail Server Solution for Red Hat(R) Enterprise Linux series.
 #
 # Version:  ${PROG_VERSION}
-# Project:  http://iRedMail.googlecode.com/
+# Project:  http://code.google.com/p/iredmail/
 #
 # If you deploy ${PROG_VERSION} in product environment, we suggest
-# you list your information in 'Success Stories' page to help us
+# you public your information in 'Success Stories' page to help us
 # generalization ${PROG_VERSION}, and you can join iredmailsupport@
 # mail list for further technique support, such as bug/issue fix,
 # event response, software update, etc.
@@ -101,7 +101,7 @@ export CONF_MSG="#
 # Success Stories:
 #   http://www.iredmail.org/wiki/index.php/IRedMail_Success_Stories
 #
-# Mail list address:
+# Mail list:
 #   http://groups.google.com/group/iredmailsupport/
 #
 # Genernal Forum:

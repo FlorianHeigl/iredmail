@@ -32,7 +32,7 @@ GRANT SELECT,INSERT,UPDATE,DELETE ON ${RCM_DB}.* TO ${RCM_DB_USER}@localhost IDE
 
 /* Import Roundcubemail SQL template. */
 USE ${RCM_DB};
-SOURCE ${RCM_HTTPD_ROOT}/SQL/mysql5.initial.sql;
+SOURCE ${RCM_HTTPD_ROOT}/SQL/mysql.initial.sql;
 
 FLUSH PRIVILEGES;
 EOF
@@ -100,65 +100,27 @@ Alias /roundcube "${RCM_HTTPD_ROOT}/"
 </Directory>
 EOF
 
-    # Roundcubemail-0.1.1 only.
-    ECHO_INFO "Patch: Add missing localization items and fix incorrect items for zh_CN."
-    cd ${RCM_HTTPD_ROOT} && \
-    patch -p0 < ${PATCH_DIR}/roundcubemail/zh_CN.labels.inc.patch >/dev/null
-
-    ECHO_INFO "Patch: Fix IMAP folder name with Chinese characters."
-    cd ${RCM_HTTPD_ROOT} && \
-    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_national_imap_folder_name.patch >/dev/null
-
-    # This was fixed in roundcubemail-0.2.
-    ECHO_INFO "Patch: Attachment display and save with Chiense characters."
-    cd ${RCM_HTTPD_ROOT} && \
-    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_PEAR_Mail_Mail_Mime_addAttachment_basename.patch >/dev/null
-
-    ECHO_INFO "Patch: Change Password and Setting Mail Forwarding."
-    cd ${RCM_HTTPD_ROOT} && \
-    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_chpwd_forward.patch >/dev/null
-
-    cd ${RCM_HTTPD_ROOT}/skins/default/ && \
-    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_chpwd_forward_skins.patch >/dev/null
-
-    ECHO_INFO "Patch: Vacation plugin."
-    # Create symbol link to sieve_dir.
-    cd ${RCM_HTTPD_ROOT} && \
-    ln -s ${SIEVE_DIR} sieve
-
-    # Function patch: vacation.
-    cd ${RCM_HTTPD_ROOT} && \
-    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_vacation.patch >/dev/null
-
-    # Skin patch: vacation.
-    cd ${RCM_HTTPD_ROOT}/skins/default/ && \
-    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_vacation_skin_default.patch >/dev/null
-
-    ECHO_INFO "Patch: Performance Improvement for Roundcubemail-0.1.1."
-    cd ${RCM_HTTPD_ROOT} && \
-    patch -p0 < ${PATCH_DIR}/roundcubemail/performance-jh1.diff >/dev/null
-
     ECHO_INFO "Patch: Display Username."
-    cd ${RCM_HTTPD_ROOT}/skins/default/ && \
-    patch -p0 < ${PATCH_DIR}/roundcubemail/display_username.patch >/dev/null && \
-    patch -p0 < ${PATCH_DIR}/roundcubemail/display_username_skin_default.patch >/dev/null
+    #cd ${RCM_HTTPD_ROOT}/skins/default/ && \
+    #patch -p0 < ${PATCH_DIR}/roundcubemail/display_username.patch >/dev/null && \
+    #patch -p0 < ${PATCH_DIR}/roundcubemail/display_username_skin_default.patch >/dev/null
 
-    ECHO_INFO "Patch: Incorrect filename while download attachment with Chinese (non-ascii) characters."
-    cd ${RCM_HTTPD_ROOT} && \
-    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_incorrect_filename_after_download.patch >/dev/null
+    ECHO_INFO "Patch: Fix 'Undefined index' error in 0.2-stable."
+    cd ${RCM_HTTPD_ROOT}/ && \
+    patch -p0 < ${PATCH_DIR}/roundcubemail/0.2-stable_undefined_index_error.patch >/dev/null
 
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
-        ECHO_INFO "Disable change password and mail forwarding featues."
-        cd ${RCM_HTTPD_ROOT} && \
-        perl -pi -e 's#(.*save-passwd.*)#//${1}#' index.php
-        perl -pi -e 's#(.*include.*passwd.*)#//${1}#' index.php
-
-        perl -pi -e 's#(.*save-forwards.*)#//${1}#' index.php
-        perl -pi -e 's#(.*include.*forwards.*)#//${1}#' index.php
+        ECHO_INFO "Patch: Change LDAP password."
+        cd ${RCM_HTTPD_ROOT}/ && \
+        patch -p1 < ${PATCH_DIR}/roundcubemail/0.2-stable_change_ldap_passwd.patch >/dev/null
 
         ECHO_INFO "Setting global LDAP address book in Roundcube."
         cd ${RCM_HTTPD_ROOT}/config/ && \
+        perl -pi -e 's#(.*address_book_type.*=).*#${1} "ldap";#' main.inc.php
+
+        # Remove PHP end of file mark.
         perl -pi -e 's#\?\>##' main.inc.php
+
         cat >> main.inc.php <<EOF
 # Global LDAP Address Book.
 \$rcmail_config['ldap_public']["${PROG_NAME}"] = array(
@@ -181,6 +143,8 @@ EOF
 // end of config file
 ?>
 EOF
+    elif [ X"${BACKEND}" == X"MySQL" ]; then
+        ECHO_INFO "Patch: Change MySQL password and mail forwarding setting."
     else
         :
     fi

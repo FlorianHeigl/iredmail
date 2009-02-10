@@ -25,7 +25,7 @@ ${CONF_MSG}
 EOF
 
     # Make phpMyAdmin can be accessed via HTTPS only.
-    sed -i 's#\(</VirtualHost>\)#Alias /phpmyadmin '${PHPMYADMIN_HTTPD_ROOT}'\n\1#' ${HTTPD_SSL_CONF}
+    sed -i 's#\(</VirtualHost>\)#Alias /phpmyadmin '${PHPMYADMIN_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
 
     ECHO_INFO "Config phpMyAdmin: ${PHPMYADMIN_CONFIG_FILE}."
     cd ${PHPMYADMIN_HTTPD_ROOT} && cp config.sample.inc.php ${PHPMYADMIN_CONFIG_FILE}
@@ -48,7 +48,7 @@ phpMyAdmin:
         - ${PHPMYADMIN_HTTPD_ROOT}
         - ${PHPMYADMIN_CONFIG_FILE}
     * URL:
-        - http://${HOSTNAME}/phpmyadmin
+        - https://${HOSTNAME}/phpmyadmin
     * See also:
         - ${HTTPD_CONF_DIR}/phpmyadmin.conf
 
