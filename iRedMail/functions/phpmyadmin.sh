@@ -18,6 +18,7 @@ phpmyadmin_install()
     ECHO_INFO "Create directory alias for phpMyAdmin in Apache: ${HTTPD_CONF_DIR}/phpmyadmin.conf."
     cat > ${HTTPD_CONF_DIR}/phpmyadmin.conf <<EOF
 ${CONF_MSG}
+#Alias /phpmyadmin "${PHPMYADMIN_HTTPD_ROOT}/"
 <Directory "${PHPMYADMIN_HTTPD_ROOT}/">
     Options -Indexes
 </Directory>

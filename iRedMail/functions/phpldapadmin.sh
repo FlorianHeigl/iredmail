@@ -26,6 +26,8 @@ pla_install()
     ECHO_INFO "Create directory alias for phpLDAPadmin."
     cat > ${HTTPD_CONF_DIR}/phpldapadmin.conf <<EOF
 ${CONF_MSG}
+#Alias /phpldapadmin "${PLA_HTTPD_ROOT}/"
+#Alias /ldap "${PLA_HTTPD_ROOT}/"
 <Directory "${PLA_HTTPD_ROOT}/">
     Options -Indexes
 </Directory>

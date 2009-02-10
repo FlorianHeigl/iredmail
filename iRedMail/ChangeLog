@@ -1,4 +1,7 @@
 iRedMail-0.3.3:
+    * Directory renamed: tools/ => dialog/.
+    * Update roundcube webmail to 0.2-stable, and patch to change ldap
+      password.
     * Make phpLDAPadmin, phMyAdmin, PostfixAdmin can be accessed via HTTPS
       only.
     * Improve LDAP schema, use 'enabledService=XXX' instead of
