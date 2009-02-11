@@ -141,6 +141,9 @@ export YUM_UPDATE_REPO='http://www.iredmail.org/yum/rpms/5/'
 #   str="$(${RANDOM_STRING})"
 export RANDOM_STRING='eval </dev/urandom tr -dc A-Za-z0-9| (head -c $1 > /dev/null 2>&1 || head -c 30)'
 
+# Syslog config file.
+export SYSLOG_CONF='/etc/syslog.conf'
+
 # Make some command operating system independent.
 if [ X"${KERNEL_NAME}" == X"Linux" -a -f /etc/redhat-release ]; then
     # RHEL/CentOS

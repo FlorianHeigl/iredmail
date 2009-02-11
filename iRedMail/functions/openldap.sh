@@ -190,8 +190,8 @@ TLS_CACERT ${SSL_CERT_FILE}
 EOF
     chown ldap:ldap ${OPENLDAP_LDAP_CONF}
 
-    ECHO_INFO "Setting up syslog configration file for openldap: /etc/syslog.conf"
-    echo -e "local4.*\t\t\t\t\t\t-${OPENLDAP_LOGFILE}" >>/etc/syslog.conf
+    ECHO_INFO "Setting up syslog configration file for OpenLDAP."
+    echo -e "local4.*\t\t\t\t\t\t-${OPENLDAP_LOGFILE}" >> ${SYSLOG_CONF}
 
     ECHO_INFO "Create empty log file for OpenLDAP: ${OPENLDAP_LOGFILE}."
     touch ${OPENLDAP_LOGFILE}
@@ -295,7 +295,7 @@ OpenLDAP:
         - ${OPENLDAP_LDAP_CONF}
         - ${OPENLDAP_SCHEMA_DIR}/${PROG_NAME_LOWERCASE}.schema
     * Log file related:
-        - /etc/syslog.conf
+        - ${SYSLOG_CONF}
         - ${OPENLDAP_LOGROTATE_FILE}
         - ${OPENLDAP_LOGFILE}
     * Data dir and files:

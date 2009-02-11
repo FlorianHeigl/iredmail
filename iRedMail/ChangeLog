@@ -1,4 +1,5 @@
 iRedMail-0.3.3:
+    * Use syslog as default log driver in roundcube.
     * Add patches for roundcube-0.2-stable, used to change ldap password,
       fix undefined index error.
     * Directory renamed: tools/ => dialog/.

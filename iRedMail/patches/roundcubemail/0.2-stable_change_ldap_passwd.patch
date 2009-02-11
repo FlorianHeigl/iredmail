@@ -1,11 +1,11 @@
-diff -ruN roundcubemail-0.2-stable.orig/index.php roundcubemail-0.2-stable/index.php
---- roundcubemail-0.2-stable.orig/index.php	2008-12-30 22:33:28.000000000 +0800
-+++ roundcubemail-0.2-stable/index.php	2009-01-04 23:56:24.000000000 +0800
-@@ -193,6 +193,7 @@
+diff -Naur roundcubemail-0.2-stable/index.php roundcubemail-0.2-stable.orig/index.php
+--- roundcubemail-0.2-stable/index.php	2009-02-11 10:43:01.000000000 +0800
++++ roundcubemail-0.2-stable.orig/index.php	2009-02-11 10:36:41.000000000 +0800
+@@ -193,7 +193,6 @@
      'subscribe'     => 'manage_folders.inc',
      'unsubscribe'   => 'manage_folders.inc',
      'add-identity'  => 'edit_identity.inc',
-+    'save-passwd'   => 'passwd.inc',
+-    'save-passwd'   => 'ldap_passwd.inc',
    )
  );
  
@@ -85,8 +85,8 @@ diff -ruN roundcubemail-0.2-stable.orig/program/localization/en_US/labels.inc ro
 +// Plesk Change Password
 +$labels['changepasswd']  = 'Change Password';
 +$labels['curpasswd']  = 'Current Password';
-+$labels['newpasswd']  = 'New Password';
-+$labels['confpasswd']  = 'Confirm New Password';
++$labels['newpasswd']  = 'Enter New Password';
++$labels['confpasswd']  = 'Retype New Password';
 +
  ?>
 diff -ruN roundcubemail-0.2-stable.orig/program/localization/en_US/messages.inc roundcubemail-0.2-stable/program/localization/en_US/messages.inc
@@ -98,11 +98,11 @@ diff -ruN roundcubemail-0.2-stable.orig/program/localization/en_US/messages.inc 
  $messages['editorwarning'] = 'Switching to the plain text editor will cause all text formatting to be lost. Do you wish to continue?';
 -
 +//Plesk Password Change
-+$messages['nopassword'] = "Please input new password.";
++$messages['nopassword'] = "Please Input Your New Password.";
 +$messages['passwordinconsistency'] = "New Passwords Do Not Match";
-+$messages['passwordtooshort'] = 'New Password Too Short';
-+$messages['passwordtoolong'] = 'New Password Too Long';
-+$messages['curpasswordincorrect'] = 'Current Password Incorrect';
++$messages['passwordtooshort'] = 'New Password is Too Short';
++$messages['passwordtoolong'] = 'New Password is Too Long';
++$messages['curpasswordincorrect'] = 'Current Password is Incorrect';
  ?>
 diff -ruN roundcubemail-0.2-stable.orig/program/steps/settings/func.inc roundcubemail-0.2-stable/program/steps/settings/func.inc
 --- roundcubemail-0.2-stable.orig/program/steps/settings/func.inc	2008-12-17 03:05:50.000000000 +0800
@@ -117,10 +117,23 @@ diff -ruN roundcubemail-0.2-stable.orig/program/steps/settings/func.inc roundcub
  ));
  
  
-diff -ruN roundcubemail-0.2-stable.orig/program/steps/settings/passwd.inc roundcubemail-0.2-stable/program/steps/settings/passwd.inc
---- roundcubemail-0.2-stable.orig/program/steps/settings/passwd.inc	1970-01-01 08:00:00.000000000 +0800
-+++ roundcubemail-0.2-stable/program/steps/settings/passwd.inc	2009-02-03 22:54:12.000000000 +0800
-@@ -0,0 +1,157 @@
+diff -Naur roundcubemail-0.2-stable.orig/program/steps/settings/func.inc roundcubemail-0.2-stable/program/steps/settings/func.inc
+--- roundcubemail-0.2-stable.orig/program/steps/settings/func.inc	2009-02-11 10:36:41.000000000 +0800
++++ roundcubemail-0.2-stable/program/steps/settings/func.inc	2009-02-11 10:54:43.000000000 +0800
+@@ -491,7 +491,8 @@
+ $OUTPUT->add_handlers(array(
+   'userprefs' => 'rcmail_user_prefs_form',
+   'identitieslist' => 'rcmail_identities_list',
+-  'itentitieslist' => 'rcmail_identities_list'  // keep this for backward compatibility
++  'itentitieslist' => 'rcmail_identities_list',  // keep this for backward compatibility
++  'userpasswd' => 'rcmail_passwd_form'
+ ));
+ 
+ 
+diff -Naur roundcubemail-0.2-stable.orig/program/steps/settings/ldap_passwd.inc roundcubemail-0.2-stable/program/steps/settings/ldap_passwd.inc
+--- roundcubemail-0.2-stable.orig/program/steps/settings/ldap_passwd.inc	1970-01-01 08:00:00.000000000 +0800
++++ roundcubemail-0.2-stable/program/steps/settings/ldap_passwd.inc	2009-02-11 11:07:06.000000000 +0800
+@@ -0,0 +1,148 @@
 +<?php
 +
 +/*
@@ -154,11 +167,6 @@ diff -ruN roundcubemail-0.2-stable.orig/program/steps/settings/passwd.inc roundc
 +
 +*/
 +
-+// The MIN length of a password for your serveras defined in /etc/login.defs
-+// -1 for no min/max
-+define("POPPASSD_MIN_LENGTH", 5); 
-+define("POPPASSD_MAX_LENGTH", -1);
-+
 +function rcmail_save_passwd($curpasswd, $newpasswd){
 +  global $CONFIG, $_SESSION, $OUTPUT, $RCMAIL;
 +  
@@ -175,18 +183,14 @@ diff -ruN roundcubemail-0.2-stable.orig/program/steps/settings/passwd.inc roundc
 +} 
 +
 +function update_pass($username, $old_password, $new_password) {
-+  $ldap_host = "localhost";
++  $ldap_host = $config['ldap_passwd_server_addr'];
 +  list($user,$domain) = split("@", $username);
-+  $dc_array = split('\\.', $domain);
-+  foreach ($dc_array as $value)
-+    $dc.="dc=".$value.",";
-+  $dc=substr($dc, 0, -1);
 +
-+  $ldap_user = "mail=$username,domainName=$domain,o=domains,$dc";
++  $ldap_user = $config['ldap_passwd_attr_user_rdn'] . '=' . $username . ',' . $config['ldap_passwd_attr_domain_dn'] . '=' . ',' . $domain . ',' . $config['ldap_passwd_basedn'];
 +  $ldap_pass = $old_password;
 +  if (!($connect = ldap_connect($ldap_host)))
 +    die("Cannot connect to LDAP server");
-+  ldap_set_option($connect, LDAP_OPT_PROTOCOL_VERSION, 3);
++  ldap_set_option($connect, LDAP_OPT_PROTOCOL_VERSION, $config['ldap_passwd_protocol_version']);
 +  ldap_set_option($connect, LDAP_OPT_REFERRALS, 0);
 +
 +  if (!ldap_bind($connect, $ldap_user, $ldap_pass))
@@ -245,9 +249,9 @@ diff -ruN roundcubemail-0.2-stable.orig/program/steps/settings/passwd.inc roundc
 +
 +  if (!isset($_POST['_newpasswd']) || !isset($_POST['_curpasswd']))
 +    $OUTPUT->show_message('errorsaving', 'error');
-+  elseif(POPPASSD_MIN_LENGTH != -1 && (strlen($_POST['_newpasswd']) < POPPASSD_MIN_LENGTH)) 
++  elseif($config['passwd_min_length'] != -1 && (strlen($_POST['_newpasswd']) < $config['passwd_min_length'])) 
 +    $OUTPUT->show_message('passwordtooshort', 'error');
-+  elseif(POPPASSD_MIN_LENGTH != -1 && (strlen($_POST['_newpasswd']) < POPPASSD_MIN_LENGTH)) 
++  elseif($config['passwd_min_length'] != -1 && (strlen($_POST['_newpasswd']) < $config['passwd_min_length'])) 
 +    $OUTPUT->show_message('passwordtooshort', 'error');
 +  elseif($_POST['_newpasswd'] != $_POST['_confpasswd'])
 +    $OUTPUT->show_message('passwordinconsistency', 'error');
@@ -319,3 +323,21 @@ diff -ruN roundcubemail-0.2-stable.orig/skins/default/templates/passwd.html roun
 +	</body>
 +</html>
 \ No newline at end of file
+diff -Naur roundcubemail-0.2-stable.orig/config/ldap_passwd.inc.php roundcubemail-0.2-stable/config/ldap_passwd.inc.php
+--- roundcubemail-0.2-stable.orig/config/ldap_passwd.inc.php	1970-01-01 08:00:00.000000000 +0800
++++ roundcubemail-0.2-stable/config/ldap_passwd.inc.php	2009-02-11 11:00:24.000000000 +0800
+@@ -0,0 +1,14 @@
++<?php
++
++$rcmail_config = array();
++
++$rcmail_config['passwd_min_length'] = 6;
++$rcmail_config['passwd_max_length'] = -1;
++$rcmail_config['ldap_passwd_server_addr'] = 'localhost';
++$rcmail_config['ldap_passwd_server_port'] = 389;
++$rcmail_config['ldap_passwd_protocol_version'] = 3;
++$rcmail_config['ldap_passwd_basedn'] = 'o=domain,dc=iredmail,dc=org';
++$rcmail_config['ldap_passwd_attr_domain_dn'] = 'domainName';
++$rcmail_config['ldap_passwd_attr_user_rdn'] = 'mail';
++
++?>

@@ -7,8 +7,10 @@
 # ---------------------------------------
 export RCM_VERSION='0.2-stable'
 export RCM_TARBALL="roundcubemail-${RCM_VERSION}.tar.gz"
-
 export RCM_HTTPD_ROOT="${HTTPD_SERVERROOT}/roundcubemail-${RCM_VERSION}"
+
+# Syslog log file.
+export RCM_LOGFILE='/var/log/roundcube.log'
 
 # Database setting.
 export RCM_DB="roundcubemail"

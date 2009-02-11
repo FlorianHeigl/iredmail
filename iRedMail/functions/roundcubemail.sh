@@ -79,15 +79,21 @@ EOF
     export FIRST_DOMAIN
     perl -pi -e 's#(.*username_domain.*=)(.*)#${1} "$ENV{FIRST_DOMAIN}";#' main.inc.php
     perl -pi -e 's#(.*locale_string.*)(en)(.*)#${1}$ENV{RCM_DEFAULT_LOCALE}${3}#' main.inc.php
-    perl -pi -e 's#(.*timezone.*)(intval.*)#${1}8; //${2}#' main.inc.php
-    perl -pi -e 's#(.*enable_spellcheck.*)(TRUE)(.*)#${1}FALSE${3}#' main.inc.php
-    perl -pi -e 's#(.*default_charset.*=)(.*)#${1}"UTF-8";#' main.inc.php
+    perl -pi -e 's#(.*timezone.*=).*#${1} 8;#' main.inc.php
+    perl -pi -e 's#(.*enable_spellcheck.*=).*#${1} FALSE;#' main.inc.php
+    perl -pi -e 's#(.*default_charset.*=).*#${1} "UTF-8";#' main.inc.php
 
     # Set useragent, add project info.
-    perl -pi -e 's#(.*rcmail_config.*useragent.*=).*#${1} "RoundCube WebMail";#' main.inc.php
+    perl -pi -e 's#(.*useragent.*=).*#${1} "RoundCube WebMail";#' main.inc.php
 
-    # Disable multiple identities. roundcube-0.2 only.
-    #perl -pi -e 's#(.*identities_level.*=).*#${1} 3;#' main.inc.php
+    # Disable multiple identities.
+    perl -pi -e 's#(.*identities_level.*=).*#${1} 3;#' main.inc.php
+
+    # Log file related.
+    perl -pi -e 's#(.*log_driver.*=).*#${1} "syslog";#' main.inc.php
+    perl -pi -e 's#(.*syslog_id.*=).*#${1} "roundcube";#' main.inc.php
+    perl -pi -e 's#(.*syslog_facility.*=).*#${1} "LOG_USER";#' main.inc.php
+    perl -pi -e 's#(.*log_logins.*=).*#${1} TRUE;#' main.inc.php
 
     ECHO_INFO "Create directory alias for Roundcubemail."
     cat > ${HTTPD_CONF_DIR}/roundcubemail.conf <<EOF
@@ -100,7 +106,7 @@ Alias /roundcube "${RCM_HTTPD_ROOT}/"
 </Directory>
 EOF
 
-    ECHO_INFO "Patch: Display Username."
+    #ECHO_INFO "Patch: Display Username."
     #cd ${RCM_HTTPD_ROOT}/skins/default/ && \
     #patch -p0 < ${PATCH_DIR}/roundcubemail/display_username.patch >/dev/null && \
     #patch -p0 < ${PATCH_DIR}/roundcubemail/display_username_skin_default.patch >/dev/null
@@ -148,6 +154,14 @@ EOF
     else
         :
     fi
+
+    # Log file related.
+    ECHO_INFO "Setting up syslog configration file for Roundcube."
+    echo -e "user.*\t\t\t\t\t\t-${RCM_LOGFILE}" >> ${SYSLOG_CONF}
+
+    touch ${RCM_LOGFILE}
+    chown root:root ${OPENLDAP_LOGFILE}
+    chmod 0600 ${OPENLDAP_LOGFILE}
 
     cat >> ${TIP_FILE} <<EOF
 WebMail(Roundcubemail):
