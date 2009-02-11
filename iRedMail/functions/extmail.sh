@@ -60,6 +60,9 @@ ${CONF_MSG}
 </VirtualHost>
 EOF
 
+    # Make ExtMail can be accessed via HTTPS.
+    sed -i 's#\(</VirtualHost>\)#Alias /extmail '${EXTMAIL_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
+
     ECHO_INFO "Basic configuration for ExtMail."
     cd ${EXTMAIL_HTTPD_ROOT} && cp -f webmail.cf.default ${EXTMAIL_CONF}
 

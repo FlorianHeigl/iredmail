@@ -22,10 +22,15 @@ sm_install()
     cat > ${HTTPD_CONF_DIR}/squirrelmail.conf <<EOF
 ${CONF_MSG}
 Alias /squirrelmail "${SM_HTTPD_ROOT}/"
+Alias /squirrel "${SM_HTTPD_ROOT}/"
 <Directory "${SM_HTTPD_ROOT}/">
     Options -Indexes
 </Directory>
 EOF
+
+    # Make SquirrelMail can be accessed via HTTPS.
+    sed -i 's#\(</VirtualHost>\)#Alias /squirrelmail '${SM_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
+    sed -i 's#\(</VirtualHost>\)#Alias /squirrel '${SM_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
 
     if [ X"${USE_RCM}" == X"YES" -o X"${USE_EXTMAIL}" == X"YES" ]; then
         :
@@ -34,6 +39,10 @@ EOF
 Alias /mail "${SM_HTTPD_ROOT}/"
 Alias /webmail "${SM_HTTPD_ROOT}/"
 EOF
+
+        # Make SquirrelMail can be accessed via HTTPS.
+        sed -i 's#\(</VirtualHost>\)#Alias /mail '${SM_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
+        sed -i 's#\(</VirtualHost>\)#Alias /webmail '${SM_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
     fi
 
     ECHO_INFO "Create directories to storage squirrelmail data and attachments: ${SM_DATA_DIR}, ${SM_ATTACHMENT_DIR}."

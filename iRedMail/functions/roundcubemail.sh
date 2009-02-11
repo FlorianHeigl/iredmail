@@ -106,6 +106,11 @@ Alias /roundcube "${RCM_HTTPD_ROOT}/"
 </Directory>
 EOF
 
+    # Make Roundcube can be accessed via HTTPS.
+    sed -i 's#\(</VirtualHost>\)#Alias /mail '${RCM_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
+    sed -i 's#\(</VirtualHost>\)#Alias /webmail '${RCM_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
+    sed -i 's#\(</VirtualHost>\)#Alias /roundcube '${RCM_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
+
     #ECHO_INFO "Patch: Display Username."
     #cd ${RCM_HTTPD_ROOT}/skins/default/ && \
     #patch -p0 < ${PATCH_DIR}/roundcubemail/display_username.patch >/dev/null && \
