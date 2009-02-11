@@ -226,7 +226,7 @@ EOF
     if [ X"${POLICYD_SEPERATE_LOG}" == X"YES" ]; then
         perl -pi -e 's#^(SYSLOG_FACILITY=)(.*)#${1}$ENV{POLICYD_SYSLOG_FACILITY}#' ${POLICYD_CONF} 
         perl -pi -e 's#^(SYSLOG_FACILITY=)(.*)#${1}$ENV{POLICYD_SYSLOG_FACILITY}#' ${POLICYD_SENDER_THROTTLE_CONF} 
-        echo -e "local1.*\t\t\t\t\t\t-${POLICYD_LOGFILE}" >>/etc/syslog.conf
+        echo -e "local1.*\t\t\t\t\t\t-${POLICYD_LOGFILE}" >> ${SYSLOG_CONF}
         cat > ${POLICYD_LOGROTATE_FILE} <<EOF
 ${CONF_MSG}
 ${AMAVISD_LOGFILE} {
@@ -286,7 +286,7 @@ EOF
     if [ X"${POLICYD_SEPERATE_LOG}" == X"YES" ]; then
         cat >> ${TIP_FILE} <<EOF
     * Log file:
-        - /etc/syslog.conf
+        - ${SYSLOG_CONF}
         - ${POLICYD_LOGFILE}
 
 EOF

@@ -163,6 +163,28 @@ EOF
     chown root:root ${OPENLDAP_LOGFILE}
     chmod 0600 ${OPENLDAP_LOGFILE}
 
+    ECHO_INFO "Setting logrotate for roundcube log file."
+    cat > ${RCM_LOGROTATE_FILE} <<EOF
+${CONF_MSG}
+${RCM_LOGROTATE_FILE} {
+    compress
+    weekly
+    rotate 10
+    create 0600 root root
+    missingok
+
+    # Use bzip2 for compress.
+    compresscmd $(which bzip2)
+    uncompresscmd $(which bunzip2)
+    compressoptions -9
+    compressext .bz2 
+
+    postrotate
+        /usr/bin/killall -HUP syslogd
+    endscript
+}
+EOF
+
     cat >> ${TIP_FILE} <<EOF
 WebMail(Roundcubemail):
     * Configuration files:
@@ -171,6 +193,10 @@ WebMail(Roundcubemail):
     * URL:
         - http://${HOSTNAME}/mail/
         - http://${HOSTNAME}/webmail/
+    * Log file related:
+        - ${SYSLOG_CONF}
+        - ${RCM_LOGFILE}
+        - ${RCM_LOGROTATE_FILE}
     * See also:
         - ${HTTPD_CONF_DIR}/roundcubemail.conf
 

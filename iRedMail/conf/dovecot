@@ -10,8 +10,8 @@ export DOVECOT_CONF='/etc/dovecot.conf'
 export DOVECOT_LDAP_CONF='/etc/dovecot-ldap.conf'
 export DOVECOT_MYSQL_CONF='/etc/dovecot-mysql.conf'
 
-export DOVECOT_LOGROTATE_FILE="${LOG_ROTATE_DIR}/dovecot"
-export SIEVE_LOGROTATE_FILE="${LOG_ROTATE_DIR}/sieve"
+export DOVECOT_LOGROTATE_FILE="${LOGROTATE_DIR}/dovecot"
+export SIEVE_LOGROTATE_FILE="${LOGROTATE_DIR}/sieve"
 
 # Dovecot auth socket.
 export DOVECOT_SOCKET_MUX='/var/spool/postfix/dovecot-auth'

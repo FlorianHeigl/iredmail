@@ -5,4 +5,4 @@
 export PROCMAIL_BIN='/usr/bin/procmail'
 export PROCMAILRC='/etc/procmailrc'
 export PROCMAIL_LOGFILE='/var/log/procmail.log'
-export PROCMAIL_LOGROTATE_FILE="${LOG_ROTATE_DIR}/procmail"
+export PROCMAIL_LOGROTATE_FILE="${LOGROTATE_DIR}/procmail"

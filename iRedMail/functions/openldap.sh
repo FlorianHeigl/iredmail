@@ -296,8 +296,8 @@ OpenLDAP:
         - ${OPENLDAP_SCHEMA_DIR}/${PROG_NAME_LOWERCASE}.schema
     * Log file related:
         - ${SYSLOG_CONF}
-        - ${OPENLDAP_LOGROTATE_FILE}
         - ${OPENLDAP_LOGFILE}
+        - ${OPENLDAP_LOGROTATE_FILE}
     * Data dir and files:
         - ${OPENLDAP_DATA_DIR}
         - ${LDAP_DATA_DIR}

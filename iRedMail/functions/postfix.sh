@@ -662,17 +662,17 @@ EOF
 postfix_config_syslog()
 {
     #
-    # maillog file is listed in ${LOG_ROTATE_DIR}/syslog file by
+    # maillog file is listed in ${LOGROTATE_DIR}/syslog file by
     # default, logrotated weekly, it's not suited for a large network.
     #
 
     ECHO_INFO "Setting up logrotate for maillog as a daily work."
 
-    # Remove maillog from ${LOG_ROTATE_DIR}/syslog.
-    perl -pi -e 's#/var/log/maillog ##' ${LOG_ROTATE_DIR}/syslog
+    # Remove maillog from ${LOGROTATE_DIR}/syslog.
+    perl -pi -e 's#/var/log/maillog ##' ${LOGROTATE_DIR}/syslog
 
     # Make maillog as standalone logrotated job.
-    cat >> ${LOG_ROTATE_DIR}/maillog <<EOF
+    cat >> ${LOGROTATE_DIR}/maillog <<EOF
 ${CONF_MSG}
 #
 # Logrotate file for postfix maillog.
@@ -700,7 +700,7 @@ EOF
 
     cat >> ${TIP_FILE} <<EOF
 Postfix (syslog):
-    * logrotate file: ${LOG_ROTATE_DIR}/maillog
+    * logrotate file: ${LOGROTATE_DIR}/maillog
 
 EOF
 

@@ -274,7 +274,7 @@ EOF
     if [ X"${AMAVISD_SEPERATE_LOG}" == X"YES" ]; then
         ECHO_INFO "Make Amavisd log to file: ${AMAVISD_LOGFILE}."
         perl -pi -e 's#(.*syslog_facility.*)(mail)(.*)#${1}local0${3}#' ${AMAVISD_CONF}
-        echo -e "local0.*\t\t\t\t\t\t-${AMAVISD_LOGFILE}" >> /etc/syslog.conf
+        echo -e "local0.*\t\t\t\t\t\t-${AMAVISD_LOGFILE}" >> ${SYSLOG_CONF}
 
         ECHO_INFO "Setting logrotate for amavisd log file: ${AMAVISD_LOGFILE}."
         cat > ${AMAVISD_LOGROTATE_FILE} <<EOF

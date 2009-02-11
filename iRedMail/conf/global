@@ -128,7 +128,7 @@ export KERNEL_NAME="$(uname -s)"
 export CRON_SPOOL_DIR="/var/spool/cron"
 
 # Logrotate configuration directory.
-export LOG_ROTATE_DIR='/etc/logrotate.d'
+export LOGROTATE_DIR='/etc/logrotate.d'
 
 # Yum repository related.
 export YUM_REPOS_DIR='/etc/yum.repos.d'
