@@ -92,7 +92,7 @@ sm_config_basic()
     perl -pi -e 's#(.*data_dir.*=)(.*)#${1}"$ENV{SM_DATA_DIR}";#' ${SM_CONFIG}
     
     # squirrelmail_default_language
-    perl -pi -e 's#(.*squirrelmail_default_language.*=)(.*)#${1}"$ENV{SM_DEFAULT_LOCALE}";#' ${SM_CONFIG}
+    perl -pi -e 's#(.*squirrelmail_default_language.*=)(.*)#${1}"$ENV{'DEFAULT_LANG'}";#' ${SM_CONFIG}
 
     # default_charset
     perl -pi -e 's#(.*default_charset.*=)(.*)#${1}"$ENV{SM_DEFAULT_CHARSET}";#' ${SM_CONFIG}

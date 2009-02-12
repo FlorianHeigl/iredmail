@@ -1,4 +1,6 @@
 iRedMail-0.3.3:
+    * Prompt to choose the default language for webmails.
+    * Update awstats to 6.9.
     * Make webmail can be accessed via HTTPS (except horde).
     * Use syslog as default log driver in roundcube.
     * Add patches for roundcube-0.2-stable, used to change ldap password,

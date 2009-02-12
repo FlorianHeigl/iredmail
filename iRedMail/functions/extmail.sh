@@ -67,7 +67,7 @@ EOF
     cd ${EXTMAIL_HTTPD_ROOT} && cp -f webmail.cf.default ${EXTMAIL_CONF}
 
     # Set default user language.
-    perl -pi -e 's#(SYS_USER_LANG.*)en_US#${1}$ENV{'SYS_USER_LANG'}#' ${EXTMAIL_CONF}
+    perl -pi -e 's#(SYS_USER_LANG.*)en_US#${1}$ENV{'DEFAULT_LANG'}#' ${EXTMAIL_CONF}
 
     # Set mail attachment size.
     perl -pi -e 's#^(SYS_MESSAGE_SIZE_LIMIT.*=)(.*)#${1} $ENV{'MESSAGE_SIZE_LIMIT'}#' ${EXTMAIL_CONF}

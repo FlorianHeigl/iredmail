@@ -77,8 +77,8 @@ EOF
 
     # Set defeault domain.
     export FIRST_DOMAIN
-    perl -pi -e 's#(.*username_domain.*=)(.*)#${1} "$ENV{FIRST_DOMAIN}";#' main.inc.php
-    perl -pi -e 's#(.*locale_string.*)(en)(.*)#${1}$ENV{RCM_DEFAULT_LOCALE}${3}#' main.inc.php
+    perl -pi -e 's#(.*username_domain.*=)(.*)#${1} "$ENV{'FIRST_DOMAIN'}";#' main.inc.php
+    perl -pi -e 's#(.*locale_string.*)(en)(.*)#${1}$ENV{'DEFAULT_LANG'}${3}#' main.inc.php
     perl -pi -e 's#(.*timezone.*=).*#${1} 8;#' main.inc.php
     perl -pi -e 's#(.*enable_spellcheck.*=).*#${1} FALSE;#' main.inc.php
     perl -pi -e 's#(.*default_charset.*=).*#${1} "UTF-8";#' main.inc.php

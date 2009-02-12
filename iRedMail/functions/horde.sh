@@ -70,7 +70,7 @@ EOF
     perl -pi -e 's#(.*conf.*auth.*admins.*=).*#${1} array\("$ENV{'DOMAIN_ADMIN_NAME'}@$ENV{'FIRST_DOMAIN'}"\);#' conf.php
 
     # Set default language.
-    perl -pi -e 's#(.*nls.*defaults.*language.*=).*#${1} "$ENV{HORDE_DEFAULT_LANGUAGE}";#' nls.php
+    perl -pi -e 's#(.*nls.*defaults.*language.*=).*#${1} "$ENV{'DEFAULT_LANG'}";#' nls.php
 
     # Empty default email footer msg.
     echo '' > ${HORDE_HTTPD_ROOT}/imp/config/trailer.txt    # Automatic appended email footer msg.

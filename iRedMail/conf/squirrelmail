@@ -56,9 +56,7 @@ export PLUGIN_ADD_ADDRESS='add_address-1.0-1.4.0.tar.gz'
 # ----------------------------------------
 export SM_TRANSLATIONS_TARBALL="all_locales-1.4.13-20071220.tar.gz"
 
-# Default locale and charset.
-# Note: Chinese locale 'zh_CN' and 'zh_TW' will be converted to 'utf-8' by default.
-export SM_DEFAULT_LOCALE='zh_CN'
+# Default charset.
 export SM_DEFAULT_CHARSET='utf-8'
 
 #

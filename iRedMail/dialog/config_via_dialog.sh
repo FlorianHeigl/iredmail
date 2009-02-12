@@ -23,9 +23,8 @@ Feedback, bug report, communication are all welcome.
 
 Contact me if you need help for ${PROG_NAME} or RHEL/CentOS:
 
-    * Author:       Bibby
-    * Mail/GTalk:   michaelbibby (at) gmail.com
-    * MSN:          michaelbibby (at) hotmail.com
+    * Author:   Zhang Huangbin
+    * Mail:     michaelbibby (at) gmail.com
 
 NOTE:
 

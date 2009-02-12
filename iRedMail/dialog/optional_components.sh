@@ -133,21 +133,23 @@ Please choose your favorite webmail program.
     "Horde WebMail" "WebMail program." "off" \
     2> /tmp/webmail
 
-    webmail="$(cat /tmp/webmail)"
-    rm -f /tmp/webmail
+webmail="$(cat /tmp/webmail)"
+rm -f /tmp/webmail
 
-    echo ${webmail} | grep -i 'roundcubemail' >/dev/null 2>&1
-    [ X"$?" == X"0" ] && \
-        export USE_RCM='YES' && echo "export USE_RCM='YES'" >> ${CONFIG_FILE}
+echo ${webmail} | grep -i 'roundcubemail' >/dev/null 2>&1
+[ X"$?" == X"0" ] && export USE_RCM='YES' && echo "export USE_RCM='YES'" >> ${CONFIG_FILE}
 
-    echo ${webmail} | grep -i 'squirrelmail' >/dev/null 2>&1
-    [ X"$?" == X"0" ] && USE_SM='YES' && echo "export USE_SM='YES'" >>${CONFIG_FILE}
+echo ${webmail} | grep -i 'squirrelmail' >/dev/null 2>&1
+[ X"$?" == X"0" ] && export USE_SM='YES' && echo "export USE_SM='YES'" >>${CONFIG_FILE}
 
-    echo ${webmail} | grep -i 'extmail' >/dev/null 2>&1
-    [ X"$?" == X"0" ] && USE_EXTMAIL='YES' && echo "export USE_EXTMAIL='YES'" >>${CONFIG_FILE}
+echo ${webmail} | grep -i 'extmail' >/dev/null 2>&1
+[ X"$?" == X"0" ] && export USE_EXTMAIL='YES' && echo "export USE_EXTMAIL='YES'" >>${CONFIG_FILE}
 
-    echo ${webmail} | grep -i 'Horde' >/dev/null 2>&1
-    [ X"$?" == X"0" ] && USE_HORDE='YES' && echo "export USE_HORDE='YES'" >>${CONFIG_FILE}
+echo ${webmail} | grep -i 'Horde' >/dev/null 2>&1
+[ X"$?" == X"0" ] && export USE_HORDE='YES' && echo "export USE_HORDE='YES'" >>${CONFIG_FILE}
+
+# Promot to choose the prefer language for webmail.
+[ X"${webmail}" != X"" ] && . ${DIALOG_DIR}/default_language.sh
 
 # ----------------------------------------
 # Optional components for special backend.
