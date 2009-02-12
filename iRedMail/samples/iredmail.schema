@@ -91,50 +91,31 @@ attributetype ( 1.3.6.1.4.1.32349.1.2.2.7 NAME 'mailForwardingAddress'
     DESC 'Address(es) to forward all incoming messages to.'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.8 NAME 'deliveryProgramPath'
-    DESC 'Program to execute for all incoming mails.'
-    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
-    SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.9 NAME 'qmailDotMode'
-    DESC 'Interpretation of .qmail files: both, dotonly, ldaponly, ldapwithprog, none'
-    EQUALITY caseIgnoreIA5Match
-    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
-    SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.10 NAME 'deliveryMode'
-    DESC 'multi field entries of: normal, forwardonly, nombox, localdelivery, reply, echo'
-    EQUALITY caseIgnoreIA5Match
-    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.11 NAME 'mailReplyText'
-    DESC 'A reply text for every incoming message'
-    EQUALITY caseIgnoreMatch
-    SUBSTR caseIgnoreSubstringsMatch
-    SYNTAX 1.3.6.1.4.1.1466.115.121.1.44{4096}
-    SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.12 NAME 'accountStatus'
+attributetype ( 1.3.6.1.4.1.32349.1.2.2.8 NAME 'accountStatus'
     DESC 'The status of a user account: active, nopop, disabled'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.13 NAME 'userRecipientBccAddress'
+attributetype ( 1.3.6.1.4.1.32349.1.2.2.9 NAME 'userRecipientBccAddress'
     DESC 'Recipient BCC address'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.14 NAME 'userSenderBccAddress'
+attributetype ( 1.3.6.1.4.1.32349.1.2.2.10 NAME 'userSenderBccAddress'
     DESC 'Sender BCC address for single user'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.15 NAME 'department'
+attributetype ( 1.3.6.1.4.1.32349.1.2.2.11 NAME 'department'
     DESC 'Department name'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.16 NAME 'userRank'
+attributetype ( 1.3.6.1.4.1.32349.1.2.2.12 NAME 'userRank'
     DESC 'Rank: boss, manager, normal'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.17 NAME 'enabledService'
+attributetype ( 1.3.6.1.4.1.32349.1.2.2.13 NAME 'enabledService'
     DESC 'Enabled service name: mail, ftp, im, smtp, imap, pop3, deliver'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
