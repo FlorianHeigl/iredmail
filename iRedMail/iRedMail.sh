@@ -31,7 +31,6 @@ check_arch && check_env
 . ${CONF_DIR}/openldap
 . ${CONF_DIR}/phpldapadmin
 . ${CONF_DIR}/mysql
-. ${CONF_DIR}/cyrus_sasl
 . ${CONF_DIR}/postfix
 . ${CONF_DIR}/policyd
 . ${CONF_DIR}/pypolicyd-spf
@@ -72,9 +71,6 @@ check_arch && check_env
 
 # Switch.
 . ${FUNCTIONS_DIR}/backend.sh
-
-# Cyrus-SASL.
-. ${FUNCTIONS_DIR}/cyrus_sasl.sh
 
 # Postfix.
 . ${FUNCTIONS_DIR}/postfix.sh
@@ -151,11 +147,6 @@ check_status_before_run apache_php_config
 # Install & Config Backend: OpenLDAP or MySQL.
 # ------------------------------------------------
 check_status_before_run backend_install
-
-# ------------------------------------------------
-# Cyrus-SASL.
-# ------------------------------------------------
-check_status_before_run cyrus_sasl_config
 
 # ------------------------------------------------
 # Postfix.

@@ -8,16 +8,7 @@
 
 postfix_config_basic()
 {
-    backup_file ${SMTPD_CONF} ${POSTFIX_FILE_MAIN_CF}
-
-    ECHO_INFO "Create saslauthd user auth lookup file: ${SMTPD_CONF}."
-
-    cat > ${SMTPD_CONF} <<EOF
-${CONF_MSG}
-pwcheck_method: saslauthd
-mech_list: PLAIN LOGIN MD5
-saslauthd_path: SASLAUTHD_MUX
-EOF
+    backup_file ${POSTFIX_FILE_MAIN_CF}
 
     ECHO_INFO "Enable chroot for Postfix."
     backup_file ${POSTFIX_FILE_MASTER_CF}
