@@ -53,10 +53,6 @@ optional_components()
     [ X"${USE_POSTFIXADMIN}" == X"YES" ] && \
         check_status_before_run postfixadmin_install
 
-    # Mailman.
-    [ X"${USE_MAILMAN}" == X"YES" ] && \
-        check_status_before_run mailman_config
-
     # Awstats.
     [ X"${USE_AWSTATS}" == X"YES" ] && \
         check_status_before_run awstats_config_basic && \

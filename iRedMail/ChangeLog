@@ -1,5 +1,5 @@
 iRedMail-0.3.3:
-    * Remove package: cyrus-sasl.
+    * Remove package: cyrus-sasl, mailman.
     * Prompt to choose the default language for webmails.
     * Update awstats to 6.9.
     * Make webmail can be accessed via HTTPS (except horde).

@@ -105,9 +105,6 @@ check_arch && check_env
 # Horde webmail.
 . ${FUNCTIONS_DIR}/horde.sh
 
-# Mailman.
-. ${FUNCTIONS_DIR}/mailman.sh
-
 # ExtMail.
 . ${FUNCTIONS_DIR}/extmail.sh
 

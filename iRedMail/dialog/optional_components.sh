@@ -168,9 +168,6 @@ use them by your own:
     "Mailgraph" "Mail statistics RRDtool frontend for Postfix." "on" \
     2>/tmp/ldap_optional_components
 
-    # Temporary disabled.
-    #"Mailman" "Mailing List Manager." "off" \
-
     LDAP_OPTIONAL_COMPONENTS="$(cat /tmp/ldap_optional_components)"
 
     echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'phpldapadmin' >/dev/null 2>&1
@@ -178,9 +175,6 @@ use them by your own:
 
     echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'phpmyadmin' >/dev/null 2>&1
     [ X"$?" == X"0" ] && USE_PHPMYADMIN='YES' && echo "export USE_PHPMYADMIN='YES'" >>${CONFIG_FILE}
-
-    echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'mailman' >/dev/null 2>&1
-    [ X"$?" == X"0" ] && USE_MAILMAN='YES' && echo "export USE_MAILMAN='YES'" >>${CONFIG_FILE}
 
     echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'awstats' >/dev/null 2>&1
     [ X"$?" == X"0" ] && USE_AWSTATS='YES' && echo "export USE_AWSTATS='YES'" >>${CONFIG_FILE}
@@ -203,9 +197,6 @@ them by your own:
     "Mailgraph" "Mail statistics RRDtool frontend for Postfix." "on" \
     2>/tmp/mysql_optional_components
 
-    # Temporary disabled.
-    #"Mailman" "Mailing List Manager." "off" \
-
     MYSQL_OPTIONAL_COMPONENTS="$(cat /tmp/mysql_optional_components)"
     rm -f /tmp/mysql_optional_components
 
@@ -214,9 +205,6 @@ them by your own:
 
     echo ${MYSQL_OPTIONAL_COMPONENTS} | grep -i 'postfixadmin' >/dev/null 2>&1
     [ X"$?" == X"0" ] && USE_POSTFIXADMIN='YES' && echo "export USE_POSTFIXADMIN='YES'" >>${CONFIG_FILE}
-
-    echo ${MYSQL_OPTIONAL_COMPONENTS} | grep -i 'mailman' >/dev/null 2>&1
-    [ X"$?" == X"0" ] && USE_MAILMAN='YES' && echo "export USE_MAILMAN='YES'" >>${CONFIG_FILE}
 
     echo ${MYSQL_OPTIONAL_COMPONENTS} | grep -i 'awstats' >/dev/null 2>&1
     [ X"$?" == X"0" ] && USE_AWSTATS='YES' && echo "export USE_AWSTATS='YES'" >>${CONFIG_FILE}
@@ -234,6 +222,3 @@ fi
 
 # Used when you use awstats.
 [ X"${USE_AWSTATS}" == X"YES" ] && . ${DIALOG_DIR}/awstats_config.sh
-
-# Used when you use mailman.
-[ X"${USE_MAILMAN}" == X"YES" ] && . ${DIALOG_DIR}/mailman_config.sh

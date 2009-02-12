@@ -97,11 +97,6 @@ install_all()
     # RRDTools.
     [ X"${USE_MAILGRAPH}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} rrdtool.${ARCH} perl-rrdtool.${ARCH} perl-File-Tail.noarch"
 
-    # Mailman.
-    [ X"${USE_MAILMAN}" == X"YES" ] && \
-        ALL_PKGS="${ALL_PKGS} mailman.${ARCH}" && \
-        ENABLED_SERVICES="${ENABLED_SERVICES} mailman"
-
     # Misc.
     ALL_PKGS="${ALL_PKGS} bzip2.${ARCH} acl.${ARCH} mailx.${ARCH} patch.${ARCH} crontabs.noarch dos2unix.${ARCH}"
     ENABLED_SERVICES="${ENABLED_SERVICES} crond"
