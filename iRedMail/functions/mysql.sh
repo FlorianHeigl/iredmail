@@ -84,8 +84,26 @@ SOURCE ${SAMPLE_SQL};
 
 /* Add your first domain. */
 INSERT INTO domain (domain,transport) VALUES ("${FIRST_DOMAIN}", "${TRANSPORT}");
+
+/* Add your first domain admin. */
+INSERT INTO admin (username,password,created) VALUES ("${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}","${FIRST_DOMAIN_ADMIN_PASSWD}", NOW());
+INSERT INTO domain_admins (username,domain,created) VALUES ("${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}","${FIRST_DOMAIN}", NOW());
+
+/* Add domain admin. */
+INSERT INTO mailbox (username,password,name,maildir,quota,domain,created) VALUES ("${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}","${FIRST_DOMAIN_ADMIN_PASSWD}","${DOMAIN_ADMIN_NAME}","${FIRST_DOMAIN}/${DOMAIN_ADMIN_NAME}/",0, "${FIRST_DOMAIN}",NOW());
+INSERT INTO alias (address,goto,domain,created) VALUES ("${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}", "${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}", "${FIRST_DOMAIN}", NOW());
+
+/* Add your first normal user. */
+INSERT INTO mailbox (username,password,name,maildir,quota,domain,created) VALUES ("${FIRST_USER}@${FIRST_DOMAIN}","${FIRST_USER_PASSWD}","${FIRST_USER}","${FIRST_DOMAIN}/${FIRST_USER}/",100, "${FIRST_DOMAIN}", NOW());
+INSERT INTO alias (address,goto,domain,created) VALUES ("${FIRST_USER}@${FIRST_DOMAIN}", "${FIRST_USER}@${FIRST_DOMAIN}", "${FIRST_DOMAIN}", NOW());
 EOF
 
+    # Maildir format.
+    export FIRST_DOMAIN
+    export DOMAIN_ADMIN_NAME
+    export FIRST_USER
+    [ X"${HOME_MAILBOX}" == X"mbox" ] && perl -pi -e 's#(.*$ENV{FIRST_DOMAIN}/$ENV{DOMAIN_ADMIN_NAME})/(.*)#${1}${2}#' ${MYSQL_VMAIL_SQL}
+    [ X"${HOME_MAILBOX}" == X"mbox" ] && perl -pi -e 's#(.*$ENV{FIRST_DOMAIN}/$ENV{FIRST_USER})/(.*)#${1}${2}#' ${MYSQL_VMAIL_SQL}
     ECHO_INFO -n "Import postfix virtual hosts/users: ${MYSQL_VMAIL_SQL}."
     mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
 SOURCE ${MYSQL_VMAIL_SQL};

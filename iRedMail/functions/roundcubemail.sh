@@ -165,8 +165,8 @@ EOF
     echo -e "user.*\t\t\t\t\t\t-${RCM_LOGFILE}" >> ${SYSLOG_CONF}
 
     touch ${RCM_LOGFILE}
-    chown root:root ${OPENLDAP_LOGFILE}
-    chmod 0600 ${OPENLDAP_LOGFILE}
+    chown root:root ${RCM_LOGFILE}
+    chmod 0600 ${RCM_LOGFILE}
 
     ECHO_INFO "Setting logrotate for roundcube log file."
     cat > ${RCM_LOGROTATE_FILE} <<EOF

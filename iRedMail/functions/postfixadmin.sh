@@ -32,15 +32,30 @@ EOF
     # Make PostfixAdmin can be accessed via HTTPS only.
     sed -i 's#\(</VirtualHost>\)#Alias /postfixadmin '${POSTFIXADMIN_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
 
-    # Import hardcoded site admin name and password.
-    mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
-/* Add whole site admin. */
+    if [ X"${SITE_ADMIN_NAME}" == X"${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}" ]; then
+        # We need update domain list, not insert a new record.
+        mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
 USE ${VMAIL_DB};
-INSERT INTO admin (username, password) VALUES("${POSTFIXADMIN_ADMIN_NAME}",password("${POSTFIXADMIN_ADMIN_PASSWD}"));
-INSERT INTO domain_admins (username,domain) VALUES ("${POSTFIXADMIN_ADMIN_NAME}","ALL");
+
+/* Update domain list. */
+UPDATE domain_admins SET domain='ALL' WHERE username="${SITE_ADMIN_NAME}";
 
 FLUSH PRIVILEGES;
 EOF
+    else
+        ECHO_INFO "Add site admin in SQL database."
+        SITE_ADMIN_PASSWD="$(openssl passwd -1 ${SITE_ADMIN_PASSWD})"
+        mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
+USE ${VMAIL_DB};
+
+/* Add whole site admin. */
+INSERT INTO admin (username, password) VALUES("${SITE_ADMIN_NAME}","${SITE_ADMIN_PASSWD}");
+INSERT INTO domain_admins (username,domain) VALUES ("${SITE_ADMIN_NAME}","ALL");
+
+FLUSH PRIVILEGES;
+EOF
+    fi
+
 
     cd ${POSTFIXADMIN_HTTPD_ROOT}
 

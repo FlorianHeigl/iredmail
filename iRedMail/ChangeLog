@@ -13,8 +13,6 @@ iRedMail-0.3.3:
     * Improve LDAP schema, use 'enabledService=XXX' instead of
       enableXXXService.
     * Make awstats use LDAP user auth if use OpenLDAP as backend.
-    * Hardcode PostfixAdmin admin user name and password (conf/postfixadmin).
-    * Do not import domain admin and first normail user of first domain.
     * Update dovecot-sieve to 1.1.6.
     * Use variable to control whether download packages from official yum
       repository or not.

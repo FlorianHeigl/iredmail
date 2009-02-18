@@ -40,7 +40,8 @@ export LDAP_SERVICE_SMTP='smtp'
 export LDAP_SERVICE_POP3='pop3'
 export LDAP_SERVICE_IMAP='imap'
 export LDAP_SERVICE_DELIVER='deliver'
-export LDAP_SERVICE_WEBMAIL='webmail'   # Not used yet.
+export LDAP_SERVICE_WEBMAIL='webmail'
+export LDAP_SERVICE_AWSTATS='awstats'
 
 # Domain related.
 export LDAP_ATTR_DOMAIN_DN_NAME='domainName'
