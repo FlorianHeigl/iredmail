@@ -3,8 +3,6 @@
 3ca3851c5f12a7d449b4cab9367b716e  rpms/php-mhash-5.1.6-4.el5.i386.rpm
 5875f75b5873cb058700d0a2b917c776  rpms/perl-Unix-Syslog-1.0-1.el5.rf.i386.rpm
 6f0da93aa785bf28549fd06adfd03c08  rpms/libmcrypt-2.5.7-5.el5.i386.rpm
-96304815847ffc139dd8b70dc9f0956d  rpms/mcrypt-2.6.4-3.el5.i386.rpm
-99af49e7604c7a312222a4e4decab0c4  rpms/lzo-1.08-4.2.el5.rf.i386.rpm
 ad0fc442150938da416abb7b3df27dcc  rpms/freeze-2.5.0-1.2.el5.rf.i386.rpm
 afa0d6fa53736722635073a27f5bbdb8  rpms/php-mcrypt-5.1.6-4.el5.i386.rpm
 b58466aa336a076d6f507d3c1f6b6bca  rpms/lzop-1.01-2.el5.rf.i386.rpm
@@ -12,7 +10,6 @@ b73a29aaf73989efe9b7935f31804d8e  rpms/lha-1.14i-19.2.2.el5.rf.i386.rpm
 bfc4b2c6ed712330c5d093e86832454c  rpms/arc-5.21o-1.el5.rf.i386.rpm
 c7a584ad4a081e1efe89a41819f8fcfa  rpms/zoo-2.10-2.2.el5.rf.i386.rpm
 cdcdb76e4e7b99885218eedcbbfcd0ec  rpms/perl-Crypt-OpenSSL-RSA-0.25-1.el5.rf.i386.rpm
-d62b5c4a0154ed7ffd294b6be69a6692  rpms/nomarch-1.4-1.el5.rf.i386.rpm
 ec0051719007f34aa421f025cb7cd0c7  rpms/ripole-0.2.0-1.2.el5.rf.i386.rpm
 f23703534d9982812245a75454d062ea  rpms/cabextract-1.2-1.el5.rf.i386.rpm
 fa2d06450fbe3f9b0dedba655133f2fb  rpms/unarj-2.63-0.a.2.el5.rf.i386.rpm
@@ -29,9 +26,11 @@ ced6000f91e2f64a92753bee0236ff67  rpms/php-eaccelerator-5.1.6_0.9.5.2-4.el5.rf.i
 18a91aa54586300c09ffdc729cd8ff98  rpms/clamav-db-0.94.2-1.el5.rf.i386.rpm
 2e12b383ab4d84976c8789bc2b824f60  rpms/clamd-0.94.2-1.el5.rf.i386.rpm
 96cada2fe843226ba531a60058810189  rpms/perl-Encode-Detect-1.01-1.el5.rf.i386.rpm
-2bec2e3458b119c833349aa73ace7a04  rpms/dovecot-1.1.8-0_85.el5.i386.rpm
 0469a32b09827b90b29ea02c6c3f349e  rpms/perl-rrdtool-1.2.29-1.el5.rf.i386.rpm
 ab2357d2743ecb89019f88b62e5b679b  rpms/rrdtool-1.2.29-1.el5.rf.i386.rpm
 8101eb702e6e05b14a153aa54b553174  rpms/postfix-2.5.6-4.ired.i386.rpm
 959211ca749f17da9219b916b00654d9  rpms/dovecot-sieve-1.1.6-9.el5.i386.rpm
 22d658bf51faea079610696e202d7969  rpms/amavisd-new-2.6.2-2.ired.i386.rpm
+a59545217ea8945415b441ce88bba39a  rpms/lzo-1.08-5.el5.rf.i386.rpm
+742b98ba9318b6720ec5ee7b32c45ad3  rpms/dovecot-1.1.11-0_90.el5.i386.rpm
+8c269f2addf7920c59e663ce65dc8556  rpms/nomarch-1.4-2.el5.i386.rpm

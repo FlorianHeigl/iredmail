@@ -1,5 +1,6 @@
 iRedMail-0.3.3:
-    * Update amavisd-new to 2.6.2.
+    * Update amavisd-new to 2.6.2, dovecot to 1.1.11, lzo to 1.08-5, nomarch
+      to 1.4-2.
     * Remove package: cyrus-sasl, mailman.
     * Prompt to choose the default language for webmails.
     * Update awstats to 6.9.
