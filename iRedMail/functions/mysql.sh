@@ -67,6 +67,8 @@ EOF
 mysql_import_vmail_users()
 {
     ECHO_INFO "Generating SQL template for postfix virtual hosts: ${MYSQL_VMAIL_SQL}."
+    export DOMAIN_ADMIN_PASSWD="$(openssl passwd -1 ${DOMAIN_ADMIN_PASSWD})"
+    export FIRST_USER_PASSWD="$(openssl passwd -1 ${FIRST_USER_PASSWD})"
 
     # Generate SQL.
     # Mailbox format is 'Maildir/' by default.
@@ -86,11 +88,11 @@ SOURCE ${SAMPLE_SQL};
 INSERT INTO domain (domain,transport) VALUES ("${FIRST_DOMAIN}", "${TRANSPORT}");
 
 /* Add your first domain admin. */
-INSERT INTO admin (username,password,created) VALUES ("${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}","${FIRST_DOMAIN_ADMIN_PASSWD}", NOW());
+INSERT INTO admin (username,password,created) VALUES ("${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}","${DOMAIN_ADMIN_PASSWD}", NOW());
 INSERT INTO domain_admins (username,domain,created) VALUES ("${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}","${FIRST_DOMAIN}", NOW());
 
 /* Add domain admin. */
-INSERT INTO mailbox (username,password,name,maildir,quota,domain,created) VALUES ("${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}","${FIRST_DOMAIN_ADMIN_PASSWD}","${DOMAIN_ADMIN_NAME}","${FIRST_DOMAIN}/${DOMAIN_ADMIN_NAME}/",0, "${FIRST_DOMAIN}",NOW());
+INSERT INTO mailbox (username,password,name,maildir,quota,domain,created) VALUES ("${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}","${DOMAIN_ADMIN_PASSWD}","${DOMAIN_ADMIN_NAME}","${FIRST_DOMAIN}/${DOMAIN_ADMIN_NAME}/",0, "${FIRST_DOMAIN}",NOW());
 INSERT INTO alias (address,goto,domain,created) VALUES ("${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}", "${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}", "${FIRST_DOMAIN}", NOW());
 
 /* Add your first normal user. */

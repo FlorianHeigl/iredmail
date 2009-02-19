@@ -221,7 +221,7 @@ fi
 [ X"${BACKEND}" == X"OpenLDAP" ] && . ${DIALOG_DIR}/mysql_config.sh
 
 # Used when you use MySQL as backend.
-[ X"${USE_POSTFIXADMIN}" == X"YES" ] && . ${TOOLS_DIR}/postfixadmin_config.sh
+[ X"${USE_POSTFIXADMIN}" == X"YES" ] && . ${DIALOG_DIR}/postfixadmin_config.sh
 
 # Used when you use awstats.
 [ X"${USE_AWSTATS}" == X"YES" ] && . ${DIALOG_DIR}/awstats_config.sh

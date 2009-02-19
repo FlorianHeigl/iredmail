@@ -76,8 +76,8 @@ export DATE="$(/bin/date +%Y.%m.%d_%H.%M.%S)"
 # Tools.
 export CONFIG_VIA_DIALOG="${DIALOG_DIR}/config_via_dialog.sh"
 # Note: config file will be sourced in file 'conf/functions', function 'check_env()'.
-export CONFIG_FILE="/root/${PROG_NAME}.config"
-export TIP_FILE="/root/${PROG_NAME}.tips"
+export CONFIG_FILE="${ROOTDIR}/config"
+export TIP_FILE="${ROOTDIR}/${PROG_NAME}.tips"
 export STATUS_FILE="${ROOTDIR}/.${PROG_NAME}.installation.status"
 
 # Output flag.

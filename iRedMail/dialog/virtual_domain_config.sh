@@ -23,7 +23,7 @@ done
 echo "export FIRST_DOMAIN='${FIRST_DOMAIN}'" >> ${CONFIG_FILE}
 rm -f /tmp/first_domain
 
-#FIRST_DOMAIN_ADMIN_NAME
+#DOMAIN_ADMIN_NAME
 ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --title "Specify administrator' name of your virtual domain" \
     --inputbox "\
@@ -35,18 +35,18 @@ EXAMPLE:
 
 " 20 76 "postmaster" 2>/tmp/first_domain_admin_name
 
-FIRST_DOMAIN_ADMIN_NAME="$(cat /tmp/first_domain_admin_name)"
-echo "export FIRST_DOMAIN_ADMIN_NAME='${FIRST_DOMAIN_ADMIN_NAME}'" >>${CONFIG_FILE}
+DOMAIN_ADMIN_NAME="$(cat /tmp/first_domain_admin_name)"
+echo "export DOMAIN_ADMIN_NAME='${DOMAIN_ADMIN_NAME}'" >>${CONFIG_FILE}
 rm -f /tmp/first_domain_admin_name
 
-# FIRST_DOMAIN_ADMIN_PASSWD
+# DOMAIN_ADMIN_PASSWD
 while : ; do
     ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --title "Password for the administrator of your domain" \
     --insecure --passwordbox "\
 Please specify password for the administrator user:
 
-    * ${FIRST_DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}
+    * ${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}
 
 Warning:
 
@@ -54,12 +54,12 @@ Warning:
 
 " 20 76 2>/tmp/first_domain_admin_passwd
 
-    FIRST_DOMAIN_ADMIN_PASSWD="$(cat /tmp/first_domain_admin_passwd)"
+    DOMAIN_ADMIN_PASSWD="$(cat /tmp/first_domain_admin_passwd)"
 
-    [ X"${FIRST_DOMAIN_ADMIN_PASSWD}" != X"" ] && break
+    [ X"${DOMAIN_ADMIN_PASSWD}" != X"" ] && break
 done
 
-echo "export FIRST_DOMAIN_ADMIN_PASSWD='${FIRST_DOMAIN_ADMIN_PASSWD}'" >> ${CONFIG_FILE}
+echo "export DOMAIN_ADMIN_PASSWD='${DOMAIN_ADMIN_PASSWD}'" >> ${CONFIG_FILE}
 rm -f /tmp/first_domain_admin_passwd
 
 #FIRST_USER
