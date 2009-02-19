@@ -15,10 +15,6 @@ pla_install()
     cd ${PLA_HTTPD_ROOT}/config/ && \
     cp -f config.php.example config.php
 
-    ECHO_INFO "Add phpLDAPadmin templates for create virtual domains/users."
-    cp -f ${SAMPLE_DIR}/phpldapadmin.templates/*xml \
-        ${PLA_HTTPD_ROOT}/templates/creation/
-
     ECHO_INFO "Set file permission."
     chown -R root:root ${PLA_HTTPD_ROOT}
     chmod -R 0755 ${PLA_HTTPD_ROOT}
@@ -46,10 +42,6 @@ phpLDAPadmin:
         - https://${HOSTNAME}/ldap/
     * See also:
         - ${HTTPD_CONF_DIR}/phpldapadmin.conf
-        - ${PLA_HTTPD_ROOT}/templates/creation/custom_*.xml
-    * Note:
-          You should click 'Purge Cache' link to enable these templates while
-          you login into phpldapadmin."
 
 EOF
 

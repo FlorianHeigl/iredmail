@@ -26,7 +26,11 @@ extmail_install()
     patch -p0 < ${PATCH_DIR}/extmail/auto_create_maildir.patch >/dev/null 2>&1
 
     ECHO_INFO "Fix incorrect quota display."
-    perl -pi -e 's#(.*ENV.*QUOTA.*mailQuota})(.*0S.*)#${1}*1024000${2}#' ${EXTMAIL_HTTPD_ROOT}/libs/Ext/App.pm
+    if [ X"${BACKEND}" == X"MySQL" ]; then
+        perl -pi -e 's#(.*ENV.*QUOTA.*mailQuota})(.*0S.*)#${1}*1024000${2}#' ${EXTMAIL_HTTPD_ROOT}/libs/Ext/App.pm
+    else
+        :
+    fi
 
     echo 'export status_extmail_install="DONE"' >> ${STATUS_FILE}
 }
@@ -47,7 +51,7 @@ ${CONF_MSG}
     Alias /extmail ${EXTMAIL_HTTPD_ROOT}/html
 EOF
 
-    if [ X"${USE_RCM}" != X"YES" -a X"${USE_SM}" == X"YES" ]; then
+    if [ X"${USE_RCM}" != X"YES" -a X"${USE_SM}" != X"YES" ]; then
         cat >> ${HTTPD_CONF_DIR}/extmail.conf <<EOF
     Alias /mail ${EXTMAIL_HTTPD_ROOT}/html
     Alias /webmail ${EXTMAIL_HTTPD_ROOT}/html
