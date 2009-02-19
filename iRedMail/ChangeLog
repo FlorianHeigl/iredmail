@@ -1,5 +1,5 @@
 iRedMail-0.3.3:
-    * Add patch to disable extmail welcome msg.
+    * Add patch to disable extmail welcome msg, typo in index page.
     * Remove phpLDAPadmin templates.
     * Add shell script for creating ldap virtual user.
     * Update amavisd-new to 2.6.2, dovecot to 1.1.11, lzo to 1.08-5, nomarch

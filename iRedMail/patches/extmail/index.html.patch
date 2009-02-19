@@ -1,0 +1,47 @@
+--- html/default/index.html	2008-09-22 02:10:43.000000000 +0800
++++ html/default/index.html.new	2009-02-19 23:02:08.000000000 +0800
+@@ -197,7 +197,8 @@
+ 	<!-- END ALREADY_LOGIN -->
+ 	<p />
+ 	<!-- IF SIGNUP_ON -->
+-	<div style="padding: 10px; padding-top: 0px; text-align: center">
++    <!--
++    <div style="padding: 10px; padding-top: 0px; text-align: center">
+ 	<script language="javascript">
+ 		var signup_domain = '';
+ 		function DoSignup() {
+@@ -212,8 +213,10 @@
+ 	</script>
+ 		<button onclick="DoSignup()" style="padding-top: 2px"><%signup%></button>
+ 	</div>
++    -->
+ 	<!-- END SIGNUP_ON -->
+-	<div style="border-bottom:1px solid #8A8A8A;padding-bottom:5px;margin-bottom:5px;">
++    <!--
++    <div style="border-bottom:1px solid #8A8A8A;padding-bottom:5px;margin-bottom:5px;">
+ 	<span id="dmy" style="color:#255788;"><b><%welcome_index%></b></span>
+ 	</div>
+ 	<div style="text-align:center;">
+@@ -223,6 +226,7 @@
+ 		SMTP <b>:</b>&nbsp;&nbsp;smtp.yourdomain.com<br />
+ 	</span>
+ 	</div>
++    -->
+ 	</div>
+ </DIV>
+ <DIV class=plus>
+@@ -242,12 +246,14 @@
+ <DIV id=foot style="FONT-SIZE: 12px;margin:30px auto; clear:both;width:750px;border-top:1px solid #DADADA;text-align:center;color:#8A8A8A;padding-top:5px; font-family: Arial;">
+ <div class=pb>Powered by <font style="font-weight: bold; color: #000"><%VERSION%></font> &copy 2005-2008 ExtMail.Org Runtime: <%TIME%></div>
+ 
++    <!--
+ 	<div class="headermenu_popup" id="my_menu" style="display: none;">
+ 		<table cellpadding="4" cellspacing="0" border="0">
+ 		<tr><td class="popupmenu_option" onclick="logmail();"><%webmail_login%></td></tr>
+ 		<tr><td class="popupmenu_option" onclick="logman();"><%extman_login%></td></tr>
+ 		</table>
+ 	</div>
++    -->
+ </DIV>
+ 
+ <script>
