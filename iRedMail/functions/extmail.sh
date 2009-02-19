@@ -21,9 +21,10 @@ extmail_install()
     chmod -R 0755 ${EXTSUITE_HTTPD_ROOT}
     chmod 0000 ${EXTMAIL_HTTPD_ROOT}/{AUTHORS,ChangeLog,CREDITS,dispatch.*,INSTALL,README.*}
 
-    ECHO_INFO "Patch ExtMail, make it create user maildir automatic."
+    ECHO_INFO "Patch ExtMail, make it create user maildir automatic and don't show the welcome msg."
     cd ${EXTMAIL_HTTPD_ROOT} && \
-    patch -p0 < ${PATCH_DIR}/extmail/auto_create_maildir.patch >/dev/null 2>&1
+    patch -p0 < ${PATCH_DIR}/extmail/auto_create_maildir.patch >/dev/null 2>&1 && \
+    patch -p0 < ${PATCH_DIR}/extmail/welcome.html.patch >/dev/null 2>&1
 
     ECHO_INFO "Fix incorrect quota display."
     if [ X"${BACKEND}" == X"MySQL" ]; then

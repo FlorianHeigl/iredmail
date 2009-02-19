@@ -1,0 +1,41 @@
+--- html/default/welcome.html	2008-09-20 11:57:41.000000000 +0800
++++ html/default/welcome.html.new	2009-02-19 22:38:54.000000000 +0800
+@@ -11,7 +11,7 @@
+ 
+ <!-- Plugins css -->
+ <link rel="stylesheet" href="/extmail/plugins/coolweather/style.css">
+-<link rel="stylesheet" href="/extmail/plugins/etnews/style.css">
++<!--<link rel="stylesheet" href="/extmail/plugins/etnews/style.css">-->
+ <link rel="stylesheet" href="/extmail/plugins/chkupdate/style.css">
+ 
+ <script language=javascript>
+@@ -23,7 +23,7 @@
+ <script type="text/javascript" src="/extmail/plugins/phprpc_client.js"></script>
+ <script type="text/javascript" src="/extmail/plugins/rpc_init.js"></script>
+ <script type="text/javascript" src="/extmail/plugins/coolweather/coolweather.js"></script>
+-<script type="text/javascript" src="/extmail/plugins/etnews/etnews.js"></script>
++<!--<script type="text/javascript" src="/extmail/plugins/etnews/etnews.js"></script>-->
+ <script type="text/javascript" src="/extmail/plugins/chkupdate/chkupdate.js"></script>
+ <script language=javascript>
+ rpc_chklng();
+@@ -104,15 +104,15 @@
+ 		<%nomail%>
+ 		<!-- END MBX_CUR_QNEW -->
+ 		</div>
+-		<div style="padding-left: 5px;padding-right:5px">
++		<!--<div style="padding-left: 5px;padding-right:5px">
+ 		<div class="panelout" id="etnews_div">
+-		<div class="paneltit">&nbsp;ExtMail Project News</div>
++        <div class="paneltit">&nbsp;ExtMail Project News</div>
+ 		<div class="panelin" id="etnews_container">
++        </div>-->
+ 		</div>
+-		</div>
+-		<script type="text/javascript">
++		<!--<script type="text/javascript">
+ 			etnews_init();
+-		</script>
++        </script>-->
+ 		</div>
+ 	</TD>
+ 	<TD  width=230px valign=top style="">
