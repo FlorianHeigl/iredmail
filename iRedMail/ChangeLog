@@ -1,4 +1,6 @@
 iRedMail-0.3.3:
+    * Remove phpLDAPadmin templates.
+    * Add shell script for creating ldap virtual user.
     * Update amavisd-new to 2.6.2, dovecot to 1.1.11, lzo to 1.08-5, nomarch
       to 1.4-2.
     * Remove package: cyrus-sasl, mailman.
