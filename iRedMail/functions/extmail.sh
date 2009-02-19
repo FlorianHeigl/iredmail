@@ -45,10 +45,21 @@ ${CONF_MSG}
 
     ScriptAlias /extmail/cgi ${EXTMAIL_HTTPD_ROOT}/cgi
     Alias /extmail ${EXTMAIL_HTTPD_ROOT}/html
+EOF
 
+    if [ X"${USE_RCM}" != X"YES" -a X"${USE_SM}" == X"YES" ]; then
+        cat >> ${HTTPD_CONF_DIR}/extmail.conf <<EOF
+    Alias /mail ${EXTMAIL_HTTPD_ROOT}/html
+    Alias /webmail ${EXTMAIL_HTTPD_ROOT}/html
+EOF
+    else
+        cat >> ${HTTPD_CONF_DIR}/extmail.conf <<EOF
     #Alias /mail ${EXTMAIL_HTTPD_ROOT}/html
     #Alias /webmail ${EXTMAIL_HTTPD_ROOT}/html
+EOF
+    fi
 
+        cat >> ${HTTPD_CONF_DIR}/extmail.conf <<EOF
     SuexecUserGroup ${VMAIL_USER_NAME} ${VMAIL_GROUP_NAME}
 
     <Directory "${EXTMAIL_HTTPD_ROOT}/">
