@@ -7,7 +7,7 @@ while : ; do
     ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --title "Your first virtual domain" \
     --inputbox "\
-Please specify the name of your first virtual domain.
+Please specify your first virtual domain name.
 
 EXAMPLES:
 

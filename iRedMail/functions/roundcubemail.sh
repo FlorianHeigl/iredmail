@@ -89,6 +89,9 @@ EOF
     # Disable multiple identities.
     perl -pi -e 's#(.*identities_level.*=).*#${1} 3;#' main.inc.php
 
+    # Enable preview pane by default.
+    perl -pi -e 's#(.*preview_pane.*=).*#${1} TRUE;#' main.inc.php
+
     # Log file related.
     perl -pi -e 's#(.*log_driver.*=).*#${1} "syslog";#' main.inc.php
     perl -pi -e 's#(.*syslog_id.*=).*#${1} "roundcube";#' main.inc.php
@@ -138,18 +141,29 @@ EOF
     'name'          => 'Global Address Book',
     'hosts'         => array("${LDAP_SERVER_HOST}"),
     'port'          => ${LDAP_SERVER_PORT},
+    'use_tls'       => false,
+    'user_specific' => true, // If true the base_dn, bind_dn and bind_pass default to the user's IMAP login.
     'base_dn'       => "${LDAP_ATTR_DOMAIN_DN_NAME}=${FIRST_DOMAIN},${LDAP_BASEDN}",
-    'bind_dn'       => "${LDAP_BINDDN}",
-    'bind_pass'     => "${LDAP_BINDPW}",
+    //'bind_dn'       => "${LDAP_BINDDN}",
+    //'bind_pass'     => "Change this value to the passwd of LDAP bind dn: ${LDAP_BINDDN}",
+
+    'writable'      => false, // Indicates if we can write to the LDAP directory or not.
+    // If writable is true then these fields need to be populated:
+    // LDAP_Object_Classes, required_fields, LDAP_rdn
+    'LDAP_Object_Classes' => array("top", "inetOrgPerson", "${LDAP_ATTR_USER_DN_NAME}"), // To create a new contact these are the object classes to specify (or any other classes you wish to use).
+    'required_fields'     => array("cn", "sn", "mail"),     // The required fields needed to build a new contact as required by the object classes (can include additional fields not required by the object classes).
+    'LDAP_rdn'      => "${LDAP_ATTR_USER_DN_NAME}", // The RDN field that is used for new entries, this field needs to be one of the search_fields, the base of base_dn is appended to the RDN to insert into the LDAP directory.
+
     'ldap_version'  => "${LDAP_BIND_VERSION}",       // using LDAPv3
-    'search_fields' => array('mail', 'cn'),  // fields to search in
+    'search_fields' => array('mail', 'cn', 'gn', 'sn', 'telephoneNumber'),  // fields to search in
     'name_field'    => 'cn',    // this field represents the contact's name
     'email_field'   => 'mail',  // this field represents the contact's e-mail
     'surname_field' => 'sn',    // this field represents the contact's last name
     'firstname_field' => 'gn',  // this field represents the contact's first name
+    'sort'          => 'cn',    // The field to sort the listing by.
     'scope'         => 'sub',   // search mode: sub|base|list
     'filter'        => "(&(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DELIVER}))",
-    'fuzzy_search'  => true);   // server allows wildcard search
+    'fuzzy_search'  => false);   // server allows wildcard search
 
 // end of config file
 ?>
