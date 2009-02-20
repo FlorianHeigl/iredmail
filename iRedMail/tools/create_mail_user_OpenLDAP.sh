@@ -115,7 +115,7 @@ add_new_domain()
         echo "Add new domain: ${DOMAIN_NAME}."
 
         ldapadd -x -D "${BINDDN}" -w "${BINDPW}" <<EOF
-dn: domainName=${DOMAIN_NAME}, ${BASE_DN}
+dn: domainName=${DOMAIN_NAME},${BASE_DN}
 objectClass: mailDomain
 domainName: ${DOMAIN_NAME}
 mtaTransport: ${TRANSPORT}
@@ -143,7 +143,7 @@ add_new_user()
     [ X"${HOME_MAILBOX}" == X"mbox" ] && mailMessageStore="${DOMAIN_NAME}/${USERNAME}"
 
     ldapadd -x -D "${BINDDN}" -w "${BINDPW}" <<EOF
-dn: mail=${MAIL}, ${DOMAIN_DN}, ${BASE_DN}
+dn: mail=${MAIL},${DOMAIN_DN},${BASE_DN}
 objectClass: inetOrgPerson
 objectClass: mailUser
 objectClass: top
