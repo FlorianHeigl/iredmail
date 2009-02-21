@@ -26,11 +26,11 @@ if header :matches ["X-Spam-Flag"] ["YES"] {
     #redirect "user2@domain.ltd";
 
     # Keep this mail in INBOX.
-    keep;
+    #keep;
 
     # If you ensure it is really a spam, drop it to 'Junk', and stop
     # here so that we do not reply to spammers.
-    #fileinto "Junk";
+    fileinto "Junk";
 
     # Do not waste resource on spam mail.
     stop;
