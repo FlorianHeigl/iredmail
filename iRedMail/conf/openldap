@@ -23,6 +23,7 @@ export LDAP_INIT_LDIF="${CONF_DIR}/ldap_init.ldif"
 #
 export LDAP_SERVER_HOST='127.0.0.1'
 export LDAP_SERVER_PORT='389'
+export LDAP_USE_TLS='NO'
 export LDAP_BIND='yes'
 export LDAP_BIND_VERSION='3'
 export LDAP_BINDPW="$(${RANDOM_STRING})"
