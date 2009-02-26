@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Filename: backup_iRedMail_Conf.sh
+# Filename: backup_iRedMail.sh
 # Author:   Zhang Huangbin (michaelbibby@gmail.com)
 # Purpose:  Backup all mail server related software configure files.
 # Project:  Open Source Mail Server Solution for Red Hat Enterprise 
@@ -12,7 +12,7 @@
 # -------------------------------------------------------------------
 # Run this script as root user:
 #
-#   # sh backup_iRedMail_Conf.sh
+#   # sh backup_iRedMail.sh
 #
 # It will collect mail server related configuration files and other
 # stuffs and compress them as a tarball under /root/ by default.
@@ -26,7 +26,7 @@
 
 export BACKUP_DIR='/root'
 export DATE="$(/bin/date +%Y.%m.%d_%H.%M.%S)"
-export BACKUP_TARBALL="${BACKUP_DIR}/iRedMail_Backup_Conf-${DATE}.tar"
+export BACKUP_TARBALL="${BACKUP_DIR}/iRedMail_Backup-${DATE}.tar"
 export COMPRESSED='YES'
 export COMPRESS_CMD='bzip2 -9'
 
