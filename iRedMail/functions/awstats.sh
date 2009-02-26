@@ -49,7 +49,7 @@ EOF
 </Directory>
 EOF
 
-        [ X"${LDAP_USE_TLS} == X"YES" ] && perl -pi -e 's#(AuthLDAPUrl.*)(ldap://)(.*)#${1}ldaps://${3}#' ${AWSTATS_HTTPD_CONF}
+        [ X"${LDAP_USE_TLS}" == X"YES" ] && perl -pi -e 's#(AuthLDAPUrl.*)(ldap://)(.*)#${1}ldaps://${3}#' ${AWSTATS_HTTPD_CONF}
     else
         # Use basic auth mech.
         cat >> ${AWSTATS_HTTPD_CONF} <<EOF
