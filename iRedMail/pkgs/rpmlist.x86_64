@@ -27,11 +27,11 @@ clamav-0.94.2-1.el5.rf.x86_64.rpm
 clamav-db-0.94.2-1.el5.rf.x86_64.rpm
 clamd-0.94.2-1.el5.rf.x86_64.rpm
 perl-Encode-Detect-1.01-1.el5.rf.x86_64.rpm
-perl-rrdtool-1.2.29-1.el5.rf.x86_64.rpm
-rrdtool-1.2.29-1.el5.rf.x86_64.rpm
 postfix-2.5.6-4.ired.x86_64.rpm
 dovecot-sieve-1.1.6-9.el5.x86_64.rpm
 amavisd-new-2.6.2-2.ired.x86_64.rpm
 lzo-1.08-5.el5.rf.x86_64.rpm
 dovecot-1.1.11-0_90.el5.x86_64.rpm
 nomarch-1.4-2.el5.x86_64.rpm
+perl-rrdtool-1.2.30-1.el5.rf.x86_64.rpm
+rrdtool-1.2.30-1.el5.rf.x86_64.rpm

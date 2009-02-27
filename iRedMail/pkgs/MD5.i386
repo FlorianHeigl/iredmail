@@ -26,11 +26,11 @@ ced6000f91e2f64a92753bee0236ff67  rpms/php-eaccelerator-5.1.6_0.9.5.2-4.el5.rf.i
 18a91aa54586300c09ffdc729cd8ff98  rpms/clamav-db-0.94.2-1.el5.rf.i386.rpm
 2e12b383ab4d84976c8789bc2b824f60  rpms/clamd-0.94.2-1.el5.rf.i386.rpm
 96cada2fe843226ba531a60058810189  rpms/perl-Encode-Detect-1.01-1.el5.rf.i386.rpm
-0469a32b09827b90b29ea02c6c3f349e  rpms/perl-rrdtool-1.2.29-1.el5.rf.i386.rpm
-ab2357d2743ecb89019f88b62e5b679b  rpms/rrdtool-1.2.29-1.el5.rf.i386.rpm
 8101eb702e6e05b14a153aa54b553174  rpms/postfix-2.5.6-4.ired.i386.rpm
 959211ca749f17da9219b916b00654d9  rpms/dovecot-sieve-1.1.6-9.el5.i386.rpm
 22d658bf51faea079610696e202d7969  rpms/amavisd-new-2.6.2-2.ired.i386.rpm
 a59545217ea8945415b441ce88bba39a  rpms/lzo-1.08-5.el5.rf.i386.rpm
 742b98ba9318b6720ec5ee7b32c45ad3  rpms/dovecot-1.1.11-0_90.el5.i386.rpm
 8c269f2addf7920c59e663ce65dc8556  rpms/nomarch-1.4-2.el5.i386.rpm
+18bb93b98b7a001f1440f7fbeccef061  rpms/perl-rrdtool-1.2.30-1.el5.rf.i386.rpm
+9ab14577163c3f178481af559d992250  rpms/rrdtool-1.2.30-1.el5.rf.i386.rpm

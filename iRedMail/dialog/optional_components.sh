@@ -72,7 +72,8 @@ fi
 ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --title "POP3, POP3S, IMAP, IMAPS" \
     --checklist "\
-Do you want to support POP3, POP3S, IMAP, IMAPS?
+Do you want to support POP3, POP3S, IMAP, IMAPS? If you don't choose 
+one of them, ${PROG_NAME} will use 'procmail' as mail deliver agent.
 " 20 76 6 \
     "POP3" "Post Office Protocol." "on" \
     "POP3S" "Secure POP3 over SSL." "on" \
