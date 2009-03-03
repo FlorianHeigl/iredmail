@@ -1,4 +1,5 @@
 iRedMail-0.3.3:
+    * Add global ldap address book in ExtMail for ldap backend.
     * Avoid quote in HOSTNAME variable. Thanks shake.chen@gmail.
     * Update rrdtool to 1.2.30.
     * Enable preview pane in roundcube by default.
