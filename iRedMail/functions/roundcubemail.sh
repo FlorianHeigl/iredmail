@@ -185,7 +185,7 @@ EOF
     ECHO_INFO "Setting logrotate for roundcube log file."
     cat > ${RCM_LOGROTATE_FILE} <<EOF
 ${CONF_MSG}
-${RCM_LOGROTATE_FILE} {
+${RCM_LOGFILE} {
     compress
     weekly
     rotate 10
