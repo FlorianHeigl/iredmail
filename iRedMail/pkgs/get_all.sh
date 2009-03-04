@@ -38,20 +38,6 @@ MISCLIST="${ROOTDIR}/misc.list"
 
 MD5_FILES="MD5.${ARCH} MD5.noarch MD5.misc"
 
-check_pkg_which()
-{
-    for i in $(echo $PATH|sed 's/:/ /g'); do
-        [ -x $i/which ] && export HAS_WHICH='YES'
-    done
-
-    [ X"${HAS_WHICH}" != X'YES' ] && install_pkg which.${ARCH}
-    if [ X"$?" != X"0" ]; then
-        ECHO_INFO "Please install package 'createrepo' first." && exit 255
-    else
-        echo 'export status_check_pkg_which="DONE"' >> ${STATUS_FILE}
-    fi
-}
-
 mirror_notify()
 {
     cat <<EOF
@@ -71,10 +57,39 @@ EOF
 
 prepare_dirs()
 {
+    ECHO_INFO "Creating necessary directories..."
     for i in ${PKG_DIR} ${MISC_DIR}
     do
         [ -d "${i}" ] || mkdir -p "${i}"
     done
+}
+
+check_pkg_which()
+{
+    ECHO_INFO "Checking necessary package: which.${ARCH}..."
+    for i in $(echo $PATH|sed 's/:/ /g'); do
+        [ -x $i/which ] && export HAS_WHICH='YES'
+    done
+
+    [ X"${HAS_WHICH}" != X'YES' ] && install_pkg which.${ARCH}
+    if [ X"$?" != X"0" ]; then
+        ECHO_INFO "Please install package 'createrepo' first." && exit 255
+    else
+        echo 'export status_check_pkg_which="DONE"' >> ${STATUS_FILE}
+    fi
+}
+
+check_pkg_createrepo()
+{
+    ECHO_INFO "Checking necessary package: createrepo.noarch..."
+    which createrepo >/dev/null 2>&1
+
+    [ X"$?" != X"0" ] && install_pkg createrepo.noarch
+    if [ X"$?" != X"0" ]; then
+        ECHO_INFO "Please install package 'createrepo' first." && exit 255
+    else
+        echo 'export status_check_createrepo="DONE"' >> ${STATUS_FILE}
+    fi
 }
 
 fetch_rpms()
@@ -149,18 +164,6 @@ check_md5()
     done
 }
 
-check_createrepo()
-{
-    which createrepo >/dev/null 2>&1
-
-    [ X"$?" != X"0" ] && install_pkg createrepo.noarch
-    if [ X"$?" != X"0" ]; then
-        ECHO_INFO "Please install package 'createrepo' first." && exit 255
-    else
-        echo 'export status_check_createrepo="DONE"' >> ${STATUS_FILE}
-    fi
-}
-
 create_yum_repo()
 {
     # createrepo
@@ -194,8 +197,6 @@ echo_end_msg()
 ********************************************************
 
 EOF
-
-    echo 'export status_echo_end_msg="DONE"' >> ${STATUS_FILE}
 }
 
 if [ -e ${STATUS_FILE} ]; then
@@ -206,13 +207,13 @@ fi
 
 check_user root && \
 check_status_before_run check_pkg_which && \
+check_pkg_createrepo && \
 check_status_before_run mirror_notify && \
 prepare_dirs && \
 check_arch && \
 fetch_rpms && \
 fetch_misc && \
 check_md5 && \
-check_createrepo && \
 create_yum_repo && \
 check_dialog && \
-check_status_before_run echo_end_msg
+echo_end_msg
