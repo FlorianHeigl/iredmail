@@ -131,7 +131,7 @@ EOF
         ECHO_INFO "Setting global LDAP address book in Roundcube."
 
         # Remove PHP end of file mark first.
-        perl -pi -e 's#\?\>##' main.inc.php
+        cd ${RCM_HTTPD_ROOT}/config/ && perl -pi -e 's#\?\>##' main.inc.php
 
         cat >> main.inc.php <<EOF
 # Global LDAP Address Book.

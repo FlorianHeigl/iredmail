@@ -38,6 +38,17 @@ MISCLIST="${ROOTDIR}/misc.list"
 
 MD5_FILES="MD5.${ARCH} MD5.noarch MD5.misc"
 
+check_pkg_which()
+{
+    for i in $(echo $PATH|sed 's/:/ /g'); do
+        [ -x $i/which ] && export HAS_WHICH='YES'
+    done
+
+    if [ X"${HAS_WHICH}" != X'YES' ]; then
+        echo "Please install package 'which' first." && exit 255
+    fi
+}
+
 mirror_notify()
 {
     cat <<EOF
