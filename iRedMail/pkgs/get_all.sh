@@ -45,7 +45,8 @@ check_pkg_which()
     done
 
     if [ X"${HAS_WHICH}" != X'YES' ]; then
-        echo "Please install package 'which' first." && exit 255
+        install_pkg createrepo.${ARCH}
+        [ X"$?" != X"0" ] && ECHO_INFO "Please install package 'createrepo' first." && exit 255
     fi
 }
 
@@ -152,7 +153,7 @@ check_createrepo()
 
     if [ X"$?" != X"0" ]; then
         install_pkg createrepo.noarch
-        [ X"$?" != X"0" ] && ECHO_INFO "Please install 'createrepo' first." && exit 255
+        [ X"$?" != X"0" ] && ECHO_INFO "Please install package 'createrepo' first." && exit 255
     else
         echo 'export status_check_createrepo="DONE"' >> ${STATUS_FILE}
     fi
@@ -202,6 +203,7 @@ else
 fi
 
 check_user root && \
+check_status_before_run check_pkg_which && \
 check_status_before_run mirror_notify && \
 prepare_dirs && \
 check_arch && \
