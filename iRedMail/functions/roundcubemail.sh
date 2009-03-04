@@ -129,10 +129,8 @@ EOF
         patch -p1 < ${PATCH_DIR}/roundcubemail/0.2-stable_change_ldap_passwd.patch >/dev/null
 
         ECHO_INFO "Setting global LDAP address book in Roundcube."
-        cd ${RCM_HTTPD_ROOT}/config/ && \
-        perl -pi -e 's#(.*address_book_type.*=).*#${1} "ldap";#' main.inc.php
 
-        # Remove PHP end of file mark.
+        # Remove PHP end of file mark first.
         perl -pi -e 's#\?\>##' main.inc.php
 
         cat >> main.inc.php <<EOF
@@ -142,11 +140,11 @@ EOF
     'hosts'         => array("${LDAP_SERVER_HOST}"),
     'port'          => ${LDAP_SERVER_PORT},
     'use_tls'       => false,
-    'user_specific' => true, // If true the base_dn, bind_dn and bind_pass default to the user's IMAP login.
-    //'base_dn'       => "${LDAP_ATTR_DOMAIN_DN_NAME}=${FIRST_DOMAIN},${LDAP_BASEDN}",
-    'base_dn'       => "${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}",
-    //'bind_dn'       => "${LDAP_BINDDN}",
-    //'bind_pass'     => "${LDAP_BINDPW}",
+    //'user_specific' => true, // If true the base_dn, bind_dn and bind_pass default to the user's IMAP login.
+    //'base_dn'       => "${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}",
+    'base_dn'       => "${LDAP_ATTR_DOMAIN_DN_NAME}=${FIRST_DOMAIN},${LDAP_BASEDN}",
+    'bind_dn'       => "${LDAP_BINDDN}",
+    'bind_pass'     => "${LDAP_BINDPW}",
     'writable'      => false, // Indicates if we can write to the LDAP directory or not.
     // If writable is true then these fields need to be populated:
     // LDAP_Object_Classes, required_fields, LDAP_rdn
