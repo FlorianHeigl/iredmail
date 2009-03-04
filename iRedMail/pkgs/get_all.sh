@@ -206,11 +206,11 @@ else
 fi
 
 check_user root && \
-check_status_before_run check_pkg_which && \
-check_pkg_createrepo && \
-check_status_before_run mirror_notify && \
-prepare_dirs && \
 check_arch && \
+check_status_before_run mirror_notify && \
+check_status_before_run check_pkg_which && \
+check_status_before_run check_pkg_createrepo && \
+prepare_dirs && \
 fetch_rpms && \
 fetch_misc && \
 check_md5 && \
