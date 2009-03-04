@@ -142,15 +142,14 @@ EOF
     'hosts'         => array("${LDAP_SERVER_HOST}"),
     'port'          => ${LDAP_SERVER_PORT},
     'use_tls'       => false,
-    'user_specific' => true, // If true the base_dn, bind_dn and bind_pass default to the user's IMAP login.
+    //'user_specific' => true, // If true the base_dn, bind_dn and bind_pass default to the user's IMAP login.
     'base_dn'       => "${LDAP_ATTR_DOMAIN_DN_NAME}=${FIRST_DOMAIN},${LDAP_BASEDN}",
-    //'bind_dn'       => "${LDAP_BINDDN}",
-    //'bind_pass'     => "Change this value to the passwd of LDAP bind dn: ${LDAP_BINDDN}",
-
+    'bind_dn'       => "${LDAP_BINDDN}",
+    'bind_pass'     => "${LDAP_BINDPW}",
     'writable'      => false, // Indicates if we can write to the LDAP directory or not.
     // If writable is true then these fields need to be populated:
     // LDAP_Object_Classes, required_fields, LDAP_rdn
-    'LDAP_Object_Classes' => array("top", "inetOrgPerson", "${LDAP_ATTR_USER_DN_NAME}"), // To create a new contact these are the object classes to specify (or any other classes you wish to use).
+    'LDAP_Object_Classes' => array("top", "inetOrgPerson", "${LDAP_OBJECTCLASS_USER}"), // To create a new contact these are the object classes to specify (or any other classes you wish to use).
     'required_fields'     => array("cn", "sn", "mail"),     // The required fields needed to build a new contact as required by the object classes (can include additional fields not required by the object classes).
     'LDAP_rdn'      => "${LDAP_ATTR_USER_DN_NAME}", // The RDN field that is used for new entries, this field needs to be one of the search_fields, the base of base_dn is appended to the RDN to insert into the LDAP directory.
 

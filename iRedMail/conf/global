@@ -54,7 +54,7 @@ export ETC_SYSCONFIG_DIR='/etc/sysconfig'
 export IPTABLES_CONFIG="${ETC_SYSCONFIG_DIR}/iptables"
 
 # Hostname.
-export HOSTNAME="$(grep '^HOSTNAME' ${ETC_SYSCONFIG_DIR}/network | awk -F'=' '{print $2}' | sed 's/"//' | sed "s/'//")"
+export HOSTNAME="$(grep '^HOSTNAME' ${ETC_SYSCONFIG_DIR}/network | awk -F'=' '{print $2}' | sed 's/"//g' | sed "s/'//g")"
 
 # SSL/TLS support.
 export SSL_FILE_DIR="/etc/pki/${PROG_NAME}"
