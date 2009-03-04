@@ -44,9 +44,11 @@ check_pkg_which()
         [ -x $i/which ] && export HAS_WHICH='YES'
     done
 
-    if [ X"${HAS_WHICH}" != X'YES' ]; then
-        install_pkg createrepo.${ARCH}
-        [ X"$?" != X"0" ] && ECHO_INFO "Please install package 'createrepo' first." && exit 255
+    [ X"${HAS_WHICH}" != X'YES' ] && install_pkg which.${ARCH}
+    if [ X"$?" != X"0" ]; then
+        ECHO_INFO "Please install package 'createrepo' first." && exit 255
+    else
+        echo 'export status_check_pkg_which="DONE"' >> ${STATUS_FILE}
     fi
 }
 
@@ -151,9 +153,9 @@ check_createrepo()
 {
     which createrepo >/dev/null 2>&1
 
+    [ X"$?" != X"0" ] && install_pkg createrepo.noarch
     if [ X"$?" != X"0" ]; then
-        install_pkg createrepo.noarch
-        [ X"$?" != X"0" ] && ECHO_INFO "Please install package 'createrepo' first." && exit 255
+        ECHO_INFO "Please install package 'createrepo' first." && exit 255
     else
         echo 'export status_check_createrepo="DONE"' >> ${STATUS_FILE}
     fi
