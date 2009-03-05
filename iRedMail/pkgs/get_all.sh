@@ -71,11 +71,15 @@ check_pkg_which()
         [ -x $i/which ] && export HAS_WHICH='YES'
     done
 
-    [ X"${HAS_WHICH}" != X'YES' ] && install_pkg which.${ARCH}
-    if [ X"$?" != X"0" ]; then
-        ECHO_INFO "Please install package 'createrepo' first." && exit 255
+    if [ X"${HAS_WHICH}" != X'YES' ]; then
+        install_pkg which.${ARCH}
+        if [ X"$?" != X"0" ]; then
+            ECHO_INFO "Please install package 'createrepo' first." && exit 255
+        else
+            echo 'export status_check_pkg_which="DONE"' >> ${STATUS_FILE}
+        fi
     else
-        echo 'export status_check_pkg_which="DONE"' >> ${STATUS_FILE}
+        :
     fi
 }
 
@@ -84,11 +88,15 @@ check_pkg_createrepo()
     ECHO_INFO "Checking necessary package: createrepo.noarch..."
     which createrepo >/dev/null 2>&1
 
-    [ X"$?" != X"0" ] && install_pkg createrepo.noarch
     if [ X"$?" != X"0" ]; then
-        ECHO_INFO "Please install package 'createrepo' first." && exit 255
+        install_pkg createrepo.noarch
+        if [ X"$?" != X"0" ]; then
+            ECHO_INFO "Please install package 'createrepo' first." && exit 255
+        else
+            echo 'export status_check_createrepo="DONE"' >> ${STATUS_FILE}
+        fi
     else
-        echo 'export status_check_createrepo="DONE"' >> ${STATUS_FILE}
+        :
     fi
 }
 
@@ -171,7 +179,11 @@ create_yum_repo()
     cd ${PKG_DIR} && createrepo . >/dev/null 2>&1 && echo -e "\t[ OK ]"
 
     # Backup old repo file.
-    [ -f ${LOCAL_REPO_FILE} ] && cp ${LOCAL_REPO_FILE} ${LOCAL_REPO_FILE}.${DATE}
+    if [ -f ${LOCAL_REPO_FILE} ]; then
+        cp ${LOCAL_REPO_FILE} ${LOCAL_REPO_FILE}.${DATE}
+    else
+        :
+    fi
 
     # Generate new repo file.
     cat > ${LOCAL_REPO_FILE} <<EOF
