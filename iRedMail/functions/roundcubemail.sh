@@ -124,9 +124,9 @@ EOF
     patch -p0 < ${PATCH_DIR}/roundcubemail/0.2-stable_undefined_index_error.patch >/dev/null
 
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
-        ECHO_INFO "Patch: Change LDAP password."
-        cd ${RCM_HTTPD_ROOT}/ && \
-        patch -p1 < ${PATCH_DIR}/roundcubemail/0.2-stable_change_ldap_passwd.patch >/dev/null
+        #ECHO_INFO "Patch: Change LDAP password."
+        #cd ${RCM_HTTPD_ROOT}/ && \
+        #patch -p1 < ${PATCH_DIR}/roundcubemail/0.2-stable_change_ldap_passwd.patch >/dev/null
 
         ECHO_INFO "Setting global LDAP address book in Roundcube."
 
@@ -135,7 +135,7 @@ EOF
 
         cat >> main.inc.php <<EOF
 # Global LDAP Address Book.
-\$rcmail_config['ldap_public']["${PROG_NAME}"] = array(
+\$rcmail_config['ldap_public']["${RCM_ADDRBOOK_NAME}"] = array(
     'name'          => 'Global Address Book',
     'hosts'         => array("${LDAP_SERVER_HOST}"),
     'port'          => ${LDAP_SERVER_PORT},
@@ -148,12 +148,11 @@ EOF
     'writable'      => false, // Indicates if we can write to the LDAP directory or not.
     // If writable is true then these fields need to be populated:
     // LDAP_Object_Classes, required_fields, LDAP_rdn
-    'LDAP_Object_Classes' => array("top", "inetOrgPerson", "${LDAP_OBJECTCLASS_USER}"), // To create a new contact these are the object classes to specify (or any other classes you wish to use).
-    'required_fields'     => array("cn", "sn", "mail"),     // The required fields needed to build a new contact as required by the object classes (can include additional fields not required by the object classes).
-    'LDAP_rdn'      => "${LDAP_ATTR_USER_DN_NAME}", // The RDN field that is used for new entries, this field needs to be one of the search_fields, the base of base_dn is appended to the RDN to insert into the LDAP directory.
-
+    //'LDAP_Object_Classes' => array("top", "inetOrgPerson", "${LDAP_OBJECTCLASS_USER}"), // To create a new contact these are the object classes to specify (or any other classes you wish to use).
+    //'required_fields'     => array("cn", "sn", "mail"),     // The required fields needed to build a new contact as required by the object classes (can include additional fields not required by the object classes).
+    //'LDAP_rdn'      => "${LDAP_ATTR_USER_DN_NAME}", // The RDN field that is used for new entries, this field needs to be one of the search_fields, the base of base_dn is appended to the RDN to insert into the LDAP directory.
     'ldap_version'  => "${LDAP_BIND_VERSION}",       // using LDAPv3
-    'search_fields' => array('mail', 'cn', 'gn', 'sn', 'telephoneNumber'),  // fields to search in
+    'search_fields' => array('mail', 'cn', 'gn', 'sn'),  // fields to search in
     'name_field'    => 'cn',    // this field represents the contact's name
     'email_field'   => 'mail',  // this field represents the contact's e-mail
     'surname_field' => 'sn',    // this field represents the contact's last name
@@ -161,13 +160,17 @@ EOF
     'sort'          => 'cn',    // The field to sort the listing by.
     'scope'         => 'sub',   // search mode: sub|base|list
     'filter'        => "(&(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DELIVER}))",
-    'fuzzy_search'  => false);   // server allows wildcard search
+    'fuzzy_search'  => true);   // server allows wildcard search
 
 // end of config file
 ?>
 EOF
+        # List global address book in autocomplete_addressbooks.
+        perl -pi -e 's#(.*autocomplete_addressbooks.*=)(.*)#${1} array("sql", "$ENV{'RCM_ADDRBOOK_NAME'}");#' main.inc.php
+
     elif [ X"${BACKEND}" == X"MySQL" ]; then
-        ECHO_INFO "Patch: Change MySQL password and mail forwarding setting."
+        #ECHO_INFO "Patch: Change MySQL password and mail forwarding setting."
+        :
     else
         :
     fi

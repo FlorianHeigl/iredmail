@@ -70,7 +70,7 @@ access to attrs="${LDAP_ATTR_USER_PASSWD},${LDAP_ATTR_USER_ALIAS}"
     by dn.regex="${LDAP_ATTR_USER_DN_NAME}=${DOMAIN_ADMIN_NAME}@([^,]+),${LDAP_ATTR_DOMAIN_DN_NAME}=\$1,${LDAP_BASEDN}"   write
     by users        none
 
-access to attrs="cn,sn"
+access to attrs="cn,sn,telephoneNumber"
     by anonymous    auth
     by self         write
     by dn.exact="${LDAP_BINDDN}"   read
@@ -165,11 +165,11 @@ mode        0700
 #
 # Default index.
 #
-index objectClass                       eq,pres
-index ou,cn,mail,surname,givenname      eq,pres,sub
-index uidNumber,gidNumber,loginShell    eq,pres
-index uid,memberUid                     eq,pres,sub
-index nisMapName,nisMapEntry            eq,pres,sub
+index objectClass                                   eq,pres
+index ou,cn,mail,surname,givenname,telephoneNumber  eq,pres,sub
+index uidNumber,gidNumber,loginShell                eq,pres
+index uid,memberUid                                 eq,pres,sub
+index nisMapName,nisMapEntry                        eq,pres,sub
 
 #
 # Index for mail attrs.

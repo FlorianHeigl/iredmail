@@ -17,3 +17,6 @@ export RCM_LOGROTATE_FILE="${LOGROTATE_DIR}/roundcube"
 export RCM_DB="roundcubemail"
 export RCM_DB_USER="roundcube"
 export RCM_DB_PASSWD="$(${RANDOM_STRING})"
+
+# Global LDAP Address Book name.
+export RCM_ADDRBOOK_NAME="${PROG_NAME}"
