@@ -140,15 +140,15 @@ extmail_config_ldap()
     ECHO_INFO "Configure ExtMail for LDAP support."
     cd ${EXTMAIL_HTTPD_ROOT}
 
-    export LDAP_BASEDN LDAP_SERVER_HOST LDAP_ADMIN_DN LDAP_ADMIN_PW
+    export LDAP_BASEDN LDAP_SERVER_HOST LDAP_ADMIN_DN LDAP_ADMIN_PW LDAP_ATTR_GROUP_USERS
     perl -pi -e 's#(SYS_AUTH_TYPE.*)mysql#${1}ldap#' ${EXTMAIL_CONF}
-    perl -pi -e 's#(SYS_LDAP_BASE)(.*)#${1} = $ENV{'LDAP_BASEDN'}#' ${EXTMAIL_CONF}
+    perl -pi -e 's#(SYS_LDAP_BASE)(.*)#${1} = $ENV{'LDAP_ATTR_GROUP_RDN'}=$ENV{'LDAP_ATTR_GROUP_USERS'},domainName=$ENV{'FIRST_DOMAIN'},$ENV{'LDAP_BASEDN'}#' ${EXTMAIL_CONF}
     perl -pi -e 's#(SYS_LDAP_RDN)(.*)#${1} = $ENV{'LDAP_ADMIN_DN'}#' ${EXTMAIL_CONF}
     perl -pi -e 's#(SYS_LDAP_PASS.*=)(.*)#${1} $ENV{'LDAP_ADMIN_PW'}#' ${EXTMAIL_CONF}
     perl -pi -e 's#(SYS_LDAP_HOST.*=)(.*)#${1} $ENV{'LDAP_SERVER_HOST'}#' ${EXTMAIL_CONF}
 
-    export LDAP_ATTR_DOMAIN_DN_NAME LDAP_ATTR_USER_STATUS 
-    perl -pi -e 's#(SYS_LDAP_ATTR_DOMAIN.*=)(.*)#${1} $ENV{'LDAP_ATTR_DOMAIN_DN_NAME'}#' ${EXTMAIL_CONF}
+    export LDAP_ATTR_DOMAIN_RDN LDAP_ATTR_USER_STATUS 
+    perl -pi -e 's#(SYS_LDAP_ATTR_DOMAIN.*=)(.*)#${1} $ENV{'LDAP_ATTR_DOMAIN_RDN'}#' ${EXTMAIL_CONF}
 
     perl -pi -e 's/^(SYS_LDAP_ATTR_CLEARPW.*)/#${1}/' ${EXTMAIL_CONF}
     #perl -pi -e 's/^(SYS_LDAP_ATTR_NDQUOTA.*)/#${1}/' ${EXTMAIL_CONF}
@@ -172,7 +172,7 @@ extmail_config_ldap_addressbook()
     export LDAP_SERVER_HOST LDAP_BASEDN LDAP_BINDDN LDAP_BINDPW FIRST_DOMAIN
     perl -pi -e 's#(^SYS_G_ABOOK_TYPE)(.*)#${1} = ldap#' ${EXTMAIL_CONF}
     perl -pi -e 's#(^SYS_G_ABOOK_LDAP_HOST)(.*)#${1} = $ENV{'LDAP_SERVER_HOST'}#' ${EXTMAIL_CONF}
-    perl -pi -e 's#(^SYS_G_ABOOK_LDAP_BASE)(.*)#${1} = $ENV{'LDAP_ATTR_DOMAIN_DN_NAME'}=$ENV{'FIRST_DOMAIN'},$ENV{'LDAP_BASEDN'}#' ${EXTMAIL_CONF}
+    perl -pi -e 's#(^SYS_G_ABOOK_LDAP_BASE)(.*)#${1} = $ENV{'LDAP_ATTR_GROUP_RDN'}=$ENV{'LDAP_ATTR_GROUP_USERS'},$ENV{'LDAP_ATTR_DOMAIN_RDN'}=$ENV{'FIRST_DOMAIN'},$ENV{'LDAP_BASEDN'}#' ${EXTMAIL_CONF}
     perl -pi -e 's#(^SYS_G_ABOOK_LDAP_ROOTDN)(.*)#${1} = $ENV{'LDAP_BINDDN'}#' ${EXTMAIL_CONF}
     perl -pi -e 's#(^SYS_G_ABOOK_LDAP_ROOTPW)(.*)#${1} = $ENV{'LDAP_BINDPW'}#' ${EXTMAIL_CONF}
     perl -pi -e 's#(^SYS_G_ABOOK_LDAP_FILTER)(.*)#${1} = (&(objectClass=$ENV{'LDAP_OBJECTCLASS_USER'})($ENV{'LDAP_ATTR_USER_STATUS'}=$ENV{'LDAP_STATUS_ACTIVE'})($ENV{'LDAP_ENABLED_SERVICE'}=$ENV{'LDAP_SERVICE_DELIVER'}))#' ${EXTMAIL_CONF}

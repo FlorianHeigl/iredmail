@@ -56,7 +56,7 @@ loglevel    0
 #
 # NOTE: Every domain have a administrator. e.g.
 #   Domain Name: '${FIRST_DOMAIN}'
-#   Admin Name: ${LDAP_ATTR_USER_DN_NAME}=${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}, ${LDAP_ATTR_DOMAIN_DN_NAME}=${FIRST_DOMAIN}, ${LDAP_BASEDN}
+#   Admin Name: ${LDAP_ATTR_USER_DN_NAME}=${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}, ${LDAP_ATTR_DOMAIN_RDN}=${FIRST_DOMAIN}, ${LDAP_BASEDN}
 #
 
 #
@@ -67,7 +67,7 @@ access to attrs="${LDAP_ATTR_USER_PASSWD},${LDAP_ATTR_USER_ALIAS}"
     by self         write
     by dn.exact="${LDAP_BINDDN}"   read
     by dn.exact="${LDAP_ADMIN_DN}"  write
-    by dn.regex="${LDAP_ATTR_USER_DN_NAME}=${DOMAIN_ADMIN_NAME}@([^,]+),${LDAP_ATTR_DOMAIN_DN_NAME}=\$1,${LDAP_BASEDN}"   write
+    by dn.regex="${LDAP_ATTR_USER_DN_NAME}=${DOMAIN_ADMIN_NAME}@([^,]+),${LDAP_ATTR_DOMAIN_RDN}=\$1,${LDAP_BASEDN}"   write
     by users        none
 
 access to attrs="cn,sn,telephoneNumber"
@@ -75,16 +75,16 @@ access to attrs="cn,sn,telephoneNumber"
     by self         write
     by dn.exact="${LDAP_BINDDN}"   read
     by dn.exact="${LDAP_ADMIN_DN}"  write
-    by dn.regex="${LDAP_ATTR_USER_DN_NAME}=${DOMAIN_ADMIN_NAME}@([^,]+),${LDAP_ATTR_DOMAIN_DN_NAME}=\$1,${LDAP_BASEDN}"   write
+    by dn.regex="${LDAP_ATTR_USER_DN_NAME}=${DOMAIN_ADMIN_NAME}@([^,]+),${LDAP_ATTR_DOMAIN_RDN}=\$1,${LDAP_BASEDN}"   write
     by users        read
 
 # Domain attrs.
-access to attrs="objectclass,${LDAP_ATTR_DOMAIN_DN_NAME},${LDAP_ATTR_DOMAIN_TRANSPORT},${LDAP_ATTR_DOMAIN_STATUS},${LDAP_ENABLED_SERVICE},${LDAP_ATTR_DOMAIN_SENDER_BCC_ADDRESS},${LDAP_ATTR_DOMAIN_RECIPIENT_BCC_ADDRESS}"
+access to attrs="objectclass,${LDAP_ATTR_DOMAIN_RDN},${LDAP_ATTR_DOMAIN_TRANSPORT},${LDAP_ATTR_DOMAIN_STATUS},${LDAP_ENABLED_SERVICE},${LDAP_ATTR_DOMAIN_SENDER_BCC_ADDRESS},${LDAP_ATTR_DOMAIN_RECIPIENT_BCC_ADDRESS}"
     by anonymous    auth
     by self         read
     by dn.exact="${LDAP_BINDDN}"   read
     by dn.exact="${LDAP_ADMIN_DN}"  write
-    by dn.regex="${LDAP_ATTR_USER_DN_NAME}=${DOMAIN_ADMIN_NAME}@([^,]+),${LDAP_ATTR_DOMAIN_DN_NAME}=\$1,${LDAP_BASEDN}"    write
+    by dn.regex="${LDAP_ATTR_USER_DN_NAME}=${DOMAIN_ADMIN_NAME}@([^,]+),${LDAP_ATTR_DOMAIN_RDN}=\$1,${LDAP_BASEDN}"    write
     by users        read
 
 # User attrs.
@@ -93,7 +93,7 @@ access to attrs="${LDAP_ATTR_USER_DN_NAME},${LDAP_ATTR_USER_STATUS},${LDAP_ATTR_
     by self         read
     by dn.exact="${LDAP_BINDDN}"   read
     by dn.exact="${LDAP_ADMIN_DN}"  write
-    by dn.regex="${LDAP_ATTR_USER_DN_NAME}=${DOMAIN_ADMIN_NAME}@([^,]+),${LDAP_ATTR_DOMAIN_DN_NAME}=\$1,${LDAP_BASEDN}"    write
+    by dn.regex="${LDAP_ATTR_USER_DN_NAME}=${DOMAIN_ADMIN_NAME}@([^,]+),${LDAP_ATTR_DOMAIN_RDN}=\$1,${LDAP_BASEDN}"    write
     by users        read
 
 #
@@ -112,13 +112,13 @@ access to dn="${LDAP_ADMIN_DN}"
 #
 # Allow users to access their own domain subtree.
 #
-access to dn.regex="${LDAP_ATTR_DOMAIN_DN_NAME}=([^,]+),${LDAP_BASEDN}\$"
+access to dn.regex="${LDAP_ATTR_DOMAIN_RDN}=([^,]+),${LDAP_BASEDN}\$"
     by anonymous                    auth
     by self                         write
     by dn.exact="${LDAP_BINDDN}"   read
     by dn.exact="${LDAP_ADMIN_DN}"  write
-    by dn.regex="${LDAP_ATTR_USER_DN_NAME}=${DOMAIN_ADMIN_NAME}@\$1,${LDAP_ATTR_DOMAIN_DN_NAME}=\$1,${LDAP_BASEDN}\$" write
-    by dn.regex="${LDAP_ATTR_USER_DN_NAME}=[^,]+,${LDAP_ATTR_DOMAIN_DN_NAME}=\$1,${LDAP_BASEDN}\$" read
+    by dn.regex="${LDAP_ATTR_USER_DN_NAME}=${DOMAIN_ADMIN_NAME}@\$1,${LDAP_ATTR_DOMAIN_RDN}=\$1,${LDAP_BASEDN}\$" write
+    by dn.regex="${LDAP_ATTR_USER_DN_NAME}=[^,]+,${LDAP_ATTR_DOMAIN_RDN}=\$1,${LDAP_BASEDN}\$" read
     by users                        none
 #
 # Enable vmail/vmailadmin. 
@@ -128,7 +128,7 @@ access to dn.subtree="${LDAP_BASEDN}"
     by self                         write
     by dn.exact="${LDAP_BINDDN}"   read
     by dn.exact="${LDAP_ADMIN_DN}"  write
-    by dn.regex="${LDAP_ATTR_USER_DN_NAME}=[^,]+,${LDAP_ATTR_DOMAIN_DN_NAME}=\$1,${LDAP_BASEDN}\$" read
+    by dn.regex="${LDAP_ATTR_USER_DN_NAME}=[^,]+,${LDAP_ATTR_DOMAIN_RDN}=\$1,${LDAP_BASEDN}\$" read
     by users                        read
 
 #
@@ -174,7 +174,7 @@ index nisMapName,nisMapEntry                        eq,pres,sub
 #
 # Index for mail attrs.
 #
-index ${LDAP_ATTR_DOMAIN_DN_NAME},${LDAP_ATTR_DOMAIN_TRANSPORT},${LDAP_ATTR_DOMAIN_STATUS},${LDAP_ENABLED_SERVICE}  eq,pres
+index ${LDAP_ATTR_DOMAIN_RDN},${LDAP_ATTR_DOMAIN_TRANSPORT},${LDAP_ATTR_DOMAIN_STATUS},${LDAP_ENABLED_SERVICE}  eq,pres
 index ${LDAP_ATTR_DOMAIN_QUOTA},${LDAP_ATTR_DOMAIN_USER_NUMBER} eq,pres
 index ${LDAP_ATTR_DOMAIN_SENDER_BCC_ADDRESS},${LDAP_ATTR_DOMAIN_RECIPIENT_BCC_ADDRESS}  eq,pres
 index homeDirectory,mailMessageStore,${LDAP_ATTR_USER_ALIAS},${LDAP_ATTR_USER_STATUS}   eq,pres
@@ -254,18 +254,6 @@ objectclass: organization
 dc: ${LDAP_SUFFIX_MAJOR}
 o: ${LDAP_SUFFIX_MAJOR}
 
-dn: o=${LDAP_BASEDN_NAME},${LDAP_SUFFIX}
-objectClass: Organization
-o: ${LDAP_BASEDN_NAME}
-
-dn: o=${LDAP_ATTR_DOMAINADMIN_DN_NAME},${LDAP_SUFFIX}
-objectClass: Organization
-o: ${LDAP_ATTR_DOMAINADMIN_DN_NAME}
-
-dn: o=${LDAP_BASEDN_NAME},${LDAP_SUFFIX}
-objectClass: Organization
-o: ${LDAP_BASEDN_NAME}
-
 dn: ${LDAP_BINDDN}
 objectClass: person
 objectClass: top
@@ -280,19 +268,27 @@ cn: ${VMAIL_ADMIN_USER_NAME}
 sn: ${VMAIL_ADMIN_USER_NAME}
 ${LDAP_ATTR_USER_PASSWD}: $(gen_ldap_passwd "${LDAP_ADMIN_PW}")
 
-dn: ${LDAP_ATTR_DOMAIN_DN_NAME}=${FIRST_DOMAIN},${LDAP_BASEDN}
+dn: o=${LDAP_BASEDN_NAME},${LDAP_SUFFIX}
+objectClass: Organization
+o: ${LDAP_BASEDN_NAME}
+
+dn: o=${LDAP_ATTR_DOMAINADMIN_DN_NAME},${LDAP_SUFFIX}
+objectClass: Organization
+o: ${LDAP_ATTR_DOMAINADMIN_DN_NAME}
+
+dn: ${LDAP_ATTR_DOMAIN_RDN}=${FIRST_DOMAIN},${LDAP_BASEDN}
 objectClass: ${LDAP_OBJECTCLASS_MAILDOMAIN}
-${LDAP_ATTR_DOMAIN_DN_NAME}: ${FIRST_DOMAIN}
+${LDAP_ATTR_DOMAIN_RDN}: ${FIRST_DOMAIN}
 ${LDAP_ATTR_DOMAIN_TRANSPORT}: ${TRANSPORT}
 ${LDAP_ATTR_DOMAIN_STATUS}: ${LDAP_STATUS_ACTIVE}
 ${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_MAIL}
 
-dn: ou=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_DN_NAME}=${FIRST_DOMAIN},${LDAP_BASEDN}
+dn: ${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=${FIRST_DOMAIN},${LDAP_BASEDN}
 objectClass: ${LDAP_OBJECTCLASS_OU}
 objectClass: top
 ou: ${LDAP_ATTR_GROUP_USERS}
 
-dn: ou=${LDAP_ATTR_GROUP_GROUPS},${LDAP_ATTR_DOMAIN_DN_NAME}=${FIRST_DOMAIN},${LDAP_BASEDN}
+dn: ${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_GROUPS},${LDAP_ATTR_DOMAIN_RDN}=${FIRST_DOMAIN},${LDAP_BASEDN}
 objectClass: ${LDAP_OBJECTCLASS_OU}
 objectClass: top
 ou: ${LDAP_ATTR_GROUP_GROUPS}
@@ -303,8 +299,9 @@ objectClass: ${LDAP_OBJECTCLASS_MAILADMIN}
 ${LDAP_ATTR_USER_DN_NAME}: ${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}
 ${LDAP_ATTR_USER_STATUS}: ${LDAP_STATUS_ACTIVE}
 ${LDAP_ATTR_USER_PASSWD}: $(gen_ldap_passwd "${DOMAIN_ADMIN_PASSWD}")
+${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_AWSTATS}
 
-dn: ${LDAP_ATTR_USER_DN_NAME}=${FIRST_USER}@${FIRST_DOMAIN},ou=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_DN_NAME}=${FIRST_DOMAIN},${LDAP_BASEDN}
+dn: ${LDAP_ATTR_USER_DN_NAME}=${FIRST_USER}@${FIRST_DOMAIN},${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=${FIRST_DOMAIN},${LDAP_BASEDN}
 objectClass: inetOrgPerson
 objectClass: ${LDAP_OBJECTCLASS_MAILUSER}
 objectClass: top

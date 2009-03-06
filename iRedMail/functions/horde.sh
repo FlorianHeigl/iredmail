@@ -159,7 +159,7 @@ horde_config_turba()
                                  'params' => array('server'    => "${LDAP_SERVER_HOST}",
                                                    'port'      => "${LDAP_SERVER_PORT}",
                                                    'tls'       => false,
-                                                   'root'      => "${LDAP_ATTR_DOMAIN_DN_NAME}=${FIRST_DOMAIN},${LDAP_BASEDN}",
+                                                   'root'      => "${LDAP_ATTR_DOMAIN_RDN}=${FIRST_DOMAIN},${LDAP_BASEDN}",
                                                    'bind_dn'   => "${LDAP_BINDDN}",
                                                    'bind_password' => "${LDAP_BINDPW}",
                                                    'version'   => ${LDAP_BIND_VERSION},

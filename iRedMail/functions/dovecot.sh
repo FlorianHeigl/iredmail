@@ -262,10 +262,10 @@ ldap_version    = 3
 auth_bind       = yes
 dn              = ${LDAP_BINDDN}
 dnpass          = ${LDAP_BINDPW}
-base            = ou=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}
+base            = ${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}
 scope           = subtree
 deref           = never
-user_filter     = (&(${LDAP_ATTR_USER_DN_NAME}=%u)(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=%Ls))
+user_filter     = (&(${LDAP_ATTR_USER_DN_NAME}=%u)(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=%Ls))
 pass_filter     = (${LDAP_ATTR_USER_DN_NAME}=%u)
 pass_attrs      = ${LDAP_ATTR_USER_PASSWD}=password
 default_pass_scheme = CRYPT
