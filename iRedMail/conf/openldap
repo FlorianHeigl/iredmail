@@ -46,6 +46,9 @@ export LDAP_SERVICE_DELIVER='deliver'
 export LDAP_SERVICE_WEBMAIL='webmail'
 export LDAP_SERVICE_AWSTATS='awstats'
 
+# Domain admin related.
+export LDAP_ATTR_DOMAINADMIN_DN_NAME='domainName'
+
 # Domain related.
 export LDAP_ATTR_DOMAIN_DN_NAME='domainName'
 export LDAP_ATTR_DOMAIN_TRANSPORT='mtaTransport'
@@ -54,6 +57,10 @@ export LDAP_ATTR_DOMAIN_QUOTA='domainMaxQuotaSize'
 export LDAP_ATTR_DOMAIN_USER_NUMBER='domainMaxUserNumber'
 export LDAP_ATTR_DOMAIN_SENDER_BCC_ADDRESS='domainSenderBccAddress'
 export LDAP_ATTR_DOMAIN_RECIPIENT_BCC_ADDRESS='domainRecipientBccAddress'
+
+# Group related.
+export LDAP_ATTR_GROUP_USERS='Users'
+export LDAP_ATTR_GROUP_GROUPS='Groups'
 
 # User related.
 export LDAP_ATTR_USER_DN_NAME='mail'

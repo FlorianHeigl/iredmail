@@ -144,5 +144,5 @@ objectclass ( 1.3.6.1.4.1.32349.1.2.3.2 NAME 'mailDomain'
         description $ streetAddress $ telephoneNumber $ fax ))
 objectclass ( 1.3.6.1.4.1.32349.1.2.3.3 NAME 'mailAdmin'
     DESC 'Mail Domain Admin' SUP top STRUCTURAL
-    MUST ( mail $ userPassword )
+    MUST ( mail $ userPassword $ accountStatus )
     MAY ( description ))
