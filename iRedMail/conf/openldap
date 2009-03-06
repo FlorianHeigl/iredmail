@@ -30,8 +30,10 @@ export LDAP_BINDPW="$(${RANDOM_STRING})"
 
 # ---------- LDAP schema related -----------
 # objectClass
-export LDAP_OBJECTCLASS_DOMAIN='mailDomain'
-export LDAP_OBJECTCLASS_USER='mailUser'
+export LDAP_OBJECTCLASS_OU='organizationalUnit'
+export LDAP_OBJECTCLASS_MAILDOMAIN='mailDomain'
+export LDAP_OBJECTCLASS_MAILUSER='mailUser'
+export LDAP_OBJECTCLASS_MAILADMIN='mailUser'
 
 # Common attribute.
 export LDAP_ENABLED_SERVICE='enabledService'

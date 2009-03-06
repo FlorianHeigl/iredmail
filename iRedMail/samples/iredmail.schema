@@ -54,6 +54,11 @@ attributetype ( 1.3.6.1.4.1.32349.1.2.1.7 NAME 'domainMaxUserNumber'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
+attributetype ( 1.3.6.1.4.1.32349.1.2.1.8 NAME 'domainAdmin'
+    DESC 'Domain admin'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+    )
 
 #
 # Mail Service: User related attributes.
@@ -124,7 +129,7 @@ attributetype ( 1.3.6.1.4.1.32349.1.2.2.13 NAME 'enabledService'
 # Object Class Definitions
 #
 objectclass ( 1.3.6.1.4.1.32349.1.2.3.1 NAME 'mailUser'
-    DESC 'Postfix-LDAP User' SUP top AUXILIARY
+    DESC 'Mail User' SUP top AUXILIARY
     MUST ( mail $ uid )
     MAY ( mailMessageStore $ homeDirectory $ userPassword $
         mailAlternateAddress $ mailUID $ mailGID $ mailQuota $
@@ -132,8 +137,12 @@ objectclass ( 1.3.6.1.4.1.32349.1.2.3.1 NAME 'mailUser'
         userRecipientBccAddress $ userSenderBccAddress $
         enabledService $ department ))
 objectclass ( 1.3.6.1.4.1.32349.1.2.3.2 NAME 'mailDomain'
-    DESC 'Postfix-LDAP Domain' SUP top STRUCTURAL
+    DESC 'Mail Domain' SUP top STRUCTURAL
     MUST ( domainName $ mtaTransport $ domainStatus )
     MAY ( domainSenderBccAddress $ domainRecipientBccAddress $
         domainMaxQuotaSize $ domainMaxUserNumber $ enabledService $
         description $ streetAddress $ telephoneNumber $ fax ))
+objectclass ( 1.3.6.1.4.1.32349.1.2.3.3 NAME 'mailAdmin'
+    DESC 'Mail Domain Admin' SUP top STRUCTURAL
+    MUST ( mail $ userPassword )
+    MAY ( description ))

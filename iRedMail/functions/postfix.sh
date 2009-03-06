@@ -220,7 +220,7 @@ bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
 search_base     = ${LDAP_BASEDN}
 scope           = one
-query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_DOMAIN})(${LDAP_ATTR_DOMAIN_DN_NAME}=%s)(${LDAP_ATTR_DOMAIN_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
+query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_MAILDOMAIN})(${LDAP_ATTR_DOMAIN_DN_NAME}=%s)(${LDAP_ATTR_DOMAIN_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
 result_attribute= ${LDAP_ATTR_DOMAIN_DN_NAME}
 debuglevel     = 0
 EOF
@@ -241,7 +241,7 @@ bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
 search_base     = ${LDAP_BASEDN}
 scope           = one
-query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_DOMAIN})(${LDAP_ATTR_DOMAIN_DN_NAME}=%s)(${LDAP_ATTR_DOMAIN_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
+query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_MAILDOMAIN})(${LDAP_ATTR_DOMAIN_DN_NAME}=%s)(${LDAP_ATTR_DOMAIN_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
 result_attribute= ${LDAP_ATTR_DOMAIN_TRANSPORT}
 debuglevel     = 0
 EOF
@@ -262,7 +262,7 @@ bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
 search_base     = ${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}
 scope           = sub
-query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_DN_NAME}=%s)(${LDAP_ATTR_USER_STATUS}=active)(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
+query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_USER_DN_NAME}=%s)(${LDAP_ATTR_USER_STATUS}=active)(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
 result_attribute= mailMessageStore
 debuglevel     = 0
 EOF
@@ -278,7 +278,7 @@ bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
 search_base     = ${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}
 scope           = sub
-query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_DN_NAME}=%s)(${LDAP_ATTR_USER_STATUS}=active)(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DELIVER}))
+query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_USER_DN_NAME}=%s)(${LDAP_ATTR_USER_STATUS}=active)(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DELIVER}))
 result_attribute= ${LDAP_ATTR_USER_DN_NAME}
 debuglevel     = 0
 EOF
@@ -295,7 +295,7 @@ bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
 search_base     = ${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}
 scope           = sub
-query_filter    = (&(${LDAP_ATTR_USER_DN_NAME}=%s)(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=active)(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_SMTP}))
+query_filter    = (&(${LDAP_ATTR_USER_DN_NAME}=%s)(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_USER_STATUS}=active)(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_SMTP}))
 result_attribute= ${LDAP_ATTR_USER_DN_NAME}
 debuglevel     = 0
 EOF
@@ -313,7 +313,7 @@ bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
 search_base     = ${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}
 scope           = sub
-query_filter    = (&(${LDAP_ATTR_USER_DN_NAME}=%s)(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=active)(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
+query_filter    = (&(${LDAP_ATTR_USER_DN_NAME}=%s)(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_USER_STATUS}=active)(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
 result_attribute= ${LDAP_ATTR_USER_ALIAS}
 debuglevel     = 0
 EOF
@@ -329,7 +329,7 @@ bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
 search_base     = ${LDAP_BASEDN}
 scope           = one
-query_filter    = (&(${LDAP_ATTR_DOMAIN_DN_NAME}=%d)(objectClass=${LDAP_OBJECTCLASS_DOMAIN})(${LDAP_ATTR_DOMAIN_STATUS}=active)(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
+query_filter    = (&(${LDAP_ATTR_DOMAIN_DN_NAME}=%d)(objectClass=${LDAP_OBJECTCLASS_MAILDOMAIN})(${LDAP_ATTR_DOMAIN_STATUS}=active)(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
 result_attribute= ${LDAP_ATTR_DOMAIN_RECIPIENT_BCC_ADDRESS}
 debuglevel     = 0
 EOF
@@ -345,7 +345,7 @@ bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
 search_base     = ${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}
 scope           = sub
-query_filter    = (&(${LDAP_ATTR_USER_DN_NAME}=%s)(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=active)(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
+query_filter    = (&(${LDAP_ATTR_USER_DN_NAME}=%s)(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_USER_STATUS}=active)(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
 result_attribute= ${LDAP_ATTR_USER_RECIPIENT_BCC_ADDRESS}
 debuglevel     = 0
 EOF
@@ -361,7 +361,7 @@ bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
 search_base     = ${LDAP_BASEDN}
 scope           = one
-query_filter    = (&(${LDAP_ATTR_DOMAIN_DN_NAME}=%d)(objectClass=${LDAP_OBJECTCLASS_DOMAIN})(${LDAP_ATTR_DOMAIN_STATUS}=active)(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
+query_filter    = (&(${LDAP_ATTR_DOMAIN_DN_NAME}=%d)(objectClass=${LDAP_OBJECTCLASS_MAILDOMAIN})(${LDAP_ATTR_DOMAIN_STATUS}=active)(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
 result_attribute= ${LDAP_ATTR_DOMAIN_SENDER_BCC_ADDRESS}
 debuglevel     = 0
 EOF
@@ -377,7 +377,7 @@ bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
 search_base     = ${LDAP_ATTR_DOMAIN_DN_NAME}=%d,${LDAP_BASEDN}
 scope           = sub
-query_filter    = (&(${LDAP_ATTR_USER_DN_NAME}=%s)(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=active)(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
+query_filter    = (&(${LDAP_ATTR_USER_DN_NAME}=%s)(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_USER_STATUS}=active)(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
 result_attribute= ${LDAP_ATTR_USER_SENDER_BCC_ADDRESS}
 debuglevel     = 0
 EOF
