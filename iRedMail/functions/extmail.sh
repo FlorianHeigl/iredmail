@@ -175,7 +175,7 @@ extmail_config_ldap_addressbook()
     perl -pi -e 's#(^SYS_G_ABOOK_LDAP_BASE)(.*)#${1} = $ENV{'LDAP_ATTR_GROUP_RDN'}=$ENV{'LDAP_ATTR_GROUP_USERS'},$ENV{'LDAP_ATTR_DOMAIN_RDN'}=$ENV{'FIRST_DOMAIN'},$ENV{'LDAP_BASEDN'}#' ${EXTMAIL_CONF}
     perl -pi -e 's#(^SYS_G_ABOOK_LDAP_ROOTDN)(.*)#${1} = $ENV{'LDAP_BINDDN'}#' ${EXTMAIL_CONF}
     perl -pi -e 's#(^SYS_G_ABOOK_LDAP_ROOTPW)(.*)#${1} = $ENV{'LDAP_BINDPW'}#' ${EXTMAIL_CONF}
-    perl -pi -e 's#(^SYS_G_ABOOK_LDAP_FILTER)(.*)#${1} = (&(objectClass=$ENV{'LDAP_OBJECTCLASS_USER'})($ENV{'LDAP_ATTR_USER_STATUS'}=$ENV{'LDAP_STATUS_ACTIVE'})($ENV{'LDAP_ENABLED_SERVICE'}=$ENV{'LDAP_SERVICE_DELIVER'}))#' ${EXTMAIL_CONF}
+    perl -pi -e 's#(^SYS_G_ABOOK_LDAP_FILTER)(.*)#${1} = (&(objectClass=$ENV{'LDAP_OBJECTCLASS_MAILUSER'})($ENV{'LDAP_ATTR_USER_STATUS'}=$ENV{'LDAP_STATUS_ACTIVE'})($ENV{'LDAP_ENABLED_SERVICE'}=$ENV{'LDAP_SERVICE_DELIVER'}))#' ${EXTMAIL_CONF}
 
     echo 'export status_extmail_config_ldap_addressbook="DONE"' >> ${STATUS_FILE}
 }

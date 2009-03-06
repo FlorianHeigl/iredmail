@@ -386,9 +386,9 @@ ${CONF_MSG}
 \$ldap_server = 'ldap://${LDAP_SERVER_HOST}:${LDAP_SERVER_PORT}';
 \$ldap_protocol_version = ${LDAP_BIND_VERSION};
 \$ldap_password_field = "${LDAP_ATTR_USER_PASSWD}";
-\$ldap_user_field = "${LDAP_ATTR_USER_DN_NAME}";
+\$ldap_user_field = "${LDAP_ATTR_USER_RDN}";
 \$ldap_base_dn = '${LDAP_BASEDN}';
-\$ldap_filter = "(&(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))";
+\$ldap_filter = "(&(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))";
 \$query_dn="${LDAP_BINDDN}";
 \$query_pw="${LDAP_BINDPW}";
 \$ldap_bind_as_manager = false;

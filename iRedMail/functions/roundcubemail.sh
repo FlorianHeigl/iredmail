@@ -130,6 +130,9 @@ EOF
 
         ECHO_INFO "Setting global LDAP address book in Roundcube."
 
+        # Global LDAP Address Book name.
+        export RCM_ADDRBOOK_NAME="${FIRST_DOMAIN}"
+
         # Remove PHP end of file mark first.
         cd ${RCM_HTTPD_ROOT}/config/ && perl -pi -e 's#\?\>##' main.inc.php
 
@@ -148,9 +151,9 @@ EOF
     'writable'      => false, // Indicates if we can write to the LDAP directory or not.
     // If writable is true then these fields need to be populated:
     // LDAP_Object_Classes, required_fields, LDAP_rdn
-    //'LDAP_Object_Classes' => array("top", "inetOrgPerson", "${LDAP_OBJECTCLASS_USER}"), // To create a new contact these are the object classes to specify (or any other classes you wish to use).
+    //'LDAP_Object_Classes' => array("top", "inetOrgPerson", "${LDAP_OBJECTCLASS_MAILUSER}"), // To create a new contact these are the object classes to specify (or any other classes you wish to use).
     //'required_fields'     => array("cn", "sn", "mail"),     // The required fields needed to build a new contact as required by the object classes (can include additional fields not required by the object classes).
-    //'LDAP_rdn'      => "${LDAP_ATTR_USER_DN_NAME}", // The RDN field that is used for new entries, this field needs to be one of the search_fields, the base of base_dn is appended to the RDN to insert into the LDAP directory.
+    //'LDAP_rdn'      => "${LDAP_ATTR_USER_RDN}", // The RDN field that is used for new entries, this field needs to be one of the search_fields, the base of base_dn is appended to the RDN to insert into the LDAP directory.
     'ldap_version'  => "${LDAP_BIND_VERSION}",       // using LDAPv3
     'search_fields' => array('mail', 'cn', 'gn', 'sn'),  // fields to search in
     'name_field'    => 'cn',    // this field represents the contact's name
@@ -159,7 +162,7 @@ EOF
     'firstname_field' => 'gn',  // this field represents the contact's first name
     'sort'          => 'cn',    // The field to sort the listing by.
     'scope'         => 'sub',   // search mode: sub|base|list
-    'filter'        => "(&(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DELIVER}))",
+    'filter'        => "(&(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DELIVER}))",
     'fuzzy_search'  => true);   // server allows wildcard search
 
 // end of config file
