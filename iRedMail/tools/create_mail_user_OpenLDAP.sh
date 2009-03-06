@@ -109,9 +109,7 @@ WELCOME_MSG_BODY="Welcome, new user."
 
 add_new_domain()
 {
-    ldapsearch -x -D "${BINDDN}" -w "${BINDPW}" \
-    -b "${BASE_DN}" | \
-    grep "o: ${DOMAIN_NAME}" >/dev/null
+    ldapsearch -x -D "${BINDDN}" -w "${BINDPW}" -b "${BASE_DN}" | grep "domainName: ${DOMAIN_NAME}" >/dev/null
 
     if [ X"$?" != X"0" ]; then
         echo "Add new domain: ${DOMAIN_NAME}."
@@ -123,18 +121,24 @@ domainName: ${DOMAIN_NAME}
 mtaTransport: ${TRANSPORT}
 domainStatus: active
 enableMailService: yes
+EOF
+    else
+        :
+    fi
 
+    ldapadd -x -D "${BINDDN}" -w "${BINDPW}" <<EOF
 dn: ${OU_USER_DN},${DOMAIN_DN},${BASE_DN}
 objectClass: organizationalUnit
 objectClass: top
 ou: Users
+EOF
 
+    ldapadd -x -D "${BINDDN}" -w "${BINDPW}" <<EOF
 dn: ${OU_GROUP_DN},${DOMAIN_DN},${BASE_DN}
 objectClass: organizationalUnit
 objectClass: top
 ou: Groups
 EOF
-    fi
 }
 
 add_new_user()

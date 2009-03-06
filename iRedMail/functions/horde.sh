@@ -14,8 +14,9 @@ horde_install()
     # Secure config files.
     chown -R apache:root ${HORDE_HTTPD_ROOT}/config
     chown -R apache:root ${HORDE_HTTPD_ROOT}/*/config
-    chmod -R go-rwx ${HORDE_HTTPD_ROOT}/config
-    chmod -R go-rwx ${HORDE_HTTPD_ROOT}/*/config
+    chmod -R 0000 ${HORDE_HTTPD_ROOT}/docs/
+    chmod -R 0700 ${HORDE_HTTPD_ROOT}/config
+    chmod -R 0700 ${HORDE_HTTPD_ROOT}/*/config
 
     # Secure scripts.
     chown -R root:root ${HORDE_HTTPD_ROOT}/scripts
@@ -159,7 +160,7 @@ horde_config_turba()
                                  'params' => array('server'    => "${LDAP_SERVER_HOST}",
                                                    'port'      => "${LDAP_SERVER_PORT}",
                                                    'tls'       => false,
-                                                   'root'      => "${LDAP_ATTR_DOMAIN_RDN}=${FIRST_DOMAIN},${LDAP_BASEDN}",
+                                                   'root'      => "${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=${FIRST_DOMAIN},${LDAP_BASEDN}",
                                                    'bind_dn'   => "${LDAP_BINDDN}",
                                                    'bind_password' => "${LDAP_BINDPW}",
                                                    'version'   => ${LDAP_BIND_VERSION},
