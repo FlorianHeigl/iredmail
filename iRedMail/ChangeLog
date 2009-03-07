@@ -13,10 +13,7 @@ iRedMail-0.3.3:
     * Update awstats to 6.9.
     * Make webmail can be accessed via HTTPS (except horde).
     * Use syslog as default log driver in roundcube.
-    * Add patches for roundcube-0.2-stable, used to change ldap password,
-      fix undefined index error.
     * Directory renamed: tools/ => dialog/.
-    * Update roundcube webmail to 0.2-stable.
     * Make phpLDAPadmin, phMyAdmin, PostfixAdmin can be accessed via HTTPS
       only.
     * Improve LDAP schema, use 'enabledService=XXX' instead of

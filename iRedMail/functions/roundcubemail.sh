@@ -32,7 +32,7 @@ GRANT SELECT,INSERT,UPDATE,DELETE ON ${RCM_DB}.* TO ${RCM_DB_USER}@localhost IDE
 
 /* Import Roundcubemail SQL template. */
 USE ${RCM_DB};
-SOURCE ${RCM_HTTPD_ROOT}/SQL/mysql.initial.sql;
+SOURCE ${RCM_HTTPD_ROOT}/SQL/mysql5.initial.sql;
 
 FLUSH PRIVILEGES;
 EOF
@@ -77,26 +77,17 @@ EOF
 
     # Set defeault domain.
     export FIRST_DOMAIN
-    perl -pi -e 's#(.*username_domain.*=)(.*)#${1} "$ENV{'FIRST_DOMAIN'}";#' main.inc.php
-    perl -pi -e 's#(.*locale_string.*)(en)(.*)#${1}$ENV{'DEFAULT_LANG'}${3}#' main.inc.php
-    perl -pi -e 's#(.*timezone.*=).*#${1} 8;#' main.inc.php
-    perl -pi -e 's#(.*enable_spellcheck.*=).*#${1} FALSE;#' main.inc.php
-    perl -pi -e 's#(.*default_charset.*=).*#${1} "UTF-8";#' main.inc.php
+    perl -pi -e 's#(.*username_domain.*=)(.*)#${1} "$ENV{FIRST_DOMAIN}";#' main.inc.php
+    perl -pi -e 's#(.*locale_string.*)(en)(.*)#${1}$ENV{RCM_DEFAULT_LOCALE}${3}#' main.inc.php
+    perl -pi -e 's#(.*timezone.*)(intval.*)#${1}8; //${2}#' main.inc.php
+    perl -pi -e 's#(.*enable_spellcheck.*)(TRUE)(.*)#${1}FALSE${3}#' main.inc.php
+    perl -pi -e 's#(.*default_charset.*=)(.*)#${1}"UTF-8";#' main.inc.php
 
     # Set useragent, add project info.
-    perl -pi -e 's#(.*useragent.*=).*#${1} "RoundCube WebMail";#' main.inc.php
+    perl -pi -e 's#(.*rcmail_config.*useragent.*=).*#${1} "RoundCube WebMail";#' main.inc.php
 
-    # Disable multiple identities.
-    perl -pi -e 's#(.*identities_level.*=).*#${1} 3;#' main.inc.php
-
-    # Enable preview pane by default.
-    perl -pi -e 's#(.*preview_pane.*=).*#${1} TRUE;#' main.inc.php
-
-    # Log file related.
-    perl -pi -e 's#(.*log_driver.*=).*#${1} "syslog";#' main.inc.php
-    perl -pi -e 's#(.*syslog_id.*=).*#${1} "roundcube";#' main.inc.php
-    perl -pi -e 's#(.*syslog_facility.*=).*#${1} "LOG_USER";#' main.inc.php
-    perl -pi -e 's#(.*log_logins.*=).*#${1} TRUE;#' main.inc.php
+    # Disable multiple identities. roundcube-0.2 only.
+    #perl -pi -e 's#(.*identities_level.*=).*#${1} 3;#' main.inc.php
 
     ECHO_INFO "Create directory alias for Roundcubemail."
     cat > ${HTTPD_CONF_DIR}/roundcubemail.conf <<EOF
@@ -109,104 +100,90 @@ Alias /roundcube "${RCM_HTTPD_ROOT}/"
 </Directory>
 EOF
 
-    # Make Roundcube can be accessed via HTTPS.
-    sed -i 's#\(</VirtualHost>\)#Alias /mail '${RCM_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
-    sed -i 's#\(</VirtualHost>\)#Alias /webmail '${RCM_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
-    sed -i 's#\(</VirtualHost>\)#Alias /roundcube '${RCM_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
+    # Roundcubemail-0.1.1 only.
+    ECHO_INFO "Patch: Add missing localization items and fix incorrect items for zh_CN."
+    cd ${RCM_HTTPD_ROOT} && \
+    patch -p0 < ${PATCH_DIR}/roundcubemail/zh_CN.labels.inc.patch >/dev/null
 
-    #ECHO_INFO "Patch: Display Username."
-    #cd ${RCM_HTTPD_ROOT}/skins/default/ && \
-    #patch -p0 < ${PATCH_DIR}/roundcubemail/display_username.patch >/dev/null && \
-    #patch -p0 < ${PATCH_DIR}/roundcubemail/display_username_skin_default.patch >/dev/null
+    ECHO_INFO "Patch: Fix IMAP folder name with Chinese characters."
+    cd ${RCM_HTTPD_ROOT} && \
+    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_national_imap_folder_name.patch >/dev/null
 
-    ECHO_INFO "Patch: Fix 'Undefined index' error in 0.2-stable."
-    cd ${RCM_HTTPD_ROOT}/ && \
-    patch -p0 < ${PATCH_DIR}/roundcubemail/0.2-stable_undefined_index_error.patch >/dev/null
+    # This was fixed in roundcubemail-0.2.
+    ECHO_INFO "Patch: Attachment display and save with Chiense characters."
+    cd ${RCM_HTTPD_ROOT} && \
+    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_PEAR_Mail_Mail_Mime_addAttachment_basename.patch >/dev/null
+
+    ECHO_INFO "Patch: Change Password and Setting Mail Forwarding."
+    cd ${RCM_HTTPD_ROOT} && \
+    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_chpwd_forward.patch >/dev/null
+
+    cd ${RCM_HTTPD_ROOT}/skins/default/ && \
+    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_chpwd_forward_skins.patch >/dev/null
+
+    ECHO_INFO "Patch: Vacation plugin."
+    # Create symbol link to sieve_dir.
+    cd ${RCM_HTTPD_ROOT} && \
+    ln -s ${SIEVE_DIR} sieve
+
+    # Function patch: vacation.
+    cd ${RCM_HTTPD_ROOT} && \
+    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_vacation.patch >/dev/null
+
+    # Skin patch: vacation.
+    cd ${RCM_HTTPD_ROOT}/skins/default/ && \
+    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_vacation_skin_default.patch >/dev/null
+
+    ECHO_INFO "Patch: Performance Improvement for Roundcubemail-0.1.1."
+    cd ${RCM_HTTPD_ROOT} && \
+    patch -p0 < ${PATCH_DIR}/roundcubemail/performance-jh1.diff >/dev/null
+
+    ECHO_INFO "Patch: Display Username."
+    cd ${RCM_HTTPD_ROOT}/skins/default/ && \
+    patch -p0 < ${PATCH_DIR}/roundcubemail/display_username.patch >/dev/null && \
+    patch -p0 < ${PATCH_DIR}/roundcubemail/display_username_skin_default.patch >/dev/null
+
+    ECHO_INFO "Patch: Incorrect filename while download attachment with Chinese (non-ascii) characters."
+    cd ${RCM_HTTPD_ROOT} && \
+    patch -p0 < ${PATCH_DIR}/roundcubemail/roundcubemail-0.1.1_incorrect_filename_after_download.patch >/dev/null
 
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
-        #ECHO_INFO "Patch: Change LDAP password."
-        #cd ${RCM_HTTPD_ROOT}/ && \
-        #patch -p1 < ${PATCH_DIR}/roundcubemail/0.2-stable_change_ldap_passwd.patch >/dev/null
+        ECHO_INFO "Disable change password and mail forwarding featues."
+        cd ${RCM_HTTPD_ROOT} && \
+        perl -pi -e 's#(.*save-passwd.*)#//${1}#' index.php
+        perl -pi -e 's#(.*include.*passwd.*)#//${1}#' index.php
+
+        perl -pi -e 's#(.*save-forwards.*)#//${1}#' index.php
+        perl -pi -e 's#(.*include.*forwards.*)#//${1}#' index.php
 
         ECHO_INFO "Setting global LDAP address book in Roundcube."
-
-        # Global LDAP Address Book name.
-        export RCM_ADDRBOOK_NAME="${FIRST_DOMAIN}"
-
-        # Remove PHP end of file mark first.
-        cd ${RCM_HTTPD_ROOT}/config/ && perl -pi -e 's#\?\>##' main.inc.php
-
+        cd ${RCM_HTTPD_ROOT}/config/ && \
+        perl -pi -e 's#\?\>##' main.inc.php
         cat >> main.inc.php <<EOF
 # Global LDAP Address Book.
-\$rcmail_config['ldap_public']["${RCM_ADDRBOOK_NAME}"] = array(
+\$rcmail_config['ldap_public']["${PROG_NAME}"] = array(
     'name'          => 'Global Address Book',
     'hosts'         => array("${LDAP_SERVER_HOST}"),
     'port'          => ${LDAP_SERVER_PORT},
-    'use_tls'       => false,
-    //'user_specific' => true, // If true the base_dn, bind_dn and bind_pass default to the user's IMAP login.
-    //'base_dn'       => "${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}",
-    'base_dn'       => "${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=${FIRST_DOMAIN},${LDAP_BASEDN}",
+    'base_dn'       => "${LDAP_ATTR_DOMAIN_DN_NAME}=${FIRST_DOMAIN},${LDAP_BASEDN}",
     'bind_dn'       => "${LDAP_BINDDN}",
     'bind_pass'     => "${LDAP_BINDPW}",
-    'writable'      => false, // Indicates if we can write to the LDAP directory or not.
-    // If writable is true then these fields need to be populated:
-    // LDAP_Object_Classes, required_fields, LDAP_rdn
-    //'LDAP_Object_Classes' => array("top", "inetOrgPerson", "${LDAP_OBJECTCLASS_MAILUSER}"), // To create a new contact these are the object classes to specify (or any other classes you wish to use).
-    //'required_fields'     => array("cn", "sn", "mail"),     // The required fields needed to build a new contact as required by the object classes (can include additional fields not required by the object classes).
-    //'LDAP_rdn'      => "${LDAP_ATTR_USER_RDN}", // The RDN field that is used for new entries, this field needs to be one of the search_fields, the base of base_dn is appended to the RDN to insert into the LDAP directory.
     'ldap_version'  => "${LDAP_BIND_VERSION}",       // using LDAPv3
-    'search_fields' => array('mail', 'cn', 'gn', 'sn'),  // fields to search in
+    'search_fields' => array('mail', 'cn'),  // fields to search in
     'name_field'    => 'cn',    // this field represents the contact's name
     'email_field'   => 'mail',  // this field represents the contact's e-mail
     'surname_field' => 'sn',    // this field represents the contact's last name
     'firstname_field' => 'gn',  // this field represents the contact's first name
-    'sort'          => 'cn',    // The field to sort the listing by.
     'scope'         => 'sub',   // search mode: sub|base|list
-    'filter'        => "(&(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DELIVER}))",
+    'filter'        => "(&(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DELIVER}))",
     'fuzzy_search'  => true);   // server allows wildcard search
 
 // end of config file
 ?>
 EOF
-        # List global address book in autocomplete_addressbooks.
-        perl -pi -e 's#(.*autocomplete_addressbooks.*=)(.*)#${1} array("sql", "$ENV{'RCM_ADDRBOOK_NAME'}");#' main.inc.php
-
-    elif [ X"${BACKEND}" == X"MySQL" ]; then
-        #ECHO_INFO "Patch: Change MySQL password and mail forwarding setting."
-        :
     else
         :
     fi
-
-    # Log file related.
-    ECHO_INFO "Setting up syslog configration file for Roundcube."
-    echo -e "user.*\t\t\t\t\t\t-${RCM_LOGFILE}" >> ${SYSLOG_CONF}
-
-    touch ${RCM_LOGFILE}
-    chown root:root ${RCM_LOGFILE}
-    chmod 0600 ${RCM_LOGFILE}
-
-    ECHO_INFO "Setting logrotate for roundcube log file."
-    cat > ${RCM_LOGROTATE_FILE} <<EOF
-${CONF_MSG}
-${RCM_LOGFILE} {
-    compress
-    weekly
-    rotate 10
-    create 0600 root root
-    missingok
-
-    # Use bzip2 for compress.
-    compresscmd $(which bzip2)
-    uncompresscmd $(which bunzip2)
-    compressoptions -9
-    compressext .bz2 
-
-    postrotate
-        /usr/bin/killall -HUP syslogd
-    endscript
-}
-EOF
 
     cat >> ${TIP_FILE} <<EOF
 WebMail(Roundcubemail):
@@ -216,10 +193,6 @@ WebMail(Roundcubemail):
     * URL:
         - http://${HOSTNAME}/mail/
         - http://${HOSTNAME}/webmail/
-    * Log file related:
-        - ${SYSLOG_CONF}
-        - ${RCM_LOGFILE}
-        - ${RCM_LOGROTATE_FILE}
     * See also:
         - ${HTTPD_CONF_DIR}/roundcubemail.conf
 
