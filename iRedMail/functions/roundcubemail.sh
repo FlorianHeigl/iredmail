@@ -179,7 +179,7 @@ EOF
     elif [ X"${BACKEND}" == X"MySQL" ]; then
         ECHO_INFO "Patch: Change MySQL password."
         cd ${RCM_HTTPD_ROOT}/ && \
-        patch -p1 < ${PATCH_DIR}/roundcubemail/0.2-stable-changepasswd_sql.patch
+        patch -p1 < ${PATCH_DIR}/roundcubemail/0.2-stable-changepasswd_sql.patch >/dev/null
     else
         :
     fi

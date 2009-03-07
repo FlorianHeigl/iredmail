@@ -1,4 +1,6 @@
 iRedMail-0.3.3:
+    * Use mod_auth_mysql for user auth in awstats.
+    * Improve LDAP schema.
     * Add global ldap address book in ExtMail for ldap backend.
     * Avoid quote in HOSTNAME variable. Thanks shake.chen@gmail.
     * Update rrdtool to 1.2.30.

@@ -353,7 +353,8 @@ diff -Naur --exclude='*.svn*' roundcubemail-0.2-stable.managesieve/program/steps
 +if ($_SESSION['password'] == $RCMAIL->encrypt_passwd($old_pw)) {
 +    $updated = false;
 +    //$updated = $user_db->query($sql_update);
-+    $tmpEncPass = crypt($new_pw, "");
++    $salt = $pass = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890'), 0, 8);
++    $tmpEncPass = crypt($new_pw, $salt);
 +    $updated = $user_db->query(
 +        "UPDATE " . $changepasswd_config['db_name_table'] . 
 +        " SET " . $changepasswd_config['db_passwd_field'] . " = '" . $tmpEncPass . "'" . 

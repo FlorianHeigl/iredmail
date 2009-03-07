@@ -24,8 +24,6 @@ ScriptAlias /awstats ${AWSTATS_HTTPD_ROOT}/
 #Alias /js ${AWSTATS_HTTPD_ROOT}/js/
 EOF
 
-    if [ X"${BACKEND}" == X"OpenLDAP" ]; then
-        # Use LDAP auth.
         cat >> ${AWSTATS_HTTPD_CONF} <<EOF
 <Directory ${AWSTATS_HTTPD_ROOT}/>
     DirectoryIndex awstats.pl
@@ -34,8 +32,13 @@ EOF
     allow from all
     #allow from 127.0.0.1
 
+    AuthName "Authorization Required"
+EOF
+
+    if [ X"${BACKEND}" == X"OpenLDAP" ]; then
+        # Use LDAP auth.
+        cat >> ${AWSTATS_HTTPD_CONF} <<EOF
     AuthType Basic
-    AuthName "Authorization Realm"
 
     AuthBasicProvider ldap
     AuthzLDAPAuthoritative   Off
@@ -44,30 +47,38 @@ EOF
 
     AuthLDAPBindDN "${LDAP_BINDDN}"
     AuthLDAPBindPassword "${LDAP_BINDPW}"
-
-    Require valid-user
-</Directory>
 EOF
 
         [ X"${LDAP_USE_TLS}" == X"YES" ] && perl -pi -e 's#(AuthLDAPUrl.*)(ldap://)(.*)#${1}ldaps://${3}#' ${AWSTATS_HTTPD_CONF}
+    elif [ X"${BACKEND}" == X"MySQL" ]; then
+        # Use mod_auth_mysql.
+        cat >> ${AWSTATS_HTTPD_CONF} <<EOF
+    AuthType Basic
+
+    AuthMYSQLEnable on
+    AuthMySQLUser ${MYSQL_BIND_USER}
+    AuthMySQLPassword ${MYSQL_BIND_PW}
+    AuthMySQLDB ${VMAIL_DB}
+    AuthMySQLUserTable admin
+    AuthMySQLNameField username
+    AuthMySQLPasswordField password
+EOF
     else
         # Use basic auth mech.
         cat >> ${AWSTATS_HTTPD_CONF} <<EOF
-<Directory ${AWSTATS_HTTPD_ROOT}/>
-    DirectoryIndex awstats.pl
-    Options ExecCGI
-    order deny,allow
-    allow from all
-    #allow from 127.0.0.1
-
     AllowOverride AuthConfig
     AuthType Basic
-    AuthName "Restricted Files"
     AuthUserFile ${AWSTATS_HTPASSWD_FILE}
+EOF
+    fi
+
+
+    # Close <Directory> container.
+    cat >> ${AWSTATS_HTTPD_CONF} <<EOF
+
     Require valid-user
 </Directory>
 EOF
-    fi
 
     # Set username, password for web access.
     htpasswd -bcm ${AWSTATS_HTPASSWD_FILE} "${AWSTATS_USERNAME}" "${AWSTATS_PASSWD}" >/dev/null 2>&1

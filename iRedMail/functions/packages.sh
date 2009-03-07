@@ -24,6 +24,9 @@ install_all()
 
     ENABLED_SERVICES="${ENABLED_SERVICES} httpd postfix"
 
+    # Awstats.
+    [ X"${USE_AWSTATS}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} awstats.noarch"
+
     # Backend: OpenLDAP or MySQL.
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
         # OpenLDAP server & client.
@@ -44,6 +47,9 @@ install_all()
 
         # For SquirrelMail.
         [ X"${USE_SM}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} php-pear-db.noarch"
+
+        # For Awstats.
+        [ X"${USE_AWSTATS}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} mod_auth_mysql.${ARCH}"
 
         # For ExtMail.
         [ X"${USE_EXTMAIL}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} libdbi-dbd-mysql.${ARCH} perl-DBD-mysql.${ARCH}"
@@ -90,9 +96,6 @@ install_all()
 
     # pysieved.
     ALL_PKGS="${ALL_PKGS} pysieved.noarch"
-
-    # Awstats.
-    [ X"${USE_AWSTATS}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} awstats.noarch"
 
     # RRDTools.
     [ X"${USE_MAILGRAPH}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} rrdtool.${ARCH} perl-rrdtool.${ARCH} perl-File-Tail.noarch"
