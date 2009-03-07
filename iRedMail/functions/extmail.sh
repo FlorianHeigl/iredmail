@@ -83,6 +83,10 @@ EOF
     ECHO_INFO "Basic configuration for ExtMail."
     cd ${EXTMAIL_HTTPD_ROOT} && cp -f webmail.cf.default ${EXTMAIL_CONF}
 
+    # Don't show debug info and warning msg.
+    perl -pi -e 's#(SYS_SHOW_WARN.*=).*#${1} 0#' ${EXTMAIL_CONF}
+    perl -pi -e 's#(SYS_LOG_ON.*=).*#${1} 1#' ${EXTMAIL_CONF}
+
     # Set default user language.
     perl -pi -e 's#(SYS_USER_LANG.*)en_US#${1}$ENV{'DEFAULT_LANG'}#' ${EXTMAIL_CONF}
 
