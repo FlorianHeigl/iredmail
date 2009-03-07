@@ -180,6 +180,9 @@ EOF
         ECHO_INFO "Patch: Change MySQL password."
         cd ${RCM_HTTPD_ROOT}/ && \
         patch -p1 < ${PATCH_DIR}/roundcubemail/0.2-stable-changepasswd_sql.patch >/dev/null
+
+        # Set correct username, password and database name.
+        perl -pi -e 's#(.*db_dsnw.*= )(.*)#${1}"mysqli://$ENV{'RCM_DB_USER'}:$ENV{'RCM_DB_PASSWD'}\@$ENV{'MYSQL_SERVER'}/$ENV{'VMAIL_DB'}";#' plugins/changepasswd/config.inc.php
     else
         :
     fi

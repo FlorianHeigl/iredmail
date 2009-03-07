@@ -55,7 +55,7 @@ diff -Naur --exclude='*.svn*' roundcubemail-0.2-stable.managesieve/plugins/chang
 +$changepasswd_config = array();
 +
 +// User database settings
-+$changepasswd_config['db_dsnw'] = "mysqli://roundcube:xtPq1gU4cpelxduX7up5vZyN7VT53n@localhost/vmail";
++$changepasswd_config['db_dsnw'] = "mysqli://dbuser:dbpasswd@localhost/vmail";
 +
 +// PEAR database DSN for read only operations (if empty write database will be used)
 +// useful for database replication
