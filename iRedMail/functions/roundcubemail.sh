@@ -17,6 +17,10 @@ rcm_install()
     chown -R apache:apache ${RCM_HTTPD_ROOT}/{temp,logs}
     chmod 0000 ${RCM_HTTPD_ROOT}/{CHANGELOG,INSTALL,LICENSE,README,UPGRADING,installer,SQL}
 
+    ECHO_INFO "Patch: Managesieve service frontend."
+    cd ${RCM_HTTPD_ROOT}/ && \
+    patch -p1 < ${PATCH_DIR}/roundcubemail/0.2-stable-managesieve.patch > /dev/null
+
     echo 'export status_rcm_install="DONE"' >> ${STATUS_FILE}
 }
 
@@ -123,10 +127,6 @@ EOF
     ECHO_INFO "Patch: Fix 'Undefined index' error in 0.2-stable."
     cd ${RCM_HTTPD_ROOT}/ && \
     patch -p0 < ${PATCH_DIR}/roundcubemail/0.2-stable_undefined_index_error.patch >/dev/null
-
-    ECHO_INFO "Patch: Managesieve service frontend."
-    cd ${RCM_HTTPD_ROOT}/ && \
-    patch -p1 < ${PATCH_DIR}/roundcubemail/0.2-stable-managesieve.patch > /dev/null
 
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
         #ECHO_INFO "Patch: Change LDAP password."
