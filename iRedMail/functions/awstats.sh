@@ -35,6 +35,7 @@ EOF
     AuthName "Authorization Required"
 EOF
 
+    ECHO_INFO "Setup user auth for awstats: ${AWSTATS_HTTPD_CONF}."
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
         # Use LDAP auth.
         cat >> ${AWSTATS_HTTPD_CONF} <<EOF

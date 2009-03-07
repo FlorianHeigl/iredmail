@@ -21,7 +21,21 @@ rcm_install()
     cd ${RCM_HTTPD_ROOT}/ && \
     patch -p1 < ${PATCH_DIR}/roundcubemail/0.2-stable-managesieve.patch > /dev/null
 
+    cd ${RCM_HTTPD_ROOT}/config/
+    cp -f db.inc.php.dist db.inc.php
+    cp -f main.inc.php.dist main.inc.php
+
     echo 'export status_rcm_install="DONE"' >> ${STATUS_FILE}
+}
+
+rcm_config_managesieve()
+{
+    ECHO_INFO "Config managesieve service."
+    cd ${RCM_HTTPD_ROOT}/config/ && \
+    perl -pi -e 's#(.*managesieve_host.*=).*#${1} "${MANAGESIEVE_SERVER}";#' main.inc.php
+    perl -pi -e 's#(.*managesieve_port.*=).*#${1} ${MANAGESIEVE_PORT};#' main.inc.php
+    perl -pi -e 's#(.*managesieve_default.*=).*#${1} "";#' main.inc.php
+    perl -pi -e 's#(.*managesieve_replace_delimiter.*=).*#${1} "";#' main.inc.php
 }
 
 rcm_config()
@@ -58,9 +72,6 @@ EOF
     fi
 
     ECHO_INFO "Configure database for Roundcubemail: ${RCM_HTTPD_ROOT}/config/*."
-    cd ${RCM_HTTPD_ROOT}/config/
-    cp -f db.inc.php.dist db.inc.php
-    cp -f main.inc.php.dist main.inc.php
 
     cd ${RCM_HTTPD_ROOT}/config/
 
