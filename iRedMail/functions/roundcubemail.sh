@@ -165,7 +165,7 @@ EOF
     'name'          => 'Global Address Book',
     'hosts'         => array("${LDAP_SERVER_HOST}"),
     'port'          => ${LDAP_SERVER_PORT},
-    'base_dn'       => "${LDAP_ATTR_DOMAIN_DN_NAME}=${FIRST_DOMAIN},${LDAP_BASEDN}",
+    'base_dn'       => "${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=${FIRST_DOMAIN},${LDAP_BASEDN}",
     'bind_dn'       => "${LDAP_BINDDN}",
     'bind_pass'     => "${LDAP_BINDPW}",
     'ldap_version'  => "${LDAP_BIND_VERSION}",       // using LDAPv3
@@ -175,7 +175,7 @@ EOF
     'surname_field' => 'sn',    // this field represents the contact's last name
     'firstname_field' => 'gn',  // this field represents the contact's first name
     'scope'         => 'sub',   // search mode: sub|base|list
-    'filter'        => "(&(objectClass=${LDAP_OBJECTCLASS_USER})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DELIVER}))",
+    'filter'        => "(&(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DELIVER}))",
     'fuzzy_search'  => true);   // server allows wildcard search
 
 // end of config file
