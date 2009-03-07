@@ -95,7 +95,8 @@ EOF
     # Log file related.
     perl -pi -e 's#(.*log_driver.*=).*#${1} "syslog";#' main.inc.php
     perl -pi -e 's#(.*syslog_id.*=).*#${1} "roundcube";#' main.inc.php
-    perl -pi -e 's#(.*syslog_facility.*=).*#${1} "LOG_USER";#' main.inc.php
+    # syslog_facility should be a constant, not string. (Do *NOT* use quote.)
+    perl -pi -e 's#(.*syslog_facility.*=).*#${1} LOG_USER;#' main.inc.php
     perl -pi -e 's#(.*log_logins.*=).*#${1} TRUE;#' main.inc.php
 
     ECHO_INFO "Create directory alias for Roundcubemail."
