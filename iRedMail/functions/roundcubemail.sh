@@ -149,12 +149,16 @@ EOF
 
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
         ECHO_INFO "Disable change password and mail forwarding featues."
-        cd ${RCM_HTTPD_ROOT} && \
+        cd ${RCM_HTTPD_ROOT}
         perl -pi -e 's#(.*save-passwd.*)#//${1}#' index.php
         perl -pi -e 's#(.*include.*passwd.*)#//${1}#' index.php
 
         perl -pi -e 's#(.*save-forwards.*)#//${1}#' index.php
         perl -pi -e 's#(.*include.*forwards.*)#//${1}#' index.php
+
+        cd ${RCM_HTTPD_ROOT}/skins/default/includes/ && \
+        perl -pi -e 's#(.*settingstabpasswd.*)#<!--${1}-->#' settingstabs.html
+        perl -pi -e 's#(.*settingstabforward.*)#<!--${1}-->#' settingstabs.html
 
         ECHO_INFO "Setting global LDAP address book in Roundcube."
         cd ${RCM_HTTPD_ROOT}/config/ && \
