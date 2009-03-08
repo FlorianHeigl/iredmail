@@ -142,6 +142,8 @@ EOF
         ECHO_INFO "Patch: Change LDAP password."
         cd ${RCM_HTTPD_ROOT}/ && \
         patch -p1 < ${PATCH_DIR}/roundcubemail/0.2-stable-changepasswd_ldap.patch >/dev/null
+
+        cd ${RCM_HTTPD_ROOT}/config/ && \
         perl -pi -e 's#(.*ldap_passwd_server_addr.*=).*#${1} "$ENV{'LDAP_SERVER_HOST'}";#' main.inc.php
         perl -pi -e 's#(.*ldap_passwd_server_port.*=).*#${1} "$ENV{'LDAP_SERVER_PORT'}";#' main.inc.php
         perl -pi -e 's#(.*ldap_passwd_protocol_version.*=).*#${1} "$ENV{'LDAP_BIND_VERSION'}";#' main.inc.php
