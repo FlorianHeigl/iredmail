@@ -130,19 +130,18 @@ EOF
     sed -i 's#\(</VirtualHost>\)#Alias /webmail '${RCM_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
     sed -i 's#\(</VirtualHost>\)#Alias /roundcube '${RCM_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
 
-    #ECHO_INFO "Patch: Display Username."
-    #cd ${RCM_HTTPD_ROOT}/skins/default/ && \
-    #patch -p0 < ${PATCH_DIR}/roundcubemail/display_username.patch >/dev/null && \
-    #patch -p0 < ${PATCH_DIR}/roundcubemail/display_username_skin_default.patch >/dev/null
+    ECHO_INFO "Patch: Display Username."
+    cd ${RCM_HTTPD_ROOT}/ && \
+    patch -p0 < ${PATCH_DIR}/roundcubemail/display_username.patch >/dev/null
 
     ECHO_INFO "Patch: Fix 'Undefined index' error in 0.2-stable."
     cd ${RCM_HTTPD_ROOT}/ && \
     patch -p0 < ${PATCH_DIR}/roundcubemail/0.2-stable_undefined_index_error.patch >/dev/null
 
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
-        #ECHO_INFO "Patch: Change LDAP password."
-        #cd ${RCM_HTTPD_ROOT}/ && \
-        #patch -p1 < ${PATCH_DIR}/roundcubemail/0.2-stable_change_ldap_passwd.patch >/dev/null
+        ECHO_INFO "Patch: Change LDAP password."
+        cd ${RCM_HTTPD_ROOT}/ && \
+        patch -p1 < ${PATCH_DIR}/roundcubemail/0.2-stable-changepasswd_ldap.patch >/dev/null
 
         ECHO_INFO "Setting global LDAP address book in Roundcube."
 
