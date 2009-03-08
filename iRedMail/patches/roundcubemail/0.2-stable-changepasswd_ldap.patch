@@ -8428,7 +8428,8 @@ diff -ruNa roundcubemail.bak/program/steps/settings/passwd.inc roundcubemail/pro
 +  $ldap_host = $CONFIG['ldap_passwd_server_addr'];
 +  list($user,$domain) = split("@", $username);
 +
-+  $ldap_user = $CONFIG['ldap_passwd_attr_user_rdn'] . '=' . $username . ',' . $CONFIG['ldap_passwd_attr_domain_dn'] . '=' . $domain . ',' . $CONFIG['ldap_passwd_basedn'];
++  // LDAP user dn format: mail=user@domain.ltd,ou=Users,domainName=domain.ltd,o=domains,dc=iredmail,dc=org
++  $ldap_user = $CONFIG['ldap_passwd_attr_user_rdn'] . '=' . $username . ',ou=Users,' . $CONFIG['ldap_passwd_attr_domain_dn'] . '=' . $domain . ',' . $CONFIG['ldap_passwd_basedn'];
 +  $ldap_pass = $old_password;
 +  if (!($connect = ldap_connect($ldap_host)))
 +    die("Cannot connect to LDAP server");
