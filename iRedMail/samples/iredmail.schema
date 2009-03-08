@@ -31,31 +31,36 @@ attributetype ( 1.3.6.1.4.1.32349.1.2.1.3 NAME 'domainStatus'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.1.4 NAME 'domainSenderBccAddress'
+attributetype ( 1.3.6.1.4.1.32349.1.2.1.4 NAME 'backupMX'
+    DESC 'Backup MX: yes'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+    SINGLE-VALUE )
+attributetype ( 1.3.6.1.4.1.32349.1.2.1.5 NAME 'domainSenderBccAddress'
     DESC 'Sender BCC address for whole domain'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.1.5 NAME 'domainRecipientBccAddress'
+attributetype ( 1.3.6.1.4.1.32349.1.2.1.6 NAME 'domainRecipientBccAddress'
     DESC 'Recipient BCC address for whole domain'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.1.6 NAME 'domainMaxQuotaSize'
+attributetype ( 1.3.6.1.4.1.32349.1.2.1.7 NAME 'domainMaxQuotaSize'
     DESC 'Max quota size limit for single domain'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.1.7 NAME 'domainMaxUserNumber'
+attributetype ( 1.3.6.1.4.1.32349.1.2.1.8 NAME 'domainMaxUserNumber'
     DESC 'Max user number limit for single domain'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.1.8 NAME 'domainAdmin'
+attributetype ( 1.3.6.1.4.1.32349.1.2.1.9 NAME 'domainAdmin'
     DESC 'Domain admin'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-attributetype ( 1.3.6.1.4.1.32349.1.2.1.9 NAME 'domainGlobalAdmin'
+attributetype ( 1.3.6.1.4.1.32349.1.2.1.10 NAME 'domainGlobalAdmin'
     DESC 'Site wide domin admin: yes'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
@@ -148,11 +153,12 @@ objectclass ( 1.3.6.1.4.1.32349.1.2.4.1 NAME 'mailUser'
         mailAlternateAddress $ mailUID $ mailGID $ mailQuota $
         mailHost $ mailForwardingAddress $ accountStatus $
         userRecipientBccAddress $ userSenderBccAddress $
-        enabledService $ department $ telephoneNumber ))
+        enabledService $ department $ telephoneNumber $
+        mtaTransport ))
 objectclass ( 1.3.6.1.4.1.32349.1.2.4.2 NAME 'mailDomain'
     DESC 'Mail Domain' SUP top STRUCTURAL
     MUST ( domainName $ mtaTransport $ domainStatus )
-    MAY ( domainAdmin $ enabledService $
+    MAY ( domainAdmin $ enabledService $ backupMX $
         domainSenderBccAddress $ domainRecipientBccAddress $
         domainMaxQuotaSize $ domainMaxUserNumber $ 
         description $ streetAddress $ telephoneNumber $ fax ))
@@ -163,4 +169,4 @@ objectclass ( 1.3.6.1.4.1.32349.1.2.4.3 NAME 'mailAdmin'
 objectclass ( 1.3.6.1.4.1.32349.1.2.4.4 NAME 'mailList'
     DESC 'Mail Domain Admin' SUP top STRUCTURAL
     MUST ( mail $ accountStatus )
-    MAY ( listOwner $ listMember ))
+    MAY ( description $ listOwner $ listMember ))
