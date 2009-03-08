@@ -143,6 +143,7 @@ EOF
         cd ${RCM_HTTPD_ROOT}/ && \
         patch -p1 < ${PATCH_DIR}/roundcubemail/0.2-stable-changepasswd_ldap.patch >/dev/null
 
+        export LDAP_SERVER_HOST LDAP_SERVER_PORT LDAP_BIND_VERSION LDAP_BASEDN LDAP_ATTR_DOMAIN_RDN LDAP_ATTR_USER_RDN
         cd ${RCM_HTTPD_ROOT}/config/ && \
         perl -pi -e 's#(.*ldap_passwd_server_addr.*=).*#${1} "$ENV{'LDAP_SERVER_HOST'}";#' main.inc.php
         perl -pi -e 's#(.*ldap_passwd_server_port.*=).*#${1} "$ENV{'LDAP_SERVER_PORT'}";#' main.inc.php

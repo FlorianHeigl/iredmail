@@ -27,6 +27,11 @@ adduser_vmail()
         :
     fi
 
+    ECHO_INFO "Create directory to store user sieve rule files: ${SIEVE_DIR}."
+    mkdir -p ${SIEVE_DIR} && \
+    chown -R ${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} ${SIEVE_DIR} && \
+    chmod -R 0700 ${SIEVE_DIR}
+
     cat >> ${TIP_FILE} <<EOF
 Mail Storage:
     - Path:

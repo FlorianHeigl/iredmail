@@ -11,6 +11,9 @@ trap "exit 255" 2
 
 check_arch
 
+# Initialize config file.
+echo '' > ${CONFIG_FILE}
+
 DIALOG='dialog --no-collapse'
 DIALOG_BACKTITLE="${PROG_NAME}: Mail Server Installation Wizard for RHEL/CentOS 5.x"
 
@@ -49,7 +52,8 @@ NOTE:
 " 20 76 "${VMAIL_USER_HOME_DIR}" 2>/tmp/vmail_user_home_dir
 
 VMAIL_USER_HOME_DIR="$(cat /tmp/vmail_user_home_dir)"
-echo "export VMAIL_USER_HOME_DIR='${VMAIL_USER_HOME_DIR}'" >${CONFIG_FILE}
+export VMAIL_USER_HOME_DIR="${VMAIL_USER_HOME_DIR}" && echo "export VMAIL_USER_HOME_DIR='${VMAIL_USER_HOME_DIR}'" >>${CONFIG_FILE}
+export SIEVE_DIR="${VMAIL_USER_HOME_DIR}/sieve" && echo "export SIEVE_DIR='${SIEVE_DIR}'" >>${CONFIG_FILE}
 rm -f /tmp/vmail_user_home_dir
 
 # --------------------------------------------------

@@ -339,12 +339,6 @@ EOF
     chown ${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} ${SIEVE_FILTER_FILE}.sample
     chmod 0500 ${SIEVE_FILTER_FILE}.sample
 
-
-    ECHO_INFO "Create directory to store user sieve rule files: ${SIEVE_DIR}."
-    mkdir -p ${SIEVE_DIR} && \
-    chown -R apache:${VMAIL_GROUP_NAME} ${SIEVE_DIR} && \
-    chmod -R 0770 ${SIEVE_DIR}
-
     ECHO_INFO "Create dovecot log file: ${DOVECOT_LOG_FILE}, ${SIEVE_LOG_FILE}."
     touch ${DOVECOT_LOG_FILE} ${SIEVE_LOG_FILE}
     chown ${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} ${DOVECOT_LOG_FILE} ${SIEVE_LOG_FILE}
