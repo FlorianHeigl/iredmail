@@ -11,7 +11,7 @@ diff -ruNa roundcubemail.bak/config/main.inc.php roundcubemail/config/main.inc.p
 +$rcmail_config['ldap_passwd_server_addr'] = 'localhost';
 +$rcmail_config['ldap_passwd_server_port'] = 389;
 +$rcmail_config['ldap_passwd_protocol_version'] = 3;
-+$rcmail_config['ldap_passwd_basedn'] = 'o=domains,dc=iredmail,dc=org';
++$rcmail_config['ldap_passwd_basedn'] = '';
 +$rcmail_config['ldap_passwd_attr_domain_rdn'] = 'domainName';
 +$rcmail_config['ldap_passwd_attr_user_rdn'] = 'mail';
 +
