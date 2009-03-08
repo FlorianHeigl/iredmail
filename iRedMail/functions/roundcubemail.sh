@@ -142,6 +142,12 @@ EOF
         ECHO_INFO "Patch: Change LDAP password."
         cd ${RCM_HTTPD_ROOT}/ && \
         patch -p1 < ${PATCH_DIR}/roundcubemail/0.2-stable-changepasswd_ldap.patch >/dev/null
+        perl -pi -e 's#(.*ldap_passwd_server_addr.*=).*#${1} "$ENV{'LDAP_SERVER_HOST'}";#' main.inc.php
+        perl -pi -e 's#(.*ldap_passwd_server_port.*=).*#${1} "$ENV{'LDAP_SERVER_PORT'}";#' main.inc.php
+        perl -pi -e 's#(.*ldap_passwd_protocol_version.*=).*#${1} "$ENV{'LDAP_BIND_VERSION'}";#' main.inc.php
+        perl -pi -e 's#(.*ldap_passwd_basedn.*=).*#${1} "$ENV{'LDAP_BASEDN'}";#' main.inc.php
+        perl -pi -e 's#(.*ldap_passwd_attr_domain_rdn.*=).*#${1} "$ENV{'LDAP_ATTR_DOMAIN_RDN'}";#' main.inc.php
+        perl -pi -e 's#(.*ldap_passwd_attr_user_rdn.*=).*#${1} "$ENV{'LDAP_ATTR_USER_RDN'}";#' main.inc.php
 
         ECHO_INFO "Setting global LDAP address book in Roundcube."
 
