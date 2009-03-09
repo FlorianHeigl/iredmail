@@ -7,15 +7,15 @@ ECHO_INFO()
     if [ X"$1" == X"-n" ]; then
         shift 1
         if [ X"${TERM}" == X"xterm" -o X"${TERM}" == X"linux" -o X"${TERM}" == X"pcconsole" ]; then
-            echo -ne "\033[42m${OUTPUT_FLAG}\033[0m $@"
+            echo -ne "\033[42m${INFO_FLAG}\033[0m $@"
         else
-            echo -ne "${OUTPUT_FLAG} $@"
+            echo -ne "${INFO_FLAG} $@"
         fi
     else
         if [ X"${TERM}" == X"xterm" -o X"${TERM}" == X"linux" -o X"${TERM}" == X"pcconsole" ]; then
-            echo -e "\033[42m${OUTPUT_FLAG}\033[0m $@"
+            echo -e "\033[42m${INFO_FLAG}\033[0m $@"
         else
-            echo -e "${OUTPUT_FLAG} $@"
+            echo -e "${INFO_FLAG} $@"
         fi
     fi
 }
@@ -148,8 +148,8 @@ check_dialog()
         install_pkg dialog.${ARCH}
 
         #[ X"$?" != X"0" ] && \
-        #    echo "${OUTPUT_FLAG} Install 'dialog' failed. Please install it first and make" && \
-        #    echo "${OUTPUT_FLAG} sure your yum client works well." && \
+        #    echo "${INFO_FLAG} Install 'dialog' failed. Please install it first and make" && \
+        #    echo "${INFO_FLAG} sure your yum client works well." && \
         #    exit 255
     else
         :

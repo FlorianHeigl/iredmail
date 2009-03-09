@@ -140,12 +140,12 @@ Configuration completed.
 *************************************************************************
 EOF
 
-echo -en "\n${OUTPUT_FLAG} Continue? [Y|n]"
+echo -en "\n${INFO_FLAG} Continue? [Y|n]"
 read ANSWER
 
 case ${ANSWER} in
     N|n)
-        echo "${OUTPUT_FLAG} Canceled, Exit."
+        echo "${INFO_FLAG} Canceled, Exit."
         exit 255
         ;;
     Y|y|*)

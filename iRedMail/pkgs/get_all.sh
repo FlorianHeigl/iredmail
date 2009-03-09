@@ -161,7 +161,7 @@ check_md5()
         md5sum -c ${ROOTDIR}/${i} |grep 'FAILED'
 
         if [ X"$?" == X"0" ]; then
-            echo -e "\n${OUTPUT_FLAG} MD5 check failed. Check your rpm packages. Script exit...\n"
+            echo -e "\n${INFO_FLAG} MD5 check failed. Check your rpm packages. Script exit...\n"
             exit 255
         else
             echo -e "\t[ OK ]"
