@@ -1,4 +1,5 @@
 iRedMail-0.3.3:
+    * Add two tool scripts for winwebmail and extmail mailbox migration.
     * Change ${SIEVE_DIR} to ${VMAIL_USER_HOME_DIR}/sieve/.
     * Add patch for roundcube-0.2 to change ldap password.
     * Use mod_auth_mysql for user auth in awstats.
