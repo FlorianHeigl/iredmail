@@ -32,7 +32,7 @@ EOF
     sed -i 's#\(</VirtualHost>\)#Alias /squirrelmail '${SM_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
     sed -i 's#\(</VirtualHost>\)#Alias /squirrel '${SM_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
 
-    if [ X"${USE_RCM}" == X"YES" -o X"${USE_EXTMAIL}" == X"YES" ]; then
+    if [ X"${USE_RCM}" == X"YES" ]; then
         :
     else
         cat >> ${HTTPD_CONF_DIR}/squirrelmail.conf <<EOF

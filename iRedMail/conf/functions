@@ -234,5 +234,5 @@ check_status_before_run()
 
 gen_ldap_passwd()
 {
-    slappasswd -h {MD5} -s "${1}"
+    slappasswd -h {SSHA} -s "${1}"
 }

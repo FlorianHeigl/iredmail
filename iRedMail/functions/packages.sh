@@ -35,9 +35,6 @@ install_all()
         # MySQL server. Used to store extra data, such as policyd, roundcube webmail.
         ALL_PKGS="${ALL_PKGS} mysql-server.${ARCH} mysql.${ARCH}"
 
-        # For ExtMail.
-        [ X"${USE_EXTMAIL}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} perl-LDAP"
-
         ENABLED_SERVICES="${ENABLED_SERVICES} ldap mysqld policyd"
 
     elif [ X"${BACKEND}" == X"MySQL" ]; then
@@ -50,9 +47,6 @@ install_all()
 
         # For Awstats.
         [ X"${USE_AWSTATS}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} mod_auth_mysql.${ARCH}"
-
-        # For ExtMail.
-        [ X"${USE_EXTMAIL}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} libdbi-dbd-mysql.${ARCH} perl-DBD-mysql.${ARCH}"
 
         ENABLED_SERVICES="${ENABLED_SERVICES} mysqld policyd"
     else

@@ -45,7 +45,6 @@ check_arch && check_env
 . ${CONF_DIR}/roundcube
 . ${CONF_DIR}/postfixadmin
 . ${CONF_DIR}/phpmyadmin
-. ${CONF_DIR}/extmail
 . ${CONF_DIR}/horde
 . ${CONF_DIR}/awstats
 
@@ -105,9 +104,6 @@ check_arch && check_env
 
 # Horde webmail.
 . ${FUNCTIONS_DIR}/horde.sh
-
-# ExtMail.
-. ${FUNCTIONS_DIR}/extmail.sh
 
 # Mailgraph.
 . ${FUNCTIONS_DIR}/mailgraph.sh

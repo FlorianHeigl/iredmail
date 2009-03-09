@@ -130,7 +130,6 @@ Please choose your favorite webmail program.
 " 20 76 5 \
     "SquirrelMail" "WebMail program, written in PHP." "on" \
     "Roundcubemail" "WebMail program (PHP, XHTML, CSS2, AJAX)." "on" \
-    "ExtMail" "WebMail program from ExtMail project." "off" \
     "Horde WebMail" "WebMail program." "off" \
     2> /tmp/webmail
 
@@ -142,9 +141,6 @@ echo ${webmail} | grep -i 'roundcubemail' >/dev/null 2>&1
 
 echo ${webmail} | grep -i 'squirrelmail' >/dev/null 2>&1
 [ X"$?" == X"0" ] && export USE_SM='YES' && echo "export USE_SM='YES'" >>${CONFIG_FILE}
-
-echo ${webmail} | grep -i 'extmail' >/dev/null 2>&1
-[ X"$?" == X"0" ] && export USE_EXTMAIL='YES' && echo "export USE_EXTMAIL='YES'" >>${CONFIG_FILE}
 
 echo ${webmail} | grep -i 'Horde' >/dev/null 2>&1
 [ X"$?" == X"0" ] && export USE_HORDE='YES' && echo "export USE_HORDE='YES'" >>${CONFIG_FILE}

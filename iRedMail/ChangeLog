@@ -1,14 +1,13 @@
-iRedMail-0.3.3:
+iRedMail-0.4:
+    * Say goodbye to ExtMail.
     * Add two tool scripts for winwebmail and extmail mailbox migration.
     * Change ${SIEVE_DIR} to ${VMAIL_USER_HOME_DIR}/sieve/.
     * Add patch for roundcube-0.2 to change ldap password.
     * Use mod_auth_mysql for user auth in awstats.
     * Improve LDAP schema.
-    * Add global ldap address book in ExtMail for ldap backend.
     * Avoid quote in HOSTNAME variable. Thanks shake.chen@gmail.
     * Update rrdtool to 1.2.30.
     * Enable preview pane in roundcube by default.
-    * Add patch to disable extmail welcome msg, typo in index page.
     * Remove phpLDAPadmin templates.
     * Add shell script for creating ldap virtual user.
     * Update amavisd-new to 2.6.2, dovecot to 1.1.11, lzo to 1.08-5, nomarch

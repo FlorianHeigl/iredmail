@@ -63,9 +63,4 @@ optional_components()
     # Mailgraph.
     [ X"${USE_MAILGRAPH}" == X"YES" ] && \
         check_status_before_run mailgraph_setup
-
-    # ExtMail.
-    [ X"${USE_EXTMAIL}" == X"YES" ] && \
-        check_status_before_run extmail_install && \
-        check_status_before_run extmail_config
 }

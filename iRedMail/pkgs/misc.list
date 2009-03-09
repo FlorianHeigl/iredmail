@@ -58,11 +58,6 @@ ${POSTFIXADMIN_TARBALL}
 ${PHPMYADMIN_TARBALL}
 
 # --------------------------
-# ExtMail.
-# --------------------------
-${EXTMAIL_TARBALL}
-
-# --------------------------
 # Horde Webmail.
 # --------------------------
 ${HORDE_TARBALL}

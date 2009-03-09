@@ -129,7 +129,6 @@ fetch_misc()
         . ${CONF_DIR}/roundcube
         . ${CONF_DIR}/postfixadmin
         . ${CONF_DIR}/phpmyadmin
-        . ${CONF_DIR}/extmail
         . ${CONF_DIR}/horde
 
         # Fetch all misc packages.
