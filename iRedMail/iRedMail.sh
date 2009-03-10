@@ -105,9 +105,6 @@ check_arch && check_env
 # Horde webmail.
 . ${FUNCTIONS_DIR}/horde.sh
 
-# Mailgraph.
-. ${FUNCTIONS_DIR}/mailgraph.sh
-
 # Awstats.
 . ${FUNCTIONS_DIR}/awstats.sh
 

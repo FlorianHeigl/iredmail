@@ -22,4 +22,4 @@ export AWSTATS_CONF_MAIL="${AWSTATS_CONF_DIR}/awstats.mail.conf"
 #   English:        en
 #   Simp Chinese:   cn
 #   Trad Chinese:   tw
-export AWSTATS_LANGUAGE="cn"
+export AWSTATS_LANGUAGE="en"

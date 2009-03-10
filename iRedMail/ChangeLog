@@ -1,4 +1,5 @@
 iRedMail-0.4-stable:
+    * Say goodbye to mailgraph.
     * Say goodbye to ExtMail.
     * Add two tool scripts for winwebmail and extmail mailbox migration.
     * Change ${SIEVE_DIR} to ${VMAIL_USER_HOME_DIR}/sieve/.

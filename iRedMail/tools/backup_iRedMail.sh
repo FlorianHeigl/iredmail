@@ -20,7 +20,6 @@
 
 # Last update:  2008.10.23
 # ChangeLog:
-#   - 08.11.05: Add mailgraph.
 #   - 08.10.27: Add directory: /var/lib/dovecot/. It maybe contains bdb
 #               database of plugin expire.
 
@@ -118,11 +117,6 @@ PYSIEVED="/etc/pysieved.ini*
 /etc/xinetd.d/pysieved
 "
 
-MAILGRAPH="/var/www/cgi-bin/mailgraph.cgi
-/usr/local/bin/mailgraph.pl
-/etc/init.d/mailgraph
-"
-
 MISC="/etc/syslog.conf
 /etc/sysctl.conf
 /etc/sysconfig/network
@@ -133,7 +127,7 @@ MISC="/etc/syslog.conf
 
 # Do not modify it unless you add new categories.
 ALL_FILES="${FIREWALL} ${HTTPD} ${PHP} ${OPENLDAP} ${MYSQL} ${POSTFIX}
-${DOVECOT} ${CLAMAV} ${AMAVISD} ${SPAMASSASSIN} ${PYSIEVED} ${MAILGRAPH} ${MISC}"
+${DOVECOT} ${CLAMAV} ${AMAVISD} ${SPAMASSASSIN} ${PYSIEVED} ${MISC}"
 
 # Check user.
 check_user root

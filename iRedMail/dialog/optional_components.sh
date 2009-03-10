@@ -128,8 +128,8 @@ ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --checklist "\
 Please choose your favorite webmail program.
 " 20 76 5 \
-    "SquirrelMail" "WebMail program, written in PHP." "on" \
     "Roundcubemail" "WebMail program (PHP, XHTML, CSS2, AJAX)." "on" \
+    "SquirrelMail" "WebMail program, written in PHP." "off" \
     "Horde WebMail" "WebMail program." "off" \
     2> /tmp/webmail
 
@@ -162,7 +162,6 @@ use them by your own:
     "phpLDAPadmin" "Web-based LDAP browser to manage your LDAP server." "on" \
     "phpMyAdmin" "Web-based MySQL database management." "on" \
     "Awstats" "Advanced web and mail log analyzer." "on" \
-    "Mailgraph" "Mail statistics RRDtool frontend for Postfix." "on" \
     2>/tmp/ldap_optional_components
 
     LDAP_OPTIONAL_COMPONENTS="$(cat /tmp/ldap_optional_components)"
@@ -176,9 +175,6 @@ use them by your own:
     echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'awstats' >/dev/null 2>&1
     [ X"$?" == X"0" ] && USE_AWSTATS='YES' && echo "export USE_AWSTATS='YES'" >>${CONFIG_FILE}
 
-    echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'mailgraph' >/dev/null 2>&1
-    [ X"$?" == X"0" ] && USE_MAILGRAPH='YES' && echo "export USE_MAILGRAPH='YES'" >>${CONFIG_FILE}
-
     rm /tmp/ldap_optional_components
 
 elif [ X"${BACKEND}" == X"MySQL" ]; then
@@ -191,7 +187,6 @@ them by your own:
     "phpMyAdmin" "Web-based MySQL database management." "on" \
     "PostfixAdmin" "Web-based program to manage domains and users stored in MySQL." "on" \
     "Awstats" "Advanced web and mail log analyzer." "on" \
-    "Mailgraph" "Mail statistics RRDtool frontend for Postfix." "on" \
     2>/tmp/mysql_optional_components
 
     MYSQL_OPTIONAL_COMPONENTS="$(cat /tmp/mysql_optional_components)"
@@ -205,9 +200,6 @@ them by your own:
 
     echo ${MYSQL_OPTIONAL_COMPONENTS} | grep -i 'awstats' >/dev/null 2>&1
     [ X"$?" == X"0" ] && USE_AWSTATS='YES' && echo "export USE_AWSTATS='YES'" >>${CONFIG_FILE}
-
-    echo ${MYSQL_OPTIONAL_COMPONENTS} | grep -i 'mailgraph' >/dev/null 2>&1
-    [ X"$?" == X"0" ] && USE_MAILGRAPH='YES' && echo "export USE_MAILGRAPH='YES'" >>${CONFIG_FILE}
 
 else
     # No hook for other backend yet.

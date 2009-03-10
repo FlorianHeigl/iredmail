@@ -59,8 +59,4 @@ optional_components()
         check_status_before_run awstats_config_weblog && \
         check_status_before_run awstats_config_maillog && \
         check_status_before_run awstats_config_crontab
-
-    # Mailgraph.
-    [ X"${USE_MAILGRAPH}" == X"YES" ] && \
-        check_status_before_run mailgraph_setup
 }
