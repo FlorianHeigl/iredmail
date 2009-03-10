@@ -26,7 +26,6 @@ iRedMail-0.4-stable:
     * Update dovecot-sieve to 1.1.6.
     * Use variable to control whether download packages from official yum
       repository or not.
-    * Hardcode CONFIG_FILE and TIP_FILE location, under '/root'.
     * Mark iptables as a must service.
     * Update packages: Dovecot => 1.1.8, rrdtool => 1.2.29, postfix => 2.5.6.
     * Fix incorrect parameter in postfix ldap lookup table: debug_level =>

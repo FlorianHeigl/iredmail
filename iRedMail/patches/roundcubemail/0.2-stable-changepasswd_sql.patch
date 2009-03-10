@@ -206,7 +206,7 @@ diff -Naur --exclude='*.svn*' roundcubemail-0.2-stable.managesieve/program/local
 +$labels['changepasswd']  = 'Change password';
 +$labels['curpasswd']  = 'Current password';
 +$labels['newpasswd']  = 'New password';
-+$labels['confpasswd']  = 'Confirm new password';
++$labels['confpasswd']  = 'Retype new password';
 +
  $labels['filters'] = 'Filters';
  $labels['managefilters'] = 'Manage incoming mail filters';
