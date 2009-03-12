@@ -1,4 +1,7 @@
-iRedMail-0.4-stable:
+iRedMail-0.4.1:
+    * Add script for mysql database backup: tools/backup_MySQL.sh.
+
+iRedMail-0.4:
     * Say goodbye to mailgraph.
     * Say goodbye to ExtMail.
     * Add two tool scripts for winwebmail and extmail mailbox migration.
