@@ -19,7 +19,7 @@
 attributetype ( 1.3.6.1.4.1.32349.1.2.1.1 NAME 'domainName'
     DESC 'Virtual Domain Name'
     EQUALITY caseIgnoreIA5Match
-    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{255}
     SINGLE-VALUE )
 attributetype ( 1.3.6.1.4.1.32349.1.2.1.2 NAME 'mtaTransport'
     DESC 'Transport program for Postfix'
@@ -39,12 +39,12 @@ attributetype ( 1.3.6.1.4.1.32349.1.2.1.4 NAME 'backupMX'
 attributetype ( 1.3.6.1.4.1.32349.1.2.1.5 NAME 'domainSenderBccAddress'
     DESC 'Sender BCC address for whole domain'
     EQUALITY caseIgnoreIA5Match
-    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320}
     SINGLE-VALUE )
 attributetype ( 1.3.6.1.4.1.32349.1.2.1.6 NAME 'domainRecipientBccAddress'
     DESC 'Recipient BCC address for whole domain'
     EQUALITY caseIgnoreIA5Match
-    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320}
     SINGLE-VALUE )
 attributetype ( 1.3.6.1.4.1.32349.1.2.1.7 NAME 'domainMaxQuotaSize'
     DESC 'Max quota size limit for single domain'
@@ -59,7 +59,7 @@ attributetype ( 1.3.6.1.4.1.32349.1.2.1.8 NAME 'domainMaxUserNumber'
 attributetype ( 1.3.6.1.4.1.32349.1.2.1.9 NAME 'domainAdmin'
     DESC 'Domain admin'
     EQUALITY caseIgnoreIA5Match
-    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320} )
 attributetype ( 1.3.6.1.4.1.32349.1.2.1.10 NAME 'domainGlobalAdmin'
     DESC 'Site wide domin admin: yes'
     EQUALITY caseIgnoreIA5Match
@@ -88,7 +88,7 @@ attributetype ( 1.3.6.1.4.1.32349.1.2.2.4 NAME 'mailAlternateAddress'
     SUBSTR caseIgnoreSubstringsMatch
     DESC 'Secondary (alias) mailaddresses for the same user'
     EQUALITY caseIgnoreIA5Match
-    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320} )
 attributetype ( 1.3.6.1.4.1.32349.1.2.2.5 NAME 'mailQuota'
     DESC 'The amount of space the user can use until all further messages get bounced.'
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.44
@@ -101,7 +101,7 @@ attributetype ( 1.3.6.1.4.1.32349.1.2.2.6 NAME 'mailHost'
 attributetype ( 1.3.6.1.4.1.32349.1.2.2.7 NAME 'mailForwardingAddress'
     DESC 'Address(es) to forward all incoming messages to.'
     EQUALITY caseIgnoreIA5Match
-    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320} )
 attributetype ( 1.3.6.1.4.1.32349.1.2.2.8 NAME 'accountStatus'
     DESC 'The status of a user account: active, nopop, disabled'
     EQUALITY caseIgnoreIA5Match
@@ -110,12 +110,12 @@ attributetype ( 1.3.6.1.4.1.32349.1.2.2.8 NAME 'accountStatus'
 attributetype ( 1.3.6.1.4.1.32349.1.2.2.9 NAME 'userRecipientBccAddress'
     DESC 'Recipient BCC address'
     EQUALITY caseIgnoreIA5Match
-    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320}
     SINGLE-VALUE )
 attributetype ( 1.3.6.1.4.1.32349.1.2.2.10 NAME 'userSenderBccAddress'
     DESC 'Sender BCC address for single user'
     EQUALITY caseIgnoreIA5Match
-    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320}
     SINGLE-VALUE )
 attributetype ( 1.3.6.1.4.1.32349.1.2.2.11 NAME 'department'
     DESC 'Department name'
@@ -137,11 +137,11 @@ attributetype ( 1.3.6.1.4.1.32349.1.2.2.13 NAME 'enabledService'
 attributetype ( 1.3.6.1.4.1.32349.1.2.3.1 NAME 'listOwner'
     DESC 'Mail list owner: must be email address for mail deliver'
     EQUALITY caseIgnoreIA5Match
-    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320} )
 attributetype ( 1.3.6.1.4.1.32349.1.2.3.2 NAME 'listMember'
     DESC 'Mail list member: must be email address for mail deliver'
     EQUALITY caseIgnoreIA5Match
-    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320} )
 
 #
 # Object Class Definitions

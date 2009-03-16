@@ -1,4 +1,5 @@
 iRedMail-0.4.1:
+    * Add max length limit for several ldap attributes.
     * Adjust mail_location setting in dovecot.
     * Replace 'gn' by 'givenName' in roundcube global ldap address book.
       Thanks shake.chen@gmail.
