@@ -133,7 +133,7 @@ EOF
 # Such as: /home/vmail/iredmail.org/www/
 #          ----------- ================
 #          homeDirectory  mailMessageStore
-mail_location = maildir:/%Lh/%Ld/%Ln/:INDEX=/%Lh/%Ld/%Ln/
+mail_location = maildir:/%Lh/:INDEX=/%Lh/
 
 plugin {
     quota = maildir
@@ -272,7 +272,7 @@ default_pass_scheme = CRYPT
 EOF
         # Maildir format.
         [ X"${HOME_MAILBOX}" == X"Maildir" ] && cat >> ${DOVECOT_LDAP_CONF} <<EOF
-user_attrs      = homeDirectory=home,=sieve_dir=${SIEVE_DIR}/%Ld/%Ln/,mailMessageStore=maildir:mail,${LDAP_ATTR_USER_QUOTA}=quota_rule=*:bytes=%\$
+user_attrs      = =sieve_dir=${SIEVE_DIR}/%Ld/%Ln/,mailMessageStore=home=${VMAIL_USER_HOME_DIR}/%\$,${LDAP_ATTR_USER_QUOTA}=quota_rule=*:bytes=%\$
 EOF
         [ X"${HOME_MAILBOX}" == X"mbox" ] && cat >> ${DOVECOT_LDAP_CONF} <<EOF
 #    sieve = /%Lh/%Ld/.%Ln${SIEVE_RULE_FILENAME}
@@ -295,14 +295,11 @@ password_query = SELECT password FROM mailbox WHERE username='%u' AND active='1'
 EOF
         # Maildir format.
         [ X"${HOME_MAILBOX}" == X"Maildir" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
-user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, \
-    "${SIEVE_DIR}/%Ld/%Ln/" AS sieve_dir, \
-    CONCAT('*:bytes=', quota*1048576) AS quota_rule, \
-    maildir FROM mailbox \
-    WHERE username='%u' \
-    AND active='1' \
-    AND enable%Ls='1' \
-    AND expired >= NOW()
+user_query = SELECT CONCAT("${VMAIL_USER_HOME_DIR}/", maildir) AS home, \
+"${SIEVE_DIR}/%Ld/%Ln/" AS sieve_dir, \
+CONCAT('*:bytes=', quota*1048576) AS quota_rule \
+FROM mailbox WHERE username='%u' \
+AND active='1' AND enable%Ls='1' AND expired >= NOW()
 EOF
         [ X"${HOME_MAILBOX}" == X"mbox" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
 user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, \

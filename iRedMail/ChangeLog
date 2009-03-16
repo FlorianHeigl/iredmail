@@ -1,4 +1,5 @@
 iRedMail-0.4.1:
+    * Adjust mail_location setting in dovecot.
     * Replace 'gn' by 'givenName' in roundcube global ldap address book.
       Thanks shake.chen@gmail.
     * Add script for mysql database backup: tools/backup_MySQL.sh.
