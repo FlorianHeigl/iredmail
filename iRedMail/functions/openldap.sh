@@ -178,7 +178,7 @@ index ${LDAP_ATTR_DOMAIN_RDN},${LDAP_ATTR_DOMAIN_TRANSPORT},${LDAP_ATTR_DOMAIN_S
 index ${LDAP_ATTR_DOMAIN_QUOTA},${LDAP_ATTR_DOMAIN_USER_NUMBER} eq,pres
 index ${LDAP_ATTR_DOMAIN_SENDER_BCC_ADDRESS},${LDAP_ATTR_DOMAIN_RECIPIENT_BCC_ADDRESS}  eq,pres
 index homeDirectory,mailMessageStore,${LDAP_ATTR_USER_ALIAS},${LDAP_ATTR_USER_STATUS}   eq,pres
-
+index domainAdmin,domainGlobalAdmin,backupMX    eq,pres
 cachesize   1000
 EOF
 
