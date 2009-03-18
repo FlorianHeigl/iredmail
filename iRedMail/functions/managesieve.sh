@@ -70,7 +70,7 @@ EOF
     # Create directory to store pid file.
     pysieved_pid_dir="$(dirname ${PYSIEVED_PIDFILE})"
     mkdir -p ${pysieved_pid_dir} 2>/dev/null
-    chown ${VMAIL_USER_UID}:${VMAIL_USER_GID} ${pysieved_pid_dir}
+    chown ${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} ${pysieved_pid_dir}
 
     # Copy init script and enable it.
     cp -f ${SAMPLE_DIR}/pysieved.init /etc/init.d/pysieved
