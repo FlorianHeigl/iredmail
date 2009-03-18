@@ -72,19 +72,17 @@ EOF
     mkdir -p ${pysieved_pid_dir} 2>/dev/null
     chown ${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} ${pysieved_pid_dir}
 
-    # Copy init script and enable it.
-    cp -f ${SAMPLE_DIR}/pysieved.init /etc/init.d/pysieved
-    chmod +x /etc/init.d/pysieved
-    /sbin/chkconfig --level 345 pysieved on
-
-    # Disable pysieved in xinetd.
-    pysieved_xinetd_conf="$(eval ${LIST_FILES_IN_PKG} pysieved | grep 'xinetd' | grep 'pysieved$')"
-    [ ! -z ${pysieved_xinetd_conf} ] && perl -pi -e 's#(.*disable.*=).*#${1} yes#' ${pysieved_xinetd_conf}
+    # Enable pysieved in xinetd.
+    export pysieved_xinetd_conf="$(eval ${LIST_FILES_IN_PKG} pysieved | grep 'xinetd' | grep 'pysieved$')"
+    perl -pi -e 's#(.*disable.*=).*#${1} no#' ${pysieved_xinetd_conf}
+    perl -pi -e 's#(.*user.*=).*#${1} $ENV{'VMAIL_USER_NAME'}#' ${pysieved_xinetd_conf}
+    perl -pi -e 's#(.*group.*=).*#${1} $ENV{'VMAIL_GROUP_NAME'}#' ${pysieved_xinetd_conf}
 
     cat >> ${TIP_FILE} <<EOF
 pysieved:
     * Configuration files:
         - ${PYSIEVED_INI}
+        - ${pysieved_xinetd_conf}
     * RC script:
         - /etc/init.d/pysieved
 

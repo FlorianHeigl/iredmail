@@ -1,4 +1,5 @@
 iRedMail-0.4.1:
+    * Fix zombie process issue with pysieved.
     * Fix file permission: /etc/pysieved.ini, should be owned by vmail:vmail.
     * Add max length limit for several ldap attributes, remove unnecessary
       attribute.
