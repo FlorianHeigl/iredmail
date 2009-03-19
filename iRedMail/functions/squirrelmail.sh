@@ -11,6 +11,11 @@ sm_install()
 
     # Extract source tarball.
     extract_pkg ${SM_TARBALL} ${HTTPD_SERVERROOT}
+
+    # Create symbol link, so that we don't need to modify apache
+    # conf.d/squirrelmail.conf file after upgrade this component.
+    ln -s ${SM_HTTPD_ROOT} ${HTTPD_SERVERROOT}/squirrelmail 2>/dev/null
+
     cp -f ${SM_HTTPD_ROOT}/config/config_default.php ${SM_HTTPD_ROOT}/config/config.php
 
     ECHO_INFO "Set correct permission for squirrelmail: ${SM_HTTPD_ROOT}."
@@ -21,23 +26,23 @@ sm_install()
     ECHO_INFO "Create directory alias for squirrelmail in Apache: ${HTTPD_DOCUMENTROOT}/mail/."
     cat > ${HTTPD_CONF_DIR}/squirrelmail.conf <<EOF
 ${CONF_MSG}
-Alias /squirrelmail "${SM_HTTPD_ROOT}/"
-Alias /squirrel "${SM_HTTPD_ROOT}/"
+Alias /squirrelmail "${HTTPD_SERVERROOT}/squirrelmail/"
+Alias /squirrel "${HTTPD_SERVERROOT}/squirrelmail/"
 <Directory "${SM_HTTPD_ROOT}/">
     Options -Indexes
 </Directory>
 EOF
 
     # Make SquirrelMail can be accessed via HTTPS.
-    sed -i 's#\(</VirtualHost>\)#Alias /squirrelmail '${SM_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
-    sed -i 's#\(</VirtualHost>\)#Alias /squirrel '${SM_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
+    sed -i 's#\(</VirtualHost>\)#Alias /squirrelmail '${HTTPD_SERVERROOT}/squirrelmail/'\n\1#' ${HTTPD_SSL_CONF}
+    sed -i 's#\(</VirtualHost>\)#Alias /squirrel '${HTTPD_SERVERROOT}/squirrelmail/'\n\1#' ${HTTPD_SSL_CONF}
 
     if [ X"${USE_RCM}" == X"YES" ]; then
         :
     else
         cat >> ${HTTPD_CONF_DIR}/squirrelmail.conf <<EOF
-Alias /mail "${SM_HTTPD_ROOT}/"
-Alias /webmail "${SM_HTTPD_ROOT}/"
+Alias /mail "${HTTPD_SERVERROOT}/squirrelmail/"
+Alias /webmail "${HTTPD_SERVERROOT}/squirrelmail/"
 EOF
 
         # Make SquirrelMail can be accessed via HTTPS.

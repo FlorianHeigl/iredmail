@@ -11,6 +11,10 @@ pla_install()
 
     extract_pkg ${PLA_TARBALL} ${HTTPD_SERVERROOT}
 
+    # Create symbol link, so that we don't need to modify apache
+    # conf.d/phpldapadmin.conf file after upgrade this component.
+    ln -s ${PLA_HTTPD_ROOT} ${HTTPD_SERVERROOT}/phpldapadmin 2>/dev/null
+
     ECHO_INFO "Copy example config file."
     cd ${PLA_HTTPD_ROOT}/config/ && \
     cp -f config.php.example config.php
@@ -22,15 +26,15 @@ pla_install()
     ECHO_INFO "Create directory alias for phpLDAPadmin."
     cat > ${HTTPD_CONF_DIR}/phpldapadmin.conf <<EOF
 ${CONF_MSG}
-#Alias /phpldapadmin "${PLA_HTTPD_ROOT}/"
-#Alias /ldap "${PLA_HTTPD_ROOT}/"
+#Alias /phpldapadmin "${HTTPD_SERVERROOT}/phpldapadmin/"
+#Alias /ldap "${HTTPD_SERVERROOT}/phpldapadmin/"
 <Directory "${PLA_HTTPD_ROOT}/">
     Options -Indexes
 </Directory>
 EOF
 
     # Make phpldapadmin can be accessed via HTTPS only.
-    sed -i 's#\(</VirtualHost>\)#Alias /phpldapadmin '${PLA_HTTPD_ROOT}'/\nAlias /ldap '${PLA_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
+    sed -i 's#\(</VirtualHost>\)#Alias /phpldapadmin '${HTTPD_SERVERROOT}/phpldapadmin/'\nAlias /ldap '${HTTPD_SERVERROOT}/phpldapadmin/'\n\1#' ${HTTPD_SSL_CONF}
 
     cat >> ${TIP_FILE} <<EOF
 phpLDAPadmin:

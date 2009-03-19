@@ -9,7 +9,12 @@ postfixadmin_install()
 {
     cd ${MISC_DIR}
 
-    extract_pkg ${POSTFIXADMIN_TARBALL} ${HTTPD_SERVERROOT} && \
+    extract_pkg ${POSTFIXADMIN_TARBALL} ${HTTPD_SERVERROOT}
+
+    # Create symbol link, so that we don't need to modify apache
+    # conf.d/postfixadmin.conf file after upgrade this component.
+    ln -s ${POSTFIXADMIN_HTTPD_ROOT} ${HTTPD_SERVERROOT}/postfixadmin/ 2>/dev/null
+
     cd ${POSTFIXADMIN_HTTPD_ROOT}/ && \
     patch -p0 < ${PATCH_DIR}/postfixadmin/create_mailbox.patch >/dev/null && \
     patch -p0 < ${PATCH_DIR}/postfixadmin/login-security-issue.patch >/dev/null
@@ -23,14 +28,14 @@ postfixadmin_install()
     ECHO_INFO "Create directory alias for PostfixAdmin in Apache."
     cat > ${HTTPD_CONF_DIR}/postfixadmin.conf <<EOF
 ${CONF_MSG}
-#Alias /postfixadmin "${POSTFIXADMIN_HTTPD_ROOT}/"
+#Alias /postfixadmin "${HTTPD_SERVERROOT}/postfixadmin/"
 <Directory "${POSTFIXADMIN_HTTPD_ROOT}/">
     Options -Indexes
 </Directory>
 EOF
 
     # Make PostfixAdmin can be accessed via HTTPS only.
-    sed -i 's#\(</VirtualHost>\)#Alias /postfixadmin '${POSTFIXADMIN_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
+    sed -i 's#\(</VirtualHost>\)#Alias /postfixadmin '${HTTPD_SERVERROOT}/postfixadmin/'\n\1#' ${HTTPD_SSL_CONF}
 
     if [ X"${SITE_ADMIN_NAME}" == X"${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}" ]; then
         # We need update domain list, not insert a new record.

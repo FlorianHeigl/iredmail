@@ -12,6 +12,10 @@ rcm_install()
     # Extract source tarball.
     extract_pkg ${RCM_TARBALL} ${HTTPD_SERVERROOT}
 
+    # Create symbol link, so that we don't need to modify apache
+    # conf.d/roundcubemail.conf file after upgrade this component.
+    ln -s ${RCM_HTTPD_ROOT} ${HTTPD_SERVERROOT}/roundcubemail 2>/dev/null
+
     ECHO_INFO "Set correct permission for Roundcubemail: ${RCM_HTTPD_ROOT}."
     chown -R root:root ${RCM_HTTPD_ROOT}
     chown -R apache:apache ${RCM_HTTPD_ROOT}/{temp,logs}
@@ -117,18 +121,18 @@ EOF
     ECHO_INFO "Create directory alias for Roundcubemail."
     cat > ${HTTPD_CONF_DIR}/roundcubemail.conf <<EOF
 ${CONF_MSG}
-Alias /mail "${RCM_HTTPD_ROOT}/"
-Alias /webmail "${RCM_HTTPD_ROOT}/"
-Alias /roundcube "${RCM_HTTPD_ROOT}/"
+Alias /mail "${HTTPD_SERVERROOT}/roundcubemail/"
+Alias /webmail "${HTTPD_SERVERROOT}/roundcubemail/"
+Alias /roundcube "${HTTPD_SERVERROOT}/roundcubemail/"
 <Directory "${RCM_HTTPD_ROOT}/">
     Options -Indexes
 </Directory>
 EOF
 
     # Make Roundcube can be accessed via HTTPS.
-    sed -i 's#\(</VirtualHost>\)#Alias /mail '${RCM_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
-    sed -i 's#\(</VirtualHost>\)#Alias /webmail '${RCM_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
-    sed -i 's#\(</VirtualHost>\)#Alias /roundcube '${RCM_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
+    sed -i 's#\(</VirtualHost>\)#Alias /mail '${HTTPD_SERVERROOT}/roundcubemail/'\n\1#' ${HTTPD_SSL_CONF}
+    sed -i 's#\(</VirtualHost>\)#Alias /webmail '${HTTPD_SERVERROOT}/roundcubemail/'\n\1#' ${HTTPD_SSL_CONF}
+    sed -i 's#\(</VirtualHost>\)#Alias /roundcube '${HTTPD_SERVERROOT}/roundcubemail/'\n\1#' ${HTTPD_SSL_CONF}
 
     ECHO_INFO "Patch: Display Username."
     cd ${RCM_HTTPD_ROOT}/ && \

@@ -15,17 +15,23 @@ phpmyadmin_install()
     chown -R root:root ${PHPMYADMIN_HTTPD_ROOT}
     chmod -R 0755 ${PHPMYADMIN_HTTPD_ROOT}
 
+    # Create symbol link, so that we don't need to modify apache
+    # conf.d/phpmyadmin.conf file after upgrade this component.
+    ln -s ${PHPMYADMIN_HTTPD_ROOT} ${HTTPD_SERVERROOT}/phpmyadmin 2>/dev/null
+
     ECHO_INFO "Create directory alias for phpMyAdmin in Apache: ${HTTPD_CONF_DIR}/phpmyadmin.conf."
     cat > ${HTTPD_CONF_DIR}/phpmyadmin.conf <<EOF
 ${CONF_MSG}
-#Alias /phpmyadmin "${PHPMYADMIN_HTTPD_ROOT}/"
+#Alias /phpmyadmin "${HTTPD_SERVERROOT}/phpmyadmin/"
+#Alias /mysql "${HTTPD_SERVERROOT}/phpmyadmin/"
 <Directory "${PHPMYADMIN_HTTPD_ROOT}/">
     Options -Indexes
 </Directory>
 EOF
 
     # Make phpMyAdmin can be accessed via HTTPS only.
-    sed -i 's#\(</VirtualHost>\)#Alias /phpmyadmin '${PHPMYADMIN_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
+    sed -i 's#\(</VirtualHost>\)#Alias /phpmyadmin '${HTTPD_SERVERROOT}/phpmyadmin/'\n\1#' ${HTTPD_SSL_CONF}
+    sed -i 's#\(</VirtualHost>\)#Alias /mysql '${HTTPD_SERVERROOT}/phpmyadmin/'\n\1#' ${HTTPD_SSL_CONF}
 
     ECHO_INFO "Config phpMyAdmin: ${PHPMYADMIN_CONFIG_FILE}."
     cd ${PHPMYADMIN_HTTPD_ROOT} && cp config.sample.inc.php ${PHPMYADMIN_CONFIG_FILE}
