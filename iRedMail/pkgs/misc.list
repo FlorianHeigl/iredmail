@@ -57,11 +57,6 @@ ${POSTFIXADMIN_TARBALL}
 # --------------------------
 ${PHPMYADMIN_TARBALL}
 
-# --------------------------
-# Horde Webmail.
-# --------------------------
-${HORDE_TARBALL}
-
 # ----------------------------
 # SpamAssassin Chinese rules.
 # ----------------------------

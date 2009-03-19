@@ -1,4 +1,7 @@
 iRedMail-0.4.1:
+    * Say goodbye to Horde.
+    * Create symbol link for all web-based programs, so that we don't have
+      to restart apache while upgrade them.
     * Fix zombie process issue with pysieved.
     * Fix file permission: /etc/pysieved.ini, should be owned by vmail:vmail.
     * Add max length limit for several ldap attributes, remove unnecessary
