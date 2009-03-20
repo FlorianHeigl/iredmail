@@ -1,4 +1,5 @@
 iRedMail-0.4.1:
+    * Fixed: Make awstats access via https only.
     * Say goodbye to Horde.
     * Create symbol link for all web-based programs, so that we don't have
       to restart apache while upgrade them.

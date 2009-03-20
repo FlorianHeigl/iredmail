@@ -11,8 +11,8 @@ awstats_config_basic()
 
     cat > ${AWSTATS_HTTPD_CONF} <<EOF
 ${CONF_MSG}
-Alias /awstats/icon ${AWSTATS_HTTPD_ROOT}/icon/
-ScriptAlias /awstats ${AWSTATS_HTTPD_ROOT}/
+#Alias /awstats/icon ${AWSTATS_HTTPD_ROOT}/icon/
+#ScriptAlias /awstats ${AWSTATS_HTTPD_ROOT}/
 #Alias /css ${AWSTATS_HTTPD_ROOT}/css/
 #Alias /js ${AWSTATS_HTTPD_ROOT}/js/
 EOF
@@ -77,6 +77,10 @@ EOF
     # Set username, password for web access.
     htpasswd -bcm ${AWSTATS_HTPASSWD_FILE} "${AWSTATS_USERNAME}" "${AWSTATS_PASSWD}" >/dev/null 2>&1
 
+    # Make Awstats can be accessed via HTTPS.
+    sed -i 's#\(</VirtualHost>\)#Alias /awstats/icon '$ENV{AWSTATS_HTTPD_ROOT}/icon/'\n\1#' ${HTTPD_SSL_CONF}
+    sed -i 's#\(</VirtualHost>\)#ScriptAlias /awstats '$ENV{AWSTATS_HTTPD_ROOT}/'\n\1#' ${HTTPD_SSL_CONF}
+
     cat >> ${TIP_FILE} <<EOF
 Awstats:
     * Configuration files:
@@ -86,9 +90,9 @@ Awstats:
         - ${AWSTATS_CONF_MAIL}
         - ${AWSTATS_HTTPD_CONF}
     * URL:
-        - http://${HOSTNAME}/awstats/awstats.pl
-        - http://${HOSTNAME}/awstats/awstats.pl?config=${HOSTNAME}
-        - http://${HOSTNAME}/awstats/awstats.pl?config=mail
+        - https://${HOSTNAME}/awstats/awstats.pl
+        - https://${HOSTNAME}/awstats/awstats.pl?config=${HOSTNAME}
+        - https://${HOSTNAME}/awstats/awstats.pl?config=mail
     * Crontab job:
         shell> crontab -l root
     
