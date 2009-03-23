@@ -79,7 +79,7 @@ OU_GROUP_DN="ou=Groups"
 BINDDN="cn=Manager,${LDAP_SUFFIX}"
 
 # Setting rootpw of LDAP.
-BINDPW="passwd"
+BINDPW='passwd'
  
 # ---------- Virtual Domains & Users --------------
 # Set default quota for LDAP users: 104857600 = 100M

@@ -131,6 +131,12 @@ access to dn.subtree="${LDAP_BASEDN}"
     by dn.regex="${LDAP_ATTR_USER_RDN}=[^,]+,${LDAP_ATTR_DOMAIN_RDN}=\$1,${LDAP_BASEDN}\$" read
     by users                        read
 
+access to dn.subtree="o=${LDAP_ATTR_DOMAINADMIN_DN_NAME},${LDAP_SUFFIX}"
+    by anonymous                    auth
+    by self                         write
+    by dn.exact="${LDAP_ADMIN_DN}"  write
+    by users                        none
+
 #
 # Set permission for "cn=*,${LDAP_SUFFIX}".
 #
