@@ -163,6 +163,9 @@ directory   ${LDAP_DATA_DIR}
 rootdn      "${LDAP_ROOTDN}"
 rootpw      $(gen_ldap_passwd "${LDAP_ROOTPW}")
 
+sizelimit   500
+cachesize   500
+
 #
 # Set directory permission.
 #
@@ -185,7 +188,6 @@ index ${LDAP_ATTR_DOMAIN_QUOTA},${LDAP_ATTR_DOMAIN_USER_NUMBER} eq,pres
 index ${LDAP_ATTR_DOMAIN_SENDER_BCC_ADDRESS},${LDAP_ATTR_DOMAIN_RECIPIENT_BCC_ADDRESS}  eq,pres
 index homeDirectory,mailMessageStore,${LDAP_ATTR_USER_ALIAS},${LDAP_ATTR_USER_STATUS}   eq,pres
 index domainAdmin,domainGlobalAdmin,backupMX    eq,pres
-cachesize   1000
 EOF
 
     ECHO_INFO "Generating new LDAP client configuration file: ${OPENLDAP_LDAP_CONF}"
