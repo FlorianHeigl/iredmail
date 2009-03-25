@@ -1,4 +1,5 @@
 iRedMail-0.4.1:
+    * userPassword & accountStatus are optional for objectclass mailAdmin.
     * Fixed OpenLDAP ACL.
     * Fixed: Make awstats access via https only.
     * Say goodbye to Horde.
