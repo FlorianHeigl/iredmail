@@ -23,8 +23,8 @@ remove_sendmail()
         read ANSWER
         case $ANSWER in
             N|n )
-                ECHO_INFO "Disable sendmail, of course it is replaced by Postfix." && \
-                chkconfig --level 35 sendmail off
+                ECHO_INFO "Disable sendmail, it is replaced by Postfix." && \
+                eval ${disable_service} sendmail
                 ;;
             Y|y|* ) remove_pkg sendmail ;;
         esac

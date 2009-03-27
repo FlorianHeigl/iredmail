@@ -232,6 +232,16 @@ check_status_before_run()
     fi
 }
 
+enable_service_rh()
+{
+    /sbin/chkconfig --level 345 $i on
+}
+
+disable_service_rh()
+{
+    /sbin/chkconfig --level 345 $i off
+}
+
 gen_ldap_passwd()
 {
     slappasswd -h {SSHA} -s "${1}"

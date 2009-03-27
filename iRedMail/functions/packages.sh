@@ -109,13 +109,13 @@ install_all()
     {
         # Enable services.
         for i in ${ENABLED_SERVICES}; do
-            chkconfig --level 345 $i on
+            eval ${enable_service} $i
         done
 
         # Disable services.
         for i in ${DISABLED_SERVICES}
         do
-            chkconfig --level 345 $i off
+            eval ${disable_service} $i
         done
 
         echo 'export status_enable_all_services="DONE"' >> ${STATUS_FILE}
