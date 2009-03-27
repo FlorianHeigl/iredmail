@@ -1,4 +1,5 @@
 iRedMail-0.4.1:
+    * Add missing index attributes in OpenLDAP: listMember, listOwner.
     * userPassword & accountStatus are optional for objectclass mailAdmin.
     * Fixed OpenLDAP ACL.
     * Fixed: Make awstats access via https only.
