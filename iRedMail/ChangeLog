@@ -1,4 +1,5 @@
 iRedMail-0.4.1:
+    * Add attribute for mail list access policy control.
     * Add missing index attributes in OpenLDAP: listMember, listOwner.
     * userPassword & accountStatus are optional for objectclass mailAdmin.
     * Fixed OpenLDAP ACL.

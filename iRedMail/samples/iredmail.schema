@@ -129,11 +129,16 @@ attributetype ( 1.3.6.1.4.1.32349.1.2.2.12 NAME 'enabledService'
 #
 # Mail Service: Mail List related attributes.
 #
-attributetype ( 1.3.6.1.4.1.32349.1.2.3.1 NAME 'listOwner'
+attributetype ( 1.3.6.1.4.1.32349.1.2.3.1 NAME 'accessPolicy'
+    DESC 'Mail list access policy: open, domain, member, owner'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+    SINGLE-VALUE )
+attributetype ( 1.3.6.1.4.1.32349.1.2.3.2 NAME 'listOwner'
     DESC 'Mail list owner: must be email address for mail deliver'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320} )
-attributetype ( 1.3.6.1.4.1.32349.1.2.3.2 NAME 'listMember'
+attributetype ( 1.3.6.1.4.1.32349.1.2.3.3 NAME 'listMember'
     DESC 'Mail list member: must be email address for mail deliver'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320} )
@@ -165,4 +170,4 @@ objectclass ( 1.3.6.1.4.1.32349.1.2.4.3 NAME 'mailAdmin'
 objectclass ( 1.3.6.1.4.1.32349.1.2.4.4 NAME 'mailList'
     DESC 'Mail Domain Admin' SUP top STRUCTURAL
     MUST ( mail $ accountStatus )
-    MAY ( description $ listOwner $ listMember ))
+    MAY ( description $ accessPolicy $ listOwner $ listMember ))
