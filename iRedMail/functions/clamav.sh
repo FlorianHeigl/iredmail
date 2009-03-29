@@ -12,14 +12,6 @@ clamav_config()
     perl -pi -e 's/^(TCPSocket.*)/#${1}/' ${CLAMD_CONF}
     perl -pi -e 's/^(TCPAddr )/${1}no #/' ${CLAMD_CONF}
 
-    # The following options are no longer supported in ClamAV 0.93.
-    perl -pi -e 's/^(MailMaxRecursion.*)/#${1}/' ${CLAMD_CONF}
-    perl -pi -e 's/^(ArchiveMaxFileSize.*)/#${1}/' ${CLAMD_CONF}
-    perl -pi -e 's/^(ArchiveMaxRecursion.*)/#${1}/' ${CLAMD_CONF}
-    perl -pi -e 's/^(ArchiveMaxFiles.*)/#${1}/' ${CLAMD_CONF}
-    perl -pi -e 's/^(ArchiveMaxCompressionRatio.*)/#${1}/' ${CLAMD_CONF}
-    perl -pi -e 's/^(ArchiveBlockMax.*)/#${1}/' ${CLAMD_CONF}
-
     ECHO_INFO "Configure freshclam: ${FRESHCLAM_CONF}."
     perl -pi -e 's-^#(PidFile)(.*)-${1} $ENV{FRESHCLAM_PID_FILE} #${2}-' ${FRESHCLAM_CONF}
 

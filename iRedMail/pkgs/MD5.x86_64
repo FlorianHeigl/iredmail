@@ -30,5 +30,5 @@ ade9ce32de8fcfd5fa5d9a093c09368e  rpms/clamd-0.94.2-1.el5.rf.x86_64.rpm
 809cac9250aad41e0696313d98fdd212  rpms/dovecot-sieve-1.1.6-9.el5.x86_64.rpm
 be56f8829bb6d8570dc8228a26574223  rpms/amavisd-new-2.6.2-2.ired.x86_64.rpm
 e326b2121b87add97262333bebfb3040  rpms/lzo-1.08-5.el5.rf.x86_64.rpm
-c4e94336c90906a95accf9cb488c27f6  rpms/dovecot-1.1.11-0_90.el5.x86_64.rpm
 21c60912200abf9a9768590d3f0c3441  rpms/nomarch-1.4-2.el5.x86_64.rpm
+584c5fdef35f9a81e932ea6a14ec2333  rpms/dovecot-1.1.13-0_91.el5.x86_64.rpm
