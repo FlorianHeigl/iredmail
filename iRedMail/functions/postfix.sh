@@ -200,7 +200,7 @@ postfix_config_ldap()
     postconf -e transport_maps="ldap:${ldap_transport_maps_cf}"
     postconf -e virtual_mailbox_domains="ldap:${ldap_virtual_mailbox_domains_cf}"
     postconf -e virtual_mailbox_maps="ldap:${ldap_accounts_cf}, ldap:${ldap_virtual_mailbox_maps_cf}"
-    postconf -e virtual_alias_maps="ldap:${ldap_virtual_alias_maps_cf}, ldap:${ldap_virtual_maillist_maps.cf}"
+    postconf -e virtual_alias_maps="ldap:${ldap_virtual_alias_maps_cf}, ldap:${ldap_virtual_maillist_maps_cf}"
     #postconf -e local_recipient_maps='$alias_maps $virtual_alias_maps $virtual_mailbox_maps'
     postconf -e sender_bcc_maps="ldap:${ldap_sender_bcc_maps_domain_cf}, ldap:${ldap_sender_bcc_maps_user_cf}"
     postconf -e recipient_bcc_maps="ldap:${ldap_recipient_bcc_maps_domain_cf}, ldap:${ldap_recipient_bcc_maps_user_cf}"
