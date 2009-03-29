@@ -146,7 +146,7 @@ amavisd_config()
 
     #### http://www.clamav.net/
     ['ClamAV-clamd',
-    \&ask_daemon, ["CONTSCAN {}\n", "/tmp/clamd.socket"],
+    \&ask_daemon, ["CONTSCAN {}\n", "${CLAMD_LOCAL_SOCKET}"],
     qr/\bOK$/, qr/\bFOUND$/,
     qr/^.*?: (?!Infected Archive)(.*) FOUND$/ ],
 );

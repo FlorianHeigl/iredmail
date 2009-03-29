@@ -8,9 +8,11 @@
 
 clamav_config()
 {
+    export CLAMD_LOCAL_SOCKET CLAMD_LISTEN_ADDR
     ECHO_INFO "Configure ClamAV: ${CLAMD_CONF}."
     perl -pi -e 's/^(TCPSocket.*)/#${1}/' ${CLAMD_CONF}
-    perl -pi -e 's/^(TCPAddr )/${1}no #/' ${CLAMD_CONF}
+    perl -pi -e 's#^(TCPAddr).*#${1} $ENV{'CLAMD_LISTEN_ADDR'}#' ${CLAMD_CONF}
+    perl -pi -e 's#^(LocalSocket).*#${1} $ENV{'CLAMD_LOCAL_SOCKET'}#' ${CLAMD_CONF}
 
     ECHO_INFO "Configure freshclam: ${FRESHCLAM_CONF}."
     perl -pi -e 's-^#(PidFile)(.*)-${1} $ENV{FRESHCLAM_PID_FILE} #${2}-' ${FRESHCLAM_CONF}
