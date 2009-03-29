@@ -3,7 +3,7 @@
 #   /etc/postfix/check_helo_access.pcre
 #
 # Shipped within iRedMail project:
-#   * http://iRedMail.googlecode.com/
+#   * http://code.google.com/p/iredmail/
 #
 # Thanks all contributer(s):
 #   * muniao <at> gamil.
@@ -83,7 +83,6 @@
 /^dsldevice\.lan$/          REJECT Go away, bad guy (dsldevice.lan).
 /\.zj.cn$/                  REJECT Go away, bad guy (.zj.cn).
 /\.kornet$/                 REJECT Go away, bad guy (.kornet).
-/\?/                        REJECT Go away, bad guy (?).
 /\.zj.cn$/                  REJECT Go away, bad guy (.zj.cn).
 /\.local$/                  REJECT Go away, bad guy (.local).
 
