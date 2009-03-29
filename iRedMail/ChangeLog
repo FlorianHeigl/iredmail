@@ -1,4 +1,5 @@
 iRedMail-0.4.1:
+    * Add group mail/alias support for openldap backend.
     * Add attribute for mail list access policy control.
     * Add missing index attributes in OpenLDAP: listMember, listOwner,
       accessPolicy.

@@ -192,11 +192,15 @@ EOF
 
 postfix_config_ldap()
 {
+    # LDAP search filters.
+    ldap_search_base_user="${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}"
+    ldap_search_base_group="${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_GROUPS},${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}"
+
     ECHO_INFO "Setting up LDAP lookup in Postfix."
     postconf -e transport_maps="ldap:${ldap_transport_maps_cf}"
     postconf -e virtual_mailbox_domains="ldap:${ldap_virtual_mailbox_domains_cf}"
     postconf -e virtual_mailbox_maps="ldap:${ldap_accounts_cf}, ldap:${ldap_virtual_mailbox_maps_cf}"
-    postconf -e virtual_alias_maps="ldap:${ldap_virtual_alias_maps_cf}"
+    postconf -e virtual_alias_maps="ldap:${ldap_virtual_alias_maps_cf}, ldap:${ldap_virtual_maillist_maps.cf}"
     #postconf -e local_recipient_maps='$alias_maps $virtual_alias_maps $virtual_mailbox_maps'
     postconf -e sender_bcc_maps="ldap:${ldap_sender_bcc_maps_domain_cf}, ldap:${ldap_sender_bcc_maps_user_cf}"
     postconf -e recipient_bcc_maps="ldap:${ldap_recipient_bcc_maps_domain_cf}, ldap:${ldap_recipient_bcc_maps_user_cf}"
@@ -222,7 +226,7 @@ search_base     = ${LDAP_BASEDN}
 scope           = one
 query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_MAILDOMAIN})(${LDAP_ATTR_DOMAIN_RDN}=%s)(${LDAP_ATTR_DOMAIN_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
 result_attribute= ${LDAP_ATTR_DOMAIN_RDN}
-debuglevel     = 0
+debuglevel      = 0
 EOF
 
     #
@@ -243,7 +247,7 @@ search_base     = ${LDAP_BASEDN}
 scope           = one
 query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_MAILDOMAIN})(${LDAP_ATTR_DOMAIN_RDN}=%s)(${LDAP_ATTR_DOMAIN_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
 result_attribute= ${LDAP_ATTR_DOMAIN_TRANSPORT}
-debuglevel     = 0
+debuglevel      = 0
 EOF
 
     #
@@ -260,11 +264,11 @@ bind            = ${LDAP_BIND}
 start_tls       = no
 bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
-search_base     = ${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}
-scope           = sub
+search_base     = ${ldap_search_base_user}
+scope           = one
 query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_USER_RDN}=%s)(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
 result_attribute= mailMessageStore
-debuglevel     = 0
+debuglevel      = 0
 EOF
 
     cat > ${ldap_virtual_mailbox_maps_cf} <<EOF
@@ -276,11 +280,11 @@ bind            = ${LDAP_BIND}
 start_tls       = no
 bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
-search_base     = ${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}
-scope           = sub
+search_base     = ${ldap_search_base_user}
+scope           = one
 query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_USER_RDN}=%s)(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DELIVER}))
 result_attribute= ${LDAP_ATTR_USER_RDN}
-debuglevel     = 0
+debuglevel      = 0
 EOF
 
     ECHO_INFO "Setting up LDAP sender login maps: ${ldap_sender_login_maps_cf}."
@@ -293,11 +297,11 @@ bind            = ${LDAP_BIND}
 start_tls       = no
 bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
-search_base     = ${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}
-scope           = sub
+search_base     = ${ldap_search_base_user}
+scope           = one
 query_filter    = (&(${LDAP_ATTR_USER_RDN}=%s)(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_SMTP}))
 result_attribute= ${LDAP_ATTR_USER_RDN}
-debuglevel     = 0
+debuglevel      = 0
 EOF
 
     ECHO_INFO "Setting up LDAP virtual aliases: ${ldap_virtual_alias_maps_cf}."
@@ -311,11 +315,29 @@ bind            = ${LDAP_BIND}
 start_tls       = no
 bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
-search_base     = ${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}
-scope           = sub
+search_base     = ${ldap_search_base_user}
+scope           = one
 query_filter    = (&(${LDAP_ATTR_USER_RDN}=%s)(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
 result_attribute= ${LDAP_ATTR_USER_ALIAS}
-debuglevel     = 0
+debuglevel      = 0
+EOF
+
+    ECHO_INFO "Setting up LDAP virtual mail list: ${ldap_virtual_maillist_maps_cf}."
+
+    cat > ${ldap_virtual_maillist_maps_cf} <<EOF
+${CONF_MSG}
+server_host     = ${LDAP_SERVER_HOST}
+server_port     = ${LDAP_SERVER_PORT}
+version         = ${LDAP_BIND_VERSION}
+bind            = ${LDAP_BIND}
+start_tls       = no
+bind_dn         = ${LDAP_BINDDN}
+bind_pw         = ${LDAP_BINDPW}
+search_base     = ${ldap_search_base_group}
+scope           = one
+query_filter    = (&(${LDAP_ATTR_USER_RDN}=%s)(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
+result_attribute= ${LDAP_ATTR_USER_ALIAS}
+debuglevel      = 0
 EOF
 
     cat > ${ldap_recipient_bcc_maps_domain_cf} <<EOF
@@ -331,7 +353,7 @@ search_base     = ${LDAP_BASEDN}
 scope           = one
 query_filter    = (&(${LDAP_ATTR_DOMAIN_RDN}=%d)(objectClass=${LDAP_OBJECTCLASS_MAILDOMAIN})(${LDAP_ATTR_DOMAIN_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
 result_attribute= ${LDAP_ATTR_DOMAIN_RECIPIENT_BCC_ADDRESS}
-debuglevel     = 0
+debuglevel      = 0
 EOF
 
     cat > ${ldap_recipient_bcc_maps_user_cf} <<EOF
@@ -343,11 +365,11 @@ bind            = ${LDAP_BIND}
 start_tls       = no
 bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
-search_base     = ${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}
-scope           = sub
+search_base     = ${ldap_search_base_user}
+scope           = one
 query_filter    = (&(${LDAP_ATTR_USER_RDN}=%s)(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
 result_attribute= ${LDAP_ATTR_USER_RECIPIENT_BCC_ADDRESS}
-debuglevel     = 0
+debuglevel      = 0
 EOF
 
     cat > ${ldap_sender_bcc_maps_domain_cf} <<EOF
@@ -363,7 +385,7 @@ search_base     = ${LDAP_BASEDN}
 scope           = one
 query_filter    = (&(${LDAP_ATTR_DOMAIN_RDN}=%d)(objectClass=${LDAP_OBJECTCLASS_MAILDOMAIN})(${LDAP_ATTR_DOMAIN_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
 result_attribute= ${LDAP_ATTR_DOMAIN_SENDER_BCC_ADDRESS}
-debuglevel     = 0
+debuglevel      = 0
 EOF
 
     cat > ${ldap_sender_bcc_maps_user_cf} <<EOF
@@ -375,11 +397,11 @@ bind            = ${LDAP_BIND}
 start_tls       = no
 bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
-search_base     = ${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}
-scope           = sub
+search_base     = ${ldap_search_base_user}
+scope           = one
 query_filter    = (&(${LDAP_ATTR_USER_RDN}=%s)(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
 result_attribute= ${LDAP_ATTR_USER_SENDER_BCC_ADDRESS}
-debuglevel     = 0
+debuglevel      = 0
 EOF
 
     ECHO_INFO "Set file permission: Owner/Group -> root/root, Mode -> 0640."
@@ -394,6 +416,7 @@ EOF
         ${ldap_accounts_cf} \
         ${ldap_virtual_mailbox_maps_cf} \
         ${ldap_virtual_alias_maps_cf} \
+        ${ldap_virtual_maillist_maps_cf} \
         ${ldap_recipient_bcc_maps_domain_cf} \
         ${ldap_recipient_bcc_maps_user_cf} \
         ${ldap_sender_bcc_maps_domain_cf} \
