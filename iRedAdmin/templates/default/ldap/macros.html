@@ -1,0 +1,23 @@
+{% macro set_status_img(status) -%}
+    {% if status == 'active' or status == 'yes' %}
+        {% set img = "enabled.png" %}
+    {% else %}
+        {% set img = "disabled.png" %}
+    {% endif %}
+    <img src="{{ctx.homepath}}/static/{{skin}}/images/{{img}}">
+{%- endmacro %}
+
+{% macro list_enabled_services(services) -%}
+    {% for service in services %}
+        {{ service }}
+    {% endfor %}
+{%- endmacro %}
+
+{% macro display_input_img(image="", alt="") -%}
+    <input type="image" src="{{ctx.homepath}}/static/{{skin}}/images/{{image}}" alt="{{alt}}">
+{%- endmacro %}
+
+{% macro input_hidden(name, value) -%}
+    <input type="hidden" name="{{ name }}" value="{{ value }}">
+{%- endmacro %}
+

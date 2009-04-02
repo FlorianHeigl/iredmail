@@ -1,0 +1,13 @@
+{% macro sidebar_domain() -%}
+{% set nav=[
+    ("{{ctx.homepath}}/domain/list", '{{ _('List all domains') }}'),
+    ("{{ctx.homepath}}/domain/add", '{{ _('List all domains') }}'),
+    ("{{ctx.homepath}}/domain/list", '{{ _('List all domains') }}'),
+    ]
+%}
+<ul class="vlist">
+    {% for key, value = nav.items() %}
+    <li><a href="{{key}}">{{value}}</a></li>
+    {% endfor %}
+</ul>
+{%- endmacro %}

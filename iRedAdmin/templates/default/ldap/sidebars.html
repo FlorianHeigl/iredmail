@@ -1,0 +1,49 @@
+{% macro sidebar_domain() -%}
+<ul class="vlist">
+    <li><a href="{{ctx.homepath}}/domain/list">{{ _('List all domains') }}</a></li>
+    {% if session.get('domainGlobalAdmin') == 'yes' %}
+        <li><a href="{{ctx.homepath}}/domain/add">{{ _('Add new domain(s)') }}</a></li>
+    {% endif %}
+</ul>
+{%- endmacro %}
+
+{% macro sidebar_dashboard() -%}
+<ul class="vlist">
+    <li><a href="{{ctx.homepath}}/systeminfo">{{ _('System Info') }}</a></li>
+    <li><a href="{{ctx.homepath}}/news">{{ _('Project News') }}</a></li>
+</ul>
+{%- endmacro %}
+
+{% macro sidebar_admin() -%}
+<ul class="vlist">
+    <li><a href="{{ctx.homepath}}/admin/list">{{ _('List all admins') }}</a></li>
+    <li><a href="{{ctx.homepath}}/admin/add">{{ _('Add new admin(s)') }}</a></li>
+</ul>
+{%- endmacro %}
+
+{% macro sidebar_preferences() -%}
+<ul class="vlist">
+    <li><a href="{{ctx.homepath}}/preference/change_passwd">{{ _('Change password') }}</a></li>
+</ul>
+{%- endmacro %}
+
+{% macro sidebar_user() -%}
+<div id="subnav">
+    <div class="subhlist">
+        <ul>
+            <li><a href="{{ctx.homepath}}/user/add">Add new user</a></li>
+        </ul>
+    </div>
+</div>
+{%- endmacro %}
+
+{% macro sidebar_policy() -%}
+<div id="subnav">
+    <div class="subhlist">
+        <ul>
+            <li><a href="{{ctx.homepath}}/policy/whitelist/add">Add new whitelist host</a></li>
+        </ul>
+    </div>
+</div>
+{%- endmacro %}
+

@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% from "sidebars.html" import sidebar_preferences %}
+
+{% block title %}{{ _('Preferences') }}{% endblock %}
+
+{% block leftcolumn %}
+    {{ sidebar_preferences() }}
+{% endblock %}
+
+{% block rightcolumn %}
+    
+{% endblock %}

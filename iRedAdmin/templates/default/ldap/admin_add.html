@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% from "macros.html" import set_status_img, list_enabled_services %}
+{% from "sidebars.html" import sidebar_admin %}
+
+{% block title %}{{ _('Admins') }}{% endblock %}
+
+{% block leftcolumn %}
+    {{ sidebar_admin() }}
+{% endblock leftcolumn %}
+
+{% block rightcolumn %}
+{# Add new admin. #}
+<form method="post" action="{{ctx.homepath}}/admin/add">
+    <p>{{ _('Add new admin(s):') }}</p>
+    <p>
+    <input type="text" size="40" name="username"> <strong></strong> 
+    <input type="submit" value="Add now" class="button">
+    </p>
+    <p><span id="hint">{{ _('Hint: Multiple accounts must be sperated by SPACE.') }}</span></p>
+</form>
+
+{% endblock rightcolumn %}

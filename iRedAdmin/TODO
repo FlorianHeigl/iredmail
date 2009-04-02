@@ -1,0 +1,7 @@
+* Show Aliases in user list.
+* Show 'backup mx' status in domain list.
+* Safe Filters
+* Fetch RSS feed from twitter.com/iredmail to show project news.
+* Use google calendar for server maintances, notify domain admin via sms msg or mail.
+* Ban after auth failed 3 times.
+
