@@ -20,7 +20,9 @@ DIALOG_BACKTITLE="${PROG_NAME}: Mail Server Installation Wizard for RHEL/CentOS 
 # Welcome message.
 ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --title "Welcome and thanks for use" \
-    --msgbox "\
+    --yes-label "Continue" \
+    --no-label "Exit" \
+    --yesno "\
 Thanks for your use of ${PROG_NAME}.
 Feedback, bug report, communication are all welcome.
 
@@ -33,6 +35,9 @@ NOTE:
 
     Ctrl-C will abort this wizard.
 " 20 76
+
+# Exit when use choose 'exit'.
+[ X"$?" != X"0" ] && ECHO_INFO "Exit." && exit 0
 
 # VMAIL_USER_HOME_DIR
 VMAIL_USER_HOME_DIR="/home/vmail"
