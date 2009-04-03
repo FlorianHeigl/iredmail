@@ -33,6 +33,7 @@ export LDAP_BINDPW="$(${RANDOM_STRING})"
 export LDAP_OBJECTCLASS_OU='organizationalUnit'
 export LDAP_OBJECTCLASS_MAILDOMAIN='mailDomain'
 export LDAP_OBJECTCLASS_MAILUSER='mailUser'
+export LDAP_OBJECTCLASS_MAILGROUP='mailList'
 export LDAP_OBJECTCLASS_MAILADMIN='mailAdmin'
 
 # Common attribute.
@@ -50,7 +51,7 @@ export LDAP_SERVICE_AWSTATS='awstats'
 # Domain admin related.
 export LDAP_ATTR_DOMAINADMIN_DN_NAME='domainAdmins'
 
-# Domain related.
+# Domain related attributes.
 export LDAP_ATTR_DOMAIN_RDN='domainName'
 export LDAP_ATTR_DOMAIN_TRANSPORT='mtaTransport'
 export LDAP_ATTR_DOMAIN_STATUS='domainStatus'
@@ -68,7 +69,11 @@ export LDAP_ATTR_GROUP_RDN='ou'
 export LDAP_ATTR_GROUP_USERS='Users'
 export LDAP_ATTR_GROUP_GROUPS='Groups'
 
-# User related.
+# Attributes of group object.
+export LDAP_ATTR_GROUP_MEMBER='listMember'
+export LDAP_ATTR_GROUP_OWNER='listOwner'
+
+# Attributes of user object.
 export LDAP_ATTR_USER_RDN='mail'
 export LDAP_ATTR_USER_PASSWD='userPassword'
 export LDAP_ATTR_USER_SENDER_BCC_ADDRESS='userSenderBccAddress'

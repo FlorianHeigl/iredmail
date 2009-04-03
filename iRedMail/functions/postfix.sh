@@ -335,8 +335,8 @@ bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
 search_base     = ${ldap_search_base_group}
 scope           = one
-query_filter    = (&(${LDAP_ATTR_USER_RDN}=%s)(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
-result_attribute= ${LDAP_ATTR_USER_ALIAS}
+query_filter    = (&(${LDAP_ATTR_USER_RDN}=%s)(objectClass=${LDAP_OBJECTCLASS_MAILGROUP})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
+result_attribute= ${LDAP_ATTR_GROUP_MEMBER}
 debuglevel      = 0
 EOF
 

@@ -159,14 +159,15 @@ EOF
         ECHO_INFO "Setting global LDAP address book in Roundcube."
 
         # Global LDAP Address Book name.
-        export RCM_ADDRBOOK_NAME="${FIRST_DOMAIN}"
+        export RCM_ADDRBOOK_NAME_USERS="${FIRST_DOMAIN}_USERS"
+        export RCM_ADDRBOOK_NAME_GROUPS="${FIRST_DOMAIN}_GROUPS"
 
         # Remove PHP end of file mark first.
         cd ${RCM_HTTPD_ROOT}/config/ && perl -pi -e 's#\?\>##' main.inc.php
 
         cat >> main.inc.php <<EOF
-# Global LDAP Address Book.
-\$rcmail_config['ldap_public']["${RCM_ADDRBOOK_NAME}"] = array(
+# Global LDAP Address Book. Contains domain users.
+\$rcmail_config['ldap_public']["${RCM_ADDRBOOK_NAME_USERS}"] = array(
     'name'          => 'Global Address Book',
     'hosts'         => array("${LDAP_SERVER_HOST}"),
     'port'          => ${LDAP_SERVER_PORT},
@@ -192,12 +193,46 @@ EOF
     'scope'         => 'sub',   // search mode: sub|base|list
     'filter'        => "(&(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DELIVER}))",
     'fuzzy_search'  => true);   // server allows wildcard search
+EOF
 
+        cat >> main.inc.php <<EOF
+# Global LDAP Address Book. Contains mail list.
+\$rcmail_config['ldap_public']["${RCM_ADDRBOOK_NAME_GROUPS}"] = array(
+    'name'          => 'Global Address Book (Groups)',
+    'hosts'         => array("${LDAP_SERVER_HOST}"),
+    'port'          => ${LDAP_SERVER_PORT},
+    'use_tls'       => false,
+    //'user_specific' => true, // If true the base_dn, bind_dn and bind_pass default to the user's IMAP login.
+    //'base_dn'       => "${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}",
+    'base_dn'       => "${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_GROUPS},${LDAP_ATTR_DOMAIN_RDN}=${FIRST_DOMAIN},${LDAP_BASEDN}",
+    'bind_dn'       => "${LDAP_BINDDN}",
+    'bind_pass'     => "${LDAP_BINDPW}",
+    'writable'      => false, // Indicates if we can write to the LDAP directory or not.
+    // If writable is true then these fields need to be populated:
+    // LDAP_Object_Classes, required_fields, LDAP_rdn
+    //'LDAP_Object_Classes' => array("top", "inetOrgPerson", "${LDAP_OBJECTCLASS_MAILUSER}"), // To create a new contact these are the object classes to specify (or any other classes you wish to use).
+    //'required_fields'     => array("cn", "sn", "mail"),     // The required fields needed to build a new contact as required by the object classes (can include additional fields not required by the object classes).
+    //'LDAP_rdn'      => "${LDAP_ATTR_USER_RDN}", // The RDN field that is used for new entries, this field needs to be one of the search_fields, the base of base_dn is appended to the RDN to insert into the LDAP directory.
+    'ldap_version'  => "${LDAP_BIND_VERSION}",       // using LDAPv3
+    'search_fields' => array('mail', 'description'),  // fields to search in
+    'name_field'    => 'description',    // this field represents the contact's name
+    'email_field'   => 'mail',  // this field represents the contact's e-mail
+    //'surname_field' => 'sn',    // this field represents the contact's last name
+    //'firstname_field' => 'givenName',  // this field represents the contact's first name
+    'sort'          => 'mail',    // The field to sort the listing by.
+    'scope'         => 'sub',   // search mode: sub|base|list
+    'filter'        => "(&(objectClass=${LDAP_OBJECTCLASS_MAILGROUP})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))",
+    'fuzzy_search'  => true);   // server allows wildcard search
+EOF
+
+        cat >> main.inc.php <<EOF
+# Global LDAP Address Book. Contains domain users.
 // end of config file
 ?>
 EOF
-        # List global address book in autocomplete_addressbooks.
-        perl -pi -e 's#(.*autocomplete_addressbooks.*=)(.*)#${1} array("sql", "$ENV{'RCM_ADDRBOOK_NAME'}");#' main.inc.php
+
+        # List global address book in autocomplete_addressbooks, contains domain users and groups.
+        perl -pi -e 's#(.*autocomplete_addressbooks.*=)(.*)#${1} array("sql", "$ENV{'RCM_ADDRBOOK_NAME_USERS'}", "$ENV{'RCM_ADDRBOOK_NAME_GROUPS'}");#' main.inc.php
 
     elif [ X"${BACKEND}" == X"MySQL" ]; then
         ECHO_INFO "Patch: Change MySQL password."

@@ -26,10 +26,13 @@ ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
 Thanks for your use of ${PROG_NAME}.
 Feedback, bug report, communication are all welcome.
 
-Contact me if you need help for ${PROG_NAME} or RHEL/CentOS:
+Contact us:
 
-    * Author:   Zhang Huangbin
-    * Mail:     michaelbibby (at) gmail.com
+    * Forum (English users):
+        - http://groups.google.com/group/iredmail/
+
+    * Forum (Chinese users):
+        - http://www.iredmail.org/bbs/
 
 NOTE:
 

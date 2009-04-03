@@ -122,24 +122,6 @@ else
     export ENABLE_DOVECOT_SSL="NO" && echo 'export ENABLE_DOVECOT_SSL="NO"' >> ${CONFIG_FILE}
 fi
 
-# WebMail.
-${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-    --title "WebMail Program" \
-    --checklist "\
-Please choose your favorite webmail program.
-" 20 76 5 \
-    "Roundcubemail" "WebMail program (PHP, XHTML, CSS2, AJAX)." "on" \
-    2> /tmp/webmail
-
-webmail="$(cat /tmp/webmail)"
-rm -f /tmp/webmail
-
-echo ${webmail} | grep -i 'roundcubemail' >/dev/null 2>&1
-[ X"$?" == X"0" ] && export USE_RCM='YES' && echo "export USE_RCM='YES'" >> ${CONFIG_FILE}
-
-# Promot to choose the prefer language for webmail.
-[ X"${webmail}" != X"" ] && . ${DIALOG_DIR}/default_language.sh
-
 # ----------------------------------------
 # Optional components for special backend.
 # ----------------------------------------
@@ -151,23 +133,11 @@ if [ X"${BACKEND}" == X"OpenLDAP" ]; then
 ${PROG_NAME} provides several optional components for LDAP backend, you can
 use them by your own:
 " 20 76 5 \
+    "Roundcubemail" "WebMail program (PHP, XHTML, CSS2, AJAX)." "on" \
     "phpLDAPadmin" "Web-based LDAP browser to manage your LDAP server." "on" \
     "phpMyAdmin" "Web-based MySQL database management." "on" \
     "Awstats" "Advanced web and mail log analyzer." "on" \
-    2>/tmp/ldap_optional_components
-
-    LDAP_OPTIONAL_COMPONENTS="$(cat /tmp/ldap_optional_components)"
-
-    echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'phpldapadmin' >/dev/null 2>&1
-    [ X"$?" == X"0" ] && USE_PHPLDAPADMIN='YES' && echo "export USE_PHPLDAPADMIN='YES'" >>${CONFIG_FILE}
-
-    echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'phpmyadmin' >/dev/null 2>&1
-    [ X"$?" == X"0" ] && USE_PHPMYADMIN='YES' && echo "export USE_PHPMYADMIN='YES'" >>${CONFIG_FILE}
-
-    echo ${LDAP_OPTIONAL_COMPONENTS} | grep -i 'awstats' >/dev/null 2>&1
-    [ X"$?" == X"0" ] && USE_AWSTATS='YES' && echo "export USE_AWSTATS='YES'" >>${CONFIG_FILE}
-
-    rm /tmp/ldap_optional_components
+    2>/tmp/optional_components
 
 elif [ X"${BACKEND}" == X"MySQL" ]; then
     ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
@@ -176,27 +146,36 @@ elif [ X"${BACKEND}" == X"MySQL" ]; then
 ${PROG_NAME} provides several optional components for MySQL backend, you can use
 them by your own:
 " 20 76 5 \
+    "Roundcubemail" "WebMail program (PHP, XHTML, CSS2, AJAX)." "on" \
     "phpMyAdmin" "Web-based MySQL database management." "on" \
     "PostfixAdmin" "Web-based program to manage domains and users stored in MySQL." "on" \
     "Awstats" "Advanced web and mail log analyzer." "on" \
-    2>/tmp/mysql_optional_components
-
-    MYSQL_OPTIONAL_COMPONENTS="$(cat /tmp/mysql_optional_components)"
-    rm -f /tmp/mysql_optional_components
-
-    echo ${MYSQL_OPTIONAL_COMPONENTS} | grep -i 'phpmyadmin' >/dev/null 2>&1
-    [ X"$?" == X"0" ] && USE_PHPMYADMIN='YES' && echo "export USE_PHPMYADMIN='YES'" >>${CONFIG_FILE}
-
-    echo ${MYSQL_OPTIONAL_COMPONENTS} | grep -i 'postfixadmin' >/dev/null 2>&1
-    [ X"$?" == X"0" ] && USE_POSTFIXADMIN='YES' && echo "export USE_POSTFIXADMIN='YES'" >>${CONFIG_FILE}
-
-    echo ${MYSQL_OPTIONAL_COMPONENTS} | grep -i 'awstats' >/dev/null 2>&1
-    [ X"$?" == X"0" ] && USE_AWSTATS='YES' && echo "export USE_AWSTATS='YES'" >>${CONFIG_FILE}
-
+    2>/tmp/optional_components
 else
     # No hook for other backend yet.
     :
 fi
+
+OPTIONAL_COMPONENTS="$(cat /tmp/optional_components)"
+rm -f /tmp/optional_components
+
+echo ${OPTIONAL_COMPONENTS} | grep -i 'roundcubemail' >/dev/null 2>&1
+[ X"$?" == X"0" ] && export USE_WEBMAIL='YES' && export USE_RCM='YES' && echo "export USE_RCM='YES'" >> ${CONFIG_FILE}
+
+echo ${OPTIONAL_COMPONENTS} | grep -i 'phpldapadmin' >/dev/null 2>&1
+[ X"$?" == X"0" ] && USE_PHPLDAPADMIN='YES' && echo "export USE_PHPLDAPADMIN='YES'" >>${CONFIG_FILE}
+
+echo ${OPTIONAL_COMPONENTS} | grep -i 'phpmyadmin' >/dev/null 2>&1
+[ X"$?" == X"0" ] && USE_PHPMYADMIN='YES' && echo "export USE_PHPMYADMIN='YES'" >>${CONFIG_FILE}
+
+echo ${OPTIONAL_COMPONENTS} | grep -i 'postfixadmin' >/dev/null 2>&1
+[ X"$?" == X"0" ] && USE_POSTFIXADMIN='YES' && echo "export USE_POSTFIXADMIN='YES'" >>${CONFIG_FILE}
+
+echo ${OPTIONAL_COMPONENTS} | grep -i 'awstats' >/dev/null 2>&1
+[ X"$?" == X"0" ] && USE_AWSTATS='YES' && echo "export USE_AWSTATS='YES'" >>${CONFIG_FILE}
+
+# Promot to choose the prefer language for webmail.
+[ X"${USE_WEBMAIL}" == X"YES" ] && . ${DIALOG_DIR}/default_language.sh
 
 # Used when you use OpenLDAP as backend, only prompt for MySQL root password.
 [ X"${BACKEND}" == X"OpenLDAP" ] && . ${DIALOG_DIR}/mysql_config.sh
