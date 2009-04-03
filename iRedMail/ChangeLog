@@ -1,4 +1,5 @@
 iRedMail-0.4.1:
+    * Say goodbye to SquirrelMail.
     * Update SquirrelMail plugin: compatibility-2.0.14.
     * Update dovecot to 1.1.13.
     * Add group mail/alias support for openldap backend.

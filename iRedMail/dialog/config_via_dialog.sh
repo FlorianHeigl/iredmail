@@ -72,9 +72,9 @@ We provide two backends and the homologous webmail programs:
     +--------------------+---------------+--------------+
     | Backend            | Web Mail      | Admin tool   |
     +--------------------+---------------+--------------+
-    | MySQL(Recommended) | RoundcubeMail | PostfixAdmin |
-    +--------------------+---------------+--------------+
-    | OpenLDAP           | SquirrelMail  | phpLDAPadmin |
+    | MySQL(Recommended) |               | PostfixAdmin |
+    +--------------------+ RoundcubeMail +--------------+
+    | OpenLDAP           |               | phpLDAPadmin |
     +--------------------+---------------+--------------+
 
 TIP:

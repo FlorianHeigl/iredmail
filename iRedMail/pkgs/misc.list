@@ -3,45 +3,6 @@
 # ------------------------
 ${PLA_TARBALL}
 
-# ------------------------
-# SquirrelMail and plugins.
-# ------------------------
-# SquirrelMail
-${SM_TARBALL}
-
-# SquirrelMail plugin: change_ldappass.
-${PLUGIN_CHANGE_LDAPPASS_TARBALL}
-
-# SquirrelMail plugin: change_sqlpass.
-${PLUGIN_CHANGE_SQLPASS_TARBALL}
-
-# SquirrelMail plugin: compatibiliry.
-${PLUGIN_COMPATIBILITY_TARBALL}
-
-# SquirrelMail plugin: Check Quota.
-${PLUGIN_CHECK_QUOTA_TARBALL}
-
-# SquirrelMail plugin: Select Language.
-${PLUGIN_SELECT_LANGUAGE_TARBALL}
-
-# SquirrelMail plugin: AutoSubscribe.
-${PLUGIN_AUTOSUBSCRIBE_TARBALL}
-
-# SquirrelMail plugin: Email Footer.
-${PLUGIN_EMAIL_FOOTER_TARBALL}
-
-# SquirrelMail plugin: Email Footer.
-${PLUGIN_LOGIN_AUTO}
-
-# SquirrelMail plugin: Avelsieve.
-${PLUGIN_AVELSIEVE}
-
-# SquirrelMail plugin: add_address.
-${PLUGIN_ADD_ADDRESS}
-
-# SquirrelMail translations.
-${SM_TRANSLATIONS_TARBALL}
-
 # --------------------------
 # Roundcube.
 # --------------------------

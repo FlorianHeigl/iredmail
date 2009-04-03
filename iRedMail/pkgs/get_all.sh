@@ -124,7 +124,6 @@ fetch_misc()
     if [ X"${DOWNLOAD_PKGS}" == X"YES" ]; then
         # Source relate config files.
         . ${CONF_DIR}/pypolicyd-spf
-        . ${CONF_DIR}/squirrelmail
         . ${CONF_DIR}/phpldapadmin
         . ${CONF_DIR}/roundcube
         . ${CONF_DIR}/postfixadmin

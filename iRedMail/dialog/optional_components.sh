@@ -129,7 +129,6 @@ ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
 Please choose your favorite webmail program.
 " 20 76 5 \
     "Roundcubemail" "WebMail program (PHP, XHTML, CSS2, AJAX)." "on" \
-    "SquirrelMail" "WebMail program, written in PHP." "off" \
     2> /tmp/webmail
 
 webmail="$(cat /tmp/webmail)"
@@ -137,9 +136,6 @@ rm -f /tmp/webmail
 
 echo ${webmail} | grep -i 'roundcubemail' >/dev/null 2>&1
 [ X"$?" == X"0" ] && export USE_RCM='YES' && echo "export USE_RCM='YES'" >> ${CONFIG_FILE}
-
-echo ${webmail} | grep -i 'squirrelmail' >/dev/null 2>&1
-[ X"$?" == X"0" ] && export USE_SM='YES' && echo "export USE_SM='YES'" >>${CONFIG_FILE}
 
 # Promot to choose the prefer language for webmail.
 [ X"${webmail}" != X"" ] && . ${DIALOG_DIR}/default_language.sh

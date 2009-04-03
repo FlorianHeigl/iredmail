@@ -42,9 +42,6 @@ install_all()
         [ X"${MYSQL_FRESH_INSTALLATION}" == X'YES' ] && \
             ALL_PKGS="${ALL_PKGS} mysql-server.${ARCH} mysql.${ARCH}"
 
-        # For SquirrelMail.
-        [ X"${USE_SM}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} php-pear-db.noarch"
-
         # For Awstats.
         [ X"${USE_AWSTATS}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} mod_auth_mysql.${ARCH}"
 
