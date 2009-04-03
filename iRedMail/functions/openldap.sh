@@ -188,7 +188,7 @@ index ${LDAP_ATTR_DOMAIN_QUOTA},${LDAP_ATTR_DOMAIN_USER_NUMBER} eq,pres
 index ${LDAP_ATTR_DOMAIN_SENDER_BCC_ADDRESS},${LDAP_ATTR_DOMAIN_RECIPIENT_BCC_ADDRESS}  eq,pres
 index homeDirectory,mailMessageStore,${LDAP_ATTR_USER_ALIAS},${LDAP_ATTR_USER_STATUS}   eq,pres
 index domainAdmin,domainGlobalAdmin,backupMX    eq,pres
-index listOwner,listMember,accessPolicy eq,pres
+index accessPolicy,hasMember,listOwner,listMember eq,pres
 EOF
 
     ECHO_INFO "Generating new LDAP client configuration file: ${OPENLDAP_LDAP_CONF}"
