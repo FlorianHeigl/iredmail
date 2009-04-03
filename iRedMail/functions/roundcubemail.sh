@@ -168,7 +168,7 @@ EOF
         cat >> main.inc.php <<EOF
 # Global LDAP Address Book. Contains domain users.
 \$rcmail_config['ldap_public']["${RCM_ADDRBOOK_NAME_USERS}"] = array(
-    'name'          => 'Global Address Book',
+    'name'          => 'Address Book (Users)',
     'hosts'         => array("${LDAP_SERVER_HOST}"),
     'port'          => ${LDAP_SERVER_PORT},
     'use_tls'       => false,
@@ -198,7 +198,7 @@ EOF
         cat >> main.inc.php <<EOF
 # Global LDAP Address Book. Contains mail list.
 \$rcmail_config['ldap_public']["${RCM_ADDRBOOK_NAME_GROUPS}"] = array(
-    'name'          => 'Global Address Book (Groups)',
+    'name'          => 'Address Book (Groups)',
     'hosts'         => array("${LDAP_SERVER_HOST}"),
     'port'          => ${LDAP_SERVER_PORT},
     'use_tls'       => false,
@@ -221,12 +221,9 @@ EOF
     //'firstname_field' => 'givenName',  // this field represents the contact's first name
     'sort'          => 'mail',    // The field to sort the listing by.
     'scope'         => 'sub',   // search mode: sub|base|list
-    'filter'        => "(&(objectClass=${LDAP_OBJECTCLASS_MAILGROUP})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))",
+    'filter'        => "(&(objectClass=${LDAP_OBJECTCLASS_MAILGROUP})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ATTR_GROUP_HASMEMBER}=${LDAP_VALUE_GROUP_HASMEMBER})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))",
     'fuzzy_search'  => true);   // server allows wildcard search
-EOF
 
-        cat >> main.inc.php <<EOF
-# Global LDAP Address Book. Contains domain users.
 // end of config file
 ?>
 EOF

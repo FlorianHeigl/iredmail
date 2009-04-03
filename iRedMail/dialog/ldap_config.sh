@@ -7,9 +7,10 @@
 # --------------------------------------------------
 
 # LDAP suffix.
-${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-    --title "LDAP suffix" \
-    --inputbox "\
+while : ; do
+    ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
+        --title "LDAP suffix" \
+        --inputbox "\
 Please specify your LDAP suffix.
 
 EXAMPLE:
@@ -24,7 +25,10 @@ EXAMPLE:
 
 " 20 76 "dc=iredmail,dc=org" 2>/tmp/ldap_suffix
 
-LDAP_SUFFIX="$(cat /tmp/ldap_suffix)"
+    LDAP_SUFFIX="$(cat /tmp/ldap_suffix)"
+    [ X"${LDAP_SUFFIX}" != X"" ] && break
+done
+
 LDAP_SUFFIX_MAJOR="$(sed 's/dc=//g' /tmp/ldap_suffix | awk -F',' '{print $1}')"
 LDAP_SUFFIX_MINOR="$(sed 's/dc=//g' /tmp/ldap_suffix | awk -F',' '{print $2}')"
 LDAP_BINDDN="cn=${VMAIL_USER_NAME},${LDAP_SUFFIX}"

@@ -70,8 +70,11 @@ export LDAP_ATTR_GROUP_USERS='Users'
 export LDAP_ATTR_GROUP_GROUPS='Groups'
 
 # Attributes of group object.
+export LDAP_ATTR_GROUP_HASMEMBER='hasMember'
 export LDAP_ATTR_GROUP_MEMBER='listMember'
 export LDAP_ATTR_GROUP_OWNER='listOwner'
+# Values of group related attributes.
+export LDAP_VALUE_GROUP_HASMEMBER='yes'
 
 # Attributes of user object.
 export LDAP_ATTR_USER_RDN='mail'

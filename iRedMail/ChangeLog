@@ -1,4 +1,7 @@
 iRedMail-0.4.1:
+    * Update phpMyAdmin to 2.11.9.5.
+    * Address of mail group/list will be autocomplete while you type
+      recipients in roundcube now.
     * Say goodbye to SquirrelMail.
     * Update SquirrelMail plugin: compatibility-2.0.14.
     * Update dovecot to 1.1.13.
