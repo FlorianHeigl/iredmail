@@ -18,10 +18,6 @@ sa_config()
     ECHO_INFO "Enable crontabs for SpamAssassin update."
     perl -pi -e 's/#(10.*)/${1}/' /etc/cron.d/sa-update
 
-    [ -f ${MISC_DIR}/Chinese_rules.cf ] && \
-    ECHO_INFO "Use Chinese rules from www.ccert.edu.cn." && \
-    cp ${MISC_DIR}/Chinese_rules.cf /usr/share/spamassassin/
-
     cat >> ${TIP_FILE} <<EOF
 SpamAssassin:
     * Configuration files:
