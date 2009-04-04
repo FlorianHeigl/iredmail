@@ -133,7 +133,7 @@ fetch_misc()
             ECHO_INFO "Fetching (${misc_count}/${misc_total}): $(eval echo ${i})..."
 
             cd ${MISC_DIR}
-            ${FETCH_CMD} ${MIRROR}/rpms/5/${i}
+            ${FETCH_CMD} ${MIRROR}/misc/${i}
 
             misc_count=$((misc_count + 1))
         done
