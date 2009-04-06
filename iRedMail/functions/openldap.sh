@@ -183,12 +183,16 @@ index nisMapName,nisMapEntry                        eq,pres,sub
 #
 # Index for mail attrs.
 #
+# ---- Domain related ----
 index ${LDAP_ATTR_DOMAIN_RDN},${LDAP_ATTR_DOMAIN_TRANSPORT},${LDAP_ATTR_DOMAIN_STATUS},${LDAP_ENABLED_SERVICE}  eq,pres
 index ${LDAP_ATTR_DOMAIN_QUOTA},${LDAP_ATTR_DOMAIN_USER_NUMBER} eq,pres
+index ${LDAP_ATTR_DOMAIN_ADMIN},${LDAP_ATTR_DOMAIN_GLOBALADMIN},${LDAP_ATTR_DOMAIN_BACKUPMX}    eq,pres
 index ${LDAP_ATTR_DOMAIN_SENDER_BCC_ADDRESS},${LDAP_ATTR_DOMAIN_RECIPIENT_BCC_ADDRESS}  eq,pres
+# ---- Group related ----
+index ${LDAP_ATTR_GROUP_ACCESSPOLICY},${LDAP_ATTR_GROUP_HASMEMBER},${LDAP_ATTR_GROUP_MEMBER},${LDAP_ATTR_GROUP_OWNER}   eq,pres
+# ---- User related ----
 index homeDirectory,mailMessageStore,${LDAP_ATTR_USER_ALIAS},${LDAP_ATTR_USER_STATUS}   eq,pres
-index domainAdmin,domainGlobalAdmin,backupMX    eq,pres
-index accessPolicy,hasMember,listOwner,listMember eq,pres
+index ${LDAP_ATTR_USER_BACKUPMAILADDRESS}   eq,pres
 EOF
 
     ECHO_INFO "Generating new LDAP client configuration file: ${OPENLDAP_LDAP_CONF}"

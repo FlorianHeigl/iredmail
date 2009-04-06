@@ -1,4 +1,6 @@
 iRedMail-0.4.1:
+    * Add ldap attribute to store user's backup mail address, used for
+      password reset or whatever.
     * Add backup mx detect in virtual domain lookup.
     * Update phpMyAdmin to 2.11.9.5.
     * Address of mail group/list will be autocomplete while you type
