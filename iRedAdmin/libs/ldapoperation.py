@@ -62,7 +62,7 @@ def ldif_user(domainName, username, passwd, quota):
     homeDirectory = iredconf.MAILBOX_BASE + '/' + mailMessageStore
 
     ldif = [
-        ('objectCLass',         ['inetOrgPerson', 'mailUser']),
+        ('objectCLass',         ['inetOrgPerson', 'mailUser', 'shadowAccount']),
         ('mail',                [mail]),
         ('userPassword',        [str(passwd)]),
         ('mailQuota',           [quota]),
