@@ -161,6 +161,7 @@ add_new_user()
     ldapadd -x -D "${BINDDN}" -w "${BINDPW}" <<EOF
 dn: mail=${MAIL},${OU_USER_DN},${DOMAIN_DN},${BASE_DN}
 objectClass: inetOrgPerson
+objectClass: shadowAccount
 objectClass: mailUser
 objectClass: top
 homeDirectory: ${VMAIL_USER_HOME_DIR}

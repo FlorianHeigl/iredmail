@@ -269,16 +269,20 @@ o: ${LDAP_SUFFIX_MAJOR}
 
 dn: ${LDAP_BINDDN}
 objectClass: person
+objectClass: shadowAccount
 objectClass: top
 cn: ${VMAIL_USER_NAME}
 sn: ${VMAIL_USER_NAME}
+uid: ${VMAIL_USER_NAME}
 ${LDAP_ATTR_USER_PASSWD}: $(gen_ldap_passwd "${LDAP_BINDPW}")
 
 dn: ${LDAP_ADMIN_DN}
 objectClass: person
+objectClass: shadowAccount
 objectClass: top
 cn: ${VMAIL_ADMIN_USER_NAME}
 sn: ${VMAIL_ADMIN_USER_NAME}
+uid: ${VMAIL_ADMIN_USER_NAME}
 ${LDAP_ATTR_USER_PASSWD}: $(gen_ldap_passwd "${LDAP_ADMIN_PW}")
 
 dn: o=${LDAP_BASEDN_NAME},${LDAP_SUFFIX}
@@ -308,7 +312,9 @@ ou: ${LDAP_ATTR_GROUP_GROUPS}
 
 dn: ${LDAP_ATTR_USER_RDN}=${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN},o=${LDAP_ATTR_DOMAINADMIN_DN_NAME},${LDAP_SUFFIX}
 objectClass: ${LDAP_OBJECTCLASS_MAILADMIN}
+objectClass: shadowAccount
 objectClass: top
+uid: ${DOMAIN_ADMIN_NAME}
 ${LDAP_ATTR_USER_RDN}: ${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}
 ${LDAP_ATTR_USER_STATUS}: ${LDAP_STATUS_ACTIVE}
 ${LDAP_ATTR_USER_PASSWD}: $(gen_ldap_passwd "${DOMAIN_ADMIN_PASSWD}")
@@ -317,6 +323,7 @@ ${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_AWSTATS}
 
 dn: ${LDAP_ATTR_USER_RDN}=${FIRST_USER}@${FIRST_DOMAIN},${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=${FIRST_DOMAIN},${LDAP_BASEDN}
 objectClass: inetOrgPerson
+objectClass: shadowAccount
 objectClass: ${LDAP_OBJECTCLASS_MAILUSER}
 objectClass: top
 cn: ${FIRST_USER}
