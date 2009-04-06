@@ -224,7 +224,7 @@ bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
 search_base     = ${LDAP_BASEDN}
 scope           = one
-query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_MAILDOMAIN})(${LDAP_ATTR_DOMAIN_RDN}=%s)(${LDAP_ATTR_DOMAIN_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
+query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_MAILDOMAIN})(${LDAP_ATTR_DOMAIN_RDN}=%s)(!(${LDAP_ATTR_DOMAIN_BACKUPMX}=${LDAP_VALUE_DOMAIN_BACKUPMX}))(${LDAP_ATTR_DOMAIN_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
 result_attribute= ${LDAP_ATTR_DOMAIN_RDN}
 debuglevel      = 0
 EOF
@@ -466,7 +466,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT domain FROM domain WHERE domain='%s' AND active='1' AND expired >= NOW()
+query       = SELECT domain FROM domain WHERE domain='%s' AND backupmx='0' AND active='1' AND expired >= NOW()
 EOF
 
     cat > ${mysql_virtual_mailbox_maps_cf} <<EOF

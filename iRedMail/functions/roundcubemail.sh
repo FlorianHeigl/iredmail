@@ -196,7 +196,7 @@ EOF
 EOF
 
         # List global address book in autocomplete_addressbooks, contains domain users and groups.
-        perl -pi -e 's#(.*autocomplete_addressbooks.*=)(.*)#${1} array("sql", "$ENV{'RCM_ADDRBOOK_NAME_USERS'}", "$ENV{'RCM_ADDRBOOK_NAME_GROUPS'}");#' main.inc.php
+        perl -pi -e 's#(.*autocomplete_addressbooks.*=)(.*)#${1} array("sql", "$ENV{'FIRST_DOMAIN'}");#' main.inc.php
 
     elif [ X"${BACKEND}" == X"MySQL" ]; then
         ECHO_INFO "Patch: Change MySQL password."

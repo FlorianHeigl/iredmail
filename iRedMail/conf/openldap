@@ -57,12 +57,14 @@ export LDAP_ATTR_DOMAIN_TRANSPORT='mtaTransport'
 export LDAP_ATTR_DOMAIN_STATUS='domainStatus'
 export LDAP_ATTR_DOMAIN_ADMIN='domainAdmin'
 export LDAP_ATTR_DOMAIN_GLOBALADMIN='domainGlobalAdmin'
+export LDAP_ATTR_DOMAIN_BACKUPMX='backupMX'
 export LDAP_ATTR_DOMAIN_QUOTA='domainMaxQuotaSize'
 export LDAP_ATTR_DOMAIN_USER_NUMBER='domainMaxUserNumber'
 export LDAP_ATTR_DOMAIN_SENDER_BCC_ADDRESS='domainSenderBccAddress'
 export LDAP_ATTR_DOMAIN_RECIPIENT_BCC_ADDRESS='domainRecipientBccAddress'
 # Values of domain related attributes.
 export LDAP_VALUE_DOMAIN_GLOBALADMIN='yes'
+export LDAP_VALUE_DOMAIN_BACKUPMX='yes'
 
 # Group related.
 export LDAP_ATTR_GROUP_RDN='ou'
