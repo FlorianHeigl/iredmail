@@ -1,6 +1,6 @@
 diff -ruNa rc-beta2-old/config/main.inc.php.dist rc-beta2/config/main.inc.php.dist
---- rc-beta2-old/config/main.inc.php.dist	2009-01-18 10:39:07.000000000 +0100
-+++ rc-beta2/config/main.inc.php.dist	2009-02-22 16:23:35.675003721 +0100
+--- rc-beta2-old/config/main.inc.php.dist   2009-01-18 10:39:07.000000000 +0100
++++ rc-beta2/config/main.inc.php.dist   2009-02-22 16:23:35.675003721 +0100
 @@ -14,6 +14,30 @@
  
  $rcmail_config = array();
@@ -33,8 +33,8 @@ diff -ruNa rc-beta2-old/config/main.inc.php.dist rc-beta2/config/main.inc.php.di
  // system error reporting: 1 = log; 2 = report (not implemented yet), 4 = show, 8 = trace
  $rcmail_config['debug_level'] = 1;
 diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include/rcube_sieve.php
---- rc-beta2-old/program/include/rcube_sieve.php	1970-01-01 01:00:00.000000000 +0100
-+++ rc-beta2/program/include/rcube_sieve.php	2009-02-24 13:14:09.838074167 +0100
+--- rc-beta2-old/program/include/rcube_sieve.php    1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/program/include/rcube_sieve.php    2009-02-24 13:14:09.838074167 +0100
 @@ -0,0 +1,741 @@
 +<?php
 +
@@ -61,20 +61,20 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +
 +define('SIEVE_ERROR_CONNECTION', 1);
 +define('SIEVE_ERROR_LOGIN', 2);
-+define('SIEVE_ERROR_NOT_EXISTS', 3);	// script not exists
-+define('SIEVE_ERROR_INSTALL', 4);	// script installation
-+define('SIEVE_ERROR_ACTIVATE', 5);	// script activation
-+define('SIEVE_ERROR_OTHER', 255);	// other/unknown error
++define('SIEVE_ERROR_NOT_EXISTS', 3);   // script not exists
++define('SIEVE_ERROR_INSTALL', 4);  // script installation
++define('SIEVE_ERROR_ACTIVATE', 5); // script activation
++define('SIEVE_ERROR_OTHER', 255);  // other/unknown error
 +
 +
 +class rcube_sieve
 +{
-+  var $sieve;				// Net_Sieve object
-+  var $error = false; 			// error flag 
-+  var $list = array(); 			// scripts list 
++  var $sieve;              // Net_Sieve object
++  var $error = false;          // error flag 
++  var $list = array();             // scripts list 
 +
-+  public $script;			// rcube_sieve_script object
-+  private $disabled;			// array of disabled extensions
++  public $script;          // rcube_sieve_script object
++  private $disabled;           // array of disabled extensions
 +
 +  /**
 +    * Object constructor
@@ -110,19 +110,19 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +    {
 +      return $this->error ? $this->error : false;
 +    }
-+			    
++               
 +  public function save()
 +    {
 +      $script = $this->script->as_text();
 +
 +      if (!$script)
-+	$script = '/* empty script */';
++   $script = '/* empty script */';
 +
 +      if (PEAR::isError($this->sieve->installScript('roundcube', $script)))
-+    	return $this->_set_error(SIEVE_ERROR_INSTALL);
++       return $this->_set_error(SIEVE_ERROR_INSTALL);
 +
 +      if (PEAR::isError($this->sieve->setActive('roundcube')))
-+    	return $this->_set_error(SIEVE_ERROR_ACTIVATE);
++       return $this->_set_error(SIEVE_ERROR_ACTIVATE);
 +
 +      return true;
 +    }
@@ -130,14 +130,14 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +  public function get_extensions()
 +    {
 +      if ($this->sieve) {
-+	$ext = $this->sieve->getExtensions();
++   $ext = $this->sieve->getExtensions();
 +
-+	if ($this->script) {
-+	  $supported = $this->script->get_extensions();
-+	  foreach ($ext as $idx => $ext_name)
-+	    if (!in_array($ext_name, $supported))
-+	      unset($ext[$idx]);
-+	}
++   if ($this->script) {
++     $supported = $this->script->get_extensions();
++     foreach ($ext as $idx => $ext_name)
++       if (!in_array($ext_name, $supported))
++         unset($ext[$idx]);
++   }
 +
 +        return array_values($ext);
 +      }
@@ -151,15 +151,15 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +      $this->list = $this->sieve->listScripts();
 +
 +      if (PEAR::isError($this->list))
-+    	return $this->_set_error(SIEVE_ERROR_OTHER);
++       return $this->_set_error(SIEVE_ERROR_OTHER);
 +    
 +      if (in_array('roundcube', $this->list))
 +        {
 +          $script = $this->sieve->getScript('roundcube');
 +    
 +          if (PEAR::isError($script))
-+    	    return $this->_set_error(SIEVE_ERROR_OTHER);
-+	}
++           return $this->_set_error(SIEVE_ERROR_OTHER);
++   }
 +      // import scripts from squirrelmail
 +      elseif (in_array('phpscript', $this->list))
 +        {
@@ -178,9 +178,9 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +        }
 +      else
 +        {
-+	  $this->_set_error(SIEVE_ERROR_NOT_EXISTS);
++     $this->_set_error(SIEVE_ERROR_NOT_EXISTS);
 +          $script = '';
-+	}
++   }
 +
 +      $this->script = new rcube_sieve_script($script, $this->disabled);
 +    }
@@ -195,13 +195,13 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +          {
 +            if (preg_match('/^#START_SIEVE_RULE.*/', $token, $matches))
 +              {
-+	        $name[$i] = "unnamed rule ".($i+1);
++           $name[$i] = "unnamed rule ".($i+1);
 +                $content .= "# rule:[".$name[$i]."]\n";
 +              }
 +            elseif (isset($name[$i]))
 +              {
-+	        $content .= "if ".$token."\n";
-+		$i++;
++           $content .= "if ".$token."\n";
++       $i++;
 +              }
 +          }
 +
@@ -218,13 +218,13 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +
 +class rcube_sieve_script
 +{
-+  var $content = array();	// script rules array   
++  var $content = array();  // script rules array   
 +
-+  private $supported = array(	// extensions supported by class
++  private $supported = array(  // extensions supported by class
 +    'fileinto',
 +    'reject',
 +    'ereject',
-+    'vacation', 	// RFC5230
++    'vacation',    // RFC5230
 +    // TODO: (most wanted first) body, imapflags, notify, regex
 +    );
 +  
@@ -241,7 +241,7 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +      if (!empty($disabled))
 +        foreach ($disabled as $ext)
 +          if (($idx = array_search($ext, $this->supported)) !== false)
-+	    unset($this->supported[$idx]);
++       unset($this->supported[$idx]);
 +
 +      $this->content = $this->_parse_text($script);
 +    }
@@ -249,7 +249,7 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +  /**
 +    * Adds script contents as text to the script array (at the end)
 +    *
-+    * @param	string	Text script contents
++    * @param   string  Text script contents
 +    */
 +  public function add_text($script)
 +    {
@@ -262,10 +262,10 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +      
 +      foreach ($content as $elem)
 +        if (!isset($names[$elem['name']]))
-+	  {
++     {
 +            array_push($this->content, $elem);
-+	    $result = true;
-+	  }
++       $result = true;
++     }
 +
 +      return $result;
 +    }
@@ -273,8 +273,8 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +  /**
 +    * Adds rule to the script (at the end)
 +    *
-+    * @param	string	Rule name
-+    * @param	array	Rule content (as array)
++    * @param   string  Rule name
++    * @param   array   Rule content (as array)
 +    */
 +  public function add_rule($content)
 +    {
@@ -288,8 +288,8 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +      if(isset($this->content[$index]))
 +        {
 +          unset($this->content[$index]);
-+	  return true;
-+	}
++     return true;
++   }
 +      return false;
 +    }
 +
@@ -303,9 +303,9 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +      // TODO: check this->supported
 +      if ($this->content[$index])
 +        {
-+	  $this->content[$index] = $content;
-+	  return $index;
-+	}
++     $this->content[$index] = $content;
++     return $index;
++   }
 +      return false;
 +    }
 +
@@ -320,109 +320,109 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +      // rules
 +      foreach ($this->content as $idx => $rule)
 +        {
-+	  $extension = '';
-+	  $tests = array();
-+	  $i = 0;
-+	  
-+	  // header
-+	  $script .= '# rule:[' . $rule['name'] . "]\n";
++     $extension = '';
++     $tests = array();
++     $i = 0;
++     
++     // header
++     $script .= '# rule:[' . $rule['name'] . "]\n";
 +  
-+	  // constraints expressions
-+	  foreach ($rule['tests'] as $test)
-+	    {
-+	      $tests[$i] = '';
-+	      switch ($test['test'])
-+	        {
-+		  case 'size':
-+		    $tests[$i] .= ($test['not'] ? 'not ' : '');
-+		    $tests[$i] .= 'size :' . ($test['type']=='under' ? 'under ' : 'over ') . $test['arg'];
-+		  break;
-+		  case 'true':
-+		    $tests[$i] .= ($test['not'] ? 'not true' : 'true');
-+		  break;
-+		  case 'exists':
-+		    $tests[$i] .= ($test['not'] ? 'not ' : '');
-+		    if (is_array($test['arg']))
-+			$tests[$i] .= 'exists ["' . implode('", "', $this->_escape_string($test['arg'])) . '"]';
-+		    else
-+			$tests[$i] .= 'exists "' . $this->_escape_string($test['arg']) . '"';
-+		  break;    
-+		  case 'header':
-+		    $tests[$i] .= ($test['not'] ? 'not ' : '');
-+		    $tests[$i] .= 'header :' . $test['type'];
-+		    if (is_array($test['arg1']))
-+			$tests[$i] .= ' ["' . implode('", "', $this->_escape_string($test['arg1'])) . '"]';
-+		    else
-+			$tests[$i] .= ' "' . $this->_escape_string($test['arg1']) . '"';
-+		    if (is_array($test['arg2']))
-+			$tests[$i] .= ' ["' . implode('", "', $this->_escape_string($test['arg2'])) . '"]';
-+		    else
-+			$tests[$i] .= ' "' . $this->_escape_string($test['arg2']) . '"';
-+		  break;
-+		}
-+	      $i++;
-+	    }
++     // constraints expressions
++     foreach ($rule['tests'] as $test)
++       {
++         $tests[$i] = '';
++         switch ($test['test'])
++           {
++         case 'size':
++           $tests[$i] .= ($test['not'] ? 'not ' : '');
++           $tests[$i] .= 'size :' . ($test['type']=='under' ? 'under ' : 'over ') . $test['arg'];
++         break;
++         case 'true':
++           $tests[$i] .= ($test['not'] ? 'not true' : 'true');
++         break;
++         case 'exists':
++           $tests[$i] .= ($test['not'] ? 'not ' : '');
++           if (is_array($test['arg']))
++           $tests[$i] .= 'exists ["' . implode('", "', $this->_escape_string($test['arg'])) . '"]';
++           else
++           $tests[$i] .= 'exists "' . $this->_escape_string($test['arg']) . '"';
++         break;    
++         case 'header':
++           $tests[$i] .= ($test['not'] ? 'not ' : '');
++           $tests[$i] .= 'header :' . $test['type'];
++           if (is_array($test['arg1']))
++           $tests[$i] .= ' ["' . implode('", "', $this->_escape_string($test['arg1'])) . '"]';
++           else
++           $tests[$i] .= ' "' . $this->_escape_string($test['arg1']) . '"';
++           if (is_array($test['arg2']))
++           $tests[$i] .= ' ["' . implode('", "', $this->_escape_string($test['arg2'])) . '"]';
++           else
++           $tests[$i] .= ' "' . $this->_escape_string($test['arg2']) . '"';
++         break;
++       }
++         $i++;
++       }
 +  
-+	  $script .= ($idx>0 ? 'els' : '').($rule['join'] ? 'if allof (' : 'if anyof (');
-+	  if (sizeof($tests) > 1)
-+	    $script .= implode(",\n\t", $tests);
-+	  elseif (sizeof($tests))
-+	    $script .= $tests[0];
-+	  else
-+	    $script .= 'true';
-+	  $script .= ")\n{\n";
++     $script .= ($idx>0 ? 'els' : '').($rule['join'] ? 'if allof (' : 'if anyof (');
++     if (sizeof($tests) > 1)
++       $script .= implode(",\n\t", $tests);
++     elseif (sizeof($tests))
++       $script .= $tests[0];
++     else
++       $script .= 'true';
++     $script .= ")\n{\n";
 +  
-+	  // action(s)
-+	  foreach ($rule['actions'] as $action)
-+	    switch ($action['type'])
-+	    {
-+	      case 'fileinto':
-+	        $extension = 'fileinto';
-+		$script .= "\tfileinto \"" . $this->_escape_string($action['target']) . "\";\n";
-+	      break;
-+	      case 'redirect':
-+		$script .= "\tredirect \"" . $this->_escape_string($action['target']) . "\";\n";
-+	      break;
-+	      case 'reject':
-+	      case 'ereject':
-+	        $extension = $action['type'];
-+		if (strpos($action['target'], "\n")!==false)
-+		  $script .= "\t".$action['type']." text:\n" . $action['target'] . "\n.\n;\n";
-+		else
-+		  $script .= "\t".$action['type']." \"" . $this->_escape_string($action['target']) . "\";\n";
-+	      break;
-+	      case 'keep':
-+	      case 'discard':
-+	      case 'stop':
-+	        $script .= "\t" . $action['type'] .";\n";
-+	      break;
-+	      case 'vacation':
++     // action(s)
++     foreach ($rule['actions'] as $action)
++       switch ($action['type'])
++       {
++         case 'fileinto':
++           $extension = 'fileinto';
++       $script .= "\tfileinto \"" . $this->_escape_string($action['target']) . "\";\n";
++         break;
++         case 'redirect':
++       $script .= "\tredirect \"" . $this->_escape_string($action['target']) . "\";\n";
++         break;
++         case 'reject':
++         case 'ereject':
++           $extension = $action['type'];
++       if (strpos($action['target'], "\n")!==false)
++         $script .= "\t".$action['type']." text:\n" . $action['target'] . "\n.\n;\n";
++       else
++         $script .= "\t".$action['type']." \"" . $this->_escape_string($action['target']) . "\";\n";
++         break;
++         case 'keep':
++         case 'discard':
++         case 'stop':
++           $script .= "\t" . $action['type'] .";\n";
++         break;
++         case 'vacation':
 +                $extension = 'vacation';
 +                $script .= "\tvacation";
-+		if ($action['days'])
-+		  $script .= " :days " . $action['days'];
-+		if ($action['addresses'])
-+		  $script .= " :addresses " . $this->_print_list($action['addresses']);
-+		if ($action['subject'])
-+		  $script .= " :subject \"" . $this->_escape_string($action['subject']) . "\"";
-+		if ($action['handle'])
-+		  $script .= " :handle \"" . $this->_escape_string($action['handle']) . "\"";
-+		if ($action['from'])
-+		  $script .= " :from \"" . $this->_escape_string($action['from']) . "\"";
-+		if ($action['mime'])
-+		  $script .= " :mime";
-+		if (strpos($action['reason'], "\n")!==false)
-+		  $script .= " text:\n" . $action['reason'] . "\n.\n;\n";
-+		else
-+		  $script .= " \"" . $this->_escape_string($action['reason']) . "\";\n";
-+	      break;
-+	    }
-+	  
-+	  $script .= "}\n";
-+	
-+	  if ($extension && !isset($exts[$extension]))
-+	    $exts[$extension] = $extension;
-+	}
++       if ($action['days'])
++         $script .= " :days " . $action['days'];
++       if ($action['addresses'])
++         $script .= " :addresses " . $this->_print_list($action['addresses']);
++       if ($action['subject'])
++         $script .= " :subject \"" . $this->_escape_string($action['subject']) . "\"";
++       if ($action['handle'])
++         $script .= " :handle \"" . $this->_escape_string($action['handle']) . "\"";
++       if ($action['from'])
++         $script .= " :from \"" . $this->_escape_string($action['from']) . "\"";
++       if ($action['mime'])
++         $script .= " :mime";
++       if (strpos($action['reason'], "\n")!==false)
++         $script .= " text:\n" . $action['reason'] . "\n.\n;\n";
++       else
++         $script .= " \"" . $this->_escape_string($action['reason']) . "\";\n";
++         break;
++       }
++     
++     $script .= "}\n";
++   
++     if ($extension && !isset($exts[$extension]))
++       $exts[$extension] = $extension;
++   }
 +      
 +      // requires
 +      if (sizeof($exts))
@@ -452,7 +452,7 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +  /**
 +    * Converts text script to rules array
 +    *
-+    * @param	string	Text script
++    * @param   string  Text script
 +    */
 +  private function _parse_text($script)
 +    {
@@ -465,22 +465,22 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +      // tokenize rules
 +      if ($tokens = preg_split('/(# rule:\[.*\])\n/', $script, -1, PREG_SPLIT_DELIM_CAPTURE))
 +        foreach($tokens as $token)
-+	  {
-+	    if (preg_match('/^# rule:\[(.*)\]/', $token, $matches))
-+	      {
-+	        $content[$i]['name'] = $matches[1];
-+	      }
-+	    elseif (isset($content[$i]['name']) && sizeof($content[$i]) == 1)
-+	      {
-+	        if ($rule = $this->_tokenize_rule($token))
-+		  {
-+	    	    $content[$i] = array_merge($content[$i], $rule);
-+	    	    $i++;
-+		  }
-+		else // unknown rule format
-+		    unset($content[$i]);
-+	      }
-+	  }
++     {
++       if (preg_match('/^# rule:\[(.*)\]/', $token, $matches))
++         {
++           $content[$i]['name'] = $matches[1];
++         }
++       elseif (isset($content[$i]['name']) && sizeof($content[$i]) == 1)
++         {
++           if ($rule = $this->_tokenize_rule($token))
++         {
++               $content[$i] = array_merge($content[$i], $rule);
++               $i++;
++         }
++       else // unknown rule format
++           unset($content[$i]);
++         }
++     }
 +
 +      return $content;
 +    }
@@ -488,7 +488,7 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +  /**
 +    * Convert text script fragment to rule object
 +    *
-+    * @param	string	Text rule
++    * @param   string  Text rule
 +    */
 +  private function _tokenize_rule($content)
 +    {
@@ -496,16 +496,16 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +    
 +      if (preg_match('/^(if|elsif|else)\s+((allof|anyof|exists|header|not|size)\s+(.*))\s+\{(.*)\}$/sm', trim($content), $matches))
 +        {
-+	  list($tests, $join) = $this->_parse_tests(trim($matches[2]));
-+	  $actions = $this->_parse_actions(trim($matches[5]));
++     list($tests, $join) = $this->_parse_tests(trim($matches[2]));
++     $actions = $this->_parse_actions(trim($matches[5]));
 +
-+	  if ($tests && $actions)
-+	    $result = array(
-+		    'tests' => $tests,
-+		    'actions' => $actions,
-+		    'join' => $join,
-+	    );
-+	}
++     if ($tests && $actions)
++       $result = array(
++           'tests' => $tests,
++           'actions' => $actions,
++           'join' => $join,
++       );
++   }
 +    
 +      return $result;
 +    }    
@@ -513,8 +513,8 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +  /**
 +    * Parse body of actions section
 +    *
-+    * @param	string	Text body
-+    * @return	array	Array of parsed action type/target pairs
++    * @param   string  Text body
++    * @return  array   Array of parsed action type/target pairs
 +    */
 +  private function _parse_actions($content)
 +    {
@@ -541,59 +541,59 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +      // parse actions body
 +      if (preg_match_all($pattern, $content, $mm, PREG_SET_ORDER))
 +      {
-+    	foreach ($mm as $m)
-+	{
-+	  $content = trim($m[0]);
-+	  
-+    	  if(preg_match('/^(discard|keep|stop)/', $content, $matches))
-+    	    {
-+	      $result[] = array('type' => $matches[1]);
-+	    }
++       foreach ($mm as $m)
++   {
++     $content = trim($m[0]);
++     
++         if(preg_match('/^(discard|keep|stop)/', $content, $matches))
++           {
++         $result[] = array('type' => $matches[1]);
++       }
 +          elseif(preg_match('/^fileinto/', $content))
-+    	    {
-+	      $result[] = array('type' => 'fileinto', 'target' => $this->_parse_string($m[sizeof($m)-1])); 
-+	    }
++           {
++         $result[] = array('type' => 'fileinto', 'target' => $this->_parse_string($m[sizeof($m)-1])); 
++       }
 +          elseif(preg_match('/^redirect/', $content))
-+    	    {
-+	      $result[] = array('type' => 'redirect', 'target' => $this->_parse_string($m[sizeof($m)-1])); 
-+	    }
-+    	  elseif(preg_match('/^(reject|ereject)\s+(.*);$/sm', $content, $matches))
-+    	    {
-+	      $result[] = array('type' => $matches[1], 'target' => $this->_parse_string($matches[2])); 
-+	    }
++           {
++         $result[] = array('type' => 'redirect', 'target' => $this->_parse_string($m[sizeof($m)-1])); 
++       }
++         elseif(preg_match('/^(reject|ereject)\s+(.*);$/sm', $content, $matches))
++           {
++         $result[] = array('type' => $matches[1], 'target' => $this->_parse_string($matches[2])); 
++       }
 +          elseif(preg_match('/^vacation\s+(.*);$/sm', $content, $matches))
 +            {
-+	      $vacation = array('type' => 'vacation');
++         $vacation = array('type' => 'vacation');
 +
-+    	      if (preg_match('/:(days)\s+([0-9]+)/', $content, $vm)) {
-+	        $vacation['days'] = $vm[2];
-+		$content = preg_replace('/:(days)\s+([0-9]+)/', '', $content); 
-+	      }
-+    	      if (preg_match('/:(subject)\s+(".*?[^\\\]")/', $content, $vm)) {
-+	        $vacation['subject'] = $vm[2];
-+		$content = preg_replace('/:(subject)\s+(".*?[^\\\]")/', '', $content); 
-+	      }
-+    	      if (preg_match('/:(addresses)\s+\[(.*?[^\\\])\]/', $content, $vm)) {
-+	        $vacation['addresses'] = $this->_parse_list($vm[2]);
-+		$content = preg_replace('/:(addresses)\s+\[(.*?[^\\\])\]/', '', $content); 
-+	      }
-+    	      if (preg_match('/:(handle)\s+(".*?[^\\\]")/', $content, $vm)) {
-+	        $vacation['handle'] = $vm[2];
-+		$content = preg_replace('/:(handle)\s+(".*?[^\\\]")/', '', $content); 
-+	      }
-+    	      if (preg_match('/:(from)\s+(".*?[^\\\]")/', $content, $vm)) {
-+	        $vacation['from'] = $vm[2];
-+		$content = preg_replace('/:(from)\s+(".*?[^\\\]")/', '', $content); 
-+	      }
-+	      $content = preg_replace('/^vacation/', '', $content);	     
-+	      $content = preg_replace('/;$/', '', $content);
-+	      $content = trim($content);
-+    	      if (preg_match('/^:(mime)/', $content, $vm)) {
-+	        $vacation['mime'] = true;
-+		$content = preg_replace('/^:mime/', '', $content); 
-+	      }
++             if (preg_match('/:(days)\s+([0-9]+)/', $content, $vm)) {
++           $vacation['days'] = $vm[2];
++       $content = preg_replace('/:(days)\s+([0-9]+)/', '', $content); 
++         }
++             if (preg_match('/:(subject)\s+(".*?[^\\\]")/', $content, $vm)) {
++           $vacation['subject'] = $vm[2];
++       $content = preg_replace('/:(subject)\s+(".*?[^\\\]")/', '', $content); 
++         }
++             if (preg_match('/:(addresses)\s+\[(.*?[^\\\])\]/', $content, $vm)) {
++           $vacation['addresses'] = $this->_parse_list($vm[2]);
++       $content = preg_replace('/:(addresses)\s+\[(.*?[^\\\])\]/', '', $content); 
++         }
++             if (preg_match('/:(handle)\s+(".*?[^\\\]")/', $content, $vm)) {
++           $vacation['handle'] = $vm[2];
++       $content = preg_replace('/:(handle)\s+(".*?[^\\\]")/', '', $content); 
++         }
++             if (preg_match('/:(from)\s+(".*?[^\\\]")/', $content, $vm)) {
++           $vacation['from'] = $vm[2];
++       $content = preg_replace('/:(from)\s+(".*?[^\\\]")/', '', $content); 
++         }
++         $content = preg_replace('/^vacation/', '', $content);      
++         $content = preg_replace('/;$/', '', $content);
++         $content = trim($content);
++             if (preg_match('/^:(mime)/', $content, $vm)) {
++           $vacation['mime'] = true;
++       $content = preg_replace('/^:mime/', '', $content); 
++         }
 +
-+	      $vacation['reason'] = $this->_parse_string($content);
++         $vacation['reason'] = $this->_parse_string($content);
 +
 +              $result[] = $vacation;
 +            }
@@ -606,7 +606,7 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +   /**
 +    * Parse test/conditions section
 +    *
-+    * @param	string	Text 
++    * @param   string  Text 
 +    */
 +
 +  private function _parse_tests($content)
@@ -615,12 +615,12 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +
 +      // lists
 +      if (preg_match('/^(allof|anyof)\s+\((.*)\)$/sm', $content, $matches))
-+	{
-+	  $content = $matches[2];
-+	  $join = $matches[1]=='allof' ? true : false;
-+	}
++   {
++     $content = $matches[2];
++     $join = $matches[1]=='allof' ? true : false;
++   }
 +      else
-+	  $join = false;
++     $join = false;
 +      
 +      // supported tests regular expressions
 +      // TODO: comparators, envelope
@@ -639,46 +639,46 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +      // ...and parse tests list
 +      if (preg_match_all($pattern, $content, $matches, PREG_SET_ORDER))
 +        {
-+	  foreach ($matches as $match)
-+	    {
-+	      $size = sizeof($match);
-+	      
-+	      if (preg_match('/^(not\s+)?size/', $match[0]))
-+	        {
-+		  $result[] = array(
-+		    'test' 	=> 'size',
-+		    'not' 	=> $match[$size-4] ? true : false,
-+		    'type' 	=> $match[$size-2], // under/over
-+		    'arg'	=> $match[$size-1], // value
-+		  );
-+		}
-+	      elseif (preg_match('/^(not\s+)?header/', $match[0]))
-+	    	{
-+		  $result[] = array(
-+		    'test'	=> 'header',
-+		    'not' 	=> $match[$size-5] ? true : false,
-+		    'type'	=> $match[$size-3], // is/contains/matches
-+		    'arg1' 	=> $this->_parse_list($match[$size-2]), // header(s)
-+		    'arg2'	=> $this->_parse_list($match[$size-1]), // string(s)
-+		  );  
-+		}
-+	      elseif (preg_match('/^(not\s+)?exists/', $match[0]))
-+		{
-+		  $result[] = array(
-+		    'test' 	=> 'exists',
-+		    'not' 	=> $match[$size-3] ? true : false,
-+		    'arg' 	=> $this->_parse_list($match[$size-1]), // header(s)
-+		  );
-+	        }
-+	      elseif (preg_match('/^(not\s+)?true/', $match[0]))
-+		{
-+		  $result[] = array(
-+		    'test' 	=> 'true',
-+		    'not' 	=> $match[$size-2] ? true : false,
-+		  );
-+	        }
-+	    }
-+	}
++     foreach ($matches as $match)
++       {
++         $size = sizeof($match);
++         
++         if (preg_match('/^(not\s+)?size/', $match[0]))
++           {
++         $result[] = array(
++           'test'  => 'size',
++           'not'   => $match[$size-4] ? true : false,
++           'type'  => $match[$size-2], // under/over
++           'arg'   => $match[$size-1], // value
++         );
++       }
++         elseif (preg_match('/^(not\s+)?header/', $match[0]))
++           {
++         $result[] = array(
++           'test'  => 'header',
++           'not'   => $match[$size-5] ? true : false,
++           'type'  => $match[$size-3], // is/contains/matches
++           'arg1'  => $this->_parse_list($match[$size-2]), // header(s)
++           'arg2'  => $this->_parse_list($match[$size-1]), // string(s)
++         );  
++       }
++         elseif (preg_match('/^(not\s+)?exists/', $match[0]))
++       {
++         $result[] = array(
++           'test'  => 'exists',
++           'not'   => $match[$size-3] ? true : false,
++           'arg'   => $this->_parse_list($match[$size-1]), // header(s)
++         );
++           }
++         elseif (preg_match('/^(not\s+)?true/', $match[0]))
++       {
++         $result[] = array(
++           'test'  => 'true',
++           'not'   => $match[$size-2] ? true : false,
++         );
++           }
++       }
++   }
 +
 +      return array($result, $join);
 +    }    
@@ -686,7 +686,7 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +   /**
 +    * Parse string value
 +    *
-+    * @param	string	Text 
++    * @param   string  Text 
 +    */
 +  private function _parse_string($content)
 +    {
@@ -704,7 +704,7 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +   /**
 +    * Escape special chars in string value
 +    *
-+    * @param	string	Text 
++    * @param   string  Text 
 +    */
 +  private function _escape_string($content)
 +    {
@@ -712,11 +712,11 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +      
 +      if (is_array($content))
 +        {
-+	  for ($x=0, $y=sizeof($content); $x<$y; $x++)
-+	    $content[$x] = preg_replace(array_keys($replace), array_values($replace), $content[$x]);
++     for ($x=0, $y=sizeof($content); $x<$y; $x++)
++       $content[$x] = preg_replace(array_keys($replace), array_values($replace), $content[$x]);
 +        
-+	  return $content;
-+	}
++     return $content;
++   }
 +      else
 +        return preg_replace(array_keys($replace), array_values($replace), $content);
 +    }
@@ -724,7 +724,7 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +   /**
 +    * Parse string or list of strings to string or array of strings
 +    *
-+    * @param	string	Text 
++    * @param   string  Text 
 +    */
 +  private function _parse_list($content)
 +    {
@@ -732,31 +732,31 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +      
 +      for ($x=0, $len=strlen($content); $x<$len; $x++)
 +        {
-+	  switch ($content[$x])
-+	    {
-+	      case '\\':
-+	        $str .= $content[++$x];
++     switch ($content[$x])
++       {
++         case '\\':
++           $str .= $content[++$x];
 +              break;
-+	      case '"':
-+	        if (isset($str))
-+	    	  {
-+		    $result[] = $str;
-+		    unset($str);
-+		  }
-+	        else
-+	          $str = '';
-+	      break;
-+	      default:
-+	        if(isset($str))
-+	          $str .= $content[$x];
-+	      break;
-+	    }
-+	}
++         case '"':
++           if (isset($str))
++             {
++           $result[] = $str;
++           unset($str);
++         }
++           else
++             $str = '';
++         break;
++         default:
++           if(isset($str))
++             $str .= $content[$x];
++         break;
++       }
++   }
 +      
 +      if (sizeof($result)>1)
 +        return $result;
 +      elseif (sizeof($result) == 1)
-+	return $result[0];
++   return $result[0];
 +      else
 +        return NULL;
 +    }    
@@ -764,7 +764,7 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +   /**
 +    * Convert array of elements to list of strings
 +    *
-+    * @param	string	Text 
++    * @param   string  Text 
 +    */
 +  private function _print_list($list)
 +    {
@@ -778,8 +778,8 @@ diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include
 +
 +?>
 diff -ruNa rc-beta2-old/program/js/app.js rc-beta2/program/js/app.js
---- rc-beta2-old/program/js/app.js	2009-02-11 08:50:49.000000000 +0100
-+++ rc-beta2/program/js/app.js	2009-03-01 15:23:00.047142288 +0100
+--- rc-beta2-old/program/js/app.js  2009-02-11 08:50:49.000000000 +0100
++++ rc-beta2/program/js/app.js  2009-03-01 15:23:00.047142288 +0100
 @@ -288,6 +288,7 @@
  
        case 'settings':
@@ -792,27 +792,27 @@ diff -ruNa rc-beta2-old/program/js/app.js rc-beta2/program/js/app.js
          if (this.env.action=='folders')
            this.enable_command('subscribe', 'unsubscribe', 'create-folder', 'rename-folder', 'delete-folder', true);
  
-+	if (this.env.action=='managesieve')
-+	  {
-+	    if (!this.env.sieveconnerror)
-+	      this.enable_command('sievefilteradd', true);
++       if (this.env.action=='managesieve')
++         {
++           if (!this.env.sieveconnerror)
++             this.enable_command('sievefilteradd', true);
 +
-+    	    if (this.gui_objects.filterslist)
-+    	      {
-+    		this.sievefilters_list = new rcube_list_widget(this.gui_objects.filterslist, {multiselect:false, draggable:false, keyboard:false});
-+        	this.sievefilters_list.addEventListener('select', function(o){ p.sievefilter_select(o); });
-+        	this.sievefilters_list.init();
-+        	this.sievefilters_list.focus();
-+	      }
-+	    
-+	    if (this.gui_objects.sieveform)
-+	      this.enable_command('sievefiltersave', true);
-+	  }
-+	
++               if (this.gui_objects.filterslist)
++                 {
++               this.sievefilters_list = new rcube_list_widget(this.gui_objects.filterslist, {multiselect:false, draggable:false, keyboard:false});
++               this.sievefilters_list.addEventListener('select', function(o){ p.sievefilter_select(o); });
++               this.sievefilters_list.init();
++               this.sievefilters_list.focus();
++             }
++           
++           if (this.gui_objects.sieveform)
++             this.enable_command('sievefiltersave', true);
++         }
++   
          if (this.gui_objects.identitieslist)
            {
            this.identity_list = new rcube_list_widget(this.gui_objects.identitieslist, {multiselect:false, draggable:false, keyboard:false});
-@@ -1062,6 +1080,31 @@
+@@ -1062,6 +1080,30 @@
          this.delete_folder(props);
          break;
  
@@ -839,12 +839,11 @@ diff -ruNa rc-beta2-old/program/js/app.js rc-beta2/program/js/app.js
 +      case 'sievefilterdown':
 +        this.sievefilter_down();
 +        break;
-+	
 +
        }
  
      return obj ? false : true;
-@@ -2796,6 +2839,347 @@
+@@ -2800,6 +2842,347 @@
  
  
    /*********************************************************/
@@ -863,21 +862,21 @@ diff -ruNa rc-beta2-old/program/js/app.js rc-beta2/program/js/app.js
 +
 +    if (confirm(this.get_label('filterconfirmdelete')))
 +      this.http_request('managesieve',
-+	    '_act=delete&_fid='+this.sievefilters_list.rows[id].uid, true);
++       '_act=delete&_fid='+this.sievefilters_list.rows[id].uid, true);
 +    };
 +
 +  this.sievefilter_up = function()
 +    {
 +    var id = this.sievefilters_list.get_single_selection();
 +    this.http_request('managesieve',
-+    	    '_act=up&_fid='+this.sievefilters_list.rows[id].uid, true);
++           '_act=up&_fid='+this.sievefilters_list.rows[id].uid, true);
 +    };
 +
 +  this.sievefilter_down = function()
 +    {
 +    var id = this.sievefilters_list.get_single_selection();
 +    this.http_request('managesieve',
-+    	    '_act=down&_fid='+this.sievefilters_list.rows[id].uid, true);
++           '_act=down&_fid='+this.sievefilters_list.rows[id].uid, true);
 +    };
 +
 +  this.sievefilter_rowid = function(id)
@@ -886,7 +885,7 @@ diff -ruNa rc-beta2-old/program/js/app.js rc-beta2/program/js/app.js
 +    
 +    for (var i=0; i<rows.length; i++)
 +      if (rows[i] != null && rows[i].uid == id)
-+	return i;
++   return i;
 +    }
 +
 +  this.sievefilter_updatelist = function(action, name, id)
@@ -897,105 +896,105 @@ diff -ruNa rc-beta2-old/program/js/app.js rc-beta2/program/js/app.js
 +      {
 +      case 'delete':
 +        this.sievefilters_list.remove_row(this.sievefilter_rowid(id));
-+	this.sievefilters_list.clear_selection();
-+	this.enable_command('sievefilterdel', 'sievefilterup', 'sievefilterdown', false);
-+	this.show_contentframe(false);
++   this.sievefilters_list.clear_selection();
++   this.enable_command('sievefilterdel', 'sievefilterup', 'sievefilterdown', false);
++   this.show_contentframe(false);
 +
-+	// re-numbering filters
++   // re-numbering filters
 +        var rows = this.sievefilters_list.rows;
 +        for (var i=0; i<rows.length; i++)
 +          {
-+	  if (rows[i] != null && rows[i].uid > id)
-+	    rows[i].uid = rows[i].uid-1;
-+	  }
-+	break;
++     if (rows[i] != null && rows[i].uid > id)
++       rows[i].uid = rows[i].uid-1;
++     }
++   break;
 +
 +      case 'down':
 +        var rows = this.sievefilters_list.rows;
-+	var from;
++   var from;
 +
-+	// we need only to replace filter names...
++   // we need only to replace filter names...
 +        for (var i=0; i<rows.length; i++)
 +        {
-+	  if (rows[i]==null) { // removed row
-+	    continue;
++     if (rows[i]==null) { // removed row
++       continue;
 +          } else if (rows[i].uid == id) {
-+	    from = rows[i].obj.cells[0];
-+	  } else if (rows[i].uid == id+1){
-+	    name = rows[i].obj.cells[0].innerHTML;
-+	    rows[i].obj.cells[0].innerHTML = from.innerHTML;
-+	    from.innerHTML = name;
-+	    this.sievefilters_list.highlight_row(i);
-+	    break;
-+	  }
-+	}
-+	// ... and disable/enable Down button
-+	this.sievefilter_listbuttons();
++       from = rows[i].obj.cells[0];
++     } else if (rows[i].uid == id+1){
++       name = rows[i].obj.cells[0].innerHTML;
++       rows[i].obj.cells[0].innerHTML = from.innerHTML;
++       from.innerHTML = name;
++       this.sievefilters_list.highlight_row(i);
++       break;
++     }
++   }
++   // ... and disable/enable Down button
++   this.sievefilter_listbuttons();
 +        break;
 +
 +      case 'up':
 +        var rows = this.sievefilters_list.rows;
-+	var from;
++   var from;
 +
-+	// we need only to replace filter names...
++   // we need only to replace filter names...
 +        for (var i=0; i<rows.length; i++)
 +        {
-+	  if (rows[i]==null) { // removed row
-+	    continue;
++     if (rows[i]==null) { // removed row
++       continue;
 +          } else if (rows[i].uid == id-1) {
-+	    from = rows[i].obj.cells[0];
-+	    this.sievefilters_list.highlight_row(i);
-+	  } else if (rows[i].uid == id) {
-+	    name = rows[i].obj.cells[0].innerHTML;
-+	    rows[i].obj.cells[0].innerHTML = from.innerHTML;
-+	    from.innerHTML = name;
-+	    break;
-+	  }
-+	}
-+	// ... and disable/enable Up button
-+	this.sievefilter_listbuttons();
++       from = rows[i].obj.cells[0];
++       this.sievefilters_list.highlight_row(i);
++     } else if (rows[i].uid == id) {
++       name = rows[i].obj.cells[0].innerHTML;
++       rows[i].obj.cells[0].innerHTML = from.innerHTML;
++       from.innerHTML = name;
++       break;
++     }
++   }
++   // ... and disable/enable Up button
++   this.sievefilter_listbuttons();
 +        break;
-+	
++   
 +      case 'update':
 +        var rows = parent.rcmail.sievefilters_list.rows;
 +        for (var i=0; i<rows.length; i++)
-+	  if (rows[i] && rows[i].uid == id)
-+	    {
-+	    rows[i].obj.cells[0].innerHTML = name;
-+	    break;
-+	    }
++     if (rows[i] && rows[i].uid == id)
++       {
++       rows[i].obj.cells[0].innerHTML = name;
++       break;
++       }
 +        break;
 +      
 +      case 'add':
 +        var row, new_row, td;
-+	var list = parent.rcmail.sievefilters_list;
++   var list = parent.rcmail.sievefilters_list;
 +
-+	if (!list)
++   if (!list)
 +          break;
 +
-+	for (var i=0; i<list.rows.length; i++)
-+	  if (list.rows[i] != null && String(list.rows[i].obj.id).match(/^rcmrow/))
-+	    row = list.rows[i].obj;
++   for (var i=0; i<list.rows.length; i++)
++     if (list.rows[i] != null && String(list.rows[i].obj.id).match(/^rcmrow/))
++       row = list.rows[i].obj;
 +
 +        if (row)
-+	  {
-+	    new_row = parent.document.createElement('TR');
-+	    new_row.id = 'rcmrow'+id;
-+    	    td = parent.document.createElement('TD');
-+    	    new_row.appendChild(td);
-+	    list.insert_row(new_row, false);
++     {
++       new_row = parent.document.createElement('TR');
++       new_row.id = 'rcmrow'+id;
++           td = parent.document.createElement('TD');
++           new_row.appendChild(td);
++       list.insert_row(new_row, false);
 +
-+    	    if (row.cells[0].className)
-+    	      td.className = row.cells[0].className;
++           if (row.cells[0].className)
++             td.className = row.cells[0].className;
 +        
-+    	    td.innerHTML = name;
-+	    list.highlight_row(id);
++           td.innerHTML = name;
++       list.highlight_row(id);
 +
-+	    parent.rcmail.enable_command('sievefilterdel', 'sievefilterup', true);
-+	  }
++       parent.rcmail.enable_command('sievefilterdel', 'sievefilterup', true);
++     }
 +        else // refresh whole page
-+	  parent.rcmail.goto_url('managesieve');
-+	break;
++     parent.rcmail.goto_url('managesieve');
++   break;
 +      }
 +
 +    this.set_busy(false);
@@ -1014,8 +1013,8 @@ diff -ruNa rc-beta2-old/program/js/app.js rc-beta2/program/js/app.js
 +      if (parent.rcmail && parent.rcmail.sievefilters_list)
 +        {
 +        var id = parent.rcmail.sievefilters_list.get_single_selection();
-+	if (id != null)
-+	  this.gui_objects.sieveform.elements['_fid'].value = parent.rcmail.sievefilters_list.rows[id].uid;
++   if (id != null)
++     this.gui_objects.sieveform.elements['_fid'].value = parent.rcmail.sievefilters_list.rows[id].uid;
 +        }
 +      this.gui_objects.sieveform.submit();
 +    };
@@ -1049,24 +1048,24 @@ diff -ruNa rc-beta2-old/program/js/app.js rc-beta2/program/js/app.js
 +      {
 +      if (rows[i] == null) { // removed row
 +        } else if (i == id) {
-+	  this.enable_command('sievefilterup', false);
-+	  break;
++     this.enable_command('sievefilterup', false);
++     break;
 +        } else {
-+	  this.enable_command('sievefilterup', true);
-+	  break;
++     this.enable_command('sievefilterup', true);
++     break;
 +        }
 +      }
 +
 +    for (var i=rows.length-1; i>0; i--)
 +      {
 +        if (rows[i] == null) { // removed row
-+	} else if (i == id) {
-+	  this.enable_command('sievefilterdown', false);
-+	  break;
-+	} else {
-+	  this.enable_command('sievefilterdown', true);
-+	  break;
-+	}
++   } else if (i == id) {
++     this.enable_command('sievefilterdown', false);
++     break;
++   } else {
++     this.enable_command('sievefilterdown', true);
++     break;
++   }
 +      } 
 +    };
 +
@@ -1080,28 +1079,28 @@ diff -ruNa rc-beta2-old/program/js/app.js rc-beta2/program/js/app.js
 +    {
 +      if (content != '')
 +        {
-+	// create new element
-+	var div = document.getElementById('rules');
-+	var row = document.createElement('div');
++   // create new element
++   var div = document.getElementById('rules');
++   var row = document.createElement('div');
 +
-+	this.sievefilter_insertrow(div, row, after);
-+	// fill row after inserting (for IE)
-+	row.setAttribute('id', 'rulerow'+id);
-+	row.className = 'rulerow';
++   this.sievefilter_insertrow(div, row, after);
++   // fill row after inserting (for IE)
++   row.setAttribute('id', 'rulerow'+id);
++   row.className = 'rulerow';
 +        row.innerHTML = content;
 +
-+	this.sievefilter_formbuttons(div);
-+	}
++   this.sievefilter_formbuttons(div);
++   }
 +    };
 +
 +  this.sievefilter_ruledel = function(id)
 +    {
 +      if (confirm(this.get_label('ruledeleteconfirm')))
-+	{
-+	var row = document.getElementById('rulerow'+id);
-+	row.parentNode.removeChild(row);
-+	this.sievefilter_formbuttons(document.getElementById('rules'));
-+	}
++   {
++   var row = document.getElementById('rulerow'+id);
++   row.parentNode.removeChild(row);
++   this.sievefilter_formbuttons(document.getElementById('rules'));
++   }
 +    };
 +
 +  this.sievefilter_actionadd = function(id)
@@ -1113,37 +1112,37 @@ diff -ruNa rc-beta2-old/program/js/app.js rc-beta2/program/js/app.js
 +    {
 +      if (content != '')
 +        {
-+	var div = document.getElementById('actions');
-+	var row = document.createElement('div');
++   var div = document.getElementById('actions');
++   var row = document.createElement('div');
 +
-+	this.sievefilter_insertrow(div, row, after);
-+	// fill row after inserting (for IE)
-+	row.className = 'actionrow';
-+	row.setAttribute('id', 'actionrow'+id);
++   this.sievefilter_insertrow(div, row, after);
++   // fill row after inserting (for IE)
++   row.className = 'actionrow';
++   row.setAttribute('id', 'actionrow'+id);
 +        row.innerHTML = content;
 +
 +        this.sievefilter_formbuttons(div);
-+	}
++   }
 +    };
 +
 +  this.sievefilter_actiondel = function(id)
 +    {
 +      if (confirm(this.get_label('actiondeleteconfirm')))
-+	{
-+	var row = document.getElementById('actionrow'+id);
-+	row.parentNode.removeChild(row);
-+	this.sievefilter_formbuttons(document.getElementById('actions'));
-+	}
++   {
++   var row = document.getElementById('actionrow'+id);
++   row.parentNode.removeChild(row);
++   this.sievefilter_formbuttons(document.getElementById('actions'));
++   }
 +    };
 +
 +  // insert rule/action row in specified place on the list
 +  this.sievefilter_insertrow = function(div, row, after)
 +    {
 +      for (var i=0; i<div.childNodes.length; i++)
-+	{
++   {
 +        if (div.childNodes[i].id == (div.id == 'rules' ? 'rulerow' : 'actionrow')  + after)
-+	  break;
-+	}
++     break;
++   }
 +
 +      if (div.childNodes[i+1])
 +        div.insertBefore(row, div.childNodes[i+1]);
@@ -1158,32 +1157,32 @@ diff -ruNa rc-beta2-old/program/js/app.js rc-beta2/program/js/app.js
 +      var i, j=0;
 +      // count and get buttons
 +      for (i=0; i<div.childNodes.length; i++)
-+	{
-+	if (div.id == 'rules' && div.childNodes[i].id)
-+	  {
-+	  if (/rulerow/.test(div.childNodes[i].id))
-+	    buttons.push('ruledel' + div.childNodes[i].id.replace(/rulerow/, ''));
-+	  }
-+	else if (div.childNodes[i].id)
-+	  {
-+	  if (/actionrow/.test(div.childNodes[i].id))
-+	    buttons.push( 'actiondel' + div.childNodes[i].id.replace(/actionrow/, ''));
-+	  }
++   {
++   if (div.id == 'rules' && div.childNodes[i].id)
++     {
++     if (/rulerow/.test(div.childNodes[i].id))
++       buttons.push('ruledel' + div.childNodes[i].id.replace(/rulerow/, ''));
++     }
++   else if (div.childNodes[i].id)
++     {
++     if (/actionrow/.test(div.childNodes[i].id))
++       buttons.push( 'actiondel' + div.childNodes[i].id.replace(/actionrow/, ''));
++     }
 +        }
 +
 +      for (i=0; i<buttons.length; i++)
-+	{
-+	var button = document.getElementById(buttons[i]);
-+	if (i>0 || buttons.length>1)
-+	  {
-+	  this.set_classname(button, 'disabled', false);
-+	  button.removeAttribute('disabled');
-+	  }
-+	else
-+	  {
-+	  this.set_classname(button, 'disabled', true);
-+	  button.setAttribute('disabled', true);
-+	  }
++   {
++   var button = document.getElementById(buttons[i]);
++   if (i>0 || buttons.length>1)
++     {
++     this.set_classname(button, 'disabled', false);
++     button.removeAttribute('disabled');
++     }
++   else
++     {
++     this.set_classname(button, 'disabled', true);
++     button.setAttribute('disabled', true);
++     }
 +        }
 +    }
 +    
@@ -1193,8 +1192,8 @@ diff -ruNa rc-beta2-old/program/js/app.js rc-beta2/program/js/app.js
    /*********************************************************/
  
 diff -ruNa rc-beta2-old/program/lib/Net/Sieve.php rc-beta2/program/lib/Net/Sieve.php
---- rc-beta2-old/program/lib/Net/Sieve.php	1970-01-01 01:00:00.000000000 +0100
-+++ rc-beta2/program/lib/Net/Sieve.php	2009-02-11 08:59:02.576418179 +0100
+--- rc-beta2-old/program/lib/Net/Sieve.php  1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/program/lib/Net/Sieve.php  2009-02-11 08:59:02.576418179 +0100
 @@ -0,0 +1,1149 @@
 +<?php
 +// +-----------------------------------------------------------------------+
@@ -2316,7 +2315,7 @@ diff -ruNa rc-beta2-old/program/lib/Net/Sieve.php rc-beta2/program/lib/Net/Sieve
 +        if (PEAR::isError($res = $this->_doCmd("STARTTLS"))) {
 +            return $res;
 +        }
-+	
++   
 +        if(stream_socket_enable_crypto($this->_sock->fp, true, STREAM_CRYPTO_METHOD_TLS_CLIENT) == false) {
 +            $msg='Failed to establish TLS connection';
 +            $code=2;
@@ -2346,8 +2345,8 @@ diff -ruNa rc-beta2-old/program/lib/Net/Sieve.php rc-beta2/program/lib/Net/Sieve
 +}
 +?>
 diff -ruNa rc-beta2-old/program/localization/bg_BG/labels.inc rc-beta2/program/localization/bg_BG/labels.inc
---- rc-beta2-old/program/localization/bg_BG/labels.inc	2009-02-11 08:50:50.000000000 +0100
-+++ rc-beta2/program/localization/bg_BG/labels.inc	2009-02-11 09:01:46.251824143 +0100
+--- rc-beta2-old/program/localization/bg_BG/labels.inc  2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/bg_BG/labels.inc  2009-02-11 09:01:46.251824143 +0100
 @@ -257,4 +257,37 @@
  $labels['MB'] = 'MB';
  $labels['GB'] = 'GB';
@@ -2387,8 +2386,8 @@ diff -ruNa rc-beta2-old/program/localization/bg_BG/labels.inc rc-beta2/program/l
 +
  ?>
 diff -ruNa rc-beta2-old/program/localization/bg_BG/messages.inc rc-beta2/program/localization/bg_BG/messages.inc
---- rc-beta2-old/program/localization/bg_BG/messages.inc	2009-02-11 08:50:50.000000000 +0100
-+++ rc-beta2/program/localization/bg_BG/messages.inc	2009-02-11 09:01:37.707685875 +0100
+--- rc-beta2-old/program/localization/bg_BG/messages.inc    2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/bg_BG/messages.inc    2009-02-11 09:01:37.707685875 +0100
 @@ -96,4 +96,16 @@
  $messages['nofromaddress'] = 'Ğ›Ğ¸Ğ¿ÑĞ²Ğ° e-mail Ğ°Ğ´Ñ€ĞµÑ Ğ·Ğ° Ğ¸Ğ·Ğ±Ñ€Ğ°Ğ½Ğ°Ñ‚Ğ° ÑĞ°Ğ¼Ğ¾Ğ»Ğ¸Ñ‡Ğ½Ğ¾ÑÑ‚';
  $messages['editorwarning'] = 'ĞŸÑ€ĞµĞ²ĞºĞ»ÑÑ‡Ğ²Ğ°Ğ½ĞµÑ‚Ğ¾ Ğ½Ğ° Ñ€ĞµĞ´Ğ°ĞºÑ‚Ğ¾Ñ€Ğ° Ğ² Ñ‚ĞµĞºÑÑ‚Ğ¾Ğ² Ñ€ĞµĞ¶Ğ¸Ğ¼ Ñ‰Ğµ Ğ´Ğ¾Ğ²ĞµĞ´Ğµ Ğ´Ğ¾ Ğ·Ğ°Ğ³ÑƒĞ±Ğ° Ğ½Ğ° Ñ„Ğ¾Ñ€Ğ¼Ğ°Ñ‚Ğ¸Ñ€Ğ°Ğ½ĞµÑ‚Ğ¾ Ğ½Ğ° Ñ‚ĞµĞºÑĞ°. Ğ¡Ğ¸Ğ³ÑƒÑ€Ğ½Ğ¸ Ğ»Ğ¸ ÑÑ‚Ğµ, Ñ‡Ğµ Ğ¸ÑĞºĞ°Ñ‚Ğµ Ğ´Ğ° Ğ¿Ñ€Ğ¾Ğ´ÑŠĞ»Ğ¶Ğ¸Ñ‚Ğµ?';
@@ -2407,8 +2406,8 @@ diff -ruNa rc-beta2-old/program/localization/bg_BG/messages.inc rc-beta2/program
 +
  ?>
 diff -ruNa rc-beta2-old/program/localization/de_DE/labels.inc rc-beta2/program/localization/de_DE/labels.inc
---- rc-beta2-old/program/localization/de_DE/labels.inc	2009-02-11 08:50:50.000000000 +0100
-+++ rc-beta2/program/localization/de_DE/labels.inc	2009-02-11 08:59:02.592418514 +0100
+--- rc-beta2-old/program/localization/de_DE/labels.inc  2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/de_DE/labels.inc  2009-02-11 08:59:02.592418514 +0100
 @@ -264,4 +264,36 @@
  $labels['MB'] = 'MB';
  $labels['GB'] = 'GB';
@@ -2447,8 +2446,8 @@ diff -ruNa rc-beta2-old/program/localization/de_DE/labels.inc rc-beta2/program/l
 +$labels['recipient'] = 'EmpfÃ¤nger';
  ?>
 diff -ruNa rc-beta2-old/program/localization/de_DE/messages.inc rc-beta2/program/localization/de_DE/messages.inc
---- rc-beta2-old/program/localization/de_DE/messages.inc	2009-02-11 08:50:50.000000000 +0100
-+++ rc-beta2/program/localization/de_DE/messages.inc	2009-02-11 08:59:02.608418009 +0100
+--- rc-beta2-old/program/localization/de_DE/messages.inc    2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/de_DE/messages.inc    2009-02-11 08:59:02.608418009 +0100
 @@ -95,4 +95,16 @@
  $messages['nofromaddress'] = 'Fehlende E-Mail-Adresse in ausgewÃ¤hlter IdentitÃ¤t';
  $messages['editorwarning'] = 'Beim Wechseln in den Texteditor gehen alle Textformatierungen verloren. MÃ¶chten Sie fortfahren?';
@@ -2467,8 +2466,8 @@ diff -ruNa rc-beta2-old/program/localization/de_DE/messages.inc rc-beta2/program
 +
  ?>
 diff -ruNa rc-beta2-old/program/localization/en_US/labels.inc rc-beta2/program/localization/en_US/labels.inc
---- rc-beta2-old/program/localization/en_US/labels.inc	2009-02-11 08:50:50.000000000 +0100
-+++ rc-beta2/program/localization/en_US/labels.inc	2009-02-24 12:57:54.884558014 +0100
+--- rc-beta2-old/program/localization/en_US/labels.inc  2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/en_US/labels.inc  2009-02-24 12:57:54.884558014 +0100
 @@ -323,4 +323,43 @@
  $labels['MB'] = 'MB';
  $labels['GB'] = 'GB';
@@ -2514,8 +2513,8 @@ diff -ruNa rc-beta2-old/program/localization/en_US/labels.inc rc-beta2/program/l
 +
  ?>
 diff -ruNa rc-beta2-old/program/localization/en_US/messages.inc rc-beta2/program/localization/en_US/messages.inc
---- rc-beta2-old/program/localization/en_US/messages.inc	2009-02-11 08:50:50.000000000 +0100
-+++ rc-beta2/program/localization/en_US/messages.inc	2009-02-11 08:59:02.668421218 +0100
+--- rc-beta2-old/program/localization/en_US/messages.inc    2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/en_US/messages.inc    2009-02-11 08:59:02.668421218 +0100
 @@ -95,4 +95,16 @@
  $messages['nofromaddress'] = 'Missing e-mail address in selected identity';
  $messages['editorwarning'] = 'Switching to the plain text editor will cause all text formatting to be lost. Do you wish to continue?';
@@ -2534,8 +2533,8 @@ diff -ruNa rc-beta2-old/program/localization/en_US/messages.inc rc-beta2/program
 +
  ?>
 diff -ruNa rc-beta2-old/program/localization/fi_FI/labels.inc rc-beta2/program/localization/fi_FI/labels.inc
---- rc-beta2-old/program/localization/fi_FI/labels.inc	2009-02-11 08:50:50.000000000 +0100
-+++ rc-beta2/program/localization/fi_FI/labels.inc	2009-02-11 09:02:55.793291753 +0100
+--- rc-beta2-old/program/localization/fi_FI/labels.inc  2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/fi_FI/labels.inc  2009-02-11 09:02:55.793291753 +0100
 @@ -255,4 +255,37 @@
  $labels['MB'] = 'Mt';
  $labels['GB'] = 'Gt';
@@ -2575,8 +2574,8 @@ diff -ruNa rc-beta2-old/program/localization/fi_FI/labels.inc rc-beta2/program/l
 +
  ?>
 diff -ruNa rc-beta2-old/program/localization/fi_FI/messages.inc rc-beta2/program/localization/fi_FI/messages.inc
---- rc-beta2-old/program/localization/fi_FI/messages.inc	2009-02-11 08:50:50.000000000 +0100
-+++ rc-beta2/program/localization/fi_FI/messages.inc	2009-02-11 09:02:48.817130299 +0100
+--- rc-beta2-old/program/localization/fi_FI/messages.inc    2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/fi_FI/messages.inc    2009-02-11 09:02:48.817130299 +0100
 @@ -95,4 +95,16 @@
  $messages['opnotpermitted'] = 'Toiminto ei ole sallittu!';
  $messages['nofromaddress'] = 'Valittu identiteetti ei sisÃ¤llÃ¤ sÃ¤hkÃ¶postiosoitetta';
@@ -2595,8 +2594,8 @@ diff -ruNa rc-beta2-old/program/localization/fi_FI/messages.inc rc-beta2/program
 +
  ?>
 diff -ruNa rc-beta2-old/program/localization/fr_FR/labels.inc rc-beta2/program/localization/fr_FR/labels.inc
---- rc-beta2-old/program/localization/fr_FR/labels.inc	2009-02-11 08:50:50.000000000 +0100
-+++ rc-beta2/program/localization/fr_FR/labels.inc	2009-02-24 10:59:00.808744784 +0100
+--- rc-beta2-old/program/localization/fr_FR/labels.inc  2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/fr_FR/labels.inc  2009-02-24 10:59:00.808744784 +0100
 @@ -266,4 +266,38 @@
  $labels['MB'] = 'Mo';
  $labels['GB'] = 'Go';
@@ -2637,8 +2636,8 @@ diff -ruNa rc-beta2-old/program/localization/fr_FR/labels.inc rc-beta2/program/l
 +
  ?>
 diff -ruNa rc-beta2-old/program/localization/fr_FR/messages.inc rc-beta2/program/localization/fr_FR/messages.inc
---- rc-beta2-old/program/localization/fr_FR/messages.inc	2009-02-11 08:50:50.000000000 +0100
-+++ rc-beta2/program/localization/fr_FR/messages.inc	2009-02-11 08:59:02.700421608 +0100
+--- rc-beta2-old/program/localization/fr_FR/messages.inc    2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/fr_FR/messages.inc    2009-02-11 08:59:02.700421608 +0100
 @@ -97,4 +97,16 @@
  $messages['nofromaddress'] = 'Il manque une adresse e-mail dans l\'identitÃ©e sÃ©lectionnÃ©e';
  $messages['editorwarning'] = 'Passer Ã  l\'Ã©diteur texte seul causera la perte du formatage du texte. Voulez-vous continuer ?';
@@ -2657,8 +2656,8 @@ diff -ruNa rc-beta2-old/program/localization/fr_FR/messages.inc rc-beta2/program
 +
  ?>
 diff -ruNa rc-beta2-old/program/localization/nl_NL/labels.inc rc-beta2/program/localization/nl_NL/labels.inc
---- rc-beta2-old/program/localization/nl_NL/labels.inc	2009-02-11 08:50:50.000000000 +0100
-+++ rc-beta2/program/localization/nl_NL/labels.inc	2009-02-11 09:03:53.002484686 +0100
+--- rc-beta2-old/program/localization/nl_NL/labels.inc  2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/nl_NL/labels.inc  2009-02-11 09:03:53.002484686 +0100
 @@ -266,4 +266,37 @@
  $labels['MB'] = 'MB';
  $labels['GB'] = 'GB';
@@ -2698,8 +2697,8 @@ diff -ruNa rc-beta2-old/program/localization/nl_NL/labels.inc rc-beta2/program/l
 +
  ?>
 diff -ruNa rc-beta2-old/program/localization/nl_NL/messages.inc rc-beta2/program/localization/nl_NL/messages.inc
---- rc-beta2-old/program/localization/nl_NL/messages.inc	2009-02-11 08:50:50.000000000 +0100
-+++ rc-beta2/program/localization/nl_NL/messages.inc	2009-02-11 09:03:46.162342625 +0100
+--- rc-beta2-old/program/localization/nl_NL/messages.inc    2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/nl_NL/messages.inc    2009-02-11 09:03:46.162342625 +0100
 @@ -96,4 +96,16 @@
  $messages['nofromaddress'] = 'Het e-mailadres mist in de geselecteerde identiteit';
  $messages['editorwarning'] = 'Door het overschakelen naar de platte tekst editor gaat alle opmaak verloren. Weet je zeker dat je verder wil gaan?';
@@ -2718,8 +2717,8 @@ diff -ruNa rc-beta2-old/program/localization/nl_NL/messages.inc rc-beta2/program
 +
  ?>
 diff -ruNa rc-beta2-old/program/localization/pl_PL/labels.inc rc-beta2/program/localization/pl_PL/labels.inc
---- rc-beta2-old/program/localization/pl_PL/labels.inc	2009-02-11 08:50:50.000000000 +0100
-+++ rc-beta2/program/localization/pl_PL/labels.inc	2009-02-24 12:58:16.989045093 +0100
+--- rc-beta2-old/program/localization/pl_PL/labels.inc  2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/pl_PL/labels.inc  2009-02-24 12:58:16.989045093 +0100
 @@ -269,4 +269,41 @@
  $labels['GB'] = 'GB';
  $labels['checkallfolders'] = 'Sprawdzaj czy nadeszÅ‚y nowe wiadomoÅ›ci we wszystkich folderach';
@@ -2763,8 +2762,8 @@ diff -ruNa rc-beta2-old/program/localization/pl_PL/labels.inc rc-beta2/program/l
 +
  ?>
 diff -ruNa rc-beta2-old/program/localization/pl_PL/messages.inc rc-beta2/program/localization/pl_PL/messages.inc
---- rc-beta2-old/program/localization/pl_PL/messages.inc	2009-02-11 08:50:50.000000000 +0100
-+++ rc-beta2/program/localization/pl_PL/messages.inc	2009-02-11 08:59:02.760411128 +0100
+--- rc-beta2-old/program/localization/pl_PL/messages.inc    2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/pl_PL/messages.inc    2009-02-11 08:59:02.760411128 +0100
 @@ -100,4 +100,16 @@
  $messages['nofromaddress'] = 'Brak adresu e-mail w wybranej toÅ¼samoÅ›ci';
  $messages['editorwarning'] = 'Zmiana edytora spowoduje utratÄ™ formatowania tekstu. Czy jesteÅ› pewien, Å¼e chcesz to zrobiÄ‡?';
@@ -2783,8 +2782,8 @@ diff -ruNa rc-beta2-old/program/localization/pl_PL/messages.inc rc-beta2/program
 +
  ?>
 diff -ruNa rc-beta2-old/program/localization/ru_RU/labels.inc rc-beta2/program/localization/ru_RU/labels.inc
---- rc-beta2-old/program/localization/ru_RU/labels.inc	2009-02-11 08:50:50.000000000 +0100
-+++ rc-beta2/program/localization/ru_RU/labels.inc	2009-02-11 08:59:02.780419927 +0100
+--- rc-beta2-old/program/localization/ru_RU/labels.inc  2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/ru_RU/labels.inc  2009-02-11 08:59:02.780419927 +0100
 @@ -266,4 +266,37 @@
  $labels['MB'] = 'ĞœĞ‘';
  $labels['GB'] = 'Ğ“Ğ‘';
@@ -2824,8 +2823,8 @@ diff -ruNa rc-beta2-old/program/localization/ru_RU/labels.inc rc-beta2/program/l
 +
  ?>
 diff -ruNa rc-beta2-old/program/localization/ru_RU/messages.inc rc-beta2/program/localization/ru_RU/messages.inc
---- rc-beta2-old/program/localization/ru_RU/messages.inc	2009-02-11 08:50:50.000000000 +0100
-+++ rc-beta2/program/localization/ru_RU/messages.inc	2009-02-11 08:59:02.816425148 +0100
+--- rc-beta2-old/program/localization/ru_RU/messages.inc    2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/ru_RU/messages.inc    2009-02-11 08:59:02.816425148 +0100
 @@ -97,4 +97,16 @@
  $messages['nofromaddress'] = 'Ğ’ Ğ²Ñ‹Ğ±Ñ€Ğ°Ğ½Ğ½Ğ¾Ğ¼ Ğ¿Ñ€Ğ¾Ñ„Ğ¸Ğ»Ğµ Ğ½Ğµ Ñ…Ğ²Ğ°Ñ‚Ğ°ĞµÑ‚ Ğ°Ğ´Ñ€ĞµÑĞ° ÑĞ»ĞµĞºÑ‚Ñ€Ğ¾Ğ½Ğ½Ğ¾Ğ¹ Ğ¿Ğ¾Ñ‡Ñ‚Ñ‹';
  $messages['editorwarning'] = 'ĞŸÑ€Ğ¸ Ğ¿ĞµÑ€ĞµĞºĞ»ÑÑ‡ĞµĞ½Ğ¸Ğ¸ Ğ² Ñ€ĞµĞ´Ğ°ĞºÑ‚Ğ¾Ñ€ Ğ¿Ñ€Ğ¾ÑÑ‚Ğ¾Ğ³Ğ¾ Ñ‚ĞµĞºÑÑ‚Ğ° Ğ²ÑĞµ Ñ„Ğ¾Ñ€Ğ¼Ğ°Ñ‚Ğ¸Ñ€Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ Ğ±ÑƒĞ´ĞµÑ‚ Ğ¿Ğ¾Ñ‚ĞµÑ€ÑĞ½Ğ¾. ĞŸÑ€Ğ¾Ğ´Ğ¾Ğ»Ğ¶Ğ¸Ñ‚ÑŒ?';
@@ -2844,8 +2843,8 @@ diff -ruNa rc-beta2-old/program/localization/ru_RU/messages.inc rc-beta2/program
 +
  ?>
 diff -ruNa rc-beta2-old/program/localization/zh_CN/labels.inc rc-beta2/program/localization/zh_CN/labels.inc
---- rc-beta2-old/program/localization/zh_CN/labels.inc	2009-02-11 08:50:50.000000000 +0100
-+++ rc-beta2/program/localization/zh_CN/labels.inc	2009-02-11 08:59:02.860413217 +0100
+--- rc-beta2-old/program/localization/zh_CN/labels.inc  2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/zh_CN/labels.inc  2009-02-11 08:59:02.860413217 +0100
 @@ -265,4 +265,36 @@
  $labels['MB'] = 'MB';
  $labels['GB'] = 'GB';
@@ -2884,8 +2883,8 @@ diff -ruNa rc-beta2-old/program/localization/zh_CN/labels.inc rc-beta2/program/l
 +$labels['recipient'] = 'æ”¶ä»¶äºº';
  ?>
 diff -ruNa rc-beta2-old/program/localization/zh_CN/messages.inc rc-beta2/program/localization/zh_CN/messages.inc
---- rc-beta2-old/program/localization/zh_CN/messages.inc	2009-02-11 08:50:50.000000000 +0100
-+++ rc-beta2/program/localization/zh_CN/messages.inc	2009-02-11 08:59:02.880423971 +0100
+--- rc-beta2-old/program/localization/zh_CN/messages.inc    2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/zh_CN/messages.inc    2009-02-11 08:59:02.880423971 +0100
 @@ -96,4 +96,16 @@
  $messages['nofromaddress'] = 'é€‰ç§çš„èº«ä»½ä¸­æ²¡æœ‰é‚®ä»¶åœ°å€';
  $messages['editorwarning'] = 'åˆ‡æ¢åˆ°çº¯æ–‡æœ¬ç¼–è¾‘å™¨å°†å¯¼è‡´é‚®ä»¶æ­£æ–‡ä¸­çš„æ‰€æœ‰æ–‡æœ¬æ ¼å¼å¤±æ•ˆï¼Œæ‚¨ç¡®å®šè¦è¿™æ ·åšå—ï¼Ÿ';
@@ -2904,8 +2903,8 @@ diff -ruNa rc-beta2-old/program/localization/zh_CN/messages.inc rc-beta2/program
 +
  ?>
 diff -ruNa rc-beta2-old/program/steps/settings/managesieve.inc rc-beta2/program/steps/settings/managesieve.inc
---- rc-beta2-old/program/steps/settings/managesieve.inc	1970-01-01 01:00:00.000000000 +0100
-+++ rc-beta2/program/steps/settings/managesieve.inc	2009-03-01 15:40:30.181976376 +0100
+--- rc-beta2-old/program/steps/settings/managesieve.inc 1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/program/steps/settings/managesieve.inc 2009-03-01 15:40:30.181976376 +0100
 @@ -0,0 +1,807 @@
 +<?php
 +
@@ -2928,11 +2927,11 @@ diff -ruNa rc-beta2-old/program/steps/settings/managesieve.inc rc-beta2/program/
 +
 +// try to connect to managesieve server and to fetch the script
 +$SIEVE = new rcube_sieve($_SESSION['username'], 
-+		$RCMAIL->decrypt_passwd($_SESSION['password']), 
-+		($CONFIG['managesieve_host'] ? $CONFIG['managesieve_host'] : 'localhost'),
-+		($CONFIG['managesieve_port'] ? $CONFIG['managesieve_port'] : 2000),
-+		(bool) $CONFIG['managesieve_usetls'],
-+		$CONFIG['managesieve_disabled_extensions']);
++       $RCMAIL->decrypt_passwd($_SESSION['password']), 
++       ($CONFIG['managesieve_host'] ? $CONFIG['managesieve_host'] : 'localhost'),
++       ($CONFIG['managesieve_port'] ? $CONFIG['managesieve_port'] : 2000),
++       (bool) $CONFIG['managesieve_usetls'],
++       $CONFIG['managesieve_disabled_extensions']);
 +
 +$error = $SIEVE->error();
 +
@@ -3030,7 +3029,7 @@ diff -ruNa rc-beta2-old/program/steps/settings/managesieve.inc rc-beta2/program/
 +
 +    foreach ($domain_array as $domain_part)
 +      if (!preg_match('/^(([A-Za-z0-9][A-Za-z0-9-]{0,61}[A-Za-z0-9])|([A-Za-z0-9]))$/', $domain_part))
-+	return false;
++   return false;
 +
 +    return true;
 +  }
@@ -3076,7 +3075,7 @@ diff -ruNa rc-beta2-old/program/steps/settings/managesieve.inc rc-beta2/program/
 +    foreach($SCRIPT as $idx => $rule)
 +      if($rule['name'] == $name && $idx != $fid)
 +      {
-+	$FORM_ERR['name'] = rcube_label('ruleexist');
++   $FORM_ERR['name'] = rcube_label('ruleexist');
 +        break;
 +      }
 +      
@@ -3101,63 +3100,63 @@ diff -ruNa rc-beta2-old/program/steps/settings/managesieve.inc rc-beta2/program/
 +
 +      if ($type == 'exists')
 +        {
-+	$S['tests'][$i]['test'] = 'exists';
++   $S['tests'][$i]['test'] = 'exists';
 +        $S['tests'][$i]['arg'] = $header;
-+	}
++   }
 +      else
-+        {	
-+	$S['tests'][$i]['type'] = $type;
++        {  
++   $S['tests'][$i]['type'] = $type;
 +        $S['tests'][$i]['test'] = 'header';
 +        $S['tests'][$i]['arg1'] = $header;
 +        $S['tests'][$i]['arg2'] = $target;
-+	
++   
 +        if ($target == '')
 +          $FORM_ERR['tests'][$i]['target'] = rcube_label('cannotbeempty');
-+	}
++   }
 +    }
 +    else
 +      switch ($header)
 +      {
 +        case 'size':
-+	  $sizeop = strip_val($sizeops[$idx]);
-+	  $sizeitem = strip_val($items[$idx]);
-+	  $sizetarget = strip_val($sizetargets[$idx]);
++     $sizeop = strip_val($sizeops[$idx]);
++     $sizeitem = strip_val($items[$idx]);
++     $sizetarget = strip_val($sizetargets[$idx]);
 +
 +          $S['tests'][$i]['test'] = 'size';
 +          $S['tests'][$i]['type'] = $sizeop;
 +          $S['tests'][$i]['arg'] = $sizetarget.$sizeitem;
 +
-+	  if (!preg_match('/^[0-9]+(K|M|G)*$/i', $sizetarget))
-+	    $FORM_ERR['tests'][$i]['sizetarget'] = rcube_label('wrongformat');
-+	break;
-+	case '...':
++     if (!preg_match('/^[0-9]+(K|M|G)*$/i', $sizetarget))
++       $FORM_ERR['tests'][$i]['sizetarget'] = rcube_label('wrongformat');
++   break;
++   case '...':
 +          $cust_header = strip_val($cust_headers[$idx]);
 +
 +          if(preg_match('/^not/', $op))
-+	    $S['tests'][$i]['not'] = true;
-+    	  $type = preg_replace('/^not/', '', $op);
++       $S['tests'][$i]['not'] = true;
++         $type = preg_replace('/^not/', '', $op);
 +
 +          if ($cust_header == '')
-+    	    $FORM_ERR['tests'][$i]['header'] = rcube_label('cannotbeempty');
++           $FORM_ERR['tests'][$i]['header'] = rcube_label('cannotbeempty');
 +          elseif (!preg_match('/^[a-z0-9-]+$/i', $cust_header))
-+    	    $FORM_ERR['tests'][$i]['header'] = rcube_label('forbiddenchars');
++           $FORM_ERR['tests'][$i]['header'] = rcube_label('forbiddenchars');
 +
 +          if ($type == 'exists')
-+    	    {
-+	    $S['tests'][$i]['test'] = 'exists';
-+    	    $S['tests'][$i]['arg'] = $cust_header;
-+	    }
++           {
++       $S['tests'][$i]['test'] = 'exists';
++           $S['tests'][$i]['arg'] = $cust_header;
++       }
 +          else
-+    	    {	
-+    	    $S['tests'][$i]['test'] = 'header';
-+	    $S['tests'][$i]['type'] = $type;
++           {   
++           $S['tests'][$i]['test'] = 'header';
++       $S['tests'][$i]['type'] = $type;
 +            $S['tests'][$i]['arg1'] = $cust_header;
-+    	    $S['tests'][$i]['arg2'] = $target;
++           $S['tests'][$i]['arg2'] = $target;
 +
 +            if ($target == '')
-+    	      $FORM_ERR['tests'][$i]['target'] = rcube_label('cannotbeempty');
-+	    }
-+	break;
++             $FORM_ERR['tests'][$i]['target'] = rcube_label('cannotbeempty');
++       }
++   break;
 +      }
 +    $i++;
 +  }
@@ -3174,48 +3173,48 @@ diff -ruNa rc-beta2-old/program/steps/settings/managesieve.inc rc-beta2/program/
 +    switch ($type)
 +    {
 +      case 'fileinto':
-+	$mailbox = strip_val($mailboxes[$idx]);
-+	$S['actions'][$i]['target'] = $mailbox;
++   $mailbox = strip_val($mailboxes[$idx]);
++   $S['actions'][$i]['target'] = $mailbox;
 +      break;
 +      case 'reject':
 +      case 'ereject':
-+	$target = strip_val($area_targets[$idx]);
-+	$S['actions'][$i]['target'] = str_replace("\r\n", "\n", $target);
++   $target = strip_val($area_targets[$idx]);
++   $S['actions'][$i]['target'] = str_replace("\r\n", "\n", $target);
 +
 + //       if ($target == '')
-+//    	  $FORM_ERR['actions'][$i]['targetarea'] = rcube_label('cannotbeempty');
++//       $FORM_ERR['actions'][$i]['targetarea'] = rcube_label('cannotbeempty');
 +      break;
 +      case 'redirect':
-+	$S['actions'][$i]['target'] = $target;
++   $S['actions'][$i]['target'] = $target;
 +
 +        if ($S['actions'][$i]['target'] == '')
-+    	  $FORM_ERR['actions'][$i]['target'] = rcube_label('cannotbeempty');
++         $FORM_ERR['actions'][$i]['target'] = rcube_label('cannotbeempty');
 +        else if (!check_email($S['actions'][$i]['target']))
-+    	  $FORM_ERR['actions'][$i]['target'] = rcube_label('noemailwarning');
++         $FORM_ERR['actions'][$i]['target'] = rcube_label('noemailwarning');
 +      break;
 +      case 'vacation':
 +        $reason = strip_val($reasons[$idx]);
 +        $S['actions'][$i]['reason'] = str_replace("\r\n", "\n", $reason);
-+	$S['actions'][$i]['days'] = $days[$idx];
-+	$S['actions'][$i]['addresses'] = explode(',', $addresses[$idx]);
++   $S['actions'][$i]['days'] = $days[$idx];
++   $S['actions'][$i]['addresses'] = explode(',', $addresses[$idx]);
 +// @TODO: vacation :subject, :mime, :from, :handle
 +
-+	if ($S['actions'][$i]['addresses']) {
-+	  foreach($S['actions'][$i]['addresses'] as $aidx => $address) {
-+	    $address = trim($address);
-+	    if (!$address)
-+	      unset($S['actions'][$i]['addresses'][$aidx]);
-+	    else if(!check_email($address)) {
-+	      $FORM_ERR['actions'][$i]['addresses'] = rcube_label('noemailwarning');
-+	      break;
-+	    } else
-+	      $S['actions'][$i]['addresses'][$aidx] = $address;
-+	  }
-+	}
++   if ($S['actions'][$i]['addresses']) {
++     foreach($S['actions'][$i]['addresses'] as $aidx => $address) {
++       $address = trim($address);
++       if (!$address)
++         unset($S['actions'][$i]['addresses'][$aidx]);
++       else if(!check_email($address)) {
++         $FORM_ERR['actions'][$i]['addresses'] = rcube_label('noemailwarning');
++         break;
++       } else
++         $S['actions'][$i]['addresses'][$aidx] = $address;
++     }
++   }
 +        if ($S['actions'][$i]['reason'] == '')
-+    	  $FORM_ERR['actions'][$i]['reason'] = rcube_label('cannotbeempty');
++         $FORM_ERR['actions'][$i]['reason'] = rcube_label('cannotbeempty');
 +        if ($S['actions'][$i]['days'] && !preg_match('/^[0-9]+$/', $S['actions'][$i]['days']))
-+    	  $FORM_ERR['actions'][$i]['days'] = rcube_label('forbiddenchars');
++         $FORM_ERR['actions'][$i]['days'] = rcube_label('forbiddenchars');
 +      break;
 +    }
 +  
@@ -3238,14 +3237,14 @@ diff -ruNa rc-beta2-old/program/steps/settings/managesieve.inc rc-beta2/program/
 +
 +    if ($save && $fid !== false)
 +    {
-+	    $OUTPUT->show_message('filtersaved', 'confirmation');
-+	    $OUTPUT->command('sievefilter_updatelist', isset($new) ? 'add' : 'update', $S['name'], $fid);
-+//	    $OUTPUT->send();
++       $OUTPUT->show_message('filtersaved', 'confirmation');
++       $OUTPUT->command('sievefilter_updatelist', isset($new) ? 'add' : 'update', $S['name'], $fid);
++//     $OUTPUT->send();
 +    }
 +    else
 +    {
-+	    $OUTPUT->show_message('filtersaveerror', 'error');
-+//	    $OUTPUT->send();
++       $OUTPUT->show_message('filtersaveerror', 'error');
++//     $OUTPUT->send();
 +    }
 +  }
 +}
@@ -3321,7 +3320,7 @@ diff -ruNa rc-beta2-old/program/steps/settings/managesieve.inc rc-beta2/program/
 +  // filter name input
 +  $field_id = '_name';
 +  $input_name = new html_inputfield(array('name' => '_name', 'id' => $field_id, 'size' => 30,
-+	'class' => ($FORM_ERR['name'] ? 'error' : '')));
++   'class' => ($FORM_ERR['name'] ? 'error' : '')));
 +
 +  if (isset($scr))
 +    $input_name = $input_name->show($scr['name']);
@@ -3329,14 +3328,14 @@ diff -ruNa rc-beta2-old/program/steps/settings/managesieve.inc rc-beta2/program/
 +    $input_name = $input_name->show();
 +
 +  $out .= sprintf("\n<label for=\"%s\"><b>%s:</b></label> %s<br /><br />\n",
-+        	$field_id, Q(rcube_label('filtername')), $input_name);
++           $field_id, Q(rcube_label('filtername')), $input_name);
 +
 +  $out .= '<fieldset><legend>' . Q(rcube_label('messagesrules')) . "</legend>\n";
 +
 +  // any, allof, anyof radio buttons
 +  $field_id = '_allof';
 +  $input_join = new html_radiobutton(array('name' => '_join', 'id' => $field_id, 'value' => 'allof',
-+	'onclick' => 'rule_join_radio(\'allof\')', 'class' => 'radio'));
++   'onclick' => 'rule_join_radio(\'allof\')', 'class' => 'radio'));
 +
 +  if (isset($scr) && !$any)
 +    $input_join = $input_join->show($scr['join'] ? 'allof' : '');
@@ -3344,11 +3343,11 @@ diff -ruNa rc-beta2-old/program/steps/settings/managesieve.inc rc-beta2/program/
 +    $input_join = $input_join->show();
 +
 +  $out .= sprintf("%s<label for=\"%s\">%s</label>&nbsp;\n",
-+        	$input_join, $field_id, Q(rcube_label('filterallof')));
++           $input_join, $field_id, Q(rcube_label('filterallof')));
 +
 +  $field_id = '_anyof';
 +  $input_join = new html_radiobutton(array('name' => '_join', 'id' => $field_id, 'value' => 'anyof',
-+	'onclick' => 'rule_join_radio(\'anyof\')', 'class' => 'radio'));
++   'onclick' => 'rule_join_radio(\'anyof\')', 'class' => 'radio'));
 +
 +  if (isset($scr) && !$any)
 +    $input_join = $input_join->show($scr['join'] ? '' : 'anyof');
@@ -3356,16 +3355,16 @@ diff -ruNa rc-beta2-old/program/steps/settings/managesieve.inc rc-beta2/program/
 +    $input_join = $input_join->show('anyof'); // default
 +
 +  $out .= sprintf("%s<label for=\"%s\">%s</label>\n",
-+        	$input_join, $field_id, Q(rcube_label('filteranyof')));
++           $input_join, $field_id, Q(rcube_label('filteranyof')));
 +
 +  $field_id = '_any';
 +  $input_join = new html_radiobutton(array('name' => '_join', 'id' => $field_id, 'value' => 'any',
-+  	'onclick' => 'rule_join_radio(\'any\')', 'class' => 'radio'));
++   'onclick' => 'rule_join_radio(\'any\')', 'class' => 'radio'));
 +
 +  $input_join = $input_join->show($any ? 'any' : '');
 +
 +  $out .= sprintf("%s<label for=\"%s\">%s</label>\n",
-+        	$input_join, $field_id, Q(rcube_label('filterany')));
++           $input_join, $field_id, Q(rcube_label('filterany')));
 +
 +  $rows_num = isset($scr) ? sizeof($scr['tests']) : 1;
 +
@@ -3463,8 +3462,8 @@ diff -ruNa rc-beta2-old/program/steps/settings/managesieve.inc rc-beta2/program/
 +    $out .= $select_op->show();
 +    if(preg_match('/^([0-9]+)(K|M|G)*$/', $rule['arg'], $matches))
 +      {
-+	$sizetarget = $matches[1];
-+	$sizeitem = $matches[2];
++   $sizetarget = $matches[1];
++   $sizeitem = $matches[2];
 +      }
 +    }
 +  else
@@ -3474,8 +3473,8 @@ diff -ruNa rc-beta2-old/program/steps/settings/managesieve.inc rc-beta2/program/
 +    }
 +
 +  $out .= '<input type="text" name="_rule_target[]" id="rule_target' .$id. '" 
-+	value="' .Q($target). '" size="20" ' . error_class($id, 'test', 'target') 
-+	. ' style="display:' . ($rule['test']!='size' && $rule['test'] != 'exists' ? 'inline' : 'none') . '" />'."\n";
++   value="' .Q($target). '" size="20" ' . error_class($id, 'test', 'target') 
++   . ' style="display:' . ($rule['test']!='size' && $rule['test'] != 'exists' ? 'inline' : 'none') . '" />'."\n";
 +
 +  $select_size_op = new html_select(array('name' => "_rule_size_op[]", 'id' => 'rule_size_op'.$id));
 +  $select_size_op->add(Q(rcube_label('filterunder')), 'under');
@@ -3484,10 +3483,10 @@ diff -ruNa rc-beta2-old/program/steps/settings/managesieve.inc rc-beta2/program/
 +  $out .= '<div id="rule_size' .$id. '" style="display:' . ($rule['test']=='size' ? 'inline' : 'none') .'">';
 +  $out .= $select_size_op->show($rule['test']=='size' ? $rule['type'] : '');
 +  $out .= '<input type="text" name="_rule_size_target[]" value="'.$sizetarget.'" size="10" ' . error_class($id, 'test', 'sizetarget') .' />
-+	<input type="radio" name="_rule_size_item['.$id.']" value=""'. (!$sizeitem ? ' checked="checked"' : '') .' class="radio" />B
-+	<input type="radio" name="_rule_size_item['.$id.']" value="K"'. ($sizeitem=='K' ? ' checked="checked"' : '') .' class="radio" />kB
-+	<input type="radio" name="_rule_size_item['.$id.']" value="M"'. ($sizeitem=='M' ? ' checked="checked"' : '') .' class="radio" />MB
-+	<input type="radio" name="_rule_size_item['.$id.']" value="G"'. ($sizeitem=='G' ? ' checked="checked"' : '') .' class="radio" />GB';
++   <input type="radio" name="_rule_size_item['.$id.']" value=""'. (!$sizeitem ? ' checked="checked"' : '') .' class="radio" />B
++   <input type="radio" name="_rule_size_item['.$id.']" value="K"'. ($sizeitem=='K' ? ' checked="checked"' : '') .' class="radio" />kB
++   <input type="radio" name="_rule_size_item['.$id.']" value="M"'. ($sizeitem=='M' ? ' checked="checked"' : '') .' class="radio" />MB
++   <input type="radio" name="_rule_size_item['.$id.']" value="G"'. ($sizeitem=='G' ? ' checked="checked"' : '') .' class="radio" />GB';
 +  $out .= '</div>';
 +  $out .= '</td>';
 +  
@@ -3538,27 +3537,27 @@ diff -ruNa rc-beta2-old/program/steps/settings/managesieve.inc rc-beta2/program/
 +  $out .= '<td class="rowtargets">';
 +  // shared targets
 +  $out .= '<input type="text" name="_action_target[]" id="action_target' .$id. '" '
-+	.'value="' .($action['type']=='redirect' ? Q($action['target'], 'strict', false) : ''). '" size="40" '
-+	.'style="display:' .($action['type']=='redirect' ? 'inline' : 'none') .'" '
-+	. error_class($id, 'action', 'target') .' />';
++   .'value="' .($action['type']=='redirect' ? Q($action['target'], 'strict', false) : ''). '" size="40" '
++   .'style="display:' .($action['type']=='redirect' ? 'inline' : 'none') .'" '
++   . error_class($id, 'action', 'target') .' />';
 +  $out .= '<textarea name="_action_target_area[]" id="action_target_area' .$id. '" '
-+	.'rows="3" cols="40" '. error_class($id, 'action', 'targetarea')
-+	.'style="display:' .(in_array($action['type'], array('reject', 'ereject')) ? 'inline' : 'none') .'">'
-+	. (in_array($action['type'], array('reject', 'ereject')) ? Q($action['target'], 'strict', false) : '')
-+	. "</textarea>\n";
++   .'rows="3" cols="40" '. error_class($id, 'action', 'targetarea')
++   .'style="display:' .(in_array($action['type'], array('reject', 'ereject')) ? 'inline' : 'none') .'">'
++   . (in_array($action['type'], array('reject', 'ereject')) ? Q($action['target'], 'strict', false) : '')
++   . "</textarea>\n";
 +
 +  // vacation
 +  $out .= '<div id="action_vacation' .$id.'" style="display:' .($action['type']=='vacation' ? 'inline' : 'none') .'">';
 +  $out .= '<span class="label">'. Q(rcube_label('vacationreason')) .'</span><br />'
-+	.'<textarea name="_action_reason[]" id="action_reason' .$id. '" '
-+	.'rows="3" cols="40" '. error_class($id, 'action', 'reason') . '>'
-+	. Q($action['reason'], 'strict', false) . "</textarea>\n";
++   .'<textarea name="_action_reason[]" id="action_reason' .$id. '" '
++   .'rows="3" cols="40" '. error_class($id, 'action', 'reason') . '>'
++   . Q($action['reason'], 'strict', false) . "</textarea>\n";
 +  $out .= '<br /><span class="label">' .Q(rcube_label('vacationaddresses')) . '</span><br />'
-+	.'<input type="text" name="_action_addresses[]" '
++   .'<input type="text" name="_action_addresses[]" '
 +        .'value="' . (is_array($action['addresses']) ? Q(implode(', ', $action['addresses']), 'strict', false) : $action['addresses']) . '" size="40" '
 +        . error_class($id, 'action', 'addresses') .' />';
 +  $out .= '<br /><span class="label">' . Q(rcube_label('vacationdays')) . '</span><br />'
-+	.'<input type="text" name="_action_days[]" '
++   .'<input type="text" name="_action_days[]" '
 +        .'value="' .Q($action['days'], 'strict', false) . '" size="2" '
 +        . error_class($id, 'action', 'days') .' />';
 +  $out .= '</div>';
@@ -3593,9 +3592,9 @@ diff -ruNa rc-beta2-old/program/steps/settings/managesieve.inc rc-beta2/program/
 +
 +    $out .= sprintf('<option value="%s"%s>%s%s</option>'."\n",
 +                    htmlspecialchars($utf7folder),
-+		    ($mailbox == $utf7folder ? ' selected="selected"' : ''),
-+		    str_repeat('&nbsp;', 4 * (sizeof($names)-1)),
-+		    Q(abbreviate_string($foldername, 40 - (2 * sizeof($names)-1))));
++           ($mailbox == $utf7folder ? ' selected="selected"' : ''),
++           str_repeat('&nbsp;', 4 * (sizeof($names)-1)),
++           Q(abbreviate_string($foldername, 40 - (2 * sizeof($names)-1))));
 +  }
 +  $out .= '</select>';
 +  $out .= '</td>';
@@ -3618,8 +3617,8 @@ diff -ruNa rc-beta2-old/program/steps/settings/managesieve.inc rc-beta2/program/
 +
 +function genid()
 +{
-+	$result = intval(rcube_timer());
-+	return $result;
++   $result = intval(rcube_timer());
++   return $result;
 +}
 +
 +
@@ -3634,12 +3633,12 @@ diff -ruNa rc-beta2-old/program/steps/settings/managesieve.inc rc-beta2/program/
 +    {
 +      if ($SIEVE->script->update_rule($fid, $SCRIPT[$fid-1]) !== false
 +        && $SIEVE->script->update_rule($fid-1, $SCRIPT[$fid]) !== false)
-+	$result = $SIEVE->save();
++   $result = $SIEVE->save();
 +      
 +      if ($result)
 +      {
 +//        $OUTPUT->show_message('filtersaved', 'confirmation');
-+	$OUTPUT->command('sievefilter_updatelist', 'up', '', $fid);
++   $OUTPUT->command('sievefilter_updatelist', 'up', '', $fid);
 +      }
 +      else
 +        $OUTPUT->show_message('filtersaveerror', 'error');
@@ -3651,12 +3650,12 @@ diff -ruNa rc-beta2-old/program/steps/settings/managesieve.inc rc-beta2/program/
 +    {
 +      if ($SIEVE->script->update_rule($fid, $SCRIPT[$fid+1]) !== false
 +        && $SIEVE->script->update_rule($fid+1, $SCRIPT[$fid]) !== false)
-+	$result = $SIEVE->save();
++   $result = $SIEVE->save();
 +      
 +      if ($result)
 +      {
 +//        $OUTPUT->show_message('filtersaved', 'confirmation');
-+	$OUTPUT->command('sievefilter_updatelist', 'down', '', $fid);
++   $OUTPUT->command('sievefilter_updatelist', 'down', '', $fid);
 +      }
 +      else
 +        $OUTPUT->show_message('filtersaveerror', 'error');
@@ -3673,8 +3672,8 @@ diff -ruNa rc-beta2-old/program/steps/settings/managesieve.inc rc-beta2/program/
 +        $OUTPUT->show_message('filterdeleteerror', 'error');
 +      else
 +      {
-+	$OUTPUT->show_message('filterdeleted', 'confirmation');
-+	$OUTPUT->command('sievefilter_updatelist', 'delete', '', $fid);
++   $OUTPUT->show_message('filterdeleted', 'confirmation');
++   $OUTPUT->command('sievefilter_updatelist', 'delete', '', $fid);
 +      }
 +    }
 +  }
@@ -3715,8 +3714,8 @@ diff -ruNa rc-beta2-old/program/steps/settings/managesieve.inc rc-beta2/program/
 +
 +?>
 diff -ruNa rc-beta2-old/skins/default/filters.css rc-beta2/skins/default/filters.css
---- rc-beta2-old/skins/default/filters.css	1970-01-01 01:00:00.000000000 +0100
-+++ rc-beta2/skins/default/filters.css	2009-03-01 15:32:29.743529598 +0100
+--- rc-beta2-old/skins/default/filters.css  1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/filters.css  2009-03-01 15:32:29.743529598 +0100
 @@ -0,0 +1,157 @@
 +/***** RoundCube|Filters styles *****/
 +
@@ -3876,185 +3875,185 @@ diff -ruNa rc-beta2-old/skins/default/filters.css rc-beta2/skins/default/filters
 +  white-space: nowrap;
 +}
 diff -ruNa rc-beta2-old/skins/default/images/buttons/filter_add_pas.png rc-beta2/skins/default/images/buttons/filter_add_pas.png
---- rc-beta2-old/skins/default/images/buttons/filter_add_pas.png	1970-01-01 01:00:00.000000000 +0100
-+++ rc-beta2/skins/default/images/buttons/filter_add_pas.png	2009-02-11 08:59:02.944429779 +0100
+--- rc-beta2-old/skins/default/images/buttons/filter_add_pas.png    1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/images/buttons/filter_add_pas.png    2009-02-11 08:59:02.944429779 +0100
 @@ -0,0 +1,6 @@
-+‰PNG
++?PNG
 +
-+   IHDR           szzô   sRGB ®Îé   bKGD ÿ ÿ ÿ ½§“   	pHYs     šœ   tIMEØ	+¡PâX  £IDATXÃµ—MŒWÇõ^¿îùØ™Ùïµwmgm‡#'²DŒø:‰§Hœ¸!@NÜ¸sáD.HpàÄ#K	BJ° DÇ»Ä^yegwvgg{ºû½â0İ;3f×ÙÅñ“º¥×Uõ¯ªÿ¿ZT•µ6¾ÛlÔ¿f­ñ€ŠG-U ?Å{ïôö¾WÅu÷áõÉ‹«D ±‹–Û­æ3±sÇ¾¬ªÕácÌY¶ÕÛëÿœ¬h:şác9P]TEœ‹ÌT³ñ“Âûı~úc‡„}öXKª{"2<Eš+K×’Ø}ú¸c•FQU¢(š[9½x-İ…ã8ñXTH 2`Ç«§®[k—>Ê‡Çw ¬zkûé€îní]
-+ïŸo·š×Dh=QªÀ]ähÖëÄÎá¢U%vî‹I¿ò(>´„¿ªcÎ9bç.=ª¸?6&-Š'Ÿ‚’I”'"¢Ç2­ã&GTáë“nCÕÊ‰JFYÑcx}D½N:Byj•’ €á0vĞÒÿÃxi4	 êøAg#j&¦°®G¦Y³gJÎgÈ¨
-+?”ªv9­òî½‡Â³“ïñ­÷Yëİ£—õ	ª$Ö1_ïpivõ¹Õù¥¿îözßäƒßˆ˜ÃÔPËˆ´T7©hyH%«³(†ÆßîŞâÕ»où‚ºKJ•‚TsÖz›¼»ıjŸzöËç>óë©}÷Íİ~ï3¤yXß+$B™ÏPíò½jyà/¾Ã/×_'v1³Sm:&Ÿ_yÏ½Àù™j‰cnjš;ıüôß¿Å×ùA³ÖøªV\90* á†çØÖPĞB¹¹÷¯nü¥ÖSIDÍz:Îpeşi›»ÈrcÄÔ¢À\³I†çk¦Şn|ßŠYª4U„ÿA L¾+·/YÈùÓæÌÔL;CË:Ni9)hEJ'RZ6pªQç~ú€·»·Î´§Úß°Æ¸)Ã5”‘ŸGiˆ*wÒ{ºÍb­Fb2jÖpbÆj&à$VIlNİœm6XëİÄÄö¥Z\ûìXŒ i¼‚LÎkX,²M.6=5ÓIÎ{!2UÙÎÖ¦Q=OÍ:‚*ÛÙŞo°WìĞÓôÍ¸öğÇh¢´¤RÂ"(Š„*ˆ2¿K=‚ÓÍ:ÏÌ^=´UÏ·—9ß^>x¾½³ÁííubS0ğıfÇMhÃ!Ì%€:³fsUÅŠ!2Bğ'çqU°v(Ùa‚ˆ´,Dt¿¨J@ˆĞ‰;ÜïİôoŞ»^¦ÍPws\˜ùF,ïu×éî¿…39ôó”šÍICB#jöŠ"_qcyÉ‚£iœL û‚ùä4wwÿF_¶(²M@Põ$Q‹Õé«±t]îî¾Å”s(Rß–š{šºi¼“æû7&Šğ FJz¨LyÍ™©/ĞJVH³w‰M<ì"1X©»Cdb¬‰P„À¾.Ì^Âçşg¹ÏoL´aë„ “Ô\íŠ²ÌóìÌUT:x-–é1³àYh^æTíÜÍşşŞƒ†ñP©:áˆÁ{")ı,¥MsyáKüóşïğÚÅˆÁkÎ­­×°“æ›$ÆÔãU™­_âSs_(ú½½o¾Øªô&ğ!ldYvSD¼HeGşTasğa˜ï,M]YúÊ¹÷·oĞ¬“ù}Ö»¯Çt1IˆL›3­Ëœk]¤½ôëé`ÿWÆŒúGT•½wÛt:R%$ÎÆ33/Çõø;;ù½éíÁÒb
-+bÛ`*^`¶v–DÚ¯¥iÿåş~ÿÆø7à$¿ÕUK&.¢GX-7êÍ—œs/ª„§­DÛÁë›Y–^Ï}ş{#Rdy>‘æÅÅEş€tgSG ç—    IEND®B`‚
++   IHDR           szz?   sRGB ???   bKGD ? ? ?????    pHYs     ??   tIME? +?P?X  ?IDATXÃµ?M?W??^???Ø™???wmgm?#'?D??:??H??!?@NÜ¸s?D.Hp??#K   BJ?? DÇ»?^yegwvgg{????0?;3f???ñ“???U?????ZT??6??lÔ¿f????G-U ??{????WÅu???É‹?D ???Û­?3?sÇ¾????c?Y???????h:??c9P]TE???T??????~?c???}?XK?{"2<E?+K×’?}???c?FQU?(?[9?x-?İ…?8?XTH 2?`Ç«??[k?>Ê‡?w??zk????n???]
++??o???Dh=Q??]?h??????U%v??I??(>????c?9b?.=???6?&-?'???I?'"??2??&G?T???nC?Ê‰JFY?cx}D??N:Byj?????0v?????xi4 ???Ag#j&????G?Y?gJ?gÈ¨
++???v9??î½‡Â³??????Y?İ£?? ?$?1_?piv????????z???ßˆ???PËˆ?T7?hyH%??(??????Õ»o????KJ??Ts?z?????j?z???>???}???~?3?yX?+$B??P???jy?/??/?_'v1?Sm:?&?_y?Ï½???j?cnj?;???ß¿???A????V\90*??????P?B????n????SID?z:?pe?i????rc??Ô¢?\?I??k??n|ßŠY??4U??A L?+?/Y??????L;C?:Ni9)hEJ'RZ6p?Q?~ú€·»·Î´??ß°Æ¸)?5???Gi?*w?{??b?Fb2j?pb?j&?$VIlN??m6X??????Z\??X??i??L?kX,?M.6=5?I?{!2U??Ö¦Q=O?:?*???o?W????Í¸???h???R?"(???*?2?K=???:??^=?UÏ·?9?^>x??????ubS0??f?M??h?!?%?:?fsUÅŠ!2B?'?qU?v(?a???,Dt??J@?Ğ‰;????oŞ»^??Pws\??F,?u??î¿…39?????ICB#j??"_?qcyÉ‚?i?L??????4ww?F_?(?M@P?$Q?????t]???Å”s(R?ß–?{??i????7&???FJz?LyÍ™?/?JVH?w?M<?"1X??Cdb??P?À¾.?^???g??oL?aë„ ??\???????UT:x-???1??Yh^?T?????Ş???P?:???{")?,?Msy?K??????Åˆ?kÎ­?×°???$???U??_?Ss_(???o?Øª?&?!ldYvSD?HeG??Tas?a??,M]Y?Ê¹??o????}Ö»??t1I?L?3?Ëœk]?????`?WÆŒ?GT??wÛt:R%$??33/???;;??????b
++b?`*^`?v?DÚ¯?i???~???7?$??UK&.?GX-7?Í—?s/?????D????Y?^?}?{#Rdy>????E??tgSG ??    IEND?B`?
 \ Brak znaku nowej linii na koÅ„cu pliku
 diff -ruNa rc-beta2-old/skins/default/images/buttons/filter_add.png rc-beta2/skins/default/images/buttons/filter_add.png
---- rc-beta2-old/skins/default/images/buttons/filter_add.png	1970-01-01 01:00:00.000000000 +0100
-+++ rc-beta2/skins/default/images/buttons/filter_add.png	2009-02-11 08:59:02.968421060 +0100
+--- rc-beta2-old/skins/default/images/buttons/filter_add.png    1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/images/buttons/filter_add.png    2009-02-11 08:59:02.968421060 +0100
 @@ -0,0 +1,13 @@
-+‰PNG
++?PNG
 +
-+   IHDR           szzô   	pHYs     šœ    cHRM  z%  €ƒ  ùÿ  €é  u0  ê`  :˜  o’_ÅF  šIDATxÚ¬—[lWÇçÌe/³ëu¼±8¶9—ÆuÒ¦©­HU*D‹€> €
-+å%HT‚—”‡<5/H (T‚
-+ªmSÑ$-­âÒ@.jËÅqšø¯½¾îîìœïğ0³k;qŒ]8š3gæŒæ;ÿóÿ®GYkyíÂÅïµÛ¾èûQ
-+«”B±rÖ
-+Ö‚µk­ª…¡mdüéj­öc­5km>„d3]=]»‚lfÍ?‹XŒ"BdëşhzvnjìFéW¬£¹ ¬Å&‚eM?ZbD­ÙLFoêØxª†¥‰Rù¬ë:k’£”­T"vmMVh­ÑJ¡ãçàŞ}§ó¹ìµndU…)¥–õ•¾k­P	1B:•*~tÿŞÓ¹\¶Ï¬„^má•æo°`Cù\°mÿ@ÿó)Ïë±Û[éİ÷\&Ë3\½>Ê•F¨…á]İ]§µVùuXi—k±Èl&CGqA%“IcD²Ùû[ò¹«± ù4{(´Ò8Zãy.A%²ıñ·UÜğnvùƒMnb-X¢u©`5´·ûn±$Wòl×ìĞz­‹¬(Ş¨ÿk,‡işw5ÁKòv Dâh¸¤%™A-ªå¶ ì‡`B¬E¬4“”ƒD+‚1‚Å"ÖŠµG)\Wq³H·I£ØuÙX›ìŞR¯†8Ä„ÌÔg‰DÈzi
-+nJ*Ó2ŸvƒŒïÎ;N½	€€IP¯%ˆ„a•:×Æxîß¯r~äFçKDbÈûYúÛ¶òèöC{õßõÇ‘‘±oO/Ì¼ìhgÛnÃŠE„Fìn„W–Ô7(¯UCl5äÃ¯ğƒ·N1W¯Ò–)€¶àÀ´T8?z™†Şàãİûv?øÄK›'3O\/p´s«
-+ H3¾/µ‡Eê¢zªuyÿ4Odg±—Íév/Å‘QHå8wíÏ¼9ú­E'Şã‘ßå7Ÿzú™öhãxifò¹Fá¢ÂÅÆ˜å=2˜HâÑ˜˜%c°UÃ‹ãøşÅ“ìíêcS>CÁÙ¸<¾ûa¾°ó!´ï¢Å­°!qG{s¶ÆWÏÿbwûqÏñ:é:Ó™¥İ‰I<šd>¬Õ™3»|Š¾¶v¶[R½asÆ6Uæ(èÊXz2Âf?â#‹ü½ü>?¿úJwÏ¦-_ó\Ï[@b„b’Å "³l4bĞÆr¡|‰š±·µ@Á£à×È{–Àqš ŒZ<CÁ¯Pô*|¬£Èù‘qr©Ç6ä[ï[â6Şa$ âj'Öl¯±XRx¼7ûWw†lÈæèi¹O98J“vÓhØÎÖ­Xy‚ŸÅXahvŒ0¼Èxõ*cfjgG®pğšÛğicb°IJN€ÄwÛŒzÒÌ…×(¦w·ùôo¬èªtßÃİ÷4ßÏ~ğ'Î½NÎ­2–‚Şì¦å^P½ZE$"ø®GÆÕD!¸Ê®+e‹UxZá9
-+¥´,b#v7#À’ZU¬GÑ“ëåİ	Å•ò[üôò—c•áÑ–ÙÅ'û¾ƒ«}Îÿá©gÉ:ó(•)ZıyÊõ<íé¹j¥2œ#Û @ÓÊ!NBjYı»˜ç+aİ…»y{ä$•R›ı 06¤êâÛ¾«}®Ì\áíëÏ²)›E¬ÂQ
-+”Oköa68ÿV®LB±@’@dV-Í¬µÔe¾â ]-÷Rı-Ä^d=<½x°qµKÊğb
-+ÃdMsxçg©/„¿\›n(	Í.²ü}É|$ÂÜlÏô}Ñ=Ô¥v“ªU¢.…µ*aP˜¯‡ta_áşLLÿÄ˜hÑ°V5Z‹Fh—¨ qÂdª47MofGî<Æ¯ßı.53Œ§]B™çÌ¿ã;yÊó—É{‘„„bÙ^|”Ïí:•Fn|«Z«N5B±²ÖòÒ¹7J§Ó_ÒÚ1JÅ
-+_éxÚ¨n¬‘;z¶æªÁõŞßàêôë™¦næ°X|í¡u¬×Íş®Ïs°ëñZylú+¥©ñŸé$ìÙxáÌ9g½²ˆ•|Æ÷ïìÛşd®-8z­r©uhz©êê¦BÎo§3×ÏÖƒô–7§¦&,MN.•1°gO³"2J)³®J\ƒvtåFiôØôlúÔÆ¶şÇzÚ<(*ÚjßÓ©²©Ë¥Ùòôó×kÃ¯:i­o9üşg fÑºÌ˜Á‡    IEND®B`‚
++   IHDR           szz?    pHYs     ??    cHRM  z%  ??  ??  ??  u0  ?`  :?  o?_?F  ?IDATxÚ¬?[lW???e/??u???8?9??uÒ???HU?*D???> ?
++?%HT????<5/H?(T?
++?mS?$-???@.j??q???????????0?k;q?]8?3g???;????GYky?????Û¾???Q
++??B?r?
++Ö‚?k????md??j??c?5km?>?d3]=]???lf???X?"Bd???hzvnj?F?W??? ??&?eM?ZbD??LFo??x????R???:k????T"vmM?Vh??J?????}???ìµndU?)?????k?P   1B:?*~t??Ó¹\?Ï¬?^m???o?`C??\?m?@??)?????Û[???\&?3\?>Ê•F???]?]???V?uXi?k??l&CGqA?%?IcD???[??????4{(??8Z?y.A?%????U??nv??Mnb-X?u?`5???n?$W?l???z???(Ş¨??k,?i?w5?K?v?D?h??%?A-??? ??`B?E?4???D+?1??"ÖŠ?G)\Wq?H?I??uÙX???R??8Ä„??g?D?zi
++n?J*?2?v????;?N??    ??IP?%??a?:??x?ß¯r~?F?KDb??Y?Û¶???C{???Ç‘??oO/Ì¼?hg?nÃŠE?F?n?W??7(?UCl5?Ã¯???N1W?Ò–)???À´T8?z???????v???K?'3O\/??p?s?
++ H3?/??E??z?u?y?4O?dg????v/Å‘QH?8w?Ï¼9???E'?????7?z???h?xif??F????Æ˜?=2?H?Ñ˜?%c?UÃ‹???Å“???cS>C???<??a???!???Å­?!qG{s??W???bw?q??:?:?????I<?d>?Õ™3?|???v?[R?as?6U?(??Xz2?f??#????>???JwÏ¦-_?\?[@b?b?? "?l4b??r?|?????@Á????{??q? ?Z<CÁ¯P?*|?????qr??6?[?[?6?a$??j'?l??XRx?7?Ww?l???i?O98J?v?h??Ö­Xy????Xahv?0??x?*cfjgG?p????icb?IJN??wÛŒz??Ì…?(?w????o???t????4??~?'??NÎ­2???ì¦?^?P?ZE$"??G??D!?Ê®+e?UxZ?9
++??,?b#v7#À’ZU?GÑ“???  Å•?[????c??Ñ–??'????}?????g?:?(?)Z?y??<?é¹j?2?#? @??!NBjY????+a?İ…?y{?$?R???06????Û¾??}??\???Ï²)?E??Q
++?Ok?a68?V?LB?@?@dV-Í¬??e??? ]-?R??-??^d=<?x?q?K???b
++?dMsx?g?/??\?n(  ?.??}?|$??l???}?=Ô¥v??U?.??*aP???ta_??LL??Ä˜h??V5?Z?Fh?? q?d?47MofG?<Æ¯??.53??]B??Ì¿??;y????{???b?^|???:?Fn|?Z?N5B????Ò¹7?J??_??1J?
++_?xÚ¨n??;z??????????????n??X|??u???????s???Zyl?+?????$??x??9g????|??????d?-8z?r?uhz?????B?o?3?ÏÖƒ??7??&?,MN.?1?gO?"2J)??J\?vt?Fi???l??Æ¶??z?<(*?j?Ó©??Ë¥?????kÃ¯:?i?o9??g fÑºÌ˜Á‡    IEND?B`?
 \ Brak znaku nowej linii na koÅ„cu pliku
 diff -ruNa rc-beta2-old/skins/default/images/buttons/filter_add_sel.png rc-beta2/skins/default/images/buttons/filter_add_sel.png
---- rc-beta2-old/skins/default/images/buttons/filter_add_sel.png	1970-01-01 01:00:00.000000000 +0100
-+++ rc-beta2/skins/default/images/buttons/filter_add_sel.png	2009-02-11 08:59:02.996428630 +0100
+--- rc-beta2-old/skins/default/images/buttons/filter_add_sel.png    1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/images/buttons/filter_add_sel.png    2009-02-11 08:59:02.996428630 +0100
 @@ -0,0 +1,13 @@
-+‰PNG
++?PNG
 +
-+   IHDR           szzô   sRGB ®Îé   bKGD ÿ ÿ ÿ ½§“   	pHYs     šœ   tIMEØ	/,_‚i  ˆIDATXÃ­—]lWÇ÷ÎÌîÌ®wm¯]Çv'©ë4mš¨‚°*¨
-+â!}l%$}ú }¨Ä}AB´T"…70­  >()¥N(JÔDI± DIœØq¼¶w½»3sÏáa?²N×F½Ú»óuçŞÿıŸsşçŒ™™™áÔ™sß)õõ>“	gŠ1Öoª *­£¢¨‰ã$sc~áÅFÿÄËfÛ“‡ñra8::4¸7ŠÂM¿,¢ˆ
-+"Šsß÷^Y©®..,”Åš  Š¶&–M½¨-6DcQÚûJ¯Æq²°X^ş³ïy›šÇÆ˜Ö´›k°¬µXcšİšüÁ‡&¦ò¹è¨lÀ=1fM_ï¹µcÆZÄ)ÙLfàÑıNårÑın ìF¯w=&ÚãÛfÌç¢İOŒ¿ñım¢úÿ3p/pë]¾ÇÒr…Ù¹y®^Ÿ#N’ƒÃCƒSÖ˜Â– ¬·ËÍxd†ô‰¢ˆ0Ì""ä¢h²§'÷òF,X>Šfšš k,±øG”‰¢è!İ €ÿ‘ Ğµ'ÚúUPÒ-™@?ÄiÖ{®(­_ë\7Ğv³‹l¨¹Ñæ±³¸¶îC øMÜí÷ÕVC:@n«d›Ì½%Îß*İw>o+ âê*Š8i²‚Šªb­Á÷šÀîÎª[¢ıöâÍ¤”6<u	•´J*Bäg)ø9ê™°¸šõóaàU­goÓ³€€Å9Ù”¨*$Iõ”µ›üîÊß95wùÚ"N„|2Ş·'Ç8<¾ïôüüÍo®Ô*ò¬·Æ~Û‹E¤6ŠmƒèªÚµE%n$h#æ·×şÆKg_c5mĞÀ(XX‘:§æ/òæ•÷øÄğ¾}/úò‡Êá×o”ç_ö¬·> çZöì$ ½£i^»4…FÂÏ.ıœ™bwÿ(CÙ‘Ÿáè®I
-+™<Ó7ÎóÏùû9»x‰gÿò"?şÌó/•\ÿ\¹²ôkmW¶<YÄ5»s8çp©Ã¥Ò<:×ãÚp¼µp†›âÁmcæC
-+AÂöÈãØøã|i÷$”öĞã×)fRö”¨jÌÓ¯Ğ?<ğ}ßó·µëÛÜàDI]«‹âDp*8u8•&C"ÄqJÕÕøÑÅ×ë-±=òÎ¤Œ†ÂP¨“y†²ÊHV
-+RîïgfåoÌ¾½cdpøk¾ç·°–')©s¤©:éV”3Ë‰å
-+{‹
-+~•B“÷•Èó: œ8r>ôB!¨ÓÔùø@?Óóoáå3OõötEAsÇ©0­ßÊ2ÆÜEÉğŸê¿˜L(FyFz>F`,ÖX²^KÓÁv·£ò)
-+A„C¸Z¹I’œc¡1ËM·41+<üÕoz6ˆÓ–¢µk40wè—ŠâŒc5¹N_Æ°¿ÔÇgw=½n¨>À‘áëw¯Ÿçİ+§Éù*I9?İ·s9q¤Î¶÷½®ˆ
-+çz–TÀ7º¥”-jğ­Á·`0Ò%ÅÚq´¶v·@W­ªª`#ùQş½h¸º|–__üVkX@_¸›Oïü
-+8yíÌ.ı†Ğ«a0,Ö—(fj,'yJÙJ£Ñ¸œ#j3Ğ4Aj›©ÄÓE¿Y“çëIÌı…ı¼?7Å¢¹Ìê€ÁiB!³Oîx€k•«¼?÷ƒQˆj³jÆÃÇéõJç—ëåé~úÚ Úî6,ÍT•TRvöM0Ôsåê	r~,¾ÍvÆzÖ'ãEdlˆ¨Áà(Ç–É]Ÿ'­Å¿¬%µéNJ[ˆ\«wŸ»µ÷SQV«1Ÿ{µ#$ßajÓòƒvâIXM&²¯ğØÌ­å…ãÒ’İ–ªÑfBE¤©ùwõV™_^]¡_vpôoƒ&–:H¤ÆÉËÇ9yù8+«'Èû©&4$e¬ïI¾°çÙ´¼pë8^l+¡ºtvµ¶:cŒm~œvíä®Ò«å3Tÿ+{FööÛ÷İ±w®üœÙÊiV“%Ş›ı)ŠXßæÉx#<:òEm;ÖX¹¹òÕåJù÷İŸmfff†7ON{[­EUòay`çØsùŞÜó×ú®®œa©qÔÕÉ%óãì*¢`†ßYZ¾õ\¹¼8İ=ÇÄŞ½ŠÈaŒÛb%µ¶vkqş{+Õì«¥Şñ§FJ<¡ÆíR$ã›LYR9[Y^y}.¾vÂZ›ZkïúøıÍ¹¸cWüÕ    IEND®B`‚
++   IHDR           szz?   sRGB ???   bKGD ? ? ?????    pHYs     ??   tIME? /,_?i  ?IDATXÃ­?]lW?????Ì®wm?]?v'??4m?????*?
++?!}l%$}? }??}AB?T"?70?? >()?N(J?DI? DI??q??w??3s??a??N?F?Ú»?u?????s?çŒ™???Ô™s?)??>?    g?1?o??*??????$sc~??F???f????ra8::4?7??M?,??
++"?s??^Y??..,???????&?M??-6DcQ??J??q??X^???y???Æ˜Ö´?k???Xc?İš?Á‡&???è¨l?=1fM_ï¹µc?Z?)?Lf???N?r??n ?F?w=&???f????O?????m???3p/p?]???r?Ù¹y?^?#N???C?SÖ˜Â– ????xd?????0?""??h??'??F,X>?f?? k,????G????!? ??? Ğµ'??UP?-?@??i?{?(?_?\7?v??l???æ±³???C??M?????VC:@n?d?Ì½%??*?w>o+? ??*?8i????b????????[????Í¤?6<u  ??J*B?g)?9ê™°????a?U?goÓ³???9Ù”?*$I????????95w???"N?|2Ş·?'?8<??????o??*????~Û‹E?6?m?????E%n$h#?????Kg_c5m??(XX?:??/????????}/??????o??_???> ?Z??$ ??i^?4?F??.????bw?(C??????I
++?<?7?????9?x?g??"????/?\?\???kmW?<Y?5?s8?p?Ã¥?<:???p??p?????mc?C
++A???????|i?$??????)fR???j?Ó¯??<?}??????Ü?DI]???Dp*8u8?&C"?qJ???????-?=?Î¤???P??y???HV
++R??gf?oÌ¾?cdp?k?????')?s???:??V?3???
++{?
++~?B?????: ?8r>?B!?????@???o??3O???tEAsÇ©0???2?ÜE???ê¿˜L(FyFz>F`,?X?^K??v???)
++A?C?Z?I??c?1?M?41?+<??oz6?Ó–??k40wè—Š??c5?N_Æ°???gw=?n?>À‘???w????+???*I9?İ·s?9q?Î¶????
++??z?T?7???-j??Á·`0?%??q??v??@W???`#?Q??h??|?__?VkX@_??O??
++?8y??.??Ğ«a0,Ö—(fj,'yJÙJ?Ñ¸?#j3?4Aj????E?Y???I??????7Å¢?Ì???iB!??O?x??k??????Q?j?j?????J?????~?? ??6,?T?TRv?M0?s???   r~,??v?z?'?Edl????(Ç–?]?'?Å¿?%??NJ[?\?w????SQV?1?{?#$?aj???v?IXM&?????Ì­???Ò’İ–??fBE???w?V?_^]?_vp??o?&?:H?????9y?8+?'???&4$e??I???Ù´?p??8^l+???tv??:c?m~?v???Ò«?3T?+{F????İ±w?????iV?%Ş›?)?X???x#<:?Em;?X?????J??İŸmfff?7ON{[??EU?a?y`??s?????????a?q????%???*?`??YZ??\??8?=??Ş½???a??b%???vkq?{+?ì«¥???FJ?<???R$??LYR9[Y^y}.?v?Z?Zk????Í¹?cW??    IEND?B`?
 \ Brak znaku nowej linii na koÅ„cu pliku
 diff -ruNa rc-beta2-old/skins/default/images/buttons/filter_del_pas.png rc-beta2/skins/default/images/buttons/filter_del_pas.png
---- rc-beta2-old/skins/default/images/buttons/filter_del_pas.png	1970-01-01 01:00:00.000000000 +0100
-+++ rc-beta2/skins/default/images/buttons/filter_del_pas.png	2009-02-11 08:59:03.020424940 +0100
+--- rc-beta2-old/skins/default/images/buttons/filter_del_pas.png    1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/images/buttons/filter_del_pas.png    2009-02-11 08:59:03.020424940 +0100
 @@ -0,0 +1,14 @@
-+‰PNG
++?PNG
 +
-+   IHDR           szzô   sRGB ®Îé   bKGD ÿ ÿ ÿ ½§“   	pHYs     šœ   tIMEØ	*4šî@  åIDATXÃµ—KŒGÇUÕÕ===3ëµ³³Ùuì„ø‰Q,°Ù‰"”SDNÜGHN¹qçÂ‰\à '$ŒÌKBI„‚D’]ƒ1‘ ça„½Éîz×;ïîéªÃLÏÎ8¶³ÆqI¥êéQUı¿ÿ÷ÿ­D„Ëÿ]ú^R¿iŒv€(¥¸ÕñU9çÂF«ıı<Ï|»½7{" m0_«&ûCk·¼YDğ"ƒÕZë¥Y¶Şjw~ÉŒ``2~ğ– EP
-+¬t%)ÿ4wîZ§Ó{Cë­1¡”µyì–†*ö)…BV¥’³3§¢Ğ~i«†hîb/‚ Ø±s®~*íÃ[qW 
-+&Pj‚Á(š«Ïœ6ÆÌ~†»0T½1šn/e£Ùâz£IîÜáZ59¥Õ{
-+ 0Ü–$	­Å"‚µöX…/ß…Ï€Ò_èBkMh-¡µ‡n'îÏŒ['-ò{ï‚a&6™¸£DtWWËø•›@
-+óå^‡¡H¢¨›^‘- >Å[°^&€¸¢>HÁ†x´RÜ,;#¶äÿ¸|xiî<ï4ï1ÖB„a-
-+º‰5º­‡9c<C…ù~XÕ¶RN¿;çè‹Ç7t/]¤wõ
-+y»ˆ`lH8=M²gß£Õùg›­öı´÷ªÒúfÕP†É°º©"Í¡n¨’Åš;Gî=éÅ±¾ø>Ï	âXP
-+ñîÒUÚ—? <·óàöcO¾Ò²•ïôZ­—ÇÔ7Ö÷‚	/‚x/æğ½8çÉ½Ğ=ko¾±–RµFFFh…¢R‰RµFº²Ìòï~MUä‡a¹ü¼%¸ 0R²L/~°Mñ…¸<}ñä—?`cñJµ)’Ù9¦{ƒ`¼'@¡ûåú,Û?F”$÷¹öúkL•Ë?ĞZÏLê"ü'ğ“ï†3w²ŒæÙl×ël?ş$•C_`êÈQŒ€N{Ä3u¶}õ8ÕGeÛãG°å„şê*Ù¿/<ÔjßÖZÛMF.ğëÅ-üŞtƒÇ+pKWac°\F{?Š xÏ^ªG tÿ<µã'Ğ¥ ½4—SJz/ó\ÇG7IºÇ?ÎŒnù#bkUomÖ™×pÍ ¥½û©<õ4:XıÛ9²¿,™€¨dÑít:ûÂ(úò'50~¡/D8X‹gD Ñ@‡
-+Æü•iüöç¸æÆ rÌ º¯ıuìO¯PG`!58‡tÚ‰µv×Dh†‡Ú¬³¹ˆ ı§´·†H‹ B3ã¥8B—^ÖÑŞšö’
-+QÊ¹`b\€^n:¦¦‘~kµğ½&ös»¨<ót¹‚÷¼—ú"ñ‰¯C	|»‰ïtĞÅ$•Vçÿ™á¦ïeB~\œ¹s˜¹yèeøF“`f7•Ï£K	 kç¹ş‡ŸáZë~„øè³x§pëë˜jI*ÿÈ³laB„ã™pÒêI6\šÁıóõ:ÒÍğİ×íw÷îló#ZoÂµ6 h®5q9HÚ':ôy2ñ¿ğışÂø‡	^åeÔb©[4>"B×y*_9Fş›%ÜÇ+´_=M¾kù?ß&"!²ºBû¿"Ú{w‘0ëîİŞ{àRocã'2©j"&æd” ¤İ.ÙÌ<•§¾†
-+ùÒ2œû3ß7HH‰|écÔù·±ı>Á®ˆO>“·»İïº<_/Î
-+ œ÷KY–]RJ9¥±ÿ¦ÍŸ¬®¬úéİ*µg“İ·Î/¯àÛ}”Ö£b„8L<LôÄÉ´ÕwßJ;ßë±Š¨D„ï}hî´;ÁGÖ„;îÛñblxI®\Ú–_yß¸ä9*.cî›Å>xÙ>ÿV¯Óy±×i/Œ·õz}€;ù¬.rBdâ0Àv¾T©>gsRùşƒxª ¼îĞÏÒŞi—¥¯k¥ò¬ßŸhFêõ:ÿ©¸ÿ+Â\ş6    IEND®B`‚
++   IHDR           szz?   sRGB ???   bKGD ? ? ?????    pHYs     ??   tIME? *4??@  ?IDATXÃµ?K?G?U??===3ëµ³??u????Q?,?Ù‰?"?SDN?GHN?q?Â‰\?? '$??KBI??D?]?1? ?a????z?;??éª?L??8???qI???QU??????D???]?^R??i?v?(?????U9??F???<?|??7?{" m0_?&?Ck??YD?"??Z??Y??jw~??``2~?? EP
++?t%)?4w?Z??{C??1???yì–†*?)?BV????3???~i??h?b/? Ø±s?~*??[qW 
++&Pj??(??Ïœ6??~??0T?1?n/e???z?I???Z59??{
++?0??$?   ??"???X?/ß????_?BkMh-???n'?ÏŒ?['-?{??a&6???DtWW????@
++??^??H???^?- >Å[?^&???>HÁ†x?R?,;#????|xi?<??4?1?B?a-
++??5???9c<C??~XÕ¶RN?;????7t/]?w?
++y???`lH8=M?gß£???g?????????f?P?É°??"Í¡n??Åš;G?=?????>?  ?XP
++????UÚ—??<????cO?Ò²???Z??Ç?7???  /?x?/???8?É½?=?ko????R?FFFh??R?R?F?????~MU??a???%? 0R?L/~??M???<}????`c?J?)??9?{?`?'@????,??F?$?????kL????Z?L?"?'????3w????l??l??$?C_`??Q??N{?3u?}?8?Ge??G?????*Ù¿/<??j??Z?MF.???-??t??+pKWac??\F{???x?^?G??t?<??'Ğ¥ ?4?SJz/?\?G7?I???ÎŒn?#bkUom?Ö™?p? ????<?4:?X??9??,???d??t:??(??'50~?/D8X?gD??@?
++???i?????? r? ???u??O?PG`!58?tÚ‰?v?Dh??Ú¬??????????H? ?B3??8B?^??Ş???
++QÊ?`b\?^n:???~?k???&?s??<?t??÷¼—??"???C  |???tĞ?$?V???????eB?~\??s??y?e?F?`f7?Ï£K    k??????Z?~????x?p???jI*?È³laB???p??I6\?????:??????w??l?#Zo?Âµ6 h?5q9H?':?y2????????  ^?e?b?[4>"B?y*_9F??%??+?_=M?k???&?"!??B???"?Ú{w?0??İ?{?Roc?'2?j"&?d? ??.??<????
++??2??3?7HH?|?c?????>Á®?O>??????<_/?
++ ??KY?]RJ9??????ÍŸ??????*?g?İ?Î/???}?Ö£b?8L<L??É´?w?J;??ë±Š?D??}h??;?GÖ„;???blxI?\Ú–_yß¸??9*.c???>x?>?V??y??i/???z}?;??.rBd?0?v?T?>gsR???x? ??????i???k???ßŸhF??:????+?\?6    IEND?B`?
 \ Brak znaku nowej linii na koÅ„cu pliku
 diff -ruNa rc-beta2-old/skins/default/images/buttons/filter_del.png rc-beta2/skins/default/images/buttons/filter_del.png
---- rc-beta2-old/skins/default/images/buttons/filter_del.png	1970-01-01 01:00:00.000000000 +0100
-+++ rc-beta2/skins/default/images/buttons/filter_del.png	2009-02-11 08:59:03.064430050 +0100
+--- rc-beta2-old/skins/default/images/buttons/filter_del.png    1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/images/buttons/filter_del.png    2009-02-11 08:59:03.064430050 +0100
 @@ -0,0 +1,7 @@
-+‰PNG
++?PNG
 +
-+   IHDR           szzô   	pHYs     šœ    cHRM  z%  €ƒ  ùÿ  €é  u0  ê`  :˜  o’_ÅF  ßIDATxÚ¬—{Œ\UÇ?çŞ;{gvfw§»Û]·­´Ö]¨µm¬	ÑĞHÅF£&ˆQÆ?Tšø¨XQêƒ?jB‹-T!A£ÿP$"ÁRùÃP›J*m)®Ôvßİ÷ìÌÎ{ÏÃ?îÙİº]wÑ“93gîãœïùş¾¿ÇÆ^yõÔŞ–Bóg“É„#„@°pÓŒÑÆŒ1¢Éş¡Ë?òıêÏ,Ëb©mçö›q 2Û±ª£íºŒç.ùe­Jk´ÖH¥H8ÎãSÓ¥‰á‘±gXFs ƒ‰'ÖKzÑ1 µÆÏu­•­+ªÁØèØäËc/i@°„ˆ§]Z€m	,ËÂ+g¶lè:Úõ6-u#‹L1¯/tß²"¢•&J¶n¼áh6ë­UK a-¶ğB×ÿc‚9 kflÈfŞ¹±kı³©D¢Mkóö¸¸…ş'ã“Ez†¸Ø7H5nììh;jY¢aY ÚåRé¹.­…&2×M£´Æó¼ä².Æ‚Åÿ£‰È#@`	Û²H$²LÆ[İ[ÄÿçfæLü¥ƒ\–	C{µûCü‰ÇfÉm-u‘Å E5Ñ{µÅ£0Íƒâ,6ñ\A^”ÖQ4œR‹’³Ì fÍrU æm0¡A]ORJ+B¥Q:êƒ6Fc°…ÀqWNéÔiÔfYºÓÆÄ»7TÂ	˜0@‹ 	×E4äHg3¹\ÚÉxI§lÛVœxÌ 4j¥—´Ö f”Bô1ş»ç™<yä2F)™,ÙµëhÛ¾ã†ö-[OßW)NıÁ²íyl;5ëmsÂ+sê‚šk”ûÕ _†Ÿÿo>€¬TH7Hº.BXèP2qê$#ÇÿÄŠM[Ş½î[ü~Øu¿214ø¨eÛó½ÀSg@)Œ»R
-+YïQŞ×Ú!¾RLüüIŞÜ÷ )×£©£“lC7‘ íØxé4¹|#Ïœáõ/İM»QV´|j®Àc  ãçu©PRG¿JE,)ÅŒRø>ÆÅCi\µ†–¹æî{IMRIRBàÌ”(tßÈš»¾@®µ*ş±w7«[
-+ûíD¢­–®cFôK¥çdÃ+òBìQ¡’0Sfà±ƒd
-+Í4ww³nÏƒ$š$rØSSä6¼—Îİ{pò8Ù,½?}ŒÒç˜~á¹ÎÖí;îéë{kQì:ŠZˆ*3ó¥ yê$ââ2k¯Å‘2òA yû‡±Â€™c/Ñöí°ó L‹TÉ·µ1õÂs´ßö±;fšš¯D&Ğ&²½Œí/gí?W¡”aüı5š2I<7…îéağ;»	úh¼õ6Ú¿ÿ0vS3 çŸz’Ò‘Ãä’iòöpbtä]Ù|~s]ÚD ”í>W„rVR*P
-+Ó×K"ãâe)7‰üëËôñv‚Á^°,D2À›Oü„Ò¾FAWIg •µa€Éx·j^ ª/°HE¤µ&‘ŒjAÀr$*ìAëAÒ…UXÉä¼ç›šs8ToáÈ¬UX,!ĞÂÒóİ0¢ŠİMÊ¸Ïk´¤V_ƒ®ø„ÃCÈ‰2|?í<ShCI‰?U åãwQøŞ!D£@ GG±Ó‰¶•%ß÷/ÍsÃºÿkU¤ÒjÖ4Z¡Æ¯VI½o3frÙÛOºkm=ƒİØ@Ï/sñş[‡/ ¿å34ï:‚-‚^ ÕŞ‰i]yÖ/—NÌPÛ}l©êÁh6E×«ÓeÌÆÍ¸İİ¨ñ2rlšpl$ÜãTµoà5†ú4Áp/ =ı0ÅrŸø$%¥Ëåuè˜eéº»-t8‹B¶a¼*iÿúıø÷œ¢zúÃßøşM¡òëG(äS(“Å¼q‘ï~âšmTyˆl¹BvÇGqnİÙ3yéÒZJ=›µ£Ö¬ç8mùøÒôøÙ÷lbå÷3´ç>üSgàÜYòMr¦ö|ÿo§±Ÿ$S•¸7m¥°ï€ìŸøjàûµ3¤Êp°T.õX–­„ˆÂÎÕ¨iæüÙózí¶ÙwiY=úã½ø¯ŸE^A8	°F*P‰|šÜw’ÿò¾êĞLxÏôØè‹3[	c¿ıãq{¹²ÖF7¸Éäuë¯ßÕœä›æÄ‹•W_BöıíûØ…Éë7àŞ|;úÚM™İ59rùÄÜTÜÕİ]°ìó€6†œ—¢uI¤İ¦•w¸éä‡¬°²F(™éìdˆ}º45ùlP*³m[–Ëåy‡ß®înş= Ù)r#d    IEND®B`‚
++   IHDR           szz?    pHYs     ??    cHRM  z%  ??  ??  ??  u0  ?`  :?  o?_?F  ?IDATxÚ¬?{?\U????;?{gvfw???]????]??m?    ??H?F?&?Q??T???XQ???jB?-T!A??P$"?R??P?J*m)??v?????Î{??????İº]wÑ“93g??????????^y??Ş–B?g?É„#?@?p?????1??????????,?b?m???q 2?Û±??íºŒ?.?e?Jk??H?H8??SÓ¥?á‘±gXFs ??'?Kz?1????u???+???????Ëc/i@????]Z?m  ,??+g?l?:Ú?6-u#?L1?/tß²"??&?J?n??h6??UK a-??B??c?9 kfl?fŞ¹?k???D?Mk??????'??Ez???7H5n??h;jY?aY ??R??.??&2?M????????.Æ‚?????#@`  Û²H$??L?[?[???f?L????\?    C{??C???f?m-u?? E5?{?Å£0???,6?\A^??Q4?R???? f?rU ?m0??A]ORJ+B?Q:??6Fc???qWN??i?fY???Ä»7T?   ?0@??   ?E4?Hg3?\??xI?l?V?x? 4j???? f?B?1????<y?2F)?,Ùµ?hÛ¾???-[O?W)N?Á²?yl;5?ms?+sê‚š?k??? _???o>??TH7H?.BX?P2q?$#??ÄŠM[Ş½?[?~?u?214??e????Sg@)???R
++Y?Q???!?RL??I??? )×£???lC7? ??x?4?|#??Ïœ??/?M?QV?|j??c ???u?PRG?JE,)ÅŒR?>??Ci\??????{IMRIRB?Ì”(t?Èš??@??*??w7?[
++??D????cF?K??d?+?B?Q??0Sfà±ƒd
++?4ww?nÏƒ$?$r?SS?6????{p??8?,??}????~?????;???{kQ?:?Z???*3?? y?$??2k?Å‘2?A?y???Â€?c/?????? L?TÉ·?1??s????;f????D&?&????/g??W??a??5?2I<7???a?;? ?h??6Ú¿?0vS3 ??z?Ò‘???i???pbt?]?|~s]?D ???>W?rVR*P
++??K"??e)7??????v??^?,D2À›O????FAWIg ??a??x??j^ ?/?HE??&??jA??r$*?A?AÒ…UX???ç›šs8?To???UX,!?????0???MÊ¸?k??V_?????CÈ‰2|???<?ShCI??U???wQ??!D?@ GG?????%??/?sÃº?kU??j?4Z??Æ¯VI?o3fr??O?km=???@?/s??[?/ ???34?:?-?^ ?Ş‰i]y?/?N?P?}l???h6E×«?e??Í¸?İ¨?2rl?pl$??T?o?5??4?p/ =?0?r??$%????u??eéº»-t8?B?a?*i???????z?????M???G(?S(?Å¼q???~???mTy?l?Bv?Gqn??3y??ZJ=?????Ö¬?8m???????lb??3??>?Sg??Y?Mr??|?o????$S??7m???????j???3??p?T.?X????????i????zí¶?wiY=??????E^?A8  ?F*P?|?Üw??????Lx???è‹3[  c???q{???F7???u???Õœ???Ä‹??W_B????Ø…??7??|;??M??59r???T???]????6?????uI?İ??w??ä‡¬??F(???d?}?45?lP*?m[???y?ß®?n?= ?)r#d    IEND?B`?
 \ Brak znaku nowej linii na koÅ„cu pliku
 diff -ruNa rc-beta2-old/skins/default/images/buttons/filter_del_sel.png rc-beta2/skins/default/images/buttons/filter_del_sel.png
---- rc-beta2-old/skins/default/images/buttons/filter_del_sel.png	1970-01-01 01:00:00.000000000 +0100
-+++ rc-beta2/skins/default/images/buttons/filter_del_sel.png	2009-02-11 08:59:03.088415326 +0100
+--- rc-beta2-old/skins/default/images/buttons/filter_del_sel.png    1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/images/buttons/filter_del_sel.png    2009-02-11 08:59:03.088415326 +0100
 @@ -0,0 +1,11 @@
-+‰PNG
++?PNG
 +
-+   IHDR           szzô   sRGB ®Îé   bKGD ÿ ÿ ÿ ½§“   	pHYs     šœ   tIMEØ	/Ø‹78  ÀIDATXÃ­—mˆ\WÇçÜ—¹wŞwg7›¬yÑÔ]“4‰5‘"$6m¤Ah!¢_T)Æbc¬*AP¬ÅZ¤)"4Ğ†¦*‰ôƒXjcUjLı’’„ê®‰i^ö}7»3;3wîyñÃÜ™µ›tWz˜çŞ3÷œ{Îÿ>ÏÿüŸsÄğğ0oœ»p¸»XøœïyZ,B XºXÖšän±XÑhÄşØäÔQÔxN
-+ÉrËŞİwã¤ƒ ¿UÏ`Ë~Ù‹±c,Zk\×ùyy¾:35uó×¬ ¸ ¬Å&›e½hocBì-u¿ĞhÄS37çşä:Î²Æ‘ B€"vyE R€”)DÓ¤Èlß<p2“wk–à–“±È–j—R ¤@H‰Ñ–”ï—îºóC'Óép£^y»‰—z¾”'Zı[aÌ¤Ã÷o¸ã”ïº}ÆÚÿß··ÔÏu˜«02>ÁõÑqq¼}õª“RˆÜŠ ,õ•Ëad”ºò„aH¤0Æ†áîl6}äv^¼E45RH!q=‡t: ÃÍö6 Ü÷€]\±ÉÅXµ¢Øw!ÍRíKòKêvÙZ.w’Ûj~hóŞÜ&
-+÷.PÜÛÜIÈ[j©!m *ÙòâÖç®ÔİÿÛŞR<h£QÚ`¬A·@aµ)®ÓöÎ\`íŠÜ¾0y3)Õ•BVÅ˜J´ÆD&‹ŸóÙ”›	=g^:rÁ=‹ ĞÆ¢µY–Ø$ÎqÜ ¦zl”›~•¹óçˆ¦¦°Æà…iÒë×Ó³kÏ¶UÛïúÇøÄä×ê•òËÒq…Ãm±Ø“,‹lèØ´<Ô•¨©˜ÊéW¸züT½NªØ…€À*ÍìùóLÿı][·mZ¿ÿÑ?LÁ£³ãGdG¦” ´nšÒm’gm³ÍøKÇDZ3{ê$—Ÿı)~Rè[C:“%åº¤\‡ •"—Ë‘ï[Mehˆ¡ÃÓkõ3™®îÏt\¶”Ãƒ1ºiZ£µF+V¦y×ºÙGkjÚ½q†Ç‘_ÓO÷¦-¬ıôgñ­ÁÓ
-+_ÜÚ<ÅÁM¼ï¡}dK%¨×ùÏÓOÒ_êzJºn_kß‘°õ…–…ıe’¥´†Z•ñ—ÙğÈÜb/“eêØQ(—ImÚÌš/?‚“Ëã¤3Œüê%ª—şÍüéWÖ–víyxztôG@ÜÚµ=ĞÎ±¢Y·š¯èç×¯’^·Wé6«‹»?T1õ3¯SúÊWqry Ê•
-+Är¥åÓ¤÷¾û÷Õ…×€¿49`,Ú4c¯.´ÂĞ‡Ö(¥°Â!şçEòiŸ ğ1W®0ş“'‰ÇÇ Èßs/½ß8„S(pé7'¨şò8Y/E."'GÓSé\î£mF'+A´¶¨Pm"jZcGGğÂaüÀC¿y†±ïì')Àå/RıÙ)š©4ø¡bìÌt&Ãu‹„¨©b’¶ó—Ğc®ç!¥À"B«+3Aª¸é{‹ú
-+YÜ¢@›«8JA°Ù[˜ddÑÖ$,7	˜Ä:êZ¬øık1õˆxr=;Nø±ô>‚SìAkMT® ĞıÀC~‘˜É1ÔÌ4N*Àëé­DQôö‚$!PÚ69h@PGİZ¢FÿÎmØò<zdŒÔÀNz{'ßÀ•SÇ¹şã/ &¯Ûõ)
-+_ü>JIâ·¯á¯Z-õ^ŒjÕ³ ZqÖIÜ5Ê˜Ä:êZÓ˜¯b·l#DÏÖP7+¨™é„p¿ ñ»§Ç.2qä ñä ãWÆˆë`+5²|’y­OÄÕ& ·MÂÄı­å¶Ôá¬©˜0ÛĞ¬zx?Ñãh¼5Ääß$úÈ½D/?O1ç£m.3ıÌ!*ı;iüöEÒÕˆôûpîÙ;\¾qã¨ÑºƒÖ
-+cl3!™æ$ÆÚwZ‚o~v–Ê·Òû­oã¤<¢Cpò9rxèšUÀæˆ.¼…8õ<a-"Øñaºû®šœ;Ğh4f)¡Òj¤Z«!›‡Sníg*Ã—ÍºŸÈöı ´~æèÓDÿBM×R`•ÓÀË¥È>ø ¹Ï=š¨©/ÍÏLÿ¾óØ&†‡‡yõ¯g•îµ&xşîØx°àqˆs¯ëç^G^ÃF²Ø…·qÁİ÷c6lı[yfæàÜôÔÙÎT<08Ø +<XkÉ†>Åt
-+7ôzûö)o¯TõBkŸTú¦Ây³Z;W+§¥”ªV«-:üò_1Ó'vøÀ    IEND®B`‚
++   IHDR           szz?   sRGB ???   bKGD ? ? ?????    pHYs     ??   tIME? /Ø‹78  ?IDATXÃ­?m?\W??Ü—?w?wg7??y??]?4?5?"$6m?Ah!?_T)?bc?*AP??Z?)"4Ğ†?*???XjcUjL????ê®‰i^?}7?3;3w?y??Ü™???tWz???3??{??>????s???0o??p??X???yZ,B X?XÖš?n?X?h?????Q?xN
++?r???w?????U?`?~???c,Zk\??yy?:35u?×¬?? ??&?e?hocB??-u??h?S37???:Î²Æ‘ B?"vyE R??)DÓ¤?l?<p2?wk?à–“?È–j?R ?@H?Ñ–??????C'??p?^y???z??'Z?[aÌ¤??o?????}????????u???02>???qq?}õª“R?ÜŠ ,???ad????aH?0????l6}?v^??E45RH!q=?t: ???6 ???]\???X???w!?R?K?K?v?Z.w??j~h?Ş?&
++?.P???I?[?j?!m *???????????R<h?Q?`?A?@a??)????\`??Ü¾0y3)Õ•BVÅ˜J??D&???Ù”?  =g^:r?=? ?Æ¢?Y??$?qÜ ?zl??~???çˆ¦?????i???Ó³kÏ¶U?????????????q??m???,?l????<???????W?z?T?N?Ø…??*????L??][?mZ????LÁ£??GdG??? ?n??m?gm???K?DZ3{?$???)~R?[C:?%åº¤\? ?"?Ë‘?[Meh??Ã?k?3????t\????1?iZ??F+?V?y×º?Gkj??q?Ç?_?O??-???g????
++_??<??M???}dK%?????O?_?zJ?n_kß‘??õ…–…??e????Z????????b/?e??Q(?Im?Ìš/??????3???%??????WÖ–v?yxzt?G@???=?Î±?Y?????×¯?^?W?6?????T1?3?S??Wqry Ê•
++?r??????????×€?49`,?4c?.?????(???!??E?i? ?1W?0??'??? ??s/??8?S(p?7'???8Y/E."'G?S?\??mF'+A???Pm"jZcGG??a??C?y????')???/R??)??4??b??t&?u????b?????c??!??"??B?+3A???{??
++YÜ¢@??8JA??[??dd??$,7   ??:?Z???k1??xr=;N???>?S?AkMT? ???C~???1??4N*????DQ???$!P?69?h@PG?Z?F??m??<zd???Nz{'?À•SÇ¹??/?&????)
++_?>JIâ·¯??Z?-?^?jÕ³ Zq?I?5Ê˜?:?ZÓ˜?b?l#D??P7+????p??????.2q? ?? ?WÆˆ?`+5?|?y?O??& ?M???????á¬©?0?Ğ¬zx???h?5???$?È½D/?O1??m.3??!*?;i??E?Õˆ???p??;\?q??Ñº??
++cl3!??$??wZ?o~v??????o??<?Cp?9rx??U???.??8?<a-"??a?û®šœ;?h4f)??j?Z?!??Sn??g*Ã—Íº??????~???D?BM??R`???Ë¥?>? ??=???/??L????&???y??g??î?&x???x??q?s???^G?^?F?Ø…?q???c6l?[yf???????T<08? +<XkÉ†>?t
++7?z??)o?T?Bk?T???y?Z?;W+????V?-:??_1?'v??    IEND?B`?
 \ Brak znaku nowej linii na koÅ„cu pliku
 diff -ruNa rc-beta2-old/skins/default/images/buttons/filter_down_pas.png rc-beta2/skins/default/images/buttons/filter_down_pas.png
---- rc-beta2-old/skins/default/images/buttons/filter_down_pas.png	1970-01-01 01:00:00.000000000 +0100
-+++ rc-beta2/skins/default/images/buttons/filter_down_pas.png	2009-02-11 08:59:03.112426863 +0100
+--- rc-beta2-old/skins/default/images/buttons/filter_down_pas.png   1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/images/buttons/filter_down_pas.png   2009-02-11 08:59:03.112426863 +0100
 @@ -0,0 +1,9 @@
-+‰PNG
++?PNG
 +
-+   IHDR           szzô   sRGB ®Îé   bKGD ÿ ÿ ÿ ½§“   	pHYs     šœ   tIMEØ	+87“*  ÎIDATXÃµ—ËWÆ÷ŞºU]Õ/ÏLÛ3ãÌŒ­1¶ÄÂa^+6°†=dãˆ-¥%ìXDd	HŒ@#a‰¢(¶qP:	3dü÷LOUuÕ9,ª_ãG<ÆÎ•®ª«ºªÎw¾{¾ï2ªJ÷ƒõ3I\ûn8ˆ1†GUP´:Q ”2îmõZÅÏ>êÙûÇñ#‡	 ¼–Û­æg£ĞïùaUETaxtÖİIÓÍşNú2O0ìğ(UJÕ‹÷4”
-+D•„İ?7óó8®}UDŸÀÆkÆ˜äàı/G¡?¥ª/ 7fDE	7ûÜâW¢Ğİˆ§0bÃ(\†Ë‹óû8·ø8OÀ0à¬%M36{[lŞëQå­fãcLûcÀ°}àH’˜Ğ{\PŠøàt-ŠÎî^®É|v L¥!3dÁ9Kè=aè_PU÷0%=SeZÀàÑw<+ CgT†.ù#xêĞ:rd”şãğØ§0¡L§£­â±|OŸı$SUE¥¢¢£%QuCÃš&g Õÿ#øpJ!£BVæˆ
-+ŞDÖS:ßÈÛrÖl:k«ûEvÑ(ª˜=‡²L)l}Ş¾Ó¥Ûû^¾M©BäB:q›OÎ¬;ÔY¸¸Õë½”ùï¸/B0^3UT¤Òóˆ+cÆ·t;*:)
-+áò½.\û';ENì£¡Àät{\¹ó>‡ZóÇ¾±üùß6Óğ›Û½Ÿ˜‡áˆQE¤:ª2šÃëªUpS
-+—î\å\÷6pÌ6Z4ã„ÓOğ••Ïqdf‰(òtûXïßæ×^#¯éëµä;Óûƒ} ETªãÔ¬Š«úRéöÿËùµ¿Ói´iFšöyÃg:G81w„ƒõ¡P„¹zÂçŞ{¸•ü(‚%î·âéÌeB¦Y/K¡Ğ‚?o¼A»3:šNh{¥îu—ğ´½ÒtÂB’p;»Ë›ïh7ZßwÖÆS0ÎNTP•aæÕùô2õìYy‹…¸Fâ„È•Ä%q!f²A5qPÒpÂr=áıŞ;àİ·â°ö¥	 &4i2 2]‚Áp+½Áj£Ê:Ÿ;I©	…¤L[Q)9«í£´£%Dª[ö=é¯FQíÔD:İd‚šêšA©„©cWU¹ôHœ¡î…¥öiæ“Eê¾Ã¥¿!ZVK*%KÃ|bæ‡ÛÊ_Öoß%´B.i„í•‰Œk`hZ¹–ŞgæªŠZÅ[C^œàØ`>™á¿ˆ1UN«íeêşèø–P¬gÀ`tªu"Ãı÷©`¬…¦oQª’[¼uı7ll]`&j¹°ú]k:OV
-+¯ÿç5ÒüÖxâ N‹¢è>X„#ıO¤L'Ê ,èÔÉE($ÅÃ•›¿çÃ­·pÌ¬.¬§(Ş$	<[ƒM¢`‰m\Ëóìâ.dÚÛwe½›¼Ğr³´£eÒr€Å1\½ù*ÛWÆÁ¢\XûÃ0xˆ*¤%,5#ùe^äv3°Kÿ©!Ë
-+ÏœÂ˜J-°X0põæ«Üì_Cşºş'ƒ*¸(äRĞI>ÅÁdõƒí~ïlYùônh•IŸö°Æ{º×Ù¤´}“¾Æåç)ôÎ8á_·ÎãÜ[dy—º÷”*”¢ì‹ñüÜ—ug«FD®[k'›‘ˆläùàªµ…­>ÓÌG¶_ªp=»­v'9¹ğÍ•wï^änúªYÑG‹k„6` ‚w-k=ÏJód‘mçßÛIû¿ş€5ªÊÕwà°Ø`~vöÅ0Ø+®ÏŞM×Ø)îRÊ€ĞÅÔÃıÌÖ–©™Ö?¶··ÎdYzaº]›_XØµõîµ!	}@8Ì'qıÛŞû¯«ÑÃŠ„Ö÷TôÍ<ËÎåEv^D:´ói ÿ/û¥šÀ’ù    IEND®B`‚
++   IHDR           szz?   sRGB ???   bKGD ? ? ?????    pHYs     ??   tIME? +87?*  ?IDATXÃµ?ËW??ŞºU]?/?L?3?ÌŒ?1????a^+6??=d??-??%?XDd   ?H?@#a???(?qP:    3d??LOUu?9,?_?G<?Î•??????w?{???2?J???3I\?n8?1?GUP?:Q??2?m?Z??>?????#?   ??Û­?g????aUETaxtÖ?I???N?2O0??(UJÕ‹?4?
++D????7??8?}UD???kÆ˜????/G????/ 7fDE    7????W?????0b?(\?Ë‹??8??8O?0??%M36{[l??Q??f?cL?cÀ°}?H???{\P???t-???^??|v L?!3d??9K?=a?_PU?0%=SeZ???w<+ CgT?.?#x??:rd????Ø§0?L?????|O??$SUE????%QuCÃš&g ??#?pJ!?BV??
++?D?S:???r?l:k??Ev?(??=??L)l}Ş¾Ó¥???^?M?B?B:q?OÎ¬;?Y???ë½”???/B0^3UT????+cÆ·?t;*:)
++???.\?';ENì£¡À?t{\??>?Z?Ç¾????6???Û½?????QE?:?2????UpS
++??\?\?6p?6Z4???O????qdf?(?t?X????^#??????;???}?ET??Ô¬????R????????i?iF???y?g:G81w????P??z????{????(?%?????eB?Y/K?Ğ‚?o?A?3:?Nh{??u?????t?B?p;????h7Z?w??S0?NTP?a????2???Yy???F??È•Ä%q!f?A5qP?p?r=???;?İ·????     &4?i2?2]??p+??j??:??;I?   ??L[Q)9?í£´?%D?[?=??FQ??D:?d????A???cWU??H??î…¥?i??E??Ã¥??!ZVK*%K??|b????_?o?%?B.i?í•‰?k`hZ???gæªŠZ?[C^???`>????1UN??e?????P?g?`t?u"????`???oQ??[?u?7ll]`&j???]k:OV
++???5????x? N???>X?#?O?L'Ê ,???E($?Ã•???Ã­?pÌ¬.???(?$    <[?M?`?m\????.d??we?????r???e?r?Å1\??*?W???\X??0x?*?%,5?#?e^?v3?K??!?
++?ÏœÂ˜J-?X0p?????_C???'?*?(?R?I>??d???~?lY??nh?I????{?????}?????)??8?_????[dy????*??ì‹??Ü—ug?FD?[k'???l??àªµ??>??G?_?p=???v'9??Í•w?^?n??Y?G?k?6` ?w-?k=?J?d?m???I?????5???wà°?`~v??0?+???M??)?RÊ€??????Ö–????????dYza?]?_XØµ???! }@8?'q???????ÃŠ???T??<???Ev^D:??i ?/???À’?    IEND?B`?
 \ Brak znaku nowej linii na koÅ„cu pliku
 diff -ruNa rc-beta2-old/skins/default/images/buttons/filter_down.png rc-beta2/skins/default/images/buttons/filter_down.png
---- rc-beta2-old/skins/default/images/buttons/filter_down.png	1970-01-01 01:00:00.000000000 +0100
-+++ rc-beta2/skins/default/images/buttons/filter_down.png	2009-02-11 08:59:03.136415770 +0100
+--- rc-beta2-old/skins/default/images/buttons/filter_down.png   1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/images/buttons/filter_down.png   2009-02-11 08:59:03.136415770 +0100
 @@ -0,0 +1,7 @@
-+‰PNG
++?PNG
 +
-+   IHDR           szzô   	pHYs     šœ    cHRM  z%  €ƒ  ùÿ  €é  u0  ê`  :˜  o’_ÅF  àIDATxÚ¬—il\WÇ÷Î›y³yl·8ñÒ¸u–Ò$mšR„VjZPØ‹DU$(ğ‰‚PªP	¾ H…Z@B(PT„TMh¨D@,JPªIŠZÔĞŠ¤I½;Ç3ö,ïŞsùğfÆc'NbàhÎ¼«yoîùß³üÏyÊ9ÇÑ¿ØÓ‘mı¸ïÇ´RˆRŠ•Ä9'àÀ‰àPT‚Jbtbê»ÅRùÉˆÒ°òß—Èûï¾ ™HôöõtßÚ”Jr­"Îa­àD0"Ä¢Ñı3³¹ÜôÌìÓ¬Btõ\âœ7¹&uÎáœÃŠ €d2¡7ü4ÛÚ|—1vu ”R×êµº( ¢Zk”RD”Fk¼uËO7¥“·YkWãŒ(µD/w_ëªFb…¸ËŞ~Ë–ƒ™tjPDş; W2xÉJ¡P(¥q„alJ§z·o½ñ‹u_„fµ®_B)
-+bÇÅÙ9ÎsndŒR©|SÏÚ®ƒZëæU¸R	®\›Høt´gI%“ø¾O`…D"1ÔœiÚï.ÎšÍÿCTÈŠ0)½H„XÌ#JÒ”JŞ$V"µªiT äÿYÜÒ…«~‰s8P‹O\55d+3¡»Œ}GõS];Üêˆhu –?ë\hØ¹ã57_e+ïJ7&äJ D\3.z!Ä‚Qa©³ØÕ \‹'Ä¹°1Õš”µˆœû„à'NÎWŠˆ§êÀ– pÎ!«p{İ¸"SĞ”
-+A#†d$NÆKQ‰%Ó…¸—‰y*zˆiÚ«£©7–«Aƒ*&KÓ<sæ(GGşÎHaŠ@M±›²}|h`ç†;6o{h®T8¢–•D@ØájÈt(šT-Æâå U6zó_ş	3¥ÙD&LkÆ86vŠÃg³³gË†Ç‡>ÿ›µ³©‡ÏO~§±õÕsÀJ7 ©³ÕÒA¤;cºbùÑ¿Í—ş²Ÿõ­ëli%îE¹ï†{ÈÆ3<?rŠ?¿HWK'§_ç½G¾Èáİûè¬´OM\œ: µ^,C'.ŒMÕu5k$¼Z»è¥²ptúE¾2¼ŸÍkúéÎ$i‰ô'#<°ñİ|lğvtn")Òê6ttRV†Oû­=í'üxÏ*v8¬XŒµ+UµŒ„W[ı­R	(»2ß8õ3z[²¬OÇXçzBWB ©WZwÜÑ—º}Ã¶öv^ÏŸå©s¿ëì]Óó`Ì‹&ê Ä±xz±X1! c—^EĞNäşI>ø·´¶ÒÈÄ*´Å=ÚıT;”R´ú	š£õÖø–¡6û-¤¢nmjyç¢ªó­Ş„`L5¦¦Æ ‰p:÷
-+»º})K«ïó‘Á¨H¥ ×´BÅäÙÕ»›¾ÌÛ0²À»º<º¼7¦2™–Û–ğ€•ĞÅ¸Å¯êÎt‹ƒ¨vÌc´ûš¤a¨÷a¶´o§3µ™¿ô=ŒT l™¡î;yÏÀıÜÙïØ÷7K*ò'Ò‘€y;ë'Rı}KxÀZ¡6L®4‰u$<Å| ‰é"QÆØÚ¶‡vìE© »úŞNgrw¸§r€ÕÕ P®!	¥NDµd3fYT×N`mª‡Š¹Ò8¿|åANM` ÓM&–
-+×ÍkIG“äË7_ØK.ÿ$QU$¢S´ùm¥R©t¶¡©† Ìz+RMFæFu-Î±P)±©y;…ÀP.¢”æÙWá¥‰ƒ—x,Xş2åâÚâIÆçÏÑï§=ºæµÂüÜğ²2¬q€TOÛPõä´Êôúƒô6‘«,à©((ÅáWá“ÏÖã±á¯R* -Fä*Û»?ˆY0ÏJ…ã—­kCq‰Vß‚ææŠ|`àsèÈ ”ğ”WñN_8‚qğí_§¸ğsÚãi¬sÌe6vÜË¶»ÎOLî¯TÊ• h©V‚­v8qRUWo»"a5ÌÌçh6k¹ÿ-ûPú:J¶ˆVÁğÜé½üàä'˜+<EG"IEJ& ?û>>ºáQ73>½ÇX3éyŞb/0ÆLæçO{‘ˆ©¬¡]¨Åq¯6ñ9/ç_s{7%?uóûşxæû¼1{+yæÊpå#4Eã%ëá­=÷±sİ'Mn²ğ™™Ü…_Õú €rÎñÜïEDV3[q’ŠG½-×ßğÙ¦lúÑÑÒËÙ3¹˜)¥bHÇÚèJmæú–wĞ¢{NNNí™Ëç7NÄ[·m«wC«”²« 5D"3uaü‰Ù|üÙ÷®k¿ùn§ìu‚yÚŸ#§ò¹¹Ã#Å7ş`Œ	´Ö,güÏ (n´=æ(    IEND®B`‚
++   IHDR           szz?    pHYs     ??    cHRM  z%  ??  ??  ??  u0  ?`  :?  o?_?F  ?IDATxÚ¬?il\W??Î›y?yl??8?Ò¸u??$m?R?VjZPØ‹DU$(???P?P ? H?Z@B(PT?TMh?D@,JP?I?Z?ĞŠ?I?;??3?,??s??f?c'Nb?hÎ¼?yo??ß³??y?9?Ñ¿??Ó‘m???Ç´R?R???9'?À‰?PT?Jbtb???R?ÉˆÒ°?ß—???? ?H???t?Ú”Jr?"?a??D0"Ä¢??3??????Ó¬Bt?\??7?&u???ÃŠ??d2?7?4??|?1vu ?R?êµº( ?Zk?RD?Fk??uËO7???YkW???(?D/w_??Fb????~Ë–??tjPD?; W2x?J?P(?q?alJ?z?o????u_?f??_B)
++b????9Î?snd?R?|S?Ú®?Z??U?R    ?\??H?t?gI%???O`?D"1Ôœi??.Îš??CT??0)?H?X?#?JÒ”J?$V"??iT ???Y?Ò…?~?s8P?O\55d+3???}G?S];???hu ???\hØ¹?57_e+?J7&?J?D\3.z!??Qa???? \?'Ä¹?1Õš???????'N?W????À– p?!?p{İ¸"S??
++A#?d$N?KQ?%Ó…???y*?z?iÚ«??7??A?*&K?<s?(GG??Ha?@M???}|h`??;6o{h?T8???D@??j?t?(?T-??? U6z?_?    3??D&Lk?86v??g???gË†Ç‡>???????O?~????s?J7 ????A?;c?b?Ñ¿Í—??????li%?E???{??3<?r????HWK'?_??G??????è¬´OM\?:??^,C'.?M?u5k$?Z?è¥²pt?E?2???k???$i??'#<???|l?vtn")??6ttRV?O??=??'?x?*v8?X??+U???W[??R    (?2?8?3z[??O?X?zBWB ?WZw?Ñ—?}Ã¶?v^ÏŸ??s???]??`Ì‹&? Ä±xz?X1! c?^E?N??I>???????*??=??T?;?R??   ?????????6??-??nmjy???ó­Ş„`L5??Æ ?p:?
++??})K??????H? ×?B???Õ»????0?À»?<??7?2??Û–????Å¸????t???v?c?????a??a??o?3????=?T l???;y????????7K*?'Ò‘?y;?'R?}Kx?Z?6L?4?u$<?|???"Q??Ú¶??v?E? ???Ngrw??r??Õ P?!    ?ND?d3fYT?N`m?????8?|?ANM` ?M&?
++??kIG???7_?K.?$QU$?S??m?R?t???? ?z+RMF?Fu-Î±P)??y;??P.????Wá¥‰??x,X?2????I??????=????????2?q?TO?P?????????6??,??((??W???Ö?????R*?-?F?*?Û»??Y0?J?ã—­kCq?Vß‚???|`?s?? ????W?N_8?q??_???s??i?s?e6v?Ë???OL???TÊ• h?V??v8qRUWo?"a5???h6k??-?P?:J??V????????'?+<EG"IEJ&???>>??Q73>??X3?y?b/0?L??O{?????]??q?6?9/?_s{7%?u???x???1{+y??p?#4E??%???=??s?'Mn????Ü…_?? ?r?????EDV3?[q??G?-???Ù¦l??????3??)??bH???Jm???wĞ¢{NNN??????7N?[?m?wC?????5D"3ua???|????k??n??u??yÚŸ#?????#?7?`?   ??,g?? (n?=??(    IEND?B`?
 \ Brak znaku nowej linii na koÅ„cu pliku
 diff -ruNa rc-beta2-old/skins/default/images/buttons/filter_down_sel.png rc-beta2/skins/default/images/buttons/filter_down_sel.png
---- rc-beta2-old/skins/default/images/buttons/filter_down_sel.png	1970-01-01 01:00:00.000000000 +0100
-+++ rc-beta2/skins/default/images/buttons/filter_down_sel.png	2009-02-11 08:59:03.160424513 +0100
+--- rc-beta2-old/skins/default/images/buttons/filter_down_sel.png   1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/images/buttons/filter_down_sel.png   2009-02-11 08:59:03.160424513 +0100
 @@ -0,0 +1,4 @@
-+‰PNG
++?PNG
 +
-+   IHDR           szzô   sRGB ®Îé   bKGD ÿ ÿ ÿ ½§“   	pHYs     šœ   tIMEØ	.¢–j   ÉIDATXÃ¥—ldUÇ?÷½yoŞL§vÚí¶İm)eaYv‰¬¸(A	‰Ñ?ÕDcŒòÆH¢1ñ/ôãnøCcèFPşPTVTTQ`A~ìfYØ´İn·™vfŞ=çøÇ›N§û‹½™;ïfî}ï|çœï9ßóÜÑ£GyöŸ‡ï®”ËŸŠã(puÎq¾ajš­U1išæO}¯Ñl=º€‹·Üø~r I’LNŒo¹¶¯P¸è›ÕUÅÔğªDQnÿòJuyétõ =Œ6\S³öƒU/jšf ª8 $ÁeÓS?*—û?äEzàp8zA€sĞAPÜ³sÇÁ¾baŸ¨ôâóqnÓ<×~dÓ…%G•kvï|´T,^¾Î•\Èà¹<áÈÎYûŠ…ÉİWîx,¢ñwĞ«ëÏ áœQ˜ce¥Æ‰ùŞ™›§Ùlíy4pA¹' JÁóç&$IL¥R¦ˆã/J’$×÷÷÷í·ìÁgÏÿÅçc¤YŠ È!QR,&ô’=ªbÆY²:ğÛ¼°ö—šaâ6N¼kÌìÂ¶Î±oíO{mXo…¨7g5Ë›±aÜºæFîBî&äù@™eÕ“0Öã.€#×«»ÏÜï "™@‰¡¢(†š™0ÜÄ¿ –ìwfmA2¤å	œyêé*bB!ÈSÊH£¤´š¢Ğ-ç¢&ŠtiEn¾ªv„åâŒƒO=4…ÅÖO¼õ7ûsõSxóôEEfÊÜ:õ¾+®»l×ìüÜü—jÍÕ'Ü)‘yÀk«@°{·!Rëáh§¾•âZÂïOÌòà‹Yn®RNJëµïW™]x•CÇŸcßØÎ+¾¶÷Ó¿])~ùÄ©ùİ¹8 fˆd ´#@¶‰lë D<®¥üì?àÛÿx„ÉòV¦ÊäÃ·_rå|‰çæ^eváeF†xiéM>÷ô·8pó=§C‹+§vİ•ĞÔP±¶Ö*‚ˆ ^¯ÙU$Û¦ñìÒË|÷ÅGØ±e[J"Ï¶BÈ37ñÑéÙ3<C1l0{¦+Ã´œç«³û)İŸóÛ7 T¯ŠÃ«!ªˆ)b‚˜v8ÒJ=-ZüàµGï/³½1{Æe8Q@;*9š7&e4öìªğfı8øÓèøÈØ£\Tè P#3"‚ª êñ"x¯xÑ«*Âáêêé¿¹ª\¦yJQÊ`>¤:µÃ9G9Nè`0öŒÄÂŞÊŸÿ#s+÷õß¸áËB šÑN:áA¼' äXõ7ŒE¥œ¹múNR­ĞLk›H›ú:7ŒßÌxéÄÖØ72`Ş/Í”JûºHØv¹h¶ÆŸ©!f†ÆZºÀPì¨<{Ç?ËÎ¡İwpğ•ã5ÀK‹½£×ñÉ;¸nÂ8pX)¥zVe%Ÿ¶Mu¥aÖ\®7“ëÎÙ°¢ÎÈçk> rr, påàv>sõçq.à†‰÷2\ø`vFèª€™‚w‘p£¨(¢’q@ßµQPØZ#U¥Ú:É¯|ƒWOş€ÉÒ(¥Œ[LöRÌ¨{á‡ÏßGµösr®AŒÍVó®4Qkg€"j-¸t­ÍXK›Ìôï¦î…FºŒsO»—WNşö,Õ½pà…ïĞj<Î`>aaíúã	†r[ÔWk³]hs@¥
-+ß&¤×®µ«­5ÆãiÆû÷RK×È‘‡İËk‹OvŒ7Ä8ğÂı43˜/bÕ–qÍè­Èšübµ¹úÌæ,h»_E7¯eóï^Z­Á‡'?‰§H­Ùá8tì^~1xèğ÷i¬ıŠ¡|5cÕ·˜©ÜÆÕƒ×¿uòÔÜş4mµº ¨¢ÖvûÕëÌÙî°—×ªôËVî¸üœÛNS8á©c÷ñğK_¡VŒJ’š§)mƒ·ğ‘Kï²Ó'—î•ù07´@DæV×Ö^ƒf•²®7%·Ñî­w|fğzı»t|¦ø‰«¾9õ—·~ÂÛÕYTëÔd	k=M_”§)Jñ±ÛÙ·õã¾ºXÿÂrõô/»3Ì=z”§ş<„½4äb¦…|.·sê’»Jå¾¯Ï5_¯¯=ÏéÆqRiPŒ)î`jàZÜØs‹‹ów×êÕg².û+WîÚÕQCqÎI/I „AèO--<°R_ùépyúÎ­C»nÅÉ´¢qèâ}±V­=>×xû÷>‚`S3ğ_jWS›èÁ-_    IEND®B`‚
++   IHDR           szz?   sRGB ???   bKGD ? ? ?????    pHYs     ??   tIME? .??j?  ?IDATXÃ¥?ldU????yo?L??v????m)eaYv???(A  ????Dc???H?1?/??n?Cc??FP?PTVTTQ`A~?fYØ´?n???vf?=??Ç›N?????;?f?}?|???9???Ñ£Gy???ï®”ËŸ??(pu?q?aj??U1i??O}??l=??????~r I?LN?o???P????U????DQn??Juy?t? =?6\S???U/j?f ?8??$?e?S?*????Ez?p8zA?s??APÜ³s?Á¾ba??????qn?<?~dÓ…%G?kv?|?T,^?Î•?\???<???Y?????W?x,???wĞ«?? ??Q?ce?Æ‰?Ş™???l?y4pA?' J???&$IL?R????/J?$????????g????c?Y? ?!QR,&??=?b?Y?:?Û¼????a??6N?k??Â¶Î±o?O{mXo??7g?5???aÜº?F?B?&??@?eÕ“?0??.?#×«?????"?@???(????0?Ä¿ ???wfmA2??   ?y??*bB!?S?H??????-??&?tiEn??v??âŒƒO=4???O??7???s?Sx??EEf??:??+??l??????j??'?)?y?k?@?{?!R??h????Z??O????Yn?RNJ???W?]x?CÇŸc???+???Ó¿])~?Ä©?İ¹8 f?d ?#@??l? D<????????x???V?????_r?|???^ev?eF?xi?M>???8p?=?C?+?vİ•??P???*?? ^??U$???????|??GØ±e[J"Ï¶BÈ37????3<C1l0{?+Ã´?ç«³?)?İŸ???7 T??Ã«!??)b??v8?J=-Z???G?/??1{?e8Q@;*9?7&e4????f?8?????????\T? P#3"?? ??"x?xÑ?*?????é¿¹?\?yJQ?`>?:??9G9N??`0????????#s+??ß¸??B ??N:?A?' ?X?7?E????m?NR??Lk?H??:7???x????72?`?/Í”J??H?v?h??ÆŸ?!f??Z??P??<{???Î¡?wp???5?K???????;?n?8pX)?zVe%??Mu?a?\?7???Ù?????k> rr, p??v>s??q.à†‰?2\?`vFèª€??w?p??(??q@ßµQP?Z#U??:É¯?|?WO????(??[L??R??{????G??sr?A??V???4Qkg?"j-?t??XK???????F??sO??WN??,?Õ½p????j<?`>aa??? ?r[??Wk?]hs@?
++?&?×®???5??i???RK?È‘????k?Ov?7?8???4?3?/bÕ–q???Èš?b?????,h?_E7?e??^?Z?Á‡'???H???8t?^??~1x???i????|5cÕ·????Õƒ×¿u????4m?? ???v?????î°—×ª??V?????NS8??c???K_?V?J????)?m????K???'????07?@D?V??^?f????7%????w|f?z??t|?????9???~???YT??d k=M_??)J?????Ù·?ã¾ºX??r??/?3?=z???<??4?b??|.?sê’»Jå¾¯?5_??=???qRiP?)?`j?Z??s???w???g?.?+W???QCq?I/I ?A?O--<?R_??py?Î­C?n?É´?q??}?V?=>?x???>?`S3?_jWS???-_    IEND?B`?
 \ Brak znaku nowej linii na koÅ„cu pliku
 diff -ruNa rc-beta2-old/skins/default/images/buttons/filter_up_pas.png rc-beta2/skins/default/images/buttons/filter_up_pas.png
---- rc-beta2-old/skins/default/images/buttons/filter_up_pas.png	1970-01-01 01:00:00.000000000 +0100
-+++ rc-beta2/skins/default/images/buttons/filter_up_pas.png	2009-02-11 08:59:03.188426495 +0100
+--- rc-beta2-old/skins/default/images/buttons/filter_up_pas.png 1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/images/buttons/filter_up_pas.png 2009-02-11 08:59:03.188426495 +0100
 @@ -0,0 +1,11 @@
-+‰PNG
++?PNG
 +
-+   IHDR           szzô   sRGB ®Îé   bKGD ÿ ÿ ÿ ½§“   	pHYs     šœ   tIMEØ	*Æú¯¤  ÈIDATXÃµ—ËWÆçŞztõôôx—3á$J¢€í AØÀÖ°6‰Øò7ğXZbÁED@ŞÀ"‘@hdyì$ˆ¶Û±g¦g¦«ª«ÎaÑÕÓİc;aœ+]İ®î[}¾ós¾s¯˜­ë7_¯'µïw€Šf`XïÁ€RË¤½½û³¢(~şqïîÏ|j•  ƒ¥‰æøgã(<ğËf†šAµzçÏuÒts·“¾É!†«Ví¹ÔûãM £¢ç„;>=ù‹$©}UÕàĞC Á‰ "õÅÙãoÆQxÚÌ>Y PÙbjŸ:±0ûV…Ÿ>ˆ#è3"ôÍÅQ´´0wü×÷qt " à#M36ÛÛlnµ)Šò…æxã-™øDP%cxêõ„(ñA@©F¯ÔâøÜh¸óÉ^IeÈ‰à½#
-+C¢(|ÁÌüÃ*é‰2ğ(ÑºŞñ¤ TÊhT*yˆÙ´› é»ÿ8<îè ú ŒAÅY¿U<–àèŞ<53L{@L­30_	Ö09# ÌşãÕÔB1%+sÔ”ĞÄ.¤ôa#\Ó;ÙôÎõö«èÓ¨fÈCY*R*;Å.ÿºß¢Õşv¾CiJì#f’	\>µ23¿¶İn¿‘ùïØg!Ø‹™¦Ú«ç>W"{ÛûuÛO:-
-+åß[-~ã¯tŠœ$Œ	œÇDÈ­¤ÕşË÷¯±Òœ;õõ¥3¿O£nî´*KÂ>j†jo5U´?«ïÍzÆ¥Tşrÿ
-+ç[pgz|‚8i&	''O€WÆ“„™Æ1nî®óË÷Ş&¯ÙOÆjõï÷÷À@5í­C³—\½ß(Öî-Ş¹q‘™ÆãqHì
-+&#ÇkK§ùÆÊçynrGF(Ócc¢œ¿úG’fıÇA<Å~)ö\+:ÌJe¼,•Â
-+şpûµ„ÉÈÓğÇBáË‹g™¯Ïğ•Ÿãéæ
-+Í@™¯×YÏ6¸´ùşìD£ù}ï\2Ä {Ş©)fZyŞ{ƒ(ÜÌî’•÷˜O_Ğ=g^f~la@­_Z<ÃüØ*BF#P–Æê\k¿¡ÿVÕ¾0 À€æ=Ú+L‡sC„{é]N6”‰°$	B^š=Ë\}ñjñÎñÅÅ3L'«¨uYn‹¶îŒãÚ™A†ÊĞ†ÂĞKÂª:úŸ\ÛÔ½0/Í¾Âleüngƒ´Ì ø¨³AZdÎñêâËL×Vˆ\Nä”\Ó8ˆ¢å!ØóP+úm(îÃ˜¡@pÒ¥,ïpkg~tGOd®µoreı ¹–˜máœ€ÄĞí‹·bòp›ÜÉ¬Øæò½·ÙÊ7hm]g:qâ*únoıƒw}›;Œ<¿ÌXm'!I¤EQ´"Â}JX§e¤­ÊHKë–3µ>h+¡d¶şL„uÔÊ
-+¬Rè&·Ú±ÙînOSw÷²NºV'é—aÿ¾¶h€<çe—¦Ÿ¢/‘–]ÁKâÙ/³ˆÃ¹‘ 0Òj<ƒvõWy‘_-Ã‘
-+xøe¤ŸYVğìäiD&)­9›Ä[†ˆ3r-™©?Çbıäõİö¹²,òa!rÆ£nAC=¿’ĞN7%Öq>3û5DQZ·b±KksÖÆi÷]b/U(J%§x~úUëlï¾®ªwœsƒf¤ª·ó¼{Å¹Âõ®iò±Ç/3¸“­ÛÌÄLıÅùo.ÿwcô*]M¹ºñ§^ŠÃK„sM–›Ï³<şb‘íäßë¤»¿¾ÀŠ™qå?-øC„4\075õƒ(‰~Ô.îLm¤7è”Ú%ò	cÑq¦jKÔ¤yqggû,K/×ææç÷ Œ´ŞƒH¢0 xÌÕ“±o‡aøš‰­9	¶Líïy–Ï‹ìUíZ%çÃ ş¨“p›/Ş    IEND®B`‚
++   IHDR           szz?   sRGB ???   bKGD ? ? ?????    pHYs     ??   tIME? *????  ?IDATXÃµ?ËW???zt???x??3??$J???? A??Ö°6???7?XZbÁED@??"??@hd?y?$??Û±?g?g?????a????c;?a?+]İ®?[}???s?s????7_?'???w???f`X?Á€RË¤?????(~?q???|j?  ?????g?(<??f??A?z??u?ts????!??V?????M ????;>=??$?}U???C Á‰ "????o?Qx??>Y P?bj??:?0?V??>?#?3"???Q??0w?×??qt " ??#M36??ln?)????x?-??DP%cx???(?A@?F?????h????^IeÈ‰??#
++C?(|????*??2?(?????? T?hT*y?Ù´? ???8<?? ? ?A?Y?U<?????<53L{@L?30_    ?09# ?????B1%+sÔ”??.??a#\?;????????Ó¨fÈ?CY*R*;?.??ß¢???v?CiJ?#f?  ??\>?23???n?????g!Ø‹??Ú«?>W"{??u?O:-
++??[-~??t??$? ??DÈ­????????Òœ;???3?O?n??*K?>j?jo5U?????zÆ¥T?r?
++?[p?gz|?8i&    ''O?WÆ“???1n??????&??O?j?????@5??C??\??(???-Ş¹q????qH?
++&#?kK?????ynrGF(?cc????G?f??A<?~)?\+:?Je?,??
++?p????????B?Ë‹g?????????
++?@???Y?6?????D??}?\2? {Ş©)fZy?{?(??î’•??O_?=g^f~la@?_Z<???*BF#P???\k???VÕ¾0 À€?=?+L?sC?{?]N6???$  B^?=?\}??j?????3L'??uYn??îŒ?Ú™A??Ğ†??KÂª:???\?Ô½0/Í¾?le?ng??? ???AZd?????L?V?\N??\?8???!??P+?m(????@pÒ¥,?pkg?~tGOd??ore? ???m?????í‹·b?p??É????????7hm]g:q?*?no??w}?;??<??Xm'!I??EQ?"?}JX?e???HK??3?>h+?d???L??u??
++?R?&?????nOSw???N?V'??a????h??<?e????/??]?K??/??Ã¹? 0??j<?v?Wy?_-Ã‘
++x?e??YV???iD&)?9??[??3r-????b????????,?a!rÆ£nAC=???N7%?q>3?5D?QZ?b?Kks???i?]b/U(J?%?x~?U?lï¾®?w?s?f?????{Å¹???i???/3??????L???o.?wc???*]M????^??K?sM??Ï³<?b????ë¤»??ÀŠ?q??-?C??4\075??(?~?.?Lm?7???%?    c?q?jKÔ¤yqgg??,K/????? ??ŞƒH?0?x?Õ“?o?a????9  ?L??y??Ï‹?U?Z%?? ???p?/Ş    IEND?B`?
 \ Brak znaku nowej linii na koÅ„cu pliku
 diff -ruNa rc-beta2-old/skins/default/images/buttons/filter_up.png rc-beta2/skins/default/images/buttons/filter_up.png
---- rc-beta2-old/skins/default/images/buttons/filter_up.png	1970-01-01 01:00:00.000000000 +0100
-+++ rc-beta2/skins/default/images/buttons/filter_up.png	2009-02-11 08:59:03.212417637 +0100
+--- rc-beta2-old/skins/default/images/buttons/filter_up.png 1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/images/buttons/filter_up.png 2009-02-11 08:59:03.212417637 +0100
 @@ -0,0 +1,8 @@
-+‰PNG
++?PNG
 +
-+   IHDR           szzô   	pHYs     šœ    cHRM  z%  €ƒ  ùÿ  €é  u0  ê`  :˜  o’_ÅF  ÒIDATxÚ¬—]l\WÇçÜ»w¿íx½NìÄNR—ØM›Äùj£¨J´}T(	$T@j¨¢ˆª¨¼ AZú¤HUUB ª-J´D@B)--$Nb;±íµwãİ½çÌááî—];‰£½W»wÏüÏfş3«œsÿéôá®\Ççâñ@+…(¥Xi9â8ŠjXM]|v¡\yÎSVşù¢õ±ûâ¤’É¾½={²é7»Ä9¬œF„ ;6=[(LMÏ¾È*–®KœsÑÆ"7eÎ9œsXJ%õÖ-ı/ä:Úï5Æ®€RêfYk,xZ¡µF)…§4ZëÔí·¿˜Í¤î´Ö®†œ(µÈ–û^ëšy
-+±B"äöíÚşr[&½EDş; ×sø¾”B¡PJãˆÂ˜Í¤ûvï¸ı•xôÜ„fµÔ/¡”ï33;Ç¥±+\§\®lë]¿îe­uûª \¯W®MH&ãtås¤S)âñ8¡’Éäşö¶ì1·L8ë~4ÿ¥"}PDIé{Aà“I§È¦SÛÄŠW¯šV"øŸ—[|ãjoâBTó‰† le%tËøwÔ^µ{‡[­ÄÒg‹;×â¼Nó¶ò¯·qkB®JÄµ(c“…KFµ„¥¡b7p3LˆsQcª7)k+8õ	Á!Nœ8\\)<_5€-àœCVA{Ã¹"S	Ñ”Ša#†”— ÍOSR™bÂo|UˆÅ|Ä
-+­2í7Ğ‹4Ë‹ ÂªAUå)^:?Ìğè_-NŠ!¤¹-·‘÷8¸uèÔøèø‘¹rñuµ¤$j ¢WG¦ëBÑÒ¤ê1'8 ¬„¨Šá•Ë'xòÔóL—‹t¦Ú‰{¢%Wexì¯?’½ÛŞèWëgÓ^šû~këkT•(nÖ
-+¦fÖZLÃc-"°¢«–çşõ*?E,g°gmÙ$}9îë¿ÖwæìŞÄŸ§Şã#¯?F©CYÛÿlkĞµi ŠM…†‹5]­m²T†§Îğø©clíŞDO[Š¬¿@&ÆSûá÷|OŞò!|W ·t­¥¢ış»tôæŸNÆ½‹¤Øá°ÒzÒè´F#ÑÕÖ>«VC*®ÂwÎş¾59nÉte6§5OŞyˆùm |{ßÃ|¸÷ I5GoÂ0”ÏóŞÜ~tñ×kûº{	üX²@ÍÓ‹ÅŠ‰ »ø*‚¶pºğóá?ØÕ‘£3V¦;ãk»0Ôµ»™\Jñ­;¿ÊÎµQÌÓ“0ìïêäão@:ö‰ìš»›¸%ñ7Íø/ÊcĞx¼S8Ç}ë}éD’/m;ÌüŞ÷UKày|sï!sÄÈÖy¬ó/3Nõ·µ­¹k1 ‰(âİ’„¦™ÆX¬s”ÂqòqÍ@›ğÅmrG~ Ÿ¡Pàí™
-+•yâÇã{³¥ã2^‘ŒR²³ñd:³± ‘SÓ<­mÍ…3q¤¯ ML•¨†opfòŸüìícx NæÕw_  dªˆ½„¯Á×Ó P®©HCˆêâİ¨UÕÔpq‚ó`}º—s%a®r•ãï|ƒËÅN\>É–l_Gêø	Îş”_cœ›™§Xú9kcƒø:Mg¼³\.—/dHÕËZ¢¬·"µdŒ˜¨ß‹s\«–¹­}7ÅĞ°Î ğyóÒ³¤9ÍlùV*5°!f„3ã?¦R~¶ Í•ÒEÚ›ÈÇºß-–æN-)Ãz¬ë¡X>ÅÊ5úâ[èmßO¡z­4—F© ”·d¼ó‰y)< „BÕ±¯çÌ5óR±\<¹lØ† -cµAss<Ğÿ´×O(å–É,š×}¡Vìz½÷^º:9v¬Z­T[“PK­l­Ã‰“š¹FÛ‰vœ.h7ëùÌßCéÍTìà0²ÀğÈQ†G2Sú%ÙÀÃJHÙ„lÊ}”O<á¦¯L6ÖLø~”+Ê9ÇÃ|,‘L|Á÷<HK
-+6‡×œø¢îiİ`ßæT˜½ºñwç22{+B[Äát­3$cêş46|Ş&ŠOL]y^ëˆ¥CC€×~sÂsà­f ·â$ˆùÛoıÀ—³¹Ìcå¿åÎŞdfá{LĞÉºôVn]s7ktïé‰‰ñ#só…“­ñ¡¡ÆDd•Rv5 ´ÏóÌä¿¯<3;ŸøIWnàÁù÷;e76ğu|NŒœ/Ì]ù­1&ÔZ³ô?ã ¢‰B' ¶    IEND®B`‚
++   IHDR           szz?    pHYs     ??    cHRM  z%  ??  ??  ??  u0  ?`  :?  o?_?F  ?IDATxÚ¬?]l\W??Ü»w??x?N??NR??M???j??J?}T(    $T@j???????? AZ??HUUB??-J??D@?B)--$Nb;????w?İ½??????];?????W?w???f?3??s?????\????@+?(?Xi9?8?jXM?]?|v?\y?SV?????????É¾??={??7??9??F? ;6=[(LMÏ¾?*???K?s??"7e?9?sX?J%??-?/?:??5Æ®?R?fYk,xZ??F)??4Z?Ôí·¿?Í¤??Ö®???(?È–?^??y
++?B"?????r[&?ED?; ?s???B?PJ??Â˜Í¤?v????x???f??/????33;Ç¥?+\?\?l?]??e?u?? \?W?MH&?t?s?S)??8????????1?L8?~4???"}PDI?{A??I?È¦S?ÄŠW??V"???[|?jo?BT?????le%t??w?^?{?[????g??;???N?????qkB?JÄµ(c??KF????b7p3L?sQc?7)k+8?  ?!N?8\\)<_5?-??CVA{Ã¹"S    ???a#?????OSR?b?o|U??|?
++?2?7Ğ‹4??? ÂªAU?)^:????_-N?!??-????8?u???????r?u??$j ?WG??B?Ò¤?1'8 ???????'x???L??t?Ú‰{?%Wex?????????W?gÓ^??~k?kT??(n?
++?f?ZL?c-"????????*?E,g?gm?$}?9????w???ÄŸ???#??F?C?YÛ?lkĞµi ?M????5]?m?T??????cl??DO[???@&?S???|?O??!|W ?t??????t???N????????z???F#???>?VC*??w????59n?te6?5O?y???m |{??|?? I5Go?0?????~t??k??{  ?X?@?Ó‹ÅŠ? ??*??p??????Õ‘?3V?;?k??0Ôµ??\J??;??ÎµQ?Ó“0?????o@:???ìš»??%?7??/?c?x?S8?}?}éD?/m;Ì???UK?y|s?!s???y??/3Nõ·µ­?k1 ?(??İ’????X?s??q?q?@???m?rG~ ??P????
++?y????{???2^??R???d:?? ?S?<?mÍ…3q??? ML???opf?????cx N????w_ ?d???????Ó P??HC???İ¨U??pq??`}??s%a?r???|???N\>É–l_G??   Î??_c????X?9kc??:Mg??\.?/dH?ËZ???"?d???ß‹s\????}7?Ğ°Î ?y?Ò³?9?l?V*5?!f?3???R~?? Í•?E???Çº?-??N-)?z???X>??5??[?m?O?z?4??F? ??d???y)<? ?BÕ±???5?R?\<?lØ† -c?Ass<????O(???,???}?V?z????^?:9v?Z?T[?PK?l?Ã‰???F??v?.h7????C??T??0????Q?G?2S?%???JHÙ„l?}?O<á¦¯L6?L?~?+?9??|,?L|??<HK
++6?×œ???i?`??T????w??22{+B[??t?3$c??46|?&?OL]y^ëˆ¥CC??~s?s??f ??$????o?À—???c?????df?{?L?Éº?Vn]s7kt?é‰‰?#só…“­ñ¡¡?Dd?Rv5 ????ä¿¯<3;??IWn?????;e76?u|N???/?]??1&?Z???? ??B'??    IEND?B`?
 \ Brak znaku nowej linii na koÅ„cu pliku
 diff -ruNa rc-beta2-old/skins/default/images/buttons/filter_up_sel.png rc-beta2/skins/default/images/buttons/filter_up_sel.png
---- rc-beta2-old/skins/default/images/buttons/filter_up_sel.png	1970-01-01 01:00:00.000000000 +0100
-+++ rc-beta2/skins/default/images/buttons/filter_up_sel.png	2009-02-11 08:59:03.236428615 +0100
+--- rc-beta2-old/skins/default/images/buttons/filter_up_sel.png 1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/images/buttons/filter_up_sel.png 2009-02-11 08:59:03.236428615 +0100
 @@ -0,0 +1,14 @@
-+‰PNG
++?PNG
 +
-+   IHDR           szzô   sRGB ®Îé   bKGD ÿ ÿ ÿ ½§“   	pHYs     šœ   tIMEØ	.,dš³  ÅIDATXÃ¥—]l\GÇ3÷Şı´½^Çvì&1›/7	mÔ&m(O…âmˆPÚ‚h…„
-+â	‰ å)ˆ‡HT|(jZ!•JZÄG6)”„ mL›6q\oê8ö®×Ş½3çğp×ëµ“¸YíÙ;Ú™ó¿çëÆLLL0ö·3ö
-+¤R‘51Æp£¡
-+¢’ÌEPqgK3W¾¿T«ÿ(0–›÷½ÿ !@&“ÙrË`ßùlö¦ÿ,ªˆ*Š!ŠÂ£sóå¹Ù«åã´1pUT‹Ü”¨*ªàE0@6“±·+:?à¼o€Á`hoÀ°ÖbŒ!0kmnÏÎmÇó¹ì~/¾Ü@‰1«äzëÖ&bƒx!ŠzîØ½óDG.·}9VÚ°ÂëYÂìW?æsÙ-»wm{&EƒïÂÒ®é×€0Æ€(™Ÿ¯0UºÌ¥éµZ}Ï@ï	kl¡- ë¥às2™==²™,©T
-+ç…L&s°³3T“ƒ¯•ÿÅ7ŠHÕÄÖZB¥r¹ùlfˆ¨r@Rşï¡«'ÚøUbÌÊwuª®¯ë:ëŠÒø4æŠ¶WˆÚ±v¯j¢X•åÚ"ëŒp½ƒ[òF T“êIÈ
-+m€1ëàÛ5÷Úõ&1â}BP^/Š¨ª(š²† X+ 4ÙØ^Ü©6Iñu‡õ`Ô±WñêÉÚ4a–8ÊtTÓAW˜¹0
-+Q/ø®—á‹H“XnN9¸ØAÍ3SŸå¹flúŸL/\Á©#å)ÜÂ¡¡»vÜ}ëèxiºôX¥V}Î¬I‰Ä*hƒå ì²ïÍ
-+I-»£‘Z¸zŒ©{ŸçÉÓÇ™«UéÎv’²‚¡ª1c¥qòâËìØ¹ãëûÿº>÷•©+¥'Íõ²À«â½à½à¼àE›VIDq^Q\cêÂÏßzÇÇ~H”J1Ò¿‰|†Áb÷İFşînFú6ñÙ7yğwßf± Olè,Şß[¶Ñ ^\ïïñŞãÇ;IŞ'ëŞCM›=ËwOÿ”m}›èëÈ’–Ê…<¾ïs|sÿƒ|xË=„”)¤<Ã=¨Ç×şr”Â@ñ{éTz³i-Å
-+ˆxœÎ+N4yk¼z¼JÓõØQ§Î^=Á`gÍ¹ˆ¾¨Æ¦¬åKï=Ìhq _¾ı³8@ÆTL;F‹=¼Y¹È3Sèìx8
-+£l€(‰ïñxq8ïq.qGó)‚8S>ÇBü·º)F5ú²!Ÿß}„ÑİMÓÆğÅ½0ºá †úÒ}=EN•~¹ğã…|ç½+ĞÄ^%ŞKÓMwxwKÀëåsÜÛëÌ9ºÒ>³ã»Š{¯É–(xhÏa¶îÆëwõZzƒ)Jnv¤££ë@kO˜˜Üâßâ†$ ¥¹îUYŒ/SL¶vŸŞş¶÷ ğŸ«“”ã…d>7I¹¾@*xxï†»·Ur£êçÓ™l~¨Å4”yœ,¿¹4³b%;<¢J:4€%4Ub7ÀÙ+oñ«×F€à¯ÓgxáüÓ T}ŒÈ…ĞBdo©„-u`¹x/W€–B®ª`acv€sU¡RŸáäßáíê$ão¿Ìp>G`Ã†ùÓü{ú—¼•87_¡Zıº¶Øİ©î¥Z½v>G¶@häyB%Æ´Ö+³Šçã#»yeÚ“6eŸ:FÖæk=ˆÔ!È#8–ü%Î^~èˆ²\^¼DgêŠaß¹òÜÜx‘îå4lÄ€øWHCZæŞS­/2˜f°s•x‹%²9Œ‰`Í­È˜€Èf	LÊuåşCøEÿtµV}iuˆ$æeõÜ¯şİ‰R©,ñÁ-÷c‚!b­µtf+½Øª.f¤çCìí>xá+ÓGã¸^oB+ªxÑF	n\½ÖJ£Ã[,Óé7ò±í_Å˜ÍÔe	 'KŒM>ÅØäSÌUK>
-+ğê¨yÇ¦îûøÈÖGôê;³zñ¥ VÈÈ{?]]\|5°5­7%³Òî-G‚*¼¶p^·ä>uÛ·†ştáÇL–ÇYteNMCQ"’²yÂ`€½eÿÆOºòÌÂCså«Ï¶6:fbb‚ÿ8(í4ä^U²é0Ü9ôG:
-+ùoL×^ë¹Xy…¹¥‹Ôı¹¨›ŞÜ6†ºî¤Ëœš™)=VY(¿”´pÉ«ìmvDŞãÛiH,ØÀ]™½üÄüÂüO6†?±±8zã‡I&5¯^NWÊ•_L/MtÎÅÖÚUÍÀìO#¿&    IEND®B`‚
++   IHDR           szz?   sRGB ???   bKGD ? ? ?????    pHYs     ??   tIME? .,d??  ?IDATXÃ¥?]l\G?3?????^?v?&1??/7  m?&m(O????m?PÚ‚h??
++?  ????)??HT|(jZ!?JZ?G6)?? mL?6q\o?8???Ş½3??p?ëµ“?Y??;Ú™??????LLL0??3??
++?R?51?p??
++???EPqgK3W??T??(0????? !@&??r?`ß?l???,??*?!?Â£s???Ù«???1pUT?Ü”?*??E0@6???+:???o??`ho???b?!0kmn??m????~/??@?1??z??&b?x!??z?Ø½?DG.?}9V?????YÂ?W??s?-?wm{&E???Ò®?×€0Æ€?(???0U?Ì¥??Z}?@?    kl?- ????s2?==??,?T
++??L&s??3T??????7?H???ZB?r??lf???r?@R?ï¡«'??Ub?Êwu?????:????4æŠ¶W???v?j?X???"??p??[?F?T??I?
++m?1???5???&1?}BP^/???(??? X+ 4??^Ü©6I?u??`Ô±W????4a?8?tT?AW??0
++Q/?????H?XnN9??A?3S???fl??L/\Á©#?)?Â¡??v?}??xi??X?V}Î¬I??*h?? ????
++I-???Z?z??{?????Ç™?U??v?????1c?q????Ø¹?????>???+?'???À«???????E?VIDq^Q\c????z???~H?J1Ò¿??|??b??İF???nF?6???7y?w?f? Ol?,??[?? ^\???????;I??'??CM?=?wO??m}???È’?Ê…<??s|s??|x?=??)?<?=????r??@?{?Tz?i-?
++?x??+N4yk?z?J???Q??^=?`g?Í¹???Æ¦??K?=?hq _???8@?TL;F?=?Y??3S??x8
++?l?(???xq8?q.qG?)?8S>?B???)F5??!??}?Ñ?M???Å½0?? ??Ò}=EN?~????|??+??^%?K?Mwx?wK???s????9??>????{?É–(xh?a????w?Zz?)Jnv????@kO???????$ ???UY?/SL?v????? ğŸ«“???d>7I??@*xx?????Ur????Ó™l~??4?y?,??4?b%;<?J:4?%4Ub7??+o???F????gx??? T}?????Bdo??-u`?x/W??B??`acv?sU?R???????$?o??p>G`Ã†???{????87_?Z????İ©??Z?v>G?@h?yB%Æ´?+????#??yeÚ“6e?:F??k=??!?#8??%?^~èˆ²\^?Dg??aß¹???x???4lÄ€?WHCZ??S?/2?f?s?x?%?9??`Í­È˜??f   L?u???C?E?t?V}iu?$?e?Ü¯?İ‰R?,??-?c?!b??tf+???.f??C??>x??+?G??^oB+?x?F    n\??J?Ã[,??7???_Å˜??e     'K?M>???S?UK>
++???yÇ¦?????G??;??z?? V??{?]]\|5?5?7%???-G?*??p^???>uÛ·??t??L??YteNMCQ"??y?`??e??O????Cs??Ï¶6:fbb??8(?4?^U??0?9??G:
++?oL?^??Xy???????????6????????)=VY(???pÉ«?mvD???iH,??]???????O6????8z??I&5?^NWÊ•_L/M?t????U???O#?&    IEND?B`?
 \ Brak znaku nowej linii na koÅ„cu pliku
 diff -ruNa rc-beta2-old/skins/default/includes/settingstabs.html rc-beta2/skins/default/includes/settingstabs.html
---- rc-beta2-old/skins/default/includes/settingstabs.html	2009-02-11 08:50:51.000000000 +0100
-+++ rc-beta2/skins/default/includes/settingstabs.html	2009-02-11 08:59:03.272419030 +0100
+--- rc-beta2-old/skins/default/includes/settingstabs.html   2009-02-11 08:50:51.000000000 +0100
++++ rc-beta2/skins/default/includes/settingstabs.html   2009-02-11 08:59:03.272419030 +0100
 @@ -2,4 +2,5 @@
  <span id="settingstabdefault" class="tablink"><roundcube:button command="preferences" type="link" label="preferences" title="editpreferences" /></span>
  <span id="settingstabfolders" class="tablink"><roundcube:button command="folders" type="link" label="folders" title="managefolders" class="tablink" /></span>
@@ -4062,8 +4061,8 @@ diff -ruNa rc-beta2-old/skins/default/includes/settingstabs.html rc-beta2/skins/
 +<span id="settingstabmanagesieve" class="tablink"><roundcube:button command="managesieve" type="link" label="filters" title="managefilters" class="tablink" /></span>
  </div>
 diff -ruNa rc-beta2-old/skins/default/templates/managesieveedit.html rc-beta2/skins/default/templates/managesieveedit.html
---- rc-beta2-old/skins/default/templates/managesieveedit.html	1970-01-01 01:00:00.000000000 +0100
-+++ rc-beta2/skins/default/templates/managesieveedit.html	2009-02-24 10:08:45.851584233 +0100
+--- rc-beta2-old/skins/default/templates/managesieveedit.html   1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/templates/managesieveedit.html   2009-02-24 10:08:45.851584233 +0100
 @@ -0,0 +1,110 @@
 +<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 +<html xmlns="http://www.w3.org/1999/xhtml">
@@ -4083,21 +4082,21 @@ diff -ruNa rc-beta2-old/skins/default/templates/managesieveedit.html rc-beta2/sk
 +
 +    if (obj.value == 'size')
 +    {
-+	document.getElementById('rule_size' + id).style.display = 'inline';
-+	document.getElementById('rule_op' + id).style.display = 'none';
-+	document.getElementById('rule_target' + id).style.display = 'none';
-+	document.getElementById('custom_header' + id).style.display = 'none';
++   document.getElementById('rule_size' + id).style.display = 'inline';
++   document.getElementById('rule_op' + id).style.display = 'none';
++   document.getElementById('rule_target' + id).style.display = 'none';
++   document.getElementById('custom_header' + id).style.display = 'none';
 +    }
 +    else
 +    {
-+	if (obj.value != '...')
-+	    document.getElementById('custom_header' + id).style.display = 'none';
-+	else
-+	    document.getElementById('custom_header' + id).style.display = 'inline';
++   if (obj.value != '...')
++       document.getElementById('custom_header' + id).style.display = 'none';
++   else
++       document.getElementById('custom_header' + id).style.display = 'inline';
 +    
-+	document.getElementById('rule_size' + id).style.display = 'none';
-+	document.getElementById('rule_op' + id).style.display = 'inline';
-+	rule_op_select(id);
++   document.getElementById('rule_size' + id).style.display = 'none';
++   document.getElementById('rule_op' + id).style.display = 'inline';
++   rule_op_select(id);
 +    }
 +}
 +
@@ -4107,11 +4106,11 @@ diff -ruNa rc-beta2-old/skins/default/templates/managesieveedit.html rc-beta2/sk
 +
 +    if (obj.value == 'exists' || obj.value == 'notexists')
 +    {
-+	document.getElementById('rule_target' + id).style.display = 'none';
++   document.getElementById('rule_target' + id).style.display = 'none';
 +    }
 +    else
 +    {
-+	document.getElementById('rule_target' + id).style.display = 'inline';
++   document.getElementById('rule_target' + id).style.display = 'inline';
 +    }
 +}
 +
@@ -4121,38 +4120,38 @@ diff -ruNa rc-beta2-old/skins/default/templates/managesieveedit.html rc-beta2/sk
 +
 +    if (obj.value == 'fileinto')
 +    {
-+	document.getElementById('action_mailbox' + id).style.display = 'inline';
-+	document.getElementById('action_target' + id).style.display = 'none';
-+	document.getElementById('action_target_area' + id).style.display = 'none';
-+	document.getElementById('action_vacation' + id).style.display = 'none';
++   document.getElementById('action_mailbox' + id).style.display = 'inline';
++   document.getElementById('action_target' + id).style.display = 'none';
++   document.getElementById('action_target_area' + id).style.display = 'none';
++   document.getElementById('action_vacation' + id).style.display = 'none';
 +    }
 +    else if (obj.value == 'redirect')
 +    {
-+	document.getElementById('action_target' + id).style.display = 'inline';
-+	document.getElementById('action_mailbox' + id).style.display = 'none';
-+	document.getElementById('action_target_area' + id).style.display = 'none';
-+	document.getElementById('action_vacation' + id).style.display = 'none';
++   document.getElementById('action_target' + id).style.display = 'inline';
++   document.getElementById('action_mailbox' + id).style.display = 'none';
++   document.getElementById('action_target_area' + id).style.display = 'none';
++   document.getElementById('action_vacation' + id).style.display = 'none';
 +    }
 +    else if (obj.value.match(/^reject|ereject$/))
 +    {
-+	document.getElementById('action_target_area' + id).style.display = 'inline';
-+	document.getElementById('action_vacation' + id).style.display = 'none';
-+	document.getElementById('action_target' + id).style.display = 'none';
-+	document.getElementById('action_mailbox' + id).style.display = 'none';
++   document.getElementById('action_target_area' + id).style.display = 'inline';
++   document.getElementById('action_vacation' + id).style.display = 'none';
++   document.getElementById('action_target' + id).style.display = 'none';
++   document.getElementById('action_mailbox' + id).style.display = 'none';
 +    }
 +    else if (obj.value == 'vacation')
 +    {
-+	document.getElementById('action_vacation' + id).style.display = 'inline';
++   document.getElementById('action_vacation' + id).style.display = 'inline';
 +        document.getElementById('action_target_area' + id).style.display = 'none';
-+	document.getElementById('action_target' + id).style.display = 'none';
-+	document.getElementById('action_mailbox' + id).style.display = 'none';
++   document.getElementById('action_target' + id).style.display = 'none';
++   document.getElementById('action_mailbox' + id).style.display = 'none';
 +    }
 +    else // discard, keep, stop
 +    {
-+	document.getElementById('action_target_area' + id).style.display = 'none';
-+	document.getElementById('action_vacation' + id).style.display = 'none';
-+	document.getElementById('action_target' + id).style.display = 'none';
-+	document.getElementById('action_mailbox' + id).style.display = 'none';
++   document.getElementById('action_target_area' + id).style.display = 'none';
++   document.getElementById('action_vacation' + id).style.display = 'none';
++   document.getElementById('action_target' + id).style.display = 'none';
++   document.getElementById('action_mailbox' + id).style.display = 'none';
 +    }
 +}
 +
@@ -4176,8 +4175,8 @@ diff -ruNa rc-beta2-old/skins/default/templates/managesieveedit.html rc-beta2/sk
 +</body>
 +</html>
 diff -ruNa rc-beta2-old/skins/default/templates/managesieve.html rc-beta2/skins/default/templates/managesieve.html
---- rc-beta2-old/skins/default/templates/managesieve.html	1970-01-01 01:00:00.000000000 +0100
-+++ rc-beta2/skins/default/templates/managesieve.html	2009-02-11 08:59:03.336432101 +0100
+--- rc-beta2-old/skins/default/templates/managesieve.html   1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/templates/managesieve.html   2009-02-11 08:59:03.336432101 +0100
 @@ -0,0 +1,34 @@
 +<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 +<html xmlns="http://www.w3.org/1999/xhtml">

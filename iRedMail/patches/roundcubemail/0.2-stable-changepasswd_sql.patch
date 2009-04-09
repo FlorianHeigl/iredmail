@@ -1,6 +1,6 @@
-diff -Naur --exclude='*.svn*' roundcubemail-0.2-stable.managesieve/plugins/changepasswd/changepasswd.php roundcubemail-0.2-stable/plugins/changepasswd/changepasswd.php
---- roundcubemail-0.2-stable.managesieve/plugins/changepasswd/changepasswd.php	1970-01-01 08:00:00.000000000 +0800
-+++ roundcubemail-0.2-stable/plugins/changepasswd/changepasswd.php	2009-03-07 20:00:29.000000000 +0800
+diff -Naur --exclude='*.svn*' roundcube_svn/plugins/changepasswd/changepasswd.php roundcube_pub/plugins/changepasswd/changepasswd.php
+--- roundcube_svn/plugins/changepasswd/changepasswd.php	1970-01-01 01:00:00.000000000 +0100
++++ roundcube_pub/plugins/changepasswd/changepasswd.php	2009-03-10 18:49:10.000000000 +0000
 @@ -0,0 +1,31 @@
 +<?php
 +
@@ -34,10 +34,10 @@ diff -Naur --exclude='*.svn*' roundcubemail-0.2-stable.managesieve/plugins/chang
 +
 +?>
 \ No newline at end of file
-diff -Naur --exclude='*.svn*' roundcubemail-0.2-stable.managesieve/plugins/changepasswd/config.inc.php roundcubemail-0.2-stable/plugins/changepasswd/config.inc.php
---- roundcubemail-0.2-stable.managesieve/plugins/changepasswd/config.inc.php	1970-01-01 08:00:00.000000000 +0800
-+++ roundcubemail-0.2-stable/plugins/changepasswd/config.inc.php	2009-03-07 20:00:29.000000000 +0800
-@@ -0,0 +1,38 @@
+diff -Naur --exclude='*.svn*' roundcube_svn/plugins/changepasswd/config.inc.php roundcube_pub/plugins/changepasswd/config.inc.php
+--- roundcube_svn/plugins/changepasswd/config.inc.php	1970-01-01 01:00:00.000000000 +0100
++++ roundcube_pub/plugins/changepasswd/config.inc.php	2009-03-10 18:49:10.000000000 +0000
+@@ -0,0 +1,42 @@
 +<?php
 +
 +/*
@@ -55,7 +55,7 @@ diff -Naur --exclude='*.svn*' roundcubemail-0.2-stable.managesieve/plugins/chang
 +$changepasswd_config = array();
 +
 +// User database settings
-+$changepasswd_config['db_dsnw'] = "mysqli://dbuser:dbpasswd@localhost/vmail";
++$changepasswd_config['db_dsnw'] = 'mysql://username:password@localhost/database';
 +
 +// PEAR database DSN for read only operations (if empty write database will be used)
 +// useful for database replication
@@ -76,82 +76,10 @@ diff -Naur --exclude='*.svn*' roundcubemail-0.2-stable.managesieve/plugins/chang
 +$changepasswd_config['db_passwd_field'] = 'password';
 +
 +?>
-diff -Naur --exclude='*.svn*' roundcubemail-0.2-stable.managesieve/program/js/app.js roundcubemail-0.2-stable/program/js/app.js
---- roundcubemail-0.2-stable.managesieve/program/js/app.js	2009-03-07 19:51:21.000000000 +0800
-+++ roundcubemail-0.2-stable/program/js/app.js	2009-03-07 19:54:23.000000000 +0800
-@@ -237,6 +237,7 @@
- case "settings":
- this.enable_command("preferences","identities","save","folders",true);
- this.enable_command("managesieve",true);
-+this.enable_command("changepasswd",true);
- if(this.env.action=="identities"||this.env.action=="edit-identity"||this.env.action=="add-identity"){
- this.enable_command("add",this.env.identities_level<2);
- this.enable_command("delete","edit",true);
-@@ -247,6 +248,9 @@
- if(this.env.action=="folders"){
- this.enable_command("subscribe","unsubscribe","create-folder","rename-folder","delete-folder",true);
- }
-+if(this.env.action=="changepasswd"){
-+this.enable_command("save-changepasswd",true);
-+}
- if(this.env.action=="managesieve"){
- if(!this.env.sieveconnerror){
- this.enable_command("sievefilteradd",true);
-@@ -889,6 +893,14 @@
- case "identities":
- this.goto_url("identities");
- break;
-+case "changepasswd":
-+this.goto_url("changepasswd");
-+break;
-+case "save-changepasswd":
-+if(changepasswd_check_input()){
-+this.gui_objects.editform.submit();
-+}
-+break;
- case "delete-identity":
- this.delete_identity();
- case "folders":
-diff -Naur --exclude='*.svn*' roundcubemail-0.2-stable.managesieve/program/js/app.js.src roundcubemail-0.2-stable/program/js/app.js.src
---- roundcubemail-0.2-stable.managesieve/program/js/app.js.src	2009-03-07 19:51:21.000000000 +0800
-+++ roundcubemail-0.2-stable/program/js/app.js.src	2009-03-07 19:56:04.000000000 +0800
-@@ -289,6 +289,7 @@
-       case 'settings':
-         this.enable_command('preferences', 'identities', 'save', 'folders', true);
-         this.enable_command('managesieve', true);
-+        this.enable_command('changepasswd', true);
-         
-         if (this.env.action=='identities' || this.env.action=='edit-identity' || this.env.action=='add-identity') {
-           this.enable_command('add', this.env.identities_level < 2);
-@@ -301,6 +302,9 @@
-         if (this.env.action=='folders')
-           this.enable_command('subscribe', 'unsubscribe', 'create-folder', 'rename-folder', 'delete-folder', true);
- 
-+        if (this.env.action=='changepasswd')
-+          this.enable_command('save-changepasswd', true);
-+
- 	if (this.env.action=='managesieve')
- 	  {
- 	    if (!this.env.sieveconnerror)
-@@ -1053,6 +1057,15 @@
-         this.goto_url('identities');
-         break;
-           
-+      case 'changepasswd':
-+        this.goto_url('changepasswd');
-+        break;
-+
-+      case 'save-changepasswd':
-+        if (changepasswd_check_input())
-+          this.gui_objects.editform.submit();
-+        break;
-+
-       case 'delete-identity':
-         this.delete_identity();
-         
-diff -Naur --exclude='*.svn*' roundcubemail-0.2-stable.managesieve/program/js/changepasswd.js roundcubemail-0.2-stable/program/js/changepasswd.js
---- roundcubemail-0.2-stable.managesieve/program/js/changepasswd.js	1970-01-01 08:00:00.000000000 +0800
-+++ roundcubemail-0.2-stable/program/js/changepasswd.js	2009-03-07 20:00:33.000000000 +0800
+\ No newline at end of file
+diff -Naur --exclude='*.svn*' roundcube_svn/program/js/changepasswd.js roundcube_pub/program/js/changepasswd.js
+--- roundcube_svn/program/js/changepasswd.js	1970-01-01 01:00:00.000000000 +0100
++++ roundcube_pub/program/js/changepasswd.js	2009-03-10 18:49:10.000000000 +0000
 @@ -0,0 +1,43 @@
 +/*
 + +-----------------------------------------------------------------------+
@@ -196,9 +124,46 @@ diff -Naur --exclude='*.svn*' roundcubemail-0.2-stable.managesieve/program/js/ch
 +	
 +	return false;
 +}
-diff -Naur --exclude='*.svn*' roundcubemail-0.2-stable.managesieve/program/localization/en_US/labels.inc roundcubemail-0.2-stable/program/localization/en_US/labels.inc
---- roundcubemail-0.2-stable.managesieve/program/localization/en_US/labels.inc	2009-03-07 19:51:22.000000000 +0800
-+++ roundcubemail-0.2-stable/program/localization/en_US/labels.inc	2009-03-07 19:56:58.000000000 +0800
+diff -Naur --exclude='*.svn*' roundcube_svn/program/js/app.js roundcube_pub/program/js/app.js
+--- roundcube_svn/program/js/app.js	1970-01-01 01:00:00.000000000 +0100
++++ roundcube_pub/program/js/app.js	2009-03-10 18:49:10.000000000 +0000
+@@ -289,6 +289,7 @@
+       case 'settings':
+         this.enable_command('preferences', 'identities', 'save', 'folders', true);
+         this.enable_command('managesieve', true);
++        this.enable_command('changepasswd', true);
+         
+         if (this.env.action=='identities' || this.env.action=='edit-identity' || this.env.action=='add-identity') {
+           this.enable_command('add', this.env.identities_level < 2);
+@@ -318,6 +319,9 @@
+              this.enable_command('sievefiltersave', true);
+          }
+    
++        if (this.env.action=='changepasswd')
++          this.enable_command('save-changepasswd', true);
++
+         if (this.gui_objects.identitieslist)
+           {
+           this.identity_list = new rcube_list_widget(this.gui_objects.identitieslist, {multiselect:false, draggable:false, keyboard:false});
+@@ -1053,6 +1057,15 @@
+         this.goto_url('identities');
+         break;
+           
++      case 'changepasswd':
++        this.goto_url('changepasswd');
++        break;
++
++      case 'save-changepasswd':
++        if (changepasswd_check_input())
++          this.gui_objects.editform.submit();
++        break;
++
+       case 'delete-identity':
+         this.delete_identity();
+         
+diff -Naur --exclude='*.svn*' roundcube_svn/program/localization/en_US/labels.inc roundcube_pub/program/localization/en_US/labels.inc
+--- roundcube_svn/program/localization/en_US/labels.inc	2009-01-18 11:24:41.000000000 +0000
++++ roundcube_pub/program/localization/en_US/labels.inc	2009-03-10 18:49:10.000000000 +0000
 @@ -323,6 +323,11 @@
  $labels['MB'] = 'MB';
  $labels['GB'] = 'GB';
@@ -211,9 +176,9 @@ diff -Naur --exclude='*.svn*' roundcubemail-0.2-stable.managesieve/program/local
  $labels['filters'] = 'Filters';
  $labels['managefilters'] = 'Manage incoming mail filters';
  $labels['filtername'] = 'Filter name';
-diff -Naur --exclude='*.svn*' roundcubemail-0.2-stable.managesieve/program/localization/en_US/messages.inc roundcubemail-0.2-stable/program/localization/en_US/messages.inc
---- roundcubemail-0.2-stable.managesieve/program/localization/en_US/messages.inc	2009-03-07 19:51:22.000000000 +0800
-+++ roundcubemail-0.2-stable/program/localization/en_US/messages.inc	2009-03-07 19:57:29.000000000 +0800
+diff -Naur --exclude='*.svn*' roundcube_svn/program/localization/en_US/messages.inc roundcube_pub/program/localization/en_US/messages.inc
+--- roundcube_svn/program/localization/en_US/messages.inc	2009-01-18 11:24:41.000000000 +0000
++++ roundcube_pub/program/localization/en_US/messages.inc	2009-03-10 18:49:10.000000000 +0000
 @@ -95,6 +95,14 @@
  $messages['nofromaddress'] = 'Missing e-mail address in selected identity';
  $messages['editorwarning'] = 'Switching to the plain text editor will cause all text formatting to be lost. Do you wish to continue?';
@@ -229,9 +194,9 @@ diff -Naur --exclude='*.svn*' roundcubemail-0.2-stable.managesieve/program/local
  $messages['filterunknownerror'] = 'Unknown server error';
  $messages['filterconnerror'] = 'Unable to connect to managesieve server';
  $messages['filterdeleteerror'] = 'Unable to delete filter. Server error occured';
-diff -Naur --exclude='*.svn*' roundcubemail-0.2-stable.managesieve/program/steps/settings/changepasswd.inc roundcubemail-0.2-stable/program/steps/settings/changepasswd.inc
---- roundcubemail-0.2-stable.managesieve/program/steps/settings/changepasswd.inc	1970-01-01 08:00:00.000000000 +0800
-+++ roundcubemail-0.2-stable/program/steps/settings/changepasswd.inc	2009-03-07 20:00:36.000000000 +0800
+diff -Naur --exclude='*.svn*' roundcube_svn/program/steps/settings/changepasswd.inc roundcube_pub/program/steps/settings/changepasswd.inc
+--- roundcube_svn/program/steps/settings/changepasswd.inc	1970-01-01 01:00:00.000000000 +0100
++++ roundcube_pub/program/steps/settings/changepasswd.inc	2009-03-10 18:49:10.000000000 +0000
 @@ -0,0 +1,72 @@
 +<?php
 +
@@ -306,10 +271,10 @@ diff -Naur --exclude='*.svn*' roundcubemail-0.2-stable.managesieve/program/steps
 +
 +?>
 \ No newline at end of file
-diff -Naur --exclude='*.svn*' roundcubemail-0.2-stable.managesieve/program/steps/settings/save_changepasswd.inc roundcubemail-0.2-stable/program/steps/settings/save_changepasswd.inc
---- roundcubemail-0.2-stable.managesieve/program/steps/settings/save_changepasswd.inc	1970-01-01 08:00:00.000000000 +0800
-+++ roundcubemail-0.2-stable/program/steps/settings/save_changepasswd.inc	2009-03-07 20:00:39.000000000 +0800
-@@ -0,0 +1,66 @@
+diff -Naur --exclude='*.svn*' roundcube_svn/program/steps/settings/save_changepasswd.inc roundcube_pub/program/steps/settings/save_changepasswd.inc
+--- roundcube_svn/program/steps/settings/save_changepasswd.inc	1970-01-01 01:00:00.000000000 +0100
++++ roundcube_pub/program/steps/settings/save_changepasswd.inc	2009-03-10 18:49:10.000000000 +0000
+@@ -0,0 +1,69 @@
 +<?php
 +
 +/*
@@ -349,7 +314,6 @@ diff -Naur --exclude='*.svn*' roundcubemail-0.2-stable.managesieve/program/steps
 +    'type' => 'db',
 +    'message' => $err_str), FALSE, TRUE);
 +}
-+
 +if ($_SESSION['password'] == $RCMAIL->encrypt_passwd($old_pw)) {
 +    $updated = false;
 +    //$updated = $user_db->query($sql_update);
@@ -369,16 +333,17 @@ diff -Naur --exclude='*.svn*' roundcubemail-0.2-stable.managesieve/program/steps
 +    }
 +}
 +else {
-+    $OUTPUT->show_message('passwordfailed', 'error');
++  	$OUTPUT->show_message('passwordfailed', 'error');
 +}
 +
 +// go to next step
 +rcmail_overwrite_action('changepasswd');
 +
 +?>
-diff -Naur --exclude='*.svn*' roundcubemail-0.2-stable.managesieve/skins/default/includes/settingstabs.html roundcubemail-0.2-stable/skins/default/includes/settingstabs.html
---- roundcubemail-0.2-stable.managesieve/skins/default/includes/settingstabs.html	2009-03-07 19:51:22.000000000 +0800
-+++ roundcubemail-0.2-stable/skins/default/includes/settingstabs.html	2009-03-07 19:58:15.000000000 +0800
+\ No newline at end of file
+diff -Naur --exclude='*.svn*' roundcube_svn/skins/default/includes/settingstabs.html roundcube_pub/skins/default/includes/settingstabs.html
+--- roundcube_svn/skins/default/includes/settingstabs.html	2008-05-20 17:45:39.000000000 +0100
++++ roundcube_pub/skins/default/includes/settingstabs.html	2009-03-10 18:49:10.000000000 +0000
 @@ -2,5 +2,6 @@
  <span id="settingstabdefault" class="tablink"><roundcube:button command="preferences" type="link" label="preferences" title="editpreferences" /></span>
  <span id="settingstabfolders" class="tablink"><roundcube:button command="folders" type="link" label="folders" title="managefolders" class="tablink" /></span>
@@ -386,9 +351,9 @@ diff -Naur --exclude='*.svn*' roundcubemail-0.2-stable.managesieve/skins/default
 +<span id="settingstabchangepasswd" class="tablink"><roundcube:button command="changepasswd" type="link" label="password" title="changepasswd" class="tablink" /></span>
  <span id="settingstabmanagesieve" class="tablink"><roundcube:button command="managesieve" type="link" label="filters" title="managefilters" class="tablink" /></span>
  </div>
-diff -Naur --exclude='*.svn*' roundcubemail-0.2-stable.managesieve/skins/default/templates/changepasswd.html roundcubemail-0.2-stable/skins/default/templates/changepasswd.html
---- roundcubemail-0.2-stable.managesieve/skins/default/templates/changepasswd.html	1970-01-01 08:00:00.000000000 +0800
-+++ roundcubemail-0.2-stable/skins/default/templates/changepasswd.html	2009-03-07 20:00:41.000000000 +0800
+diff -Naur --exclude='*.svn*' roundcube_svn/skins/default/templates/changepasswd.html roundcube_pub/skins/default/templates/changepasswd.html
+--- roundcube_svn/skins/default/templates/changepasswd.html	1970-01-01 01:00:00.000000000 +0100
++++ roundcube_pub/skins/default/templates/changepasswd.html	2009-03-10 18:49:10.000000000 +0000
 @@ -0,0 +1,27 @@
 +<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 +<html xmlns="http://www.w3.org/1999/xhtml">
