@@ -5,6 +5,8 @@
 export CLAMD_CONF='/etc/clamd.conf'
 export CLAMD_LOCAL_SOCKET='/tmp/clamd.socket'
 export CLAMD_LISTEN_ADDR='127.0.0.1'
+export CLAMD_LOGFILE='/var/log/clamav/clamd.log'
+export FRESHCLAM_LOGFILE='/var/log/clamav/clamd.log'
 export FRESHCLAM_CONF='/etc/freshclam.conf'
 export FRESHCLAM_PID_FILE='/var/run/clamav/freshclam.pid'
 export FRESHCLAM_INIT_FILE_SAMPLE="${SAMPLE_DIR}/freshclam.init"

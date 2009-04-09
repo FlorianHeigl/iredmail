@@ -82,9 +82,9 @@ install_all()
         :
     fi
 
-    # pysieved. It should be run under xinetd instead of standalone daemon.
-    ALL_PKGS="${ALL_PKGS} pysieved.noarch xinetd.${ARCH}"
-    ENABLED_SERVICES="${ENABLED_SERVICES} xinetd"
+    # pysieved.
+    ALL_PKGS="${ALL_PKGS} pysieved.noarch"
+    ENABLED_SERVICES="${ENABLED_SERVICES} pysieved"
 
     # Misc.
     ALL_PKGS="${ALL_PKGS} bzip2.${ARCH} acl.${ARCH} mailx.${ARCH} patch.${ARCH} crontabs.noarch dos2unix.${ARCH}"

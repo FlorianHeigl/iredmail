@@ -13,9 +13,11 @@ clamav_config()
     perl -pi -e 's/^(TCPSocket.*)/#${1}/' ${CLAMD_CONF}
     perl -pi -e 's#^(TCPAddr).*#${1} $ENV{'CLAMD_LISTEN_ADDR'}#' ${CLAMD_CONF}
     perl -pi -e 's#^(LocalSocket).*#${1} $ENV{'CLAMD_LOCAL_SOCKET'}#' ${CLAMD_CONF}
+    perl -pi -e 's#^(LogFile).*#${1} $ENV{'CLAMD_LOGFILE'}#' ${CLAMD_CONF}
 
     ECHO_INFO "Configure freshclam: ${FRESHCLAM_CONF}."
     perl -pi -e 's-^#(PidFile)(.*)-${1} $ENV{FRESHCLAM_PID_FILE} #${2}-' ${FRESHCLAM_CONF}
+    perl -pi -e 's#^(UpdateLogFile).*#${1} $ENV{'FRESHCLAM_LOGFILE'}#' ${CLAMD_CONF}
 
     ECHO_INFO "Copy freshclam init startup script and enable it."
     cp -f ${FRESHCLAM_INIT_FILE_SAMPLE} /etc/rc.d/init.d/freshclam
