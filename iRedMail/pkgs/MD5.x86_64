@@ -22,9 +22,6 @@ d8f67576d493fc3f814bb7b57d96ee71  rpms/unrar-3.8.2-1.el5.rf.x86_64.rpm
 37bf80e1e94d257bdcfda4fd3b4a0a41  rpms/perl-BerkeleyDB-0.36-1.el5.rf.x86_64.rpm
 cb6045d305d3d837b82b92462160f8a9  rpms/perl-Compress-Raw-Zlib-2.015-1.el5.rf.x86_64.rpm
 b763f87639929cc513f8176f0b8b23b2  rpms/php-eaccelerator-5.1.6_0.9.5.2-4.el5.rf.x86_64.rpm
-fad9eb7250e85d1f852e5315ba337a79  rpms/clamav-0.94.2-1.el5.rf.x86_64.rpm
-ace23160b624a6153e8ff29c30437921  rpms/clamav-db-0.94.2-1.el5.rf.x86_64.rpm
-ade9ce32de8fcfd5fa5d9a093c09368e  rpms/clamd-0.94.2-1.el5.rf.x86_64.rpm
 49356f67173dc13170e058f8a81c6324  rpms/perl-Encode-Detect-1.01-1.el5.rf.x86_64.rpm
 116ce62aa19edfadd0e05c5507fccb33  rpms/postfix-2.5.6-4.ired.x86_64.rpm
 809cac9250aad41e0696313d98fdd212  rpms/dovecot-sieve-1.1.6-9.el5.x86_64.rpm
@@ -32,3 +29,6 @@ be56f8829bb6d8570dc8228a26574223  rpms/amavisd-new-2.6.2-2.ired.x86_64.rpm
 e326b2121b87add97262333bebfb3040  rpms/lzo-1.08-5.el5.rf.x86_64.rpm
 21c60912200abf9a9768590d3f0c3441  rpms/nomarch-1.4-2.el5.x86_64.rpm
 584c5fdef35f9a81e932ea6a14ec2333  rpms/dovecot-1.1.13-0_91.el5.x86_64.rpm
+bf631a59ae0edc67937a95979dad3d71  rpms/clamav-0.95.1-1.el5.rf.x86_64.rpm
+96c2a54ad7811fa94476821174f716dc  rpms/clamav-db-0.95.1-1.el5.rf.x86_64.rpm
+18ebaf4d3013220590bb46627bfdcd95  rpms/clamd-0.95.1-1.el5.rf.x86_64.rpm

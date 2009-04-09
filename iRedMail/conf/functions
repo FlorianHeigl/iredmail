@@ -234,12 +234,18 @@ check_status_before_run()
 
 enable_service_rh()
 {
-    /sbin/chkconfig --level 345 $i on
+    services="$@"
+    for i in $services; do
+        /sbin/chkconfig --level 345 $i on
+    done
 }
 
 disable_service_rh()
 {
-    /sbin/chkconfig --level 345 $i off
+    services="$@"
+    for i in $services; do
+        /sbin/chkconfig --level 345 $i off
+    done
 }
 
 gen_ldap_passwd()

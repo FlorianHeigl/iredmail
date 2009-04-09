@@ -97,20 +97,14 @@ install_all()
         echo 'export status_install_all_pkgs="DONE"' >> ${STATUS_FILE}
     }
 
-
     # Enable/Disable services.
     enable_all_services()
     {
         # Enable services.
-        for i in ${ENABLED_SERVICES}; do
-            eval ${enable_service} $i
-        done
+        eval ${enable_service} ${ENABLED_SERVICES}
 
         # Disable services.
-        for i in ${DISABLED_SERVICES}
-        do
-            eval ${disable_service} $i
-        done
+        eval ${disable_service} ${DISABLED_SERVICES}
 
         echo 'export status_enable_all_services="DONE"' >> ${STATUS_FILE}
     }

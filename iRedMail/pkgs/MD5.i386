@@ -22,9 +22,6 @@ e89ad55c67811e700c4e3cba55b097e5  rpms/perl-Convert-UUlib-1.11-1.ired.i386.rpm
 73a4835924c0a22fa52fa7d2b8f5577e  rpms/perl-BerkeleyDB-0.36-1.el5.rf.i386.rpm
 9f001e591572d88c6e035bd525f772fe  rpms/perl-Compress-Raw-Zlib-2.015-1.el5.rf.i386.rpm
 ced6000f91e2f64a92753bee0236ff67  rpms/php-eaccelerator-5.1.6_0.9.5.2-4.el5.rf.i386.rpm
-8aba2b02ab7e37dbf34785c2e08324b0  rpms/clamav-0.94.2-1.el5.rf.i386.rpm
-18a91aa54586300c09ffdc729cd8ff98  rpms/clamav-db-0.94.2-1.el5.rf.i386.rpm
-2e12b383ab4d84976c8789bc2b824f60  rpms/clamd-0.94.2-1.el5.rf.i386.rpm
 96cada2fe843226ba531a60058810189  rpms/perl-Encode-Detect-1.01-1.el5.rf.i386.rpm
 8101eb702e6e05b14a153aa54b553174  rpms/postfix-2.5.6-4.ired.i386.rpm
 959211ca749f17da9219b916b00654d9  rpms/dovecot-sieve-1.1.6-9.el5.i386.rpm
@@ -32,3 +29,6 @@ ced6000f91e2f64a92753bee0236ff67  rpms/php-eaccelerator-5.1.6_0.9.5.2-4.el5.rf.i
 a59545217ea8945415b441ce88bba39a  rpms/lzo-1.08-5.el5.rf.i386.rpm
 8c269f2addf7920c59e663ce65dc8556  rpms/nomarch-1.4-2.el5.i386.rpm
 fd08d3b4860d9c005ce299763392ce25  rpms/dovecot-1.1.13-0_91.el5.i386.rpm
+3848730bfbc49034fad1f0768a156deb  rpms/clamav-0.95.1-1.el5.rf.i386.rpm
+904252f57bbc773ffa85af12122ad96f  rpms/clamav-db-0.95.1-1.el5.rf.i386.rpm
+8770e8e21fb0b242cafcd8039f750f77  rpms/clamd-0.95.1-1.el5.rf.i386.rpm

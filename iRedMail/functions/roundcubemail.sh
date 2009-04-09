@@ -87,12 +87,12 @@ EOF
     perl -pi -e 's#(.*enable_installer.*= )(.*)#${1}FALSE;#' main.inc.php
     perl -pi -e 's#(.*check_all_folders.*= )(.*)#${1}TRUE;#' main.inc.php
 
+    # SMTP server setting.
     perl -pi -e 's#(.*default_host.*= )(.*)#${1}"$ENV{'IMAP_SERVER'}";#' main.inc.php
     perl -pi -e 's#(.*smtp_server.*= )(.*)#${1}"$ENV{'SMTP_SERVER'}";#' main.inc.php
     perl -pi -e 's#(.*smtp_user.*= )(.*)#${1}"%u";#' main.inc.php
     perl -pi -e 's#(.*smtp_pass.*= )(.*)#${1}"%p";#' main.inc.php
     perl -pi -e 's#(.*smtp_auth_type.*= )(.*)#${1}"LOGIN";#' main.inc.php
-    perl -pi -e 's#(.*create_default_folders.*)(FALSE)(.*)#${1}TRUE${3}#' main.inc.php
 
     # Set defeault domain.
     export FIRST_DOMAIN
@@ -104,6 +104,12 @@ EOF
 
     # Set useragent, add project info.
     perl -pi -e 's#(.*useragent.*=).*#${1} "RoundCube WebMail";#' main.inc.php
+
+    # Automatic create default IMAP folders.
+    perl -pi -e 's#(.*create_default_folders.*)(FALSE)(.*)#${1}TRUE${3}#' main.inc.php
+
+    # Attachment name type: Outlook style.
+    perl -pi -e 's#(.*mime_param_folding.*=).*#${1} 1;#' main.inc.php
 
     # Disable multiple identities.
     perl -pi -e 's#(.*identities_level.*=).*#${1} 3;#' main.inc.php
