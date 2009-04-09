@@ -53,9 +53,6 @@ install_all()
     # Policyd.
     ALL_PKGS="${ALL_PKGS} policyd.${ARCH}"
 
-    # Cyrus-SASL.
-    ALL_PKGS="${ALL_PKGS} cyrus-sasl.${ARCH} cyrus-sasl-lib.${ARCH} cyrus-sasl-plain.${ARCH} cyrus-sasl-md5.${ARCH}"
-
     # Dovecot.
     if [ X"${ENABLE_DOVECOT}" == X"YES" ]; then
         ALL_PKGS="${ALL_PKGS} dovecot.${ARCH} dovecot-sieve.${ARCH}"

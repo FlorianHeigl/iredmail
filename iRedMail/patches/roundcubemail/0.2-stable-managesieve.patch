@@ -1,10 +1,17 @@
-diff -ruNa 0.2-stable.old/config/main.inc.php.dist 0.2-stable/config/main.inc.php.dist
---- 0.2-stable.old/config/main.inc.php.dist	2008-12-30 15:33:28.000000000 +0100
-+++ 0.2-stable/config/main.inc.php.dist	2009-01-03 13:51:32.635810415 +0100
-@@ -316,6 +316,24 @@
- // default sort order
- $rcmail_config['message_sort_order'] = 'DESC';
+diff -ruNa rc-beta2-old/config/main.inc.php.dist rc-beta2/config/main.inc.php.dist
+--- rc-beta2-old/config/main.inc.php.dist	2009-01-18 10:39:07.000000000 +0100
++++ rc-beta2/config/main.inc.php.dist	2009-02-22 16:23:35.675003721 +0100
+@@ -14,6 +14,30 @@
  
+ $rcmail_config = array();
+ 
++// disabled sieve extensions (body, copy, date, editheader, encoded-character,
++// envelope, environment, ereject, fileinto, ihave, imap4flags, index, 
++// mailbox, mboxmetadata, regex, reject, relational, servermetadata, 
++// spamtest, spamtestplus, subaddress, vacation, variables, virustest, etc.
++// Note: not all extensions are implemented
++$rcmail_config['managesieve_disabled_extensions'] = array();
++
 +// managesieve server port
 +$rcmail_config['managesieve_port'] = 2000;
 +
@@ -22,14 +29,13 @@ diff -ruNa 0.2-stable.old/config/main.inc.php.dist 0.2-stable/config/main.inc.ph
 +// I need this because my dovecot (with listescape plugin) uses
 +// ':' delimiter, but creates folders with dot delimiter
 +$rcmail_config['managesieve_replace_delimiter'] = '';
-+
- // THIS OPTION WILL ALLOW THE INSTALLER TO RUN AND CAN EXPOSE SENSITIVE CONFIG DATA.
- // ONLY ENABLE IT IF YOU'RE REALLY SURE WHAT YOU'RE DOING!
- $rcmail_config['enable_installer'] = false;
-diff -ruNa 0.2-stable.old/program/include/rcube_sieve.php 0.2-stable/program/include/rcube_sieve.php
---- 0.2-stable.old/program/include/rcube_sieve.php	1970-01-01 01:00:00.000000000 +0100
-+++ 0.2-stable/program/include/rcube_sieve.php	2009-01-03 13:51:32.651809367 +0100
-@@ -0,0 +1,593 @@
+ 
+ // system error reporting: 1 = log; 2 = report (not implemented yet), 4 = show, 8 = trace
+ $rcmail_config['debug_level'] = 1;
+diff -ruNa rc-beta2-old/program/include/rcube_sieve.php rc-beta2/program/include/rcube_sieve.php
+--- rc-beta2-old/program/include/rcube_sieve.php	1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/program/include/rcube_sieve.php	2009-02-24 13:14:09.838074167 +0100
+@@ -0,0 +1,741 @@
 +<?php
 +
 +/*
@@ -68,6 +74,7 @@ diff -ruNa 0.2-stable.old/program/include/rcube_sieve.php 0.2-stable/program/inc
 +  var $list = array(); 			// scripts list 
 +
 +  public $script;			// rcube_sieve_script object
++  private $disabled;			// array of disabled extensions
 +
 +  /**
 +    * Object constructor
@@ -77,8 +84,9 @@ diff -ruNa 0.2-stable.old/program/include/rcube_sieve.php 0.2-stable/program/inc
 +    * @param  string  Managesieve server hostname/address
 +    * @param  string  Managesieve server port number
 +    * @param  string  Enable/disable TLS use
++    * @param  array   Disabled extensions
 +    */
-+  public function __construct($username, $password='', $host='localhost', $port=2000, $usetls=true)
++  public function __construct($username, $password='', $host='localhost', $port=2000, $usetls=true, $disabled=array())
 +    {
 +      require_once('Net/Sieve.php');
 +    
@@ -91,6 +99,7 @@ diff -ruNa 0.2-stable.old/program/include/rcube_sieve.php 0.2-stable/program/inc
 +      if (PEAR::isError($this->sieve->login($username, $password)))
 +        return $this->_set_error(SIEVE_ERROR_LOGIN);
 +
++      $this->disabled = $disabled;
 +      $this->_get_script();
 +    }
 +
@@ -120,8 +129,18 @@ diff -ruNa 0.2-stable.old/program/include/rcube_sieve.php 0.2-stable/program/inc
 +
 +  public function get_extensions()
 +    {
-+      if ($this->sieve)
-+	return $this->sieve->getExtensions();
++      if ($this->sieve) {
++	$ext = $this->sieve->getExtensions();
++
++	if ($this->script) {
++	  $supported = $this->script->get_extensions();
++	  foreach ($ext as $idx => $ext_name)
++	    if (!in_array($ext_name, $supported))
++	      unset($ext[$idx]);
++	}
++
++        return array_values($ext);
++      }
 +    }
 +
 +  private function _get_script()
@@ -141,15 +160,55 @@ diff -ruNa 0.2-stable.old/program/include/rcube_sieve.php 0.2-stable/program/inc
 +          if (PEAR::isError($script))
 +    	    return $this->_set_error(SIEVE_ERROR_OTHER);
 +	}
++      // import scripts from squirrelmail
++      elseif (in_array('phpscript', $this->list))
++        {
++          $script = $this->sieve->getScript('phpscript');
++
++          $script = $this->_convert_from_squirrel_rules($script);
++
++          $this->script = new rcube_sieve_script($script);
++       
++          $this->save();
++
++          $script = $this->sieve->getScript('roundcube');
++
++          if (PEAR::isError($script))
++            return $this->_set_error(SIEVE_ERROR_OTHER);
++        }
 +      else
 +        {
 +	  $this->_set_error(SIEVE_ERROR_NOT_EXISTS);
 +          $script = '';
 +	}
 +
-+      $this->script = new rcube_sieve_script($script);
++      $this->script = new rcube_sieve_script($script, $this->disabled);
 +    }
 +    
++  private function _convert_from_squirrel_rules($script)
++    {
++      $i = 0;
++      $name = array();
++      // tokenize rules
++      if ($tokens = preg_split('/(#START_SIEVE_RULE.*END_SIEVE_RULE)\n/', $script, -1, PREG_SPLIT_DELIM_CAPTURE))
++        foreach($tokens as $token)
++          {
++            if (preg_match('/^#START_SIEVE_RULE.*/', $token, $matches))
++              {
++	        $name[$i] = "unnamed rule ".($i+1);
++                $content .= "# rule:[".$name[$i]."]\n";
++              }
++            elseif (isset($name[$i]))
++              {
++	        $content .= "if ".$token."\n";
++		$i++;
++              }
++          }
++
++      return $content;
++    }
++
++
 +  private function _set_error($error)
 +    {
 +      $this->error = $error;
@@ -161,20 +220,29 @@ diff -ruNa 0.2-stable.old/program/include/rcube_sieve.php 0.2-stable/program/inc
 +{
 +  var $content = array();	// script rules array   
 +
-+  public $supported = array(	// extensions supported by class
++  private $supported = array(	// extensions supported by class
 +    'fileinto',
 +    'reject',
-+//    'ereject',
-+    // TODO: (most wanted first) vacation, body, imapflags, notify, regex
++    'ereject',
++    'vacation', 	// RFC5230
++    // TODO: (most wanted first) body, imapflags, notify, regex
 +    );
 +  
 +  /**
 +    * Object constructor
 +    *
 +    * @param  string  Script's text content
++    * @param  array   Disabled extensions
 +    */
-+  public function __construct($script)
++  public function __construct($script, $disabled)
 +    {
++      global $CONFIG;
++
++      if (!empty($disabled))
++        foreach ($disabled as $ext)
++          if (($idx = array_search($ext, $this->supported)) !== false)
++	    unset($this->supported[$idx]);
++
 +      $this->content = $this->_parse_text($script);
 +    }
 +
@@ -325,7 +393,28 @@ diff -ruNa 0.2-stable.old/program/include/rcube_sieve.php 0.2-stable/program/inc
 +	      break;
 +	      case 'keep':
 +	      case 'discard':
++	      case 'stop':
 +	        $script .= "\t" . $action['type'] .";\n";
++	      break;
++	      case 'vacation':
++                $extension = 'vacation';
++                $script .= "\tvacation";
++		if ($action['days'])
++		  $script .= " :days " . $action['days'];
++		if ($action['addresses'])
++		  $script .= " :addresses " . $this->_print_list($action['addresses']);
++		if ($action['subject'])
++		  $script .= " :subject \"" . $this->_escape_string($action['subject']) . "\"";
++		if ($action['handle'])
++		  $script .= " :handle \"" . $this->_escape_string($action['handle']) . "\"";
++		if ($action['from'])
++		  $script .= " :from \"" . $this->_escape_string($action['from']) . "\"";
++		if ($action['mime'])
++		  $script .= " :mime";
++		if (strpos($action['reason'], "\n")!==false)
++		  $script .= " text:\n" . $action['reason'] . "\n.\n;\n";
++		else
++		  $script .= " \"" . $this->_escape_string($action['reason']) . "\";\n";
 +	      break;
 +	    }
 +	  
@@ -349,6 +438,15 @@ diff -ruNa 0.2-stable.old/program/include/rcube_sieve.php 0.2-stable/program/inc
 +  public function as_array()
 +    {
 +      return $this->content;
++    }
++
++  /**
++    * Returns array of supported extensions
++    *
++    */
++  public function get_extensions()
++    {
++      return array_values($this->supported);
 +    }
 +
 +  /**
@@ -425,12 +523,18 @@ diff -ruNa 0.2-stable.old/program/include/rcube_sieve.php 0.2-stable/program/inc
 +      // supported actions
 +      $patterns[] = '^\s*discard;';
 +      $patterns[] = '^\s*keep;';
-+      $patterns[] = '^\s*fileinto\s+(.*?[^\\\]);';
++      $patterns[] = '^\s*stop;';
 +      $patterns[] = '^\s*redirect\s+(.*?[^\\\]);';
-+      $patterns[] = '^\s*reject\s+text:(.*)\n\.\n;';
-+      $patterns[] = '^\s*ereject\s+text:(.*)\n\.\n;';
-+      $patterns[] = '^\s*reject\s+(.*?[^\\\]);';
-+      $patterns[] = '^\s*ereject\s+(.*?[^\\\]);';
++      if (in_array('fileinto', $this->supported))
++        $patterns[] = '^\s*fileinto\s+(.*?[^\\\]);';
++      if (in_array('reject', $this->supported)) {
++        $patterns[] = '^\s*reject\s+text:(.*)\n\.\n;';
++        $patterns[] = '^\s*reject\s+(.*?[^\\\]);';
++        $patterns[] = '^\s*ereject\s+text:(.*)\n\.\n;';
++        $patterns[] = '^\s*ereject\s+(.*?[^\\\]);';
++      }
++      if (in_array('vacation', $this->supported))
++        $patterns[] = '^\s*vacation\s+(.*?[^\\\]);';
 +
 +      $pattern = '/(' . implode('$)|(', $patterns) . '$)/ms';
 +
@@ -441,7 +545,7 @@ diff -ruNa 0.2-stable.old/program/include/rcube_sieve.php 0.2-stable/program/inc
 +	{
 +	  $content = trim($m[0]);
 +	  
-+    	  if(preg_match('/^(discard|keep)/', $content, $matches))
++    	  if(preg_match('/^(discard|keep|stop)/', $content, $matches))
 +    	    {
 +	      $result[] = array('type' => $matches[1]);
 +	    }
@@ -457,6 +561,42 @@ diff -ruNa 0.2-stable.old/program/include/rcube_sieve.php 0.2-stable/program/inc
 +    	    {
 +	      $result[] = array('type' => $matches[1], 'target' => $this->_parse_string($matches[2])); 
 +	    }
++          elseif(preg_match('/^vacation\s+(.*);$/sm', $content, $matches))
++            {
++	      $vacation = array('type' => 'vacation');
++
++    	      if (preg_match('/:(days)\s+([0-9]+)/', $content, $vm)) {
++	        $vacation['days'] = $vm[2];
++		$content = preg_replace('/:(days)\s+([0-9]+)/', '', $content); 
++	      }
++    	      if (preg_match('/:(subject)\s+(".*?[^\\\]")/', $content, $vm)) {
++	        $vacation['subject'] = $vm[2];
++		$content = preg_replace('/:(subject)\s+(".*?[^\\\]")/', '', $content); 
++	      }
++    	      if (preg_match('/:(addresses)\s+\[(.*?[^\\\])\]/', $content, $vm)) {
++	        $vacation['addresses'] = $this->_parse_list($vm[2]);
++		$content = preg_replace('/:(addresses)\s+\[(.*?[^\\\])\]/', '', $content); 
++	      }
++    	      if (preg_match('/:(handle)\s+(".*?[^\\\]")/', $content, $vm)) {
++	        $vacation['handle'] = $vm[2];
++		$content = preg_replace('/:(handle)\s+(".*?[^\\\]")/', '', $content); 
++	      }
++    	      if (preg_match('/:(from)\s+(".*?[^\\\]")/', $content, $vm)) {
++	        $vacation['from'] = $vm[2];
++		$content = preg_replace('/:(from)\s+(".*?[^\\\]")/', '', $content); 
++	      }
++	      $content = preg_replace('/^vacation/', '', $content);	     
++	      $content = preg_replace('/;$/', '', $content);
++	      $content = trim($content);
++    	      if (preg_match('/^:(mime)/', $content, $vm)) {
++	        $vacation['mime'] = true;
++		$content = preg_replace('/^:mime/', '', $content); 
++	      }
++
++	      $vacation['reason'] = $this->_parse_string($content);
++
++              $result[] = $vacation;
++            }
 +        }
 +      }
 +
@@ -620,3387 +760,26 @@ diff -ruNa 0.2-stable.old/program/include/rcube_sieve.php 0.2-stable/program/inc
 +      else
 +        return NULL;
 +    }    
++
++   /**
++    * Convert array of elements to list of strings
++    *
++    * @param	string	Text 
++    */
++  private function _print_list($list)
++    {
++      $list = (array) $list;
++      foreach($list as $idx => $val)
++        $list[$idx] = $this->_escape_string($val);
++    
++      return '["' . implode('","', $list) . '"]';
++    }
 +}
 +
 +?>
-diff -ruNa 0.2-stable.old/program/js/app.js 0.2-stable/program/js/app.js
---- 0.2-stable.old/program/js/app.js	2008-12-30 16:25:56.000000000 +0100
-+++ 0.2-stable/program/js/app.js	2009-01-03 14:06:30.927372199 +0100
-@@ -236,6 +236,7 @@
- break;
- case "settings":
- this.enable_command("preferences","identities","save","folders",true);
-+this.enable_command("managesieve",true);
- if(this.env.action=="identities"||this.env.action=="edit-identity"||this.env.action=="add-identity"){
- this.enable_command("add",this.env.identities_level<2);
- this.enable_command("delete","edit",true);
-@@ -246,6 +247,22 @@
- if(this.env.action=="folders"){
- this.enable_command("subscribe","unsubscribe","create-folder","rename-folder","delete-folder",true);
- }
-+if(this.env.action=="managesieve"){
-+if(!this.env.sieveconnerror){
-+this.enable_command("sievefilteradd",true);
-+}
-+if(this.gui_objects.filterslist){
-+this.sievefilters_list=new rcube_list_widget(this.gui_objects.filterslist,{multiselect:false,draggable:false,keyboard:false});
-+this.sievefilters_list.addEventListener("select",function(o){
-+p.sievefilter_select(o);
-+});
-+this.sievefilters_list.init();
-+this.sievefilters_list.focus();
-+}
-+if(this.gui_objects.sieveform){
-+this.enable_command("sievefiltersave",true);
-+}
-+}
- if(this.gui_objects.identitieslist){
- this.identity_list=new rcube_list_widget(this.gui_objects.identitieslist,{multiselect:false,draggable:false,keyboard:false});
- this.identity_list.addEventListener("select",function(o){
-@@ -262,23 +279,23 @@
- }
- break;
- case "login":
--var _29=rcube_find_object("rcmloginuser");
--var _2a=rcube_find_object("rcmloginpwd");
--var _2b=rcube_find_object("rcmlogintz");
--if(_29){
--_29.onkeyup=function(e){
-+var _2a=rcube_find_object("rcmloginuser");
-+var _2b=rcube_find_object("rcmloginpwd");
-+var _2c=rcube_find_object("rcmlogintz");
-+if(_2a){
-+_2a.onkeyup=function(e){
- return rcmail.login_user_keyup(e);
- };
- }
--if(_29&&_29.value==""){
--_29.focus();
--}else{
--if(_2a){
-+if(_2a&&_2a.value==""){
- _2a.focus();
-+}else{
-+if(_2b){
-+_2b.focus();
- }
- }
--if(_2b){
--_2b.value=new Date().getTimezoneOffset()/-60;
-+if(_2c){
-+_2c.value=new Date().getTimezoneOffset()/-60;
- }
- this.enable_command("login",true);
- break;
-@@ -332,9 +349,9 @@
- };
- }
- if(!this.env.flagged_col&&this.env.coltypes){
--var _32;
--if((_32=find_in_array("flag",this.env.coltypes))>=0){
--this.set_env("flagged_col",_32+1);
-+var _33;
-+if((_33=find_in_array("flag",this.env.coltypes))>=0){
-+this.set_env("flagged_col",_33+1);
- }
- }
- if(this.env.flagged_col&&(row.flagged_icon=row.obj.cells[this.env.flagged_col].childNodes[0])&&row.flagged_icon.nodeName=="IMG"){
-@@ -350,34 +367,34 @@
- if(!this.gui_objects.messageform){
- return false;
- }
--var _34=rcube_find_object("_from");
--var _35=rcube_find_object("_to");
--var _36=rcube_find_object("_cc");
--var _37=rcube_find_object("_bcc");
--var _38=rcube_find_object("_replyto");
--var _39=rcube_find_object("_subject");
--var _3a=rcube_find_object("_message");
--var _3b=rcube_find_object("_draft_saveid");
--if(_35){
--this.init_address_input_events(_35);
--}
-+var _35=rcube_find_object("_from");
-+var _36=rcube_find_object("_to");
-+var _37=rcube_find_object("_cc");
-+var _38=rcube_find_object("_bcc");
-+var _39=rcube_find_object("_replyto");
-+var _3a=rcube_find_object("_subject");
-+var _3b=rcube_find_object("_message");
-+var _3c=rcube_find_object("_draft_saveid");
- if(_36){
- this.init_address_input_events(_36);
- }
- if(_37){
- this.init_address_input_events(_37);
- }
--if(_34&&_34.type=="select-one"&&(!_3b||_3b.value=="")&&rcube_find_object("_is_html").value!="1"){
--this.change_identity(_34);
-+if(_38){
-+this.init_address_input_events(_38);
-+}
-+if(_35&&_35.type=="select-one"&&(!_3c||_3c.value=="")&&rcube_find_object("_is_html").value!="1"){
-+this.change_identity(_35);
- }
--if(_35&&_35.value==""){
--_35.focus();
-+if(_36&&_36.value==""){
-+_36.focus();
- }else{
--if(_39&&_39.value==""){
--_39.focus();
-+if(_3a&&_3a.value==""){
-+_3a.focus();
- }else{
--if(_3a){
--this.set_caret2start(_3a);
-+if(_3b){
-+this.set_caret2start(_3b);
- }
- }
- }
-@@ -385,35 +402,35 @@
- this.auto_save_start();
- };
- this.init_address_input_events=function(obj){
--var _3d=function(e){
-+var _3e=function(e){
- return _1.ksearch_keypress(e,this);
- };
- if(obj.addEventListener){
--obj.addEventListener(bw.safari?"keydown":"keypress",_3d,false);
-+obj.addEventListener(bw.safari?"keydown":"keypress",_3e,false);
- }else{
--obj.onkeydown=_3d;
-+obj.onkeydown=_3e;
- }
- obj.setAttribute("autocomplete","off");
- };
--this.command=function(_3f,_40,obj){
-+this.command=function(_40,_41,obj){
- if(obj&&obj.blur){
- obj.blur();
- }
- if(this.busy){
- return false;
- }
--if(!this.commands[_3f]){
-+if(!this.commands[_40]){
- if(this.env.framed&&parent.rcmail&&parent.rcmail.command){
--parent.rcmail.command(_3f,_40);
-+parent.rcmail.command(_40,_41);
- }
- return false;
- }
--if(this.task=="mail"&&this.env.action=="compose"&&(_3f=="list"||_3f=="mail"||_3f=="addressbook"||_3f=="settings")){
-+if(this.task=="mail"&&this.env.action=="compose"&&(_40=="list"||_40=="mail"||_40=="addressbook"||_40=="settings")){
- if(this.cmp_hash!=this.compose_field_hash()&&!confirm(this.get_label("notsentwarning"))){
- return false;
- }
- }
--switch(_3f){
-+switch(_40){
- case "login":
- if(this.gui_objects.loginform){
- this.gui_objects.loginform.submit();
-@@ -425,7 +442,7 @@
- case "mail":
- case "addressbook":
- case "settings":
--this.switch_task(_3f);
-+this.switch_task(_40);
- break;
- case "permaurl":
- if(obj&&obj.href&&obj.target){
-@@ -438,20 +455,20 @@
- break;
- case "list":
- if(this.task=="mail"){
--if(this.env.search_request<0||(_40!=""&&(this.env.search_request&&_40!=this.env.mailbox))){
-+if(this.env.search_request<0||(_41!=""&&(this.env.search_request&&_41!=this.env.mailbox))){
- this.reset_qsearch();
- }
--this.list_mailbox(_40);
-+this.list_mailbox(_41);
- if(this.env.trash_mailbox){
- this.set_alttext("delete",this.env.mailbox!=this.env.trash_mailbox?"movemessagetotrash":"deletemessage");
- }
- }else{
- if(this.task=="addressbook"){
--if(this.env.search_request<0||(this.env.search_request&&_40!=this.env.source)){
-+if(this.env.search_request<0||(this.env.search_request&&_41!=this.env.source)){
- this.reset_qsearch();
- }
--this.list_contacts(_40);
--this.enable_command("add",(this.env.address_sources&&!this.env.address_sources[_40].readonly));
-+this.list_contacts(_41);
-+this.enable_command("add",(this.env.address_sources&&!this.env.address_sources[_41].readonly));
- }
- }
- break;
-@@ -459,29 +476,29 @@
- this.load_headers(obj);
- break;
- case "sort":
--var _42=_40.split("_");
--var _43=_42[0];
--var _44=_42[1]?_42[1].toUpperCase():null;
--var _45;
--if(_44==null){
--if(this.env.sort_col==_43){
--_44=this.env.sort_order=="ASC"?"DESC":"ASC";
-+var _43=_41.split("_");
-+var _44=_43[0];
-+var _45=_43[1]?_43[1].toUpperCase():null;
-+var _46;
-+if(_45==null){
-+if(this.env.sort_col==_44){
-+_45=this.env.sort_order=="ASC"?"DESC":"ASC";
- }else{
--_44=this.env.sort_order;
-+_45=this.env.sort_order;
- }
- }
--if(this.env.sort_col==_43&&this.env.sort_order==_44){
-+if(this.env.sort_col==_44&&this.env.sort_order==_45){
- break;
- }
--if(_45=document.getElementById("rcm"+this.env.sort_col)){
--this.set_classname(_45,"sorted"+(this.env.sort_order.toUpperCase()),false);
-+if(_46=document.getElementById("rcm"+this.env.sort_col)){
-+this.set_classname(_46,"sorted"+(this.env.sort_order.toUpperCase()),false);
- }
--if(_45=document.getElementById("rcm"+_43)){
--this.set_classname(_45,"sorted"+_44,true);
-+if(_46=document.getElementById("rcm"+_44)){
-+this.set_classname(_46,"sorted"+_45,true);
- }
--this.env.sort_col=_43;
--this.env.sort_order=_44;
--this.list_mailbox("","",_43+"_"+_44);
-+this.env.sort_col=_44;
-+this.env.sort_order=_45;
-+this.list_mailbox("","",_44+"_"+_45);
- break;
- case "nextpage":
- this.list_page("next");
-@@ -518,7 +535,7 @@
- }
- }else{
- if(this.task=="addressbook"){
--var cid=_40?_40:this.get_single_cid();
-+var cid=_41?_41:this.get_single_cid();
- if(cid&&!(this.env.action=="show"&&cid==this.env.cid)){
- this.load_contact(cid,"show");
- }
-@@ -540,30 +557,30 @@
- if(this.task=="addressbook"&&(cid=this.get_single_cid())){
- this.load_contact(cid,"edit");
- }else{
--if(this.task=="settings"&&_40){
--this.load_identity(_40,"edit-identity");
-+if(this.task=="settings"&&_41){
-+this.load_identity(_41,"edit-identity");
- }
- }
- break;
- case "save-identity":
- case "save":
- if(this.gui_objects.editform){
--var _48=rcube_find_object("_pagesize");
--var _49=rcube_find_object("_name");
--var _4a=rcube_find_object("_email");
--if(_48&&isNaN(parseInt(_48.value))){
-+var _49=rcube_find_object("_pagesize");
-+var _4a=rcube_find_object("_name");
-+var _4b=rcube_find_object("_email");
-+if(_49&&isNaN(parseInt(_49.value))){
- alert(this.get_label("nopagesizewarning"));
--_48.focus();
-+_49.focus();
- break;
- }else{
--if(_49&&_49.value==""){
-+if(_4a&&_4a.value==""){
- alert(this.get_label("nonamewarning"));
--_49.focus();
-+_4a.focus();
- break;
- }else{
--if(_4a&&!rcube_check_email(_4a.value)){
-+if(_4b&&!rcube_check_email(_4b.value)){
- alert(this.get_label("noemailwarning"));
--_4a.focus();
-+_4b.focus();
- break;
- }
- }
-@@ -587,49 +604,49 @@
- case "move":
- case "moveto":
- if(this.task=="mail"){
--this.move_messages(_40);
-+this.move_messages(_41);
- }else{
- if(this.task=="addressbook"&&this.drag_active){
--this.copy_contact(null,_40);
-+this.copy_contact(null,_41);
- }
- }
- break;
- case "mark":
--if(_40){
--this.mark_message(_40);
-+if(_41){
-+this.mark_message(_41);
- }
- break;
- case "toggle_status":
--if(_40&&!_40._row){
-+if(_41&&!_41._row){
- break;
- }
- var uid;
--var _4b="read";
--if(_40._row.uid){
--uid=_40._row.uid;
-+var _4c="read";
-+if(_41._row.uid){
-+uid=_41._row.uid;
- if(this.message_list.rows[uid].deleted){
--_4b="undelete";
-+_4c="undelete";
- }else{
- if(!this.message_list.rows[uid].unread){
--_4b="unread";
-+_4c="unread";
- }
- }
- }
--this.mark_message(_4b,uid);
-+this.mark_message(_4c,uid);
- break;
- case "toggle_flag":
--if(_40&&!_40._row){
-+if(_41&&!_41._row){
- break;
- }
- var uid;
--var _4b="flagged";
--if(_40._row.uid){
--uid=_40._row.uid;
-+var _4c="flagged";
-+if(_41._row.uid){
-+uid=_41._row.uid;
- if(this.message_list.rows[uid].flagged){
--_4b="unflagged";
-+_4c="unflagged";
- }
- }
--this.mark_message(_4b,uid);
-+this.mark_message(_4c,uid);
- break;
- case "always-load":
- if(this.env.uid&&this.env.sender){
-@@ -645,12 +662,12 @@
- }
- break;
- case "load-attachment":
--var _4c="_mbox="+urlencode(this.env.mailbox)+"&_uid="+this.env.uid+"&_part="+_40.part;
--if(this.env.uid&&_40.mimetype&&find_in_array(_40.mimetype,this.mimetypes)>=0){
--if(_40.mimetype=="text/html"){
--_4c+="&_safe=1";
-+var _4d="_mbox="+urlencode(this.env.mailbox)+"&_uid="+this.env.uid+"&_part="+_41.part;
-+if(this.env.uid&&_41.mimetype&&find_in_array(_41.mimetype,this.mimetypes)>=0){
-+if(_41.mimetype=="text/html"){
-+_4d+="&_safe=1";
- }
--this.attachment_win=window.open(this.env.comm_path+"&_action=get&"+_4c+"&_frame=1","rcubemailattachment");
-+this.attachment_win=window.open(this.env.comm_path+"&_action=get&"+_4d+"&_frame=1","rcubemailattachment");
- if(this.attachment_win){
- window.setTimeout(function(){
- _1.attachment_win.focus();
-@@ -658,10 +675,10 @@
- break;
- }
- }
--this.goto_url("get",_4c+"&_download=1",false);
-+this.goto_url("get",_4d+"&_download=1",false);
- break;
- case "select-all":
--this.message_list.select_all(_40);
-+this.message_list.select_all(_41);
- break;
- case "select-none":
- this.message_list.clear_selection();
-@@ -699,30 +716,30 @@
- url+="&_draft_uid="+uid;
- }
- }else{
--if(_40){
--url+="&_to="+urlencode(_40);
-+if(_41){
-+url+="&_to="+urlencode(_41);
- }
- }
- }else{
- if(this.task=="addressbook"){
--if(_40&&_40.indexOf("@")>0){
-+if(_41&&_41.indexOf("@")>0){
- url=this.get_task_url("mail",url);
--this.redirect(url+"&_to="+urlencode(_40));
-+this.redirect(url+"&_to="+urlencode(_41));
- break;
- }
--var _4e=new Array();
--if(_40){
--_4e[_4e.length]=_40;
-+var _4f=new Array();
-+if(_41){
-+_4f[_4f.length]=_41;
- }else{
- if(this.contact_list){
--var _4f=this.contact_list.get_selection();
--for(var n=0;n<_4f.length;n++){
--_4e[_4e.length]=_4f[n];
-+var _50=this.contact_list.get_selection();
-+for(var n=0;n<_50.length;n++){
-+_4f[_4f.length]=_50[n];
- }
- }
- }
--if(_4e.length){
--this.http_request("mailto","_cid="+urlencode(_4e.join(","))+"&_source="+urlencode(this.env.source),true);
-+if(_4f.length){
-+this.http_request("mailto","_cid="+urlencode(_4f.join(","))+"&_source="+urlencode(this.env.source),true);
- }
- break;
- }
-@@ -749,10 +766,10 @@
- break;
- }
- this.set_busy(true,"savingmessage");
--var _51=this.gui_objects.messageform;
--_51.target="savetarget";
--_51._draft.value="1";
--_51.submit();
-+var _52=this.gui_objects.messageform;
-+_52.target="savetarget";
-+_52._draft.value="1";
-+_52.submit();
- break;
- case "send":
- if(!this.gui_objects.messageform){
-@@ -763,26 +780,26 @@
- }
- self.clearTimeout(this.save_timer);
- this.set_busy(true,"sendingmessage");
--var _51=this.gui_objects.messageform;
--_51.target="savetarget";
--_51._draft.value="";
--_51.submit();
-+var _52=this.gui_objects.messageform;
-+_52.target="savetarget";
-+_52._draft.value="";
-+_52.submit();
- clearTimeout(this.request_timer);
- break;
- case "add-attachment":
- this.show_attachment_form(true);
- case "send-attachment":
- self.clearTimeout(this.save_timer);
--this.upload_file(_40);
-+this.upload_file(_41);
- break;
- case "remove-attachment":
--this.remove_attachment(_40);
-+this.remove_attachment(_41);
- break;
- case "reply-all":
- case "reply":
- var uid;
- if(uid=this.get_single_uid()){
--this.goto_url("compose","_reply_uid="+uid+"&_mbox="+urlencode(this.env.mailbox)+(_3f=="reply-all"?"&_all=1":""),true);
-+this.goto_url("compose","_reply_uid="+uid+"&_mbox="+urlencode(this.env.mailbox)+(_40=="reply-all"?"&_all=1":""),true);
- }
- break;
- case "forward":
-@@ -817,14 +834,14 @@
- }
- break;
- case "add-contact":
--this.add_contact(_40);
-+this.add_contact(_41);
- break;
- case "search":
--if(!_40&&this.gui_objects.qsearchbox){
--_40=this.gui_objects.qsearchbox.value;
-+if(!_41&&this.gui_objects.qsearchbox){
-+_41=this.gui_objects.qsearchbox.value;
- }
--if(_40){
--this.qsearch(_40);
-+if(_41){
-+this.qsearch(_41);
- break;
- }
- case "reset-search":
-@@ -840,8 +857,8 @@
- break;
- case "import":
- if(this.env.action=="import"&&this.gui_objects.importform){
--var _53=document.getElementById("rcmimportfile");
--if(_53&&!_53.value){
-+var _54=document.getElementById("rcmimportfile");
-+if(_54&&!_54.value){
- alert(this.get_label("selectimportfile"));
- break;
- }
-@@ -854,16 +871,16 @@
- break;
- case "export":
- if(this.contact_list.rowcount>0){
--var _54=(this.env.source?"_source="+urlencode(this.env.source)+"&":"");
-+var _55=(this.env.source?"_source="+urlencode(this.env.source)+"&":"");
- if(this.env.search_request){
--_54+="_search="+this.env.search_request;
-+_55+="_search="+this.env.search_request;
- }
--this.goto_url("export",_54);
-+this.goto_url("export",_55);
- }
- break;
- case "collapse-folder":
--if(_40){
--this.collapse_folder(_40);
-+if(_41){
-+this.collapse_folder(_41);
- }
- break;
- case "preferences":
-@@ -878,41 +895,59 @@
- this.goto_url("folders");
- break;
- case "subscribe":
--this.subscribe_folder(_40);
-+this.subscribe_folder(_41);
- break;
- case "unsubscribe":
--this.unsubscribe_folder(_40);
-+this.unsubscribe_folder(_41);
- break;
- case "create-folder":
--this.create_folder(_40);
-+this.create_folder(_41);
- break;
- case "rename-folder":
--this.rename_folder(_40);
-+this.rename_folder(_41);
- break;
- case "delete-folder":
--this.delete_folder(_40);
-+this.delete_folder(_41);
-+break;
-+case "managesieve":
-+this.goto_url("managesieve","",true);
-+break;
-+case "sievefiltersave":
-+this.sievefilter_save();
-+break;
-+case "sievefilteradd":
-+this.sievefilter_add();
-+break;
-+case "sievefilterdel":
-+this.sievefilter_del();
-+break;
-+case "sievefilterup":
-+this.sievefilter_up();
-+break;
-+case "sievefilterdown":
-+this.sievefilter_down();
- break;
- }
- return obj?false:true;
- };
- this.enable_command=function(){
--var _55=arguments;
--if(!_55.length){
-+var _56=arguments;
-+if(!_56.length){
- return -1;
- }
--var _56;
--var _57=_55[_55.length-1];
--for(var n=0;n<_55.length-1;n++){
--_56=_55[n];
--this.commands[_56]=_57;
--this.set_button(_56,(_57?"act":"pas"));
-+var _57;
-+var _58=_56[_56.length-1];
-+for(var n=0;n<_56.length-1;n++){
-+_57=_56[n];
-+this.commands[_57]=_58;
-+this.set_button(_57,(_58?"act":"pas"));
- }
- return true;
- };
--this.set_busy=function(a,_5a){
--if(a&&_5a){
--var msg=this.get_label(_5a);
--if(msg==_5a){
-+this.set_busy=function(a,_5b){
-+if(a&&_5b){
-+var msg=this.get_label(_5b);
-+if(msg==_5b){
- msg="Loading...";
- }
- this.display_message(msg,"loading",true);
-@@ -934,71 +969,71 @@
- },this.env.request_timeout*1000);
- }
- };
--this.get_label=function(_5c){
--if(this.labels[_5c]){
--return this.labels[_5c];
-+this.get_label=function(_5d){
-+if(this.labels[_5d]){
-+return this.labels[_5d];
- }else{
--return _5c;
-+return _5d;
- }
- };
--this.switch_task=function(_5d){
--if(this.task===_5d&&_5d!="mail"){
-+this.switch_task=function(_5e){
-+if(this.task===_5e&&_5e!="mail"){
- return;
- }
--var url=this.get_task_url(_5d);
--if(_5d=="mail"){
-+var url=this.get_task_url(_5e);
-+if(_5e=="mail"){
- url+="&_mbox=INBOX";
- }
- this.redirect(url);
- };
--this.get_task_url=function(_5f,url){
-+this.get_task_url=function(_60,url){
- if(!url){
- url=this.env.comm_path;
- }
--return url.replace(/_task=[a-z]+/,"_task="+_5f);
-+return url.replace(/_task=[a-z]+/,"_task="+_60);
- };
- this.request_timed_out=function(){
- this.set_busy(false);
- this.display_message("Request timed out!","error");
- };
- this.doc_mouse_up=function(e){
--var _62,li;
-+var _63,li;
- if(this.message_list){
- this.message_list.blur();
--_62=this.env.mailboxes;
-+_63=this.env.mailboxes;
- }else{
- if(this.contact_list){
- this.contact_list.blur();
--_62=this.env.address_sources;
-+_63=this.env.address_sources;
- }else{
- if(this.ksearch_value){
- this.ksearch_blur();
- }
- }
- }
--if(this.drag_active&&_62&&this.env.last_folder_target){
-+if(this.drag_active&&_63&&this.env.last_folder_target){
- this.set_classname(this.get_folder_li(this.env.last_folder_target),"droptarget",false);
--this.command("moveto",_62[this.env.last_folder_target].id);
-+this.command("moveto",_63[this.env.last_folder_target].id);
- this.env.last_folder_target=null;
- }
- };
--this.drag_start=function(_64){
--var _65=this.task=="mail"?this.env.mailboxes:this.env.address_sources;
-+this.drag_start=function(_65){
-+var _66=this.task=="mail"?this.env.mailboxes:this.env.address_sources;
- this.drag_active=true;
- if(this.preview_timer){
- clearTimeout(this.preview_timer);
- }
--if(this.gui_objects.folderlist&&_65){
--var li,pos,_64,_68;
--_64=rcube_find_object(this.task=="mail"?"mailboxlist":"directorylist");
--pos=rcube_get_object_pos(_64);
--this.env.folderlist_coords={x1:pos.x,y1:pos.y,x2:pos.x+_64.offsetWidth,y2:pos.y+_64.offsetHeight};
-+if(this.gui_objects.folderlist&&_66){
-+var li,pos,_65,_69;
-+_65=rcube_find_object(this.task=="mail"?"mailboxlist":"directorylist");
-+pos=rcube_get_object_pos(_65);
-+this.env.folderlist_coords={x1:pos.x,y1:pos.y,x2:pos.x+_65.offsetWidth,y2:pos.y+_65.offsetHeight};
- this.env.folder_coords=new Array();
--for(var k in _65){
-+for(var k in _66){
- if(li=this.get_folder_li(k)){
- pos=rcube_get_object_pos(li.firstChild);
--if(_68=li.firstChild.offsetHeight){
--this.env.folder_coords[k]={x1:pos.x,y1:pos.y,x2:pos.x+li.firstChild.offsetWidth,y2:pos.y+_68};
-+if(_69=li.firstChild.offsetHeight){
-+this.env.folder_coords[k]={x1:pos.x,y1:pos.y,x2:pos.x+li.firstChild.offsetWidth,y2:pos.y+_69};
- }
- }
- }
-@@ -1006,10 +1041,10 @@
- };
- this.drag_move=function(e){
- if(this.gui_objects.folderlist&&this.env.folder_coords){
--var li,pos,_6d;
--_6d=rcube_event.get_mouse_pos(e);
-+var li,pos,_6e;
-+_6e=rcube_event.get_mouse_pos(e);
- pos=this.env.folderlist_coords;
--if(_6d.x<pos.x1||_6d.x>=pos.x2||_6d.y<pos.y1||_6d.y>=pos.y2){
-+if(_6e.x<pos.x1||_6e.x>=pos.x2||_6e.y<pos.y1||_6e.y>=pos.y2){
- if(this.env.last_folder_target){
- this.set_classname(this.get_folder_li(this.env.last_folder_target),"droptarget",false);
- this.env.last_folder_target=null;
-@@ -1018,7 +1053,7 @@
- }
- for(var k in this.env.folder_coords){
- pos=this.env.folder_coords[k];
--if(this.check_droptarget(k)&&((_6d.x>=pos.x1)&&(_6d.x<pos.x2)&&(_6d.y>=pos.y1)&&(_6d.y<pos.y2))){
-+if(this.check_droptarget(k)&&((_6e.x>=pos.x1)&&(_6e.x<pos.x2)&&(_6e.y>=pos.y1)&&(_6e.y<pos.y2))){
- this.set_classname(this.get_folder_li(k),"droptarget",true);
- this.env.last_folder_target=k;
- }else{
-@@ -1062,26 +1097,26 @@
- this.contact_list.focus();
- }
- }
--var _74;
--if(_74=this.get_folder_li()){
--this.set_classname(_74,"unfocused",true);
-+var _75;
-+if(_75=this.get_folder_li()){
-+this.set_classname(_75,"unfocused",true);
- }
- return rcube_event.get_button(e)==2?true:rcube_event.cancel(e);
- };
--this.msglist_select=function(_75){
-+this.msglist_select=function(_76){
- if(this.preview_timer){
- clearTimeout(this.preview_timer);
- }
--var _76=_75.selection.length==1;
-+var _77=_76.selection.length==1;
- if(this.env.mailbox==this.env.drafts_mailbox){
- this.enable_command("reply","reply-all","forward",false);
--this.enable_command("show",_76);
--this.enable_command("delete","moveto","mark",(_75.selection.length>0?true:false));
-+this.enable_command("show",_77);
-+this.enable_command("delete","moveto","mark",(_76.selection.length>0?true:false));
- }else{
--this.enable_command("show","reply","reply-all","forward","print",_76);
--this.enable_command("delete","moveto","mark",(_75.selection.length>0?true:false));
-+this.enable_command("show","reply","reply-all","forward","print",_77);
-+this.enable_command("delete","moveto","mark",(_76.selection.length>0?true:false));
- }
--if(_76&&this.env.contentframe&&!_75.multi_selecting){
-+if(_77&&this.env.contentframe&&!_76.multi_selecting){
- this.preview_timer=window.setTimeout(function(){
- _1.msglist_get_preview();
- },200);
-@@ -1091,11 +1126,11 @@
- }
- }
- };
--this.msglist_dbl_click=function(_77){
-+this.msglist_dbl_click=function(_78){
- if(this.preview_timer){
- clearTimeout(this.preview_timer);
- }
--var uid=_77.get_single_selection();
-+var uid=_78.get_single_selection();
- if(uid&&this.env.mailbox==this.env.drafts_mailbox){
- this.goto_url("compose","_draft_uid="+uid+"&_mbox="+urlencode(this.env.mailbox),true);
- }else{
-@@ -1104,17 +1139,17 @@
- }
- }
- };
--this.msglist_keypress=function(_79){
--if(_79.key_pressed==_79.ENTER_KEY){
-+this.msglist_keypress=function(_7a){
-+if(_7a.key_pressed==_7a.ENTER_KEY){
- this.command("show");
- }else{
--if(_79.key_pressed==_79.DELETE_KEY){
-+if(_7a.key_pressed==_7a.DELETE_KEY){
- this.command("delete");
- }else{
--if(_79.key_pressed==_79.BACKSPACE_KEY){
-+if(_7a.key_pressed==_7a.BACKSPACE_KEY){
- this.command("delete");
- }else{
--_79.shiftkey=false;
-+_7a.shiftkey=false;
- }
- }
- }
-@@ -1142,30 +1177,30 @@
- }
- }
- };
--this.show_message=function(id,_7d,_7e){
-+this.show_message=function(id,_7e,_7f){
- if(!id){
- return;
- }
--var _7f="";
--var _80=_7e?"preview":"show";
--var _81=window;
--if(_7e&&this.env.contentframe&&window.frames&&window.frames[this.env.contentframe]){
--_81=window.frames[this.env.contentframe];
--_7f="&_framed=1";
-+var _80="";
-+var _81=_7f?"preview":"show";
-+var _82=window;
-+if(_7f&&this.env.contentframe&&window.frames&&window.frames[this.env.contentframe]){
-+_82=window.frames[this.env.contentframe];
-+_80="&_framed=1";
- }
--if(_7d){
--_7f="&_safe=1";
-+if(_7e){
-+_80="&_safe=1";
- }
- if(this.env.search_request){
--_7f+="&_search="+this.env.search_request;
-+_80+="&_search="+this.env.search_request;
- }
--var url="&_action="+_80+"&_uid="+id+"&_mbox="+urlencode(this.env.mailbox)+_7f;
--if(_80=="preview"&&String(_81.location.href).indexOf(url)>=0){
-+var url="&_action="+_81+"&_uid="+id+"&_mbox="+urlencode(this.env.mailbox)+_80;
-+if(_81=="preview"&&String(_82.location.href).indexOf(url)>=0){
- this.show_contentframe(true);
- }else{
- this.set_busy(true,"loading");
--_81.location.href=this.env.comm_path+url;
--if(_80=="preview"&&this.message_list&&this.message_list.rows[id]&&this.message_list.rows[id].unread){
-+_82.location.href=this.env.comm_path+url;
-+if(_81=="preview"&&this.message_list&&this.message_list.rows[id]&&this.message_list.rows[id].unread){
- this.set_message(id,"unread",false);
- if(this.env.unread_counts[this.env.mailbox]){
- this.env.unread_counts[this.env.mailbox]-=1;
-@@ -1174,246 +1209,246 @@
- }
- }
- };
--this.show_contentframe=function(_83){
-+this.show_contentframe=function(_84){
- var frm;
- if(this.env.contentframe&&(frm=rcube_find_object(this.env.contentframe))){
--if(!_83&&window.frames[this.env.contentframe]){
-+if(!_84&&window.frames[this.env.contentframe]){
- if(window.frames[this.env.contentframe].location.href.indexOf(this.env.blankpage)<0){
- window.frames[this.env.contentframe].location.href=this.env.blankpage;
- }
- }else{
- if(!bw.safari){
--frm.style.display=_83?"block":"none";
-+frm.style.display=_84?"block":"none";
- }
- }
- }
--if(!_83&&this.busy){
-+if(!_84&&this.busy){
- this.set_busy(false);
- }
- };
--this.list_page=function(_85){
--if(_85=="next"){
--_85=this.env.current_page+1;
-+this.list_page=function(_86){
-+if(_86=="next"){
-+_86=this.env.current_page+1;
- }
--if(_85=="last"){
--_85=this.env.pagecount;
-+if(_86=="last"){
-+_86=this.env.pagecount;
- }
--if(_85=="prev"&&this.env.current_page>1){
--_85=this.env.current_page-1;
-+if(_86=="prev"&&this.env.current_page>1){
-+_86=this.env.current_page-1;
- }
--if(_85=="first"&&this.env.current_page>1){
--_85=1;
-+if(_86=="first"&&this.env.current_page>1){
-+_86=1;
- }
--if(_85>0&&_85<=this.env.pagecount){
--this.env.current_page=_85;
-+if(_86>0&&_86<=this.env.pagecount){
-+this.env.current_page=_86;
- if(this.task=="mail"){
--this.list_mailbox(this.env.mailbox,_85);
-+this.list_mailbox(this.env.mailbox,_86);
- }else{
- if(this.task=="addressbook"){
--this.list_contacts(this.env.source,_85);
-+this.list_contacts(this.env.source,_86);
- }
- }
- }
- };
--this.filter_mailbox=function(_86){
--var _87;
-+this.filter_mailbox=function(_87){
-+var _88;
- if(this.gui_objects.qsearchbox){
--_87=this.gui_objects.qsearchbox.value;
-+_88=this.gui_objects.qsearchbox.value;
- }
- this.message_list.clear();
- this.env.current_page=1;
- this.set_busy(true,"searching");
--this.http_request("search","_filter="+_86+(_87?"&_q="+urlencode(_87):"")+(this.env.mailbox?"&_mbox="+urlencode(this.env.mailbox):""),true);
-+this.http_request("search","_filter="+_87+(_88?"&_q="+urlencode(_88):"")+(this.env.mailbox?"&_mbox="+urlencode(this.env.mailbox):""),true);
- };
--this.list_mailbox=function(_88,_89,_8a){
-+this.list_mailbox=function(_89,_8a,_8b){
- this.last_selected=0;
--var _8b="";
--var _8c=window;
--if(!_88){
--_88=this.env.mailbox;
-+var _8c="";
-+var _8d=window;
-+if(!_89){
-+_89=this.env.mailbox;
- }
--if(_8a){
--_8b+="&_sort="+_8a;
-+if(_8b){
-+_8c+="&_sort="+_8b;
- }
- if(this.env.search_request){
--_8b+="&_search="+this.env.search_request;
-+_8c+="&_search="+this.env.search_request;
- }
--if(!_89&&_88!=this.env.mailbox){
--_89=1;
--this.env.current_page=_89;
-+if(!_8a&&_89!=this.env.mailbox){
-+_8a=1;
-+this.env.current_page=_8a;
- if(this.message_list){
- this.message_list.clear_selection();
- }
- this.show_contentframe(false);
- }
--if(_88!=this.env.mailbox||(_88==this.env.mailbox&&!_89&&!_8a)){
--_8b+="&_refresh=1";
-+if(_89!=this.env.mailbox||(_89==this.env.mailbox&&!_8a&&!_8b)){
-+_8c+="&_refresh=1";
- }
--this.select_folder(_88,this.env.mailbox);
--this.env.mailbox=_88;
-+this.select_folder(_89,this.env.mailbox);
-+this.env.mailbox=_89;
- if(this.gui_objects.messagelist){
--this.list_mailbox_remote(_88,_89,_8b);
-+this.list_mailbox_remote(_89,_8a,_8c);
- return;
- }
- if(this.env.contentframe&&window.frames&&window.frames[this.env.contentframe]){
--_8c=window.frames[this.env.contentframe];
--_8b+="&_framed=1";
-+_8d=window.frames[this.env.contentframe];
-+_8c+="&_framed=1";
- }
--if(_88){
-+if(_89){
- this.set_busy(true,"loading");
--_8c.location.href=this.env.comm_path+"&_mbox="+urlencode(_88)+(_89?"&_page="+_89:"")+_8b;
-+_8d.location.href=this.env.comm_path+"&_mbox="+urlencode(_89)+(_8a?"&_page="+_8a:"")+_8c;
- }
- };
--this.list_mailbox_remote=function(_8d,_8e,_8f){
-+this.list_mailbox_remote=function(_8e,_8f,_90){
- this.message_list.clear();
--var url="_mbox="+urlencode(_8d)+(_8e?"&_page="+_8e:"");
-+var url="_mbox="+urlencode(_8e)+(_8f?"&_page="+_8f:"");
- this.set_busy(true,"loading");
--this.http_request("list",url+_8f,true);
-+this.http_request("list",url+_90,true);
- };
--this.expunge_mailbox=function(_91){
--var _92=false;
--var _93="";
--if(_91==this.env.mailbox){
--_92=true;
-+this.expunge_mailbox=function(_92){
-+var _93=false;
-+var _94="";
-+if(_92==this.env.mailbox){
-+_93=true;
- this.set_busy(true,"loading");
--_93="&_reload=1";
-+_94="&_reload=1";
- }
--var url="_mbox="+urlencode(_91);
--this.http_post("expunge",url+_93,_92);
-+var url="_mbox="+urlencode(_92);
-+this.http_post("expunge",url+_94,_93);
- };
--this.purge_mailbox=function(_95){
--var _96=false;
--var _97="";
-+this.purge_mailbox=function(_96){
-+var _97=false;
-+var _98="";
- if(!confirm(this.get_label("purgefolderconfirm"))){
- return false;
- }
--if(_95==this.env.mailbox){
--_96=true;
-+if(_96==this.env.mailbox){
-+_97=true;
- this.set_busy(true,"loading");
--_97="&_reload=1";
-+_98="&_reload=1";
- }
--var url="_mbox="+urlencode(_95);
--this.http_post("purge",url+_97,_96);
-+var url="_mbox="+urlencode(_96);
-+this.http_post("purge",url+_98,_97);
- return true;
- };
- this.purge_mailbox_test=function(){
- return (this.env.messagecount&&(this.env.mailbox==this.env.trash_mailbox||this.env.mailbox==this.env.junk_mailbox||this.env.mailbox.match("^"+RegExp.escape(this.env.trash_mailbox)+RegExp.escape(this.env.delimiter))||this.env.mailbox.match("^"+RegExp.escape(this.env.junk_mailbox)+RegExp.escape(this.env.delimiter))));
- };
- this.set_message_icon=function(uid){
--var _9a;
--var _9b=this.message_list.rows;
--if(!_9b[uid]){
-+var _9b;
-+var _9c=this.message_list.rows;
-+if(!_9c[uid]){
- return false;
- }
--if(_9b[uid].deleted&&this.env.deletedicon){
--_9a=this.env.deletedicon;
-+if(_9c[uid].deleted&&this.env.deletedicon){
-+_9b=this.env.deletedicon;
- }else{
--if(_9b[uid].replied&&this.env.repliedicon){
--if(_9b[uid].forwarded&&this.env.forwardedrepliedicon){
--_9a=this.env.forwardedrepliedicon;
-+if(_9c[uid].replied&&this.env.repliedicon){
-+if(_9c[uid].forwarded&&this.env.forwardedrepliedicon){
-+_9b=this.env.forwardedrepliedicon;
- }else{
--_9a=this.env.repliedicon;
-+_9b=this.env.repliedicon;
- }
- }else{
--if(_9b[uid].forwarded&&this.env.forwardedicon){
--_9a=this.env.forwardedicon;
-+if(_9c[uid].forwarded&&this.env.forwardedicon){
-+_9b=this.env.forwardedicon;
- }else{
--if(_9b[uid].unread&&this.env.unreadicon){
--_9a=this.env.unreadicon;
-+if(_9c[uid].unread&&this.env.unreadicon){
-+_9b=this.env.unreadicon;
- }else{
- if(this.env.messageicon){
--_9a=this.env.messageicon;
-+_9b=this.env.messageicon;
- }
- }
- }
- }
- }
--if(_9a&&_9b[uid].icon){
--_9b[uid].icon.src=_9a;
-+if(_9b&&_9c[uid].icon){
-+_9c[uid].icon.src=_9b;
- }
--_9a="";
--if(_9b[uid].flagged&&this.env.flaggedicon){
--_9a=this.env.flaggedicon;
-+_9b="";
-+if(_9c[uid].flagged&&this.env.flaggedicon){
-+_9b=this.env.flaggedicon;
- }else{
--if(!_9b[uid].flagged&&this.env.unflaggedicon){
--_9a=this.env.unflaggedicon;
-+if(!_9c[uid].flagged&&this.env.unflaggedicon){
-+_9b=this.env.unflaggedicon;
- }
- }
--if(_9b[uid].flagged_icon&&_9a){
--_9b[uid].flagged_icon.src=_9a;
-+if(_9c[uid].flagged_icon&&_9b){
-+_9c[uid].flagged_icon.src=_9b;
- }
- };
--this.set_message_status=function(uid,_9d,_9e){
--var _9f=this.message_list.rows;
--if(!_9f[uid]){
-+this.set_message_status=function(uid,_9e,_9f){
-+var _a0=this.message_list.rows;
-+if(!_a0[uid]){
- return false;
- }
--if(_9d=="unread"){
--_9f[uid].unread=_9e;
-+if(_9e=="unread"){
-+_a0[uid].unread=_9f;
- }else{
--if(_9d=="deleted"){
--_9f[uid].deleted=_9e;
-+if(_9e=="deleted"){
-+_a0[uid].deleted=_9f;
- }else{
--if(_9d=="replied"){
--_9f[uid].replied=_9e;
-+if(_9e=="replied"){
-+_a0[uid].replied=_9f;
- }else{
--if(_9d=="forwarded"){
--_9f[uid].forwarded=_9e;
-+if(_9e=="forwarded"){
-+_a0[uid].forwarded=_9f;
- }else{
--if(_9d=="flagged"){
--_9f[uid].flagged=_9e;
-+if(_9e=="flagged"){
-+_a0[uid].flagged=_9f;
- }
- }
- }
- }
- }
--this.env.messages[uid]=_9f[uid];
-+this.env.messages[uid]=_a0[uid];
- };
--this.set_message=function(uid,_a1,_a2){
--var _a3=this.message_list.rows;
--if(!_a3[uid]){
-+this.set_message=function(uid,_a2,_a3){
-+var _a4=this.message_list.rows;
-+if(!_a4[uid]){
- return false;
- }
--if(_a1){
--this.set_message_status(uid,_a1,_a2);
-+if(_a2){
-+this.set_message_status(uid,_a2,_a3);
- }
--if(_a3[uid].unread&&_a3[uid].classname.indexOf("unread")<0){
--_a3[uid].classname+=" unread";
--this.set_classname(_a3[uid].obj,"unread",true);
-+if(_a4[uid].unread&&_a4[uid].classname.indexOf("unread")<0){
-+_a4[uid].classname+=" unread";
-+this.set_classname(_a4[uid].obj,"unread",true);
- }else{
--if(!_a3[uid].unread&&_a3[uid].classname.indexOf("unread")>=0){
--_a3[uid].classname=_a3[uid].classname.replace(/\s*unread/,"");
--this.set_classname(_a3[uid].obj,"unread",false);
-+if(!_a4[uid].unread&&_a4[uid].classname.indexOf("unread")>=0){
-+_a4[uid].classname=_a4[uid].classname.replace(/\s*unread/,"");
-+this.set_classname(_a4[uid].obj,"unread",false);
- }
- }
--if(_a3[uid].deleted&&_a3[uid].classname.indexOf("deleted")<0){
--_a3[uid].classname+=" deleted";
--this.set_classname(_a3[uid].obj,"deleted",true);
-+if(_a4[uid].deleted&&_a4[uid].classname.indexOf("deleted")<0){
-+_a4[uid].classname+=" deleted";
-+this.set_classname(_a4[uid].obj,"deleted",true);
- }else{
--if(!_a3[uid].deleted&&_a3[uid].classname.indexOf("deleted")>=0){
--_a3[uid].classname=_a3[uid].classname.replace(/\s*deleted/,"");
--this.set_classname(_a3[uid].obj,"deleted",false);
-+if(!_a4[uid].deleted&&_a4[uid].classname.indexOf("deleted")>=0){
-+_a4[uid].classname=_a4[uid].classname.replace(/\s*deleted/,"");
-+this.set_classname(_a4[uid].obj,"deleted",false);
- }
- }
--if(_a3[uid].flagged&&_a3[uid].classname.indexOf("flagged")<0){
--_a3[uid].classname+=" flagged";
--this.set_classname(_a3[uid].obj,"flagged",true);
-+if(_a4[uid].flagged&&_a4[uid].classname.indexOf("flagged")<0){
-+_a4[uid].classname+=" flagged";
-+this.set_classname(_a4[uid].obj,"flagged",true);
- }else{
--if(!_a3[uid].flagged&&_a3[uid].classname.indexOf("flagged")>=0){
--_a3[uid].classname=_a3[uid].classname.replace(/\s*flagged/,"");
--this.set_classname(_a3[uid].obj,"flagged",false);
-+if(!_a4[uid].flagged&&_a4[uid].classname.indexOf("flagged")>=0){
-+_a4[uid].classname=_a4[uid].classname.replace(/\s*flagged/,"");
-+this.set_classname(_a4[uid].obj,"flagged",false);
- }
- }
- this.set_message_icon(uid);
- };
--this.move_messages=function(_a4){
--if(!_a4||_a4==this.env.mailbox||(!this.env.uid&&(!this.message_list||!this.message_list.get_selection().length))){
-+this.move_messages=function(_a5){
-+if(!_a5||_a5==this.env.mailbox||(!this.env.uid&&(!this.message_list||!this.message_list.get_selection().length))){
- return;
- }
--var _a5=false;
--var _a6="&_target_mbox="+urlencode(_a4)+"&_from="+(this.env.action?this.env.action:"");
-+var _a6=false;
-+var _a7="&_target_mbox="+urlencode(_a5)+"&_from="+(this.env.action?this.env.action:"");
- if(this.env.action=="show"){
--_a5=true;
-+_a6=true;
- this.set_busy(true,"movingmessage");
- }else{
- if(!this.env.flag_for_deletion){
-@@ -1421,11 +1456,11 @@
- }
- }
- this.enable_command("reply","reply-all","forward","delete","mark","print",false);
--this._with_selected_messages("moveto",_a5,_a6,(this.env.flag_for_deletion?false:true));
-+this._with_selected_messages("moveto",_a6,_a7,(this.env.flag_for_deletion?false:true));
- };
- this.delete_messages=function(){
--var _a7=this.message_list?this.message_list.get_selection():new Array();
--if(!this.env.uid&&!_a7.length){
-+var _a8=this.message_list?this.message_list.get_selection():new Array();
-+if(!this.env.uid&&!_a8.length){
- return;
- }
- if(this.env.trash_mailbox&&String(this.env.mailbox).toLowerCase()!=String(this.env.trash_mailbox).toLowerCase()){
-@@ -1445,7 +1480,7 @@
- if(this.env.action=="show"){
- this.command("nextmessage","",this);
- }else{
--if(_a7.length==1){
-+if(_a8.length==1){
- this.message_list.select_next();
- }
- }
-@@ -1464,19 +1499,19 @@
- this.show_contentframe(false);
- this._with_selected_messages("delete",false,"&_from="+(this.env.action?this.env.action:""),true);
- };
--this._with_selected_messages=function(_a8,_a9,_aa,_ab){
--var _ac=new Array();
-+this._with_selected_messages=function(_a9,_aa,_ab,_ac){
-+var _ad=new Array();
- if(this.env.uid){
--_ac[0]=this.env.uid;
-+_ad[0]=this.env.uid;
- }else{
--var _ad=this.message_list.get_selection();
--var _ae=this.message_list.rows;
-+var _ae=this.message_list.get_selection();
-+var _af=this.message_list.rows;
- var id;
--for(var n=0;n<_ad.length;n++){
--id=_ad[n];
--_ac[_ac.length]=id;
--if(_ab){
--this.message_list.remove_row(id,(n==_ad.length-1));
-+for(var n=0;n<_ae.length;n++){
-+id=_ae[n];
-+_ad[_ad.length]=id;
-+if(_ac){
-+this.message_list.remove_row(id,(n==_ae.length-1));
- }else{
- this.set_message_status(id,"deleted",true);
- if(this.env.read_when_deleted){
-@@ -1487,129 +1522,129 @@
- }
- }
- if(this.env.search_request){
--_aa+="&_search="+this.env.search_request;
-+_ab+="&_search="+this.env.search_request;
- }
--this.http_post(_a8,"_uid="+_ac.join(",")+"&_mbox="+urlencode(this.env.mailbox)+_aa,_a9);
-+this.http_post(_a9,"_uid="+_ad.join(",")+"&_mbox="+urlencode(this.env.mailbox)+_ab,_aa);
- };
--this.mark_message=function(_b1,uid){
--var _b3=new Array();
-+this.mark_message=function(_b2,uid){
- var _b4=new Array();
--var _b5=this.message_list?this.message_list.get_selection():new Array();
-+var _b5=new Array();
-+var _b6=this.message_list?this.message_list.get_selection():new Array();
- if(uid){
--_b3[0]=uid;
-+_b4[0]=uid;
- }else{
- if(this.env.uid){
--_b3[0]=this.env.uid;
-+_b4[0]=this.env.uid;
- }else{
- if(this.message_list){
--for(var n=0;n<_b5.length;n++){
--_b3[_b3.length]=_b5[n];
-+for(var n=0;n<_b6.length;n++){
-+_b4[_b4.length]=_b6[n];
- }
- }
- }
- }
- if(!this.message_list){
--_b4=_b3;
-+_b5=_b4;
- }else{
--for(var id,n=0;n<_b3.length;n++){
--id=_b3[n];
--if((_b1=="read"&&this.message_list.rows[id].unread)||(_b1=="unread"&&!this.message_list.rows[id].unread)||(_b1=="delete"&&!this.message_list.rows[id].deleted)||(_b1=="undelete"&&this.message_list.rows[id].deleted)||(_b1=="flagged"&&!this.message_list.rows[id].flagged)||(_b1=="unflagged"&&this.message_list.rows[id].flagged)){
--_b4[_b4.length]=id;
-+for(var id,n=0;n<_b4.length;n++){
-+id=_b4[n];
-+if((_b2=="read"&&this.message_list.rows[id].unread)||(_b2=="unread"&&!this.message_list.rows[id].unread)||(_b2=="delete"&&!this.message_list.rows[id].deleted)||(_b2=="undelete"&&this.message_list.rows[id].deleted)||(_b2=="flagged"&&!this.message_list.rows[id].flagged)||(_b2=="unflagged"&&this.message_list.rows[id].flagged)){
-+_b5[_b5.length]=id;
- }
- }
- }
--if(!_b4.length){
-+if(!_b5.length){
- return;
- }
--switch(_b1){
-+switch(_b2){
- case "read":
- case "unread":
--this.toggle_read_status(_b1,_b4);
-+this.toggle_read_status(_b2,_b5);
- break;
- case "delete":
- case "undelete":
--this.toggle_delete_status(_b4);
-+this.toggle_delete_status(_b5);
- break;
- case "flagged":
- case "unflagged":
--this.toggle_flagged_status(_b1,_b3);
-+this.toggle_flagged_status(_b2,_b4);
- break;
- }
- };
--this.toggle_read_status=function(_b8,_b9){
--for(var i=0;i<_b9.length;i++){
--this.set_message(_b9[i],"unread",(_b8=="unread"?true:false));
-+this.toggle_read_status=function(_b9,_ba){
-+for(var i=0;i<_ba.length;i++){
-+this.set_message(_ba[i],"unread",(_b9=="unread"?true:false));
- }
--this.http_post("mark","_uid="+_b9.join(",")+"&_flag="+_b8);
-+this.http_post("mark","_uid="+_ba.join(",")+"&_flag="+_b9);
- };
--this.toggle_flagged_status=function(_bb,_bc){
--for(var i=0;i<_bc.length;i++){
--this.set_message(_bc[i],"flagged",(_bb=="flagged"?true:false));
-+this.toggle_flagged_status=function(_bc,_bd){
-+for(var i=0;i<_bd.length;i++){
-+this.set_message(_bd[i],"flagged",(_bc=="flagged"?true:false));
- }
--this.http_post("mark","_uid="+_bc.join(",")+"&_flag="+_bb);
-+this.http_post("mark","_uid="+_bd.join(",")+"&_flag="+_bc);
- };
--this.toggle_delete_status=function(_be){
--var _bf=this.message_list?this.message_list.rows:new Array();
--if(_be.length==1){
--if(!_bf.length||(_bf[_be[0]]&&!_bf[_be[0]].deleted)){
--this.flag_as_deleted(_be);
-+this.toggle_delete_status=function(_bf){
-+var _c0=this.message_list?this.message_list.rows:new Array();
-+if(_bf.length==1){
-+if(!_c0.length||(_c0[_bf[0]]&&!_c0[_bf[0]].deleted)){
-+this.flag_as_deleted(_bf);
- }else{
--this.flag_as_undeleted(_be);
-+this.flag_as_undeleted(_bf);
- }
- return true;
- }
--var _c0=true;
--for(var i=0;i<_be.length;i++){
--uid=_be[i];
--if(_bf[uid]){
--if(!_bf[uid].deleted){
--_c0=false;
-+var _c1=true;
-+for(var i=0;i<_bf.length;i++){
-+uid=_bf[i];
-+if(_c0[uid]){
-+if(!_c0[uid].deleted){
-+_c1=false;
- break;
- }
- }
- }
--if(_c0){
--this.flag_as_undeleted(_be);
-+if(_c1){
-+this.flag_as_undeleted(_bf);
- }else{
--this.flag_as_deleted(_be);
-+this.flag_as_deleted(_bf);
- }
- return true;
- };
--this.flag_as_undeleted=function(_c2){
--for(var i=0;i<_c2.length;i++){
--this.set_message(_c2[i],"deleted",false);
-+this.flag_as_undeleted=function(_c3){
-+for(var i=0;i<_c3.length;i++){
-+this.set_message(_c3[i],"deleted",false);
- }
--this.http_post("mark","_uid="+_c2.join(",")+"&_flag=undelete");
-+this.http_post("mark","_uid="+_c3.join(",")+"&_flag=undelete");
- return true;
- };
--this.flag_as_deleted=function(_c4){
--var _c5="";
--var _c6=new Array();
--var _c7=this.message_list?this.message_list.rows:new Array();
--for(var i=0;i<_c4.length;i++){
--uid=_c4[i];
--if(_c7[uid]){
-+this.flag_as_deleted=function(_c5){
-+var _c6="";
-+var _c7=new Array();
-+var _c8=this.message_list?this.message_list.rows:new Array();
-+for(var i=0;i<_c5.length;i++){
-+uid=_c5[i];
-+if(_c8[uid]){
- this.set_message(uid,"deleted",true);
--if(_c7[uid].unread){
--_c6[_c6.length]=uid;
-+if(_c8[uid].unread){
-+_c7[_c7.length]=uid;
- }
- }
- }
--if(_c6.length){
--_c5="&_ruid="+_c6.join(",");
-+if(_c7.length){
-+_c6="&_ruid="+_c7.join(",");
- }
--this.http_post("mark","_uid="+_c4.join(",")+"&_flag=delete"+_c5);
-+this.http_post("mark","_uid="+_c5.join(",")+"&_flag=delete"+_c6);
- return true;
- };
--this.flag_deleted_as_read=function(_c9){
--var _ca;
--var _cb=this.message_list?this.message_list.rows:new Array();
--var str=String(_c9);
--var _cd=new Array();
--_cd=str.split(",");
--for(var uid,i=0;i<_cd.length;i++){
--uid=_cd[i];
--if(_cb[uid]){
-+this.flag_deleted_as_read=function(_ca){
-+var _cb;
-+var _cc=this.message_list?this.message_list.rows:new Array();
-+var str=String(_ca);
-+var _ce=new Array();
-+_ce=str.split(",");
-+for(var uid,i=0;i<_ce.length;i++){
-+uid=_ce[i];
-+if(_cc[uid]){
- this.set_message(uid,"unread",false);
- }
- }
-@@ -1623,34 +1658,34 @@
- }
- };
- this.check_compose_input=function(){
--var _d3=rcube_find_object("_to");
--var _d4=rcube_find_object("_cc");
--var _d5=rcube_find_object("_bcc");
--var _d6=rcube_find_object("_from");
--var _d7=rcube_find_object("_subject");
--var _d8=rcube_find_object("_message");
--if(_d6.type=="text"&&!rcube_check_email(_d6.value,true)){
-+var _d4=rcube_find_object("_to");
-+var _d5=rcube_find_object("_cc");
-+var _d6=rcube_find_object("_bcc");
-+var _d7=rcube_find_object("_from");
-+var _d8=rcube_find_object("_subject");
-+var _d9=rcube_find_object("_message");
-+if(_d7.type=="text"&&!rcube_check_email(_d7.value,true)){
- alert(this.get_label("nosenderwarning"));
--_d6.focus();
-+_d7.focus();
- return false;
- }
--var _d9=_d3.value?_d3.value:(_d4.value?_d4.value:_d5.value);
--if(!rcube_check_email(_d9.replace(/^\s+/,"").replace(/[\s,;]+$/,""),true)){
-+var _da=_d4.value?_d4.value:(_d5.value?_d5.value:_d6.value);
-+if(!rcube_check_email(_da.replace(/^\s+/,"").replace(/[\s,;]+$/,""),true)){
- alert(this.get_label("norecipientwarning"));
--_d3.focus();
-+_d4.focus();
- return false;
- }
--if(_d7&&_d7.value==""){
--var _da=prompt(this.get_label("nosubjectwarning"),this.get_label("nosubject"));
--if(!_da&&_da!==""){
--_d7.focus();
-+if(_d8&&_d8.value==""){
-+var _db=prompt(this.get_label("nosubjectwarning"),this.get_label("nosubject"));
-+if(!_db&&_db!==""){
-+_d8.focus();
- return false;
- }else{
--_d7.value=_da?_da:this.get_label("nosubject");
-+_d8.value=_db?_db:this.get_label("nosubject");
- }
- }
--if((!window.tinyMCE||!tinyMCE.get("compose-body"))&&_d8.value==""&&!confirm(this.get_label("nobodywarning"))){
--_d8.focus();
-+if((!window.tinyMCE||!tinyMCE.get("compose-body"))&&_d9.value==""&&!confirm(this.get_label("nobodywarning"))){
-+_d9.focus();
- return false;
- }else{
- if(window.tinyMCE&&tinyMCE.get("compose-body")&&!tinyMCE.get("compose-body").getContent()&&!confirm(this.get_label("nobodywarning"))){
-@@ -1694,16 +1729,13 @@
- }
- this.busy=false;
- };
--this.compose_field_hash=function(_df){
--var _e0=rcube_find_object("_to");
--var _e1=rcube_find_object("_cc");
--var _e2=rcube_find_object("_bcc");
--var _e3=rcube_find_object("_subject");
--var _e4,_e5;
-+this.compose_field_hash=function(_e0){
-+var _e1=rcube_find_object("_to");
-+var _e2=rcube_find_object("_cc");
-+var _e3=rcube_find_object("_bcc");
-+var _e4=rcube_find_object("_subject");
-+var _e5,_e6;
- var str="";
--if(_e0&&_e0.value){
--str+=_e0.value+":";
--}
- if(_e1&&_e1.value){
- str+=_e1.value+":";
- }
-@@ -1713,13 +1745,16 @@
- if(_e3&&_e3.value){
- str+=_e3.value+":";
- }
--if(_e4=tinyMCE.get("compose-body")){
--str+=_e4.getContent();
-+if(_e4&&_e4.value){
-+str+=_e4.value+":";
-+}
-+if(_e5=tinyMCE.get("compose-body")){
-+str+=_e5.getContent();
- }else{
--_e5=rcube_find_object("_message");
--str+=_e5.value;
-+_e6=rcube_find_object("_message");
-+str+=_e6.value;
- }
--if(_df){
-+if(_e0){
- this.cmp_hash=str;
- }
- return str;
-@@ -1729,14 +1764,14 @@
- return false;
- }
- var id=obj.options[obj.selectedIndex].value;
--var _e9=rcube_find_object("_message");
--var _ea=_e9?_e9.value:"";
--var _eb=(rcube_find_object("_is_html").value=="1");
-+var _ea=rcube_find_object("_message");
-+var _eb=_ea?_ea.value:"";
-+var _ec=(rcube_find_object("_is_html").value=="1");
- var sig,p;
- if(!this.env.identity){
- this.env.identity=id;
- }
--if(!_eb){
-+if(!_ec){
- if(this.env.identity&&this.env.signatures&&this.env.signatures[this.env.identity]){
- if(this.env.signatures[this.env.identity]["is_html"]){
- sig=this.env.signatures[this.env.identity]["plain_text"];
-@@ -1746,12 +1781,12 @@
- if(sig.indexOf("-- ")!=0){
- sig="-- \n"+sig;
- }
--p=_ea.lastIndexOf(sig);
-+p=_eb.lastIndexOf(sig);
- if(p>=0){
--_ea=_ea.substring(0,p-1)+_ea.substring(p+sig.length,_ea.length);
-+_eb=_eb.substring(0,p-1)+_eb.substring(p+sig.length,_eb.length);
- }
- }
--_ea=_ea.replace(/[\r\n]+$/,"");
-+_eb=_eb.replace(/[\r\n]+$/,"");
- if(this.env.signatures&&this.env.signatures[id]){
- sig=this.env.signatures[id]["text"];
- if(this.env.signatures[id]["is_html"]){
-@@ -1760,35 +1795,35 @@
- if(sig.indexOf("-- ")!=0){
- sig="-- \n"+sig;
- }
--_ea+="\n\n"+sig;
-+_eb+="\n\n"+sig;
- }
- }else{
--var _ee=tinyMCE.get("compose-body");
-+var _ef=tinyMCE.get("compose-body");
- if(this.env.signatures){
--var _ef=_ee.dom.get("_rc_sig");
--var _f0="";
--var _f1=true;
--if(!_ef){
-+var _f0=_ef.dom.get("_rc_sig");
-+var _f1="";
-+var _f2=true;
-+if(!_f0){
- if(bw.ie){
--_ee.getBody().appendChild(_ee.getDoc().createElement("br"));
-+_ef.getBody().appendChild(_ef.getDoc().createElement("br"));
- }
--_ef=_ee.getDoc().createElement("div");
--_ef.setAttribute("id","_rc_sig");
--_ee.getBody().appendChild(_ef);
-+_f0=_ef.getDoc().createElement("div");
-+_f0.setAttribute("id","_rc_sig");
-+_ef.getBody().appendChild(_f0);
- }
- if(this.env.signatures[id]){
--_f0=this.env.signatures[id]["text"];
--_f1=this.env.signatures[id]["is_html"];
-+_f1=this.env.signatures[id]["text"];
-+_f2=this.env.signatures[id]["is_html"];
- }
--if(_f1){
--_ef.innerHTML=_f0;
-+if(_f2){
-+_f0.innerHTML=_f1;
- }else{
--_ef.innerHTML="<pre>"+_f0+"</pre>";
-+_f0.innerHTML="<pre>"+_f1+"</pre>";
- }
- }
- }
--if(_e9){
--_e9.value=_ea;
-+if(_ea){
-+_ea.value=_eb;
- }
- this.env.identity=id;
- return true;
-@@ -1797,14 +1832,14 @@
- if(!this.gui_objects.uploadbox){
- return false;
- }
--var elm,_f4;
-+var elm,_f5;
- if(elm=this.gui_objects.uploadbox){
--if(a&&(_f4=this.gui_objects.attachmentlist)){
--var pos=rcube_get_object_pos(_f4);
--var _f6=pos.x;
--var top=pos.y+_f4.offsetHeight+10;
-+if(a&&(_f5=this.gui_objects.attachmentlist)){
-+var pos=rcube_get_object_pos(_f5);
-+var _f7=pos.x;
-+var top=pos.y+_f5.offsetHeight+10;
- elm.style.top=top+"px";
--elm.style.left=_f6+"px";
-+elm.style.left=_f7+"px";
- }
- elm.style.visibility=a?"visible":"hidden";
- }
-@@ -1817,47 +1852,47 @@
- }
- return true;
- };
--this.upload_file=function(_f8){
--if(!_f8){
-+this.upload_file=function(_f9){
-+if(!_f9){
- return false;
- }
--var _f9=false;
--for(var n=0;n<_f8.elements.length;n++){
--if(_f8.elements[n].type=="file"&&_f8.elements[n].value){
--_f9=true;
-+var _fa=false;
-+for(var n=0;n<_f9.elements.length;n++){
-+if(_f9.elements[n].type=="file"&&_f9.elements[n].value){
-+_fa=true;
- break;
- }
- }
--if(_f9){
-+if(_fa){
- var ts=new Date().getTime();
--var _fc="rcmupload"+ts;
-+var _fd="rcmupload"+ts;
- if(document.all){
--var _fd="<iframe name=\""+_fc+"\" src=\"program/blank.gif\" style=\"width:0;height:0;visibility:hidden;\"></iframe>";
--document.body.insertAdjacentHTML("BeforeEnd",_fd);
-+var _fe="<iframe name=\""+_fd+"\" src=\"program/blank.gif\" style=\"width:0;height:0;visibility:hidden;\"></iframe>";
-+document.body.insertAdjacentHTML("BeforeEnd",_fe);
- }else{
--var _fe=document.createElement("IFRAME");
--_fe.name=_fc;
--_fe.style.border="none";
--_fe.style.width=0;
--_fe.style.height=0;
--_fe.style.visibility="hidden";
--document.body.appendChild(_fe);
--}
--_f8.target=_fc;
--_f8.action=this.env.comm_path+"&_action=upload";
--_f8.setAttribute("enctype","multipart/form-data");
--_f8.submit();
-+var _ff=document.createElement("IFRAME");
-+_ff.name=_fd;
-+_ff.style.border="none";
-+_ff.style.width=0;
-+_ff.style.height=0;
-+_ff.style.visibility="hidden";
-+document.body.appendChild(_ff);
-+}
-+_f9.target=_fd;
-+_f9.action=this.env.comm_path+"&_action=upload";
-+_f9.setAttribute("enctype","multipart/form-data");
-+_f9.submit();
- }
--this.gui_objects.attachmentform=_f8;
-+this.gui_objects.attachmentform=_f9;
- return true;
- };
--this.add2attachment_list=function(_ff,_100){
-+this.add2attachment_list=function(name,_101){
- if(!this.gui_objects.attachmentlist){
- return false;
- }
- var li=document.createElement("LI");
--li.id=_ff;
--li.innerHTML=_100;
-+li.id=name;
-+li.innerHTML=_101;
- this.gui_objects.attachmentlist.appendChild(li);
- return true;
- };
-@@ -1878,14 +1913,14 @@
- }
- return true;
- };
--this.add_contact=function(_105){
--if(_105){
--this.http_post("addcontact","_address="+_105);
-+this.add_contact=function(_106){
-+if(_106){
-+this.http_post("addcontact","_address="+_106);
- }
- return true;
- };
--this.qsearch=function(_106,_107){
--if(_106!=""){
-+this.qsearch=function(_107,_108){
-+if(_107!=""){
- if(this.message_list){
- this.message_list.clear();
- }else{
-@@ -1895,11 +1930,11 @@
- }
- }
- if(this.gui_objects.search_filter){
--_107="&_filter="+this.gui_objects.search_filter.value;
-+_108="&_filter="+this.gui_objects.search_filter.value;
- }
- this.env.current_page=1;
- this.set_busy(true,"searching");
--this.http_request("search","_q="+urlencode(_106)+(this.env.mailbox?"&_mbox="+urlencode(this.env.mailbox):"")+(this.env.source?"&_source="+urlencode(this.env.source):"")+(_107?_107:""),true);
-+this.http_request("search","_q="+urlencode(_107)+(this.env.mailbox?"&_mbox="+urlencode(this.env.mailbox):"")+(this.env.source?"&_source="+urlencode(this.env.source):"")+(_108?_108:""),true);
- }
- return true;
- };
-@@ -1918,7 +1953,7 @@
- if(this.ksearch_timer){
- clearTimeout(this.ksearch_timer);
- }
--var _10c;
-+var _10d;
- var key=rcube_event.get_keycode(e);
- var mod=rcube_event.get_modifier(e);
- switch(key){
-@@ -1928,12 +1963,12 @@
- break;
- }
- var dir=key==38?1:0;
--_10c=document.getElementById("rcmksearchSelected");
--if(!_10c){
--_10c=this.ksearch_pane.ul.firstChild;
-+_10d=document.getElementById("rcmksearchSelected");
-+if(!_10d){
-+_10d=this.ksearch_pane.ul.firstChild;
- }
--if(_10c){
--this.ksearch_select(dir?_10c.previousSibling:_10c.nextSibling);
-+if(_10d){
-+this.ksearch_select(dir?_10d.previousSibling:_10d.nextSibling);
- }
- return rcube_event.cancel(e);
- case 9:
-@@ -1958,10 +1993,10 @@
- return true;
- };
- this.ksearch_select=function(node){
--var _111=document.getElementById("rcmksearchSelected");
--if(_111&&node){
--_111.removeAttribute("id");
--this.set_classname(_111,"selected",false);
-+var _112=document.getElementById("rcmksearchSelected");
-+if(_112&&node){
-+_112.removeAttribute("id");
-+this.set_classname(_112,"selected",false);
- }
- if(node){
- node.setAttribute("id","rcmksearchSelected");
-@@ -1973,29 +2008,29 @@
- if(!this.env.contacts[id]||!this.ksearch_input){
- return;
- }
--var _113=this.ksearch_input.value.toLowerCase();
-+var _114=this.ksearch_input.value.toLowerCase();
- var cpos=this.get_caret_pos(this.ksearch_input);
--var p=_113.lastIndexOf(this.ksearch_value,cpos);
-+var p=_114.lastIndexOf(this.ksearch_value,cpos);
- var pre=this.ksearch_input.value.substring(0,p);
- var end=this.ksearch_input.value.substring(p+this.ksearch_value.length,this.ksearch_input.value.length);
--var _118=this.env.contacts[id]+", ";
--this.ksearch_input.value=pre+_118+end;
--cpos=p+_118.length;
-+var _119=this.env.contacts[id]+", ";
-+this.ksearch_input.value=pre+_119+end;
-+cpos=p+_119.length;
- if(this.ksearch_input.setSelectionRange){
- this.ksearch_input.setSelectionRange(cpos,cpos);
- }
- };
- this.ksearch_get_results=function(){
--var _119=this.ksearch_input?this.ksearch_input.value:null;
--if(_119===null){
-+var _11a=this.ksearch_input?this.ksearch_input.value:null;
-+if(_11a===null){
- return;
- }
- if(this.ksearch_pane&&this.ksearch_pane.visible){
- this.ksearch_pane.show(0);
- }
- var cpos=this.get_caret_pos(this.ksearch_input);
--var p=_119.lastIndexOf(",",cpos-1);
--var q=_119.substring(p+1,cpos);
-+var p=_11a.lastIndexOf(",",cpos-1);
-+var q=_11a.substring(p+1,cpos);
- q=q.replace(/(^\s+|\s+$)/g,"").toLowerCase();
- if(!q.length||q==this.ksearch_value){
- return;
-@@ -2004,21 +2039,21 @@
- this.display_message(this.get_label("searching"),"loading",true);
- this.http_post("autocomplete","_search="+q);
- };
--this.ksearch_query_results=function(_11d){
-+this.ksearch_query_results=function(_11e){
- this.hide_message();
--this.env.contacts=_11d?_11d:[];
--var _11e=new Array();
-+this.env.contacts=_11e?_11e:[];
-+var _11f=new Array();
- var c=0;
- for(var i=0;i<this.env.contacts.length;i++){
--_11e[c++]=i;
-+_11f[c++]=i;
- if(c==15){
- break;
- }
- }
--this.ksearch_display_results(this.env.contacts,_11e,c);
-+this.ksearch_display_results(this.env.contacts,_11f,c);
- };
--this.ksearch_display_results=function(_121,_122,c){
--if(c&&_121.length&&this.ksearch_input){
-+this.ksearch_display_results=function(_122,_123,c){
-+if(c&&_122.length&&this.ksearch_input){
- var p,ul,li;
- if(!this.ksearch_pane){
- ul=document.createElement("UL");
-@@ -2029,20 +2064,20 @@
- ul=this.ksearch_pane.ul;
- }
- ul.innerHTML="";
--for(i=0;i<_121.length;i++){
-+for(i=0;i<_122.length;i++){
- li=document.createElement("LI");
--li.innerHTML=_121[i].replace(new RegExp("("+this.ksearch_value+")","ig"),"##$1%%").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/##([^%]+)%%/g,"<b>$1</b>");
-+li.innerHTML=_122[i].replace(new RegExp("("+this.ksearch_value+")","ig"),"##$1%%").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/##([^%]+)%%/g,"<b>$1</b>");
- li.onmouseover=function(){
- _1.ksearch_select(this);
- };
- li.onmouseup=function(){
- _1.ksearch_click(this);
- };
--li._rcm_id=_122[i];
-+li._rcm_id=_123[i];
- ul.appendChild(li);
- }
- if(this.ksearch_selected!==null){
--p=find_in_array(this.ksearch_selected,_122);
-+p=find_in_array(this.ksearch_selected,_123);
- if(p>=0&&ul.childNodes){
- ul.childNodes[p].setAttribute("id","rcmksearchSelected");
- this.set_classname(ul.childNodes[p],"selected",true);
-@@ -2053,7 +2088,7 @@
- if(this.ksearch_selected===null){
- ul.firstChild.setAttribute("id","rcmksearchSelected");
- this.set_classname(ul.firstChild,"selected",true);
--this.ksearch_selected=_122[0];
-+this.ksearch_selected=_123[0];
- }
- var pos=rcube_get_object_pos(this.ksearch_input);
- this.ksearch_pane.move(pos.x,pos.y+this.ksearch_input.offsetHeight);
-@@ -2092,7 +2127,7 @@
- if(this.preview_timer){
- clearTimeout(this.preview_timer);
- }
--var id,_12c,_1=this;
-+var id,_12d,_1=this;
- if(id=list.get_single_selection()){
- this.preview_timer=window.setTimeout(function(){
- _1.load_contact(id,"show");
-@@ -2108,8 +2143,8 @@
- return false;
- };
- this.list_contacts=function(src,page){
--var _12f="";
--var _130=window;
-+var _130="";
-+var _131=window;
- if(!src){
- src=this.env.source;
- }
-@@ -2128,14 +2163,14 @@
- return;
- }
- if(this.env.contentframe&&window.frames&&window.frames[this.env.contentframe]){
--_130=window.frames[this.env.contentframe];
--_12f="&_framed=1";
-+_131=window.frames[this.env.contentframe];
-+_130="&_framed=1";
- }
- if(this.env.search_request){
--_12f+="&_search="+this.env.search_request;
-+_130+="&_search="+this.env.search_request;
- }
- this.set_busy(true,"loading");
--_130.location.href=this.env.comm_path+(src?"&_source="+urlencode(src):"")+(page?"&_page="+page:"")+_12f;
-+_131.location.href=this.env.comm_path+(src?"&_source="+urlencode(src):"")+(page?"&_page="+page:"")+_130;
- };
- this.list_contacts_remote=function(src,page){
- this.contact_list.clear(true);
-@@ -2149,21 +2184,21 @@
- this.set_busy(true,"loading");
- this.http_request("list",url,true);
- };
--this.load_contact=function(cid,_135,_136){
--var _137="";
--var _138=window;
-+this.load_contact=function(cid,_136,_137){
-+var _138="";
-+var _139=window;
- if(this.env.contentframe&&window.frames&&window.frames[this.env.contentframe]){
--_137="&_framed=1";
--_138=window.frames[this.env.contentframe];
-+_138="&_framed=1";
-+_139=window.frames[this.env.contentframe];
- this.show_contentframe(true);
- }else{
--if(_136){
-+if(_137){
- return false;
- }
- }
--if(_135&&(cid||_135=="add")&&!this.drag_active){
-+if(_136&&(cid||_136=="add")&&!this.drag_active){
- this.set_busy(true);
--_138.location.href=this.env.comm_path+"&_action="+_135+"&_source="+urlencode(this.env.source)+"&_cid="+urlencode(cid)+_137;
-+_139.location.href=this.env.comm_path+"&_action="+_136+"&_source="+urlencode(this.env.source)+"&_cid="+urlencode(cid)+_138;
- }
- return true;
- };
-@@ -2176,43 +2211,304 @@
- }
- };
- this.delete_contacts=function(){
--var _13b=this.contact_list.get_selection();
--if(!(_13b.length||this.env.cid)||!confirm(this.get_label("deletecontactconfirm"))){
-+var _13c=this.contact_list.get_selection();
-+if(!(_13c.length||this.env.cid)||!confirm(this.get_label("deletecontactconfirm"))){
- return;
- }
--var _13c=new Array();
-+var _13d=new Array();
- var qs="";
- if(this.env.cid){
--_13c[_13c.length]=this.env.cid;
-+_13d[_13d.length]=this.env.cid;
- }else{
- var id;
--for(var n=0;n<_13b.length;n++){
--id=_13b[n];
--_13c[_13c.length]=id;
--this.contact_list.remove_row(id,(n==_13b.length-1));
-+for(var n=0;n<_13c.length;n++){
-+id=_13c[n];
-+_13d[_13d.length]=id;
-+this.contact_list.remove_row(id,(n==_13c.length-1));
- }
--if(_13b.length==1){
-+if(_13c.length==1){
- this.show_contentframe(false);
- }
- }
- if(this.env.search_request){
- qs+="&_search="+this.env.search_request;
- }
--this.http_post("delete","_cid="+urlencode(_13c.join(","))+"&_source="+urlencode(this.env.source)+"&_from="+(this.env.action?this.env.action:"")+qs);
-+this.http_post("delete","_cid="+urlencode(_13d.join(","))+"&_source="+urlencode(this.env.source)+"&_from="+(this.env.action?this.env.action:"")+qs);
- return true;
- };
--this.update_contact_row=function(cid,_141){
-+this.update_contact_row=function(cid,_142){
- var row;
- if(this.contact_list.rows[cid]&&(row=this.contact_list.rows[cid].obj)){
--for(var c=0;c<_141.length;c++){
-+for(var c=0;c<_142.length;c++){
- if(row.cells[c]){
--row.cells[c].innerHTML=_141[c];
-+row.cells[c].innerHTML=_142[c];
- }
- }
- return true;
- }
- return false;
- };
-+this.sievefilter_add=function(){
-+this.load_sievefilterframe();
-+this.sievefilters_list.clear_selection();
-+};
-+this.sievefilter_del=function(){
-+var id=this.sievefilters_list.get_single_selection();
-+if(confirm(this.get_label("filterconfirmdelete"))){
-+this.http_request("managesieve","_act=delete&_fid="+this.sievefilters_list.rows[id].uid,true);
-+}
-+};
-+this.sievefilter_up=function(){
-+var id=this.sievefilters_list.get_single_selection();
-+this.http_request("managesieve","_act=up&_fid="+this.sievefilters_list.rows[id].uid,true);
-+};
-+this.sievefilter_down=function(){
-+var id=this.sievefilters_list.get_single_selection();
-+this.http_request("managesieve","_act=down&_fid="+this.sievefilters_list.rows[id].uid,true);
-+};
-+this.sievefilter_rowid=function(id){
-+var rows=this.sievefilters_list.rows;
-+for(var i=0;i<rows.length;i++){
-+if(rows[i]!=null&&rows[i].uid==id){
-+return i;
-+}
-+}
-+};
-+this.sievefilter_updatelist=function(_14b,name,id){
-+this.set_busy(true);
-+switch(_14b){
-+case "delete":
-+this.sievefilters_list.remove_row(this.sievefilter_rowid(id));
-+this.sievefilters_list.clear_selection();
-+this.enable_command("sievefilterdel","sievefilterup","sievefilterdown",false);
-+this.show_contentframe(false);
-+var rows=this.sievefilters_list.rows;
-+for(var i=0;i<rows.length;i++){
-+if(rows[i]!=null&&rows[i].uid>id){
-+rows[i].uid=rows[i].uid-1;
-+}
-+}
-+break;
-+case "down":
-+var rows=this.sievefilters_list.rows;
-+var from;
-+for(var i=0;i<rows.length;i++){
-+if(rows[i]==null){
-+continue;
-+}else{
-+if(rows[i].uid==id){
-+from=rows[i].obj.cells[0];
-+}else{
-+if(rows[i].uid==parseInt(id)+1){
-+name=rows[i].obj.cells[0].innerHTML;
-+rows[i].obj.cells[0].innerHTML=from.innerHTML;
-+from.innerHTML=name;
-+this.sievefilters_list.highlight_row(i);
-+break;
-+}
-+}
-+}
-+}
-+this.sievefilter_listbuttons();
-+break;
-+case "up":
-+var rows=this.sievefilters_list.rows;
-+var from;
-+for(var i=0;i<rows.length;i++){
-+if(rows[i]==null){
-+continue;
-+}else{
-+if(rows[i].uid==id-1){
-+from=rows[i].obj.cells[0];
-+this.sievefilters_list.highlight_row(i);
-+}else{
-+if(rows[i].uid==id){
-+name=rows[i].obj.cells[0].innerHTML;
-+rows[i].obj.cells[0].innerHTML=from.innerHTML;
-+from.innerHTML=name;
-+break;
-+}
-+}
-+}
-+}
-+this.sievefilter_listbuttons();
-+break;
-+case "update":
-+var rows=parent.rcmail.sievefilters_list.rows;
-+for(var i=0;i<rows.length;i++){
-+if(rows[i]&&rows[i].uid==id){
-+rows[i].obj.cells[0].innerHTML=name;
-+break;
-+}
-+}
-+break;
-+case "add":
-+var row,_152,td;
-+var list=parent.rcmail.sievefilters_list;
-+if(!list){
-+break;
-+}
-+for(var i=0;i<list.rows.length;i++){
-+if(list.rows[i]!=null&&String(list.rows[i].obj.id).match(/^rcmrow/)){
-+row=list.rows[i].obj;
-+}
-+}
-+if(row){
-+_152=parent.document.createElement("TR");
-+_152.id="rcmrow"+id;
-+td=parent.document.createElement("TD");
-+_152.appendChild(td);
-+list.insert_row(_152,false);
-+if(row.cells[0].className){
-+td.className=row.cells[0].className;
-+}
-+td.innerHTML=name;
-+list.highlight_row(id);
-+parent.rcmail.enable_command("sievefilterdel","sievefilterup",true);
-+}else{
-+parent.rcmail.goto_url("managesieve");
-+}
-+break;
-+}
-+this.set_busy(false);
-+};
-+this.sievefilter_select=function(list){
-+var id=list.get_single_selection();
-+if(id!=null){
-+this.load_sievefilterframe(list.rows[id].uid);
-+}
-+};
-+this.sievefilter_save=function(){
-+if(parent.rcmail&&parent.rcmail.sievefilters_list){
-+var id=parent.rcmail.sievefilters_list.get_single_selection();
-+if(id!=null){
-+this.gui_objects.sieveform.elements["_fid"].value=parent.rcmail.sievefilters_list.rows[id].uid;
-+}
-+}
-+this.gui_objects.sieveform.submit();
-+};
-+this.load_sievefilterframe=function(id){
-+if(typeof (id)!="undefined"&&id!=null){
-+this.enable_command("sievefilterdel",true);
-+this.sievefilter_listbuttons();
-+}else{
-+this.enable_command("sievefilterup","sievefilterdown","sievefilterdel",false);
-+}
-+if(this.env.contentframe&&window.frames&&window.frames[this.env.contentframe]){
-+target=window.frames[this.env.contentframe];
-+this.set_busy(true,"loading");
-+target.location.href=this.env.comm_path+"&_action=managesieve&_framed=1&_fid="+id;
-+}
-+};
-+this.sievefilter_listbuttons=function(){
-+var id=this.sievefilters_list.get_single_selection();
-+var rows=this.sievefilters_list.rows;
-+for(var i=0;i<rows.length;i++){
-+if(rows[i]==null){
-+}else{
-+if(i==id){
-+this.enable_command("sievefilterup",false);
-+break;
-+}else{
-+this.enable_command("sievefilterup",true);
-+break;
-+}
-+}
-+}
-+for(var i=rows.length-1;i>0;i--){
-+if(rows[i]==null){
-+}else{
-+if(i==id){
-+this.enable_command("sievefilterdown",false);
-+break;
-+}else{
-+this.enable_command("sievefilterdown",true);
-+break;
-+}
-+}
-+}
-+};
-+this.sievefilter_ruleadd=function(id){
-+this.http_post("managesieve","_act=ruleadd&_rid="+id);
-+};
-+this.sievefilter_rulefill=function(_15d,id,_15f){
-+if(_15d!=""){
-+var div=document.getElementById("rules");
-+var row=document.createElement("div");
-+this.sievefilter_insertrow(div,row,_15f);
-+row.setAttribute("id","rulerow"+id);
-+row.className="rulerow";
-+row.innerHTML=_15d;
-+this.sievefilter_formbuttons(div);
-+}
-+};
-+this.sievefilter_ruledel=function(id){
-+if(confirm(this.get_label("ruledeleteconfirm"))){
-+var row=document.getElementById("rulerow"+id);
-+row.parentNode.removeChild(row);
-+this.sievefilter_formbuttons(document.getElementById("rules"));
-+}
-+};
-+this.sievefilter_actionadd=function(id){
-+this.http_post("managesieve","_act=actionadd&_aid="+id);
-+};
-+this.sievefilter_actionfill=function(_165,id,_167){
-+if(_165!=""){
-+var div=document.getElementById("actions");
-+var row=document.createElement("div");
-+this.sievefilter_insertrow(div,row,_167);
-+row.setAttribute("id","actionrow"+id);
-+row.className="actionrow";
-+row.innerHTML=_165;
-+this.sievefilter_formbuttons(div);
-+}
-+};
-+this.sievefilter_actiondel=function(id){
-+if(confirm(this.get_label("actiondeleteconfirm"))){
-+var row=document.getElementById("actionrow"+id);
-+row.parentNode.removeChild(row);
-+this.sievefilter_formbuttons(document.getElementById("actions"));
-+}
-+};
-+this.sievefilter_insertrow=function(div,row,_16e){
-+for(var i=0;i<div.childNodes.length;i++){
-+if(div.childNodes[i].id==((div.id=="rules"?"rulerow":"actionrow")+_16e)){
-+break;
-+}
-+}
-+if(div.childNodes[i+1]){
-+div.insertBefore(row,div.childNodes[i+1]);
-+}else{
-+div.appendChild(row);
-+}
-+};
-+this.sievefilter_formbuttons=function(div){
-+var _171=new Array();
-+var i;
-+for(i=0;i<div.childNodes.length;i++){
-+if(div.id=="rules"&&div.childNodes[i].id){
-+if(/rulerow/.test(div.childNodes[i].id)){
-+_171.push("ruledel"+div.childNodes[i].id.replace(/rulerow/,""));
-+}
-+}else{
-+if(div.childNodes[i].id){
-+if(/actionrow/.test(div.childNodes[i].id)){
-+_171.push("actiondel"+div.childNodes[i].id.replace(/actionrow/,""));
-+}
-+}
-+}
-+}
-+for(i=0;i<_171.length;i++){
-+var _173=document.getElementById(_171[i]);
-+if(i>0||_171.length>1){
-+this.set_classname(_173,"disabled",false);
-+_173.removeAttribute("disabled");
-+}else{
-+this.set_classname(_173,"disabled",true);
-+_173.setAttribute("disabled",true);
-+}
-+}
-+};
- this.init_subscription_list=function(){
- var p=this;
- this.subscription_list=new rcube_list_widget(this.gui_objects.subscriptionlist,{multiselect:false,draggable:true,keyboard:false,toggleselect:true});
-@@ -2226,15 +2522,15 @@
- p.subscription_move_folder(o);
- });
- this.subscription_list.row_init=function(row){
--var _149=row.obj.getElementsByTagName("A");
--if(_149[0]){
--_149[0].onclick=function(){
-+var _179=row.obj.getElementsByTagName("A");
-+if(_179[0]){
-+_179[0].onclick=function(){
- p.rename_folder(row.id);
- return false;
- };
- }
--if(_149[1]){
--_149[1].onclick=function(){
-+if(_179[1]){
-+_179[1].onclick=function(){
- p.delete_folder(row.id);
- return false;
- };
-@@ -2254,41 +2550,41 @@
- this.load_identity(id,"edit-identity");
- }
- };
--this.load_identity=function(id,_14d){
--if(_14d=="edit-identity"&&(!id||id==this.env.iid)){
-+this.load_identity=function(id,_17d){
-+if(_17d=="edit-identity"&&(!id||id==this.env.iid)){
- return false;
- }
--var _14e="";
--var _14f=window;
-+var _17e="";
-+var _17f=window;
- if(this.env.contentframe&&window.frames&&window.frames[this.env.contentframe]){
--_14e="&_framed=1";
--_14f=window.frames[this.env.contentframe];
-+_17e="&_framed=1";
-+_17f=window.frames[this.env.contentframe];
- document.getElementById(this.env.contentframe).style.visibility="inherit";
- }
--if(_14d&&(id||_14d=="add-identity")){
-+if(_17d&&(id||_17d=="add-identity")){
- this.set_busy(true);
--_14f.location.href=this.env.comm_path+"&_action="+_14d+"&_iid="+id+_14e;
-+_17f.location.href=this.env.comm_path+"&_action="+_17d+"&_iid="+id+_17e;
- }
- return true;
- };
- this.delete_identity=function(id){
--var _151=this.identity_list.get_selection();
--if(!(_151.length||this.env.iid)){
-+var _181=this.identity_list.get_selection();
-+if(!(_181.length||this.env.iid)){
- return;
- }
- if(!id){
--id=this.env.iid?this.env.iid:_151[0];
-+id=this.env.iid?this.env.iid:_181[0];
- }
- this.goto_url("delete-identity","_iid="+id,true);
- return true;
- };
- this.focus_subscription=function(id){
--var row,_154;
-+var row,_184;
- var reg=RegExp("["+RegExp.escape(this.env.delimiter)+"]?[^"+RegExp.escape(this.env.delimiter)+"]+$");
- if(this.drag_active&&this.env.folder&&(row=document.getElementById(id))){
--if(this.env.subscriptionrows[id]&&(_154=this.env.subscriptionrows[id][0])){
--if(this.check_droptarget(_154)&&!this.env.subscriptionrows[this.get_folder_row_id(this.env.folder)][2]&&(_154!=this.env.folder.replace(reg,""))&&(!_154.match(new RegExp("^"+RegExp.escape(this.env.folder+this.env.delimiter))))){
--this.set_env("dstfolder",_154);
-+if(this.env.subscriptionrows[id]&&(_184=this.env.subscriptionrows[id][0])){
-+if(this.check_droptarget(_184)&&!this.env.subscriptionrows[this.get_folder_row_id(this.env.folder)][2]&&(_184!=this.env.folder.replace(reg,""))&&(!_184.match(new RegExp("^"+RegExp.escape(this.env.folder+this.env.delimiter))))){
-+this.set_env("dstfolder",_184);
- this.set_classname(row,"droptarget",true);
- }
- }else{
-@@ -2309,9 +2605,9 @@
- }
- };
- this.subscription_select=function(list){
--var id,_15a;
--if((id=list.get_single_selection())&&this.env.subscriptionrows["rcmrow"+id]&&(_15a=this.env.subscriptionrows["rcmrow"+id][0])){
--this.set_env("folder",_15a);
-+var id,_18a;
-+if((id=list.get_single_selection())&&this.env.subscriptionrows["rcmrow"+id]&&(_18a=this.env.subscriptionrows["rcmrow"+id][0])){
-+this.set_env("folder",_18a);
- }else{
- this.set_env("folder",null);
- }
-@@ -2323,10 +2619,10 @@
- var reg=RegExp("["+RegExp.escape(this.env.delimiter)+"]?[^"+RegExp.escape(this.env.delimiter)+"]+$");
- if(this.env.folder&&this.env.dstfolder&&(this.env.dstfolder!=this.env.folder)&&(this.env.dstfolder!=this.env.folder.replace(reg,""))){
- var reg=new RegExp("[^"+RegExp.escape(this.env.delimiter)+"]*["+RegExp.escape(this.env.delimiter)+"]","g");
--var _15d=this.env.folder.replace(reg,"");
--var _15e=this.env.dstfolder==this.env.delimiter?_15d:this.env.dstfolder+this.env.delimiter+_15d;
-+var _18d=this.env.folder.replace(reg,"");
-+var _18e=this.env.dstfolder==this.env.delimiter?_18d:this.env.dstfolder+this.env.delimiter+_18d;
- this.set_busy(true,"foldermoving");
--this.http_post("rename-folder","_folder_oldname="+urlencode(this.env.folder)+"&_folder_newname="+urlencode(_15e),true);
-+this.http_post("rename-folder","_folder_oldname="+urlencode(this.env.folder)+"&_folder_newname="+urlencode(_18e),true);
- }
- this.drag_active=false;
- this.unfocus_subscription(this.get_folder_row_id(this.env.dstfolder));
-@@ -2391,17 +2687,17 @@
- this.name_input_keypress=function(e){
- var key=rcube_event.get_keycode(e);
- if(key==13){
--var _16a=this.name_input?this.name_input.value:null;
--if(this.edit_folder&&_16a){
--if(_16a.indexOf(this.env.delimiter)>=0){
-+var _19a=this.name_input?this.name_input.value:null;
-+if(this.edit_folder&&_19a){
-+if(_19a.indexOf(this.env.delimiter)>=0){
- alert(this.get_label("forbiddencharacter")+" ("+this.env.delimiter+")");
- return false;
- }
- if(this.name_input.__parent){
--_16a=this.name_input.__parent+this.env.delimiter+_16a;
-+_19a=this.name_input.__parent+this.env.delimiter+_19a;
- }
- this.set_busy(true,"folderrenaming");
--this.http_post("rename-folder","_folder_oldname="+urlencode(this.env.subscriptionrows[this.edit_folder][0])+"&_folder_newname="+urlencode(_16a),true);
-+this.http_post("rename-folder","_folder_oldname="+urlencode(this.env.subscriptionrows[this.edit_folder][0])+"&_folder_newname="+urlencode(_19a),true);
- }
- }else{
- if(key==27){
-@@ -2410,60 +2706,60 @@
- }
- };
- this.delete_folder=function(id){
--var _16c=this.env.subscriptionrows[id][0];
-+var _19c=this.env.subscriptionrows[id][0];
- if(this.edit_folder){
- this.reset_folder_rename();
- }
--if(_16c&&confirm(this.get_label("deletefolderconfirm"))){
-+if(_19c&&confirm(this.get_label("deletefolderconfirm"))){
- this.set_busy(true,"folderdeleting");
--this.http_post("delete-folder","_mboxes="+urlencode(_16c),true);
-+this.http_post("delete-folder","_mboxes="+urlencode(_19c),true);
- this.set_env("folder",null);
- if(this.gui_objects.createfolderhint){
- this.gui_objects.createfolderhint.innerHTML="";
- }
- }
- };
--this.add_folder_row=function(name,_16e,_16f,_170){
-+this.add_folder_row=function(name,_19e,_19f,_1a0){
- if(!this.gui_objects.subscriptionlist){
- return false;
- }
--for(var _171 in this.env.subscriptionrows){
--if(this.env.subscriptionrows[_171]!=null&&!this.env.subscriptionrows[_171][2]){
-+for(var _1a1 in this.env.subscriptionrows){
-+if(this.env.subscriptionrows[_1a1]!=null&&!this.env.subscriptionrows[_1a1][2]){
- break;
- }
- }
--var _172,form;
--var _174=this.gui_objects.subscriptionlist.tBodies[0];
--var id="rcmrow"+(_174.childNodes.length+1);
--var _176=this.subscription_list.get_single_selection();
--if(_16f&&_16f.id){
--id=_16f.id;
--_171=_16f.id;
-+var _1a2,form;
-+var _1a4=this.gui_objects.subscriptionlist.tBodies[0];
-+var id="rcmrow"+(_1a4.childNodes.length+1);
-+var _1a6=this.subscription_list.get_single_selection();
-+if(_19f&&_19f.id){
-+id=_19f.id;
-+_1a1=_19f.id;
- }
--if(!id||!(_172=document.getElementById(_171))){
-+if(!id||!(_1a2=document.getElementById(_1a1))){
- this.goto_url("folders");
- }else{
--var row=this.clone_table_row(_172);
-+var row=this.clone_table_row(_1a2);
- row.id=id;
--if(_170&&(_170=this.get_folder_row_id(_170))){
--_174.insertBefore(row,document.getElementById(_170));
-+if(_1a0&&(_1a0=this.get_folder_row_id(_1a0))){
-+_1a4.insertBefore(row,document.getElementById(_1a0));
- }else{
--_174.appendChild(row);
-+_1a4.appendChild(row);
- }
--if(_16f){
--_174.removeChild(_16f);
-+if(_19f){
-+_1a4.removeChild(_19f);
- }
- }
--this.env.subscriptionrows[row.id]=[name,_16e,0];
--row.cells[0].innerHTML=_16e;
--if(!_16f){
-+this.env.subscriptionrows[row.id]=[name,_19e,0];
-+row.cells[0].innerHTML=_19e;
-+if(!_19f){
- row.cells[1].innerHTML="*";
- }
--if(!_16f&&row.cells[2]&&row.cells[2].firstChild.tagName=="INPUT"){
-+if(!_19f&&row.cells[2]&&row.cells[2].firstChild.tagName=="INPUT"){
- row.cells[2].firstChild.value=name;
- row.cells[2].firstChild.checked=true;
- }
--if(!_16f&&(form=this.gui_objects.editform)){
-+if(!_19f&&(form=this.gui_objects.editform)){
- if(form.elements["_folder_oldname"]){
- form.elements["_folder_oldname"].options[form.elements["_folder_oldname"].options.length]=new Option(name,name);
- }
-@@ -2472,39 +2768,39 @@
- }
- }
- this.init_subscription_list();
--if(_176&&document.getElementById("rcmrow"+_176)){
--this.subscription_list.select_row(_176);
-+if(_1a6&&document.getElementById("rcmrow"+_1a6)){
-+this.subscription_list.select_row(_1a6);
- }
- if(document.getElementById(id).scrollIntoView){
- document.getElementById(id).scrollIntoView();
- }
- };
--this.replace_folder_row=function(_178,_179,_17a,_17b){
--var id=this.get_folder_row_id(_178);
-+this.replace_folder_row=function(_1a8,_1a9,_1aa,_1ab){
-+var id=this.get_folder_row_id(_1a8);
- var row=document.getElementById(id);
--this.add_folder_row(_179,_17a,row,_17b);
-+this.add_folder_row(_1a9,_1aa,row,_1ab);
- var form,elm;
- if((form=this.gui_objects.editform)&&(elm=form.elements["_folder_oldname"])){
- for(var i=0;i<elm.options.length;i++){
--if(elm.options[i].value==_178){
--elm.options[i].text=_17a;
--elm.options[i].value=_179;
-+if(elm.options[i].value==_1a8){
-+elm.options[i].text=_1aa;
-+elm.options[i].value=_1a9;
- break;
- }
- }
- form.elements["_folder_newname"].value="";
- }
- };
--this.remove_folder_row=function(_181){
-+this.remove_folder_row=function(_1b1){
- var row;
--var id=this.get_folder_row_id(_181);
-+var id=this.get_folder_row_id(_1b1);
- if(id&&(row=document.getElementById(id))){
- row.style.display="none";
- }
- var form;
- if((form=this.gui_objects.editform)&&form.elements["_folder_oldname"]){
- for(var i=0;i<form.elements["_folder_oldname"].options.length;i++){
--if(form.elements["_folder_oldname"].options[i].value==_181){
-+if(form.elements["_folder_oldname"].options[i].value==_1b1){
- form.elements["_folder_oldname"].options[i]=null;
- break;
- }
-@@ -2514,19 +2810,19 @@
- form.elements["_folder_newname"].value="";
- }
- };
--this.subscribe_folder=function(_186){
--if(_186){
--this.http_post("subscribe","_mbox="+urlencode(_186));
-+this.subscribe_folder=function(_1b6){
-+if(_1b6){
-+this.http_post("subscribe","_mbox="+urlencode(_1b6));
- }
- };
--this.unsubscribe_folder=function(_187){
--if(_187){
--this.http_post("unsubscribe","_mbox="+urlencode(_187));
-+this.unsubscribe_folder=function(_1b7){
-+if(_1b7){
-+this.http_post("unsubscribe","_mbox="+urlencode(_1b7));
- }
- };
--this.get_folder_row_id=function(_188){
-+this.get_folder_row_id=function(_1b8){
- for(var id in this.env.subscriptionrows){
--if(this.env.subscriptionrows[id]&&this.env.subscriptionrows[id][0]==_188){
-+if(this.env.subscriptionrows[id]&&this.env.subscriptionrows[id][0]==_1b8){
- break;
- }
- }
-@@ -2534,7 +2830,7 @@
- };
- this.clone_table_row=function(row){
- var cell,td;
--var _18d=document.createElement("TR");
-+var _1bd=document.createElement("TR");
- for(var n=0;n<row.cells.length;n++){
- cell=row.cells[n];
- td=document.createElement("TD");
-@@ -2545,9 +2841,9 @@
- td.setAttribute("align",cell.align);
- }
- td.innerHTML=cell.innerHTML;
--_18d.appendChild(td);
-+_1bd.appendChild(td);
- }
--return _18d;
-+return _1bd;
- };
- this.set_page_buttons=function(){
- this.enable_command("nextpage",(this.env.pagecount>this.env.current_page));
-@@ -2555,121 +2851,121 @@
- this.enable_command("previouspage",(this.env.current_page>1));
- this.enable_command("firstpage",(this.env.current_page>1));
- };
--this.set_button=function(_18f,_190){
--var _191=this.buttons[_18f];
--var _192,obj;
--if(!_191||!_191.length){
-+this.set_button=function(_1bf,_1c0){
-+var _1c1=this.buttons[_1bf];
-+var _1c2,obj;
-+if(!_1c1||!_1c1.length){
- return false;
- }
--for(var n=0;n<_191.length;n++){
--_192=_191[n];
--obj=document.getElementById(_192.id);
--if(obj&&_192.type=="image"&&!_192.status){
--_192.pas=obj._original_src?obj._original_src:obj.src;
-+for(var n=0;n<_1c1.length;n++){
-+_1c2=_1c1[n];
-+obj=document.getElementById(_1c2.id);
-+if(obj&&_1c2.type=="image"&&!_1c2.status){
-+_1c2.pas=obj._original_src?obj._original_src:obj.src;
- if(obj.runtimeStyle&&obj.runtimeStyle.filter&&obj.runtimeStyle.filter.match(/src=['"]([^'"]+)['"]/)){
--_192.pas=RegExp.$1;
-+_1c2.pas=RegExp.$1;
- }
- }else{
--if(obj&&!_192.status){
--_192.pas=String(obj.className);
-+if(obj&&!_1c2.status){
-+_1c2.pas=String(obj.className);
- }
- }
--if(obj&&_192.type=="image"&&_192[_190]){
--_192.status=_190;
--obj.src=_192[_190];
-+if(obj&&_1c2.type=="image"&&_1c2[_1c0]){
-+_1c2.status=_1c0;
-+obj.src=_1c2[_1c0];
- }else{
--if(obj&&typeof (_192[_190])!="undefined"){
--_192.status=_190;
--obj.className=_192[_190];
-+if(obj&&typeof (_1c2[_1c0])!="undefined"){
-+_1c2.status=_1c0;
-+obj.className=_1c2[_1c0];
- }
- }
--if(obj&&_192.type=="input"){
--_192.status=_190;
--obj.disabled=!_190;
-+if(obj&&_1c2.type=="input"){
-+_1c2.status=_1c0;
-+obj.disabled=!_1c0;
- }
- }
- };
--this.set_alttext=function(_195,_196){
--if(!this.buttons[_195]||!this.buttons[_195].length){
-+this.set_alttext=function(_1c5,_1c6){
-+if(!this.buttons[_1c5]||!this.buttons[_1c5].length){
- return;
- }
--var _197,obj,link;
--for(var n=0;n<this.buttons[_195].length;n++){
--_197=this.buttons[_195][n];
--obj=document.getElementById(_197.id);
--if(_197.type=="image"&&obj){
--obj.setAttribute("alt",this.get_label(_196));
-+var _1c7,obj,link;
-+for(var n=0;n<this.buttons[_1c5].length;n++){
-+_1c7=this.buttons[_1c5][n];
-+obj=document.getElementById(_1c7.id);
-+if(_1c7.type=="image"&&obj){
-+obj.setAttribute("alt",this.get_label(_1c6));
- if((link=obj.parentNode)&&link.tagName=="A"){
--link.setAttribute("title",this.get_label(_196));
-+link.setAttribute("title",this.get_label(_1c6));
- }
- }else{
- if(obj){
--obj.setAttribute("title",this.get_label(_196));
-+obj.setAttribute("title",this.get_label(_1c6));
- }
- }
- }
- };
--this.button_over=function(_19b,id){
--var _19d=this.buttons[_19b];
--var _19e,img;
--if(!_19d||!_19d.length){
-+this.button_over=function(_1cb,id){
-+var _1cd=this.buttons[_1cb];
-+var _1ce,img;
-+if(!_1cd||!_1cd.length){
- return false;
- }
--for(var n=0;n<_19d.length;n++){
--_19e=_19d[n];
--if(_19e.id==id&&_19e.status=="act"){
--img=document.getElementById(_19e.id);
--if(img&&_19e.over){
--img.src=_19e.over;
-+for(var n=0;n<_1cd.length;n++){
-+_1ce=_1cd[n];
-+if(_1ce.id==id&&_1ce.status=="act"){
-+img=document.getElementById(_1ce.id);
-+if(img&&_1ce.over){
-+img.src=_1ce.over;
- }
- }
- }
- };
--this.button_sel=function(_1a1,id){
--var _1a3=this.buttons[_1a1];
--var _1a4,img;
--if(!_1a3||!_1a3.length){
-+this.button_sel=function(_1d1,id){
-+var _1d3=this.buttons[_1d1];
-+var _1d4,img;
-+if(!_1d3||!_1d3.length){
- return;
- }
--for(var n=0;n<_1a3.length;n++){
--_1a4=_1a3[n];
--if(_1a4.id==id&&_1a4.status=="act"){
--img=document.getElementById(_1a4.id);
--if(img&&_1a4.sel){
--img.src=_1a4.sel;
-+for(var n=0;n<_1d3.length;n++){
-+_1d4=_1d3[n];
-+if(_1d4.id==id&&_1d4.status=="act"){
-+img=document.getElementById(_1d4.id);
-+if(img&&_1d4.sel){
-+img.src=_1d4.sel;
- }
- }
- }
- };
--this.button_out=function(_1a7,id){
--var _1a9=this.buttons[_1a7];
--var _1aa,img;
--if(!_1a9||!_1a9.length){
-+this.button_out=function(_1d7,id){
-+var _1d9=this.buttons[_1d7];
-+var _1da,img;
-+if(!_1d9||!_1d9.length){
- return;
- }
--for(var n=0;n<_1a9.length;n++){
--_1aa=_1a9[n];
--if(_1aa.id==id&&_1aa.status=="act"){
--img=document.getElementById(_1aa.id);
--if(img&&_1aa.act){
--img.src=_1aa.act;
-+for(var n=0;n<_1d9.length;n++){
-+_1da=_1d9[n];
-+if(_1da.id==id&&_1da.status=="act"){
-+img=document.getElementById(_1da.id);
-+if(img&&_1da.act){
-+img.src=_1da.act;
- }
- }
- }
- };
--this.set_classname=function(obj,_1ae,set){
--var reg=new RegExp("s*"+_1ae,"i");
-+this.set_classname=function(obj,_1de,set){
-+var reg=new RegExp("s*"+_1de,"i");
- if(!set&&obj.className.match(reg)){
- obj.className=obj.className.replace(reg,"");
- }else{
- if(set&&!obj.className.match(reg)){
--obj.className+=" "+_1ae;
-+obj.className+=" "+_1de;
- }
- }
- };
--this.set_pagetitle=function(_1b1){
--if(_1b1&&document.title){
--document.title=_1b1;
-+this.set_pagetitle=function(_1e1){
-+if(_1e1&&document.title){
-+document.title=_1e1;
- }
- };
- this.display_message=function(msg,type,hold){
-@@ -2690,12 +2986,12 @@
- if(type){
- cont="<div class=\""+type+"\">"+cont+"</div>";
- }
--var _1b6=this;
-+var _1e6=this;
- this.gui_objects.message.innerHTML=cont;
- this.gui_objects.message.style.display="block";
- if(type!="loading"){
- this.gui_objects.message.onmousedown=function(){
--_1b6.hide_message();
-+_1e6.hide_message();
- return true;
- };
- }
-@@ -2713,14 +3009,14 @@
- };
- this.select_folder=function(name,old){
- if(this.gui_objects.folderlist){
--var _1b9,_1ba;
--if((_1b9=this.get_folder_li(old))){
--this.set_classname(_1b9,"selected",false);
--this.set_classname(_1b9,"unfocused",false);
--}
--if((_1ba=this.get_folder_li(name))){
--this.set_classname(_1ba,"unfocused",false);
--this.set_classname(_1ba,"selected",true);
-+var _1e9,_1ea;
-+if((_1e9=this.get_folder_li(old))){
-+this.set_classname(_1e9,"selected",false);
-+this.set_classname(_1e9,"unfocused",false);
-+}
-+if((_1ea=this.get_folder_li(name))){
-+this.set_classname(_1ea,"unfocused",false);
-+this.set_classname(_1ea,"selected",true);
- }
- }
- };
-@@ -2731,13 +3027,13 @@
- }
- return null;
- };
--this.set_message_coltypes=function(_1bc){
--this.coltypes=_1bc;
-+this.set_message_coltypes=function(_1ec){
-+this.coltypes=_1ec;
- var cell,col;
--var _1bf=this.gui_objects.messagelist?this.gui_objects.messagelist.tHead:null;
--for(var n=0;_1bf&&n<this.coltypes.length;n++){
-+var _1ef=this.gui_objects.messagelist?this.gui_objects.messagelist.tHead:null;
-+for(var n=0;_1ef&&n<this.coltypes.length;n++){
- col=this.coltypes[n];
--if((cell=_1bf.rows[0].cells[n+1])&&(col=="from"||col=="to")){
-+if((cell=_1ef.rows[0].cells[n+1])&&(col=="from"||col=="to")){
- if(cell.firstChild&&cell.firstChild.tagName=="A"){
- cell.firstChild.innerHTML=this.get_label(this.coltypes[n]);
- cell.firstChild.onclick=function(){
-@@ -2755,35 +3051,35 @@
- }
- }
- };
--this.add_message_row=function(uid,cols,_1c3,_1c4,_1c5){
-+this.add_message_row=function(uid,cols,_1f3,_1f4,_1f5){
- if(!this.gui_objects.messagelist||!this.message_list){
- return false;
- }
--var _1c6=this.gui_objects.messagelist.tBodies[0];
--var _1c7=_1c6.rows.length;
--var even=_1c7%2;
--this.env.messages[uid]={deleted:_1c3.deleted?1:0,replied:_1c3.replied?1:0,unread:_1c3.unread?1:0,forwarded:_1c3.forwarded?1:0,flagged:_1c3.flagged?1:0};
-+var _1f6=this.gui_objects.messagelist.tBodies[0];
-+var _1f7=_1f6.rows.length;
-+var even=_1f7%2;
-+this.env.messages[uid]={deleted:_1f3.deleted?1:0,replied:_1f3.replied?1:0,unread:_1f3.unread?1:0,forwarded:_1f3.forwarded?1:0,flagged:_1f3.flagged?1:0};
- var row=document.createElement("TR");
- row.id="rcmrow"+uid;
--row.className="message"+(even?" even":" odd")+(_1c3.unread?" unread":"")+(_1c3.deleted?" deleted":"")+(_1c3.flagged?" flagged":"");
-+row.className="message"+(even?" even":" odd")+(_1f3.unread?" unread":"")+(_1f3.deleted?" deleted":"")+(_1f3.flagged?" flagged":"");
- if(this.message_list.in_selection(uid)){
- row.className+=" selected";
- }
- var icon=this.env.messageicon;
--if(_1c3.deleted&&this.env.deletedicon){
-+if(_1f3.deleted&&this.env.deletedicon){
- icon=this.env.deletedicon;
- }else{
--if(_1c3.replied&&this.env.repliedicon){
--if(_1c3.forwarded&&this.env.forwardedrepliedicon){
-+if(_1f3.replied&&this.env.repliedicon){
-+if(_1f3.forwarded&&this.env.forwardedrepliedicon){
- icon=this.env.forwardedrepliedicon;
- }else{
- icon=this.env.repliedicon;
- }
- }else{
--if(_1c3.forwarded&&this.env.forwardedicon){
-+if(_1f3.forwarded&&this.env.forwardedicon){
- icon=this.env.forwardedicon;
- }else{
--if(_1c3.unread&&this.env.unreadicon){
-+if(_1f3.unread&&this.env.unreadicon){
- icon=this.env.unreadicon;
- }
- }
-@@ -2798,24 +3094,24 @@
- col=document.createElement("TD");
- col.className=String(c).toLowerCase();
- if(c=="flag"){
--if(_1c3.flagged&&this.env.flaggedicon){
-+if(_1f3.flagged&&this.env.flaggedicon){
- col.innerHTML="<img src=\""+this.env.flaggedicon+"\" alt=\"\" />";
- }else{
--if(!_1c3.flagged&&this.env.unflaggedicon){
-+if(!_1f3.flagged&&this.env.unflaggedicon){
- col.innerHTML="<img src=\""+this.env.unflaggedicon+"\" alt=\"\" />";
- }
- }
- }else{
- if(c=="attachment"){
--col.innerHTML=_1c4&&this.env.attachmenticon?"<img src=\""+this.env.attachmenticon+"\" alt=\"\" />":"&nbsp;";
-+col.innerHTML=_1f4&&this.env.attachmenticon?"<img src=\""+this.env.attachmenticon+"\" alt=\"\" />":"&nbsp;";
- }else{
- col.innerHTML=cols[c];
- }
- }
- row.appendChild(col);
- }
--this.message_list.insert_row(row,_1c5);
--if(_1c5&&this.env.pagesize&&this.message_list.rowcount>this.env.pagesize){
-+this.message_list.insert_row(row,_1f5);
-+if(_1f5&&this.env.pagesize&&this.message_list.rowcount>this.env.pagesize){
- var uid=this.message_list.get_last_row();
- this.message_list.remove_row(uid);
- this.message_list.clear_selection(uid);
-@@ -2827,66 +3123,66 @@
- }
- this.set_page_buttons();
- };
--this.set_mailboxname=function(_1cf){
--if(this.gui_objects.mailboxname&&_1cf){
--this.gui_objects.mailboxname.innerHTML=_1cf;
-+this.set_mailboxname=function(_1ff){
-+if(this.gui_objects.mailboxname&&_1ff){
-+this.gui_objects.mailboxname.innerHTML=_1ff;
- }
- };
--this.set_quota=function(_1d0){
--if(this.gui_objects.quotadisplay&&_1d0){
--this.gui_objects.quotadisplay.innerHTML=_1d0;
-+this.set_quota=function(_200){
-+if(this.gui_objects.quotadisplay&&_200){
-+this.gui_objects.quotadisplay.innerHTML=_200;
- }
- };
--this.set_unread_count=function(mbox,_1d2,_1d3){
-+this.set_unread_count=function(mbox,_202,_203){
- if(!this.gui_objects.mailboxlist){
- return false;
- }
--this.env.unread_counts[mbox]=_1d2;
--this.set_unread_count_display(mbox,_1d3);
-+this.env.unread_counts[mbox]=_202;
-+this.set_unread_count_display(mbox,_203);
- };
--this.set_unread_count_display=function(mbox,_1d5){
--var reg,_1d7,item,_1d9,_1da,div;
-+this.set_unread_count_display=function(mbox,_205){
-+var reg,_207,item,_209,_20a,div;
- if(item=this.get_folder_li(mbox)){
--_1d9=this.env.unread_counts[mbox]?this.env.unread_counts[mbox]:0;
--_1d7=item.getElementsByTagName("a")[0];
-+_209=this.env.unread_counts[mbox]?this.env.unread_counts[mbox]:0;
-+_207=item.getElementsByTagName("a")[0];
- reg=/\s+\([0-9]+\)$/i;
--_1da=0;
-+_20a=0;
- if((div=item.getElementsByTagName("div")[0])&&div.className.match(/collapsed/)){
- for(var k in this.env.unread_counts){
- if(k.indexOf(mbox+this.env.delimiter)==0){
--_1da+=this.env.unread_counts[k];
-+_20a+=this.env.unread_counts[k];
- }
- }
- }
--if(_1d9&&_1d7.innerHTML.match(reg)){
--_1d7.innerHTML=_1d7.innerHTML.replace(reg," ("+_1d9+")");
-+if(_209&&_207.innerHTML.match(reg)){
-+_207.innerHTML=_207.innerHTML.replace(reg," ("+_209+")");
- }else{
--if(_1d9){
--_1d7.innerHTML+=" ("+_1d9+")";
-+if(_209){
-+_207.innerHTML+=" ("+_209+")";
- }else{
--_1d7.innerHTML=_1d7.innerHTML.replace(reg,"");
-+_207.innerHTML=_207.innerHTML.replace(reg,"");
- }
- }
- reg=new RegExp(RegExp.escape(this.env.delimiter)+"[^"+RegExp.escape(this.env.delimiter)+"]+$");
- if(mbox.match(reg)){
- this.set_unread_count_display(mbox.replace(reg,""),false);
- }
--this.set_classname(item,"unread",(_1d9+_1da)>0?true:false);
-+this.set_classname(item,"unread",(_209+_20a)>0?true:false);
- }
- reg=/^\([0-9]+\)\s+/i;
--if(_1d5&&document.title){
--var _1dd=String(document.title);
--var _1de="";
--if(_1d9&&_1dd.match(reg)){
--_1de=_1dd.replace(reg,"("+_1d9+") ");
-+if(_205&&document.title){
-+var _20d=String(document.title);
-+var _20e="";
-+if(_209&&_20d.match(reg)){
-+_20e=_20d.replace(reg,"("+_209+") ");
- }else{
--if(_1d9){
--_1de="("+_1d9+") "+_1dd;
-+if(_209){
-+_20e="("+_209+") "+_20d;
- }else{
--_1de=_1dd.replace(reg,"");
-+_20e=_20d.replace(reg,"");
- }
- }
--this.set_pagetitle(_1de);
-+this.set_pagetitle(_20e);
- }
- };
- this.new_message_focus=function(){
-@@ -2896,13 +3192,13 @@
- window.focus();
- }
- };
--this.add_contact_row=function(cid,cols,_1e1){
-+this.add_contact_row=function(cid,cols,_211){
- if(!this.gui_objects.contactslist||!this.gui_objects.contactslist.tBodies[0]){
- return false;
- }
--var _1e2=this.gui_objects.contactslist.tBodies[0];
--var _1e3=_1e2.rows.length;
--var even=_1e3%2;
-+var _212=this.gui_objects.contactslist.tBodies[0];
-+var _213=_212.rows.length;
-+var even=_213%2;
- var row=document.createElement("TR");
- row.id="rcmrow"+cid;
- row.className="contact "+(even?"even":"odd");
-@@ -2918,16 +3214,16 @@
- this.contact_list.insert_row(row);
- this.enable_command("export",(this.contact_list.rowcount>0));
- };
--this.toggle_prefer_html=function(_1e7){
--var _1e8;
--if(_1e8=document.getElementById("rcmfd_addrbook_show_images")){
--_1e8.disabled=!_1e7.checked;
-+this.toggle_prefer_html=function(_217){
-+var _218;
-+if(_218=document.getElementById("rcmfd_addrbook_show_images")){
-+_218.disabled=!_217.checked;
- }
- };
--this.set_headers=function(_1e9){
--if(this.gui_objects.all_headers_row&&this.gui_objects.all_headers_box&&_1e9){
-+this.set_headers=function(_219){
-+if(this.gui_objects.all_headers_row&&this.gui_objects.all_headers_box&&_219){
- var box=this.gui_objects.all_headers_box;
--box.innerHTML=_1e9;
-+box.innerHTML=_219;
- box.style.display="block";
- if(this.env.framed&&parent.rcmail){
- parent.rcmail.set_busy(false);
-@@ -2962,22 +3258,22 @@
- rcmail.load_headers(elem);
- };
- };
--this.html2plain=function(_1ed,id){
--var _1ef=new rcube_http_request();
-+this.html2plain=function(_21d,id){
-+var _21f=new rcube_http_request();
- var url=this.env.bin_path+"html2text.php";
--var _1f1=this;
-+var _221=this;
- this.set_busy(true,"converting");
--_1ef.onerror=function(o){
--_1f1.http_error(o);
-+_21f.onerror=function(o){
-+_221.http_error(o);
- };
--_1ef.oncomplete=function(o){
--_1f1.set_text_value(o,id);
-+_21f.oncomplete=function(o){
-+_221.set_text_value(o,id);
- };
--_1ef.POST(url,_1ed,"application/octet-stream");
-+_21f.POST(url,_21d,"application/octet-stream");
- };
--this.set_text_value=function(_1f4,id){
-+this.set_text_value=function(_224,id){
- this.set_busy(false);
--document.getElementById(id).value=_1f4.get_text();
-+document.getElementById(id).value=_224.get_text();
- };
- this.redirect=function(url,lock){
- if(lock||lock===null){
-@@ -2989,9 +3285,9 @@
- location.href=url;
- }
- };
--this.goto_url=function(_1f8,_1f9,lock){
--var _1fb=_1f9?"&"+_1f9:"";
--this.redirect(this.env.comm_path+"&_action="+_1f8+_1fb,lock);
-+this.goto_url=function(_228,_229,lock){
-+var _22b=_229?"&"+_229:"";
-+this.redirect(this.env.comm_path+"&_action="+_228+_22b,lock);
- };
- this.http_sockets=new Array();
- this.get_request_obj=function(){
-@@ -3004,65 +3300,65 @@
- this.http_sockets[i]=new rcube_http_request();
- return this.http_sockets[i];
- };
--this.http_request=function(_1fe,_1ff,lock){
--var _201=this.get_request_obj();
--_1ff+=(_1ff?"&":"")+"_remote=1";
-+this.http_request=function(_22e,_22f,lock){
-+var _231=this.get_request_obj();
-+_22f+=(_22f?"&":"")+"_remote=1";
- if(bw.safari){
--_1ff+="&_ts="+(new Date().getTime());
-+_22f+="&_ts="+(new Date().getTime());
- }
--if(_201){
-+if(_231){
- if(lock){
- this.set_busy(true);
- }
- var rcm=this;
--_201.__lock=lock?true:false;
--_201.__action=_1fe;
--_201.onerror=function(o){
-+_231.__lock=lock?true:false;
-+_231.__action=_22e;
-+_231.onerror=function(o){
- _1.http_error(o);
- };
--_201.oncomplete=function(o){
-+_231.oncomplete=function(o){
- _1.http_response(o);
- };
--_201.GET(this.env.comm_path+"&_action="+_1fe+"&"+_1ff);
-+_231.GET(this.env.comm_path+"&_action="+_22e+"&"+_22f);
- }
- };
--this.http_post=function(_205,_206,lock){
--var _208;
--if(_206&&typeof (_206)=="object"){
--_206._remote=1;
-+this.http_post=function(_235,_236,lock){
-+var _238;
-+if(_236&&typeof (_236)=="object"){
-+_236._remote=1;
- }else{
--_206+=(_206?"&":"")+"_remote=1";
-+_236+=(_236?"&":"")+"_remote=1";
- }
--if(_208=this.get_request_obj()){
-+if(_238=this.get_request_obj()){
- if(lock){
- this.set_busy(true);
- }
- var rcm=this;
--_208.__lock=lock?true:false;
--_208.__action=_205;
--_208.onerror=function(o){
-+_238.__lock=lock?true:false;
-+_238.__action=_235;
-+_238.onerror=function(o){
- rcm.http_error(o);
- };
--_208.oncomplete=function(o){
-+_238.oncomplete=function(o){
- rcm.http_response(o);
- };
--_208.POST(this.env.comm_path+"&_action="+_205,_206);
-+_238.POST(this.env.comm_path+"&_action="+_235,_236);
- }
- };
--this.http_response=function(_20c){
--var _20d=_20c.get_header("Content-Type");
--if(_20d){
--_20d=String(_20d).toLowerCase();
--var _20e=_20d.split(";");
--_20d=_20e[0];
-+this.http_response=function(_23c){
-+var _23d=_23c.get_header("Content-Type");
-+if(_23d){
-+_23d=String(_23d).toLowerCase();
-+var _23e=_23d.split(";");
-+_23d=_23e[0];
- }
--if(_20c.__lock){
-+if(_23c.__lock){
- this.set_busy(false);
- }
--if(_20c.get_text()&&(_20d=="text/javascript"||_20d=="application/x-javascript")){
--eval(_20c.get_text());
-+if(_23c.get_text()&&(_23d=="text/javascript"||_23d=="application/x-javascript")){
-+eval(_23c.get_text());
- }
--switch(_20c.__action){
-+switch(_23c.__action){
- case "delete":
- if(this.task=="addressbook"){
- var uid=this.contact_list.get_selection();
-@@ -3092,7 +3388,7 @@
- case "getunread":
- case "list":
- if(this.task=="mail"){
--if(this.message_list&&_20c.__action=="list"){
-+if(this.message_list&&_23c.__action=="list"){
- this.msglist_select(this.message_list);
- }
- this.enable_command("show","expunge","select-all","select-none","sort",(this.env.messagecount>0));
-@@ -3104,25 +3400,25 @@
- }
- break;
- }
--_20c.reset();
-+_23c.reset();
- };
--this.http_error=function(_210){
--if(_210.__lock){
-+this.http_error=function(_240){
-+if(_240.__lock){
- this.set_busy(false);
- }
--_210.reset();
--_210.__lock=false;
-+_240.reset();
-+_240.__lock=false;
- this.display_message("Unknown Server Error!","error");
- };
- this.send_keep_alive=function(){
- var d=new Date();
- this.http_request("keep-alive","_t="+d.getTime());
- };
--this.check_for_recent=function(_212){
-+this.check_for_recent=function(_242){
- if(this.busy){
- return;
- }
--if(_212){
-+if(_242){
- this.set_busy(true,"checkingmail");
- }
- this.http_request("check-recent",(this.env.search_request?"_search="+this.env.search_request+"&":"")+"_t="+(new Date().getTime()),true);
-@@ -3138,17 +3434,17 @@
- return obj.selectionEnd;
- }else{
- if(document.selection&&document.selection.createRange){
--var _214=document.selection.createRange();
--if(_214.parentElement()!=obj){
-+var _244=document.selection.createRange();
-+if(_244.parentElement()!=obj){
- return 0;
- }
--var gm=_214.duplicate();
-+var gm=_244.duplicate();
- if(obj.tagName=="TEXTAREA"){
- gm.moveToElementText(obj);
- }else{
- gm.expand("textedit");
- }
--gm.setEndPoint("EndToStart",_214);
-+gm.setEndPoint("EndToStart",_244);
- var p=gm.text.length;
- return p<=obj.value.length?p:-1;
- }else{
-@@ -3158,9 +3454,9 @@
- };
- this.set_caret2start=function(obj){
- if(obj.createTextRange){
--var _218=obj.createTextRange();
--_218.collapse(true);
--_218.select();
-+var _248=obj.createTextRange();
-+_248.collapse(true);
-+_248.select();
- }else{
- if(obj.setSelectionRange){
- obj.setSelectionRange(0,0);
-@@ -3234,20 +3530,20 @@
- this.xmlhttp.setRequestHeader("X-RoundCube-Referer",bw.get_cookie("roundcube_sessid"));
- this.xmlhttp.send(null);
- };
--this.POST=function(url,body,_221){
--if(typeof (_221)=="undefined"){
--_221="application/x-www-form-urlencoded";
-+this.POST=function(url,body,_251){
-+if(typeof (_251)=="undefined"){
-+_251="application/x-www-form-urlencoded";
- }
- this.build();
- if(!this.xmlhttp){
- this.onerror(this);
- return false;
- }
--var _222=body;
-+var _252=body;
- if(typeof (body)=="object"){
--_222="";
-+_252="";
- for(var p in body){
--_222+=(_222?"&":"")+p+"="+urlencode(body[p]);
-+_252+=(_252?"&":"")+p+"="+urlencode(body[p]);
- }
- }
- var ref=this;
-@@ -3257,9 +3553,9 @@
- ref.xmlhttp_onreadystatechange();
- };
- this.xmlhttp.open("POST",url,true);
--this.xmlhttp.setRequestHeader("Content-Type",_221);
-+this.xmlhttp.setRequestHeader("Content-Type",_251);
- this.xmlhttp.setRequestHeader("X-RoundCube-Referer",bw.get_cookie("roundcube_sessid"));
--this.xmlhttp.send(_222);
-+this.xmlhttp.send(_252);
- };
- this.xmlhttp_onreadystatechange=function(){
- if(this.xmlhttp.readyState==1){
-diff -ruNa 0.2-stable.old/program/js/app.js.src 0.2-stable/program/js/app.js.src
---- 0.2-stable.old/program/js/app.js.src	2008-12-30 16:25:19.000000000 +0100
-+++ 0.2-stable/program/js/app.js.src	2009-01-03 14:06:20.759147716 +0100
+diff -ruNa rc-beta2-old/program/js/app.js rc-beta2/program/js/app.js
+--- rc-beta2-old/program/js/app.js	2009-02-11 08:50:49.000000000 +0100
++++ rc-beta2/program/js/app.js	2009-03-01 15:23:00.047142288 +0100
 @@ -288,6 +288,7 @@
  
        case 'settings':
@@ -4065,7 +844,7 @@ diff -ruNa 0.2-stable.old/program/js/app.js.src 0.2-stable/program/js/app.js.src
        }
  
      return obj ? false : true;
-@@ -2796,6 +2839,348 @@
+@@ -2796,6 +2839,347 @@
  
  
    /*********************************************************/
@@ -4142,7 +921,7 @@ diff -ruNa 0.2-stable.old/program/js/app.js.src 0.2-stable/program/js/app.js.src
 +	    continue;
 +          } else if (rows[i].uid == id) {
 +	    from = rows[i].obj.cells[0];
-+	  } else if (rows[i].uid == parseInt(id)+1){
++	  } else if (rows[i].uid == id+1){
 +	    name = rows[i].obj.cells[0].innerHTML;
 +	    rows[i].obj.cells[0].innerHTML = from.innerHTML;
 +	    from.innerHTML = name;
@@ -4338,9 +1117,9 @@ diff -ruNa 0.2-stable.old/program/js/app.js.src 0.2-stable/program/js/app.js.src
 +	var row = document.createElement('div');
 +
 +	this.sievefilter_insertrow(div, row, after);
-+
-+	row.setAttribute('id', 'actionrow'+id);
++	// fill row after inserting (for IE)
 +	row.className = 'actionrow';
++	row.setAttribute('id', 'actionrow'+id);
 +        row.innerHTML = content;
 +
 +        this.sievefilter_formbuttons(div);
@@ -4362,7 +1141,7 @@ diff -ruNa 0.2-stable.old/program/js/app.js.src 0.2-stable/program/js/app.js.src
 +    {
 +      for (var i=0; i<div.childNodes.length; i++)
 +	{
-+        if (div.childNodes[i].id == ((div.id=='rules' ? 'rulerow' : 'actionrow') + after))
++        if (div.childNodes[i].id == (div.id == 'rules' ? 'rulerow' : 'actionrow')  + after)
 +	  break;
 +	}
 +
@@ -4376,8 +1155,7 @@ diff -ruNa 0.2-stable.old/program/js/app.js.src 0.2-stable/program/js/app.js.src
 +  this.sievefilter_formbuttons = function(div)
 +    {
 +      var buttons = new Array();
-+      var i;
-+
++      var i, j=0;
 +      // count and get buttons
 +      for (i=0; i<div.childNodes.length; i++)
 +	{
@@ -4389,7 +1167,7 @@ diff -ruNa 0.2-stable.old/program/js/app.js.src 0.2-stable/program/js/app.js.src
 +	else if (div.childNodes[i].id)
 +	  {
 +	  if (/actionrow/.test(div.childNodes[i].id))
-+	    buttons.push('actiondel' + div.childNodes[i].id.replace(/actionrow/, ''));
++	    buttons.push( 'actiondel' + div.childNodes[i].id.replace(/actionrow/, ''));
 +	  }
 +        }
 +
@@ -4414,9 +1192,9 @@ diff -ruNa 0.2-stable.old/program/js/app.js.src 0.2-stable/program/js/app.js.src
    /*********        user settings methods          *********/
    /*********************************************************/
  
-diff -ruNa 0.2-stable.old/program/lib/Net/Sieve.php 0.2-stable/program/lib/Net/Sieve.php
---- 0.2-stable.old/program/lib/Net/Sieve.php	1970-01-01 01:00:00.000000000 +0100
-+++ 0.2-stable/program/lib/Net/Sieve.php	2009-01-03 13:51:32.699810412 +0100
+diff -ruNa rc-beta2-old/program/lib/Net/Sieve.php rc-beta2/program/lib/Net/Sieve.php
+--- rc-beta2-old/program/lib/Net/Sieve.php	1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/program/lib/Net/Sieve.php	2009-02-11 08:59:02.576418179 +0100
 @@ -0,0 +1,1149 @@
 +<?php
 +// +-----------------------------------------------------------------------+
@@ -5567,9 +2345,70 @@ diff -ruNa 0.2-stable.old/program/lib/Net/Sieve.php 0.2-stable/program/lib/Net/S
 +    }
 +}
 +?>
-diff -ruNa 0.2-stable.old/program/localization/de_DE/labels.inc 0.2-stable/program/localization/de_DE/labels.inc
---- 0.2-stable.old/program/localization/de_DE/labels.inc	2008-12-06 18:59:26.000000000 +0100
-+++ 0.2-stable/program/localization/de_DE/labels.inc	2009-01-03 13:51:32.735810078 +0100
+diff -ruNa rc-beta2-old/program/localization/bg_BG/labels.inc rc-beta2/program/localization/bg_BG/labels.inc
+--- rc-beta2-old/program/localization/bg_BG/labels.inc	2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/bg_BG/labels.inc	2009-02-11 09:01:46.251824143 +0100
+@@ -257,4 +257,37 @@
+ $labels['MB'] = 'MB';
+ $labels['GB'] = 'GB';
+ 
++$labels['filters'] = 'Ğ¤Ğ¸Ğ»Ñ‚Ñ€Ğ¸';
++$labels['managefilters'] = 'Ğ£Ğ¿Ñ€Ğ°Ğ²Ğ»ĞµĞ½Ğ¸Ğµ Ğ½Ğ° Ñ„Ğ¸Ğ»Ñ‚Ñ€Ğ¸ Ğ·Ğ° Ğ²Ñ…Ğ¾Ğ´ÑÑ‰Ğ° Ğ¿Ğ¾Ñ‰Ğ°';
++$labels['filtername'] = 'Ğ˜Ğ¼Ğµ Ğ½Ğ° Ñ„Ğ¸Ğ»Ñ‚ÑŠÑ€';
++$labels['newfilter'] = 'ĞĞ¾Ğ² Ñ„Ğ¸Ğ»Ñ‚ÑŠÑ€';
++$labels['filteradd'] = 'Ğ”Ğ¾Ğ±Ğ°Ğ²ÑĞ½Ğµ Ğ½Ğ° Ñ„Ğ¸Ğ»Ñ‚ÑŠÑ€';
++$labels['filterdel'] = 'Ğ˜Ğ·Ñ‚Ñ€Ğ¸Ğ²Ğ°Ğ½Ğµ Ğ½Ğ° Ñ„Ğ¸Ğ»Ñ‚ÑŠÑ€';
++$labels['moveup'] = 'ĞŸÑ€ĞµĞ¼ĞµÑÑ‚Ğ²Ğ°Ğ½Ğµ Ğ½Ğ°Ğ³Ğ¾Ñ€Ğµ';
++$labels['movedown'] = 'ĞŸÑ€ĞµĞ¼ĞµÑÑ‚Ğ²Ğ°Ğ½Ğµ Ğ½Ğ°Ğ´Ğ¾Ğ»Ñƒ';
++$labels['filterallof'] = 'ÑÑŠĞ²Ğ¿Ğ°Ğ´ĞµĞ½Ğ¸Ğµ Ğ½Ğ° Ğ²ÑĞ¸Ñ‡ĞºĞ¸ ÑĞ»ĞµĞ´Ğ²Ğ°Ñ‰Ğ¸ Ğ¿Ñ€Ğ°Ğ²Ğ¸Ğ»Ğ°';
++$labels['filteranyof'] = 'ÑÑŠĞ²Ğ¿Ğ°Ğ´ĞµĞ½Ğ¸Ğµ Ğ½Ğ° Ğ½ÑĞºĞ¾Ğµ Ğ¾Ñ‚ ÑĞ»ĞµĞ´Ğ½Ğ¸Ñ‚Ğµ Ğ¿Ñ€Ğ°Ğ²Ğ¸Ğ»Ğ°';
++$labels['filterany'] = 'Ğ²ÑĞ¸Ñ‡ĞºĞ¸ ÑÑŠĞ¾Ğ±Ñ‰ĞµĞ½Ğ¸Ñ';
++$labels['filtercontains'] = 'ÑÑŠĞ´ÑŠÑ€Ğ¶Ğ°';
++$labels['filternotcontains'] = 'Ğ½Ğµ ÑÑŠĞ´ÑŠÑ€Ğ¶Ğ°';
++$labels['filteris'] = 'Ğµ Ñ€Ğ°Ğ²Ğ½Ğ¾ Ğ½Ğ°';
++$labels['filterisnot'] = 'Ğ½Ğµ Ğµ Ñ€Ğ°Ğ²Ğ½Ğ¾ Ğ½Ğ°';
++$labels['filterexists'] = 'ÑÑŠÑ‰ĞµÑÑ‚Ğ²ÑƒĞ²Ğ°';
++$labels['filternotexists'] = 'Ğ½Ğµ ÑÑŠÑ‰ĞµÑÑ‚Ğ²ÑƒĞ²Ğ°';
++$labels['filterunder'] = 'Ğ¿Ğ¾Ğ´';
++$labels['filterover'] = 'Ğ½Ğ°Ğ´';
++$labels['addrule'] = 'Ğ”Ğ¾Ğ±Ğ°Ğ²ÑĞ½Ğµ Ğ½Ğ° Ğ¿Ñ€Ğ°Ğ²Ğ¸Ğ»Ğ¾';
++$labels['delrule'] = 'Ğ˜Ğ·Ñ‚Ñ€Ğ¸Ğ²Ğ°Ğ½Ğµ Ğ½Ğ° Ğ¿Ñ€Ğ°Ğ²Ğ¸Ğ»Ğ¾';
++$labels['messagemoveto'] = 'ĞŸÑ€ĞµĞ¼ĞµÑÑ‚Ğ²Ğ°Ğ½Ğµ Ğ½Ğ° ÑÑŠĞ¾Ğ±Ñ‰ĞµĞ½Ğ¸ĞµÑ‚Ğ¾ Ğ²';
++$labels['messageredirect'] = 'ĞŸÑ€ĞµĞ½Ğ°ÑĞ¾Ñ‡Ğ²Ğ°Ğ½Ğµ Ğ½Ğ° ÑÑŠĞ¾Ğ±Ñ‰ĞµĞ½Ğ¸ĞµÑ‚Ğ¾ Ğ´Ğ¾';
++$labels['messagereply'] = 'ĞÑ‚Ğ³Ğ¾Ğ²Ğ¾Ñ€ ÑÑŠÑ ÑÑŠĞ¾Ğ±Ñ‰ĞµĞ½Ğ¸Ğµ';
++$labels['messagedelete'] = 'Ğ˜Ğ·Ñ‚Ñ€Ğ¸Ğ²Ğ°Ğ½Ğµ Ğ½Ğ° ÑÑŠĞ¾Ğ±Ñ‰ĞµĞ½Ğ¸Ğµ';
++$labels['messagediscard'] = 'ĞÑ‚Ñ…Ğ²ÑŠÑ€Ğ»ÑĞ½Ğµ ÑÑŠÑ ÑÑŠĞ¾Ğ±Ñ‰ĞµĞ½Ğ¸Ğµ';
++$labels['messagesrules'] = 'Ğ—Ğ° Ğ²Ñ…Ğ¾Ğ´ÑÑ‰Ğ°Ñ‚Ğ° Ğ¿Ğ¾Ñ‰Ğ°:';
++$labels['messagesactions'] = '...Ğ¸Ğ·Ğ¿ÑŠĞ»Ğ½ĞµĞ½Ğ¸Ğµ Ğ½Ğ° ÑĞ»ĞµĞ´Ğ½Ğ¸Ñ‚Ğµ Ğ´ĞµĞ¹ÑÑ‚Ğ²Ğ¸Ñ';
++$labels['add'] = 'Ğ”Ğ¾Ğ±Ğ°Ğ²ÑĞ½Ğµ';
++$labels['del'] = 'Ğ˜Ğ·Ñ‚Ñ€Ğ¸Ğ²Ğ°Ğ½Ğµ';
++$labels['sender'] = 'ĞŸĞ¾Ğ´Ğ°Ñ‚ĞµĞ»';
++$labels['recipient'] = 'ĞŸĞ¾Ğ»ÑƒÑ‡Ğ°Ñ‚ĞµĞ»';
++
+ ?>
+diff -ruNa rc-beta2-old/program/localization/bg_BG/messages.inc rc-beta2/program/localization/bg_BG/messages.inc
+--- rc-beta2-old/program/localization/bg_BG/messages.inc	2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/bg_BG/messages.inc	2009-02-11 09:01:37.707685875 +0100
+@@ -96,4 +96,16 @@
+ $messages['nofromaddress'] = 'Ğ›Ğ¸Ğ¿ÑĞ²Ğ° e-mail Ğ°Ğ´Ñ€ĞµÑ Ğ·Ğ° Ğ¸Ğ·Ğ±Ñ€Ğ°Ğ½Ğ°Ñ‚Ğ° ÑĞ°Ğ¼Ğ¾Ğ»Ğ¸Ñ‡Ğ½Ğ¾ÑÑ‚';
+ $messages['editorwarning'] = 'ĞŸÑ€ĞµĞ²ĞºĞ»ÑÑ‡Ğ²Ğ°Ğ½ĞµÑ‚Ğ¾ Ğ½Ğ° Ñ€ĞµĞ´Ğ°ĞºÑ‚Ğ¾Ñ€Ğ° Ğ² Ñ‚ĞµĞºÑÑ‚Ğ¾Ğ² Ñ€ĞµĞ¶Ğ¸Ğ¼ Ñ‰Ğµ Ğ´Ğ¾Ğ²ĞµĞ´Ğµ Ğ´Ğ¾ Ğ·Ğ°Ğ³ÑƒĞ±Ğ° Ğ½Ğ° Ñ„Ğ¾Ñ€Ğ¼Ğ°Ñ‚Ğ¸Ñ€Ğ°Ğ½ĞµÑ‚Ğ¾ Ğ½Ğ° Ñ‚ĞµĞºÑĞ°. Ğ¡Ğ¸Ğ³ÑƒÑ€Ğ½Ğ¸ Ğ»Ğ¸ ÑÑ‚Ğµ, Ñ‡Ğµ Ğ¸ÑĞºĞ°Ñ‚Ğµ Ğ´Ğ° Ğ¿Ñ€Ğ¾Ğ´ÑŠĞ»Ğ¶Ğ¸Ñ‚Ğµ?';
+ 
++$messages['filterunknownerror'] = 'ĞĞµĞ¸Ğ·Ğ²ĞµÑÑ‚Ğ½Ğ° Ğ³Ñ€ĞµÑˆĞºĞ° Ğ½Ğ° ÑÑŠÑ€Ğ²ÑŠÑ€Ğ°';
++$messages['filterconnerror'] = 'ĞĞµĞ²ÑŠĞ·Ğ¼Ğ¾Ğ¶Ğ½Ğ¾ÑÑ‚ Ğ·Ğ° ÑĞ²ÑŠÑ€Ğ·Ğ²Ğ°Ğ½Ğµ Ñ managesieve ÑÑŠÑ€Ğ²ÑŠÑ€Ğ° ';
++$messages['filterdeleteerror'] = 'ĞĞµĞ²ÑŠĞ·Ğ¼Ğ¾Ğ¶Ğ½Ğ¾ÑÑ‚ Ğ·Ğ° Ğ¸Ğ·Ñ‚Ñ€Ğ¸Ğ²Ğ°Ğ½Ğµ Ğ½Ğ° Ñ„Ğ¸Ğ»Ñ‚ÑŠÑ€. Ğ¡ÑŠÑ€Ğ²ÑŠÑ€ Ğ³Ñ€ĞµÑˆĞºĞ°';
++$messages['filterdeleted'] = 'Ğ¤Ğ¸Ğ»Ñ‚ÑŠÑ€ÑŠÑ‚ Ğµ Ğ¸Ğ·Ñ‚Ñ€Ğ¸Ñ‚ ÑƒÑĞ¿ĞµÑˆĞ½Ğ¾';
++$messages['filterconfirmdelete'] = 'ĞĞ°Ğ¸ÑÑ‚Ğ¸Ğ½Ğ° Ğ»Ğ¸ Ğ¸ÑĞºĞ°Ñ‚Ğµ Ğ´Ğ° Ğ¸Ğ·Ñ‚Ñ€Ğ¸ĞµÑ‚Ğµ Ğ¸Ğ·Ğ±Ñ€Ğ°Ğ½Ğ¸Ñ Ñ„Ğ¸Ğ»Ñ‚ÑŠÑ€?';
++$messages['filtersaved'] = 'Ğ¤Ğ¸Ğ»Ñ‚ÑŠÑ€ÑŠÑ‚ Ğµ Ğ·Ğ°Ğ¿Ğ¸ÑĞ°Ğ½ ÑƒÑĞ¿ĞµÑˆĞ½Ğ¾';
++$messages['filtersaveerror'] = 'Ğ¤Ğ¸Ğ»Ñ‚ÑŠÑ€ÑŠÑ‚ Ğ½Ğµ Ğ¼Ğ¾Ğ¶Ğµ Ğ´Ğ° Ğ±ÑŠĞ´Ğµ Ğ·Ğ°Ğ¿Ğ¸ÑĞ°Ğ½. Ğ¡ÑŠÑ€Ğ²ÑŠÑ€ Ğ³Ñ€ĞµÑˆĞºĞ°.';
++$messages['ruledeleteconfirm'] = 'Ğ¡Ğ¸Ğ³ÑƒÑ€Ğ½Ğ¸ Ğ»Ğ¸ ÑÑ‚Ğµ, Ñ‡Ğµ Ğ¸ÑĞºĞ°Ñ‚Ğµ Ğ´Ğ° Ğ¸Ğ·Ñ‚Ñ€Ğ¸ĞµÑ‚Ğµ Ğ¸Ğ·Ğ±Ñ€Ğ°Ğ½Ğ¾Ñ‚Ğ¾ Ğ¿Ñ€Ğ°Ğ²Ğ¸Ğ»Ğ¾?';
++$messages['actiondeleteconfirm'] = 'Ğ¡Ğ¸Ğ³ÑƒÑ€Ğ½Ğ¸ Ğ»Ğ¸ ÑÑ‚Ğµ, Ñ‡Ğµ Ğ¸ÑĞºĞ°Ñ‚Ğµ Ğ´Ğ° Ğ¸Ğ·Ñ‚Ñ€Ğ¸ĞµÑ‚Ğµ Ğ¸Ğ·Ğ±Ñ€Ğ°Ğ½Ğ¾Ñ‚Ğ¾ Ğ´ĞµĞ¹ÑÑ‚Ğ²Ğ¸Ğµ?';
++$messages['forbiddenchars'] = 'Ğ—Ğ°Ğ±Ñ€Ğ°Ğ½ĞµĞ½Ğ¸ ÑĞ¸Ğ¼Ğ²Ğ¾Ğ»Ğ¸ Ğ² Ğ¿Ğ¾Ğ»ĞµÑ‚Ğ¾';
++$messages['cannotbeempty'] = 'ĞŸĞ¾Ğ»ĞµÑ‚Ğ¾ Ğ½Ğµ Ğ¼Ğ¾Ğ¶Ğµ Ğ´Ğ° Ğ±ÑŠĞ´Ğµ Ğ¿Ñ€Ğ°Ğ·Ğ½Ğ¾';
++
+ ?>
+diff -ruNa rc-beta2-old/program/localization/de_DE/labels.inc rc-beta2/program/localization/de_DE/labels.inc
+--- rc-beta2-old/program/localization/de_DE/labels.inc	2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/de_DE/labels.inc	2009-02-11 08:59:02.592418514 +0100
 @@ -264,4 +264,36 @@
  $labels['MB'] = 'MB';
  $labels['GB'] = 'GB';
@@ -5607,9 +2446,9 @@ diff -ruNa 0.2-stable.old/program/localization/de_DE/labels.inc 0.2-stable/progr
 +$labels['sender'] = 'Absender';
 +$labels['recipient'] = 'EmpfÃ¤nger';
  ?>
-diff -ruNa 0.2-stable.old/program/localization/de_DE/messages.inc 0.2-stable/program/localization/de_DE/messages.inc
---- 0.2-stable.old/program/localization/de_DE/messages.inc	2008-11-17 19:52:43.000000000 +0100
-+++ 0.2-stable/program/localization/de_DE/messages.inc	2009-01-03 13:51:32.775811228 +0100
+diff -ruNa rc-beta2-old/program/localization/de_DE/messages.inc rc-beta2/program/localization/de_DE/messages.inc
+--- rc-beta2-old/program/localization/de_DE/messages.inc	2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/de_DE/messages.inc	2009-02-11 08:59:02.608418009 +0100
 @@ -95,4 +95,16 @@
  $messages['nofromaddress'] = 'Fehlende E-Mail-Adresse in ausgewÃ¤hlter IdentitÃ¤t';
  $messages['editorwarning'] = 'Beim Wechseln in den Texteditor gehen alle Textformatierungen verloren. MÃ¶chten Sie fortfahren?';
@@ -5627,10 +2466,10 @@ diff -ruNa 0.2-stable.old/program/localization/de_DE/messages.inc 0.2-stable/pro
 +$messages['cannotbeempty'] = 'Feld darf nicht leer sein';
 +
  ?>
-diff -ruNa 0.2-stable.old/program/localization/en_US/labels.inc 0.2-stable/program/localization/en_US/labels.inc
---- 0.2-stable.old/program/localization/en_US/labels.inc	2008-12-06 18:59:26.000000000 +0100
-+++ 0.2-stable/program/localization/en_US/labels.inc	2009-01-03 13:51:32.815812938 +0100
-@@ -323,4 +323,37 @@
+diff -ruNa rc-beta2-old/program/localization/en_US/labels.inc rc-beta2/program/localization/en_US/labels.inc
+--- rc-beta2-old/program/localization/en_US/labels.inc	2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/en_US/labels.inc	2009-02-24 12:57:54.884558014 +0100
+@@ -323,4 +323,43 @@
  $labels['MB'] = 'MB';
  $labels['GB'] = 'GB';
  
@@ -5653,6 +2492,12 @@ diff -ruNa 0.2-stable.old/program/localization/en_US/labels.inc 0.2-stable/progr
 +$labels['filternotexists'] = 'not exists';
 +$labels['filterunder'] = 'under';
 +$labels['filterover'] = 'over';
++$labels['filtermaxdays'] = ' at most every ';
++$labels['filterdays'] = ' days';
++$labels['vacationaddresses'] = 'Additional list of recipient e-mails (coma separated):';
++$labels['vacationdays'] = 'How often send messages (in days):';
++$labels['vacationreason'] = 'Message body (vacation reason):';
++$labels['rulestop'] = 'Stop evaluating rules';
 +$labels['addrule'] = 'Add rule';
 +$labels['delrule'] = 'Delete rule';
 +$labels['messagemoveto'] = 'Move message to';
@@ -5668,9 +2513,9 @@ diff -ruNa 0.2-stable.old/program/localization/en_US/labels.inc 0.2-stable/progr
 +$labels['recipient'] = 'Recipient';
 +
  ?>
-diff -ruNa 0.2-stable.old/program/localization/en_US/messages.inc 0.2-stable/program/localization/en_US/messages.inc
---- 0.2-stable.old/program/localization/en_US/messages.inc	2008-11-03 19:09:35.000000000 +0100
-+++ 0.2-stable/program/localization/en_US/messages.inc	2009-01-03 13:51:32.859813058 +0100
+diff -ruNa rc-beta2-old/program/localization/en_US/messages.inc rc-beta2/program/localization/en_US/messages.inc
+--- rc-beta2-old/program/localization/en_US/messages.inc	2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/en_US/messages.inc	2009-02-11 08:59:02.668421218 +0100
 @@ -95,4 +95,16 @@
  $messages['nofromaddress'] = 'Missing e-mail address in selected identity';
  $messages['editorwarning'] = 'Switching to the plain text editor will cause all text formatting to be lost. Do you wish to continue?';
@@ -5688,10 +2533,71 @@ diff -ruNa 0.2-stable.old/program/localization/en_US/messages.inc 0.2-stable/pro
 +$messages['cannotbeempty'] = 'Field cannot be empty';
 +
  ?>
-diff -ruNa 0.2-stable.old/program/localization/fr_FR/labels.inc 0.2-stable/program/localization/fr_FR/labels.inc
---- 0.2-stable.old/program/localization/fr_FR/labels.inc	2008-12-10 20:22:22.000000000 +0100
-+++ 0.2-stable/program/localization/fr_FR/labels.inc	2009-01-03 13:51:32.907813265 +0100
-@@ -266,4 +266,37 @@
+diff -ruNa rc-beta2-old/program/localization/fi_FI/labels.inc rc-beta2/program/localization/fi_FI/labels.inc
+--- rc-beta2-old/program/localization/fi_FI/labels.inc	2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/fi_FI/labels.inc	2009-02-11 09:02:55.793291753 +0100
+@@ -255,4 +255,37 @@
+ $labels['MB'] = 'Mt';
+ $labels['GB'] = 'Gt';
+ 
++$labels['filters'] = 'Suodattimet';
++$labels['managefilters'] = 'Muokkaa saapuvan sÃ¤hkÃ¶postin suodattimia';
++$labels['filtername'] = 'Suodattimen nimi';
++$labels['newfilter'] = 'Uusi suodatin';
++$labels['filteradd'] = 'LisÃ¤Ã¤ suodatin';
++$labels['filterdel'] = 'Poista suodatin';
++$labels['moveup'] = 'SiirrÃ¤ ylÃ¶s';
++$labels['movedown'] = 'SiirrÃ¤ alas';
++$labels['filterallof'] = 'TÃ¤smÃ¤Ã¤ kaikkien sÃ¤Ã¤ntÃ¶jen mukaan';
++$labels['filteranyof'] = 'TÃ¤smÃ¤Ã¤ minkÃ¤ tahansa sÃ¤Ã¤ntÃ¶jen mukaan';
++$labels['filterany'] = 'Kaikki viestit';
++$labels['filtercontains'] = 'SisÃ¤ltÃ¤Ã¤';
++$labels['filternotcontains'] = 'Ei SisÃ¤llÃ¤';
++$labels['filteris'] = 'on samanlainen kuin';
++$labels['filterisnot'] = 'ei ole samanlainen kuin';
++$labels['filterexists'] = 'on olemassa';
++$labels['filternotexists'] = 'ei ole olemassa';
++$labels['filterunder'] = 'alla';
++$labels['filterover'] = 'yli';
++$labels['addrule'] = 'LisÃ¤Ã¤ sÃ¤Ã¤ntÃ¶';
++$labels['delrule'] = 'Poista sÃ¤Ã¤ntÃ¶';
++$labels['messagemoveto'] = 'SiirrÃ¤ viesti';
++$labels['messageredirect'] = 'Uudelleen ohjaa viesti';
++$labels['messagereply'] = 'Vastaa viestin kanssa';
++$labels['messagedelete'] = 'Poista viesti';
++$labels['messagediscard'] = 'HylkÃ¤Ã¤ viesti';
++$labels['messagesrules'] = 'Saapuva sÃ¤hkÃ¶posti';
++$labels['messagesactions'] = 'Suorita seuraavat tapahtumat';
++$labels['add'] = 'LisÃ¤Ã¤';
++$labels['del'] = 'Poista';
++$labels['sender'] = 'LÃ¤hettÃ¤jÃ¤';
++$labels['recipient'] = 'Vastaanottaja';
++
+ ?>
+diff -ruNa rc-beta2-old/program/localization/fi_FI/messages.inc rc-beta2/program/localization/fi_FI/messages.inc
+--- rc-beta2-old/program/localization/fi_FI/messages.inc	2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/fi_FI/messages.inc	2009-02-11 09:02:48.817130299 +0100
+@@ -95,4 +95,16 @@
+ $messages['opnotpermitted'] = 'Toiminto ei ole sallittu!';
+ $messages['nofromaddress'] = 'Valittu identiteetti ei sisÃ¤llÃ¤ sÃ¤hkÃ¶postiosoitetta';
+ 
++$messages['filterunknownerror'] = 'Tuntematon palvelin virhe';
++$messages['filterconnerror'] = 'YhdistÃ¤minen palvelimeen epÃ¤onnistui';
++$messages['filterdeleteerror'] = 'Suodattimen poistaminen epÃ¤onnistui. Palvelin virhe';
++$messages['filterdeleted'] = 'Suodatin poistettu';
++$messages['filterconfirmdelete'] = 'Haluatko varmasti poistaa valitut suodattimet?';
++$messages['filtersaved'] = 'Suodatin tallennettu';
++$messages['filtersaveerror'] = 'Suodattimen tallennus epÃ¤onnistui. Palvelin virhe';
++$messages['ruledeleteconfirm'] = 'Haluatko poistaa valitut sÃ¤Ã¤nnÃ¶t?';
++$messages['actiondeleteconfirm'] = 'Haluatko poistaa valitut tapahtumat?';
++$messages['forbiddenchars'] = 'SisÃ¤ltÃ¤Ã¤ kiellettyjÃ¤ kirjaimia';
++$messages['cannotbeempty'] = 'KenttÃ¤ ei voi olla tyhjÃ¤';
++
+ ?>
+diff -ruNa rc-beta2-old/program/localization/fr_FR/labels.inc rc-beta2/program/localization/fr_FR/labels.inc
+--- rc-beta2-old/program/localization/fr_FR/labels.inc	2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/fr_FR/labels.inc	2009-02-24 10:59:00.808744784 +0100
+@@ -266,4 +266,38 @@
  $labels['MB'] = 'Mo';
  $labels['GB'] = 'Go';
  
@@ -5723,15 +2629,16 @@ diff -ruNa 0.2-stable.old/program/localization/fr_FR/labels.inc 0.2-stable/progr
 +$labels['messagediscard'] = 'Rejeter avec le message';
 +$labels['messagesrules'] = 'Pour les mails entrants:';
 +$labels['messagesactions'] = '...exÃ©cuter les actions suivantes:';
++$labels['rulestop'] = 'Ne plus Ã©valuer d\'autre rÃ¨gle';
 +$labels['add'] = 'Ajouter';
 +$labels['del'] = 'Supprimer';
 +$labels['sender'] = 'ExpÃ©diteur';
 +$labels['recipient'] = 'Destinataire';
 +
  ?>
-diff -ruNa 0.2-stable.old/program/localization/fr_FR/messages.inc 0.2-stable/program/localization/fr_FR/messages.inc
---- 0.2-stable.old/program/localization/fr_FR/messages.inc	2008-12-01 11:46:11.000000000 +0100
-+++ 0.2-stable/program/localization/fr_FR/messages.inc	2009-01-03 13:51:32.951813944 +0100
+diff -ruNa rc-beta2-old/program/localization/fr_FR/messages.inc rc-beta2/program/localization/fr_FR/messages.inc
+--- rc-beta2-old/program/localization/fr_FR/messages.inc	2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/fr_FR/messages.inc	2009-02-11 08:59:02.700421608 +0100
 @@ -97,4 +97,16 @@
  $messages['nofromaddress'] = 'Il manque une adresse e-mail dans l\'identitÃ©e sÃ©lectionnÃ©e';
  $messages['editorwarning'] = 'Passer Ã  l\'Ã©diteur texte seul causera la perte du formatage du texte. Voulez-vous continuer ?';
@@ -5749,10 +2656,71 @@ diff -ruNa 0.2-stable.old/program/localization/fr_FR/messages.inc 0.2-stable/pro
 +$messages['cannotbeempty'] = 'Le champ ne peut pas Ãªtre vide';
 +
  ?>
-diff -ruNa 0.2-stable.old/program/localization/pl_PL/labels.inc 0.2-stable/program/localization/pl_PL/labels.inc
---- 0.2-stable.old/program/localization/pl_PL/labels.inc	2008-12-06 20:31:06.000000000 +0100
-+++ 0.2-stable/program/localization/pl_PL/labels.inc	2009-01-03 13:51:32.991816491 +0100
-@@ -269,4 +269,37 @@
+diff -ruNa rc-beta2-old/program/localization/nl_NL/labels.inc rc-beta2/program/localization/nl_NL/labels.inc
+--- rc-beta2-old/program/localization/nl_NL/labels.inc	2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/nl_NL/labels.inc	2009-02-11 09:03:53.002484686 +0100
+@@ -266,4 +266,37 @@
+ $labels['MB'] = 'MB';
+ $labels['GB'] = 'GB';
+ 
++$labels['filters'] = 'Filters';
++$labels['managefilters'] = 'Beheer inkomende mail filters';
++$labels['filtername'] = 'Filternaam';
++$labels['newfilter'] = 'Nieuw filter';
++$labels['filteradd'] = 'Filter toevoegen';
++$labels['filterdel'] = 'Filter verwijderen';
++$labels['moveup'] = 'Omhoog';
++$labels['movedown'] = 'Omlaag';
++$labels['filterallof'] = 'die voldoen aan een van de volgende regels';
++$labels['filteranyof'] = 'die voldoen aan alle volgende regels';
++$labels['filterany'] = 'alle berichten';
++$labels['filtercontains'] = 'bevat';
++$labels['filternotcontains'] = 'bevat niet';
++$labels['filteris'] = 'is gelijk aan';
++$labels['filterisnot'] = 'is niet gelijk aan';
++$labels['filterexists'] = 'bestaat';
++$labels['filternotexists'] = 'bestaat niet';
++$labels['filterunder'] = 'onder';
++$labels['filterover'] = 'over';
++$labels['addrule'] = 'Regel toevoegen';
++$labels['delrule'] = 'Regel verwijderen';
++$labels['messagemoveto'] = 'Verplaats bericht naar';
++$labels['messageredirect'] = 'Redirect bericht naar';
++$labels['messagereply'] = 'Beantwoord met bericht';
++$labels['messagedelete'] = 'Verwijder bericht';
++$labels['messagediscard'] = 'Wijs af met bericht';
++$labels['messagesrules'] = 'Voor binnenkomende e-mail';
++$labels['messagesactions'] = '...voer de volgende acties uit';
++$labels['add'] = 'Toevoegen';
++$labels['del'] = 'Verwijderen';
++$labels['sender'] = 'Afzender';
++$labels['recipient'] = 'Ontvanger';
++
+ ?>
+diff -ruNa rc-beta2-old/program/localization/nl_NL/messages.inc rc-beta2/program/localization/nl_NL/messages.inc
+--- rc-beta2-old/program/localization/nl_NL/messages.inc	2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/nl_NL/messages.inc	2009-02-11 09:03:46.162342625 +0100
+@@ -96,4 +96,16 @@
+ $messages['nofromaddress'] = 'Het e-mailadres mist in de geselecteerde identiteit';
+ $messages['editorwarning'] = 'Door het overschakelen naar de platte tekst editor gaat alle opmaak verloren. Weet je zeker dat je verder wil gaan?';
+ 
++$messages['filterunknownerror'] = 'Onbekende fout';
++$messages['filterconnerror'] = 'Kan geen verbinding maken met de managesieve server';
++$messages['filterdeleteerror'] = 'Kan filter niet verwijderen. Er is een fout opgetreden';
++$messages['filterdeleted'] = 'Filter succesvol verwijderd';
++$messages['filterconfirmdelete'] = 'Weet je zeker dat je het geselecteerde filter wilt verwijderen?';
++$messages['filtersaved'] = 'Filter succesvol opgeslagen';
++$messages['filtersaveerror'] = 'Kan filter niet opslaan. Er is een fout opgetreden.';
++$messages['ruledeleteconfirm'] = 'Weet je zeker dat je de geselecteerde regel wilt verwijderen?';
++$messages['actiondeleteconfirm'] = 'Weet je zeker dat je de geselecteerde actie wilt verwijderen?';
++$messages['forbiddenchars'] = 'Verboden karakters in het veld';
++$messages['cannotbeempty'] = 'Veld mag niet leeg zijn';
++
+ ?>
+diff -ruNa rc-beta2-old/program/localization/pl_PL/labels.inc rc-beta2/program/localization/pl_PL/labels.inc
+--- rc-beta2-old/program/localization/pl_PL/labels.inc	2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/pl_PL/labels.inc	2009-02-24 12:58:16.989045093 +0100
+@@ -269,4 +269,41 @@
  $labels['GB'] = 'GB';
  $labels['checkallfolders'] = 'Sprawdzaj czy nadeszÅ‚y nowe wiadomoÅ›ci we wszystkich folderach';
  
@@ -5777,9 +2745,9 @@ diff -ruNa 0.2-stable.old/program/localization/pl_PL/labels.inc 0.2-stable/progr
 +$labels['filterover'] = 'ponad';
 +$labels['addrule'] = 'Dodaj reguÅ‚Ä™';
 +$labels['delrule'] = 'UsuÅ„ reguÅ‚Ä™';
-+$labels['messagemoveto'] = 'PrzenieÅ› wiadomoÅ›Ä‡ do';
++$labels['messagemoveto'] = 'PrzenieÅ› wiadomoÅ›Ä‡ do folderu';
 +$labels['messageredirect'] = 'PrzekaÅ¼ wiadomoÅ›Ä‡ na konto';
-+$labels['messagereply'] = 'Odpowiedz wiadomoÅ›ciÄ… o treÅ›ci';
++$labels['messagereply'] = 'Odpowiedz';
 +$labels['messagedelete'] = 'UsuÅ„ wiadomoÅ›Ä‡';
 +$labels['messagediscard'] = 'OdrzuÄ‡ z komunikatem';
 +$labels['messagesrules'] = 'W stosunku do przychodzÄ…cych wiadomoÅ›ci:';
@@ -5788,11 +2756,15 @@ diff -ruNa 0.2-stable.old/program/localization/pl_PL/labels.inc 0.2-stable/progr
 +$labels['del'] = 'UsuÅ„';
 +$labels['sender'] = 'Nadawca';
 +$labels['recipient'] = 'Odbiorca';
++$labels['vacationdays'] = 'CzÄ™stotliwoÅ›Ä‡ wysyÅ‚ania wiadomoÅ›ci (w dniach):';
++$labels['vacationaddresses'] = 'Lista dodatkowych adresÃ³w odbiorcÃ³w (oddzielonych przecinkami):';
++$labels['vacationreason'] = 'TreÅ›Ä‡ (przyczyna nieobecnoÅ›ci):';
++$labels['rulestop'] = 'Przerwij przetwarzanie reguÅ‚';
 +
  ?>
-diff -ruNa 0.2-stable.old/program/localization/pl_PL/messages.inc 0.2-stable/program/localization/pl_PL/messages.inc
---- 0.2-stable.old/program/localization/pl_PL/messages.inc	2008-11-03 15:26:23.000000000 +0100
-+++ 0.2-stable/program/localization/pl_PL/messages.inc	2009-01-03 13:51:33.035817170 +0100
+diff -ruNa rc-beta2-old/program/localization/pl_PL/messages.inc rc-beta2/program/localization/pl_PL/messages.inc
+--- rc-beta2-old/program/localization/pl_PL/messages.inc	2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/pl_PL/messages.inc	2009-02-11 08:59:02.760411128 +0100
 @@ -100,4 +100,16 @@
  $messages['nofromaddress'] = 'Brak adresu e-mail w wybranej toÅ¼samoÅ›ci';
  $messages['editorwarning'] = 'Zmiana edytora spowoduje utratÄ™ formatowania tekstu. Czy jesteÅ› pewien, Å¼e chcesz to zrobiÄ‡?';
@@ -5810,10 +2782,10 @@ diff -ruNa 0.2-stable.old/program/localization/pl_PL/messages.inc 0.2-stable/pro
 +$messages['cannotbeempty'] = 'Pole nie moÅ¼e byÄ‡ puste';
 +
  ?>
-diff -ruNa 0.2-stable.old/program/localization/ru_RU/labels.inc 0.2-stable/program/localization/ru_RU/labels.inc
---- 0.2-stable.old/program/localization/ru_RU/labels.inc	2008-12-04 11:21:34.000000000 +0100
-+++ 0.2-stable/program/localization/ru_RU/labels.inc	2009-01-03 13:51:33.075804421 +0100
-@@ -262,4 +262,37 @@
+diff -ruNa rc-beta2-old/program/localization/ru_RU/labels.inc rc-beta2/program/localization/ru_RU/labels.inc
+--- rc-beta2-old/program/localization/ru_RU/labels.inc	2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/ru_RU/labels.inc	2009-02-11 08:59:02.780419927 +0100
+@@ -266,4 +266,37 @@
  $labels['MB'] = 'ĞœĞ‘';
  $labels['GB'] = 'Ğ“Ğ‘';
  
@@ -5851,9 +2823,9 @@ diff -ruNa 0.2-stable.old/program/localization/ru_RU/labels.inc 0.2-stable/progr
 +$labels['recipient'] = 'ĞŸĞ¾Ğ»ÑƒÑ‡Ğ°Ñ‚ĞµĞ»ÑŒ';
 +
  ?>
-diff -ruNa 0.2-stable.old/program/localization/ru_RU/messages.inc 0.2-stable/program/localization/ru_RU/messages.inc
---- 0.2-stable.old/program/localization/ru_RU/messages.inc	2008-12-01 18:50:13.000000000 +0100
-+++ 0.2-stable/program/localization/ru_RU/messages.inc	2009-01-03 13:51:33.119804891 +0100
+diff -ruNa rc-beta2-old/program/localization/ru_RU/messages.inc rc-beta2/program/localization/ru_RU/messages.inc
+--- rc-beta2-old/program/localization/ru_RU/messages.inc	2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/ru_RU/messages.inc	2009-02-11 08:59:02.816425148 +0100
 @@ -97,4 +97,16 @@
  $messages['nofromaddress'] = 'Ğ’ Ğ²Ñ‹Ğ±Ñ€Ğ°Ğ½Ğ½Ğ¾Ğ¼ Ğ¿Ñ€Ğ¾Ñ„Ğ¸Ğ»Ğµ Ğ½Ğµ Ñ…Ğ²Ğ°Ñ‚Ğ°ĞµÑ‚ Ğ°Ğ´Ñ€ĞµÑĞ° ÑĞ»ĞµĞºÑ‚Ñ€Ğ¾Ğ½Ğ½Ğ¾Ğ¹ Ğ¿Ğ¾Ñ‡Ñ‚Ñ‹';
  $messages['editorwarning'] = 'ĞŸÑ€Ğ¸ Ğ¿ĞµÑ€ĞµĞºĞ»ÑÑ‡ĞµĞ½Ğ¸Ğ¸ Ğ² Ñ€ĞµĞ´Ğ°ĞºÑ‚Ğ¾Ñ€ Ğ¿Ñ€Ğ¾ÑÑ‚Ğ¾Ğ³Ğ¾ Ñ‚ĞµĞºÑÑ‚Ğ° Ğ²ÑĞµ Ñ„Ğ¾Ñ€Ğ¼Ğ°Ñ‚Ğ¸Ñ€Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ Ğ±ÑƒĞ´ĞµÑ‚ Ğ¿Ğ¾Ñ‚ĞµÑ€ÑĞ½Ğ¾. ĞŸÑ€Ğ¾Ğ´Ğ¾Ğ»Ğ¶Ğ¸Ñ‚ÑŒ?';
@@ -5871,9 +2843,9 @@ diff -ruNa 0.2-stable.old/program/localization/ru_RU/messages.inc 0.2-stable/pro
 +$messages['cannotbeempty'] = 'ĞŸĞ¾Ğ»Ğµ Ğ½Ğµ Ğ¼Ğ¾Ğ¶ĞµÑ‚ Ğ±Ñ‹Ñ‚ÑŒ Ğ¿ÑƒÑÑ‚Ñ‹Ğ¼';
 +
  ?>
-diff -ruNa 0.2-stable.old/program/localization/zh_CN/labels.inc 0.2-stable/program/localization/zh_CN/labels.inc
---- 0.2-stable.old/program/localization/zh_CN/labels.inc	2008-12-14 22:37:19.000000000 +0100
-+++ 0.2-stable/program/localization/zh_CN/labels.inc	2009-01-03 13:51:33.159819590 +0100
+diff -ruNa rc-beta2-old/program/localization/zh_CN/labels.inc rc-beta2/program/localization/zh_CN/labels.inc
+--- rc-beta2-old/program/localization/zh_CN/labels.inc	2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/zh_CN/labels.inc	2009-02-11 08:59:02.860413217 +0100
 @@ -265,4 +265,36 @@
  $labels['MB'] = 'MB';
  $labels['GB'] = 'GB';
@@ -5911,9 +2883,9 @@ diff -ruNa 0.2-stable.old/program/localization/zh_CN/labels.inc 0.2-stable/progr
 +$labels['sender'] = 'å‘ä»¶äºº';
 +$labels['recipient'] = 'æ”¶ä»¶äºº';
  ?>
-diff -ruNa 0.2-stable.old/program/localization/zh_CN/messages.inc 0.2-stable/program/localization/zh_CN/messages.inc
---- 0.2-stable.old/program/localization/zh_CN/messages.inc	2008-12-08 21:44:46.000000000 +0100
-+++ 0.2-stable/program/localization/zh_CN/messages.inc	2009-01-03 13:51:33.199822697 +0100
+diff -ruNa rc-beta2-old/program/localization/zh_CN/messages.inc rc-beta2/program/localization/zh_CN/messages.inc
+--- rc-beta2-old/program/localization/zh_CN/messages.inc	2009-02-11 08:50:50.000000000 +0100
++++ rc-beta2/program/localization/zh_CN/messages.inc	2009-02-11 08:59:02.880423971 +0100
 @@ -96,4 +96,16 @@
  $messages['nofromaddress'] = 'é€‰ç§çš„èº«ä»½ä¸­æ²¡æœ‰é‚®ä»¶åœ°å€';
  $messages['editorwarning'] = 'åˆ‡æ¢åˆ°çº¯æ–‡æœ¬ç¼–è¾‘å™¨å°†å¯¼è‡´é‚®ä»¶æ­£æ–‡ä¸­çš„æ‰€æœ‰æ–‡æœ¬æ ¼å¼å¤±æ•ˆï¼Œæ‚¨ç¡®å®šè¦è¿™æ ·åšå—ï¼Ÿ';
@@ -5931,10 +2903,10 @@ diff -ruNa 0.2-stable.old/program/localization/zh_CN/messages.inc 0.2-stable/pro
 +$messages['cannotbeempty'] = 'å†…å®¹ä¸èƒ½ä¸ºç©º';
 +
  ?>
-diff -ruNa 0.2-stable.old/program/steps/settings/managesieve.inc 0.2-stable/program/steps/settings/managesieve.inc
---- 0.2-stable.old/program/steps/settings/managesieve.inc	1970-01-01 01:00:00.000000000 +0100
-+++ 0.2-stable/program/steps/settings/managesieve.inc	2009-01-03 13:51:33.223807086 +0100
-@@ -0,0 +1,756 @@
+diff -ruNa rc-beta2-old/program/steps/settings/managesieve.inc rc-beta2/program/steps/settings/managesieve.inc
+--- rc-beta2-old/program/steps/settings/managesieve.inc	1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/program/steps/settings/managesieve.inc	2009-03-01 15:40:30.181976376 +0100
+@@ -0,0 +1,807 @@
 +<?php
 +
 +/*
@@ -5959,7 +2931,8 @@ diff -ruNa 0.2-stable.old/program/steps/settings/managesieve.inc 0.2-stable/prog
 +		$RCMAIL->decrypt_passwd($_SESSION['password']), 
 +		($CONFIG['managesieve_host'] ? $CONFIG['managesieve_host'] : 'localhost'),
 +		($CONFIG['managesieve_port'] ? $CONFIG['managesieve_port'] : 2000),
-+		(bool) $CONFIG['managesieve_usetls']);
++		(bool) $CONFIG['managesieve_usetls'],
++		$CONFIG['managesieve_disabled_extensions']);
 +
 +$error = $SIEVE->error();
 +
@@ -6084,6 +3057,9 @@ diff -ruNa 0.2-stable.old/program/steps/settings/managesieve.inc 0.2-stable/prog
 +  $mailboxes = $_POST['_action_mailbox'];
 +  $act_targets = $_POST['_action_target'];
 +  $area_targets = $_POST['_action_target_area'];
++  $reasons = $_POST['_action_reason'];
++  $addresses = $_POST['_action_addresses'];
++  $days = $_POST['_action_days'];
 +
 +  // we need a "hack" for radiobuttons
 +  foreach ($sizeitems as $item)
@@ -6216,6 +3192,30 @@ diff -ruNa 0.2-stable.old/program/steps/settings/managesieve.inc 0.2-stable/prog
 +    	  $FORM_ERR['actions'][$i]['target'] = rcube_label('cannotbeempty');
 +        else if (!check_email($S['actions'][$i]['target']))
 +    	  $FORM_ERR['actions'][$i]['target'] = rcube_label('noemailwarning');
++      break;
++      case 'vacation':
++        $reason = strip_val($reasons[$idx]);
++        $S['actions'][$i]['reason'] = str_replace("\r\n", "\n", $reason);
++	$S['actions'][$i]['days'] = $days[$idx];
++	$S['actions'][$i]['addresses'] = explode(',', $addresses[$idx]);
++// @TODO: vacation :subject, :mime, :from, :handle
++
++	if ($S['actions'][$i]['addresses']) {
++	  foreach($S['actions'][$i]['addresses'] as $aidx => $address) {
++	    $address = trim($address);
++	    if (!$address)
++	      unset($S['actions'][$i]['addresses'][$aidx]);
++	    else if(!check_email($address)) {
++	      $FORM_ERR['actions'][$i]['addresses'] = rcube_label('noemailwarning');
++	      break;
++	    } else
++	      $S['actions'][$i]['addresses'][$aidx] = $address;
++	  }
++	}
++        if ($S['actions'][$i]['reason'] == '')
++    	  $FORM_ERR['actions'][$i]['reason'] = rcube_label('cannotbeempty');
++        if ($S['actions'][$i]['days'] && !preg_match('/^[0-9]+$/', $S['actions'][$i]['days']))
++    	  $FORM_ERR['actions'][$i]['days'] = rcube_label('forbiddenchars');
 +      break;
 +    }
 +  
@@ -6404,7 +3404,8 @@ diff -ruNa 0.2-stable.old/program/steps/settings/managesieve.inc 0.2-stable/prog
 +  $rows_num = isset($S) ? sizeof($S['tests']) : sizeof($SCRIPT[$fid]['tests']);
 +  
 +  $out = $div ? '<div class="rulerow" id="rulerow' .$id .'">'."\n" : '';
-+  $out .= '<div class="rowactions">';
++
++  $out .= '<table><tr><td class="rowactions">';
 +
 +  // headers select
 +  $select_header = new html_select(array('name' => "_header[]", 'id' => 'header'.$id,
@@ -6426,6 +3427,8 @@ diff -ruNa 0.2-stable.old/program/steps/settings/managesieve.inc 0.2-stable/prog
 +    $out .= $select_header->show('...');
 +  else
 +    $out .= $select_header->show();
++
++  $out .= '</td><td class="rowtargets">';
 +
 +  if ((isset($rule['test']) && $rule['test'] == 'header') && !in_array($rule['arg1'], $HEADERS))
 +    $custom = $rule['arg1'];
@@ -6486,17 +3489,16 @@ diff -ruNa 0.2-stable.old/program/steps/settings/managesieve.inc 0.2-stable/prog
 +	<input type="radio" name="_rule_size_item['.$id.']" value="M"'. ($sizeitem=='M' ? ' checked="checked"' : '') .' class="radio" />MB
 +	<input type="radio" name="_rule_size_item['.$id.']" value="G"'. ($sizeitem=='G' ? ' checked="checked"' : '') .' class="radio" />GB';
 +  $out .= '</div>';
-+
-+  $out .= "</div>\n";
++  $out .= '</td>';
 +  
 +  // add/del buttons
-+  $out .= '<div class="rowbuttons">';
++  $out .= '<td class="rowbuttons">';
 +  $out .= '<input type="button" id="ruleadd' . $id .'" value="'. Q(rcube_label('add')). '" 
 +    onclick="rcmail.sievefilter_ruleadd(' . $id .')" class="button" /> ';
 +  $out .= '<input type="button" id="ruledel' . $id .'" value="'. Q(rcube_label('del')). '"
 +    onclick="rcmail.sievefilter_ruledel(' . $id .')" class="button' . ($rows_num<2 ? ' disabled' : '') .'"'
 +    . ($rows_num<2 ? ' disabled="disabled"' : '') .' />';
-+  $out .= '</div>';
++  $out .= '</td></tr></table>';
 +
 +  $out .= $div ? "</div>\n" : '';
 +        
@@ -6511,8 +3513,9 @@ diff -ruNa 0.2-stable.old/program/steps/settings/managesieve.inc 0.2-stable/prog
 +  $rows_num = isset($S) ? sizeof($S['actions']) : sizeof($SCRIPT[$fid]['actions']);
 +
 +  $out = $div ? '<div class="actionrow" id="actionrow' .$id .'">'."\n" : '';
-+  $out .= '<div class="rowactions">';
-+  
++
++  $out .= '<table><tr><td class="rowactions">';
++
 +  // action select
 +  $select_action = new html_select(array('name' => "_action_type[]", 'id' => 'action_type'.$id,
 +    'onchange' => 'action_type_select(' .$id .')'));
@@ -6523,24 +3526,43 @@ diff -ruNa 0.2-stable.old/program/steps/settings/managesieve.inc 0.2-stable/prog
 +    $select_action->add(Q(rcube_label('messagediscard')), 'reject');
 +  elseif (in_array('ereject', $EXT))
 +    $select_action->add(Q(rcube_label('messagediscard')), 'ereject');
-+//  if (in_array('vacation', $EXT))
-+//	$select_action->add(Q(rcube_label('messagereply')), 'vacation');
++  if (in_array('vacation', $EXT))
++    $select_action->add(Q(rcube_label('messagereply')), 'vacation');
 +  $select_action->add(Q(rcube_label('messagedelete')), 'discard');
++  $select_action->add(Q(rcube_label('rulestop')), 'stop');
 +
 +  $out .= $select_action->show($action['type']);
++  $out .= '</td>';
 +
 +  // actions target inputs
++  $out .= '<td class="rowtargets">';
++  // shared targets
 +  $out .= '<input type="text" name="_action_target[]" id="action_target' .$id. '" '
 +	.'value="' .($action['type']=='redirect' ? Q($action['target'], 'strict', false) : ''). '" size="40" '
 +	.'style="display:' .($action['type']=='redirect' ? 'inline' : 'none') .'" '
 +	. error_class($id, 'action', 'target') .' />';
-+
 +  $out .= '<textarea name="_action_target_area[]" id="action_target_area' .$id. '" '
 +	.'rows="3" cols="40" '. error_class($id, 'action', 'targetarea')
-+	.'style="display:' .($action['type']=='reject' || $action['type']=='ereject' ? 'inline' : 'none') .'">'
-+	. ($action['type']=='reject' || $action['type']=='ereject' ? Q($action['target'], 'strict', false) : '')
++	.'style="display:' .(in_array($action['type'], array('reject', 'ereject')) ? 'inline' : 'none') .'">'
++	. (in_array($action['type'], array('reject', 'ereject')) ? Q($action['target'], 'strict', false) : '')
 +	. "</textarea>\n";
-+  
++
++  // vacation
++  $out .= '<div id="action_vacation' .$id.'" style="display:' .($action['type']=='vacation' ? 'inline' : 'none') .'">';
++  $out .= '<span class="label">'. Q(rcube_label('vacationreason')) .'</span><br />'
++	.'<textarea name="_action_reason[]" id="action_reason' .$id. '" '
++	.'rows="3" cols="40" '. error_class($id, 'action', 'reason') . '>'
++	. Q($action['reason'], 'strict', false) . "</textarea>\n";
++  $out .= '<br /><span class="label">' .Q(rcube_label('vacationaddresses')) . '</span><br />'
++	.'<input type="text" name="_action_addresses[]" '
++        .'value="' . (is_array($action['addresses']) ? Q(implode(', ', $action['addresses']), 'strict', false) : $action['addresses']) . '" size="40" '
++        . error_class($id, 'action', 'addresses') .' />';
++  $out .= '<br /><span class="label">' . Q(rcube_label('vacationdays')) . '</span><br />'
++	.'<input type="text" name="_action_days[]" '
++        .'value="' .Q($action['days'], 'strict', false) . '" size="2" '
++        . error_class($id, 'action', 'days') .' />';
++  $out .= '</div>';
++
 +  // mailbox select
 +  $out .= '<select id="action_mailbox' .$id. '" name="_action_mailbox[]" style="display:' 
 +    .(!isset($action) || $action['type']=='fileinto' ? 'inline' : 'none'). '">';
@@ -6576,17 +3598,18 @@ diff -ruNa 0.2-stable.old/program/steps/settings/managesieve.inc 0.2-stable/prog
 +		    Q(abbreviate_string($foldername, 40 - (2 * sizeof($names)-1))));
 +  }
 +  $out .= '</select>';
-+
-+  $out .= "</div>\n";
++  $out .= '</td>';
 +
 +  // add/del buttons
-+  $out .= '<div class="rowbuttons">';
++  $out .= '<td class="rowbuttons">';
 +  $out .= '<input type="button" id="actionadd' . $id .'" value="'. Q(rcube_label('add')). '" 
 +    onclick="rcmail.sievefilter_actionadd(' . $id .')" class="button" /> ';
 +  $out .= '<input type="button" id="actiondel' . $id .'" value="'. Q(rcube_label('del')). '"
 +    onclick="rcmail.sievefilter_actiondel(' . $id .')" class="button' . ($rows_num<2 ? ' disabled' : '') .'"'
 +    . ($rows_num<2 ? ' disabled="disabled"' : '') .' />';
-+  $out .= '</div>';
++  $out .= '</td>';
++  
++  $out .= '</tr></table>';
 +
 +  $out .= $div ? "</div>\n" : '';
 +
@@ -6691,10 +3714,10 @@ diff -ruNa 0.2-stable.old/program/steps/settings/managesieve.inc 0.2-stable/prog
 +  $OUTPUT->send('managesieve');
 +
 +?>
-diff -ruNa 0.2-stable.old/skins/default/filters.css 0.2-stable/skins/default/filters.css
---- 0.2-stable.old/skins/default/filters.css	1970-01-01 01:00:00.000000000 +0100
-+++ 0.2-stable/skins/default/filters.css	2009-01-03 13:51:33.231815851 +0100
-@@ -0,0 +1,138 @@
+diff -ruNa rc-beta2-old/skins/default/filters.css rc-beta2/skins/default/filters.css
+--- rc-beta2-old/skins/default/filters.css	1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/filters.css	2009-03-01 15:32:29.743529598 +0100
+@@ -0,0 +1,157 @@
 +/***** RoundCube|Filters styles *****/
 +
 +
@@ -6786,6 +3809,9 @@ diff -ruNa 0.2-stable.old/skins/default/filters.css 0.2-stable/skins/default/fil
 +#rules, #actions
 +{
 +  margin-top: 5px;
++  width: 100%;
++  padding: 0;
++  border-collapse: collapse;
 +}
 +
 +div.rulerow, div.actionrow
@@ -6808,14 +3834,23 @@ diff -ruNa 0.2-stable.old/skins/default/filters.css 0.2-stable/skins/default/fil
 +  border: 1px solid silver;
 +}
 +
-+div.rowbuttons
++div.rulerow table, div.actionrow table
 +{
-+  float: right;
++  width: 100%;
++  padding: 0px;
 +}
 +
-+div.rowactions
++td.rowbuttons
 +{
-+  float: left;
++  width: 98%;
++  text-align: right;
++  white-space: nowrap;
++}
++
++td.rowactions, td.rowtargets
++{
++  width: 1%;
++  white-space: nowrap;
 +}
 +
 +input.disabled, input.disabled:hover
@@ -6833,9 +3868,16 @@ diff -ruNa 0.2-stable.old/skins/default/filters.css 0.2-stable/skins/default/fil
 +{
 +  border: 0;
 +}
-diff -ruNa 0.2-stable.old/skins/default/images/buttons/filter_add_pas.png 0.2-stable/skins/default/images/buttons/filter_add_pas.png
---- 0.2-stable.old/skins/default/images/buttons/filter_add_pas.png	1970-01-01 01:00:00.000000000 +0100
-+++ 0.2-stable/skins/default/images/buttons/filter_add_pas.png	2009-01-03 13:51:33.255817491 +0100
++
++span.label
++{
++  color: #666666;
++  font-size: 10px;
++  white-space: nowrap;
++}
+diff -ruNa rc-beta2-old/skins/default/images/buttons/filter_add_pas.png rc-beta2/skins/default/images/buttons/filter_add_pas.png
+--- rc-beta2-old/skins/default/images/buttons/filter_add_pas.png	1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/images/buttons/filter_add_pas.png	2009-02-11 08:59:02.944429779 +0100
 @@ -0,0 +1,6 @@
 +‰PNG
 +
@@ -6844,9 +3886,9 @@ diff -ruNa 0.2-stable.old/skins/default/images/buttons/filter_add_pas.png 0.2-st
 +?”ªv9­òî½‡Â³“ïñ­÷Yëİ£—õ	ª$Ö1_ïpivõ¹Õù¥¿îözßäƒßˆ˜ÃÔPËˆ´T7©hyH%«³(†ÆßîŞâÕ»où‚ºKJ•‚TsÖz›¼»ıjŸzöËç>óë©}÷Íİ~ï3¤yXß+$B™ÏPíò½jyà/¾Ã/×_'v1³Sm:&Ÿ_yÏ½Àù™j‰cnjš;ıüôß¿Å×ùA³ÖøªV\90* á†çØÖPĞB¹¹÷¯nü¥ÖSIDÍz:Îpeşi›»ÈrcÄÔ¢À\³I†çk¦Şn|ßŠYª4U„ÿA L¾+·/YÈùÓæÌÔL;CË:Ni9)hEJ'RZ6pªQç~ú€·»·Î´§Úß°Æ¸)Ã5”‘ŸGiˆ*wÒ{ºÍb­Fb2jÖpbÆj&à$VIlNİœm6XëİÄÄö¥Z\ûìXŒ i¼‚LÎkX,²M.6=5ÓIÎ{!2UÙÎÖ¦Q=OÍ:‚*ÛÙŞo°WìĞÓôÍ¸öğÇh¢´¤RÂ"(Š„*ˆ2¿K=‚ÓÍ:ÏÌ^=´UÏ·—9ß^>x¾½³ÁííubS0ğıfÇMhÃ!Ì%€:³fsUÅŠ!2Bğ'çqU°v(Ùa‚ˆ´,Dt¿¨J@ˆĞ‰;ÜïİôoŞ»^¦ÍPws\˜ùF,ïu×éî¿…39ôó”šÍICB#jöŠ"_qcyÉ‚£iœL û‚ùä4wwÿF_¶(²M@Põ$Q‹Õé«±t]îî¾Å”s(Rß–š{šºi¼“æû7&Šğ FJz¨LyÍ™©/ĞJVH³w‰M<ì"1X©»Cdb¬‰P„À¾.Ì^Âçşg¹ÏoL´aë„ “Ô\íŠ²ÌóìÌUT:x-–é1³àYh^æTíÜÍşşŞƒ†ñP©:áˆÁ{")ı,¥MsyáKüóşïğÚÅˆÁkÎ­­×°“æ›$ÆÔãU™­_âSs_(ú½½o¾Øªô&ğ!ldYvSD¼HeGşTasğa˜ï,M]YúÊ¹÷·oĞ¬“ù}Ö»¯Çt1IˆL›3­Ëœk]¤½ôëé`ÿWÆŒúGT•½wÛt:R%$ÎÆ33/Çõø;;ù½éíÁÒb
 +bÛ`*^`¶v–DÚ¯¥iÿåş~ÿÆø7à$¿ÕUK&.¢GX-7êÍ—œs/ª„§­DÛÁë›Y–^Ï}ş{#Rdy>‘æÅÅEş€tgSG ç—    IEND®B`‚
 \ Brak znaku nowej linii na koÅ„cu pliku
-diff -ruNa 0.2-stable.old/skins/default/images/buttons/filter_add.png 0.2-stable/skins/default/images/buttons/filter_add.png
---- 0.2-stable.old/skins/default/images/buttons/filter_add.png	1970-01-01 01:00:00.000000000 +0100
-+++ 0.2-stable/skins/default/images/buttons/filter_add.png	2009-01-03 13:51:33.279821645 +0100
+diff -ruNa rc-beta2-old/skins/default/images/buttons/filter_add.png rc-beta2/skins/default/images/buttons/filter_add.png
+--- rc-beta2-old/skins/default/images/buttons/filter_add.png	1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/images/buttons/filter_add.png	2009-02-11 08:59:02.968421060 +0100
 @@ -0,0 +1,13 @@
 +‰PNG
 +
@@ -6862,9 +3904,9 @@ diff -ruNa 0.2-stable.old/skins/default/images/buttons/filter_add.png 0.2-stable
 +ÃdMsxçg©/„¿\›n(	Í.²ü}É|$ÂÜlÏô}Ñ=Ô¥v“ªU¢.…µ*aP˜¯‡ta_áşLLÿÄ˜hÑ°V5Z‹Fh—¨ qÂdª47MofGî<Æ¯ßı.53Œ§]B™çÌ¿ã;yÊó—É{‘„„bÙ^|”Ïí:•Fn|«Z«N5B±²ÖòÒ¹7J§Ó_ÒÚ1JÅ
 +_éxÚ¨n¬‘;z¶æªÁõŞßàêôë™¦næ°X|í¡u¬×Íş®Ïs°ëñZylú+¥©ñŸé$ìÙxáÌ9g½²ˆ•|Æ÷ïìÛşd®-8z­r©uhz©êê¦BÎo§3×ÏÖƒô–7§¦&,MN.•1°gO³"2J)³®J\ƒvtåFiôØôlúÔÆ¶şÇzÚ<(*ÚjßÓ©²©Ë¥Ùòôó×kÃ¯:i­o9üşg fÑºÌ˜Á‡    IEND®B`‚
 \ Brak znaku nowej linii na koÅ„cu pliku
-diff -ruNa 0.2-stable.old/skins/default/images/buttons/filter_add_sel.png 0.2-stable/skins/default/images/buttons/filter_add_sel.png
---- 0.2-stable.old/skins/default/images/buttons/filter_add_sel.png	1970-01-01 01:00:00.000000000 +0100
-+++ 0.2-stable/skins/default/images/buttons/filter_add_sel.png	2009-01-03 13:51:33.295819759 +0100
+diff -ruNa rc-beta2-old/skins/default/images/buttons/filter_add_sel.png rc-beta2/skins/default/images/buttons/filter_add_sel.png
+--- rc-beta2-old/skins/default/images/buttons/filter_add_sel.png	1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/images/buttons/filter_add_sel.png	2009-02-11 08:59:02.996428630 +0100
 @@ -0,0 +1,13 @@
 +‰PNG
 +
@@ -6880,9 +3922,9 @@ diff -ruNa 0.2-stable.old/skins/default/images/buttons/filter_add_sel.png 0.2-st
 +çz–TÀ7º¥”-jğ­Á·`0Ò%ÅÚq´¶v·@W­ªª`#ùQş½h¸º|–__üVkX@_¸›Oïü
 +8yíÌ.ı†Ğ«a0,Ö—(fj,'yJÙJ£Ñ¸œ#j3Ğ4Aj›©ÄÓE¿Y“çëIÌı…ı¼?7Å¢¹Ìê€ÁiB!³Oîx€k•«¼?÷ƒQˆj³jÆÃÇéõJç—ëåé~úÚ Úî6,ÍT•TRvöM0Ôsåê	r~,¾ÍvÆzÖ'ãEdlˆ¨Áà(Ç–É]Ÿ'­Å¿¬%µéNJ[ˆ\«wŸ»µ÷SQV«1Ÿ{µ#$ßajÓòƒvâIXM&²¯ğØÌ­å…ãÒ’İ–ªÑfBE¤©ùwõV™_^]¡_vpôoƒ&–:H¤ÆÉËÇ9yù8+«'Èû©&4$e¬ïI¾°çÙ´¼pë8^l+¡ºtvµ¶:cŒm~œvíä®Ò«å3Tÿ+{FööÛ÷İ±w®üœÙÊiV“%Ş›ı)ŠXßæÉx#<:òEm;ÖX¹¹òÕåJù÷İŸmfff†7ON{[­EUòay`çØsùŞÜó×ú®®œa©qÔÕÉ%óãì*¢`†ßYZ¾õ\¹¼8İ=ÇÄŞ½ŠÈaŒÛb%µ¶vkqş{+Õì«¥Şñ§FJ<¡ÆíR$ã›LYR9[Y^y}.¾vÂZ›ZkïúøıÍ¹¸cWüÕ    IEND®B`‚
 \ Brak znaku nowej linii na koÅ„cu pliku
-diff -ruNa 0.2-stable.old/skins/default/images/buttons/filter_del_pas.png 0.2-stable/skins/default/images/buttons/filter_del_pas.png
---- 0.2-stable.old/skins/default/images/buttons/filter_del_pas.png	1970-01-01 01:00:00.000000000 +0100
-+++ 0.2-stable/skins/default/images/buttons/filter_del_pas.png	2009-01-03 13:51:33.315820473 +0100
+diff -ruNa rc-beta2-old/skins/default/images/buttons/filter_del_pas.png rc-beta2/skins/default/images/buttons/filter_del_pas.png
+--- rc-beta2-old/skins/default/images/buttons/filter_del_pas.png	1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/images/buttons/filter_del_pas.png	2009-02-11 08:59:03.020424940 +0100
 @@ -0,0 +1,14 @@
 +‰PNG
 +
@@ -6899,9 +3941,9 @@ diff -ruNa 0.2-stable.old/skins/default/images/buttons/filter_del_pas.png 0.2-st
 +ùÒ2œû3ß7HH‰|écÔù·±ı>Á®ˆO>“·»İïº<_/Î
 + œ÷KY–]RJ9¥±ÿ¦ÍŸ¬®¬úéİ*µg“İ·Î/¯àÛ}”Ö£b„8L<LôÄÉ´ÕwßJ;ßë±Š¨D„ï}hî´;ÁGÖ„;îÛñblxI®\Ú–_yß¸ä9*.cî›Å>xÙ>ÿV¯Óy±×i/Œ·õz}€;ù¬.rBdâ0Àv¾T©>gsRùşƒxª ¼îĞÏÒŞi—¥¯k¥ò¬ßŸhFêõ:ÿ©¸ÿ+Â\ş6    IEND®B`‚
 \ Brak znaku nowej linii na koÅ„cu pliku
-diff -ruNa 0.2-stable.old/skins/default/images/buttons/filter_del.png 0.2-stable/skins/default/images/buttons/filter_del.png
---- 0.2-stable.old/skins/default/images/buttons/filter_del.png	1970-01-01 01:00:00.000000000 +0100
-+++ 0.2-stable/skins/default/images/buttons/filter_del.png	2009-01-03 13:51:33.339823231 +0100
+diff -ruNa rc-beta2-old/skins/default/images/buttons/filter_del.png rc-beta2/skins/default/images/buttons/filter_del.png
+--- rc-beta2-old/skins/default/images/buttons/filter_del.png	1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/images/buttons/filter_del.png	2009-02-11 08:59:03.064430050 +0100
 @@ -0,0 +1,7 @@
 +‰PNG
 +
@@ -6911,9 +3953,9 @@ diff -ruNa 0.2-stable.old/skins/default/images/buttons/filter_del.png 0.2-stable
 +Í4ww³nÏƒ$š$rØSSä6¼—Îİ{pò8Ù,½?}ŒÒç˜~á¹ÎÖí;îéë{kQì:ŠZˆ*3ó¥ yê$ââ2k¯Å‘2òA yû‡±Â€™c/Ñöí°ó L‹TÉ·µ1õÂs´ßö±;fšš¯D&Ğ&²½Œí/gí?W¡”aüı5š2I<7…îéağ;»	úh¼õ6Ú¿ÿ0vS3 çŸz’Ò‘Ãä’iòöpbtä]Ù|~s]ÚD ”í>W„rVR*P
 +Ó×K"ãâe)7‰üëËôñv‚Á^°,D2À›Oü„Ò¾FAWIg •µa€Éx·j^ ª/°HE¤µ&‘ŒjAÀr$*ìAëAÒ…UXÉä¼ç›šs8ToáÈ¬UX,!ĞÂÒóİ0¢ŠİMÊ¸Ïk´¤V_ƒ®ø„ÃCÈ‰2|?í<ShCI‰?U åãwQøŞ!D£@ GG±Ó‰¶•%ß÷/ÍsÃºÿkU¤ÒjÖ4Z¡Æ¯VI½o3frÙÛOºkm=ƒİØ@Ï/sñş[‡/ ¿å34ï:‚-‚^ ÕŞ‰i]yÖ/—NÌPÛ}l©êÁh6E×«ÓeÌÆÍ¸İİ¨ñ2rlšpl$ÜãTµoà5†ú4Áp/ =ı0ÅrŸø$%¥Ëåuè˜eéº»-t8‹B¶a¼*iÿúıø÷œ¢zúÃßøşM¡òëG(äS(“Å¼q‘ï~âšmTyˆl¹BvÇGqnİÙ3yéÒZJ=›µ£Ö¬ç8mùøÒôøÙ÷lbå÷3´ç>üSgàÜYòMr¦ö|ÿo§±Ÿ$S•¸7m¥°ï€ìŸøjàûµ3¤Êp°T.õX–­„ˆÂÎÕ¨iæüÙózí¶ÙwiY=úã½ø¯ŸE^A8	°F*P‰|šÜw’ÿò¾êĞLxÏôØè‹3[	c¿ıãq{¹²ÖF7¸Éäuë¯ßÕœä›æÄ‹•W_BöıíûØ…Éë7àŞ|;úÚM™İ59rùÄÜTÜÕİ]°ìó€6†œ—¢uI¤İ¦•w¸éä‡¬°²F(™éìdˆ}º45ùlP*³m[–Ëåy‡ß®înş= Ù)r#d    IEND®B`‚
 \ Brak znaku nowej linii na koÅ„cu pliku
-diff -ruNa 0.2-stable.old/skins/default/images/buttons/filter_del_sel.png 0.2-stable/skins/default/images/buttons/filter_del_sel.png
---- 0.2-stable.old/skins/default/images/buttons/filter_del_sel.png	1970-01-01 01:00:00.000000000 +0100
-+++ 0.2-stable/skins/default/images/buttons/filter_del_sel.png	2009-01-03 13:51:33.363810693 +0100
+diff -ruNa rc-beta2-old/skins/default/images/buttons/filter_del_sel.png rc-beta2/skins/default/images/buttons/filter_del_sel.png
+--- rc-beta2-old/skins/default/images/buttons/filter_del_sel.png	1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/images/buttons/filter_del_sel.png	2009-02-11 08:59:03.088415326 +0100
 @@ -0,0 +1,11 @@
 +‰PNG
 +
@@ -6927,9 +3969,9 @@ diff -ruNa 0.2-stable.old/skins/default/images/buttons/filter_del_sel.png 0.2-st
 +cl3!™æ$ÆÚwZ‚o~v–Ê·Òû­oã¤<¢Cpò9rxèšUÀæˆ.¼…8õ<a-"Øñaºû®šœ;Ğh4f)¡Òj¤Z«!›‡Sníg*Ã—ÍºŸÈöı ´~æèÓDÿBM×R`•ÓÀË¥È>ø ¹Ï=š¨©/ÍÏLÿ¾óØ&†‡‡yõ¯g•îµ&xşîØx°àqˆs¯ëç^G^ÃF²Ø…·qÁİ÷c6lı[yfæàÜôÔÙÎT<08Ø +<XkÉ†>Åt
 +7ôzûö)o¯TõBkŸTú¦Ây³Z;W+§¥”ªV«-:üò_1Ó'vøÀ    IEND®B`‚
 \ Brak znaku nowej linii na koÅ„cu pliku
-diff -ruNa 0.2-stable.old/skins/default/images/buttons/filter_down_pas.png 0.2-stable/skins/default/images/buttons/filter_down_pas.png
---- 0.2-stable.old/skins/default/images/buttons/filter_down_pas.png	1970-01-01 01:00:00.000000000 +0100
-+++ 0.2-stable/skins/default/images/buttons/filter_down_pas.png	2009-01-03 13:51:33.387822601 +0100
+diff -ruNa rc-beta2-old/skins/default/images/buttons/filter_down_pas.png rc-beta2/skins/default/images/buttons/filter_down_pas.png
+--- rc-beta2-old/skins/default/images/buttons/filter_down_pas.png	1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/images/buttons/filter_down_pas.png	2009-02-11 08:59:03.112426863 +0100
 @@ -0,0 +1,9 @@
 +‰PNG
 +
@@ -6941,9 +3983,9 @@ diff -ruNa 0.2-stable.old/skins/default/images/buttons/filter_down_pas.png 0.2-s
 +¯ÿç5ÒüÖxâ N‹¢è>X„#ıO¤L'Ê ,èÔÉE($ÅÃ•›¿çÃ­·pÌ¬.¬§(Ş$	<[ƒM¢`‰m\Ëóìâ.dÚÛwe½›¼Ğr³´£eÒr€Å1\½ù*ÛWÆÁ¢\XûÃ0xˆ*¤%,5#ùe^äv3°Kÿ©!Ë
 +ÏœÂ˜J-°X0põæ«Üì_Cşºş'ƒ*¸(äRĞI>ÅÁdõƒí~ïlYùônh•IŸö°Æ{º×Ù¤´}“¾Æåç)ôÎ8á_·ÎãÜ[dy—º÷”*”¢ì‹ñüÜ—ug«FD®[k'›‘ˆläùàªµ…­>ÓÌG¶_ªp=»­v'9¹ğÍ•wï^änúªYÑG‹k„6` ‚w-k=ÏJód‘mçßÛIû¿ş€5ªÊÕwà°Ø`~vöÅ0Ø+®ÏŞM×Ø)îRÊ€ĞÅÔÃıÌÖ–©™Ö?¶··ÎdYzaº]›_XØµõîµ!	}@8Ì'qıÛŞû¯«ÑÃŠ„Ö÷TôÍ<ËÎåEv^D:´ói ÿ/û¥šÀ’ù    IEND®B`‚
 \ Brak znaku nowej linii na koÅ„cu pliku
-diff -ruNa 0.2-stable.old/skins/default/images/buttons/filter_down.png 0.2-stable/skins/default/images/buttons/filter_down.png
---- 0.2-stable.old/skins/default/images/buttons/filter_down.png	1970-01-01 01:00:00.000000000 +0100
-+++ 0.2-stable/skins/default/images/buttons/filter_down.png	2009-01-03 13:51:33.407816330 +0100
+diff -ruNa rc-beta2-old/skins/default/images/buttons/filter_down.png rc-beta2/skins/default/images/buttons/filter_down.png
+--- rc-beta2-old/skins/default/images/buttons/filter_down.png	1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/images/buttons/filter_down.png	2009-02-11 08:59:03.136415770 +0100
 @@ -0,0 +1,7 @@
 +‰PNG
 +
@@ -6953,18 +3995,18 @@ diff -ruNa 0.2-stable.old/skins/default/images/buttons/filter_down.png 0.2-stabl
 +»º})K«ïó‘Á¨H¥ ×´BÅäÙÕ»›¾ÌÛ0²À»º<º¼7¦2™–Û–ğ€•ĞÅ¸Å¯êÎt‹ƒ¨vÌc´ûš¤a¨÷a¶´o§3µ™¿ô=ŒT l™¡î;yÏÀıÜÙïØ÷7K*ò'Ò‘€y;ë'Rı}KxÀZ¡6L®4‰u$<Å| ‰é"QÆØÚ¶‡vìE© »úŞNgrw¸§r€ÕÕ P®!	¥NDµd3fYT×N`mª‡Š¹Ò8¿|åANM` ÓM&–
 +×ÍkIG“äË7_ØK.ÿ$QU$¢S´ùm¥R©t¶¡©† Ìz+RMFæFu-Î±P)±©y;…ÀP.¢”æÙWá¥‰ƒ—x,Xş2åâÚâIÆçÏÑï§=ºæµÂüÜğ²2¬q€TOÛPõä´Êôúƒô6‘«,à©((ÅáWá“ÏÖã±á¯R* -Fä*Û»?ˆY0ÏJ…ã—­kCq‰Vß‚ææŠ|`àsèÈ ”ğ”WñN_8‚qğí_§¸ğsÚãi¬sÌe6vÜË¶»ÎOLî¯TÊ• h©V‚­v8qRUWo»"a5ÌÌçh6k¹ÿ-ûPú:J¶ˆVÁğÜé½üàä'˜+<EG"IEJ& ?û>>ºáQ73>½ÇX3éyŞb/0ÆLæçO{‘ˆ©¬¡]¨Åq¯6ñ9/ç_s{7%?uóûşxæû¼1{+yæÊpå#4Eã%ëá­=÷±sİ'Mn²ğ™™Ü…_Õú €rÎñÜïEDV3[q’ŠG½-×ßğÙ¦lúÑÑÒËÙ3¹˜)¥bHÇÚèJmæú–wĞ¢{NNNí™Ëç7NÄ[·m«wC«”²« 5D"3uaü‰Ù|üÙ÷®k¿ùn§ìu‚yÚŸ#§ò¹¹Ã#Å7ş`Œ	´Ö,güÏ (n´=æ(    IEND®B`‚
 \ Brak znaku nowej linii na koÅ„cu pliku
-diff -ruNa 0.2-stable.old/skins/default/images/buttons/filter_down_sel.png 0.2-stable/skins/default/images/buttons/filter_down_sel.png
---- 0.2-stable.old/skins/default/images/buttons/filter_down_sel.png	1970-01-01 01:00:00.000000000 +0100
-+++ 0.2-stable/skins/default/images/buttons/filter_down_sel.png	2009-01-03 13:51:33.423824222 +0100
+diff -ruNa rc-beta2-old/skins/default/images/buttons/filter_down_sel.png rc-beta2/skins/default/images/buttons/filter_down_sel.png
+--- rc-beta2-old/skins/default/images/buttons/filter_down_sel.png	1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/images/buttons/filter_down_sel.png	2009-02-11 08:59:03.160424513 +0100
 @@ -0,0 +1,4 @@
 +‰PNG
 +
 +   IHDR           szzô   sRGB ®Îé   bKGD ÿ ÿ ÿ ½§“   	pHYs     šœ   tIMEØ	.¢–j   ÉIDATXÃ¥—ldUÇ?÷½yoŞL§vÚí¶İm)eaYv‰¬¸(A	‰Ñ?ÕDcŒòÆH¢1ñ/ôãnøCcèFPşPTVTTQ`A~ìfYØ´İn·™vfŞ=çøÇ›N§û‹½™;ïfî}ï|çœï9ßóÜÑ£GyöŸ‡ï®”ËŸŠã(puÎq¾ajš­U1išæO}¯Ñl=º€‹·Üø~r I’LNŒo¹¶¯P¸è›ÕUÅÔğªDQnÿòJuyétõ =Œ6\S³öƒU/jšf ª8 $ÁeÓS?*—û?äEzàp8zA€sĞAPÜ³sÇÁ¾baŸ¨ôâóqnÓ<×~dÓ…%G•kvï|´T,^¾Î•\Èà¹<áÈÎYûŠ…ÉİWîx,¢ñwĞ«ëÏ áœQ˜ce¥Æ‰ùŞ™›§Ùlíy4pA¹' JÁóç&$IL¥R¦ˆã/J’$×÷÷÷í·ìÁgÏÿÅçc¤YŠ È!QR,&ô’=ªbÆY²:ğÛ¼°ö—šaâ6N¼kÌìÂ¶Î±oíO{mXo…¨7g5Ë›±aÜºæFîBî&äù@™eÕ“0Öã.€#×«»ÏÜï "™@‰¡¢(†š™0ÜÄ¿ –ìwfmA2¤å	œyêé*bB!ÈSÊH£¤´š¢Ğ-ç¢&ŠtiEn¾ªv„åâŒƒO=4…ÅÖO¼õ7ûsõSxóôEEfÊÜ:õ¾+®»l×ìüÜü—jÍÕ'Ü)‘yÀk«@°{·!Rëáh§¾•âZÂïOÌòà‹Yn®RNJëµïW™]x•CÇŸcßØÎ+¾¶÷Ó¿])~ùÄ©ùİ¹8 fˆd ´#@¶‰lë D<®¥üì?àÛÿx„ÉòV¦ÊäÃ·_rå|‰çæ^eváeF†xiéM>÷ô·8pó=§C‹+§vİ•ĞÔP±¶Ö*‚ˆ ^¯ÙU$Û¦ñìÒË|÷ÅGØ±e[J"Ï¶BÈ37ñÑéÙ3<C1l0{¦+Ã´œç«³û)İŸóÛ7 T¯ŠÃ«!ªˆ)b‚˜v8ÒJ=-ZüàµGï/³½1{Æe8Q@;*9š7&e4öìªğfı8øÓèøÈØ£\Tè P#3"‚ª êñ"x¯xÑ«*Âáêêé¿¹ª\¦yJQÊ`>¤:µÃ9G9Nè`0öŒÄÂŞÊŸÿ#s+÷õß¸áËB šÑN:áA¼' äXõ7ŒE¥œ¹múNR­ĞLk›H›ú:7ŒßÌxéÄÖØ72`Ş/Í”JûºHØv¹h¶ÆŸ©!f†ÆZºÀPì¨<{Ç?ËÎ¡İwpğ•ã5ÀK‹½£×ñÉ;¸nÂ8pX)¥zVe%Ÿ¶Mu¥aÖ\®7“ëÎÙ°¢ÎÈçk> rr, påàv>sõçq.à†‰÷2\ø`vFèª€™‚w‘p£¨(¢’q@ßµQPØZ#U¥Ú:É¯|ƒWOş€ÉÒ(¥Œ[LöRÌ¨{á‡ÏßGµösr®AŒÍVó®4Qkg€"j-¸t­ÍXK›Ìôï¦î…FºŒsO»—WNşö,Õ½pà…ïĞj<Î`>aaíúã	†r[ÔWk³]hs@¥
 +ß&¤×®µ«­5ÆãiÆû÷RK×È‘‡İËk‹OvŒ7Ä8ğÂı43˜/bÕ–qÍè­Èšübµ¹úÌæ,h»_E7¯eóï^Z­Á‡'?‰§H­Ùá8tì^~1xèğ÷i¬ıŠ¡|5cÕ·˜©ÜÆÕƒ×¿uòÔÜş4mµº ¨¢ÖvûÕëÌÙî°—×ªôËVî¸üœÛNS8á©c÷ñğK_¡VŒJ’š§)mƒ·ğ‘Kï²Ó'—î•ù07´@DæV×Ö^ƒf•²®7%·Ñî­w|fğzı»t|¦ø‰«¾9õ—·~ÂÛÕYTëÔd	k=M_”§)Jñ±ÛÙ·õã¾ºXÿÂrõô/»3Ì=z”§ş<„½4äb¦…|.·sê’»Jå¾¯Ï5_¯¯=ÏéÆqRiPŒ)î`jàZÜØs‹‹ów×êÕg².û+WîÚÕQCqÎI/I „AèO--<°R_ùépyúÎ­C»nÅÉ´¢qèâ}±V­=>×xû÷>‚`S3ğ_jWS›èÁ-_    IEND®B`‚
 \ Brak znaku nowej linii na koÅ„cu pliku
-diff -ruNa 0.2-stable.old/skins/default/images/buttons/filter_up_pas.png 0.2-stable/skins/default/images/buttons/filter_up_pas.png
---- 0.2-stable.old/skins/default/images/buttons/filter_up_pas.png	1970-01-01 01:00:00.000000000 +0100
-+++ 0.2-stable/skins/default/images/buttons/filter_up_pas.png	2009-01-03 13:51:33.447826421 +0100
+diff -ruNa rc-beta2-old/skins/default/images/buttons/filter_up_pas.png rc-beta2/skins/default/images/buttons/filter_up_pas.png
+--- rc-beta2-old/skins/default/images/buttons/filter_up_pas.png	1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/images/buttons/filter_up_pas.png	2009-02-11 08:59:03.188426495 +0100
 @@ -0,0 +1,11 @@
 +‰PNG
 +
@@ -6978,9 +4020,9 @@ diff -ruNa 0.2-stable.old/skins/default/images/buttons/filter_up_pas.png 0.2-sta
 +¬Rè&·Ú±ÙînOSw÷²NºV'é—aÿ¾¶h€<çe—¦Ÿ¢/‘–]ÁKâÙ/³ˆÃ¹‘ 0Òj<ƒvõWy‘_-Ã‘
 +xøe¤ŸYVğìäiD&)­9›Ä[†ˆ3r-™©?Çbıäõİö¹²,òa!rÆ£nAC=¿’ĞN7%Öq>3û5DQZ·b±KksÖÆi÷]b/U(J%§x~úUëlï¾®ªwœsƒf¤ª·ó¼{Å¹Âõ®iò±Ç/3¸“­ÛÌÄLıÅùo.ÿwcô*]M¹ºñ§^ŠÃK„sM–›Ï³<şb‘íäßë¤»¿¾ÀŠ™qå?-øC„4\075õƒ(‰~Ô.îLm¤7è”Ú%ò	cÑq¦jKÔ¤yqggû,K/×ææç÷ Œ´ŞƒH¢0 xÌÕ“±o‡aøš‰­9	¶Líïy–Ï‹ìUíZ%çÃ ş¨“p›/Ş    IEND®B`‚
 \ Brak znaku nowej linii na koÅ„cu pliku
-diff -ruNa 0.2-stable.old/skins/default/images/buttons/filter_up.png 0.2-stable/skins/default/images/buttons/filter_up.png
---- 0.2-stable.old/skins/default/images/buttons/filter_up.png	1970-01-01 01:00:00.000000000 +0100
-+++ 0.2-stable/skins/default/images/buttons/filter_up.png	2009-01-03 13:51:33.471828621 +0100
+diff -ruNa rc-beta2-old/skins/default/images/buttons/filter_up.png rc-beta2/skins/default/images/buttons/filter_up.png
+--- rc-beta2-old/skins/default/images/buttons/filter_up.png	1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/images/buttons/filter_up.png	2009-02-11 08:59:03.212417637 +0100
 @@ -0,0 +1,8 @@
 +‰PNG
 +
@@ -6991,9 +4033,9 @@ diff -ruNa 0.2-stable.old/skins/default/images/buttons/filter_up.png 0.2-stable/
 +•yâÇã{³¥ã2^‘ŒR²³ñd:³± ‘SÓ<­mÍ…3q¤¯ ML•¨†opfòŸüìícx NæÕw_  dªˆ½„¯Á×Ó P®©HCˆêâİ¨UÕÔpq‚ó`}º—s%a®r•ãï|ƒËÅN\>É–l_Gêø	Îş”_cœ›™§Xú9kcƒø:Mg¼³\.—/dHÕËZ¢¬·"µdŒ˜¨ß‹s\«–¹­}7ÅĞ°Î ğyóÒ³¤9ÍlùV*5°!f„3ã?¦R~¶ Í•ÒEÚ›ÈÇºß-–æN-)Ãz¬ë¡X>ÅÊ5úâ[èmßO¡z­4—F© ”·d¼ó‰y)< „BÕ±¯çÌ5óR±\<¹lØ† -cµAss<Ğÿ´×O(å–É,š×}¡Vìz½÷^º:9v¬Z­T[“PK­l­Ã‰“š¹FÛ‰vœ.h7ëùÌßCéÍTìà0²ÀğÈQ†G2Sú%ÙÀÃJHÙ„lÊ}”O<á¦¯L6ÖLø~”+Ê9ÇÃ|,‘L|Á÷<HK
 +6‡×œø¢îiİ`ßæT˜½ºñwç22{+B[Äát­3$cêş46|Ş&ŠOL]y^ëˆ¥CC€×~sÂsà­f ·â$ˆùÛoıÀ—³¹Ìcå¿åÎŞdfá{LĞÉºôVn]s7ktïé‰‰ñ#só…“­ñ¡¡ÆDd•Rv5 ´ÏóÌä¿¯<3;ŸøIWnàÁù÷;e76ğu|NŒœ/Ì]ù­1&ÔZ³ô?ã ¢‰B' ¶    IEND®B`‚
 \ Brak znaku nowej linii na koÅ„cu pliku
-diff -ruNa 0.2-stable.old/skins/default/images/buttons/filter_up_sel.png 0.2-stable/skins/default/images/buttons/filter_up_sel.png
---- 0.2-stable.old/skins/default/images/buttons/filter_up_sel.png	1970-01-01 01:00:00.000000000 +0100
-+++ 0.2-stable/skins/default/images/buttons/filter_up_sel.png	2009-01-03 13:51:33.515827064 +0100
+diff -ruNa rc-beta2-old/skins/default/images/buttons/filter_up_sel.png rc-beta2/skins/default/images/buttons/filter_up_sel.png
+--- rc-beta2-old/skins/default/images/buttons/filter_up_sel.png	1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/images/buttons/filter_up_sel.png	2009-02-11 08:59:03.236428615 +0100
 @@ -0,0 +1,14 @@
 +‰PNG
 +
@@ -7010,19 +4052,19 @@ diff -ruNa 0.2-stable.old/skins/default/images/buttons/filter_up_sel.png 0.2-sta
 +ğê¨yÇ¦îûøÈÖGôê;³zñ¥ VÈÈ{?]]\|5°5­7%³Òî-G‚*¼¶p^·ä>uÛ·†ştáÇL–ÇYteNMCQ"’²yÂ`€½eÿÆOºòÌÂCså«Ï¶6:fbb‚ÿ8(í4ä^U²é0Ü9ôG:
 +ùoL×^ë¹Xy…¹¥‹Ôı¹¨›ŞÜ6†ºî¤Ëœš™)=VY(¿”´pÉ«ìmvDŞãÛiH,ØÀ]™½üÄüÂüO6†?±±8zã‡I&5¯^NWÊ•_L/MtÎÅÖÚUÍÀìO#¿&    IEND®B`‚
 \ Brak znaku nowej linii na koÅ„cu pliku
-diff -ruNa 0.2-stable.old/skins/default/includes/settingstabs.html 0.2-stable/skins/default/includes/settingstabs.html
---- 0.2-stable.old/skins/default/includes/settingstabs.html	2008-05-20 15:33:47.000000000 +0200
-+++ 0.2-stable/skins/default/includes/settingstabs.html	2009-01-03 13:51:33.599831408 +0100
+diff -ruNa rc-beta2-old/skins/default/includes/settingstabs.html rc-beta2/skins/default/includes/settingstabs.html
+--- rc-beta2-old/skins/default/includes/settingstabs.html	2009-02-11 08:50:51.000000000 +0100
++++ rc-beta2/skins/default/includes/settingstabs.html	2009-02-11 08:59:03.272419030 +0100
 @@ -2,4 +2,5 @@
  <span id="settingstabdefault" class="tablink"><roundcube:button command="preferences" type="link" label="preferences" title="editpreferences" /></span>
  <span id="settingstabfolders" class="tablink"><roundcube:button command="folders" type="link" label="folders" title="managefolders" class="tablink" /></span>
  <span id="settingstabidentities" class="tablink"><roundcube:button command="identities" type="link" label="identities" title="manageidentities" class="tablink" /></span>
 +<span id="settingstabmanagesieve" class="tablink"><roundcube:button command="managesieve" type="link" label="filters" title="managefilters" class="tablink" /></span>
  </div>
-diff -ruNa 0.2-stable.old/skins/default/templates/managesieveedit.html 0.2-stable/skins/default/templates/managesieveedit.html
---- 0.2-stable.old/skins/default/templates/managesieveedit.html	1970-01-01 01:00:00.000000000 +0100
-+++ 0.2-stable/skins/default/templates/managesieveedit.html	2009-01-03 13:51:33.639831161 +0100
-@@ -0,0 +1,99 @@
+diff -ruNa rc-beta2-old/skins/default/templates/managesieveedit.html rc-beta2/skins/default/templates/managesieveedit.html
+--- rc-beta2-old/skins/default/templates/managesieveedit.html	1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/templates/managesieveedit.html	2009-02-24 10:08:45.851584233 +0100
+@@ -0,0 +1,110 @@
 +<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 +<html xmlns="http://www.w3.org/1999/xhtml">
 +<head>
@@ -7082,22 +4124,33 @@ diff -ruNa 0.2-stable.old/skins/default/templates/managesieveedit.html 0.2-stabl
 +	document.getElementById('action_mailbox' + id).style.display = 'inline';
 +	document.getElementById('action_target' + id).style.display = 'none';
 +	document.getElementById('action_target_area' + id).style.display = 'none';
++	document.getElementById('action_vacation' + id).style.display = 'none';
 +    }
 +    else if (obj.value == 'redirect')
 +    {
 +	document.getElementById('action_target' + id).style.display = 'inline';
 +	document.getElementById('action_mailbox' + id).style.display = 'none';
 +	document.getElementById('action_target_area' + id).style.display = 'none';
++	document.getElementById('action_vacation' + id).style.display = 'none';
 +    }
 +    else if (obj.value.match(/^reject|ereject$/))
 +    {
 +	document.getElementById('action_target_area' + id).style.display = 'inline';
++	document.getElementById('action_vacation' + id).style.display = 'none';
 +	document.getElementById('action_target' + id).style.display = 'none';
 +	document.getElementById('action_mailbox' + id).style.display = 'none';
 +    }
-+    else // discard, keep
++    else if (obj.value == 'vacation')
++    {
++	document.getElementById('action_vacation' + id).style.display = 'inline';
++        document.getElementById('action_target_area' + id).style.display = 'none';
++	document.getElementById('action_target' + id).style.display = 'none';
++	document.getElementById('action_mailbox' + id).style.display = 'none';
++    }
++    else // discard, keep, stop
 +    {
 +	document.getElementById('action_target_area' + id).style.display = 'none';
++	document.getElementById('action_vacation' + id).style.display = 'none';
 +	document.getElementById('action_target' + id).style.display = 'none';
 +	document.getElementById('action_mailbox' + id).style.display = 'none';
 +    }
@@ -7122,9 +4175,9 @@ diff -ruNa 0.2-stable.old/skins/default/templates/managesieveedit.html 0.2-stabl
 +
 +</body>
 +</html>
-diff -ruNa 0.2-stable.old/skins/default/templates/managesieve.html 0.2-stable/skins/default/templates/managesieve.html
---- 0.2-stable.old/skins/default/templates/managesieve.html	1970-01-01 01:00:00.000000000 +0100
-+++ 0.2-stable/skins/default/templates/managesieve.html	2009-01-03 13:51:33.663817016 +0100
+diff -ruNa rc-beta2-old/skins/default/templates/managesieve.html rc-beta2/skins/default/templates/managesieve.html
+--- rc-beta2-old/skins/default/templates/managesieve.html	1970-01-01 01:00:00.000000000 +0100
++++ rc-beta2/skins/default/templates/managesieve.html	2009-02-11 08:59:03.336432101 +0100
 @@ -0,0 +1,34 @@
 +<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 +<html xmlns="http://www.w3.org/1999/xhtml">
