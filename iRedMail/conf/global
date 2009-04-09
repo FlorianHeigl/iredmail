@@ -27,6 +27,11 @@ export DOWNLOAD_PKGS='YES'
 export IMAP_SERVER='127.0.0.1'
 export SMTP_SERVER='127.0.0.1'
 
+# For managesieve service and software.
+export USE_MANAGESIEVE='YES'    # Use managesieve service.
+export USE_PYSIEVED='YES'       # Use pysieved to provide managesieve service.
+
+# Set command used to install packages.
 if [ X"${YUM}" == X"" ]; then
     export YUM='yum -d 2'
 else
