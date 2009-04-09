@@ -1,4 +1,5 @@
 iRedMail-0.4.1:
+    * Update roundcube and related patches to 0.2.1-stable.
     * managesieve service (pysieved) is now not a optional function.
     * Add one more object to ldap user/admin: shadowAccount.
     * Add ldap attribute to store user's backup mail address, used for

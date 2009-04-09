@@ -23,7 +23,7 @@ rcm_install()
 
     ECHO_INFO "Patch: Managesieve service frontend."
     cd ${RCM_HTTPD_ROOT}/ && \
-    patch -p1 < ${PATCH_DIR}/roundcubemail/0.2-stable-managesieve.patch > /dev/null
+    patch -p1 < ${PATCH_DIR}/roundcubemail/0.2.1-stable-managesieve.patch > /dev/null
 
     cd ${RCM_HTTPD_ROOT}/config/
     cp -f db.inc.php.dist db.inc.php
@@ -138,14 +138,10 @@ EOF
     cd ${RCM_HTTPD_ROOT}/ && \
     patch -p0 < ${PATCH_DIR}/roundcubemail/display_username.patch >/dev/null
 
-    ECHO_INFO "Patch: Fix 'Undefined index' error in 0.2-stable."
-    cd ${RCM_HTTPD_ROOT}/ && \
-    patch -p0 < ${PATCH_DIR}/roundcubemail/0.2-stable_undefined_index_error.patch >/dev/null
-
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
         ECHO_INFO "Patch: Change LDAP password."
         cd ${RCM_HTTPD_ROOT}/ && \
-        patch -p1 < ${PATCH_DIR}/roundcubemail/0.2-stable-changepasswd_ldap.patch >/dev/null
+        patch -p1 < ${PATCH_DIR}/roundcubemail/0.2.1-stable-changepasswd_ldap.patch >/dev/null
 
         export LDAP_SERVER_HOST LDAP_SERVER_PORT LDAP_BIND_VERSION LDAP_BASEDN LDAP_ATTR_DOMAIN_RDN LDAP_ATTR_USER_RDN
         cd ${RCM_HTTPD_ROOT}/config/ && \
@@ -201,7 +197,7 @@ EOF
     elif [ X"${BACKEND}" == X"MySQL" ]; then
         ECHO_INFO "Patch: Change MySQL password."
         cd ${RCM_HTTPD_ROOT}/ && \
-        patch -p1 < ${PATCH_DIR}/roundcubemail/0.2-stable-changepasswd_sql.patch >/dev/null
+        patch -p1 < ${PATCH_DIR}/roundcubemail/0.2.1-stable-changepasswd_sql.patch >/dev/null
 
         # Set correct username, password and database name.
         perl -pi -e 's#(.*db_dsnw.*= )(.*)#${1}"mysqli://$ENV{'RCM_DB_USER'}:$ENV{'RCM_DB_PASSWD'}\@$ENV{'MYSQL_SERVER'}/$ENV{'VMAIL_DB'}";#' plugins/changepasswd/config.inc.php
