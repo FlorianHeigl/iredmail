@@ -13,7 +13,7 @@ postfixadmin_install()
 
     # Create symbol link, so that we don't need to modify apache
     # conf.d/postfixadmin.conf file after upgrade this component.
-    ln -s ${POSTFIXADMIN_HTTPD_ROOT} ${HTTPD_SERVERROOT}/postfixadmin/ 2>/dev/null
+    ln -s ${POSTFIXADMIN_HTTPD_ROOT} ${HTTPD_SERVERROOT}/postfixadmin
 
     cd ${POSTFIXADMIN_HTTPD_ROOT}/ && \
     patch -p0 < ${PATCH_DIR}/postfixadmin/create_mailbox.patch >/dev/null && \
