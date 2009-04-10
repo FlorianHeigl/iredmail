@@ -2,11 +2,15 @@
 
 # Author: Zhang Huangbin (michaelbibby <at> gmail.com)
 
+# Clamd.
 export CLAMD_CONF='/etc/clamd.conf'
 export CLAMD_LOCAL_SOCKET='/tmp/clamd.socket'
 export CLAMD_LISTEN_ADDR='127.0.0.1'
 export CLAMD_LOGFILE='/var/log/clamav/clamd.log'
+
+# Freshclam.
 export FRESHCLAM_LOGFILE='/var/log/clamav/clamd.log'
 export FRESHCLAM_CONF='/etc/freshclam.conf'
 export FRESHCLAM_PID_FILE='/var/run/clamav/freshclam.pid'
 export FRESHCLAM_INIT_FILE_SAMPLE="${SAMPLE_DIR}/freshclam.init"
+export FRESHCLAM_DATABASE_MIRROR='db.us.clamav.net'     # db.cn.clamav.net is broken.

@@ -16,6 +16,7 @@ clamav_config()
     perl -pi -e 's#^(LogFile).*#${1} $ENV{'CLAMD_LOGFILE'}#' ${CLAMD_CONF}
 
     ECHO_INFO "Configure freshclam: ${FRESHCLAM_CONF}."
+    perl -pi -e 's#^(DatabaseMirror).*#${1} $ENV{'FRESHCLAM_DATABASE_MIRROR'}#' ${CLAMD_CONF}
     perl -pi -e 's-^#(PidFile)(.*)-${1} $ENV{FRESHCLAM_PID_FILE} #${2}-' ${FRESHCLAM_CONF}
     perl -pi -e 's#^(UpdateLogFile).*#${1} $ENV{'FRESHCLAM_LOGFILE'}#' ${CLAMD_CONF}
 
