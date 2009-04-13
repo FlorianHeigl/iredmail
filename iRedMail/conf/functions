@@ -109,11 +109,12 @@ check_arch()
     arch="$(uname -m)"
     if echo ${arch} | grep -E 'i?86' > /dev/null 2>&1; then
         ARCH='i386'
-    if [ X"$(uname -m)" == X'x86_64' ]; then
+    elif [ X"${arch}" == X'x86_64' ]; then
         ARCH='x86_64'
     else
         ECHO_INFO "Your architecture is not supported yet: ${arch}."
         ECHO_INFO "Both i386 and x86_64 are supported by ${PROG_NAME}."
+        exit 255
     fi
 }
 
