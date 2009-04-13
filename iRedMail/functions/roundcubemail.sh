@@ -37,6 +37,8 @@ rcm_install()
 rcm_config_sieverules()
 {
     ECHO_INFO "Config managesieve interface for roundcube webmail."
+
+    export MANAGESIEVE_SERVER MANAGESIEVE_PORT
     cd ${RCM_HTTPD_ROOT}/plugins/sieverules/ && \
     perl -pi -e 's#(.*managesieve_host.*=).*#${1} "${MANAGESIEVE_SERVER}";#' config.inc.php
     perl -pi -e 's#(.*managesieve_port.*=).*#${1} ${MANAGESIEVE_PORT};#' config.inc.php
