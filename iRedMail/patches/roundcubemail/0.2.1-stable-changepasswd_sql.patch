@@ -1,6 +1,6 @@
-diff -Naur roundcubemail-0.2.1.orig/plugins/changepasswd/changepasswd.php roundcubemail-0.2.1/plugins/changepasswd/changepasswd.php
---- roundcubemail-0.2.1.orig/plugins/changepasswd/changepasswd.php	1970-01-01 08:00:00.000000000 +0800
-+++ roundcubemail-0.2.1/plugins/changepasswd/changepasswd.php	2009-04-09 23:56:47.000000000 +0800
+diff -Naur --exclude='*.svn*' roundcube_svn/plugins/changepasswd/changepasswd.php roundcube_pub/plugins/changepasswd/changepasswd.php
+--- roundcube_svn/plugins/changepasswd/changepasswd.php	1970-01-01 01:00:00.000000000 +0100
++++ roundcube_pub/plugins/changepasswd/changepasswd.php	2009-03-10 18:49:10.000000000 +0000
 @@ -0,0 +1,31 @@
 +<?php
 +
@@ -34,9 +34,9 @@ diff -Naur roundcubemail-0.2.1.orig/plugins/changepasswd/changepasswd.php roundc
 +
 +?>
 \ No newline at end of file
-diff -Naur roundcubemail-0.2.1.orig/plugins/changepasswd/config.inc.php roundcubemail-0.2.1/plugins/changepasswd/config.inc.php
---- roundcubemail-0.2.1.orig/plugins/changepasswd/config.inc.php	1970-01-01 08:00:00.000000000 +0800
-+++ roundcubemail-0.2.1/plugins/changepasswd/config.inc.php	2009-04-09 23:56:47.000000000 +0800
+diff -Naur --exclude='*.svn*' roundcube_svn/plugins/changepasswd/config.inc.php roundcube_pub/plugins/changepasswd/config.inc.php
+--- roundcube_svn/plugins/changepasswd/config.inc.php	1970-01-01 01:00:00.000000000 +0100
++++ roundcube_pub/plugins/changepasswd/config.inc.php	2009-03-10 18:49:10.000000000 +0000
 @@ -0,0 +1,42 @@
 +<?php
 +
@@ -81,46 +81,9 @@ diff -Naur roundcubemail-0.2.1.orig/plugins/changepasswd/config.inc.php roundcub
 +
 +?>
 \ No newline at end of file
-diff -Naur roundcubemail-0.2.1.orig/program/js/app.js roundcubemail-0.2.1/program/js/app.js
---- roundcubemail-0.2.1.orig/program/js/app.js	2009-04-09 23:53:39.000000000 +0800
-+++ roundcubemail-0.2.1/program/js/app.js	2009-04-09 23:55:10.000000000 +0800
-@@ -289,6 +289,7 @@
-       case 'settings':
-         this.enable_command('preferences', 'identities', 'save', 'folders', true);
-         this.enable_command('sieverules', true);
-+        this.enable_command('changepasswd', true);
-         
-         if (this.env.action=='identities' || this.env.action=='edit-identity' || this.env.action=='add-identity') {
-           this.enable_command('add', this.env.identities_level < 2);
-@@ -301,6 +302,9 @@
-         if (this.env.action=='folders')
-           this.enable_command('subscribe', 'unsubscribe', 'create-folder', 'rename-folder', 'delete-folder', true);
- 
-+        if (this.env.action=='changepasswd')
-+          this.enable_command('save-changepasswd', true);
-+
-         if ((this.env.action=='sieverules' || this.env.action=='edit-sieverule' || this.env.action=='add-sieverule') && !this.env.sieveruleserror)
-           this.enable_command('add-sieverule', true);
- 
-@@ -1053,6 +1057,15 @@
-         this.goto_url('identities');
-         break;
-           
-+      case 'changepasswd':
-+        this.goto_url('changepasswd');
-+        break;
-+
-+      case 'save-changepasswd':
-+        if (changepasswd_check_input())
-+          this.gui_objects.editform.submit();
-+        break;
-+
-       case 'delete-identity':
-         this.delete_identity();
-         
-diff -Naur roundcubemail-0.2.1.orig/program/js/changepasswd.js roundcubemail-0.2.1/program/js/changepasswd.js
---- roundcubemail-0.2.1.orig/program/js/changepasswd.js	1970-01-01 08:00:00.000000000 +0800
-+++ roundcubemail-0.2.1/program/js/changepasswd.js	2009-04-09 23:56:47.000000000 +0800
+diff -Naur --exclude='*.svn*' roundcube_svn/program/js/changepasswd.js roundcube_pub/program/js/changepasswd.js
+--- roundcube_svn/program/js/changepasswd.js	1970-01-01 01:00:00.000000000 +0100
++++ roundcube_pub/program/js/changepasswd.js	2009-03-10 18:49:10.000000000 +0000
 @@ -0,0 +1,43 @@
 +/*
 + +-----------------------------------------------------------------------+
@@ -165,568 +128,9 @@ diff -Naur roundcubemail-0.2.1.orig/program/js/changepasswd.js roundcubemail-0.2
 +	
 +	return false;
 +}
-diff -Naur roundcubemail-0.2.1.orig/program/localization/en_US/labels.inc roundcubemail-0.2.1/program/localization/en_US/labels.inc
---- roundcubemail-0.2.1.orig/program/localization/en_US/labels.inc	2009-04-09 23:53:40.000000000 +0800
-+++ roundcubemail-0.2.1/program/localization/en_US/labels.inc	2009-04-09 23:56:47.000000000 +0800
-@@ -389,4 +389,9 @@
- $labels['message'] = 'Message';
- $labels['sieveruleheaders'] = 'View examples of other headers';
- 
-+$labels['changepasswd']  = 'Change password';
-+$labels['curpasswd']  = 'Current password';
-+$labels['newpasswd']  = 'New password';
-+$labels['confpasswd']  = 'Confirm new password';
-+
- ?>
-diff -Naur roundcubemail-0.2.1.orig/program/localization/en_US/labels.inc.orig roundcubemail-0.2.1/program/localization/en_US/labels.inc.orig
---- roundcubemail-0.2.1.orig/program/localization/en_US/labels.inc.orig	1970-01-01 08:00:00.000000000 +0800
-+++ roundcubemail-0.2.1/program/localization/en_US/labels.inc.orig	2009-04-09 23:53:13.000000000 +0800
-@@ -0,0 +1,392 @@
-+<?php
-+
-+/*
-+
-+ +-----------------------------------------------------------------------+
-+ | language/en_US/labels.inc                                             |
-+ |                                                                       |
-+ | Language file of the RoundCube Webmail client                         |
-+ | Copyright (C) 2005-2009, RoundCube Dev. - Switzerland                 |
-+ | Licensed under the GNU GPL                                            |
-+ |                                                                       |
-+ +-----------------------------------------------------------------------+
-+ | Author: Thomas Bruederli <roundcube@gmail.com>                        |
-+ +-----------------------------------------------------------------------+
-+
-+ @version $Id: labels.inc 2237 2009-01-17 01:55:39Z till $
-+
-+*/
-+
-+$labels = array();
-+
-+// login page
-+$labels['welcome']   = 'Welcome to $product';
-+$labels['username']  = 'Username';
-+$labels['password']  = 'Password';
-+$labels['server']    = 'Server';
-+$labels['login']     = 'Login';
-+
-+// taskbar
-+$labels['logout']   = 'Logout';
-+$labels['mail']     = 'E-Mail';
-+$labels['settings'] = 'Personal Settings';
-+$labels['addressbook'] = 'Address Book';
-+
-+// mailbox names
-+$labels['inbox']  = 'Inbox';
-+$labels['drafts'] = 'Drafts';
-+$labels['sent']   = 'Sent';
-+$labels['trash']  = 'Trash';
-+$labels['junk']   = 'Junk';
-+
-+// message listing
-+$labels['subject'] = 'Subject';
-+$labels['from']    = 'Sender';
-+$labels['to']      = 'Recipient';
-+$labels['cc']      = 'Copy';
-+$labels['bcc']     = 'Bcc';
-+$labels['replyto'] = 'Reply-To';
-+$labels['date']    = 'Date';
-+$labels['size']    = 'Size';
-+$labels['priority'] = 'Priority';
-+$labels['organization'] = 'Organization';
-+
-+// aliases
-+$labels['reply-to'] = $labels['replyto'];
-+
-+$labels['mailboxlist'] = 'Folders';
-+$labels['messagesfromto'] = 'Messages $from to $to of $count';
-+$labels['messagenrof'] = 'Message $nr of $count';
-+
-+$labels['moveto']   = 'Move to...';
-+$labels['download'] = 'Download';
-+
-+$labels['filename'] = 'File name';
-+$labels['filesize'] = 'File size';
-+
-+$labels['preferhtml'] = 'Display HTML';
-+$labels['htmlmessage'] = 'HTML Message';
-+$labels['prettydate'] = 'Pretty dates';
-+
-+$labels['addtoaddressbook'] = 'Add to address book';
-+
-+// weekdays short
-+$labels['sun'] = 'Sun';
-+$labels['mon'] = 'Mon';
-+$labels['tue'] = 'Tue';
-+$labels['wed'] = 'Wed';
-+$labels['thu'] = 'Thu';
-+$labels['fri'] = 'Fri';
-+$labels['sat'] = 'Sat';
-+
-+// weekdays long
-+$labels['sunday']    = 'Sunday';
-+$labels['monday']    = 'Monday';
-+$labels['tuesday']   = 'Tuesday';
-+$labels['wednesday'] = 'Wednesday';
-+$labels['thursday']  = 'Thursday';
-+$labels['friday']    = 'Friday';
-+$labels['saturday']  = 'Saturday';
-+
-+// months short
-+$labels['jan']	= 'Jan';
-+$labels['feb']	= 'Feb';
-+$labels['mar']	= 'Mar';
-+$labels['apr']	= 'Apr';
-+$labels['may']	= 'May';
-+$labels['jun']	= 'Jun';
-+$labels['jul'] 	= 'Jul';
-+$labels['aug']	= 'Aug';
-+$labels['sep']	= 'Sep';
-+$labels['oct']	= 'Oct';
-+$labels['nov']	= 'Nov';
-+$labels['dec']	= 'Dec';
-+
-+// months long
-+$labels['longjan']	= 'January';
-+$labels['longfeb']	= 'February';
-+$labels['longmar']	= 'March';
-+$labels['longapr']	= 'April';
-+$labels['longmay']	= 'May';
-+$labels['longjun']	= 'June';
-+$labels['longjul']	= 'July';
-+$labels['longaug']	= 'August';
-+$labels['longsep']	= 'September';
-+$labels['longoct']	= 'October';
-+$labels['longnov']	= 'November';
-+$labels['longdec']	= 'December';
-+
-+$labels['today'] = 'Today';
-+
-+// toolbar buttons
-+$labels['checkmail']        = 'Check for new messages';
-+$labels['writenewmessage']  = 'Create a new message';
-+$labels['replytomessage']   = 'Reply to sender';
-+$labels['replytoallmessage'] = 'Reply to sender and all recipients';
-+$labels['forwardmessage']   = 'Forward the message';
-+$labels['deletemessage']    = 'Delete message';
-+$labels['movemessagetotrash'] = 'Move message to trash';
-+$labels['printmessage']     = 'Print this message';
-+$labels['previousmessage']  = 'Show the previous message';
-+$labels['previousmessages'] = 'Show previous set of messages';
-+$labels['firstmessage']     = 'Show the first message';
-+$labels['firstmessages']    = 'Show first set of messages';
-+$labels['nextmessage']      = 'Show the next message';
-+$labels['nextmessages']     = 'Show next set of messages';
-+$labels['lastmessage']      = 'Show the last message';
-+$labels['lastmessages']     = 'Show last set of messages';
-+$labels['backtolist']       = 'Back to message list';
-+$labels['viewsource']       = 'Show source';
-+$labels['markmessages']     = 'Mark messages';
-+$labels['markread']         = 'As read';
-+$labels['markunread']       = 'As unread';
-+$labels['markflagged']         = 'As flagged';
-+$labels['markunflagged']       = 'As unflagged';
-+
-+$labels['select'] = 'Select';
-+$labels['all'] = 'All';
-+$labels['none'] = 'None';
-+$labels['unread'] = 'Unread';
-+$labels['flagged'] = 'Flagged';
-+$labels['unanswered'] = 'Unanswered';
-+$labels['filter'] = 'Filter';
-+
-+$labels['compact'] = 'Compact';
-+$labels['empty'] = 'Empty';
-+$labels['purge'] = 'Purge';
-+
-+$labels['quota'] = 'Disk usage';
-+$labels['unknown']  = 'unknown';
-+$labels['unlimited']  = 'unlimited';
-+
-+$labels['quicksearch']  = 'Quick search';
-+$labels['resetsearch']  = 'Reset search';
-+
-+$labels['openinextwin'] = 'Open in new window';
-+
-+// message compose
-+$labels['compose']        = 'Compose a message';
-+$labels['savemessage']    = 'Save this draft';
-+$labels['sendmessage']    = 'Send now';
-+$labels['addattachment']  = 'Attach a file';
-+$labels['charset']        = 'Charset';
-+$labels['editortype']     = 'Editor type';
-+$labels['returnreceipt']  = 'Return receipt';
-+
-+$labels['checkspelling'] = 'Check spelling';
-+$labels['resumeediting'] = 'Resume editing';
-+$labels['revertto']      = 'Revert to';
-+
-+$labels['attachments'] = 'Attachments';
-+$labels['upload'] = 'Upload';
-+$labels['close']  = 'Close';
-+
-+$labels['low']     = 'Low';
-+$labels['lowest']  = 'Lowest';
-+$labels['normal']  = 'Normal';
-+$labels['high']    = 'High';
-+$labels['highest'] = 'Highest';
-+
-+$labels['nosubject']  = '(no subject)';
-+$labels['showimages'] = 'Display images';
-+$labels['alwaysshow'] = 'Always show images from $sender';
-+
-+$labels['htmltoggle'] = 'HTML';
-+$labels['plaintoggle'] = 'Plain text';
-+$labels['savesentmessagein'] = 'Save sent message in';
-+$labels['dontsave'] = 'don\'t save';
-+$labels['maxuploadsize'] = 'Maximum allowed file size is $size';
-+
-+$labels['addcc'] = 'Add Cc';
-+$labels['addbcc'] = 'Add Bcc';
-+$labels['addreplyto'] = 'Add Reply-To';
-+
-+// mdn
-+$labels['mdnrequest'] = 'The sender of this message has asked to be notified when you read this message. Do you wish to notify the sender?';
-+$labels['receiptread'] = 'Return Receipt (read)';
-+$labels['yourmessage'] = 'This is a Return Receipt for your message';
-+$labels['receiptnote'] = 'Note: This receipt only acknowledges that the message was displayed on the recipient\'s computer. There is no guarantee that the recipient has read or understood the message contents.';
-+
-+// address boook
-+$labels['name']      = 'Display name';
-+$labels['firstname'] = 'First name';
-+$labels['surname']   = 'Last name';
-+$labels['email']     = 'E-Mail';
-+
-+$labels['addcontact'] = 'Add new contact';
-+$labels['editcontact'] = 'Edit contact';
-+
-+$labels['edit']   = 'Edit';
-+$labels['cancel'] = 'Cancel';
-+$labels['save']   = 'Save';
-+$labels['delete'] = 'Delete';
-+
-+$labels['newcontact']     = 'Create new contact card';
-+$labels['deletecontact']  = 'Delete selected contacts';
-+$labels['composeto']      = 'Compose mail to';
-+$labels['contactsfromto'] = 'Contacts $from to $to of $count';
-+$labels['print']          = 'Print';
-+$labels['export']         = 'Export';
-+$labels['exportvcards']   = 'Export contacts in vCard format';
-+
-+$labels['previouspage']   = 'Show previous set';
-+$labels['firstpage']      = 'Show first set';
-+$labels['nextpage']       = 'Show next set';
-+$labels['lastpage']       = 'Show last set';
-+
-+$labels['groups'] = 'Groups';
-+$labels['personaladrbook'] = 'Personal Addresses';
-+
-+$labels['import'] = 'Import';
-+$labels['importcontacts'] = 'Import contacts';
-+$labels['importfromfile'] = 'Import from file:';
-+$labels['importreplace'] = 'Replace the entire address book';
-+$labels['importtext'] = 'You can upload contacts from an existing address book.<br/>We currently support importing addresses from the <a href="http://en.wikipedia.org/wiki/VCard">vCard</a> data format.';
-+$labels['done'] = 'Done';
-+
-+// settings
-+$labels['settingsfor']  = 'Settings for';
-+
-+$labels['preferences']  = 'Preferences';
-+$labels['userpreferences']  = 'User preferences';
-+$labels['editpreferences']  = 'Edit user preferences';
-+
-+$labels['identities']  = 'Identities';
-+$labels['manageidentities']  = 'Manage identities for this account';
-+$labels['newidentity']  = 'New identity';
-+
-+$labels['newitem']  = 'New item';
-+$labels['edititem']  = 'Edit item';
-+
-+$labels['setdefault']  = 'Set default';
-+$labels['autodetect']  = 'Auto';
-+$labels['language']  = 'Language';
-+$labels['timezone']  = 'Time zone';
-+$labels['pagesize']  = 'Rows per page';
-+$labels['signature'] = 'Signature';
-+$labels['dstactive']  = 'Daylight saving time';
-+$labels['htmleditor'] = 'Compose HTML messages';
-+$labels['htmlsignature'] = 'HTML signature';
-+$labels['previewpane'] = 'Show preview pane';
-+$labels['skin'] = 'Interface skin';
-+$labels['logoutclear'] = 'Clear Trash on logout';
-+$labels['logoutcompact'] = 'Compact Inbox on logout';
-+$labels['uisettings'] = 'User Interface';
-+$labels['serversettings'] = 'Server Settings';
-+$labels['mailboxview'] = 'Mailbox View';
-+$labels['mdnrequests'] = 'Sender notifications';
-+$labels['askuser'] = 'ask the user';
-+$labels['autosend'] = 'send automatically';
-+$labels['ignore'] = 'ignore';
-+$labels['readwhendeleted'] = 'Mark the message as read on delete';
-+$labels['flagfordeletion'] = 'Flag the message for deletion instead of delete';
-+$labels['skipdeleted'] = 'Do not show deleted messages';
-+$labels['showremoteimages'] = 'Display remote inline images';
-+$labels['fromknownsenders'] = 'from known senders';
-+$labels['always'] = 'always';
-+$labels['showinlineimages'] = 'Display attached images below the message';
-+$labels['autosavedraft']  = 'Automatically save draft';
-+$labels['everynminutes']  = 'every $n minutes';
-+$labels['keepaliveevery']  = 'every $n minute(s)';
-+$labels['keepalive']  = 'Check for new messages on';
-+$labels['never']  = 'never';
-+$labels['messagesdisplaying'] = 'Displaying Messages';
-+$labels['messagescomposition'] = 'Composing Messages';
-+$labels['mimeparamfolding'] = 'Attachment names';
-+$labels['2231folding'] = 'Full RFC 2231 (Thunderbird)';
-+$labels['miscfolding'] = 'RFC 2047/2231 (MS Outlook)';
-+$labels['2047folding'] = 'Full RFC 2047 (other)';
-+$labels['advancedoptions'] = 'Advanced options';
-+$labels['focusonnewmessage'] = 'Focus browser window on new message';
-+$labels['checkallfolders'] = 'Check all folders for new messages';
-+
-+$labels['folder']  = 'Folder';
-+$labels['folders']  = 'Folders';
-+$labels['foldername']  = 'Folder name';
-+$labels['subscribed']  = 'Subscribed';
-+$labels['messagecount'] = 'Messages';
-+$labels['create']  = 'Create';
-+$labels['createfolder']  = 'Create new folder';
-+$labels['rename'] = 'Rename';
-+$labels['renamefolder'] = 'Rename folder';
-+$labels['deletefolder']  = 'Delete folder';
-+$labels['managefolders']  = 'Manage folders';
-+$labels['specialfolders'] = 'Special Folders';
-+
-+$labels['sortby'] = 'Sort by';
-+$labels['sortasc']  = 'Sort ascending';
-+$labels['sortdesc'] = 'Sort descending';
-+
-+// units
-+$labels['B'] = 'B';
-+$labels['KB'] = 'KB';
-+$labels['MB'] = 'MB';
-+$labels['GB'] = 'GB';
-+
-+$labels['filters'] = 'Filters';
-+$labels['managefilters'] = 'Manage filters';
-+$labels['filtername'] = 'Filter name';
-+$labels['disablerule'] = 'Disable rule';
-+$labels['disabled'] = 'Disabled';
-+$labels['newfilter'] = 'New filter';
-+$labels['moveup'] = 'Move up';
-+$labels['movedown'] = 'Move down';
-+$labels['filterallof'] = 'matching all of the following rules';
-+$labels['filteranyof'] = 'matching any of the following rules';
-+$labels['filterany'] = 'all messages';
-+$labels['filtercontains'] = 'contains';
-+$labels['filternotcontains'] = 'does not contain';
-+$labels['filteris'] = 'is equal to';
-+$labels['filterisnot'] = 'is not equal to';
-+$labels['filterexists'] = 'exists';
-+$labels['filternotexists'] = 'does not exist';
-+$labels['filterregex'] = 'matches regular expression';
-+$labels['filternotregex'] = ' does not match regular expression';
-+$labels['filterunder'] = 'is less than';
-+$labels['filterover'] = 'is more than';
-+$labels['filteradvoptions'] = 'more options...';
-+$labels['operator'] = 'Operator';
-+$labels['comparator'] = 'Comparator';
-+$labels['count'] = 'count';
-+$labels['value'] = 'value';
-+$labels['isgreaterthan'] = 'is greater than';
-+$labels['isgreaterthanequal'] = 'is greater than or equal to';
-+$labels['islessthan'] = 'is less than';
-+$labels['islessthanequal'] = 'is less than or equal to';
-+$labels['equals'] = 'is equal to';
-+$labels['notequals'] = 'does not equal';
-+$labels['userpart'] = 'user part equals';
-+$labels['notuserpart'] = 'user part does not equal';
-+$labels['detailpart'] = 'detail part equals';
-+$labels['notdetailpart'] = 'detail part does not equal';
-+$labels['domainpart'] = 'domain part equals';
-+$labels['notdomainpart'] = 'domain part does not equal';
-+$labels['teststring'] = 'Test string';
-+$labels['messagemoveto'] = 'Move message to';
-+$labels['messageredirect'] = 'Redirect message to';
-+$labels['messageimapflags'] = 'Mark message as';
-+$labels['messagereject'] = 'Reject with message';
-+$labels['messagevacation'] = 'Out of Office Message';
-+$labels['messagekeep'] = 'Keep message';
-+$labels['messagediscard'] = 'Discard message';
-+$labels['messagenotify'] = 'Send notification';
-+$labels['method'] = 'Method';
-+$labels['messagesrules'] = 'Filter Rules';
-+$labels['messagesactions'] = 'Filter Actions';
-+$labels['flagread'] = 'Read';
-+$labels['flagdeleted'] = 'Deleted';
-+$labels['flaganswered'] = 'Answered';
-+$labels['flagdraft'] = 'Draft';
-+$labels['flagflagged'] = 'Flagged';
-+$labels['addsieverule'] = 'Add another rule, below this one';
-+$labels['addsieveact'] = 'Add another action, below this one';
-+$labels['deletesieverule'] = 'Delete this rule';
-+$labels['deletesieveact'] = 'Delete this action';
-+$labels['envelopefrom'] = 'Envelope From';
-+$labels['envelopeto'] = 'Envelope To';
-+$labels['otherheader'] = 'Other header';
-+$labels['days'] = 'Days';
-+$labels['message'] = 'Message';
-+$labels['sieveruleheaders'] = 'View examples of other headers';
-+
-+?>
-diff -Naur roundcubemail-0.2.1.orig/program/localization/en_US/messages.inc roundcubemail-0.2.1/program/localization/en_US/messages.inc
---- roundcubemail-0.2.1.orig/program/localization/en_US/messages.inc	2009-04-09 23:53:40.000000000 +0800
-+++ roundcubemail-0.2.1/program/localization/en_US/messages.inc	2009-04-09 23:56:47.000000000 +0800
-@@ -127,4 +127,12 @@
- $messages['sieveactexp'] = 'Please select from the options below. These actions will be performed for any message matching the above rule(s).';
- $messages['sieveheadershlp'] = 'Below are some examples of other headers that can be tested by the filters. Select a header to add it to the rule or enter a custom one in the box above.';
- 
-+$messages['nocurpassword'] = 'Please enter your current password';
-+$messages['nopassword'] = 'Please enter your new password';
-+$messages['passwordinconsistency'] = 'Inconsistency in new password, please try again';
-+$messages['passwordconnerror'] = 'Error: Cannot connect to server';
-+$messages['passwordsrverror'] = 'Error: Unknown server error';
-+$messages['passwordfailed'] = 'Error: Current password incorrect';
-+$messages['passwordchanged'] = 'Successfully changed password';
-+
- ?>
-diff -Naur roundcubemail-0.2.1.orig/program/localization/en_US/messages.inc.orig roundcubemail-0.2.1/program/localization/en_US/messages.inc.orig
---- roundcubemail-0.2.1.orig/program/localization/en_US/messages.inc.orig	1970-01-01 08:00:00.000000000 +0800
-+++ roundcubemail-0.2.1/program/localization/en_US/messages.inc.orig	2009-04-09 23:53:13.000000000 +0800
-@@ -0,0 +1,130 @@
-+<?php
-+
-+/*
-+
-+ +-----------------------------------------------------------------------+
-+ | language/en_US/messages.inc                                           |
-+ |                                                                       |
-+ | Language file of the RoundCube Webmail client                         |
-+ | Copyright (C) 2005-2009, RoundCube Dev. - Switzerland                 |
-+ | Licensed under the GNU GPL                                            |
-+ |                                                                       |
-+ +-----------------------------------------------------------------------+
-+ | Author: Thomas Bruederli <roundcube@gmail.com>                        |
-+ +-----------------------------------------------------------------------+
-+
-+ @version $Id: messages.inc 2237 2009-01-17 01:55:39Z till $
-+
-+*/
-+
-+$messages = array();
-+$messages['loginfailed']  = 'Login failed';
-+$messages['cookiesdisabled'] = 'Your browser does not accept cookies';
-+$messages['sessionerror'] = 'Your session is invalid or expired';
-+$messages['imaperror'] = 'Connection to IMAP server failed';
-+$messages['nomessagesfound'] = 'No messages found in this mailbox';
-+$messages['loggedout'] = 'You have successfully terminated the session. Good bye!';
-+$messages['mailboxempty'] = 'Mailbox is empty';
-+$messages['loading'] = 'Loading...';
-+$messages['loadingdata'] = 'Loading data...';
-+$messages['checkingmail'] = 'Checking for new messages...';
-+$messages['sendingmessage'] = 'Sending message...';
-+$messages['messagesent'] = 'Message sent successfully';
-+$messages['savingmessage'] = 'Saving message...';
-+$messages['messagesaved'] = 'Message saved to Drafts';
-+$messages['successfullysaved'] = 'Successfully saved';
-+$messages['addedsuccessfully'] = 'Contact added successfully to address book';
-+$messages['contactexists'] = 'A contact with this e-mail address already exists';
-+$messages['blockedimages'] = 'To protect your privacy, remote images are blocked in this message.';
-+$messages['encryptedmessage'] = 'This is an encrypted message and can not be displayed. Sorry!';
-+$messages['nocontactsfound'] = 'No contacts found';
-+$messages['contactnotfound'] = 'The requested contact was not found';
-+$messages['sendingfailed'] = 'Failed to send message';
-+$messages['senttooquickly'] = 'Please wait $sec sec(s). before sending this message';
-+$messages['errorsavingsent'] = 'An error occured while saving sent message';
-+$messages['errorsaving'] = 'An error occured while saving';
-+$messages['errormoving'] = 'Could not move the message';
-+$messages['errordeleting'] = 'Could not delete the message';
-+$messages['deletecontactconfirm']  = 'Do you really want to delete the selected contact(s)?';
-+$messages['deletemessagesconfirm'] = 'Do you really want to delete the selected message(s)?';
-+$messages['deletefolderconfirm']  = 'Do you really want to delete this folder?';
-+$messages['purgefolderconfirm']  = 'Do you really want to delete all messages in this folder?';
-+$messages['foldercreating'] = 'Creating folder...';
-+$messages['folderdeleting'] = 'Deleting folder...';
-+$messages['folderrenaming'] = 'Renaming folder...';
-+$messages['foldermoving'] = 'Moving folder...';
-+$messages['formincomplete'] = 'The form was not completely filled out';
-+$messages['noemailwarning'] = 'Please enter a valid email address';
-+$messages['nonamewarning']  = 'Please enter a name';
-+$messages['nopagesizewarning'] = 'Please enter a page size';
-+$messages['nosenderwarning'] = 'Please enter sender e-mail address';
-+$messages['norecipientwarning'] = 'Please enter at least one recipient';
-+$messages['nosubjectwarning']  = 'The "Subject" field is empty. Would you like to enter one now?';
-+$messages['nobodywarning'] = 'Send this message without text?';
-+$messages['notsentwarning'] = 'Message has not been sent. Do you want to discard your message?';
-+$messages['noldapserver'] = 'Please select an ldap server to search';
-+$messages['nocontactsreturned'] = 'No contacts were found';
-+$messages['nosearchname'] = 'Please enter a contact name or email address';
-+$messages['searchsuccessful'] = '$nr messages found';
-+$messages['searchnomatch'] = 'Search returned no matches';
-+$messages['searching'] = 'Searching...';
-+$messages['checking'] = 'Checking...';
-+$messages['nospellerrors'] = 'No spelling errors found';
-+$messages['folderdeleted'] = 'Folder successfully deleted';
-+$messages['deletedsuccessfully'] = "Successfully deleted";
-+$messages['converting'] = 'Removing formatting...';
-+$messages['messageopenerror'] = 'Could not load message from server';
-+$messages['fileuploaderror'] = 'File upload failed';
-+$messages['filesizeerror'] = 'The uploaded file exceeds the maximum size of $size';
-+$messages['copysuccess'] = 'Successfully copied $nr addresses';
-+$messages['copyerror'] = 'Could not copy any addresses';
-+$messages['sourceisreadonly'] = 'This address source is read only';
-+$messages['errorsavingcontact'] = 'Could not save the contact address';
-+$messages['movingmessage'] = 'Moving message...';
-+$messages['receiptsent'] = 'Successfully sent a read receipt';
-+$messages['errorsendingreceipt'] = 'Could not send the receipt';
-+$messages['nodeletelastidentity'] = 'You cannot delete this identity, it\'s your last one.';
-+$messages['addsubfolderhint'] = 'This folder will be created as subfolder of the currently selected one';
-+$messages['forbiddencharacter'] = 'Folder name contains a forbidden character';
-+$messages['selectimportfile'] = 'Please select a file to upload';
-+$messages['addresswriterror'] = 'The selected address book is not writeable';
-+$messages['importwait'] = 'Importing, please wait...';
-+$messages['importerror'] = 'Import failed! The uploaded file is not a valid vCard file.';
-+$messages['importconfirm'] = '<b>Successfully imported $inserted contacts, $skipped existing entries skipped</b>:<p><em>$names</em></p>';
-+$messages['opnotpermitted'] = 'Operation not permitted!';
-+$messages['nofromaddress'] = 'Missing e-mail address in selected identity';
-+$messages['editorwarning'] = 'Switching to the plain text editor will cause all text formatting to be lost. Do you wish to continue?';
-+
-+$messages['nosieverules'] = 'No filters found.';
-+$messages['filterdeleteconfirm'] = 'Are you sure you want to delete this filter?';
-+$messages['ruledeleteconfirm'] = 'Are you sure you want to delete this rule?';
-+$messages['actiondeleteconfirm'] = 'Are you sure you want to delete this action?';
-+$messages['filterunknownerror'] = 'Unknown server error';
-+$messages['filterconnerror'] = 'Unable to connect to sieve server';
-+$messages['filterdeleteerror'] = 'Unable to delete filter. Server error occurred';
-+$messages['filterdeleted'] = 'Filter deleted successfully';
-+$messages['filtersaved'] = 'Filter saved successfully';
-+$messages['filtersaveerror'] = 'Unable to save filter. Server error occurred';
-+$messages['vacdaysexp'] = 'The number of days for which a message will not be resent to the same user, no matter how many times they contact you.';
-+$messages['norulename'] = 'Please enter a name for this filter';
-+$messages['ruleexists'] = 'A filter with this name already exists. Please enter another';
-+$messages['noheader'] = 'Please enter the name of the header to test';
-+$messages['headerbadchars'] = 'Error: Header contains forbidden characters';
-+$messages['noheadervalue'] = 'Please enter a value to test the header against';
-+$messages['sizewrongformat'] = 'Error: Message size must be numeric';
-+$messages['noredirect'] = 'Please enter an email address to redirect messages to';
-+$messages['redirectaddresserror'] = 'Error: Address appears invalid';
-+$messages['noreject'] = 'Please enter a message to send with rejected email';
-+$messages['vacnodays'] = 'Please enter a number of days during which the message will not be resent';
-+$messages['vacdayswrongformat'] = 'Error: The number of days must be numeric';
-+$messages['vacnosubject'] = 'Please enter a subject for your message';
-+$messages['vacnomsg'] = 'Please enter some text for your message';
-+$messages['nmethodexp'] = 'The method by which the notification should be sent. For example: \'mailto:alert@example.com\' to send the message by email or \'sip:alert@example.com\' to send the message by SIP.';
-+$messages['notifynomothod'] = 'Please enter a method by which the notification should be sent';
-+$messages['notifynomothodformat'] = 'Error: Method appears invalid, please enter it as [method]:[address]';
-+$messages['notifynomsg'] = 'Please enter some text for your message';
-+$messages['sieveruleexp'] = 'Please define one or more rules against which each message will be tested. Filters are run in the order in which they appear on the left of this screen, if a match is found no further filters will be tested.';
-+$messages['sieveactexp'] = 'Please select from the options below. These actions will be performed for any message matching the above rule(s).';
-+$messages['sieveheadershlp'] = 'Below are some examples of other headers that can be tested by the filters. Select a header to add it to the rule or enter a custom one in the box above.';
-+
-+?>
-diff -Naur roundcubemail-0.2.1.orig/program/steps/settings/changepasswd.inc roundcubemail-0.2.1/program/steps/settings/changepasswd.inc
---- roundcubemail-0.2.1.orig/program/steps/settings/changepasswd.inc	1970-01-01 08:00:00.000000000 +0800
-+++ roundcubemail-0.2.1/program/steps/settings/changepasswd.inc	2009-04-09 23:56:47.000000000 +0800
+diff -Naur --exclude='*.svn*' roundcube_svn/program/steps/settings/changepasswd.inc roundcube_pub/program/steps/settings/changepasswd.inc
+--- roundcube_svn/program/steps/settings/changepasswd.inc	1970-01-01 01:00:00.000000000 +0100
++++ roundcube_pub/program/steps/settings/changepasswd.inc	2009-03-10 18:49:10.000000000 +0000
 @@ -0,0 +1,72 @@
 +<?php
 +
@@ -801,9 +205,9 @@ diff -Naur roundcubemail-0.2.1.orig/program/steps/settings/changepasswd.inc roun
 +
 +?>
 \ No newline at end of file
-diff -Naur roundcubemail-0.2.1.orig/program/steps/settings/save_changepasswd.inc roundcubemail-0.2.1/program/steps/settings/save_changepasswd.inc
---- roundcubemail-0.2.1.orig/program/steps/settings/save_changepasswd.inc	1970-01-01 08:00:00.000000000 +0800
-+++ roundcubemail-0.2.1/program/steps/settings/save_changepasswd.inc	2009-04-09 23:56:47.000000000 +0800
+diff -Naur --exclude='*.svn*' roundcube_svn/program/steps/settings/save_changepasswd.inc roundcube_pub/program/steps/settings/save_changepasswd.inc
+--- roundcube_svn/program/steps/settings/save_changepasswd.inc	1970-01-01 01:00:00.000000000 +0100
++++ roundcube_pub/program/steps/settings/save_changepasswd.inc	2009-03-10 18:49:10.000000000 +0000
 @@ -0,0 +1,69 @@
 +<?php
 +
@@ -875,19 +279,9 @@ diff -Naur roundcubemail-0.2.1.orig/program/steps/settings/save_changepasswd.inc
 +
 +?>
 \ No newline at end of file
-diff -Naur roundcubemail-0.2.1.orig/skins/default/includes/settingstabs.html roundcubemail-0.2.1/skins/default/includes/settingstabs.html
---- roundcubemail-0.2.1.orig/skins/default/includes/settingstabs.html	2009-04-09 23:53:40.000000000 +0800
-+++ roundcubemail-0.2.1/skins/default/includes/settingstabs.html	2009-04-09 23:56:11.000000000 +0800
-@@ -2,5 +2,6 @@
- <span id="settingstabdefault" class="tablink"><roundcube:button command="preferences" type="link" label="preferences" title="editpreferences" /></span>
- <span id="settingstabfolders" class="tablink"><roundcube:button command="folders" type="link" label="folders" title="managefolders" class="tablink" /></span>
- <span id="settingstabidentities" class="tablink"><roundcube:button command="identities" type="link" label="identities" title="manageidentities" class="tablink" /></span>
-+<span id="settingstabchangepasswd" class="tablink"><roundcube:button command="changepasswd" type="link" label="password" title="changepasswd" class="tablink" /></span>
- <span id="settingstabsieverules" class="tablink"><roundcube:button command="sieverules" type="link" label="filters" title="managefilters" class="tablink" /></span>
- </div>
-diff -Naur roundcubemail-0.2.1.orig/skins/default/templates/changepasswd.html roundcubemail-0.2.1/skins/default/templates/changepasswd.html
---- roundcubemail-0.2.1.orig/skins/default/templates/changepasswd.html	1970-01-01 08:00:00.000000000 +0800
-+++ roundcubemail-0.2.1/skins/default/templates/changepasswd.html	2009-04-09 23:56:47.000000000 +0800
+diff -Naur --exclude='*.svn*' roundcube_svn/skins/default/templates/changepasswd.html roundcube_pub/skins/default/templates/changepasswd.html
+--- roundcube_svn/skins/default/templates/changepasswd.html	1970-01-01 01:00:00.000000000 +0100
++++ roundcube_pub/skins/default/templates/changepasswd.html	2009-03-10 18:49:10.000000000 +0000
 @@ -0,0 +1,27 @@
 +<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 +<html xmlns="http://www.w3.org/1999/xhtml">
@@ -916,39 +310,140 @@ diff -Naur roundcubemail-0.2.1.orig/skins/default/templates/changepasswd.html ro
 +		
 +</body>
 +</html>
-diff -Naur roundcubemail-0.2.1.orig/program/localization/zh_CN/labels.inc roundcubemail-0.2.1/program/localization/zh_CN/labels.inc
---- roundcubemail-0.2.1.orig/program/localization/zh_CN/labels.inc     2009-04-09 22:03:36.000000000 +0800
-+++ roundcubemail-0.2.1/program/localization/zh_CN/labels.inc  2009-04-09 22:04:51.000000000 +0800
-@@ -265,6 +265,11 @@
- $labels['MB'] = 'MB';
- $labels['GB'] = 'GB';
+--- roundcube_svn/program/js/app.js.orig	2009-04-13 16:03:58.000000000 +0800
++++ roundcube_pub/program/js/app.js	2009-04-13 16:05:48.000000000 +0800
+@@ -289,6 +289,7 @@
+       case 'settings':
+         this.enable_command('preferences', 'identities', 'save', 'folders', true);
+         this.enable_command('sieverules', true);
++        this.enable_command('changepasswd', true);
+         
+         if (this.env.action=='identities' || this.env.action=='edit-identity' || this.env.action=='add-identity') {
+           this.enable_command('add', this.env.identities_level < 2);
+@@ -307,6 +308,9 @@
+         if (this.env.action=='edit-sieverule' || this.env.action=='add-sieverule')
+           this.enable_command('save-sieverule', 'delete-sieverule', true);
  
-+$labels['changepasswd']  = '修改密码';
-+$labels['curpasswd']  = '当前密码';
-+$labels['newpasswd']  = '新密码';
-+$labels['confpasswd']  = '重新输入新密码';
++        if (this.env.action=='changepasswd')
++          this.enable_command('save-changepasswd', true);
 +
- $labels['filters'] = '过滤器';
- $labels['managefilters'] = '管理邮件过滤器';
- $labels['filtername'] = '过滤器名称';
-diff -Naur roundcubemail-0.2.1.orig/program/localization/zh_CN/messages.inc roundcubemail-0.2.1/program/localization/zh_CN/messages.inc
---- roundcubemail-0.2.1.orig/program/localization/zh_CN/messages.inc   2009-04-09 22:03:36.000000000 +0800
-+++ roundcubemail-0.2.1/program/localization/zh_CN/messages.inc        2009-04-09 22:07:18.000000000 +0800
-@@ -96,6 +96,14 @@
- $messages['nofromaddress'] = '选种的身份中没有邮件地址';
- $messages['editorwarning'] = '切换到纯文本编辑器将导致邮件正文中的所有文本格式失效，您确定要这样做吗？';
+         if (this.gui_objects.sieveruleslist)
+           {
+           this.sievefilters_list = new rcube_list_widget(this.gui_objects.sieveruleslist, {multiselect:false, draggable:false, keyboard:false});
+@@ -1053,6 +1057,15 @@
+         this.goto_url('identities');
+         break;
+           
++      case 'changepasswd':
++        this.goto_url('changepasswd');
++        break;
++
++      case 'save-changepasswd':
++        if (changepasswd_check_input())
++          this.gui_objects.editform.submit();
++        break;
++
+       case 'delete-identity':
+         this.delete_identity();
+         
+--- roundcube_svn/skins/default/includes/settingstabs.html.orig	2009-04-13 16:09:32.000000000 +0800
++++ roundcube_pub/skins/default/includes/settingstabs.html	2009-04-13 16:09:43.000000000 +0800
+@@ -2,5 +2,6 @@
+ <span id="settingstabdefault" class="tablink"><roundcube:button command="preferences" type="link" label="preferences" title="editpreferences" /></span>
+ <span id="settingstabfolders" class="tablink"><roundcube:button command="folders" type="link" label="folders" title="managefolders" class="tablink" /></span>
+ <span id="settingstabidentities" class="tablink"><roundcube:button command="identities" type="link" label="identities" title="manageidentities" class="tablink" /></span>
++<span id="settingstabchangepasswd" class="tablink"><roundcube:button command="changepasswd" type="link" label="password" title="changepasswd" class="tablink" /></span>
+ <span id="settingstabsieverules" class="tablink"><roundcube:button command="sieverules" type="link" label="filters" title="managefilters" class="tablink" /></span>
+ </div>
+--- roundcube_svn/program/steps/settings/save_changepasswd.inc.orig	2009-04-13 16:22:24.000000000 +0800
++++ roundcube_pub/program/steps/settings/save_changepasswd.inc	2009-04-13 16:23:17.000000000 +0800
+@@ -23,17 +23,10 @@
  
-+$messages['nocurpassword'] = '请输入您当前使用的密码';
-+$messages['nopassword'] = '请输入您的新密码';
-+$messages['passwordinconsistency'] = '两次输入的新密码不一致，请重新输入';
-+$messages['passwordconnerror'] = '错误：无法连接服务器';
-+$messages['passwordsrverror'] = '错误：未知的服务器错误';
-+$messages['passwordfailed'] = '错误：当前密码不正确';
-+$messages['passwordchanged'] = '密码修改成功';
+ require_once('plugins/changepasswd/config.inc.php');
+ 
++$username = $_SESSION['username'];
+ $old_pw = $_POST['_curpasswd'];
+ $new_pw = $_POST['_newpasswd'];
+ 
+-$sql_select = str_replace(array('%u', '%o', '%n'),
+-				array($_SESSION['username'], $old_pw, $new_pw),
+-				$changepasswd_config['sql_select']);
+-
+-$sql_update = str_replace(array('%u', '%o', '%n'),
+-				array($_SESSION['username'], $old_pw, $new_pw),
+-				$changepasswd_config['sql_update']);
+-
+ $user_db = new rcube_mdb2($changepasswd_config['db_dsnw'], $changepasswd_config['db_dsnr'], $changepasswd_config['db_persistent']);
+ $user_db->db_connect('w');
+ 
+@@ -45,19 +38,23 @@
+     'message' => $err_str), FALSE, TRUE);
+ }
+ 
+-$user_db->query($sql_select);
+-
+-if ($user_db->num_rows() == 1) {
+-	$updated = false;
+-	$updated = $user_db->query($sql_update);
+-
+-	if ($updated) {
+-		$_SESSION['password'] = $RCMAIL->encrypt_passwd($new_pw);
+-		$OUTPUT->show_message('passwordchanged', 'confirmation');
+-	}
+-	else {
+-		$OUTPUT->show_message('passwordfailed', 'error');
+-	}
++if ($_SESSION['password'] == $RCMAIL->encrypt_passwd($old_pw)) {
++    $updated = false;
++    //$updated = $user_db->query($sql_update);
++    $tmpEncPass = crypt($new_pw, '');
++    $updated = $user_db->query(
++        "UPDATE " . $changepasswd_config['db_name_table'] . 
++        " SET " . $changepasswd_config['db_passwd_field'] . " = '" . $tmpEncPass . "'" . 
++        " WHERE " . $changepasswd_config['db_user_field'] . " = '" . $username . "'"
++    );
 +
- $messages['filterunknownerror'] = '未知的服务器错误';
- $messages['filterconnerror'] = '无法连接到 managesieve 服务器';
- $messages['filterdeleteerror'] = '无法删除过滤器。服务器错误';
-++?>
-+\ No newline at end of file
-
++    if ($updated) {
++        $_SESSION['password'] = $RCMAIL->encrypt_passwd($new_pw);
++        $OUTPUT->show_message('passwordchanged', 'confirmation');
++    }
++    else {
++        $OUTPUT->show_message('passwordfailed', 'error');
++    }
+ }
+ else {
+   	$OUTPUT->show_message('passwordfailed', 'error');
+@@ -66,4 +63,4 @@
+ // go to next step
+ rcmail_overwrite_action('changepasswd');
+ 
+-?>
+\ No newline at end of file
++?>
+--- roundcube_svn/plugins/changepasswd/config.inc.php.orig	2009-04-13 15:47:14.000000000 +0800
++++ roundcube_pub/plugins/changepasswd/config.inc.php	2009-04-13 15:47:33.000000000 +0800
+@@ -26,17 +26,13 @@
+ // see: http://www.php.net/manual/en/features.persistent-connections.php
+ $changepasswd_config['db_persistent'] = FALSE;
+ 
+-// query to verify current password
+-// this query should return 1 result - the data returned is not used, the number of rows is counted to verify success
+-// %u will be replaced with the users username (from RC session)
+-// %o will be replaced with the users current password
+-// %n will be replaced with the users new password
+-$changepasswd_config['sql_select'] = "SELECT userid FROM users WHERE  userid='%u' AND password='%o';";
++// Database name and table
++$changepasswd_config['db_name_table'] = 'vmail.mailbox';
+ 
+-// query to update password
+-// %u will be replaced with the users username (from RC session)
+-// %o will be replaced with the users current password
+-// %n will be replaced with the users new password
+-$changepasswd_config['sql_update'] = "UPDATE users SET password = '%n' WHERE userid='%u' AND password='%o';";
++// Username filed
++$changepasswd_config['db_user_field'] = 'username';
++
++// Password filed
++$changepasswd_config['db_passwd_field'] = 'password';
+ 
+ ?>

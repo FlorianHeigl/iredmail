@@ -5,6 +5,8 @@
 # Configure pysieved.
 pysieved_config()
 {
+    ECHO_INFO "==================== Pysieved ===================="
+
     backup_file ${PYSIEVED_INI}
 
     ECHO_INFO "Setting up managesieve server: pysieved."

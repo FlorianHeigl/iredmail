@@ -4,6 +4,8 @@
 
 enable_procmail()
 {
+    ECHO_INFO "==================== Procmail ===================="
+
     ECHO_INFO "Setup procmail as Mail Deliver Agent(MDA)."
 
     ECHO_INFO "Copy ${SAMPLE_DIR}/procmailrc as ${PROCMAILRC}."

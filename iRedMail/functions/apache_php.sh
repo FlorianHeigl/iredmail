@@ -8,6 +8,7 @@
 
 apache_php_config()
 {
+    ECHO_INFO "==================== Apache & PHP ===================="
     backup_file ${HTTPD_CONF}
 
     # --------------------------

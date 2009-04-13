@@ -8,6 +8,8 @@
 
 clamav_config()
 {
+    ECHO_INFO "==================== ClamAV ===================="
+
     export CLAMD_LOCAL_SOCKET CLAMD_LISTEN_ADDR
     ECHO_INFO "Configure ClamAV: ${CLAMD_CONF}."
     perl -pi -e 's/^(TCPSocket.*)/#${1}/' ${CLAMD_CONF}

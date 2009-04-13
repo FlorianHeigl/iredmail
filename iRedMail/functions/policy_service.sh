@@ -36,6 +36,7 @@ EOF
 # ---------------------------------------------
 policyd_user()
 {
+    ECHO_INFO "==================== Policyd ===================="
     ECHO_INFO "Add user and group for policyd: ${POLICYD_USER_NAME}:${POLICYD_GROUP_NAME}."
     groupadd ${POLICYD_GROUP_NAME}
     useradd -d ${POLICYD_USER_HOME} -s /sbin/nologin -g ${POLICYD_GROUP_NAME} ${POLICYD_USER_NAME}

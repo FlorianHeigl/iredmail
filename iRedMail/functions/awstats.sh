@@ -4,6 +4,7 @@
 
 awstats_config_basic()
 {
+    ECHO_INFO "==================== Awstats ===================="
     [ -f ${AWSTATS_CONF_SAMPLE} ] && dos2unix ${AWSTATS_CONF_SAMPLE} >/dev/null 2>&1
 
     ECHO_INFO "Generate apache config file for awstats: ${AWSTATS_HTTPD_CONF}."

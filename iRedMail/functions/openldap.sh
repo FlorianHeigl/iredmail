@@ -8,6 +8,8 @@
 
 openldap_config()
 {
+    ECHO_INFO "==================== OpenLDAP ===================="
+
     backup_file ${OPENLDAP_SLAPD_CONF} ${OPENLDAP_LDAP_CONF}
 
     ECHO_INFO "Set file permission on TLS cert key file: ${SSL_KEY_FILE}."

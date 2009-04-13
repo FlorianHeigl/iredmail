@@ -7,6 +7,8 @@
 # -------------------------------------------------------
 adduser_vmail()
 {
+    ECHO_INFO "==================== User/Group: vmail ===================="
+
     homedir="$(dirname $(echo ${VMAIL_USER_HOME_DIR} | sed 's#/$##'))"
     [ -d ${homedir} ] || mkdir -p ${homedir}
 

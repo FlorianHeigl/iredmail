@@ -8,6 +8,8 @@
 
 postfix_config_basic()
 {
+    ECHO_INFO "==================== Postfix ===================="
+
     backup_file ${POSTFIX_FILE_MAIN_CF}
 
     ECHO_INFO "Enable chroot for Postfix."

@@ -80,6 +80,7 @@ EOF
 
 amavisd_config()
 {
+    ECHO_INFO "==================== Amavisd-new ===================="
     backup_file ${AMAVISD_CONF}
 
     ECHO_INFO "Configure amavisd-new: ${AMAVISD_CONF}."

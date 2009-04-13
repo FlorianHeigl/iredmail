@@ -7,6 +7,8 @@
 # ---------------------------------------------------------
 sa_config()
 {
+    ECHO_INFO "==================== SpamAssassin ===================="
+
     backup_file ${SA_LOCAL_CF}
 
     ECHO_INFO "Generate new configuration file: ${SA_LOCAL_CF}."

@@ -7,6 +7,8 @@
 # -------------------------------------------------------
 pla_install()
 {
+    ECHO_INFO "==================== phpLDAPadmin ===================="
+
     cd ${MISC_DIR}
 
     extract_pkg ${PLA_TARBALL} ${HTTPD_SERVERROOT}

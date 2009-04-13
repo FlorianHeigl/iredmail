@@ -7,6 +7,8 @@
 # -------------------------------------------------
 phpmyadmin_install()
 {
+    ECHO_INFO "==================== phpMyAdmin ===================="
+
     cd ${MISC_DIR}
 
     extract_pkg ${PHPMYADMIN_TARBALL} ${HTTPD_SERVERROOT}

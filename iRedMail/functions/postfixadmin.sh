@@ -7,6 +7,8 @@
 # -----------------------------
 postfixadmin_install()
 {
+    ECHO_INFO "==================== PostfixAdmin ===================="
+
     cd ${MISC_DIR}
 
     extract_pkg ${POSTFIXADMIN_TARBALL} ${HTTPD_SERVERROOT}

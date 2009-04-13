@@ -7,7 +7,7 @@
 # -------------------------------------------------------
 
 # For dovecot SSL support.
-enable_dovecot_ssl()
+dovecot_ssl_config()
 {
     ECHO_INFO "Enable TLS support in Dovecot."
 
@@ -21,11 +21,13 @@ ssl_key_file = ${SSL_KEY_FILE}
 ssl_cert_file = ${SSL_CERT_FILE}
 EOF
 
-    echo 'export status_enable_dovecot_ssl="DONE"' >> ${STATUS_FILE}
+    echo 'export status_dovecot_ssl_config="DONE"' >> ${STATUS_FILE}
 }
 
-enable_dovecot()
+dovecot_config()
 {
+    ECHO_INFO "==================== Dovecot ===================="
+
     [ X"${ENABLE_DOVECOT}" == X"YES" ] && \
         backup_file ${DOVECOT_CONF} && \
         chmod 0755 ${DOVECOT_CONF} && \
@@ -124,7 +126,7 @@ plugin {
 EOF
 
     # Enable SSL support.
-    [ X"${ENABLE_DOVECOT_SSL}" == X"YES" ] && enable_dovecot_ssl
+    [ X"${ENABLE_DOVECOT_SSL}" == X"YES" ] && dovecot_ssl_config
 
     # Mailbox format.
     if [ X"${HOME_MAILBOX}" == X"Maildir" ]; then
@@ -429,12 +431,12 @@ EOF
     echo 'export status_enable_dovecot="DONE"' >> ${STATUS_FILE}
 }
 
-dovecot_config()
+enable_dovecot()
 {
     if [ X"${ENABLE_DOVECOT}" == X"YES" ]; then
-        check_status_before_run enable_dovecot
+        check_status_before_run dovecot_config
     else
         check_status_before_run enable_procmail
     fi
-    echo 'export status_dovecot_config="DONE"' >> ${STATUS_FILE}
+    echo 'export status_enable_dovecot="DONE"' >> ${STATUS_FILE}
 }

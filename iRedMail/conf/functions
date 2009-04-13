@@ -107,7 +107,7 @@ extract_pkg()
 check_arch()
 {
     arch="$(uname -m)"
-    if echo ${arch} | grep -E 'i?86' > /dev/null 2>&1; then
+    if echo ${arch} | grep -E '^i?86$' > /dev/null 2>&1; then
         ARCH='i386'
     elif [ X"${arch}" == X'x86_64' ]; then
         ARCH='x86_64'

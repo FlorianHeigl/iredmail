@@ -9,6 +9,8 @@
 # -------------------------------------------------------
 mysql_initialize()
 {
+    ECHO_INFO "==================== MySQL ===================="
+
     ECHO_INFO "Starting MySQL."
     /etc/init.d/mysqld restart >/dev/null
 
