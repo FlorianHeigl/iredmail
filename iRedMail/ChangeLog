@@ -1,4 +1,6 @@
 iRedMail-0.4.1:
+    * Create symbol link: /usr/sbin/sendmail, needed by logwatch. Thanks
+      jick0214@gmail.
     * Add /robots.txt to disallow search engines.
     * POP3/IMAP are enabled by default, dialog page removed.
     * Known issue: pysieved will cause a zombie process.

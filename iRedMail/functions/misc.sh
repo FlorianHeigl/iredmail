@@ -32,6 +32,15 @@ remove_sendmail()
         :
     fi
 
+    # Create symbol link: /usr/sbin/sendmail, needed by logwatch.
+    if [ -e /usr/sbin/sendmail ]; then
+        backup_file /usr/sbin/sendmail
+        SENDMAIL="$(eval ${LIST_FILES_IN_PKG} postfix | grep 'sbin/sendmail.postfix')"
+        rm -f /usr/sbin/sendmail && ln -s ${SENDMAIL} /usr/sbin/sendmail
+    else
+        :
+    fi
+
     echo 'export status_remove_sendmail="DONE"' >> ${STATUS_FILE}
 }
 
