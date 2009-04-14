@@ -3,6 +3,36 @@
 # Author:   Zhang Huangbin <michaelbibby (at) gmail.com>
 
 # --------------------------------------------------
+# ------------- POP3(s)/IMAP(s) --------------------
+# --------------------------------------------------
+# Check enable dovecot or not. No dialog pages, but read from global
+# variables defined in file 'conf/global'.
+if [ X"${USE_POP3}" == X"YES" -o X"${USE_POP3S}" == X"YES" \
+    -o X"${USE_IMAP}" == X"YES" -o X"${USE_IMAPS}" == X"YES" ]; then
+    export ENABLE_DOVECOT="YES" && \
+    echo 'export ENABLE_DOVECOT="YES"' >> ${CONFIG_FILE}
+
+    # Which protocol will be enabled by Dovecot.
+    DOVECOT_PROTOCOLS=''
+    [ X"${USE_POP3}" == X"YES" ] && DOVECOT_PROTOCOLS="${DOVECOT_PROTOCOLS} pop3"
+    [ X"${USE_POP3S}" == X"YES" ] && DOVECOT_PROTOCOLS="${DOVECOT_PROTOCOLS} pop3s" && export ENABLE_DOVECOT_SSL="YES"
+    [ X"${USE_IMAP}" == X"YES" ] && DOVECOT_PROTOCOLS="${DOVECOT_PROTOCOLS} imap"
+    [ X"${USE_IMAPS}" == X"YES" ] && DOVECOT_PROTOCOLS="${DOVECOT_PROTOCOLS} imaps" && export ENABLE_DOVECOT_SSL="YES"
+    echo "export DOVECOT_PROTOCOLS='${DOVECOT_PROTOCOLS}'" >> ${CONFIG_FILE}
+
+    if [ X"${ENABLE_DOVECOT_SSL}" == X"YES" ]; then
+        echo 'export ENABLE_DOVECOT_SSL="YES"' >> ${CONFIG_FILE}
+    else
+        echo 'export ENABLE_DOVECOT_SSL="NO"' >> ${CONFIG_FILE}
+    fi
+
+else
+    # Disable Dovecot.
+    export ENABLE_DOVECOT="NO" && echo 'export ENABLE_DOVECOT="NO"' >> ${CONFIG_FILE}
+    export ENABLE_DOVECOT_SSL="NO" && echo 'export ENABLE_DOVECOT_SSL="NO"' >> ${CONFIG_FILE}
+fi
+
+# --------------------------------------------------
 # ------------- SPF & DKIM -------------------------
 # --------------------------------------------------
 ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
@@ -31,62 +61,6 @@ echo ${SPF_DKIM} | grep -i '\<SPF\>' >/dev/null 2>&1
 
 echo ${SPF_DKIM} | grep -i '\<DKIM\>' >/dev/null 2>&1
 [ X"$?" == X"0" ] && ENABLE_DKIM='YES' && echo "export ENABLE_DKIM='YES'" >>${CONFIG_FILE}
-
-# --------------------------------------------------
-# ------------- POP3(s)/IMAP(s) --------------------
-# --------------------------------------------------
-${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-    --title "POP3, POP3S, IMAP, IMAPS" \
-    --checklist "\
-Do you want to support POP3, POP3S, IMAP, IMAPS? If you don't choose 
-one of them, ${PROG_NAME} will use 'procmail' as mail deliver agent.
-" 20 76 6 \
-    "POP3" "Post Office Protocol." "on" \
-    "POP3S" "Secure POP3 over SSL." "on" \
-    "IMAP" "Internet Message Access Protocol." "on" \
-    "IMAPS" "Secure IMAP over SSL." "on" \
-    2>/tmp/dovecot_features
-
-DOVECOT_FEATURES="$(cat /tmp/dovecot_features)"
-rm -f /tmp/dovecot_features
-
-echo ${DOVECOT_FEATURES} | grep -i '\<POP3\>' >/dev/null 2>&1
-[ X"$?" == X"0" ] && USE_POP3='YES' && echo "export USE_POP3='YES'" >>${CONFIG_FILE}
-
-echo ${DOVECOT_FEATURES} | grep -i '\<POP3S\>' >/dev/null 2>&1
-[ X"$?" == X"0" ] && USE_POP3S='YES' && echo "export USE_POP3S='YES'" >>${CONFIG_FILE}
-
-echo ${DOVECOT_FEATURES} | grep -i '\<IMAP\>' >/dev/null 2>&1
-[ X"$?" == X"0" ] && USE_IMAP='YES' && echo "export USE_IMAP='YES'" >>${CONFIG_FILE}
-
-echo ${DOVECOT_FEATURES} | grep -i '\<IMAPS\>' >/dev/null 2>&1
-[ X"$?" == X"0" ] && USE_IMAPS='YES' && echo "export USE_IMAPS='YES'" >>${CONFIG_FILE}
-
-# Check enable dovecot or not.
-if [ X"${USE_POP3}" == X"YES" -o X"${USE_POP3S}" == X"YES" \
-    -o X"${USE_IMAP}" == X"YES" -o X"${USE_IMAPS}" == X"YES" ]; then
-    export ENABLE_DOVECOT="YES" && \
-    echo 'export ENABLE_DOVECOT="YES"' >> ${CONFIG_FILE}
-
-    # Which protocol will be enabled by Dovecot.
-    DOVECOT_PROTOCOLS=''
-    [ X"${USE_POP3}" == X"YES" ] && DOVECOT_PROTOCOLS="${DOVECOT_PROTOCOLS} pop3"
-    [ X"${USE_POP3S}" == X"YES" ] && DOVECOT_PROTOCOLS="${DOVECOT_PROTOCOLS} pop3s" && export ENABLE_DOVECOT_SSL="YES"
-    [ X"${USE_IMAP}" == X"YES" ] && DOVECOT_PROTOCOLS="${DOVECOT_PROTOCOLS} imap"
-    [ X"${USE_IMAPS}" == X"YES" ] && DOVECOT_PROTOCOLS="${DOVECOT_PROTOCOLS} imaps" && export ENABLE_DOVECOT_SSL="YES"
-    echo "export DOVECOT_PROTOCOLS='${DOVECOT_PROTOCOLS}'" >> ${CONFIG_FILE}
-
-    if [ X"${ENABLE_DOVECOT_SSL}" == X"YES" ]; then
-        echo 'export ENABLE_DOVECOT_SSL="YES"' >> ${CONFIG_FILE}
-    else
-        echo 'export ENABLE_DOVECOT_SSL="NO"' >> ${CONFIG_FILE}
-    fi
-
-else
-    # Disable Dovecot.
-    export ENABLE_DOVECOT="NO" && echo 'export ENABLE_DOVECOT="NO"' >> ${CONFIG_FILE}
-    export ENABLE_DOVECOT_SSL="NO" && echo 'export ENABLE_DOVECOT_SSL="NO"' >> ${CONFIG_FILE}
-fi
 
 # ----------------------------------------
 # Optional components for special backend.
@@ -140,6 +114,7 @@ echo ${OPTIONAL_COMPONENTS} | grep -i 'postfixadmin' >/dev/null 2>&1
 echo ${OPTIONAL_COMPONENTS} | grep -i 'awstats' >/dev/null 2>&1
 [ X"$?" == X"0" ] && USE_AWSTATS='YES' && echo "export USE_AWSTATS='YES'" >>${CONFIG_FILE}
 
+# ----------------------------------------------------------------
 # Promot to choose the prefer language for webmail.
 [ X"${USE_WEBMAIL}" == X"YES" ] && . ${DIALOG_DIR}/default_language.sh
 

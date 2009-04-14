@@ -228,11 +228,16 @@ amavisd_config()
 #\$notify_spam_admin_templ  = read_text('/var/amavis/notify_spam_admin.txt');
 EOF
 
-    # Enable DKIM feature.
+    # Write dkim settings.
+    check_status_before_run amavisd_dkim
+
+    # Enable/Disable DKIM feature.
     if [ X"${ENABLE_DKIM}" == X"YES" ]; then
-        [ X"${status_amavisd_dkim}" != X"DONE" ] && amavisd_dkim
+        perl -pi -e 's/^(\$enable_dkim_verification = )\d(;.*)/${1}1${2}/' ${AMAVISD_CONF}
+        perl -pi -e 's/^(\$enable_dkim_signing = )\d(;.*)/${1}1${2}/' ${AMAVISD_CONF}
     else
-        :
+        perl -pi -e 's/^(\$enable_dkim_verification = )\d(;.*)/${1}0${2}/' ${AMAVISD_CONF}
+        perl -pi -e 's/^(\$enable_dkim_signing = )\d(;.*)/${1}0${2}/' ${AMAVISD_CONF}
     fi
 
     cat >> ${AMAVISD_CONF} <<EOF

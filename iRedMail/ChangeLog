@@ -1,4 +1,5 @@
-iRedMail-0.4.1:
+iRedMail-current:
+    * POP3/IMAP are enabled by default, dialog page removed.
     * Known issue: pysieved will cause a zombie process.
     * Update clamav to 0.95.1.
     * Update roundcube and related patches to 0.2.1-stable.
