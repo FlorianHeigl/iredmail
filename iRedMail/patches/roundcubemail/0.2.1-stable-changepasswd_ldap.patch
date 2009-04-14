@@ -1,135 +1,6 @@
-diff -ruNa roundcubemail.bak/config/main.inc.php roundcubemail/config/main.inc.php
---- roundcubemail.bak/config/main.inc.php	2009-02-27 11:22:49.000000000 +0800
-+++ roundcubemail/config/main.inc.php	2009-03-01 10:23:28.000000000 +0800
-@@ -412,5 +412,15 @@
- // If true all folders will be checked for recent messages
- $rcmail_config['check_all_folders'] = FALSE;
- 
-+// LDAP password config
-+$rcmail_config['passwd_min_length'] = 6;
-+$rcmail_config['passwd_max_length'] = -1;
-+$rcmail_config['ldap_passwd_server_addr'] = 'localhost';
-+$rcmail_config['ldap_passwd_server_port'] = 389;
-+$rcmail_config['ldap_passwd_protocol_version'] = 3;
-+$rcmail_config['ldap_passwd_basedn'] = '';
-+$rcmail_config['ldap_passwd_attr_domain_rdn'] = 'domainName';
-+$rcmail_config['ldap_passwd_attr_user_rdn'] = 'mail';
-+
- // end of config file
- ?>
-\ No newline at end of file
-diff -ruNa roundcubemail.bak/index.php roundcubemail/index.php
---- roundcubemail.bak/index.php	2009-02-27 11:22:52.000000000 +0800
-+++ roundcubemail/index.php	2009-02-27 19:20:18.000000000 +0800
-@@ -193,6 +193,7 @@
-     'subscribe'     => 'manage_folders.inc',
-     'unsubscribe'   => 'manage_folders.inc',
-     'add-identity'  => 'edit_identity.inc',
-+    'save-passwd'   => 'passwd.inc',
-   )
- );
- 
-diff -ruNa roundcubemail.bak/program/js/app.js roundcubemail/program/js/app.js
---- roundcubemail.bak/program/js/app.js	2009-02-27 11:22:50.000000000 +0800
-+++ roundcubemail/program/js/app.js	2009-02-27 15:58:08.000000000 +0800
-@@ -289,6 +289,7 @@
-       case 'settings':
-         this.enable_command('preferences', 'identities', 'save', 'folders', true);
-         this.enable_command('managesieve', true);
-+        this.enable_command('passwd', 'save-passwd', true);
-         
-         if (this.env.action=='identities' || this.env.action=='edit-identity' || this.env.action=='add-identity') {
-           this.enable_command('add', this.env.identities_level < 2);
-@@ -317,7 +318,21 @@
-            if (this.gui_objects.sieveform)
-              this.enable_command('sievefiltersave', true);
-          }
--   
-+
-+        if (this.env.action=='passwd' || this.env.action=='save-passwd')
-+          {
-+            var input_curpasswd = rcube_find_object('_curpasswd');
-+            var input_newpasswd = rcube_find_object('_newpasswd');
-+            var input_confpasswd = rcube_find_object('_confpasswd');
-+
-+            if (input_curpasswd && input_curpasswd.value=='')
-+              input_curpasswd.focus();
-+            else if (input_confpasswd)
-+              input_confpasswd.focus();
-+
-+            this.enable_command('save-passwd', true);          
-+          }
-+
-         if (this.gui_objects.identitieslist)
-           {
-           this.identity_list = new rcube_list_widget(this.gui_objects.identitieslist, {multiselect:false, draggable:false, keyboard:false});
-@@ -1104,6 +1119,35 @@
-         this.sievefilter_down();
-         break;
- 
-+      case 'passwd':
-+        this.goto_url('passwd');
-+        break;
-+
-+      case 'save-passwd':
-+        var input_curpasswd = rcube_find_object('_curpasswd');
-+        var input_newpasswd = rcube_find_object('_newpasswd');
-+        var input_confpasswd = rcube_find_object('_confpasswd');
-+      
-+        if ((input_newpasswd && input_newpasswd.value=='') && (input_confpasswd && input_confpasswd.value=='') || (input_curpasswd && input_curpasswd.value==''))
-+          {
-+            alert(this.get_label('nopassword'));
-+            input_curpasswd.value='';
-+            input_newpasswd.value='';
-+            input_confpasswd.value='';
-+            input_curpasswd.focus();
-+          }
-+        else if ((input_newpasswd && input_confpasswd) && ( input_newpasswd.value != input_confpasswd.value))
-+          {
-+            alert(this.get_label('passwordinconsistency'));
-+            input_newpasswd.value='';
-+            input_confpasswd.value='';
-+            input_newpasswd.focus();
-+          }
-+        else
-+            this.gui_objects.editform.submit();
-+
-+        break;
-+
-       }
- 
-     return obj ? false : true;
-diff -ruNa roundcubemail.bak/program/localization/en_US/labels.inc roundcubemail/program/localization/en_US/labels.inc
---- roundcubemail.bak/program/localization/en_US/labels.inc	2009-02-27 11:22:50.000000000 +0800
-+++ roundcubemail/program/localization/en_US/labels.inc	2009-02-27 15:58:08.000000000 +0800
-@@ -356,4 +356,9 @@
- $labels['sender'] = 'Sender';
- $labels['recipient'] = 'Recipient';
- 
-+$labels['changepasswd']  = 'Change Password';
-+$labels['curpasswd']  = 'Current Password';
-+$labels['newpasswd']  = 'Enter New Password';
-+$labels['confpasswd']  = 'Retype New Password';
-+
- ?>
-diff -ruNa roundcubemail.bak/program/localization/en_US/messages.inc roundcubemail/program/localization/en_US/messages.inc
---- roundcubemail.bak/program/localization/en_US/messages.inc	2009-02-27 11:22:50.000000000 +0800
-+++ roundcubemail/program/localization/en_US/messages.inc	2009-02-27 15:58:36.000000000 +0800
-@@ -107,4 +107,10 @@
- $messages['forbiddenchars'] = 'Forbidden characters in field';
- $messages['cannotbeempty'] = 'Field cannot be empty';
- 
-+$messages['nopassword'] = "Please Input Your New Password.";
-+$messages['passwordinconsistency'] = "New Passwords Do Not Match";
-+$messages['passwordtooshort'] = 'New Password is Too Short';
-+$messages['passwordtoolong'] = 'New Password is Too Long';
-+$messages['curpasswordincorrect'] = 'Current Password is Incorrect';
-+
- ?>
-diff -ruNa roundcubemail.bak/program/steps/settings/passwd.inc roundcubemail/program/steps/settings/passwd.inc
---- roundcubemail.bak/program/steps/settings/passwd.inc	1970-01-01 08:00:00.000000000 +0800
-+++ roundcubemail/program/steps/settings/passwd.inc	2009-03-01 10:23:02.000000000 +0800
-@@ -0,0 +1,152 @@
+--- roundcube.svn/program/steps/settings/passwd.inc	1970-01-01 08:00:00.000000000 +0800
++++ roundcube.pub/program/steps/settings/passwd.inc	2009-04-14 13:56:09.000000000 +0800
+@@ -0,0 +1,151 @@
 +<?php
 +
 +/*
@@ -250,8 +121,6 @@ diff -ruNa roundcubemail.bak/program/steps/settings/passwd.inc roundcubemail/pro
 +    $OUTPUT->show_message('errorsaving', 'error');
 +  elseif($CONFIG['passwd_min_length'] != -1 && (strlen($_POST['_newpasswd']) < $CONFIG['passwd_min_length'])) 
 +    $OUTPUT->show_message('passwordtooshort', 'error');
-+  elseif($CONFIG['passwd_min_length'] != -1 && (strlen($_POST['_newpasswd']) < $CONFIG['passwd_min_length'])) 
-+    $OUTPUT->show_message('passwordtooshort', 'error');
 +  elseif($_POST['_newpasswd'] != $_POST['_confpasswd'])
 +    $OUTPUT->show_message('passwordinconsistency', 'error');
 +  else
@@ -283,15 +152,6 @@ diff -ruNa roundcubemail.bak/program/steps/settings/passwd.inc roundcubemail/pro
 +$OUTPUT->add_label('curpasswordincorrect');
 +$OUTPUT->send('passwd');
 +?>
-diff -ruNa roundcubemail.bak/skins/default/includes/settingstabs.html roundcubemail/skins/default/includes/settingstabs.html
---- roundcubemail.bak/skins/default/includes/settingstabs.html	2009-02-27 11:22:49.000000000 +0800
-+++ roundcubemail/skins/default/includes/settingstabs.html	2009-02-27 15:13:24.000000000 +0800
-@@ -3,4 +3,5 @@
- <span id="settingstabfolders" class="tablink"><roundcube:button command="folders" type="link" label="folders" title="managefolders" class="tablink" /></span>
- <span id="settingstabidentities" class="tablink"><roundcube:button command="identities" type="link" label="identities" title="manageidentities" class="tablink" /></span>
- <span id="settingstabmanagesieve" class="tablink"><roundcube:button command="managesieve" type="link" label="filters" title="managefilters" class="tablink" /></span>
-+<span id="settingstabpasswd" class="tablink"><roundcube:button command="passwd" type="link" label="password" title="changepasswd" class="tablink" /></span>
- </div>
 diff -ruNa roundcubemail.bak/skins/default/templates/passwd.html roundcubemail/skins/default/templates/passwd.html
 --- roundcubemail.bak/skins/default/templates/passwd.html	1970-01-01 08:00:00.000000000 +0800
 +++ roundcubemail/skins/default/templates/passwd.html	2009-02-27 16:53:52.000000000 +0800
@@ -324,3 +184,108 @@ diff -ruNa roundcubemail.bak/skins/default/templates/passwd.html roundcubemail/s
 +      
 +  </body>
 +</html>
+--- roundcube.bak/config/main.inc.php.orig	2009-04-14 13:18:02.000000000 +0800
++++ roundcube.pub/config/main.inc.php	2009-04-14 13:18:51.000000000 +0800
+@@ -323,6 +323,16 @@
+ // Log successful logins
+ $rcmail_config['log_logins'] = TRUE;
+ 
++// LDAP password config
++$rcmail_config['passwd_min_length'] = -1;
++$rcmail_config['passwd_max_length'] = -1;
++$rcmail_config['ldap_passwd_server_addr'] = 'localhost';
++$rcmail_config['ldap_passwd_server_port'] = 389;
++$rcmail_config['ldap_passwd_protocol_version'] = 3;
++$rcmail_config['ldap_passwd_basedn'] = '';
++$rcmail_config['ldap_passwd_attr_domain_rdn'] = 'domainName';
++$rcmail_config['ldap_passwd_attr_user_rdn'] = 'mail';
++
+ /**
+  * 'Delete always'
+  * This setting reflects if mail should be always marked as deleted,
+--- roundcube.bak/index.php.orig	2009-04-14 13:19:14.000000000 +0800
++++ roundcube.pub/index.php	2009-04-14 13:19:25.000000000 +0800
+@@ -198,6 +198,7 @@
+     'unsubscribe'   => 'manage_folders.inc',
+     'add-identity'  => 'edit_identity.inc',
+     'add-sieverule' => 'edit_sieverule.inc',
++    'save-passwd'   => 'passwd.inc',
+   )
+ );
+ 
+--- roundcube.bak/program/js/app.js.orig	2009-04-14 13:21:26.000000000 +0800
++++ roundcube.pub/program/js/app.js	2009-04-14 13:24:32.000000000 +0800
+@@ -289,6 +289,7 @@
+       case 'settings':
+         this.enable_command('preferences', 'identities', 'save', 'folders', true);
+         this.enable_command('sieverules', true);
++        this.enable_command('passwd', 'save-passwd', true);
+         
+         if (this.env.action=='identities' || this.env.action=='edit-identity' || this.env.action=='add-identity') {
+           this.enable_command('add', this.env.identities_level < 2);
+@@ -318,6 +319,20 @@
+             this.sievefilters_list.highlight_row(this.env.iid);
+           }
+ 
++        if (this.env.action=='passwd' || this.env.action=='save-passwd')
++          {
++            var input_curpasswd = rcube_find_object('_curpasswd');
++            var input_newpasswd = rcube_find_object('_newpasswd');
++            var input_confpasswd = rcube_find_object('_confpasswd');
++
++            if (input_curpasswd && input_curpasswd.value=='')
++              input_curpasswd.focus();
++            else if (input_confpasswd)
++              input_confpasswd.focus();
++
++            this.enable_command('save-passwd', true);          
++          }
++
+         if (this.gui_objects.identitieslist)
+           {
+           this.identity_list = new rcube_list_widget(this.gui_objects.identitieslist, {multiselect:false, draggable:false, keyboard:false});
+@@ -1098,6 +1113,35 @@
+           this.goto_url('delete-sieverule', '_iid=' + this.env.iid, true);
+         break;
+ 
++      case 'passwd':
++        this.goto_url('passwd');
++        break;
++
++      case 'save-passwd':
++        var input_curpasswd = rcube_find_object('_curpasswd');
++        var input_newpasswd = rcube_find_object('_newpasswd');
++        var input_confpasswd = rcube_find_object('_confpasswd');
++      
++        if ((input_newpasswd && input_newpasswd.value=='') && (input_confpasswd && input_confpasswd.value=='') || (input_curpasswd && input_curpasswd.value==''))
++          {
++            alert(this.get_label('nopassword'));
++            input_curpasswd.value='';
++            input_newpasswd.value='';
++            input_confpasswd.value='';
++            input_curpasswd.focus();
++          }
++        else if ((input_newpasswd && input_confpasswd) && ( input_newpasswd.value != input_confpasswd.value))
++          {
++            alert(this.get_label('passwordinconsistency'));
++            input_newpasswd.value='';
++            input_confpasswd.value='';
++            input_newpasswd.focus();
++          }
++        else
++            this.gui_objects.editform.submit();
++
++        break;
++
+       }
+ 
+     return obj ? false : true;
+--- roundcube.bak/skins/default/includes/settingstabs.html.orig	2009-04-14 13:30:38.000000000 +0800
++++ roundcube.pub/skins/default/includes/settingstabs.html	2009-04-14 13:30:50.000000000 +0800
+@@ -2,5 +2,6 @@
+ <span id="settingstabdefault" class="tablink"><roundcube:button command="preferences" type="link" label="preferences" title="editpreferences" /></span>
+ <span id="settingstabfolders" class="tablink"><roundcube:button command="folders" type="link" label="folders" title="managefolders" class="tablink" /></span>
+ <span id="settingstabidentities" class="tablink"><roundcube:button command="identities" type="link" label="identities" title="manageidentities" class="tablink" /></span>
++<span id="settingstabpasswd" class="tablink"><roundcube:button command="passwd" type="link" label="password" title="changepasswd" class="tablink" /></span>
+ <span id="settingstabsieverules" class="tablink"><roundcube:button command="sieverules" type="link" label="filters" title="managefilters" class="tablink" /></span>
+ </div>

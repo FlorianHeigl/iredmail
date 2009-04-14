@@ -147,3 +147,25 @@
 +$messages['passwordfailed'] = 'Error: Current password incorrect';
 +$messages['passwordchanged'] = 'Successfully changed password';
  ?>
+--- roundcube_svn/program/localization/en_US/messages.inc.orig	2009-04-14 14:09:31.000000000 +0800
++++ roundcube_pub/program/localization/en_US/messages.inc	2009-04-14 14:09:53.000000000 +0800
+@@ -134,4 +134,8 @@
+ $messages['passwordsrverror'] = 'Error: Unknown server error';
+ $messages['passwordfailed'] = 'Error: Current password incorrect';
+ $messages['passwordchanged'] = 'Successfully changed password';
++$messages['passwordtooshort'] = 'New Password is Too Short';
++$messages['passwordtoolong'] = 'New Password is Too Long';
++$messages['curpasswordincorrect'] = 'Current Password is Incorrect';
++
+ ?>
+--- roundcube_svn/program/localization/zh_CN/messages.inc.orig	2009-04-14 14:10:50.000000000 +0800
++++ roundcube_pub/program/localization/zh_CN/messages.inc	2009-04-14 14:11:28.000000000 +0800
+@@ -135,5 +135,8 @@
+ $messages['passwordsrverror'] = '错误：未知的服务器错误';
+ $messages['passwordfailed'] = '错误：当前密码不正确';
+ $messages['passwordchanged'] = '密码修改成功';
++$messages['passwordtooshort'] = '新密码长度太短';
++$messages['passwordtoolong'] = '新密码长度超出限制';
++$messages['curpasswordincorrect'] = '当前密码错误';
+ 
+ ?>

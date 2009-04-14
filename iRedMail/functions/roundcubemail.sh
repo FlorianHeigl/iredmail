@@ -40,8 +40,8 @@ rcm_config_sieverules()
 
     export MANAGESIEVE_SERVER MANAGESIEVE_PORT
     cd ${RCM_HTTPD_ROOT}/plugins/sieverules/ && \
-    perl -pi -e 's#(.*managesieve_host.*=).*#${1} "${MANAGESIEVE_SERVER}";#' config.inc.php
-    perl -pi -e 's#(.*managesieve_port.*=).*#${1} ${MANAGESIEVE_PORT};#' config.inc.php
+    perl -pi -e 's#(.*managesieve_host.*=).*#${1} "$ENV{'MANAGESIEVE_SERVER'}";#' config.inc.php
+    perl -pi -e 's#(.*managesieve_port.*=).*#${1} $ENV{'MANAGESIEVE_PORT'};#' config.inc.php
     perl -pi -e 's#(.*usetls.*=).*#${1} FALSE;#' config.inc.php
     perl -pi -e 's#(.*include_imap_root.*=).*#${1} TRUE;#' config.inc.php
 
@@ -136,7 +136,7 @@ ${CONF_MSG}
 Alias /mail "${HTTPD_SERVERROOT}/roundcubemail/"
 Alias /webmail "${HTTPD_SERVERROOT}/roundcubemail/"
 Alias /roundcube "${HTTPD_SERVERROOT}/roundcubemail/"
-<Directory "${RCM_HTTPD_ROOT}/">
+<Directory "${HTTPD_SERVERROOT}/roundcubemail/">
     Options -Indexes
 </Directory>
 EOF

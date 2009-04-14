@@ -30,7 +30,7 @@ pla_install()
 ${CONF_MSG}
 #Alias /phpldapadmin "${HTTPD_SERVERROOT}/phpldapadmin/"
 #Alias /ldap "${HTTPD_SERVERROOT}/phpldapadmin/"
-<Directory "${PLA_HTTPD_ROOT}/">
+<Directory "${HTTPD_SERVERROOT}/phpldapadmin/">
     Options -Indexes
 </Directory>
 EOF

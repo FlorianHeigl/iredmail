@@ -26,7 +26,7 @@ phpmyadmin_install()
 ${CONF_MSG}
 #Alias /phpmyadmin "${HTTPD_SERVERROOT}/phpmyadmin/"
 #Alias /mysql "${HTTPD_SERVERROOT}/phpmyadmin/"
-<Directory "${PHPMYADMIN_HTTPD_ROOT}/">
+<Directory "${HTTPD_SERVERROOT}/phpmyadmin/">
     Options -Indexes
 </Directory>
 EOF

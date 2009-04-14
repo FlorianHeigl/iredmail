@@ -32,6 +32,20 @@ apache_php_config()
         :
     fi
 
+    # Add robots.txt.
+    backup_file ${HTTPD_DOCUMENTROOT}/robots.txt
+    cat >> ${HTTPD_DOCUMENTROOT}/robots.txt <<EOF
+User-agent: *
+Disallow: /mail
+Disallow: /webmail
+Disallow: /roundcube
+Disallow: /phpldapadmin
+Disallow: /ldap
+Disallow: /mysql
+Disallow: /phpmyadmin
+Disallow: /awstats
+EOF
+
     # --------------------------
     # PHP Setting.
     # --------------------------
