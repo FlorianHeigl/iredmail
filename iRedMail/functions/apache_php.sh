@@ -44,6 +44,7 @@ Disallow: /ldap
 Disallow: /mysql
 Disallow: /phpmyadmin
 Disallow: /awstats
+Disallow: /postfixadmin
 EOF
 
     # --------------------------
