@@ -2,7 +2,7 @@
 
 # Author: Zhang Huangbin (michaelbibby <at> gmail.com)
 
-# Variables for OpenLDAP and related.
+# Variables for OpenLDAP and related. Refer to 'dialog/ldap_config.sh'.
 
 export OPENLDAP_ROOTDIR="/etc/openldap"
 export OPENLDAP_SCHEMA_DIR="${OPENLDAP_ROOTDIR}/schema"
@@ -16,7 +16,7 @@ export OPENLDAP_LOGROTATE_FILE="${LOGROTATE_DIR}/openldap"
 
 # Setting for one instance. You can edit ${OPENLDAP_SLAPD_CONF} manually to hold
 # multi instances.
-export LDAP_DATA_DIR="${OPENLDAP_DATA_DIR}/${LDAP_SUFFIX_MAJOR}.${LDAP_SUFFIX_MINOR}/"
+export LDAP_DATA_DIR="${OPENLDAP_DATA_DIR}/${dn2dnsname}/"
 export LDAP_INIT_LDIF="${CONF_DIR}/ldap_init.ldif"
 #
 # Account info for all services to bind to LDAP service.

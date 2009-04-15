@@ -9,19 +9,19 @@
 # LDAP suffix.
 while : ; do
     ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-        --title "LDAP suffix" \
+        --title "LDAP suffix (root dn)" \
         --inputbox "\
-Please specify your LDAP suffix.
+Please specify your LDAP suffix (root dn).
 
 EXAMPLE:
 
-    +---------------------+-----------------------+
-    | Your domain name    | Recommend LDAP suffix |
-    +---------------------+-----------------------+
-    | iredmail.org        | dc=iredmail,dc=org    |
-    +---------------------+-----------------------+
-    | abcde.com.cn        | dc=abcde,dc=com.cn    |
-    +---------------------+-----------------------+
+    +---------------------+-------------------------+
+    | Your domain name    | Recommend LDAP suffix   |
+    +---------------------+-------------------------+
+    | iredmail.org        | dc=iredmail,dc=org      |
+    +---------------------+-------------------------+
+    | abc.com.cn          | dc=abc,dc=com,dc=cn     |
+    +---------------------+-------------------------+
 
 " 20 76 "dc=iredmail,dc=org" 2>/tmp/ldap_suffix
 
@@ -29,8 +29,10 @@ EXAMPLE:
     [ X"${LDAP_SUFFIX}" != X"" ] && break
 done
 
-LDAP_SUFFIX_MAJOR="$(sed 's/dc=//g' /tmp/ldap_suffix | awk -F',' '{print $1}')"
-LDAP_SUFFIX_MINOR="$(sed 's/dc=//g' /tmp/ldap_suffix | awk -F',' '{print $2}')"
+# Get DNS name derived from ldap suffix.
+dn2dnsname="$(echo ${LDAP_SUFFIX} | sed -e 's/dc=//g' -e 's/,/./g')"
+
+LDAP_SUFFIX_MAJOR="$( echo ${dn2dnsname} | awk -F'.' '{print $1}')"
 LDAP_BINDDN="cn=${VMAIL_USER_NAME},${LDAP_SUFFIX}"
 LDAP_ADMIN_DN="cn=${VMAIL_ADMIN_USER_NAME},${LDAP_SUFFIX}"
 LDAP_ROOTDN="cn=Manager,${LDAP_SUFFIX}"
@@ -41,7 +43,6 @@ rm -f /tmp/ldap_suffix
 cat >> ${CONFIG_FILE} <<EOF
 export LDAP_SUFFIX="${LDAP_SUFFIX}"
 export LDAP_SUFFIX_MAJOR="${LDAP_SUFFIX_MAJOR}"
-export LDAP_SUFFIX_MINOR="${LDAP_SUFFIX_MINOR}"
 export LDAP_BINDDN="cn=${VMAIL_USER_NAME},${LDAP_SUFFIX}"
 export LDAP_ADMIN_DN="${LDAP_ADMIN_DN}"
 export LDAP_ROOTDN="cn=Manager,${LDAP_SUFFIX}"
