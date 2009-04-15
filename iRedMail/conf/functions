@@ -41,19 +41,23 @@ ECHO_QUESTION()
 backup_file()
 {
     # Usage: backup_file file1 [file2 file3 ... fileN]
-    for conf_file in $@; do
-        if [ -f ${conf_file} ]; then
-            if [ X"${TERM}" == X"xterm" -o X"${TERM}" == X"linux" -o X"${TERM}" == X"pcconsole" ]; then
-                echo -e "\033[43m${BACKUP_FLAG}\033[0m Backup file: ${conf_file} -> ${conf_file}.${DATE}."
-            else
-                echo -e "${BACKUP_FLAG} Backup file: ${conf_file} -> ${conf_file}.${DATE}."
-            fi
+    if [ X"$#" != X"0" ]; then
+        for conf_file in $@; do
+            if [ -f ${conf_file} ]; then
+                if [ X"${TERM}" == X"xterm" -o X"${TERM}" == X"linux" -o X"${TERM}" == X"pcconsole" ]; then
+                    echo -e "\033[43m${BACKUP_FLAG}\033[0m Backup file: ${conf_file} -> ${conf_file}.${DATE}."
+                else
+                    echo -e "${BACKUP_FLAG} Backup file: ${conf_file} -> ${conf_file}.${DATE}."
+                fi
 
-            cp -f ${conf_file} ${conf_file}.${DATE}
-        else
-            :
-        fi
-    done
+                cp -f ${conf_file} ${conf_file}.${DATE}
+            else
+                :
+            fi
+        done
+    else
+        :
+    fi
 }
 
 install_pkg()

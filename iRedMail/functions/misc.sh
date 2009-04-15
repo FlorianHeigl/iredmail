@@ -24,22 +24,35 @@ remove_sendmail()
         case $ANSWER in
             N|n )
                 ECHO_INFO "Disable sendmail, it is replaced by Postfix." && \
-                eval ${disable_service} sendmail
+                eval ${disable_service} sendmail && \
+                export HAS_SENDMAIL='YES'
                 ;;
-            Y|y|* ) remove_pkg sendmail ;;
+            Y|y|* )
+                remove_pkg sendmail && \
+                export HAS_SENDMAIL='NO'
+                ;;
         esac
     else
         :
     fi
 
     # Create symbol link: /usr/sbin/sendmail, needed by logwatch.
-    if [ -e /usr/sbin/sendmail ]; then
-        backup_file /usr/sbin/sendmail
-        SENDMAIL="$(eval ${LIST_FILES_IN_PKG} postfix | grep 'sbin/sendmail.postfix')"
-        rm -f /usr/sbin/sendmail && ln -s ${SENDMAIL} /usr/sbin/sendmail
+    if [ X"${HAS_SENDMAIL}" == X"YES" ]; then
+        sendmail_orig="$(which sendmail)"   # Binary file shipped within Sendmail MTA.
+        backup_file ${sendmail_orig} /usr/bin/sendmail
+        rm -f ${sendmail} /usr/bin/sendmail 2>/dev/null
     else
-        :
+        sendmail_orig="/usr/sbin/sendmail"
     fi
+
+    # Binary file shipped within Postfix MTA.
+    SENDMAIL="$(eval ${LIST_FILES_IN_PKG} postfix | grep 'sbin/sendmail.postfix')"
+
+    # Create symbol link to replace sendmail package.
+    ln -s ${SENDMAIL} ${sendmail_orig}
+
+    # Used to fix logwatch issue: /usr/sbin is not listed in its $PATH.
+    ln -s ${SENDMAIL} /usr/bin/sendmail
 
     echo 'export status_remove_sendmail="DONE"' >> ${STATUS_FILE}
 }
