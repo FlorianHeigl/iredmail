@@ -25,7 +25,8 @@ rcm_install()
 
     ECHO_INFO "Patch: Managesieve service frontend."
     cd ${RCM_HTTPD_ROOT}/ && \
-    patch -p1 < ${PATCH_DIR}/roundcubemail/0.2.1-stable-managesieve.patch > /dev/null
+    patch -p1 < ${PATCH_DIR}/roundcubemail/0.2.1-stable-managesieve.patch > /dev/null && \
+    patch -p1 < ${PATCH_DIR}/roundcubemail/encode_vacation_subject.patch > /dev/null
 
     cd ${RCM_HTTPD_ROOT}/config/
     cp -f db.inc.php.dist db.inc.php
