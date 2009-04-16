@@ -65,8 +65,11 @@ EOF
     AuthType Basic
     AuthUserFile ${AWSTATS_HTPASSWD_FILE}
 EOF
-    fi
 
+    # Set username, password for web access.
+    htpasswd -bcm ${AWSTATS_HTPASSWD_FILE} "${AWSTATS_USERNAME}" "${AWSTATS_PASSWD}" >/dev/null 2>&1
+
+    fi
 
     # Close <Directory> container.
     cat >> ${AWSTATS_HTTPD_CONF} <<EOF
@@ -75,12 +78,9 @@ EOF
 </Directory>
 EOF
 
-    # Set username, password for web access.
-    htpasswd -bcm ${AWSTATS_HTPASSWD_FILE} "${AWSTATS_USERNAME}" "${AWSTATS_PASSWD}" >/dev/null 2>&1
-
     # Make Awstats can be accessed via HTTPS.
-    sed -i 's#\(</VirtualHost>\)#Alias /awstats/icon '$ENV{AWSTATS_HTTPD_ROOT}/icon/'\n\1#' ${HTTPD_SSL_CONF}
-    sed -i 's#\(</VirtualHost>\)#ScriptAlias /awstats '$ENV{AWSTATS_HTTPD_ROOT}/'\n\1#' ${HTTPD_SSL_CONF}
+    sed -i 's#\(</VirtualHost>\)#Alias /awstats/icon "$ENV{'AWSTATS_HTTPD_ROOT'}/icon/"\n\1#' ${HTTPD_SSL_CONF}
+    sed -i 's#\(</VirtualHost>\)#ScriptAlias /awstats "$ENV{'AWSTATS_HTTPD_ROOT'}/"\n\1#' ${HTTPD_SSL_CONF}
 
     cat >> ${TIP_FILE} <<EOF
 Awstats:

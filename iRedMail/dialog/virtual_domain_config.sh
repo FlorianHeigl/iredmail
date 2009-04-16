@@ -33,6 +33,7 @@ EXAMPLE:
 
     * postmaster
 
+Warning: This account is used only for system administration.
 " 20 76 "postmaster" 2>/tmp/first_domain_admin_name
 
 DOMAIN_ADMIN_NAME="$(cat /tmp/first_domain_admin_name)"
