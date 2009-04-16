@@ -36,24 +36,6 @@ remove_sendmail()
         :
     fi
 
-    # Create symbol link: /usr/sbin/sendmail, needed by logwatch.
-    if [ X"${HAS_SENDMAIL}" == X"YES" ]; then
-        sendmail_orig="$(which sendmail)"   # Binary file shipped within Sendmail MTA.
-        backup_file ${sendmail_orig} /usr/bin/sendmail
-        rm -f ${sendmail} /usr/bin/sendmail 2>/dev/null
-    else
-        sendmail_orig="/usr/sbin/sendmail"
-    fi
-
-    # Binary file shipped within Postfix MTA.
-    SENDMAIL="$(eval ${LIST_FILES_IN_PKG} postfix | grep 'sbin/sendmail.postfix')"
-
-    # Create symbol link to replace sendmail package.
-    ln -s ${SENDMAIL} ${sendmail_orig}
-
-    # Used to fix logwatch issue: /usr/sbin is not listed in its $PATH.
-    ln -s ${SENDMAIL} /usr/bin/sendmail
-
     echo 'export status_remove_sendmail="DONE"' >> ${STATUS_FILE}
 }
 
