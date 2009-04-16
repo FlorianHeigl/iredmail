@@ -111,15 +111,15 @@ extract_pkg()
 check_arch()
 {
     arch="$(uname -m)"
-    if echo ${arch} | grep -E '^i?86$' > /dev/null 2>&1; then
-        ARCH='i386'
-    elif [ X"${arch}" == X'x86_64' ]; then
-        ARCH='x86_64'
-    else
-        ECHO_INFO "Your architecture is not supported yet: ${arch}."
-        ECHO_INFO "Both i386 and x86_64 are supported by ${PROG_NAME}."
-        exit 255
-    fi
+    case $arch in
+        i[3456]86) export ARCH='i386';;
+        x86_64) export ARCH='x86_64';;
+        *)
+            ECHO_INFO "Your architecture is not supported yet: ${arch}."
+            ECHO_INFO "Both i386 and x86_64 are supported by ${PROG_NAME}."
+            exit 255
+            ;;
+    esac
 }
 
 check_user()
