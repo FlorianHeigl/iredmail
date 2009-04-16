@@ -38,7 +38,7 @@ EOF
     AuthBasicProvider ldap
     AuthzLDAPAuthoritative   Off
 
-    AuthLDAPUrl   ldap://${LDAP_SERVER_HOST}:${LDAP_SERVER_PORT}/o=${LDAP_ATTR_DOMAINADMIN_DN_NAME},${LDAP_SUFFIX}?${LDAP_ATTR_USER_RDN}?sub?(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})
+    AuthLDAPUrl   ldap://${LDAP_SERVER_HOST}:${LDAP_SERVER_PORT}/o=${LDAP_ATTR_DOMAINADMIN_DN_NAME},${LDAP_SUFFIX}?${LDAP_ATTR_USER_RDN}?sub?(&(objectclass=${LDAP_OBJECTCLASS_MAILADMIN})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE}))
 
     AuthLDAPBindDN "${LDAP_BINDDN}"
     AuthLDAPBindPassword "${LDAP_BINDPW}"
@@ -79,8 +79,8 @@ EOF
 EOF
 
     # Make Awstats can be accessed via HTTPS.
-    sed -i 's#\(</VirtualHost>\)#Alias /awstats/icon "$ENV{'AWSTATS_HTTPD_ROOT'}/icon/"\n\1#' ${HTTPD_SSL_CONF}
-    sed -i 's#\(</VirtualHost>\)#ScriptAlias /awstats "$ENV{'AWSTATS_HTTPD_ROOT'}/"\n\1#' ${HTTPD_SSL_CONF}
+    sed -i "s#\(</VirtualHost>\)#Alias /awstats/icon ${AWSTATS_HTTPD_ROOT}/icon/\n\1#" ${HTTPD_SSL_CONF}
+    sed -i "s#\(</VirtualHost>\)#ScriptAlias /awstats ${AWSTATS_HTTPD_ROOT}/\n\1#" ${HTTPD_SSL_CONF}
 
     cat >> ${TIP_FILE} <<EOF
 Awstats:

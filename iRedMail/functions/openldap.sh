@@ -136,6 +136,7 @@ access to dn.subtree="${LDAP_BASEDN}"
 access to dn.subtree="o=${LDAP_ATTR_DOMAINADMIN_DN_NAME},${LDAP_SUFFIX}"
     by anonymous                    auth
     by self                         write
+    by dn.exact="${LDAP_BINDDN}"   read
     by dn.exact="${LDAP_ADMIN_DN}"  write
     by users                        none
 
