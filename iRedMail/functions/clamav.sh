@@ -25,7 +25,7 @@ clamav_config()
     ECHO_INFO "Copy freshclam init startup script and enable it."
     cp -f ${FRESHCLAM_INIT_FILE_SAMPLE} /etc/rc.d/init.d/freshclam
     chmod +x /etc/rc.d/init.d/freshclam
-    eval ${disable_service} freshclam
+    eval ${enable_service} freshclam
 
     cat >> ${TIP_FILE} <<EOF
 ClamAV:

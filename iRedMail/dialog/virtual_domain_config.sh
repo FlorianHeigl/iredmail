@@ -33,7 +33,10 @@ EXAMPLE:
 
     * postmaster
 
-Warning: This account is used only for system administration.
+Warning:
+
+    * This account is used only for system administration.
+    * It's *NOT* a normal mail user.
 " 20 76 "postmaster" 2>/tmp/first_domain_admin_name
 
 DOMAIN_ADMIN_NAME="$(cat /tmp/first_domain_admin_name)"
@@ -74,6 +77,9 @@ EXAMPLE:
 
     * www
 
+Note:
+
+    * This account is a normal mail user.
 " 20 76 "www" 2>/tmp/first_user
 
     FIRST_USER="$(cat /tmp/first_user)"

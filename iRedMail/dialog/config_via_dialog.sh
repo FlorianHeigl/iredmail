@@ -148,7 +148,7 @@ Configuration completed.
 *************************************************************************
 EOF
 
-echo -en "\n${INFO_FLAG} Continue? [Y|n]"
+ECHO_INFO "\n${INFO_FLAG} Continue? [Y|n]"
 read ANSWER
 
 case ${ANSWER} in
