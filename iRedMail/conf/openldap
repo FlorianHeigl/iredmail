@@ -75,7 +75,7 @@ export LDAP_ATTR_GROUP_GROUPS='Groups'
 export LDAP_ATTR_GROUP_ACCESSPOLICY='accessPolicy'
 export LDAP_ATTR_GROUP_HASMEMBER='hasMember'
 export LDAP_ATTR_GROUP_MEMBER='listMember'
-export LDAP_ATTR_GROUP_OWNER='listOwner'
+export LDAP_ATTR_GROUP_ALLOWED_USER='listAllowedUser'
 # Values of group related attributes.
 export LDAP_VALUE_GROUP_HASMEMBER='yes'
 
