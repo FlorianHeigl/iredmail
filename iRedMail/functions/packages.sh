@@ -5,7 +5,7 @@
 install_all()
 {
     ALL_PKGS=''
-    ENABLED_SERVICES=''
+    ENABLED_SERVICES='syslog'
     DISABLED_SERVICES=''
 
     # Apache and PHP.
@@ -89,6 +89,8 @@ install_all()
     # Misc.
     ALL_PKGS="${ALL_PKGS} bzip2.${ARCH} acl.${ARCH} mailx.${ARCH} patch.${ARCH} crontabs.noarch dos2unix.${ARCH}"
     ENABLED_SERVICES="${ENABLED_SERVICES} crond"
+
+    export ALL_PKGS ENABLED_SERVICES
 
     # Install all packages.
     install_all_pkgs()

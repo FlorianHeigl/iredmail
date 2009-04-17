@@ -127,7 +127,7 @@ run_freshclam_now()
     ECHO_QUESTION -n "Would you like to run freshclam now? [y|N]"
     read ANSWER
     case $ANSWER in
-        Y|y ) freshclam ;;
+        Y|y ) freshclam 2>/dev/null ;;
         N|n|* ) ECHO_INFO "Skip freshclam." ;;
     esac
 
@@ -142,10 +142,16 @@ start_postfix_now()
     case $ANSWER in
         Y|y ) 
             # Disable SELinux.
-            setenforce 0
+            SETENFORCE="$(which setenforce 2>/dev/null)"
+            if [ ! -z ${SETENFORCE} ]; then
+                ECHO_INFO "Temporarily set SELinux policy to 'permissive'."
+                ${SETENFORCE} 0
+            else
+                :
+            fi
 
             # Start/Restart necessary services.
-            for i in syslog ${ENABLED_SERVICES}
+            for i in ${ENABLED_SERVICES}
             do
                 /etc/init.d/${i} restart
             done
