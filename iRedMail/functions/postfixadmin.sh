@@ -30,6 +30,7 @@ postfixadmin_install()
     ECHO_INFO "Create directory alias for PostfixAdmin in Apache."
     cat > ${HTTPD_CONF_DIR}/postfixadmin.conf <<EOF
 ${CONF_MSG}
+# Note: Please refer to ${HTTPD_SSL_CONF} for SSL/TLS setting.
 #Alias /postfixadmin "${HTTPD_SERVERROOT}/postfixadmin/"
 <Directory "${POSTFIXADMIN_HTTPD_ROOT}/">
     Options -Indexes

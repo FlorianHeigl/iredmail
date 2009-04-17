@@ -8,7 +8,7 @@
 #   * http://iRedMail.googlecode.com/
 
 # --------------------------- WARNING ------------------------------
-# This script only work under iRedMail >= 0.3.3 due to ldap schema
+# This script only works under iRedMail >= 0.3.3 due to ldap schema
 # changes.
 # ------------------------------------------------------------------
 
@@ -45,6 +45,7 @@ MAILDIR_STRING='Maildir/'
 
 # All mails will be stored under user vmail's home directory.
 # Files and directories will be ownned as 'vmail:vmail'.
+# By default it's 'vmail:vmail'.
 VMAIL_USER_NAME="vmail"
 VMAIL_GROUP_NAME='vmail'
 
@@ -172,6 +173,7 @@ mailQuota: ${QUOTA}
 userPassword: $(slappasswd -h {MD5} -s ${USERNAME})
 cn: ${USERNAME}
 sn: ${USERNAME}
+givenName: ${USERNAME}
 uid: ${USERNAME}
 enabledService: mail
 enabledService: imap
@@ -215,6 +217,10 @@ usage()
 if [ $# -lt 2 ]; then
     usage
 else
+    # Promopt to check settings.
+    [ X"${LDAP_SUFFIX}" == X"dc=iredmail,dc=org" ] && echo "You should change 'LDAP_SUFFIX' in $0."
+
+    # Get domain name.
     DOMAIN_NAME="$1"
     shift 1
 

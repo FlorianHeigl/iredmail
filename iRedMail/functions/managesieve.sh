@@ -81,7 +81,11 @@ EOF
 
     # Disable pysieved in xinetd.
     pysieved_xinetd_conf="$(eval ${LIST_FILES_IN_PKG} pysieved | grep 'xinetd' | grep 'pysieved$')"
-    [ ! -z ${pysieved_xinetd_conf} ] && perl -pi -e 's#(.*disable.*=).*#${1} yes#' ${pysieved_xinetd_conf}
+    if [ ! -z ${pysieved_xinetd_conf} ]; then
+        perl -pi -e 's#(.*disable.*=).*#${1} yes#' ${pysieved_xinetd_conf}
+    else
+        :
+    fi
 
     cat >> ${TIP_FILE} <<EOF
 pysieved:

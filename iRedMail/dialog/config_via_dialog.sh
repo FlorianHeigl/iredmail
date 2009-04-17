@@ -149,7 +149,7 @@ read ANSWER
 
 case ${ANSWER} in
     N|n)
-        echo "${INFO_FLAG} Canceled, Exit."
+        ECHO_INFO "Canceled, Exit."
         exit 255
         ;;
     Y|y|*)

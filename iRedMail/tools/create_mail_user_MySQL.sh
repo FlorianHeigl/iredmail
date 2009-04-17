@@ -10,7 +10,33 @@
 
 # -------------------------------------------------------------------
 # Usage:
+#   * Edit these variables:
+#       DOMAIN='iredmail.org'
+#       DEFAULT_PASSWD='888888'
+#       USE_DEFAULT_PASSWD='NO'
+#       USE_NAME_AS_PASSWD='YES'
+#       DEFAULT_QUOTA='100'   # 100 -> 100M
+#   * Prepare your user list file, such as 'userlist.txt'. One name
+#     per line, without domain name. e.g.:
 #
+#       user1
+#       user2
+#       user3
+#
+#   * Run this script to generate SQL files used to import to MySQL
+#     database later.
+#
+#       # sh create_mail_user_MySQL.sh userlist.txt
+#
+#     It will generate file 'output.sql' in current directory, open
+#     it and confirm all records are correct.
+#
+#   * Import output.sql into MySQL database.
+#
+#       # mysql -uroot -p vmail
+#       mysql> SOURCE /path/to/output.sql;
+#
+#   That's all.
 # -------------------------------------------------------------------
 
 # ChangeLog:
@@ -63,9 +89,10 @@ generate_sql()
             cat >> ${SQL} <<EOF
 INSERT INTO mailbox (username, password, name, maildir, quota, domain, active)
     VALUES ('${username}@${DOMAIN}', '${CRYPT_PASSWD}', '${username}', '${maildir}', '${DEFAULT_QUOTA}', '${DOMAIN}', '1');
-INSERT INTO alias (address, goto, domain, active)
-    VALUES ('${username}@${DOMAIN}', '${username}@${DOMAIN}', '${DOMAIN}', '1');
 EOF
+        # Don't insert alias.
+        #INSERT INTO alias (address, goto, domain, active)
+        #    VALUES ('${username}@${DOMAIN}', '${username}@${DOMAIN}', '${DOMAIN}', '1');
         else
             :
         fi

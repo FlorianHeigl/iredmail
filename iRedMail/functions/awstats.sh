@@ -12,6 +12,7 @@ awstats_config_basic()
 
     cat > ${AWSTATS_HTTPD_CONF} <<EOF
 ${CONF_MSG}
+# Note: Please refer to ${HTTPD_SSL_CONF} for SSL/TLS setting.
 #Alias /awstats/icon ${AWSTATS_HTTPD_ROOT}/icon/
 #ScriptAlias /awstats ${AWSTATS_HTTPD_ROOT}/
 #Alias /css ${AWSTATS_HTTPD_ROOT}/css/

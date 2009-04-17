@@ -134,6 +134,7 @@ EOF
     ECHO_INFO "Create directory alias for Roundcubemail."
     cat > ${HTTPD_CONF_DIR}/roundcubemail.conf <<EOF
 ${CONF_MSG}
+# Note: Please refer to ${HTTPD_SSL_CONF} for SSL/TLS setting.
 Alias /mail "${HTTPD_SERVERROOT}/roundcubemail/"
 Alias /webmail "${HTTPD_SERVERROOT}/roundcubemail/"
 Alias /roundcube "${HTTPD_SERVERROOT}/roundcubemail/"

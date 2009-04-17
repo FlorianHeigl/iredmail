@@ -47,7 +47,7 @@ backup_file()
                 if [ X"${TERM}" == X"xterm" -o X"${TERM}" == X"linux" -o X"${TERM}" == X"pcconsole" ]; then
                     echo -e "\033[43m${BACKUP_FLAG}\033[0m Backup file: ${conf_file} -> ${conf_file}.${DATE}."
                 else
-                    echo -e "${BACKUP_FLAG} Backup file: ${conf_file} -> ${conf_file}.${DATE}."
+                    echo -e "${BACKUP_FLAG} ${conf_file} -> ${conf_file}.${DATE}."
                 fi
 
                 cp -f ${conf_file} ${conf_file}.${DATE}

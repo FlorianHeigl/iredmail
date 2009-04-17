@@ -39,7 +39,7 @@ export USE_PYSIEVED='YES'       # Use pysieved to provide managesieve service.
 
 # Set command used to install packages.
 if [ X"${YUM}" == X"" ]; then
-    export YUM='yum -d 2'
+    export YUM='yum -d 1'
 else
     export YUM=${YUM}
 fi
