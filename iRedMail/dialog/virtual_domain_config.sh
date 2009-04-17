@@ -104,3 +104,21 @@ done
 
 echo "export FIRST_USER_PASSWD='${FIRST_USER_PASSWD}'" >>${CONFIG_FILE}
 rm -f /tmp/first_user_passwd
+
+cat >> ${TIP_FILE} <<EOF
+Admin of domain ${FIRST_DOMAIN}:
+    * Account: ${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}
+    * Password: ${DOMAIN_ADMIN_PASSWD}
+
+    Note:
+        - This account is used only for system administrations, not a mail user.
+        - Account name is full email address.
+
+First mail user:
+    * Account: ${FIRST_USER}@${FIRST_DOMAIN}
+    * Password: ${FIRST_USER_PASSWD}
+
+    Note:
+        - This account is a normal mail user.
+        - Account name is full email address.
+EOF
