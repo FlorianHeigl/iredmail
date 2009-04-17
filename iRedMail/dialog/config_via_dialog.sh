@@ -28,11 +28,7 @@ Feedback, bug report, communication are all welcome.
 
 Contact us:
 
-    * Forum (English users):
-        - http://groups.google.com/group/iredmail/
-
-    * Forum (Chinese users):
-        - http://www.iredmail.org/bbs/
+    * Forum: http://www.iredmail.org/forum/
 
 NOTE:
 

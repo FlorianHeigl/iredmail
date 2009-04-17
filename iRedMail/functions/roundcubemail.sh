@@ -173,7 +173,7 @@ EOF
         cat >> main.inc.php <<EOF
 # Global LDAP Address Book. Contains domain users.
 \$rcmail_config['ldap_public']["${FIRST_DOMAIN}"] = array(
-    'name'          => 'Address Book (Users)',
+    'name'          => 'Global Address Book',
     'hosts'         => array("${LDAP_SERVER_HOST}"),
     'port'          => ${LDAP_SERVER_PORT},
     'use_tls'       => false,
@@ -191,7 +191,7 @@ EOF
     //'LDAP_rdn'      => "${LDAP_ATTR_USER_RDN}", // The RDN field that is used for new entries, this field needs to be one of the search_fields, the base of base_dn is appended to the RDN to insert into the LDAP directory.
     'ldap_version'  => "${LDAP_BIND_VERSION}",       // using LDAPv3
     'search_fields' => array('mail', 'cn', 'givenName', 'sn'),  // fields to search in
-    'name_field'    => 'mail',    // this field represents the contact's name
+    'name_field'    => 'cn',    // this field represents the contact's name
     'email_field'   => 'mail',  // this field represents the contact's e-mail
     'surname_field' => 'sn',    // this field represents the contact's last name
     'firstname_field' => 'givenName',  // this field represents the contact's first name

@@ -176,4 +176,4 @@ objectclass ( 1.3.6.1.4.1.32349.1.2.4.4 NAME 'mailList'
     DESC 'Mail Domain Admin' SUP top STRUCTURAL
     MUST ( mail $ accountStatus )
     MAY ( description $ accessPolicy $ enabledService $
-        hasMember $ listAllowedUser $ listMember ))
+        hasMember $ listAllowedUser $ listMember $ cn ))
