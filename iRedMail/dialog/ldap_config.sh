@@ -15,13 +15,13 @@ Please specify your LDAP suffix (root dn).
 
 EXAMPLE:
 
-    +---------------------+-------------------------+
-    | Your domain name    | Recommend LDAP suffix   |
-    +---------------------+-------------------------+
-    | iredmail.org        | dc=iredmail,dc=org      |
-    +---------------------+-------------------------+
-    | abc.com.cn          | dc=abc,dc=com,dc=cn     |
-    +---------------------+-------------------------+
+    +---------------------+-----------------------+
+    | Your domain name    | Recommend LDAP suffix |
+    +---------------------+-----------------------+
+    | iredmail.org        | dc=iredmail,dc=org    |
+    +---------------------+-----------------------+
+    | abc.com.cn          | dc=abc,dc=com,dc=cn   |
+    +---------------------+-----------------------+
 
 " 20 76 "dc=iredmail,dc=org" 2>/tmp/ldap_suffix
 

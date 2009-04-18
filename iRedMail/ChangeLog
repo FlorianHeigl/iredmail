@@ -1,4 +1,5 @@
 iRedMail-0.4.1:
+    * Add 'employeeID' in ldap schema and SQL template.
     * Create symbol link: /usr/sbin/sendmail, needed by logwatch. Thanks
       jick0214@gmail.
     * Add /robots.txt to disallow search engines.

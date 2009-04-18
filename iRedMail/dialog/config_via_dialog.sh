@@ -35,7 +35,7 @@ NOTE:
     Ctrl-C will abort this wizard.
 " 20 76
 
-# Exit when use choose 'exit'.
+# Exit when user choose 'exit'.
 [ X"$?" != X"0" ] && ECHO_INFO "Exit." && exit 0
 
 # VMAIL_USER_HOME_DIR
@@ -68,20 +68,20 @@ ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --radiolist "\
 We provide two backends and the homologous webmail programs:
 
-    +--------------------+---------------+--------------+
-    | Backend            | Web Mail      | Admin tool   |
-    +--------------------+---------------+--------------+
-    | MySQL(Recommended) |               | PostfixAdmin |
-    +--------------------+ RoundcubeMail +--------------+
-    | OpenLDAP           |               | phpLDAPadmin |
-    +--------------------+---------------+--------------+
+    +----------+---------------+--------------+
+    | Backend  | Web Mail      | Admin tool   |
+    +----------+---------------+--------------+
+    | OpenLDAP |               | phpLDAPadmin |
+    +----------+ RoundcubeMail +--------------+
+    | MySQL    |               | PostfixAdmin |
+    +----------+---------------+--------------+
 
 TIP:
     * Use 'Space' key to select item.
 
 " 20 76 2 \
-    "MySQL" "The world's most popular open source database." "on" \
-    "OpenLDAP" "An open source implementation of LDAP protocol. " "off" \
+    "OpenLDAP" "An open source implementation of LDAP protocol. " "on" \
+    "MySQL" "The world's most popular open source database." "off" \
     2>/tmp/backend
 
 BACKEND="$(cat /tmp/backend)"

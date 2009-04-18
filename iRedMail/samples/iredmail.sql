@@ -74,6 +74,7 @@ CREATE TABLE mailbox (
     domain varchar(255) NOT NULL default '',
     department varchar(255) NOT NULL default '',
     rank varchar(255) NOT NULL default 'normal',
+    employeeid varchar(255) NOT NULL default '',
     enablesmtp tinyint(1) NOT NULL default '1',
     enablepop3 tinyint(1) NOT NULL default '1',
     enableimap tinyint(1) NOT NULL default '1',

@@ -9,10 +9,10 @@ a0dbc0b4871b2bc68604d244e0827258  rpms/perl-Mail-SPF-Query-1.999.1-2.el5.rf.noar
 a3558a91707bb8a62235b50fe755cb0c  rpms/perl-Net-CIDR-Lite-0.20-1.2.el5.rf.noarch.rpm
 1cbcccabd85a23e4bc48a4166a18187e  rpms/perl-Sys-Hostname-Long-1.4-1.2.el5.rf.noarch.rpm
 ec8722e9b3d5ab1b6faac17290bb075a  rpms/perl-Mail-DKIM-0.32-1.el5.rf.noarch.rpm
-875420da5d3b5e18d1997cb1db6cea55  rpms/pysieved-1.0-1.ired.noarch.rpm
 e3583fdf37d7af599ccb7ad88848b033  rpms/perl-Archive-Zip-1.26-1.el5.rf.noarch.rpm
 7637e0b79b72f63bd624200bf292d67c  rpms/perl-Mail-SPF-2.006-1.el5.rf.noarch.rpm
 8c43b62636fb1c40219c7f73dc7c67c9  rpms/perl-MailTools-2.04-1.el5.rf.noarch.rpm
 5ed4d2a3fde53ed87f70a4b2274b38b3  rpms/perl-IO-Multiplex-1.10-1.el5.rf.noarch.rpm
 36e2c4d00fb660fccec3849226071fa9  rpms/perl-Error-0.17015-1.el5.rf.noarch.rpm
 f52f00cbbcac0fcd8d5656f5dd062566  rpms/awstats-6.9-1.el5.rf.noarch.rpm
+0b99021c293ce1546924a0e51b1be8b7  rpms/pysieved-1.0-2.ired.noarch.rpm

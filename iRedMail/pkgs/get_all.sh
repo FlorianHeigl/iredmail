@@ -10,7 +10,7 @@ CONF_DIR="${ROOTDIR}/../conf"
 . ${CONF_DIR}/global
 . ${CONF_DIR}/functions
 
-FETCH_CMD="wget -c --referer ${PROG_NAME}-${PROG_VERSION}"
+FETCH_CMD="wget -cq --referer ${PROG_NAME}-${PROG_VERSION}"
 
 #
 # Mirror site.
@@ -108,9 +108,12 @@ fetch_rpms()
         rpm_total=$(echo ${RPMLIST} ${NOARCHLIST} | wc -w | awk '{print $1}')
         rpm_count=1
 
+        ECHO_INFO "==================== Fetching RPM Packages ===================="
+
         for i in ${RPMLIST} ${NOARCHLIST}; do
-            ECHO_INFO "Fetching package: (${rpm_count}/${rpm_total}) $(eval echo ${i})..."
-            ${FETCH_CMD} ${MIRROR}/rpms/5/${i}
+            url="${MIRROR}/rpms/5/${i}"
+            ECHO_INFO "* ${rpm_count}/${rpm_total}: ${url}"
+            ${FETCH_CMD} ${url}
 
             rpm_count=$((rpm_count+1))
         done
@@ -128,12 +131,15 @@ fetch_misc()
         misc_total=$(echo ${MISCLIST} | wc -w | awk '{print $1}')
         misc_count=1
 
+        ECHO_INFO "==================== Fetching Source Tarballs ===================="
+
         for i in ${MISCLIST}
         do
-            ECHO_INFO "Fetching (${misc_count}/${misc_total}): $(eval echo ${i})..."
+            url="${MIRROR}/misc/${i}"
+            ECHO_INFO "* ${misc_count}/${misc_total}: ${url}"
 
             cd ${MISC_DIR}
-            ${FETCH_CMD} ${MIRROR}/misc/${i}
+            ${FETCH_CMD} ${url}
 
             misc_count=$((misc_count + 1))
         done
@@ -146,8 +152,10 @@ check_md5()
 {
     cd ${ROOTDIR}
 
+    ECHO_INFO "==================== Validate Packages via md5sum. ===================="
+
     for i in ${MD5_FILES}; do
-        ECHO_INFO -n "Checking MD5 via file: ${i}..."
+        ECHO_INFO -n "Validating via file: ${i}..."
         md5sum -c ${ROOTDIR}/${i} |grep 'FAILED'
 
         if [ X"$?" == X"0" ]; then
@@ -209,7 +217,6 @@ fi
 
 check_user root && \
 check_arch && \
-check_status_before_run mirror_notify && \
 check_status_before_run check_pkg_which && \
 check_status_before_run check_pkg_createrepo && \
 prepare_dirs && \
