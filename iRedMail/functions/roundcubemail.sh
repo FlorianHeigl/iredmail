@@ -123,6 +123,8 @@ EOF
 
     # Enable preview pane by default.
     perl -pi -e 's#(.*preview_pane.*=).*#${1} TRUE;#' main.inc.php
+    # Quota zero as unlimited, used to fit dovecot setting.
+    perl -pi -e 's#(.*quota_zero_as_unlimited.*=).*#${1} TRUE;#' main.inc.php
 
     # Log file related.
     perl -pi -e 's#(.*log_driver.*=).*#${1} "syslog";#' main.inc.php
