@@ -25,6 +25,15 @@
 #       * BINDPW
 #       * QUOTA
 #
+#   - In 'Virtual Domains & Users' section:
+#       * QUOTA
+#       * TRANSPORT
+#       * CREATE_MAILDIR
+#       * CRYPT_MECH                # SSHA is recommended.
+#       * DEFAULT_PASSWD
+#       * USE_DEFAULT_PASSWD
+#       * USE_NAME_AS_PASSWD
+
 #   - Optional variables:
 #       * CREATE_MAILDIR
 #       * SEND_WELCOME_MSG
@@ -94,6 +103,12 @@ TRANSPORT='dovecot'
 # mailbox automatic when user login via IMAP/POP3 successfully.
 CREATE_MAILDIR='NO'
 
+# Password setting.
+CRYPT_MECH='SSHA'   # MD5, SSHA
+DEFAULT_PASSWD='888888'
+USE_DEFAULT_PASSWD='NO'
+USE_NAME_AS_PASSWD='YES'
+
 # ------------------------------------------------------------------
 # ------------------------- Welcome Msg ----------------------------
 # ------------------------------------------------------------------
@@ -159,6 +174,13 @@ add_new_user()
     fi
     [ X"${HOME_MAILBOX}" == X"mbox" ] && mailMessageStore="${DOMAIN_NAME}/${USERNAME}"
 
+    # Generate user password.
+    if [ X"${USE_DEFAULT_PASSWD}" == X"YES" ]; then
+        PASSWD="$(slappasswd -h {${CRYPT_MECH}} -s ${DEFAULT_PASSWD})"
+    else
+        PASSWD="$(slappasswd -h {${CRYPT_MECH}} -s ${USERNAME})"
+    fi
+
     ldapadd -x -D "${BINDDN}" -w "${BINDPW}" <<EOF
 dn: mail=${MAIL},${OU_USER_DN},${DOMAIN_DN},${BASE_DN}
 objectClass: inetOrgPerson
@@ -170,7 +192,7 @@ accountStatus: active
 mailMessageStore: ${mailMessageStore}
 mail: ${MAIL}
 mailQuota: ${QUOTA}
-userPassword: $(slappasswd -h {MD5} -s ${USERNAME})
+userPassword: ${PASSWD}
 cn: ${USERNAME}
 sn: ${USERNAME}
 givenName: ${USERNAME}
