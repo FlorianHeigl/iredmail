@@ -48,8 +48,12 @@ phpLDAPadmin:
         - https://${HOSTNAME}/phpldapadmin/
         - https://${HOSTNAME}/ldap/
     * Login account:
-        * Username: ${LDAP_ADMIN_DN}
-        * Password: ${LDAP_ADMIN_PW}
+        - LDAP root account:
+            + Username: ${LDAP_ROOTDN}
+            + Password: ${LDAP_ROOTPW}
+        - Mail admin:
+            + Username: ${LDAP_ADMIN_DN}
+            + Password: ${LDAP_ADMIN_PW}
     * See also:
         - ${HTTPD_CONF_DIR}/phpldapadmin.conf
 
