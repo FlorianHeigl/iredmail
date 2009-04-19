@@ -263,6 +263,8 @@ WebMail(Roundcubemail):
     * URL:
         - http://${HOSTNAME}/mail/
         - http://${HOSTNAME}/webmail/
+    * Login account:
+        - Username: ${FIRST_USER}@${FIRST_DOMAIN}, password: ${FIRST_USER_PASSWD}
     * Log file related:
         - ${SYSLOG_CONF}
         - ${RCM_LOGFILE}

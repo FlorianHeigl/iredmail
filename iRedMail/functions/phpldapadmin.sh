@@ -47,6 +47,9 @@ phpLDAPadmin:
         - ${PLA_HTTPD_ROOT}
         - https://${HOSTNAME}/phpldapadmin/
         - https://${HOSTNAME}/ldap/
+    * Login account:
+        * Username: ${LDAP_ADMIN_DN}
+        * Password: ${LDAP_ADMIN_PW}
     * See also:
         - ${HTTPD_CONF_DIR}/phpldapadmin.conf
 

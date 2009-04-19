@@ -115,6 +115,8 @@ PostfixAdmin:
         - ${POSTFIXADMIN_HTTPD_ROOT}
         - ${POSTFIXADMIN_CONF_LOCAL}
         - ${POSTFIXADMIN_HTTPD_ROOT}/config.inc.php
+    * Login account:
+        - Username: ${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}, password: ${DOMAIN_ADMIN_PASSWD}
     * URL:
         - https://${HOSTNAME}/postfixadmin/
     * See also:

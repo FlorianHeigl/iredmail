@@ -56,6 +56,9 @@ phpMyAdmin:
     * Configuration files:
         - ${PHPMYADMIN_HTTPD_ROOT}
         - ${PHPMYADMIN_CONFIG_FILE}
+    * Login account:
+        - Username: ${MYSQL_ROOT_USER}, password: ${MYSQL_ROOT_PASSWD}
+        - Username: ${MYSQL_ADMIN_USER}, password: ${MYSQL_ADMIN_PW}
     * URL:
         - https://${HOSTNAME}/phpmyadmin
     * See also:
