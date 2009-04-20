@@ -202,6 +202,7 @@ enabledService: imap
 enabledService: pop3
 enabledService: smtp
 enabledService: deliver
+enabledService: forward
 EOF
 }
 

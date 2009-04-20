@@ -64,7 +64,7 @@ loglevel    0
 #
 # Set permission for LDAP attrs.
 #
-access to attrs="${LDAP_ATTR_USER_PASSWD},${LDAP_ATTR_USER_ALIAS}"
+access to attrs="${LDAP_ATTR_USER_PASSWD},${LDAP_ATTR_USER_FORWARD}"
     by anonymous    auth
     by self         write
     by dn.exact="${LDAP_BINDDN}"   read
@@ -90,7 +90,7 @@ access to attrs="objectclass,${LDAP_ATTR_DOMAIN_RDN},${LDAP_ATTR_DOMAIN_TRANSPOR
     by users        read
 
 # User attrs.
-access to attrs="${LDAP_ATTR_USER_RDN},${LDAP_ATTR_USER_STATUS},${LDAP_ATTR_USER_SENDER_BCC_ADDRESS},${LDAP_ATTR_USER_RECIPIENT_BCC_ADDRESS},${LDAP_ATTR_USER_ALIAS},${LDAP_ATTR_USER_QUOTA},homeDirectory,mailMessageStore"
+access to attrs="${LDAP_ATTR_USER_RDN},${LDAP_ATTR_USER_STATUS},${LDAP_ATTR_USER_SENDER_BCC_ADDRESS},${LDAP_ATTR_USER_RECIPIENT_BCC_ADDRESS},${LDAP_ATTR_USER_FORWARD},${LDAP_ATTR_USER_QUOTA},homeDirectory,mailMessageStore"
     by anonymous    auth
     by self         read
     by dn.exact="${LDAP_BINDDN}"   read
@@ -194,7 +194,7 @@ index ${LDAP_ATTR_DOMAIN_SENDER_BCC_ADDRESS},${LDAP_ATTR_DOMAIN_RECIPIENT_BCC_AD
 # ---- Group related ----
 index ${LDAP_ATTR_GROUP_ACCESSPOLICY},${LDAP_ATTR_GROUP_HASMEMBER},${LDAP_ATTR_GROUP_MEMBER},${LDAP_ATTR_GROUP_ALLOWED_USER}   eq,pres
 # ---- User related ----
-index homeDirectory,mailMessageStore,${LDAP_ATTR_USER_ALIAS},${LDAP_ATTR_USER_STATUS}   eq,pres
+index homeDirectory,mailMessageStore,${LDAP_ATTR_USER_FORWARD},${LDAP_ATTR_USER_STATUS}   eq,pres
 index ${LDAP_ATTR_USER_BACKUPMAILADDRESS},${LDAP_ATTR_USER_EMPLOYEEID}   eq,pres
 EOF
 
@@ -346,6 +346,7 @@ ${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_SMTP}
 ${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_POP3}
 ${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_IMAP}
 ${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_DELIVER}
+${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_FORWARD}
 EOF
 
     # Maildir format.

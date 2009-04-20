@@ -1,4 +1,5 @@
 iRedMail-0.4.1:
+    * Add forwarding control in ldap alias address lookup.
     * Update dovecot to 1.1.14.
     * Add 'employeeID' in ldap schema and SQL template.
     * Create symbol link: /usr/sbin/sendmail, needed by logwatch. Thanks
