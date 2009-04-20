@@ -31,7 +31,7 @@ attributetype ( 1.3.6.1.4.1.32349.1.2.1.3 NAME 'domainStatus'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.1.4 NAME 'backupMX'
+attributetype ( 1.3.6.1.4.1.32349.1.2.1.4 NAME 'domainBackupMX'
     DESC 'Backup MX: yes'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
@@ -168,7 +168,7 @@ objectclass ( 1.3.6.1.4.1.32349.1.2.4.1 NAME 'mailUser'
 objectclass ( 1.3.6.1.4.1.32349.1.2.4.2 NAME 'mailDomain'
     DESC 'Mail Domain' SUP top STRUCTURAL
     MUST ( domainName $ mtaTransport $ domainStatus )
-    MAY ( domainAdmin $ enabledService $ backupMX $
+    MAY ( domainAdmin $ enabledService $ domainBackupMX $
         domainSenderBccAddress $ domainRecipientBccAddress $
         domainMaxQuotaSize $ domainMaxUserNumber $ 
         description $ streetAddress $ telephoneNumber $ fax ))
