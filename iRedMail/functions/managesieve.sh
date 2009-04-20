@@ -77,7 +77,7 @@ EOF
     # Copy init script and enable it.
     cp -f ${SAMPLE_DIR}/pysieved.init /etc/init.d/pysieved
     chmod +x /etc/init.d/pysieved
-    /sbin/chkconfig --level 345 pysieved on
+    eval ${enable_service} pysieved
 
     # Disable pysieved in xinetd.
     pysieved_xinetd_conf="$(eval ${LIST_FILES_IN_PKG} pysieved | grep 'xinetd' | grep 'pysieved$')"

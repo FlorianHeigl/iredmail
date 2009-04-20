@@ -195,6 +195,7 @@ EOF
 postfix_config_ldap()
 {
     # LDAP search filters.
+    ldap_search_base_domain="${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}"
     ldap_search_base_user="${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}"
     ldap_search_base_group="${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_GROUPS},${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}"
 
@@ -202,7 +203,7 @@ postfix_config_ldap()
     postconf -e transport_maps="ldap:${ldap_transport_maps_cf}"
     postconf -e virtual_mailbox_domains="ldap:${ldap_virtual_mailbox_domains_cf}"
     postconf -e virtual_mailbox_maps="ldap:${ldap_accounts_cf}, ldap:${ldap_virtual_mailbox_maps_cf}"
-    postconf -e virtual_alias_maps="ldap:${ldap_virtual_alias_maps_cf}, ldap:${ldap_virtual_maillist_maps_cf}"
+    postconf -e virtual_alias_maps="ldap:${ldap_virtual_alias_maps_cf}"
     #postconf -e local_recipient_maps='$alias_maps $virtual_alias_maps $virtual_mailbox_maps'
     postconf -e sender_bcc_maps="ldap:${ldap_sender_bcc_maps_domain_cf}, ldap:${ldap_sender_bcc_maps_user_cf}"
     postconf -e recipient_bcc_maps="ldap:${ldap_recipient_bcc_maps_domain_cf}, ldap:${ldap_recipient_bcc_maps_user_cf}"
@@ -317,28 +318,10 @@ bind            = ${LDAP_BIND}
 start_tls       = no
 bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
-search_base     = ${ldap_search_base_user}
-scope           = one
-query_filter    = (&(${LDAP_ATTR_USER_RDN}=%s)(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_FORWARD}))
+search_base     = ${ldap_search_base_domain}
+scope           = sub
+query_filter    = (&(${LDAP_ATTR_USER_RDN}=%s)(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DELIVER})(|(objectClass=${LDAP_OBJECTCLASS_MAILGROUP})(objectClass=${LDAP_OBJECTCLASS_MAILALIAS})(&(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(enabledService=${LDAP_SERVICE_FORWARD}))))
 result_attribute= ${LDAP_ATTR_USER_FORWARD}
-debuglevel      = 0
-EOF
-
-    ECHO_INFO "Setting up LDAP virtual mail list: ${ldap_virtual_maillist_maps_cf}."
-
-    cat > ${ldap_virtual_maillist_maps_cf} <<EOF
-${CONF_MSG}
-server_host     = ${LDAP_SERVER_HOST}
-server_port     = ${LDAP_SERVER_PORT}
-version         = ${LDAP_BIND_VERSION}
-bind            = ${LDAP_BIND}
-start_tls       = no
-bind_dn         = ${LDAP_BINDDN}
-bind_pw         = ${LDAP_BINDPW}
-search_base     = ${ldap_search_base_group}
-scope           = one
-query_filter    = (&(${LDAP_ATTR_USER_RDN}=%s)(objectClass=${LDAP_OBJECTCLASS_MAILGROUP})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
-result_attribute= ${LDAP_ATTR_GROUP_MEMBER}
 debuglevel      = 0
 EOF
 
@@ -418,7 +401,6 @@ EOF
         ${ldap_accounts_cf} \
         ${ldap_virtual_mailbox_maps_cf} \
         ${ldap_virtual_alias_maps_cf} \
-        ${ldap_virtual_maillist_maps_cf} \
         ${ldap_recipient_bcc_maps_domain_cf} \
         ${ldap_recipient_bcc_maps_user_cf} \
         ${ldap_sender_bcc_maps_domain_cf} \

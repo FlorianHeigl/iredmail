@@ -69,7 +69,6 @@ access to attrs="${LDAP_ATTR_USER_PASSWD},${LDAP_ATTR_USER_FORWARD}"
     by self         write
     by dn.exact="${LDAP_BINDDN}"   read
     by dn.exact="${LDAP_ADMIN_DN}"  write
-    by dn.regex="${LDAP_ATTR_USER_RDN}=${DOMAIN_ADMIN_NAME}@([^,]+),${LDAP_ATTR_DOMAIN_RDN}=\$1,${LDAP_BASEDN}"   write
     by users        none
 
 access to attrs="cn,sn,telephoneNumber"
@@ -77,25 +76,22 @@ access to attrs="cn,sn,telephoneNumber"
     by self         write
     by dn.exact="${LDAP_BINDDN}"   read
     by dn.exact="${LDAP_ADMIN_DN}"  write
-    by dn.regex="${LDAP_ATTR_USER_RDN}=${DOMAIN_ADMIN_NAME}@([^,]+),${LDAP_ATTR_DOMAIN_RDN}=\$1,${LDAP_BASEDN}"   write
     by users        read
 
 # Domain attrs.
-access to attrs="objectclass,${LDAP_ATTR_DOMAIN_RDN},${LDAP_ATTR_DOMAIN_TRANSPORT},${LDAP_ATTR_DOMAIN_STATUS},${LDAP_ENABLED_SERVICE},${LDAP_ATTR_DOMAIN_SENDER_BCC_ADDRESS},${LDAP_ATTR_DOMAIN_RECIPIENT_BCC_ADDRESS}"
+access to attrs="objectclass,${LDAP_ATTR_DOMAIN_RDN},${LDAP_ATTR_DOMAIN_TRANSPORT},${LDAP_ATTR_DOMAIN_STATUS},${LDAP_ENABLED_SERVICE},${LDAP_ATTR_DOMAIN_SENDER_BCC_ADDRESS},${LDAP_ATTR_DOMAIN_RECIPIENT_BCC_ADDRESS},${LDAP_ATTR_DOMAIN_ADMIN},${LDAP_ATTR_DOMAIN_GLOBALADMIN},${LDAP_ATTR_DOMAIN_BACKUPMX},${LDAP_ATTR_DOMAIN_MAX_QUOTA_SIZE},${LDAP_ATTR_DOMAIN_MAX_USER_NUMBER}"
     by anonymous    auth
     by self         read
     by dn.exact="${LDAP_BINDDN}"   read
     by dn.exact="${LDAP_ADMIN_DN}"  write
-    by dn.regex="${LDAP_ATTR_USER_RDN}=${DOMAIN_ADMIN_NAME}@([^,]+),${LDAP_ATTR_DOMAIN_RDN}=\$1,${LDAP_BASEDN}"    write
     by users        read
 
 # User attrs.
-access to attrs="${LDAP_ATTR_USER_RDN},${LDAP_ATTR_USER_STATUS},${LDAP_ATTR_USER_SENDER_BCC_ADDRESS},${LDAP_ATTR_USER_RECIPIENT_BCC_ADDRESS},${LDAP_ATTR_USER_FORWARD},${LDAP_ATTR_USER_QUOTA},homeDirectory,mailMessageStore"
+access to attrs="homeDirectory,mailMessageStore,${LDAP_ATTR_USER_RDN},${LDAP_ATTR_USER_STATUS},${LDAP_ATTR_USER_SENDER_BCC_ADDRESS},${LDAP_ATTR_USER_RECIPIENT_BCC_ADDRESS},${LDAP_ATTR_USER_FORWARD},${LDAP_ATTR_USER_QUOTA},${LDAP_ATTR_USER_BACKUP_MAIL_ADDRESS},${LDAP_ATTR_USER_EMPLOYEEID}"
     by anonymous    auth
     by self         read
     by dn.exact="${LDAP_BINDDN}"   read
     by dn.exact="${LDAP_ADMIN_DN}"  write
-    by dn.regex="${LDAP_ATTR_USER_RDN}=${DOMAIN_ADMIN_NAME}@([^,]+),${LDAP_ATTR_DOMAIN_RDN}=\$1,${LDAP_BASEDN}"    write
     by users        read
 
 #
@@ -119,9 +115,9 @@ access to dn.regex="${LDAP_ATTR_DOMAIN_RDN}=([^,]+),${LDAP_BASEDN}\$"
     by self                         write
     by dn.exact="${LDAP_BINDDN}"   read
     by dn.exact="${LDAP_ADMIN_DN}"  write
-    by dn.regex="${LDAP_ATTR_USER_RDN}=${DOMAIN_ADMIN_NAME}@\$1,${LDAP_ATTR_DOMAIN_RDN}=\$1,${LDAP_BASEDN}\$" write
-    by dn.regex="${LDAP_ATTR_USER_RDN}=[^,]+,${LDAP_ATTR_DOMAIN_RDN}=\$1,${LDAP_BASEDN}\$" read
+    by dn.regex="${LDAP_ATTR_USER_RDN}=[^,]+,${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=\$1,${LDAP_BASEDN}\$" read
     by users                        none
+
 #
 # Enable vmail/vmailadmin. 
 #
@@ -130,7 +126,7 @@ access to dn.subtree="${LDAP_BASEDN}"
     by self                         write
     by dn.exact="${LDAP_BINDDN}"   read
     by dn.exact="${LDAP_ADMIN_DN}"  write
-    by dn.regex="${LDAP_ATTR_USER_RDN}=[^,]+,${LDAP_ATTR_DOMAIN_RDN}=\$1,${LDAP_BASEDN}\$" read
+    by dn.regex="${LDAP_ATTR_USER_RDN}=[^,]+,${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=\$1,${LDAP_BASEDN}\$" read
     by users                        read
 
 access to dn.subtree="o=${LDAP_ATTR_DOMAINADMIN_DN_NAME},${LDAP_SUFFIX}"
@@ -188,11 +184,11 @@ index nisMapName,nisMapEntry                        eq,pres,sub
 #
 # ---- Domain related ----
 index ${LDAP_ATTR_DOMAIN_RDN},${LDAP_ATTR_DOMAIN_TRANSPORT},${LDAP_ATTR_DOMAIN_STATUS},${LDAP_ENABLED_SERVICE}  eq,pres
-index ${LDAP_ATTR_DOMAIN_QUOTA},${LDAP_ATTR_DOMAIN_USER_NUMBER} eq,pres
+index ${LDAP_ATTR_DOMAIN_QUOTA},${LDAP_ATTR_DOMAIN_MAX_USER_NUMBER} eq,pres
 index ${LDAP_ATTR_DOMAIN_ADMIN},${LDAP_ATTR_DOMAIN_GLOBALADMIN},${LDAP_ATTR_DOMAIN_BACKUPMX}    eq,pres
 index ${LDAP_ATTR_DOMAIN_SENDER_BCC_ADDRESS},${LDAP_ATTR_DOMAIN_RECIPIENT_BCC_ADDRESS}  eq,pres
 # ---- Group related ----
-index ${LDAP_ATTR_GROUP_ACCESSPOLICY},${LDAP_ATTR_GROUP_HASMEMBER},${LDAP_ATTR_GROUP_MEMBER},${LDAP_ATTR_GROUP_ALLOWED_USER}   eq,pres
+index ${LDAP_ATTR_GROUP_ACCESSPOLICY},${LDAP_ATTR_GROUP_HASMEMBER},${LDAP_ATTR_GROUP_ALLOWED_USER}   eq,pres
 # ---- User related ----
 index homeDirectory,mailMessageStore,${LDAP_ATTR_USER_FORWARD},${LDAP_ATTR_USER_STATUS}   eq,pres
 index ${LDAP_ATTR_USER_BACKUPMAILADDRESS},${LDAP_ATTR_USER_EMPLOYEEID}   eq,pres
@@ -312,6 +308,11 @@ dn: ${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_GROUPS},${LDAP_ATTR_DOMAIN_RDN}=${F
 objectClass: ${LDAP_OBJECTCLASS_OU}
 objectClass: top
 ou: ${LDAP_ATTR_GROUP_GROUPS}
+
+dn: ${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_ALIASES},${LDAP_ATTR_DOMAIN_RDN}=${FIRST_DOMAIN},${LDAP_BASEDN}
+objectClass: ${LDAP_OBJECTCLASS_OU}
+objectClass: top
+ou: ${LDAP_ATTR_GROUP_ALIASES}
 
 dn: ${LDAP_ATTR_USER_RDN}=${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN},o=${LDAP_ATTR_DOMAINADMIN_DN_NAME},${LDAP_SUFFIX}
 objectClass: ${LDAP_OBJECTCLASS_MAILADMIN}

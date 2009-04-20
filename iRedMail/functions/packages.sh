@@ -83,8 +83,9 @@ install_all()
     fi
 
     # pysieved.
+    # Warning: Do *NOT* add 'pysieved' service in 'ENABLED_SERVICES'.
+    #          We don't have rc/init script under /etc/init.d/ now.
     ALL_PKGS="${ALL_PKGS} pysieved.noarch"
-    ENABLED_SERVICES="${ENABLED_SERVICES} pysieved"
 
     # Misc.
     ALL_PKGS="${ALL_PKGS} bzip2.${ARCH} acl.${ARCH} mailx.${ARCH} patch.${ARCH} crontabs.noarch dos2unix.${ARCH}"

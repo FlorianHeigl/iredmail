@@ -127,7 +127,7 @@ attributetype ( 1.3.6.1.4.1.32349.1.2.2.12 NAME 'employeeID'
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
 attributetype ( 1.3.6.1.4.1.32349.1.2.2.13 NAME 'enabledService'
-    DESC 'Enabled service name: mail, ftp, im, smtp, imap, pop3, deliver'
+    DESC 'Enabled service name: mail, smtp, imap, pop3, deliver, forward'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
 
@@ -148,15 +148,23 @@ attributetype ( 1.3.6.1.4.1.32349.1.2.3.3 NAME 'listAllowedUser'
     DESC 'User allowed to mail to list: must be email address for mail deliver'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320} )
-attributetype ( 1.3.6.1.4.1.32349.1.2.3.4 NAME 'listMember'
-    DESC 'Mail list member: must be email address for mail deliver'
-    EQUALITY caseIgnoreIA5Match
-    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320} )
 
 #
 # Object Class Definitions
 #
-objectclass ( 1.3.6.1.4.1.32349.1.2.4.1 NAME 'mailUser'
+objectclass ( 1.3.6.1.4.1.32349.1.2.4.1 NAME 'mailDomain'
+    DESC 'Mail Domain' SUP top STRUCTURAL
+    MUST ( domainName $ mtaTransport $ domainStatus )
+    MAY ( domainAdmin $ enabledService $ domainBackupMX $
+        domainSenderBccAddress $ domainRecipientBccAddress $
+        domainMaxQuotaSize $ domainMaxUserNumber $ 
+        description $ streetAddress $ telephoneNumber $ fax ))
+objectclass ( 1.3.6.1.4.1.32349.1.2.4.2 NAME 'mailAdmin'
+    DESC 'Mail Domain Admin' SUP top STRUCTURAL
+    MUST ( mail )
+    MAY ( domainGlobalAdmin $ description $ enabledService $
+        userPassword $ accountStatus $ cn $ sn $ gn $ givenName ))
+objectclass ( 1.3.6.1.4.1.32349.1.2.4.3 NAME 'mailUser'
     DESC 'Mail User' SUP top AUXILIARY
     MUST ( mail $ uid )
     MAY ( mailMessageStore $ homeDirectory $ userPassword $
@@ -165,20 +173,12 @@ objectclass ( 1.3.6.1.4.1.32349.1.2.4.1 NAME 'mailUser'
         userRecipientBccAddress $ userSenderBccAddress $
         enabledService $ telephoneNumber $ backupMailAddress $
         employeeID $ mtaTransport ))
-objectclass ( 1.3.6.1.4.1.32349.1.2.4.2 NAME 'mailDomain'
-    DESC 'Mail Domain' SUP top STRUCTURAL
-    MUST ( domainName $ mtaTransport $ domainStatus )
-    MAY ( domainAdmin $ enabledService $ domainBackupMX $
-        domainSenderBccAddress $ domainRecipientBccAddress $
-        domainMaxQuotaSize $ domainMaxUserNumber $ 
-        description $ streetAddress $ telephoneNumber $ fax ))
-objectclass ( 1.3.6.1.4.1.32349.1.2.4.3 NAME 'mailAdmin'
-    DESC 'Mail Domain Admin' SUP top STRUCTURAL
-    MUST ( mail )
-    MAY ( domainGlobalAdmin $ description $ enabledService $
-        userPassword $ accountStatus $ cn $ sn $ gn $ givenName ))
-objectclass ( 1.3.6.1.4.1.32349.1.2.4.4 NAME 'mailList'
+objectclass ( 1.3.6.1.4.1.32349.1.2.4.4 NAME 'mailAlias'
+    DESC 'Mail User' SUP top STRUCTURAL
+    MUST ( mail $ mailForwardingAddress )
+    MAY ( enabledService $ accountStatus $ description $ cn ))
+objectclass ( 1.3.6.1.4.1.32349.1.2.4.5 NAME 'mailList'
     DESC 'Mail Domain Admin' SUP top STRUCTURAL
     MUST ( mail $ accountStatus )
     MAY ( description $ accessPolicy $ enabledService $
-        hasMember $ listAllowedUser $ listMember $ cn ))
+        hasMember $ listAllowedUser $ mailForwardingAddress $ cn ))

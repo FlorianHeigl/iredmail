@@ -1,4 +1,7 @@
 iRedMail-0.4.1:
+    * Add objectclass mailAlias in ldap schema, sync postfix alias lookup
+      and roundcube global address book lookup, both will search mailList,
+      mailAlias, mailUser forwarding in one search filter.
     * Add forwarding control in ldap alias address lookup.
     * Update dovecot to 1.1.14.
     * Add 'employeeID' in ldap schema and SQL template.
