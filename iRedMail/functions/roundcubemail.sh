@@ -130,7 +130,7 @@ EOF
     perl -pi -e 's#(.*log_driver.*=).*#${1} "syslog";#' main.inc.php
     perl -pi -e 's#(.*syslog_id.*=).*#${1} "roundcube";#' main.inc.php
     # syslog_facility should be a constant, not string. (Do *NOT* use quote.)
-    perl -pi -e 's#(.*syslog_facility.*=).*#${1} LOG_USER;#' main.inc.php
+    perl -pi -e 's#(.*syslog_facility.*=).*#${1} LOG_MAIL;#' main.inc.php
     perl -pi -e 's#(.*log_logins.*=).*#${1} TRUE;#' main.inc.php
 
     ECHO_INFO "Create directory alias for Roundcubemail."
@@ -226,34 +226,12 @@ EOF
     patch -p1 < ${PATCH_DIR}/roundcubemail/translations.patch >/dev/null 2>&1
 
     # Log file related.
-    ECHO_INFO "Setting up syslog configration file for Roundcube."
-    echo -e "user.*\t\t\t\t\t\t-${RCM_LOGFILE}" >> ${SYSLOG_CONF}
+    #ECHO_INFO "Setting up syslog configration file for Roundcube."
+    #echo -e "user.*\t\t\t\t\t\t-${RCM_LOGFILE}" >> ${SYSLOG_CONF}
 
-    touch ${RCM_LOGFILE}
-    chown root:root ${RCM_LOGFILE}
-    chmod 0600 ${RCM_LOGFILE}
-
-    ECHO_INFO "Setting logrotate for roundcube log file."
-    cat > ${RCM_LOGROTATE_FILE} <<EOF
-${CONF_MSG}
-${RCM_LOGFILE} {
-    compress
-    weekly
-    rotate 10
-    create 0600 root root
-    missingok
-
-    # Use bzip2 for compress.
-    compresscmd $(which bzip2)
-    uncompresscmd $(which bunzip2)
-    compressoptions -9
-    compressext .bz2 
-
-    postrotate
-        /usr/bin/killall -HUP syslogd
-    endscript
-}
-EOF
+    #touch ${RCM_LOGFILE}
+    #chown root:root ${RCM_LOGFILE}
+    #chmod 0600 ${RCM_LOGFILE}
 
     cat >> ${TIP_FILE} <<EOF
 WebMail(Roundcubemail):
@@ -265,10 +243,6 @@ WebMail(Roundcubemail):
         - http://${HOSTNAME}/webmail/
     * Login account:
         - Username: ${FIRST_USER}@${FIRST_DOMAIN}, password: ${FIRST_USER_PASSWD}
-    * Log file related:
-        - ${SYSLOG_CONF}
-        - ${RCM_LOGFILE}
-        - ${RCM_LOGROTATE_FILE}
     * See also:
         - ${HTTPD_CONF_DIR}/roundcubemail.conf
 
