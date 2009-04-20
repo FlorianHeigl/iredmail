@@ -1,4 +1,5 @@
 iRedMail-0.4.1:
+    * Update dovecot to 1.1.14.
     * Add 'employeeID' in ldap schema and SQL template.
     * Create symbol link: /usr/sbin/sendmail, needed by logwatch. Thanks
       jick0214@gmail.
@@ -15,8 +16,7 @@ iRedMail-0.4.1:
     * Update phpMyAdmin to 2.11.9.5.
     * Address of mail group/list will be autocomplete while you type
       recipients in roundcube now.
-    * Say goodbye to SquirrelMail.
-    * Update dovecot to 1.1.13.
+    * Say goodbye to Horde, SquirrelMail.
     * Add group mail/alias support for openldap backend.
     * Add attribute for mail list access policy control.
     * Add missing index attributes in OpenLDAP: listMember, listAllowedUser,
@@ -24,7 +24,6 @@ iRedMail-0.4.1:
     * userPassword & accountStatus are optional for objectclass mailAdmin.
     * Fixed OpenLDAP ACL.
     * Fixed: Make awstats access via https only.
-    * Say goodbye to Horde.
     * Create symbol link for all web-based programs, so that we don't have
       to restart apache while upgrade them.
     * Fix file permission: /etc/pysieved.ini, should be owned by vmail:vmail.

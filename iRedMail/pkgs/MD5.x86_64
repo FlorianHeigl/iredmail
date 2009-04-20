@@ -28,7 +28,7 @@ b763f87639929cc513f8176f0b8b23b2  rpms/php-eaccelerator-5.1.6_0.9.5.2-4.el5.rf.x
 be56f8829bb6d8570dc8228a26574223  rpms/amavisd-new-2.6.2-2.ired.x86_64.rpm
 e326b2121b87add97262333bebfb3040  rpms/lzo-1.08-5.el5.rf.x86_64.rpm
 21c60912200abf9a9768590d3f0c3441  rpms/nomarch-1.4-2.el5.x86_64.rpm
-584c5fdef35f9a81e932ea6a14ec2333  rpms/dovecot-1.1.13-0_91.el5.x86_64.rpm
 bf631a59ae0edc67937a95979dad3d71  rpms/clamav-0.95.1-1.el5.rf.x86_64.rpm
 96c2a54ad7811fa94476821174f716dc  rpms/clamav-db-0.95.1-1.el5.rf.x86_64.rpm
 18ebaf4d3013220590bb46627bfdcd95  rpms/clamd-0.95.1-1.el5.rf.x86_64.rpm
+444d7fd4376a1889483c713c8b238e99  rpms/dovecot-1.1.14-0_92.el5.x86_64.rpm
