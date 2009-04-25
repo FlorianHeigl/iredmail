@@ -1,4 +1,6 @@
 iRedMail-0.4.1:
+    * Add more ldap attributes: domainCurrentQuotaSize,
+      domainCurrentUserNumber, domainCurrentAliasNumber.
     * Add objectclass mailAlias in ldap schema, sync postfix alias lookup
       and roundcube global address book lookup, both will search mailList,
       mailAlias, mailUser forwarding in one search filter.

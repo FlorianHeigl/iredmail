@@ -477,7 +477,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT goto FROM alias WHERE address='%s' AND active='1' AND expired >= NOW()
+query       = SELECT goto FROM alias WHERE address='%s' AND active='1' AND enableforward='1' AND expired >= NOW()
 EOF
 
     cat > ${mysql_sender_login_maps_cf} <<EOF

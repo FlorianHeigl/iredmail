@@ -82,7 +82,6 @@ BASE_DN="o=domains,${LDAP_SUFFIX}"
 DOMAIN_NAME="$1"
 DOMAIN_DN="domainName=${DOMAIN_NAME}"
 OU_USER_DN="ou=Users"
-OU_GROUP_DN="ou=Groups"
 
 # ---------- rootdn of LDAP Server ----------
 # Setting rootdn of LDAP.
@@ -150,10 +149,17 @@ ou: Users
 EOF
 
     ldapadd -x -D "${BINDDN}" -w "${BINDPW}" <<EOF
-dn: ${OU_GROUP_DN},${DOMAIN_DN},${BASE_DN}
+dn: ou=Groups,${DOMAIN_DN},${BASE_DN}
 objectClass: organizationalUnit
 objectClass: top
 ou: Groups
+EOF
+
+    ldapadd -x -D "${BINDDN}" -w "${BINDPW}" <<EOF
+dn: ou=Aliases,${DOMAIN_DN},${BASE_DN}
+objectClass: organizationalUnit
+objectClass: top
+ou: Aliases
 EOF
 }
 
