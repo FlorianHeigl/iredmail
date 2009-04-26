@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Author: Zhang Huangbin (michaelbibby <at> gmail.com)
 
@@ -63,7 +63,7 @@ backup_file()
 install_pkg()
 {
     ECHO_INFO "Installing package(s): $@"
-    ${YUM} -y install $@
+    ${INSTALL_PKG} -y install $@
     if [ X"$?" != X"0" ]; then
         echo -e "Installation failed, please check the terminal output."
         exit 255
@@ -75,7 +75,7 @@ install_pkg()
 remove_pkg()
 {
     ECHO_INFO "Removing package(s): $@"
-    ${YUM} -y remove $@
+    ${INSTALL_PKG} -y remove $@
     [ X"$?" != X"0" ] && ECHO_INFO "Package removed failed, please check the terminal output."
 }
 

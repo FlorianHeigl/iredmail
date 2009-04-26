@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Author: Zhang Huangbin (michaelbibby <at> gmail.com)
 
@@ -38,10 +38,16 @@ export USE_MANAGESIEVE='YES'    # Use managesieve service.
 export USE_PYSIEVED='YES'       # Use pysieved to provide managesieve service.
 
 # Set command used to install packages.
-if [ X"${YUM}" == X"" ]; then
-    export YUM='yum -d 2'
+if [ X"${INSTALL_PKG}" == X"" ]; then
+    export INSTALL_PKG='yum -d 2'
+
+    # Yum repository related.
+    export YUM_REPOS_DIR='/etc/yum.repos.d'
+    export LOCAL_REPO_NAME="${PROG_NAME}"
+    export LOCAL_REPO_FILE="${YUM_REPOS_DIR}/${LOCAL_REPO_NAME}.repo"
+    export YUM_UPDATE_REPO='http://www.iredmail.org/yum/rpms/5/'
 else
-    export YUM=${YUM}
+    export INSTALL_PKG=${INSTALL_PKG}
 fi
 
 # vmail user. uid and gid should be export after user added. Reference:
@@ -65,7 +71,7 @@ export ETC_SYSCONFIG_DIR='/etc/sysconfig'
 export IPTABLES_CONFIG="${ETC_SYSCONFIG_DIR}/iptables"
 
 # Hostname.
-export HOSTNAME="$(grep '^HOSTNAME' ${ETC_SYSCONFIG_DIR}/network | awk -F'=' '{print $2}' | sed 's/"//g' | sed "s/'//g")"
+export HOSTNAME="$(hostname --fqdn)"
 
 # SSL/TLS support.
 export SSL_FILE_DIR="/etc/pki/${PROG_NAME}"
@@ -120,7 +126,7 @@ export CONF_MSG="#
 export LC_ALL=C
 
 # TERM.
-if [ X"${TERM}" == X"xterm" ]; then
+if [ X"${TERM}" == X"xterm" -o X"${TERM}" == X"linux" ]; then
     export TERM='xterm'
 else
     export TERM='pcconsole'
@@ -135,12 +141,6 @@ export CRON_SPOOL_DIR="/var/spool/cron"
 
 # Logrotate configuration directory.
 export LOGROTATE_DIR='/etc/logrotate.d'
-
-# Yum repository related.
-export YUM_REPOS_DIR='/etc/yum.repos.d'
-export LOCAL_REPO_NAME="${PROG_NAME}"
-export LOCAL_REPO_FILE="${YUM_REPOS_DIR}/${LOCAL_REPO_NAME}.repo"
-export YUM_UPDATE_REPO='http://www.iredmail.org/yum/rpms/5/'
 
 # Genrate a random string.
 # Usage:

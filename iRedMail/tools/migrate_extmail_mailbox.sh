@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Author:   Zhang Huangbin (michaelbibby <at> gmail.com )
 # Date:     2008.06.11

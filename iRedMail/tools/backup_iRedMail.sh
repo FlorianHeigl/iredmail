@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Filename: backup_iRedMail.sh
 # Author:   Zhang Huangbin (michaelbibby@gmail.com)

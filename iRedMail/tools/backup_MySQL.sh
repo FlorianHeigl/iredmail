@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Filename: backup_mysql_db.sh
 # Author:   Zhang Huangbin (michaelbibby <at> gmail.com)

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Author:   Zhang Huangbin (michaelbibby <at> gmail.com)
 # Date:     $LastChangedDate: 2008-03-02 21:11:40 +0800 (Sun, 02 Mar 2008) $

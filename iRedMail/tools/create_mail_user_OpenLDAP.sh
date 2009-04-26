@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Filename: create_mail_ldap_user.sh
 # Author:   Zhang Huangbin (michaelbibby#gmail.com)
