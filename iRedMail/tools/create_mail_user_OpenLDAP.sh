@@ -209,6 +209,8 @@ enabledService: pop3
 enabledService: smtp
 enabledService: deliver
 enabledService: forward
+enabledService: senderbcc
+enabledService: recipientbcc
 EOF
 }
 
