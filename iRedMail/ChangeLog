@@ -1,15 +1,14 @@
 iRedMail-0.4.1:
+    * LDAP attribute 'domainStatus' is deprecated, use accountStatus instead.
     * Add more ldap attributes: domainCurrentQuotaSize,
       domainCurrentUserNumber, domainCurrentAliasNumber.
     * Add objectclass mailAlias in ldap schema, sync postfix alias lookup
       and roundcube global address book lookup, both will search mailList,
       mailAlias, mailUser forwarding in one search filter.
-    * Add forwarding control in ldap alias address lookup.
+    * Add forwarding control in postfix alias lookup map.
     * Update dovecot to 1.1.14.
-    * Add 'employeeID' in ldap schema and SQL template.
-    * Create symbol link: /usr/sbin/sendmail, needed by logwatch. Thanks
-      jick0214@gmail.
-    * Add /robots.txt to disallow search engines.
+    * Add 'employeeID' in SQL template.
+    * Add robots.txt in web server document root to disallow search engines.
     * POP3/IMAP are enabled by default, dialog page removed.
     * Known issue: pysieved will cause a zombie process.
     * Update clamav to 0.95.1.
@@ -35,7 +34,7 @@ iRedMail-0.4.1:
     * Fix file permission: /etc/pysieved.ini, should be owned by vmail:vmail.
     * Add max length limit for several ldap attributes, remove unnecessary
       attribute.
-    * Adjust mail_location setting in dovecot.
+    * Adjust mail_location setting in dovecot, use home directory now.
     * Replace 'gn' by 'givenName' in roundcube global ldap address book.
       Thanks shake.chen@gmail.
     * Add script for mysql database backup: tools/backup_MySQL.sh.

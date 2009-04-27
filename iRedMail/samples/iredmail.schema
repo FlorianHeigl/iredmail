@@ -27,7 +27,7 @@ attributetype ( 1.3.6.1.4.1.32349.1.2.1.2 NAME 'mtaTransport'
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
 attributetype ( 1.3.6.1.4.1.32349.1.2.1.3 NAME 'domainStatus'
-    DESC 'The status of a virtual domain: active, disabled'
+    DESC 'Deprecated since iRedMail-0.4.1, use accountStatus instead'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
@@ -105,47 +105,46 @@ attributetype ( 1.3.6.1.4.1.32349.1.2.2.3 NAME 'mailMessageStore'
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
 attributetype ( 1.3.6.1.4.1.32349.1.2.2.4 NAME 'mailQuota'
-    DESC 'The amount of space the user can use until all further messages get bounced.'
+    DESC 'The amount of space the user can use until all further messages get bounced'
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.44
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.5 NAME 'mailHost'
-    DESC 'On which mail server the messagestore of this user is located.'
+attributetype ( 1.3.6.1.4.1.32349.1.2.2.5 NAME 'mailQuotaMessageLimit'
+    DESC 'Quota limit in number of messages, 0 means unlimited'
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.44
+    SINGLE-VALUE )
+attributetype ( 1.3.6.1.4.1.32349.1.2.2.6 NAME 'mailHost'
+    DESC 'On which mail server the messagestore of this user is located'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.6 NAME 'mailForwardingAddress'
+attributetype ( 1.3.6.1.4.1.32349.1.2.2.7 NAME 'mailForwardingAddress'
     DESC 'Address(es) to forward all incoming messages to.'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320} )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.7 NAME 'accountStatus'
+attributetype ( 1.3.6.1.4.1.32349.1.2.2.8 NAME 'accountStatus'
     DESC 'The status of a user account: active, nopop, disabled'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.8 NAME 'userRecipientBccAddress'
+attributetype ( 1.3.6.1.4.1.32349.1.2.2.9 NAME 'userRecipientBccAddress'
     DESC 'Recipient BCC address'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320}
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.9 NAME 'userSenderBccAddress'
+attributetype ( 1.3.6.1.4.1.32349.1.2.2.10 NAME 'userSenderBccAddress'
     DESC 'Sender BCC address for single user'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320}
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.10 NAME 'backupMailAddress'
+attributetype ( 1.3.6.1.4.1.32349.1.2.2.11 NAME 'backupMailAddress'
     DESC 'Backup mail address, used to reset password or whatever'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320}
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.11 NAME 'userRank'
+attributetype ( 1.3.6.1.4.1.32349.1.2.2.12 NAME 'userRank'
     DESC 'Rank: boss, manager, normal'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.12 NAME 'employeeID'
-    DESC 'Employee ID'
-    EQUALITY caseIgnoreIA5Match
-    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
-    SINGLE-VALUE )
 attributetype ( 1.3.6.1.4.1.32349.1.2.2.13 NAME 'enabledService'
     DESC 'Enabled service name: mail, smtp, imap, pop3, deliver, forward'
     EQUALITY caseIgnoreIA5Match
@@ -174,8 +173,9 @@ attributetype ( 1.3.6.1.4.1.32349.1.2.3.3 NAME 'listAllowedUser'
 #
 objectclass ( 1.3.6.1.4.1.32349.1.2.4.1 NAME 'mailDomain'
     DESC 'Mail Domain' SUP top STRUCTURAL
-    MUST ( domainName $ mtaTransport $ domainStatus )
+    MUST ( domainName $ mtaTransport )
     MAY ( domainAdmin $ enabledService $ domainBackupMX $
+        domainStatus $ accountStatus $
         domainSenderBccAddress $ domainRecipientBccAddress $
         domainMaxQuotaSize $ domainCurrentQuotaSize $
         domainMaxUserNumber $ domainCurrentUserNumber $
@@ -190,11 +190,11 @@ objectclass ( 1.3.6.1.4.1.32349.1.2.4.3 NAME 'mailUser'
     DESC 'Mail User' SUP top AUXILIARY
     MUST ( mail $ uid )
     MAY ( mailMessageStore $ homeDirectory $ userPassword $
-        mailUID $ mailGID $ mailQuota $ mailHost $
-        mailForwardingAddress $ accountStatus $
+        mailUID $ mailGID $ mailQuota $ mailQuotaMessageLimit $
+        mailHost $ mailForwardingAddress $ accountStatus $
         userRecipientBccAddress $ userSenderBccAddress $
         enabledService $ telephoneNumber $ backupMailAddress $
-        employeeID $ mtaTransport ))
+        mtaTransport ))
 objectclass ( 1.3.6.1.4.1.32349.1.2.4.4 NAME 'mailAlias'
     DESC 'Mail User' SUP top STRUCTURAL
     MUST ( mail $ mailForwardingAddress )

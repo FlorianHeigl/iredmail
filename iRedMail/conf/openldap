@@ -50,13 +50,15 @@ export LDAP_SERVICE_FORWARD='forward'
 export LDAP_SERVICE_WEBMAIL='webmail'
 export LDAP_SERVICE_AWSTATS='awstats'
 
+# Shared attributes.
+export LDAP_ATTR_ACCOUNT_STATUS='accountStatus'
+
 # Domain admin related.
 export LDAP_ATTR_DOMAINADMIN_DN_NAME='domainAdmins'
 
 # Domain related attributes.
 export LDAP_ATTR_DOMAIN_RDN='domainName'
 export LDAP_ATTR_DOMAIN_TRANSPORT='mtaTransport'
-export LDAP_ATTR_DOMAIN_STATUS='domainStatus'
 export LDAP_ATTR_DOMAIN_ADMIN='domainAdmin'
 export LDAP_ATTR_DOMAIN_GLOBALADMIN='domainGlobalAdmin'
 export LDAP_ATTR_DOMAIN_BACKUPMX='domainBackupMX'
@@ -87,7 +89,6 @@ export LDAP_ATTR_USER_RDN='mail'
 export LDAP_ATTR_USER_PASSWD='userPassword'
 export LDAP_ATTR_USER_SENDER_BCC_ADDRESS='userSenderBccAddress'
 export LDAP_ATTR_USER_RECIPIENT_BCC_ADDRESS='userRecipientBccAddress'
-export LDAP_ATTR_USER_STATUS='accountStatus'
 export LDAP_ATTR_USER_BACKUP_MAIL_ADDRESS='backupMailAddress'
 export LDAP_ATTR_USER_QUOTA='mailQuota'
 export LDAP_ATTR_USER_FORWARD='mailForwardingAddress'

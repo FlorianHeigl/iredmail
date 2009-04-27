@@ -134,7 +134,7 @@ dn: ${DOMAIN_DN},${BASE_DN}
 objectClass: mailDomain
 domainName: ${DOMAIN_NAME}
 mtaTransport: ${TRANSPORT}
-domainStatus: active
+accountStatus: active
 enableMailService: yes
 EOF
     else
