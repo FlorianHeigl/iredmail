@@ -54,6 +54,28 @@ export SPF_PROGRAM='perl-Mail-SPF'
 # Directory /etc/sysconfig/ on RHEL/CentOS.
 export ETC_SYSCONFIG_DIR='/etc/sysconfig'
 
+# Check distribution.
+if [ X"${KERNEL_NAME}" == X"Linux" ]; then
+    if [ -f /etc/redhat-release ]; then
+        # RHEL/CentOS
+        export DISTRO='RHEL'
+    elif [ -f /etc/debian_version ]; then
+        # Debian
+        export DISTRO='DEBIAN'
+    elif [ -f /etc/lsb-release ]; then
+        # Ubuntu
+        export DISTRO='UBUNTU'
+    else
+        # Not support yet.
+        ECHO_INFO "Your distrobution is not supported yet."
+        exit 255
+    fi
+else
+    # Not support *BSD and other distrobutions yet.
+    ECHO_INFO "Your OS is not supported yet."
+    exit 255
+fi
+
 # Iptables rule file.
 export IPTABLES_CONFIG="${ETC_SYSCONFIG_DIR}/iptables"
 
@@ -61,7 +83,13 @@ export IPTABLES_CONFIG="${ETC_SYSCONFIG_DIR}/iptables"
 export HOSTNAME="$(hostname --fqdn)"
 
 # SSL/TLS support.
-export SSL_FILE_DIR="/etc/pki/${PROG_NAME}"
+if [ X"${DISTRO}" == X"RHEL" ]; then
+    export SSL_FILE_DIR="/etc/pki/${PROG_NAME}"
+elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+    export SSL_FILE_DIR="/etc/ssl/${PROG_NAME}"
+else
+    :
+fi
 export SSL_CERT_FILE="${SSL_FILE_DIR}/SSL_Cert.pem"
 export SSL_KEY_FILE="${SSL_FILE_DIR}/SSL_Key.pem"
 export TLS_COUNTRY='CN'
@@ -137,25 +165,6 @@ export RANDOM_STRING='eval </dev/urandom tr -dc A-Za-z0-9| (head -c $1 > /dev/nu
 # Syslog config file.
 export SYSLOG_CONF='/etc/syslog.conf'
 
-# Make some command operating system independent.
-if [ X"${KERNEL_NAME}" == X"Linux" ]; then
-    if [ -f /etc/redhat-release ]; then
-        # RHEL/CentOS
-        export DISTRO='RHEL'
-    elif [ -f /etc/lsb-release ]; then
-        # Ubuntu
-        export DISTRO='UBUNTU'
-    else
-        # Not support yet.
-        ECHO_INFO "Your distrobution is not supported yet."
-        exit 255
-    fi
-else
-    # Not support *BSD and other distrobutions yet.
-    ECHO_INFO "Your OS is not supported yet."
-    exit 255
-fi
-
 # install_pkg: function used to install packages without confirm.
 # remove_pkg: function used to remove packages without confirm.
 # LIST_ALL_PKGS: command used to list all installed packages.
@@ -180,17 +189,17 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     export LOCAL_REPO_FILE="${YUM_REPOS_DIR}/${LOCAL_REPO_NAME}.repo"
     export YUM_UPDATE_REPO='http://www.iredmail.org/yum/rpms/5/'
 
-elif [ X"${DISTRO}" == X"UBUNTU" ]; then
-    # Ubuntu.
+elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
+    # Ubuntu & Debian.
     # Package management.
-    export install_pkg='install_pkg_ubuntu'
-    export remove_pkg='removel_pkg_ubuntu'
+    export install_pkg='install_pkg_debian'
+    export remove_pkg='removel_pkg_debian'
     export LIST_ALL_PKGS='rpm -qa'
     export LIST_FILES_IN_PKG='rpm -ql'
 
     # Service control.
-    export enable_service="enable_service_ubuntu"
-    export disable_service="disable_service_ubuntu"
+    export enable_service="enable_service_debian"
+    export disable_service="disable_service_debian"
 else
     # Not support yet.
     ECHO_INFO "Your distrobution is not supported yet."

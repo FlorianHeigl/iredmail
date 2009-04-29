@@ -72,7 +72,7 @@ install_pkg_rhel()
     fi
 }
 
-install_pkg_ubuntu()
+install_pkg_debian()
 {
     ECHO_INFO "Installing package(s): $@"
     apt-get install -y $@
@@ -91,10 +91,10 @@ remove_pkg_rhel()
     [ X"$?" != X"0" ] && ECHO_INFO "Package removed failed, please check the terminal output."
 }
 
-remove_pkg_ubuntu()
+remove_pkg_debian()
 {
     ECHO_INFO "Removing package(s): $@"
-    apt-get remove -y $@
+    apt-get purge -y $@
     [ X"$?" != X"0" ] && ECHO_INFO "Package removed failed, please check the terminal output."
 }
 
@@ -274,7 +274,7 @@ disable_service_rh()
     done
 }
 
-enable_service_ubuntu()
+enable_service_debian()
 {
     services="$@"
     for i in $services; do
@@ -282,12 +282,11 @@ enable_service_ubuntu()
     done
 }
 
-disable_service_rh()
+disable_service_debian()
 {
     services="$@"
     for i in $services; do
-        # TODO
-        update-rc.d $i defaults
+        update-rc.d -f $i remove
     done
 }
 

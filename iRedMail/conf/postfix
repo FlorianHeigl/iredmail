@@ -17,7 +17,6 @@ export MAILDIR_LIMIT_MESSAGE="Sorry, the user's maildir has overdrawn the disk q
 # You do *NOT* need to modify them.
 export POSTFIX_ROOTDIR='/etc/postfix'
 export POSTFIX_CHROOT_DIR='/var/spool/postfix'
-export POSTFIX_CERTS_DIR="${POSTFIX_ROOTDIR}/certs"
 
 export POSTFIX_FILE_MAIN_CF="${POSTFIX_ROOTDIR}/main.cf"
 export POSTFIX_FILE_MASTER_CF="${POSTFIX_ROOTDIR}/master.cf"

@@ -263,6 +263,7 @@ EOF
     }
 EOF
 
+        backup_file ${DOVECOT_LDAP_CONF}
         cat > ${DOVECOT_LDAP_CONF} <<EOF
 ${CONF_MSG}
 hosts           = ${LDAP_SERVER_HOST}:${LDAP_SERVER_PORT}
