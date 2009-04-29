@@ -71,8 +71,8 @@ EOF
     # feature, it's used in 'smtpd_end_of_data_restrictions'.
     cp -f ${POLICYD_CONF} ${POLICYD_SENDER_THROTTLE_CONF}
 
-    # Patch init script.
-    patch -p0 < ${PATCH_DIR}/policyd/policyd_init.patch >/dev/null
+    # Patch init script on RHEL/CentOS.
+    [ X"${DISTRO}" == X"RHEL" ] && patch -p0 < ${PATCH_DIR}/policyd/policyd_init.patch >/dev/null
 
     # Set correct permission.
     chown ${POLICYD_USER_NAME}:${POLICYD_GROUP_NAME} ${POLICYD_CONF} ${POLICYD_SENDER_THROTTLE_CONF}

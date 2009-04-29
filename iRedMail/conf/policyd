@@ -5,8 +5,15 @@
 # ------------------------------------------------
 # Policyd.
 # ------------------------------------------------
-export POLICYD_CONF='/etc/policyd.conf'
-export POLICYD_INIT_SCRIPT='/etc/init.d/policyd'
+if [ X"${DISTRO}" == X"RHEL" ]; then
+    export POLICYD_CONF='/etc/policyd.conf'
+    export POLICYD_INIT_SCRIPT='/etc/init.d/policyd'
+elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+    export POLICYD_CONF='/etc/postfix-policyd.conf'
+    export POLICYD_INIT_SCRIPT='/etc/init.d/postfix-policyd'
+else
+    :
+fi
 
 export POLICYD_BINDHOST='127.0.0.1' # Default value in policyd.conf.
 export POLICYD_BINDPORT='10031' # Default value in policyd.conf.

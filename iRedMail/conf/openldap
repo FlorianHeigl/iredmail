@@ -4,29 +4,34 @@
 
 # Variables for OpenLDAP and related. Refer to 'dialog/ldap_config.sh'.
 
-export OPENLDAP_ROOTDIR="/etc/openldap"
-export OPENLDAP_SCHEMA_DIR="${OPENLDAP_ROOTDIR}/schema"
-export OPENLDAP_CACERT_DIR="${OPENLDAP_ROOTDIR}/cacerts"
-export OPENLDAP_SLAPD_CONF="${OPENLDAP_ROOTDIR}/slapd.conf"
-export OPENLDAP_LDAP_CONF="${OPENLDAP_ROOTDIR}/ldap.conf"
-export OPENLDAP_LOGFILE='/var/log/openldap.log'
-export OPENLDAP_DATA_DIR='/var/lib/ldap' # Do *NOT* end with '/'.
-export OPENLDAP_SYSCONFIG_CONF="${ETC_SYSCONFIG_DIR}/ldap"
-export OPENLDAP_LOGROTATE_FILE="${LOGROTATE_DIR}/openldap"
-
-# Setting for one instance. You can edit ${OPENLDAP_SLAPD_CONF} manually to hold
-# multi instances.
-export LDAP_DATA_DIR="${OPENLDAP_DATA_DIR}/${dn2dnsname}/"
-export LDAP_INIT_LDIF="${CONF_DIR}/ldap_init.ldif"
-#
-# Account info for all services to bind to LDAP service.
-#
+# LDAP service info.
 export LDAP_SERVER_HOST='127.0.0.1'
 export LDAP_SERVER_PORT='389'
 export LDAP_USE_TLS='NO'
 export LDAP_BIND='yes'
 export LDAP_BIND_VERSION='3'
 export LDAP_BINDPW="$(${RANDOM_STRING})"
+
+# Configure.
+if [ X"${DISTRO}" == X"RHEL" ]; then
+    export OPENLDAP_ROOTDIR="/etc/openldap"
+elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+    export OPENLDAP_ROOTDIR="/etc/ldap"
+else
+    :
+fi
+
+export OPENLDAP_SCHEMA_DIR="${OPENLDAP_ROOTDIR}/schema"
+export OPENLDAP_SLAPD_CONF="${OPENLDAP_ROOTDIR}/slapd.conf"
+export OPENLDAP_LDAP_CONF="${OPENLDAP_ROOTDIR}/ldap.conf"
+export OPENLDAP_LOGFILE='/var/log/openldap.log'
+export OPENLDAP_DATA_DIR='/var/lib/ldap' # Do *NOT* end with '/'.
+export OPENLDAP_LOGROTATE_FILE="${LOGROTATE_DIR}/openldap"
+
+# Setting for one instance. You can edit ${OPENLDAP_SLAPD_CONF} manually to hold
+# multi instances.
+export LDAP_DATA_DIR="${OPENLDAP_DATA_DIR}/${dn2dnsname}/"
+export LDAP_INIT_LDIF="${CONF_DIR}/ldap_init.ldif"
 
 # ---------- LDAP schema related -----------
 # objectClass

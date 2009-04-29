@@ -5,16 +5,18 @@
 install_all()
 {
     ALL_PKGS=''
-    ENABLED_SERVICES='syslog'
+    ENABLED_SERVICES=''
     DISABLED_SERVICES=''
 
     # Apache and PHP.
     if [ X"${USE_EXIST_AMP}" != X"YES" ]; then
-        # Apache.
-        ALL_PKGS="${ALL_PKGS} httpd.${ARCH} mod_ssl.${ARCH}"
-
-        # PHP.
-        ALL_PKGS="${ALL_PKGS} php.${ARCH} php-imap.${ARCH} php-gd.${ARCH} php-mbstring.${ARCH} libmcrypt.${ARCH} php-mcrypt.${ARCH} php-pear.noarch php-xml.${ARCH} php-pecl-fileinfo.${ARCH} php-eaccelerator.${ARCH} php-mysql.${ARCH} php-ldap.${ARCH}"
+        # Apache & PHP.
+        if [ X"${DISTRO}" == X"RHEL" ]; then
+            ALL_PKGS="${ALL_PKGS} httpd.${ARCH} mod_ssl.${ARCH} php.${ARCH} php-imap.${ARCH} php-gd.${ARCH} php-mbstring.${ARCH} libmcrypt.${ARCH} php-mcrypt.${ARCH} php-pear.noarch php-xml.${ARCH} php-pecl-fileinfo.${ARCH} php-eaccelerator.${ARCH} php-mysql.${ARCH} php-ldap.${ARCH}"
+            ENABLED_SERVICES="${ENABLED_SERVICES} httpd"
+        elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+            ALL_PKGS="${ALL_PKGS} apache2 apache2"
+            ENABLED_SERVICES="${ENABLED_SERVICES} apache2"
     else
         :
     fi
@@ -22,21 +24,41 @@ install_all()
     # Postfix.
     ALL_PKGS="${ALL_PKGS} postfix.${ARCH}"
 
-    ENABLED_SERVICES="${ENABLED_SERVICES} httpd postfix"
+    ENABLED_SERVICES="${ENABLED_SERVICES} postfix"
 
     # Awstats.
-    [ X"${USE_AWSTATS}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} awstats.noarch"
+    if [ X"${USE_AWSTATS}" == X"YES" ]; then
+        if [ X"${DISTRO}" == X"RHEL" ]; then
+            ALL_PKGS="${ALL_PKGS} awstats.noarch"
+        elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+            ALL_PKGS="${ALL_PKGS} awstats"
+        else
+            :
+        fi
+    else
+        :
+    fi
 
     # Backend: OpenLDAP or MySQL.
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
         # OpenLDAP server & client.
-        ALL_PKGS="${ALL_PKGS} openldap.${ARCH} openldap-clients.${ARCH} openldap-servers.${ARCH}"
+        # Note: mysql server is required, used to store extra data,
+        #       such as policyd, roundcube webmail data.
+        if [ X"${DISTRO}" == X"RHEL" ]; then
+            ALL_PKGS="${ALL_PKGS} openldap.${ARCH} openldap-clients.${ARCH} openldap-servers.${ARCH}"
 
-        # MySQL server. Used to store extra data, such as policyd, roundcube webmail.
-        ALL_PKGS="${ALL_PKGS} mysql-server.${ARCH} mysql.${ARCH}"
+            # MySQL server. Used to store extra data, such as policyd, roundcube webmail.
+            ALL_PKGS="${ALL_PKGS} mysql-server.${ARCH} mysql.${ARCH}"
 
-        ENABLED_SERVICES="${ENABLED_SERVICES} ldap mysqld policyd"
+            ENABLED_SERVICES="${ENABLED_SERVICES} ldap mysqld"
 
+        elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+            ALL_PKGS="${ALL_PKGS} slapd mysql-server-5.0 mysql-client-5.0"
+
+            ENABLED_SERVICES="${ENABLED_SERVICES} slapd mysql"
+        else
+            :
+        fi
     elif [ X"${BACKEND}" == X"MySQL" ]; then
         # MySQL server & client.
         [ X"${MYSQL_FRESH_INSTALLATION}" == X'YES' ] && \
@@ -45,13 +67,21 @@ install_all()
         # For Awstats.
         [ X"${USE_AWSTATS}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} mod_auth_mysql.${ARCH}"
 
-        ENABLED_SERVICES="${ENABLED_SERVICES} mysqld policyd"
+        ENABLED_SERVICES="${ENABLED_SERVICES} mysqld"
     else
         :
     fi
 
     # Policyd.
-    ALL_PKGS="${ALL_PKGS} policyd.${ARCH}"
+    if [ X"${DISTRO}" == X"RHEL" ]; then
+        ALL_PKGS="${ALL_PKGS} policyd.${ARCH}"
+        ENABLED_SERVICES="${ENABLED_SERVICES} policyd"
+    elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+        ALL_PKGS="${ALL_PKGS} postfix-policyd"
+        ENABLED_SERVICES="${ENABLED_SERVICES} postfix-policyd"
+    else
+        :
+    fi
 
     # Dovecot.
     if [ X"${ENABLE_DOVECOT}" == X"YES" ]; then

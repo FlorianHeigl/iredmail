@@ -378,7 +378,6 @@ OpenLDAP:
         - /etc/init.d/ldap
     * See also:
         - ${LDAP_INIT_LDIF}
-        - ${OPENLDAP_CACERT_DIR}
 
 EOF
 

@@ -296,6 +296,8 @@ EOF
         args = ${DOVECOT_MYSQL_CONF}
     }
 EOF
+
+        backup_file ${DOVECOT_MYSQL_CONF}
         cat > ${DOVECOT_MYSQL_CONF} <<EOF
 driver = mysql
 default_pass_scheme = CRYPT

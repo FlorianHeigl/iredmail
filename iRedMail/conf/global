@@ -51,9 +51,6 @@ export DOMAIN_ADMIN_NAME='postmaster'
 # pypolicyd-spf is *NOT* recommended.
 export SPF_PROGRAM='perl-Mail-SPF'
 
-# Directory /etc/sysconfig/ on RHEL/CentOS.
-export ETC_SYSCONFIG_DIR='/etc/sysconfig'
-
 # Check distribution.
 if [ X"${KERNEL_NAME}" == X"Linux" ]; then
     if [ -f /etc/redhat-release ]; then
@@ -74,6 +71,15 @@ else
     # Not support *BSD and other distrobutions yet.
     ECHO_INFO "Your OS is not supported yet."
     exit 255
+fi
+
+# Directory /etc/sysconfig/ on RHEL/CentOS, /etc/default/ on Debian/Ubuntu.
+if [ X"${DISTRO}" == X"RHEL" ]; then
+    export ETC_SYSCONFIG_DIR='/etc/sysconfig'
+elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+    export ETC_SYSCONFIG_DIR='/etc/default'
+else
+    :
 fi
 
 # Iptables rule file.
