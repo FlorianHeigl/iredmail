@@ -22,10 +22,14 @@ clamav_config()
     perl -pi -e 's-^#(PidFile)(.*)-${1} $ENV{FRESHCLAM_PID_FILE} #${2}-' ${FRESHCLAM_CONF}
     perl -pi -e 's#^(UpdateLogFile).*#${1} $ENV{'FRESHCLAM_LOGFILE'}#' ${CLAMD_CONF}
 
-    ECHO_INFO "Copy freshclam init startup script and enable it."
-    cp -f ${FRESHCLAM_INIT_FILE_SAMPLE} /etc/rc.d/init.d/freshclam
-    chmod +x /etc/rc.d/init.d/freshclam
-    eval ${enable_service} freshclam
+    if [ X"${DISTRO}" == X"RHEL" ]; then
+        ECHO_INFO "Copy freshclam init startup script and enable it."
+        cp -f ${FRESHCLAM_INIT_FILE_SAMPLE} /etc/rc.d/init.d/freshclam
+        chmod +x /etc/rc.d/init.d/freshclam
+        eval ${enable_service} freshclam
+    else
+        :
+    fi
 
     cat >> ${TIP_FILE} <<EOF
 ClamAV:

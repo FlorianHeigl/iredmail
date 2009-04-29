@@ -15,14 +15,20 @@ install_all()
             ALL_PKGS="${ALL_PKGS} httpd.${ARCH} mod_ssl.${ARCH} php.${ARCH} php-imap.${ARCH} php-gd.${ARCH} php-mbstring.${ARCH} libmcrypt.${ARCH} php-mcrypt.${ARCH} php-pear.noarch php-xml.${ARCH} php-pecl-fileinfo.${ARCH} php-eaccelerator.${ARCH} php-mysql.${ARCH} php-ldap.${ARCH}"
             ENABLED_SERVICES="${ENABLED_SERVICES} httpd"
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-            ALL_PKGS="${ALL_PKGS} apache2 apache2"
+            ALL_PKGS="${ALL_PKGS} apache2 apache2-mpm-prefork apache2.2-common libapache2-mod-php5 php5-cli php5-imap php5-gd php5-mbstring php5-mcrypt php5-mysql php5-ldap"
             ENABLED_SERVICES="${ENABLED_SERVICES} apache2"
     else
         :
     fi
 
     # Postfix.
-    ALL_PKGS="${ALL_PKGS} postfix.${ARCH}"
+    if [ X"${DISTRO}" == X"RHEL" ]; then
+        ALL_PKGS="${ALL_PKGS} postfix.${ARCH}"
+    elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+        ALL_PKGS="${ALL_PKGS} postfix postfix-pcre postfix-mysql postfix-ldap"
+    else
+        :
+    fi
 
     ENABLED_SERVICES="${ENABLED_SERVICES} postfix"
 
@@ -61,13 +67,28 @@ install_all()
         fi
     elif [ X"${BACKEND}" == X"MySQL" ]; then
         # MySQL server & client.
-        [ X"${MYSQL_FRESH_INSTALLATION}" == X'YES' ] && \
-            ALL_PKGS="${ALL_PKGS} mysql-server.${ARCH} mysql.${ARCH}"
+        if [ X"${MYSQL_FRESH_INSTALLATION}" == X'YES' ]; then 
+            if [ X"${DISTRO}" == X"RHEL" ]; then
+                ALL_PKGS="${ALL_PKGS} mysql-server.${ARCH} mysql.${ARCH}"
 
-        # For Awstats.
-        [ X"${USE_AWSTATS}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} mod_auth_mysql.${ARCH}"
+                # For Awstats.
+                [ X"${USE_AWSTATS}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} mod_auth_mysql.${ARCH}"
 
-        ENABLED_SERVICES="${ENABLED_SERVICES} mysqld"
+                ENABLED_SERVICES="${ENABLED_SERVICES} mysqld"
+
+            elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+                ALL_PKGS="${ALL_PKGS} mysql-server.${ARCH} mysql.${ARCH}"
+
+                # For Awstats.
+                [ X"${USE_AWSTATS}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} mod_auth_mysql.${ARCH}"
+
+                ENABLED_SERVICES="${ENABLED_SERVICES} mysql"
+            else
+                :
+            fi
+        else
+            :
+        fi
     else
         :
     fi
@@ -85,29 +106,49 @@ install_all()
 
     # Dovecot.
     if [ X"${ENABLE_DOVECOT}" == X"YES" ]; then
-        ALL_PKGS="${ALL_PKGS} dovecot.${ARCH} dovecot-sieve.${ARCH}"
+        if [ X"${DISTRO}" == X"RHEL" ]; then
+            ALL_PKGS="${ALL_PKGS} dovecot.${ARCH} dovecot-sieve.${ARCH}"
+
+            # We will use Dovecot SASL auth mechanism, so 'saslauthd'
+            # is not necessary, should be disabled.
+            DISABLED_SERVICES="${DISABLED_SERVICES} saslauthd"
+
+        elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+            ALL_PKGS="${ALL_PKGS} dovecot-imapd dovecot-pop3d"
+        else
+            :
+        fi
+
         ENABLED_SERVICES="${ENABLED_SERVICES} dovecot"
-        # We will use Dovecot SASL auth mechanism, so 'saslauthd'
-        # is not necessary, should be disabled.
-        DISABLED_SERVICES="${DISABLED_SERVICES} saslauthd"
     else
         ALL_PKGS="procmail.${ARCH}"
-        ENABLED_SERVICES="${ENABLED_SERVICES} saslauthd"
+        [ X"${DISTRO}" == X"RHEL" ] && ENABLED_SERVICES="${ENABLED_SERVICES} saslauthd"
     fi
 
     # Amavisd-new & ClamAV.
-    ALL_PKGS="${ALL_PKGS} amavisd-new.${ARCH} clamd.${ARCH} clamav.${ARCH} clamav-db.${ARCH}"
-    ENABLED_SERVICES="${ENABLED_SERVICES} amavisd clamd"
-    DISABLED_SERVICES="${DISABLED_SERVICES} spamassassin"
+    if [ X"${DISTRO}" == X"RHEL" ]; then
+        ALL_PKGS="${ALL_PKGS} amavisd-new.${ARCH} clamd.${ARCH} clamav.${ARCH} clamav-db.${ARCH}"
+        ENABLED_SERVICES="${ENABLED_SERVICES} amavisd clamd"
+        DISABLED_SERVICES="${DISABLED_SERVICES} spamassassin"
+    elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+        ALL_PKGS="${ALL_PKGS} amavisd-new clamav-freshclam clamav-daemon"
+        ENABLED_SERVICES="${ENABLED_SERVICES} amavis clamav-clamd clamav-freshclam"
+        DISABLED_SERVICES="${DISABLED_SERVICES} spamassassin"
+    else
+        :
+    fi
 
     # SPF.
     if [ X"${ENABLE_SPF}" == X"YES" ]; then
-        # Via pypolicyd-spf. It's *NOT* recommended. Reference:
-        # http://code.google.com/p/iredmail/wiki/iRedMail_tut_SPF
-        [ X"${SPF_PROGRAM}" == X'pypolicyd-spf' ] && ALL_PKGS="${ALL_PKGS} pydns.noarch pyspf.noarch"
+        if [ X"${DISTRO}" == X"RHEL" ]; then
+            # SPF implemention via perl-Mail-SPF.
+            ALL_PKGS="${ALL_PKGS} perl-Mail-SPF.noarch perl-Mail-SPF-Query.noarch"
 
-        # Via perl-Mail-SPF.
-        [ X"${SPF_PROGRAM}" == X'perl-Mail-SPF' ] && ALL_PKGS="${ALL_PKGS} perl-Mail-SPF.noarch perl-Mail-SPF-Query.noarch"
+        elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+            ALL_PKGS="${ALL_PKGS} libmail-spf-perl"
+        else
+            :
+        fi
     else
         :
     fi
@@ -115,11 +156,25 @@ install_all()
     # pysieved.
     # Warning: Do *NOT* add 'pysieved' service in 'ENABLED_SERVICES'.
     #          We don't have rc/init script under /etc/init.d/ now.
-    ALL_PKGS="${ALL_PKGS} pysieved.noarch"
+    if [ X"${DISTRO}" == X"RHEL" ]; then
+        ALL_PKGS="${ALL_PKGS} pysieved.noarch"
+    elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+        #ALL_PKGS="${ALL_PKGS} "
+        :
+    else
+        :
+    fi
 
     # Misc.
-    ALL_PKGS="${ALL_PKGS} bzip2.${ARCH} acl.${ARCH} mailx.${ARCH} patch.${ARCH} crontabs.noarch dos2unix.${ARCH}"
-    ENABLED_SERVICES="${ENABLED_SERVICES} crond"
+    if [ X"${DISTRO}" == X"RHEL" ]; then
+        ALL_PKGS="${ALL_PKGS} bzip2.${ARCH} acl.${ARCH} mailx.${ARCH} patch.${ARCH} crontabs.noarch dos2unix.${ARCH}"
+        ENABLED_SERVICES="${ENABLED_SERVICES} crond"
+    elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+        ALL_PKGS="${ALL_PKGS} bzip2 acl mailx patch cron tofrodos"
+        ENABLED_SERVICES="${ENABLED_SERVICES} cron"
+    else
+        :
+    fi
 
     export ALL_PKGS ENABLED_SERVICES
 

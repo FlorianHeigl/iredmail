@@ -9,6 +9,7 @@
 #    $ man Mail::SpamAssassin::Conf
 #
 
+
 # These two lines will not affect due to Amavisd use its
 # own variables setting in /etc/amavisd.conf.
 required_score      5.0
