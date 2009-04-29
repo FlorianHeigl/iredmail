@@ -72,7 +72,7 @@ check_pkg_which()
     done
 
     if [ X"${HAS_WHICH}" != X'YES' ]; then
-        install_pkg which.${ARCH}
+        eval ${install_pkg} which.${ARCH}
         if [ X"$?" != X"0" ]; then
             ECHO_INFO "Please install package 'createrepo' first." && exit 255
         else
@@ -89,7 +89,7 @@ check_pkg_createrepo()
     which createrepo >/dev/null 2>&1
 
     if [ X"$?" != X"0" ]; then
-        install_pkg createrepo.noarch
+        eval ${install_pkg} createrepo.noarch
         if [ X"$?" != X"0" ]; then
             ECHO_INFO "Please install package 'createrepo' first." && exit 255
         else

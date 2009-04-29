@@ -60,10 +60,10 @@ backup_file()
     fi
 }
 
-install_pkg()
+install_pkg_rhel()
 {
     ECHO_INFO "Installing package(s): $@"
-    ${INSTALL_PKG} -y install $@
+    yum -d 2 -y install $@
     if [ X"$?" != X"0" ]; then
         echo -e "Installation failed, please check the terminal output."
         exit 255
@@ -72,10 +72,29 @@ install_pkg()
     fi
 }
 
-remove_pkg()
+install_pkg_ubuntu()
+{
+    ECHO_INFO "Installing package(s): $@"
+    apt-get install -y $@
+    if [ X"$?" != X"0" ]; then
+        echo -e "Installation failed, please check the terminal output."
+        exit 255
+    else
+        :
+    fi
+}
+
+remove_pkg_rhel()
 {
     ECHO_INFO "Removing package(s): $@"
-    ${INSTALL_PKG} -y remove $@
+    yum remove -y $@
+    [ X"$?" != X"0" ] && ECHO_INFO "Package removed failed, please check the terminal output."
+}
+
+remove_pkg_ubuntu()
+{
+    ECHO_INFO "Removing package(s): $@"
+    apt-get remove -y $@
     [ X"$?" != X"0" ] && ECHO_INFO "Package removed failed, please check the terminal output."
 }
 
@@ -95,7 +114,7 @@ extract_pkg()
         which bzip2 >/dev/null 2>&1
 
         if [ X"$?" != X"0" ]; then
-            install_pkg bzip2
+            eval ${install_pkg} bzip2
         else
             :
         fi
@@ -152,7 +171,7 @@ check_dialog()
     which dialog >/dev/null 2>&1
 
     if [ X"$?" != X"0" ]; then
-        install_pkg dialog.${ARCH}
+        eval ${install_pkg} dialog.${ARCH}
 
         #[ X"$?" != X"0" ] && \
         #    echo "${INFO_FLAG} Install 'dialog' failed. Please install it first and make" && \
@@ -252,6 +271,23 @@ disable_service_rh()
     services="$@"
     for i in $services; do
         /sbin/chkconfig --level 345 $i off
+    done
+}
+
+enable_service_ubuntu()
+{
+    services="$@"
+    for i in $services; do
+        update-rc.d $i defaults
+    done
+}
+
+disable_service_rh()
+{
+    services="$@"
+    for i in $services; do
+        # TODO
+        update-rc.d $i defaults
     done
 }
 

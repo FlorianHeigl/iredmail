@@ -37,19 +37,6 @@ export USE_IMAPS='YES'
 export USE_MANAGESIEVE='YES'    # Use managesieve service.
 export USE_PYSIEVED='YES'       # Use pysieved to provide managesieve service.
 
-# Set command used to install packages.
-if [ X"${INSTALL_PKG}" == X"" ]; then
-    export INSTALL_PKG='yum -d 2'
-
-    # Yum repository related.
-    export YUM_REPOS_DIR='/etc/yum.repos.d'
-    export LOCAL_REPO_NAME="${PROG_NAME}"
-    export LOCAL_REPO_FILE="${YUM_REPOS_DIR}/${LOCAL_REPO_NAME}.repo"
-    export YUM_UPDATE_REPO='http://www.iredmail.org/yum/rpms/5/'
-else
-    export INSTALL_PKG=${INSTALL_PKG}
-fi
-
 # vmail user. uid and gid should be export after user added. Reference:
 # functions/user_vmail.sh
 export VMAIL_USER_NAME='vmail'
@@ -151,18 +138,61 @@ export RANDOM_STRING='eval </dev/urandom tr -dc A-Za-z0-9| (head -c $1 > /dev/nu
 export SYSLOG_CONF='/etc/syslog.conf'
 
 # Make some command operating system independent.
-if [ X"${KERNEL_NAME}" == X"Linux" -a -f /etc/redhat-release ]; then
-    # RHEL/CentOS
-    export LIST_FILES_IN_PKG='rpm -ql'
-    export enable_service="enable_service_rh"
-    export disable_service="disable_service_rh"
+if [ X"${KERNEL_NAME}" == X"Linux" ]; then
+    if [ -f /etc/redhat-release ]; then
+        # RHEL/CentOS
+        export DISTRO='RHEL'
+    elif [ -f /etc/lsb-release ]; then
+        # Ubuntu
+        export DISTRO='UBUNTU'
+    else
+        # Not support yet.
+        ECHO_INFO "Your distrobution is not supported yet."
+        exit 255
+    fi
 else
-    :
+    # Not support *BSD and other distrobutions yet.
+    ECHO_INFO "Your OS is not supported yet."
+    exit 255
 fi
 
-if [ X"${KERNEL_NAME}" == X"Linux" -a -f /etc/redhat-release ]; then
-    # RHEL/CentOS
+# install_pkg: function used to install packages without confirm.
+# remove_pkg: function used to remove packages without confirm.
+# LIST_ALL_PKGS: command used to list all installed packages.
+# LIST_FILES_IN_PKG: command used to list files installed by special package.
+# enable_service: function (defined in conf/functions) used to enable services.
+# disable_service: function (defined in conf/functions) used to disable services.
+if [ X"${DISTRO}" == X"RHEL" ]; then
+    # RHEL/CentOS.
+    # Package management.
+    export install_pkg='install_pkg_rhel'
+    export remove_pkg="remove_pkg_rhel"
     export LIST_ALL_PKGS='rpm -qa'
+    export LIST_FILES_IN_PKG='rpm -ql'
+
+    # Service control.
+    export enable_service='enable_service_rh'
+    export disable_service='disable_service_rh'
+
+    # Yum repository related.
+    export YUM_REPOS_DIR='/etc/yum.repos.d'
+    export LOCAL_REPO_NAME="${PROG_NAME}"
+    export LOCAL_REPO_FILE="${YUM_REPOS_DIR}/${LOCAL_REPO_NAME}.repo"
+    export YUM_UPDATE_REPO='http://www.iredmail.org/yum/rpms/5/'
+
+elif [ X"${DISTRO}" == X"UBUNTU" ]; then
+    # Ubuntu.
+    # Package management.
+    export install_pkg='install_pkg_ubuntu'
+    export remove_pkg='removel_pkg_ubuntu'
+    export LIST_ALL_PKGS='rpm -qa'
+    export LIST_FILES_IN_PKG='rpm -ql'
+
+    # Service control.
+    export enable_service="enable_service_ubuntu"
+    export disable_service="disable_service_ubuntu"
 else
-    :
+    # Not support yet.
+    ECHO_INFO "Your distrobution is not supported yet."
+    exit 255
 fi

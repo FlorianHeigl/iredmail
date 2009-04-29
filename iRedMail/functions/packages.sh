@@ -96,7 +96,7 @@ install_all()
     # Install all packages.
     install_all_pkgs()
     {
-        install_pkg ${ALL_PKGS}
+        eval ${install_pkg} ${ALL_PKGS}
         echo 'export status_install_all_pkgs="DONE"' >> ${STATUS_FILE}
     }
 

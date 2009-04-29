@@ -28,7 +28,7 @@ remove_sendmail()
                 export HAS_SENDMAIL='YES'
                 ;;
             Y|y|* )
-                remove_pkg sendmail && \
+                eval ${remove_pkg} sendmail && \
                 export HAS_SENDMAIL='NO'
                 ;;
         esac
