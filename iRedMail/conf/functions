@@ -163,7 +163,15 @@ check_os_version()
 
 check_dialog()
 {
-    ECHO_INFO "Checking necessary package: dialog.${ARCH}..."
+    if [ X"${DISTRO}" == X"RHEL" ]; then
+        pkg="dialog.${ARCH}"
+    elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+        pkg="dialog"
+    else
+        :
+    fi
+
+    ECHO_INFO "Checking necessary package: ${pkg} ..."
     # -------------------------------------------------------------
     # Use 'dialog' for configuration.
     # -------------------------------------------------------------
@@ -171,7 +179,7 @@ check_dialog()
     which dialog >/dev/null 2>&1
 
     if [ X"$?" != X"0" ]; then
-        eval ${install_pkg} dialog.${ARCH}
+        eval ${install_pkg} ${pkg}
 
         #[ X"$?" != X"0" ] && \
         #    echo "${INFO_FLAG} Install 'dialog' failed. Please install it first and make" && \
