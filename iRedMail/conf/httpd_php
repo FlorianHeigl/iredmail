@@ -26,6 +26,7 @@ elif [ X"${DISTRO}" == X"DEBIAN" ]; then
     export HTTPD_DOCUMENTROOT="${HTTPD_SERVERROOT}/default-site"
     export HTTPD_CONF="/etc/apache2/apache2.conf"
     export HTTPD_CONF_DIR="/etc/apache2/conf.d"
+    export HTTPD_SSL_CONF="${HTTPD_CONF_DIR}/ssl.conf"
 
     # ---- PHP ----
     export PHP_INI='/etc/php5/apache2/php.ini'

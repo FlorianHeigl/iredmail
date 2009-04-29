@@ -46,6 +46,10 @@ export VMAIL_ADMIN_USER_NAME="${VMAIL_USER_NAME}admin"
 # Default virtual domain admin name without domain name (@example.com).
 export DOMAIN_ADMIN_NAME='postmaster'
 
+# Arch.
+export ARCH="$(uname -i)"
+export KERNEL_NAME="$(uname -s)"
+
 # Check distribution.
 if [ X"${KERNEL_NAME}" == X"Linux" ]; then
     if [ -f /etc/redhat-release ]; then
@@ -59,12 +63,12 @@ if [ X"${KERNEL_NAME}" == X"Linux" ]; then
         export DISTRO='UBUNTU'
     else
         # Not support yet.
-        ECHO_INFO "Your distrobution is not supported yet."
+        echo "Your distrobution is not supported yet."
         exit 255
     fi
 else
     # Not support *BSD and other distrobutions yet.
-    ECHO_INFO "Your OS is not supported yet."
+    echo "Your OS is not supported yet."
     exit 255
 fi
 
@@ -148,10 +152,6 @@ else
     export TERM='pcconsole'
 fi
 
-# Arch.
-export ARCH="$(uname -i)"
-export KERNEL_NAME="$(uname -s)"
-
 # Crontab related.
 export CRON_SPOOL_DIR="/var/spool/cron"
 
@@ -203,6 +203,6 @@ elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
     export disable_service="disable_service_debian"
 else
     # Not support yet.
-    ECHO_INFO "Your distrobution is not supported yet."
+    echo "Your distrobution is not supported yet."
     exit 255
 fi
