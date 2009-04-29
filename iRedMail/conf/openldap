@@ -96,6 +96,5 @@ export LDAP_ATTR_USER_QUOTA='mailQuota'
 export LDAP_ATTR_USER_FORWARD='mailForwardingAddress'
 export LDAP_ATTR_USER_RESTRICTION_CLASS='restrictionClass'
 export LDAP_ATTR_USER_RESTRICTED_DOMAIN='restrictedDomain'
-export LDAP_ATTR_USER_EMPLOYEEID='employeeID'
 # Values of user related attributes.
 export LDAP_STATUS_ACTIVE='active'
