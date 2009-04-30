@@ -25,9 +25,9 @@ check_arch && check_env
 # ------------------------------
 # Import variables.
 # ------------------------------
-# Source 'conf/httpd_php' first, other components need some variables
+# Source 'conf/apache_php' first, other components need some variables
 # defined in it.
-. ${CONF_DIR}/httpd_php
+. ${CONF_DIR}/apache_php
 . ${CONF_DIR}/openldap
 . ${CONF_DIR}/phpldapadmin
 . ${CONF_DIR}/mysql

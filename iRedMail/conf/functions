@@ -65,7 +65,7 @@ install_pkg_rhel()
     ECHO_INFO "Installing package(s): $@"
     yum -d 2 -y install $@
     if [ X"$?" != X"0" ]; then
-        echo -e "Installation failed, please check the terminal output."
+        ECHO_INFO "Installation failed, please check the terminal output."
         exit 255
     else
         :
@@ -77,7 +77,7 @@ install_pkg_debian()
     ECHO_INFO "Installing package(s): $@"
     apt-get install -y $@
     if [ X"$?" != X"0" ]; then
-        echo -e "Installation failed, please check the terminal output."
+        ECHO_INFO "Installation failed, please check the terminal output."
         exit 255
     else
         :

@@ -32,9 +32,9 @@ apache_php_config()
         :
     fi
 
-    # Enable ssl module on Debian/Ubuntu.
+    # Enable ssl, ldap module on Debian/Ubuntu.
     if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        a2enmod ssl ldap
+        a2enmod ssl ldap > /dev/null
     else
         :
     fi

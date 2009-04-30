@@ -46,19 +46,28 @@ policyd_user()
 
 policyd_config()
 {
+    # Different package name on each distribution.
+    if [ X"${DISTRO}" == X"RHEL" ]; then
+        export pkg_policyd='policyd'
+    elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
+        export pkg_policyd='postfix-policyd'
+    else
+        :
+    fi
+
     ECHO_INFO "Initialize MySQL database for policyd."
 
     export MYSQL_SERVER MYSQL_PORT MYSQL_ROOT_USER MYSQL_ROOT_PASSWD
     mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
 # Import SQL structure.
-SOURCE $(eval ${LIST_FILES_IN_PKG} policyd | grep 'DATABASE.mysql');
+SOURCE $(eval ${LIST_FILES_IN_PKG} ${pkg_policyd} | grep 'DATABASE.mysql');
 
 # Grant privileges.
 GRANT SELECT,INSERT,UPDATE,DELETE ON ${POLICYD_DB_NAME}.* TO ${POLICYD_DB_USER}@localhost IDENTIFIED BY "${POLICYD_DB_PASSWD}";
 
 # Please do 'GRANT' before all other actions for fail-safe.
-SOURCE $(eval ${LIST_FILES_IN_PKG} policyd | grep 'whitelist.sql');
-SOURCE $(eval ${LIST_FILES_IN_PKG} policyd | grep 'blacklist_helo.sql');
+SOURCE $(eval ${LIST_FILES_IN_PKG} ${pkg_policyd} | grep 'whitelist.sql');
+SOURCE $(eval ${LIST_FILES_IN_PKG} ${pkg_policyd} | grep 'blacklist_helo.sql');
 SOURCE ${SAMPLE_DIR}/policyd_blacklist_helo.sql;
 
 FLUSH PRIVILEGES;
@@ -280,7 +289,7 @@ Policyd:
         - /etc/init.d/policyd
     * Misc:
         - /etc/cron.daily/policyd-cleanup
-        - $(eval ${LIST_FILES_IN_PKG} policyd | grep 'policyd.cron$')
+        - $(eval ${LIST_FILES_IN_PKG} ${pkg_policyd} | grep 'policyd.cron$')
         - crontab -l ${POLICYD_USER_NAME}
 EOF
 

@@ -72,7 +72,11 @@ replace_iptables_rule()
             fi
 
             # Mark iptables as enabled service.
-            chkconfig --level 345 iptables on
+            if [ X"${DISTRO}" == X"RHEL" ]; then
+                eval ${enable_service} iptables
+            else
+                :
+            fi
 
             # Prompt to restart iptables.
             ECHO_QUESTION -n "Restart iptables now? [y|N]"
@@ -174,9 +178,9 @@ clear_away()
 
 EOF
 
-    check_status_before_run disable_selinux
+    [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run disable_selinux
     check_status_before_run remove_sendmail
-    check_status_before_run re_generate_iredmail_repo
+    [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run re_generate_iredmail_repo
     check_status_before_run replace_iptables_rule
     check_status_before_run replace_mysql_config
     check_status_before_run run_freshclam_now

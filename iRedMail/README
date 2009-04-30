@@ -1,11 +1,27 @@
 ========
 Quick Installation Guide:
 
-   # cd /path/to/iRedMail-x.y.z/
-   # cd pkgs/
-   # sh get_all.sh
-   # cd ../
-   # sh iRedMail.sh
+    *) On RHEL/CentOS:
+
+        # cd /path/to/iRedMail-x.y.z/
+        # cd pkgs/
+        # sh get_all.sh
+        # cd ../
+        # sh iRedMail.sh
+
+    *) on Debian:
+
+        * Install 'acl':
+
+            # apt-get install acl
+
+        * Add mount option 'acl' in /etc/fstab which contains '/etc/' directory:
+
+           /dev/hda1       /               ext3    acl,errors=remount-ro 0       1
+
+        * Remount the mount point:
+
+            # mount -o remount,rw,acl /
 
 ========
 Full Installation Guide:

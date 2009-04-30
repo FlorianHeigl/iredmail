@@ -22,7 +22,21 @@ else
 fi
 
 # MySQL config file.
-export MYSQL_MY_CNF='/etc/my.cnf'
+if [ X"${DISTRO}" == X"RHEL" ]; then
+    export MYSQL_MY_CNF='/etc/my.cnf'
+
+    # RC script.
+    export MYSQLD_INIT_SCRIPT='/etc/init.d/mysqld'
+
+elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
+    export MYSQL_MY_CNF='/etc/mysql/my.cnf'
+
+    # RC script.
+    export MYSQLD_INIT_SCRIPT='/etc/init.d/mysql'
+
+else
+    :
+fi
 
 # For virtual user query in Postfix, Dovecot.
 export MYSQL_BIND_USER="${VMAIL_USER_NAME}"

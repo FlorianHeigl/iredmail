@@ -23,6 +23,7 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
 
     # Database type.
     export OPENLDAP_DEFAULT_DBTYPE='bdb'
+    export OPENLDAP_DB_CONFIG_SAMPLE="${OPENLDAP_CONF_ROOT}/DB_CONFIG.example"
 
     # RC script.
     export LDAP_INIT_SCRIPT='/etc/init.d/ldap'
@@ -37,6 +38,7 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
 
     # Database type.
     export OPENLDAP_DEFAULT_DBTYPE='bdb'
+    export OPENLDAP_DB_CONFIG_SAMPLE="/usr/share/slapd/DB_CONFIG"
 
     # RC script.
     export LDAP_INIT_SCRIPT='/etc/init.d/slapd'

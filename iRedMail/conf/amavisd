@@ -11,5 +11,13 @@ export AMAVISD_LOGROTATE_FILE="${LOGROTATE_DIR}/amavisd"
 export AMAVISD_DKIM_DIR='/var/lib/dkim'
 export AMAVISD_DKIM_SELECTOR='dkim'
 
+if [ X"${DISTRO}" == X"RHEL" ]; then
+    AMAVISD_BIN='amavisd'
+elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
+    AMAVISD_BIN='amavisd-new'
+else
+    :
+fi
+
 # Syslog setting, 'YES' or 'NO'
 export AMAVISD_SEPERATE_LOG='NO'

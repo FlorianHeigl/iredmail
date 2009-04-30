@@ -21,17 +21,20 @@ openldap_config()
     ECHO_INFO "Generate new configuration file: ${OPENLDAP_SLAPD_CONF}."
     cat > ${OPENLDAP_SLAPD_CONF} <<EOF
 ${CONF_MSG}
+# Schemas.
 include     ${OPENLDAP_SCHEMA_DIR}/core.schema
 include     ${OPENLDAP_SCHEMA_DIR}/corba.schema
 include     ${OPENLDAP_SCHEMA_DIR}/cosine.schema
 include     ${OPENLDAP_SCHEMA_DIR}/inetorgperson.schema
 include     ${OPENLDAP_SCHEMA_DIR}/nis.schema
-
+# Schema provided by ${PROG_NAME}.
 include     ${OPENLDAP_SCHEMA_DIR}/${PROG_NAME_LOWERCASE}.schema
 
+# PID.
 pidfile     /var/run/openldap/slapd.pid
 argsfile    /var/run/openldap/slapd.args
 
+# TLS files.
 TLSCACertificateFile ${SSL_CERT_FILE}
 TLSCertificateFile ${SSL_CERT_FILE}
 TLSCertificateKeyFile ${SSL_KEY_FILE}
@@ -155,7 +158,7 @@ access to *
 # BDB database definitions
 #######################################################################
 
-database    bdb
+database    ${OPENLDAP_DEFAULT_DBTYPE}
 suffix      "${LDAP_SUFFIX}"
 directory   ${LDAP_DATA_DIR}
 
@@ -233,7 +236,13 @@ ${OPENLDAP_LOGFILE} {
 EOF
 
     ECHO_INFO "Restarting syslog."
-    /etc/init.d/syslog restart >/dev/null
+    if [ X"${DISTRO}" == X"RHEL" ]; then
+        service_control syslog restart >/dev/null
+    elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
+        service_control rsyslog restart >/dev/null
+    else
+        :
+    fi
 
     echo 'export status_openldap_config="DONE"' >> ${STATUS_FILE}
 }
@@ -246,7 +255,7 @@ openldap_data_initialize()
     chmod -R 0700 ${OPENLDAP_DATA_DIR}
 
     ECHO_INFO "Generate DB_CONFIG for instance: ${LDAP_DATA_DIR}/DB_CONFIG."
-    cp ${OPENLDAP_CONF_ROOT}/DB_CONFIG.example ${LDAP_DATA_DIR}/DB_CONFIG
+    cp -f ${OPENLDAP_DB_CONFIG_SAMPLE} ${LDAP_DATA_DIR}/DB_CONFIG
 
     ECHO_INFO "Starting OpenLDAP."
     if [ X"${DISTRO}" == X"RHEL" ]; then
@@ -360,10 +369,10 @@ EOF
 
     # Maildir format.
     [ X"${HOME_MAILBOX}" == X"mbox" ] && \
-        perl -pi -e 's#^(mailMessageStore.*)/#${1}#' ${LDAP_INIT_LDIF} && \
-        perl -pi -e 's#^($ENV{LDAP_ATTR_USER_QUOTA}: )0#${1}1000000000000000000000#' ${LDAP_INIT_LDIF}
+        perl -pi -e 's#^(mailMessageStore.*)/#${1}#' ${LDAP_INIT_LDIF}
 
-    ldapadd -x -D "${LDAP_ROOTDN}" -w "${LDAP_ROOTPW}" -f ${LDAP_INIT_LDIF}
+    echo ldapadd -x -D "${LDAP_ROOTDN}" -w"${LDAP_ROOTPW}" -f ${LDAP_INIT_LDIF}
+    ldapadd -x -D "${LDAP_ROOTDN}" -w"${LDAP_ROOTPW}" -f ${LDAP_INIT_LDIF}
 
     cat >> ${TIP_FILE} <<EOF
 OpenLDAP:

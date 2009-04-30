@@ -15,7 +15,7 @@ amavisd_dkim()
     chown ${AMAVISD_USER}:${AMAVISD_GROUP} ${AMAVISD_DKIM_DIR}
 
     ECHO_INFO "Generate CA files: ${pem_file}." 
-    amavisd genrsa ${pem_file} >/dev/null 2>&1 && \
+    ${AMAVISD_BIN} genrsa ${pem_file} >/dev/null 2>&1 && \
     setfacl -m u:${AMAVISD_USER}:r-- ${pem_file}
 
     cat >> ${AMAVISD_CONF} <<EOF
@@ -71,7 +71,7 @@ EOF
 
     cat >> ${TIP_FILE} <<EOF
 DNS record for DKIM support:
-$(amavisd showkeys)
+$(${AMAVISD_BIN} showkeys)
 
 EOF
 
@@ -192,7 +192,7 @@ amavisd_config()
 #\$remove_existing_spam_headers = 0;
 
 # Leave empty (undef) to add no header.
-# Modify /usr/sbin/amavisd file to add customize header in:
+# Modify /usr/sbin/amavisd or /usr/sbin/amavisd-new file to add customize header in:
 #
 #   sub add_forwarding_header_edits_per_recip
 #

@@ -14,8 +14,9 @@ install_all()
         if [ X"${DISTRO}" == X"RHEL" ]; then
             ALL_PKGS="${ALL_PKGS} httpd.${ARCH} mod_ssl.${ARCH} php.${ARCH} php-imap.${ARCH} php-gd.${ARCH} php-mbstring.${ARCH} libmcrypt.${ARCH} php-mcrypt.${ARCH} php-pear.noarch php-xml.${ARCH} php-pecl-fileinfo.${ARCH} php-eaccelerator.${ARCH} php-mysql.${ARCH} php-ldap.${ARCH}"
             ENABLED_SERVICES="${ENABLED_SERVICES} httpd"
+
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-            ALL_PKGS="${ALL_PKGS} apache2 apache2-mpm-prefork apache2.2-common libapache2-mod-php5 php5-cli php5-imap php5-gd php5-mcrypt php5-mysql php5-ldap"
+            ALL_PKGS="${ALL_PKGS} apache2 apache2-mpm-prefork apache2.2-common libapache2-mod-php5 libapache2-mod-auth-mysql php5-cli php5-imap php5-gd php5-mcrypt php5-mysql php5-ldap"
             ENABLED_SERVICES="${ENABLED_SERVICES} apache2"
         else
             :
@@ -130,11 +131,11 @@ install_all()
 
     # Amavisd-new & ClamAV.
     if [ X"${DISTRO}" == X"RHEL" ]; then
-        ALL_PKGS="${ALL_PKGS} amavisd-new.${ARCH} clamd.${ARCH} clamav.${ARCH} clamav-db.${ARCH}"
+        ALL_PKGS="${ALL_PKGS} amavisd-new.${ARCH} clamd.${ARCH} clamav.${ARCH} clamav-db.${ARCH} spamassassin.${ARCH}"
         ENABLED_SERVICES="${ENABLED_SERVICES} amavisd clamd"
         DISABLED_SERVICES="${DISABLED_SERVICES} spamassassin"
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        ALL_PKGS="${ALL_PKGS} amavisd-new clamav-freshclam clamav-daemon"
+        ALL_PKGS="${ALL_PKGS} amavisd-new clamav-freshclam clamav-daemon spamassassin"
         ENABLED_SERVICES="${ENABLED_SERVICES} amavis clamav-daemon clamav-freshclam"
         DISABLED_SERVICES="${DISABLED_SERVICES} spamassassin"
     else
@@ -193,10 +194,10 @@ install_all()
     enable_all_services()
     {
         # Enable services.
-        eval ${enable_service} ${ENABLED_SERVICES}
+        eval ${enable_service} ${ENABLED_SERVICES} >/dev/null
 
         # Disable services.
-        eval ${disable_service} ${DISABLED_SERVICES}
+        eval ${disable_service} ${DISABLED_SERVICES} >/dev/null
 
         echo 'export status_enable_all_services="DONE"' >> ${STATUS_FILE}
     }

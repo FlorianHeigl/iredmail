@@ -12,7 +12,7 @@ mysql_initialize()
     ECHO_INFO "==================== MySQL ===================="
 
     ECHO_INFO "Starting MySQL."
-    /etc/init.d/mysqld restart >/dev/null
+    ${MYSQLD_INIT_SCRIPT} restart >/dev/null
 
     ECHO_INFO -n "Sleep 5 seconds for MySQL daemon initialize:"
     for i in $(seq 5 -1 1); do
@@ -23,13 +23,15 @@ mysql_initialize()
     echo '' > ${MYSQL_INIT_SQL}
 
     if [ X"${MYSQL_FRESH_INSTALLATION}" == X"YES" ]; then
-        ECHO_INFO "Setting MySQL admin's password: ${MYSQL_ROOT_USER}."
-        /usr/bin/mysqladmin -u root password "${MYSQL_ROOT_PASSWD}"
+        if [ X"${DISTRO}" == X"RHEL" ]; then
+            ECHO_INFO "Setting MySQL admin's password: ${MYSQL_ROOT_USER}."
+            /usr/bin/mysqladmin -u root password "${MYSQL_ROOT_PASSWD}"
+        else
+            # Debian: debconf will prompt admin to set root password during installation.
+            :
+        fi
 
         cat >> ${MYSQL_INIT_SQL} <<EOF
-/* Drop database 'test'. */
-DROP DATABASE test;
-
 /* Delete empty username. */
 USE mysql;
 
@@ -51,7 +53,7 @@ MySQL:
     * Data directory:
         - /var/lib/mysql
     * RC script:
-        - /etc/init.d/mysqld
+        - ${MYSQLD_INIT_SCRIPT}
     * Log file:
         - /var/log/mysqld.log
     * SSL Cert keys:
