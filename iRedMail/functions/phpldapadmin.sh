@@ -22,7 +22,7 @@ pla_install()
     cp -f config.php.example config.php
 
     ECHO_INFO "Set file permission."
-    chown -R root:root ${PLA_HTTPD_ROOT}
+    chown -R ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${PLA_HTTPD_ROOT}
     chmod -R 0755 ${PLA_HTTPD_ROOT}
 
     ECHO_INFO "Create directory alias for phpLDAPadmin."

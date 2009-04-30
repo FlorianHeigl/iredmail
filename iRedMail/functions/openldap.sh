@@ -13,7 +13,7 @@ openldap_config()
     backup_file ${OPENLDAP_SLAPD_CONF} ${OPENLDAP_LDAP_CONF}
 
     ECHO_INFO "Set file permission on TLS cert key file: ${SSL_KEY_FILE}."
-    setfacl -m u:ldap:r-- ${SSL_KEY_FILE}
+    setfacl -m u:${LDAP_USER}:r-- ${SSL_KEY_FILE}
 
     # Copy ${PROG_NAME}.schema.
     cp -f ${SAMPLE_DIR}/${PROG_NAME_LOWERCASE}.schema ${OPENLDAP_SCHEMA_DIR}
@@ -200,14 +200,14 @@ BASE    ${LDAP_SUFFIX}
 URI     ldap://${LDAP_SERVER_HOST}:${LDAP_SERVER_PORT}
 TLS_CACERT ${SSL_CERT_FILE}
 EOF
-    chown ldap:ldap ${OPENLDAP_LDAP_CONF}
+    chown ${LDAP_USER}:${LDAP_GROUP} ${OPENLDAP_LDAP_CONF}
 
     ECHO_INFO "Setting up syslog configration file for OpenLDAP."
     echo -e "local4.*\t\t\t\t\t\t-${OPENLDAP_LOGFILE}" >> ${SYSLOG_CONF}
 
     ECHO_INFO "Create empty log file for OpenLDAP: ${OPENLDAP_LOGFILE}."
     touch ${OPENLDAP_LOGFILE}
-    chown ldap:ldap ${OPENLDAP_LOGFILE}
+    chown ${LDAP_USER}:${LDAP_GROUP} ${OPENLDAP_LOGFILE}
     chmod 0600 ${OPENLDAP_LOGFILE}
 
     ECHO_INFO "Setting logrotate for openldap log file: ${OPENLDAP_LOGFILE}."
@@ -217,7 +217,7 @@ ${OPENLDAP_LOGFILE} {
     compress
     weekly
     rotate 10
-    create 0600 ldap ldap
+    create 0600 ${LDAP_USER} ${LDAP_GROUP}
     missingok
 
     # Use bzip2 for compress.
@@ -242,14 +242,20 @@ openldap_data_initialize()
 {
     ECHO_INFO "Create instance directory for openldap tree: ${LDAP_DATA_DIR}."
     mkdir -p ${LDAP_DATA_DIR}
-    chown -R ldap:ldap ${OPENLDAP_DATA_DIR}
+    chown -R ${LDAP_USER}:${LDAP_GROUP} ${OPENLDAP_DATA_DIR}
     chmod -R 0700 ${OPENLDAP_DATA_DIR}
 
     ECHO_INFO "Generate DB_CONFIG for instance: ${LDAP_DATA_DIR}/DB_CONFIG."
-    cp ${OPENLDAP_ROOTDIR}/DB_CONFIG.example ${LDAP_DATA_DIR}/DB_CONFIG
+    cp ${OPENLDAP_CONF_ROOT}/DB_CONFIG.example ${LDAP_DATA_DIR}/DB_CONFIG
 
     ECHO_INFO "Starting OpenLDAP."
-    /etc/init.d/ldap restart >/dev/null
+    if [ X"${DISTRO}" == X"RHEL" ]; then
+        service_control ldap restart >/dev/null
+    elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
+        service_control slapd restart >/dev/null
+    else
+        :
+    fi
     
     ECHO_INFO -n "Sleep 5 seconds for LDAP daemon initialize:"
     for i in $(seq 5 -1 1); do
@@ -362,7 +368,7 @@ EOF
     cat >> ${TIP_FILE} <<EOF
 OpenLDAP:
     * Configuration files:
-        - ${OPENLDAP_ROOTDIR}
+        - ${OPENLDAP_CONF_ROOT}
         - ${OPENLDAP_SLAPD_CONF}
         - ${OPENLDAP_LDAP_CONF}
         - ${OPENLDAP_SCHEMA_DIR}/${PROG_NAME_LOWERCASE}.schema
@@ -375,7 +381,7 @@ OpenLDAP:
         - ${LDAP_DATA_DIR}
         - ${LDAP_DATA_DIR}/DB_CONFIG
     * RC script:
-        - /etc/init.d/ldap
+        - ${LDAP_INIT_SCRIPT}
     * See also:
         - ${LDAP_INIT_LDIF}
 

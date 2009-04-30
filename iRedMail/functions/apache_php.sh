@@ -9,7 +9,7 @@
 apache_php_config()
 {
     ECHO_INFO "==================== Apache & PHP ===================="
-    backup_file ${HTTPD_CONF}
+    backup_file ${HTTPD_CONF} ${HTTPD_SSL_CONF}
 
     # --------------------------
     # Apache Setting.
@@ -25,6 +25,16 @@ apache_php_config()
     if [ X"${DISTRO}" == X"RHEL" ]; then
         perl -pi -e 's#^(SSLCertificateFile)(.*)#${1} $ENV{SSL_CERT_FILE}#' ${HTTPD_SSL_CONF}
         perl -pi -e 's#^(SSLCertificateKeyFile)(.*)#${1} $ENV{SSL_KEY_FILE}#' ${HTTPD_SSL_CONF}
+    elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+        perl -pi -e 's#^([ \t]+SSLCertificateFile)(.*)#${1} $ENV{SSL_CERT_FILE}#' ${HTTPD_SSL_CONF}
+        perl -pi -e 's#^([ \t]+SSLCertificateKeyFile)(.*)#${1} $ENV{SSL_KEY_FILE}#' ${HTTPD_SSL_CONF}
+    else
+        :
+    fi
+
+    # Enable ssl module on Debian/Ubuntu.
+    if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+        a2enmod ssl ldap
     else
         :
     fi

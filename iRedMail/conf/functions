@@ -298,6 +298,13 @@ disable_service_debian()
     done
 }
 
+service_control()
+{
+    service="$1"
+    action="$2"
+    /etc/init.d/${service} ${action}
+}
+
 gen_ldap_passwd()
 {
     slappasswd -h {SSHA} -s "${1}"

@@ -14,16 +14,40 @@ export LDAP_BINDPW="$(${RANDOM_STRING})"
 
 # Configure.
 if [ X"${DISTRO}" == X"RHEL" ]; then
-    export OPENLDAP_ROOTDIR="/etc/openldap"
+    # LDAP daemon user & group.
+    export LDAP_USER='ldap'
+    export LDAP_GROUP='ldap'
+
+    # Configuration files.
+    export OPENLDAP_CONF_ROOT="/etc/openldap"
+
+    # Database type.
+    export OPENLDAP_DEFAULT_DBTYPE='bdb'
+
+    # RC script.
+    export LDAP_INIT_SCRIPT='/etc/init.d/ldap'
+
 elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-    export OPENLDAP_ROOTDIR="/etc/ldap"
+    # LDAP daemon user & group.
+    export LDAP_USER='openldap'
+    export LDAP_GROUP='openldap'
+
+    # Configuration files.
+    export OPENLDAP_CONF_ROOT="/etc/ldap"
+
+    # Database type.
+    export OPENLDAP_DEFAULT_DBTYPE='bdb'
+
+    # RC script.
+    export LDAP_INIT_SCRIPT='/etc/init.d/slapd'
+
 else
     :
 fi
 
-export OPENLDAP_SCHEMA_DIR="${OPENLDAP_ROOTDIR}/schema"
-export OPENLDAP_SLAPD_CONF="${OPENLDAP_ROOTDIR}/slapd.conf"
-export OPENLDAP_LDAP_CONF="${OPENLDAP_ROOTDIR}/ldap.conf"
+export OPENLDAP_SCHEMA_DIR="${OPENLDAP_CONF_ROOT}/schema"
+export OPENLDAP_SLAPD_CONF="${OPENLDAP_CONF_ROOT}/slapd.conf"
+export OPENLDAP_LDAP_CONF="${OPENLDAP_CONF_ROOT}/ldap.conf"
 export OPENLDAP_LOGFILE='/var/log/openldap.log'
 export OPENLDAP_DATA_DIR='/var/lib/ldap' # Do *NOT* end with '/'.
 export OPENLDAP_LOGROTATE_FILE="${LOGROTATE_DIR}/openldap"

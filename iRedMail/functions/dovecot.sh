@@ -368,7 +368,7 @@ EOF
     ECHO_INFO "Create directory for Dovecot plugin: Expire."
     dovecot_expire_dict_dir="$(dirname ${DOVECOT_EXPIRE_DICT_BDB})"
     mkdir -p ${dovecot_expire_dict_dir} && \
-    chown -R dovecot:dovecot ${dovecot_expire_dict_dir} && \
+    chown -R ${DOVECOT_USER}:${DOVECOT_GROUP} ${dovecot_expire_dict_dir} && \
     chmod -R 0750 ${dovecot_expire_dict_dir}
 
     ECHO_INFO "Setting cronjob for Dovecot plugin: Expire."

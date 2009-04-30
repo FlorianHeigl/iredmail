@@ -62,7 +62,7 @@ install_all()
             ENABLED_SERVICES="${ENABLED_SERVICES} ldap mysqld"
 
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-            ALL_PKGS="${ALL_PKGS} slapd mysql-server-5.0 mysql-client-5.0"
+            ALL_PKGS="${ALL_PKGS} slapd ldap-utils mysql-server-5.0 mysql-client-5.0"
 
             ENABLED_SERVICES="${ENABLED_SERVICES} slapd mysql"
         else

@@ -3,6 +3,8 @@
 # Author: Zhang Huangbin (michaelbibby <at> gmail.com)
 
 export AMAVISD_SERVER='127.0.0.1'
+export AMAVISD_USER='amavis'
+export AMAVISD_GROUP='amavis'
 export AMAVISD_CONF='/etc/amavisd.conf'
 export AMAVISD_LOGFILE='/var/log/amavisd.log'
 export AMAVISD_LOGROTATE_FILE="${LOGROTATE_DIR}/amavisd"

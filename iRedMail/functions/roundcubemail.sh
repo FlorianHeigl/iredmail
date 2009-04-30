@@ -19,8 +19,8 @@ rcm_install()
     ln -s ${RCM_HTTPD_ROOT} ${HTTPD_SERVERROOT}/roundcubemail 2>/dev/null
 
     ECHO_INFO "Set correct permission for Roundcubemail: ${RCM_HTTPD_ROOT}."
-    chown -R root:root ${RCM_HTTPD_ROOT}
-    chown -R apache:apache ${RCM_HTTPD_ROOT}/{temp,logs}
+    chown -R ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${RCM_HTTPD_ROOT}
+    chown -R ${HTTPD_USER}:${HTTPD_GROUP} ${RCM_HTTPD_ROOT}/{temp,logs}
     chmod 0000 ${RCM_HTTPD_ROOT}/{CHANGELOG,INSTALL,LICENSE,README,UPGRADING,installer,SQL}
 
     ECHO_INFO "Patch: Managesieve service frontend."
@@ -230,7 +230,7 @@ EOF
     #echo -e "user.*\t\t\t\t\t\t-${RCM_LOGFILE}" >> ${SYSLOG_CONF}
 
     #touch ${RCM_LOGFILE}
-    #chown root:root ${RCM_LOGFILE}
+    #chown ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${RCM_LOGFILE}
     #chmod 0600 ${RCM_LOGFILE}
 
     cat >> ${TIP_FILE} <<EOF

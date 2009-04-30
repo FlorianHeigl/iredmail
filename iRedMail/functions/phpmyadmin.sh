@@ -14,7 +14,7 @@ phpmyadmin_install()
     extract_pkg ${PHPMYADMIN_TARBALL} ${HTTPD_SERVERROOT}
 
     ECHO_INFO "Set file permission for phpMyAdmin: ${PHPMYADMIN_HTTPD_ROOT}."
-    chown -R root:root ${PHPMYADMIN_HTTPD_ROOT}
+    chown -R ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${PHPMYADMIN_HTTPD_ROOT}
     chmod -R 0755 ${PHPMYADMIN_HTTPD_ROOT}
 
     # Create symbol link, so that we don't need to modify apache

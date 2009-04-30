@@ -16,6 +16,10 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     export DOVECOT_MYSQL_CONF='/etc/dovecot/dovecot-mysql.conf'
 fi
 
+# Dovecot user & group.
+export DOVECOT_USER='dovecot'
+export DOVECOT_GROUP='dovecot'
+
 export DOVECOT_LOGROTATE_FILE="${LOGROTATE_DIR}/dovecot"
 export SIEVE_LOGROTATE_FILE="${LOGROTATE_DIR}/sieve"
 

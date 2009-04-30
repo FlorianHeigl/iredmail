@@ -406,7 +406,7 @@ EOF
         ${ldap_sender_bcc_maps_domain_cf} \
         ${ldap_sender_bcc_maps_user_cf}
     do
-        chown root:root ${i}
+        chown ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${i}
         chmod 0644 ${i}
         cat >> ${TIP_FILE} <<EOF
         - ${i}
@@ -541,7 +541,7 @@ EOF
         ${mysql_recipient_bcc_maps_domain_cf} \
         ${mysql_recipient_bcc_maps_user_cf}
     do
-        chown root:root ${i}
+        chown ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${i}
         chmod 0644 ${i}
 
         cat >> ${TIP_FILE} <<EOF

@@ -163,9 +163,6 @@ export LOGROTATE_DIR='/etc/logrotate.d'
 #   str="$(${RANDOM_STRING})"
 export RANDOM_STRING='eval </dev/urandom tr -dc A-Za-z0-9| (head -c $1 > /dev/null 2>&1 || head -c 30)'
 
-# Syslog config file.
-export SYSLOG_CONF='/etc/syslog.conf'
-
 # install_pkg: function used to install packages without confirm.
 # remove_pkg: function used to remove packages without confirm.
 # LIST_ALL_PKGS: command used to list all installed packages.
@@ -174,6 +171,10 @@ export SYSLOG_CONF='/etc/syslog.conf'
 # disable_service: function (defined in conf/functions) used to disable services.
 if [ X"${DISTRO}" == X"RHEL" ]; then
     # RHEL/CentOS.
+    # System user: root. Note: not all OSes have group 'root'.
+    export SYS_ROOT_USER='root'
+    export SYS_ROOT_GROUP='root'
+
     # Package management.
     export install_pkg='install_pkg_rhel'
     export remove_pkg="remove_pkg_rhel"
@@ -184,6 +185,9 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     export enable_service='enable_service_rh'
     export disable_service='disable_service_rh'
 
+    # Syslog config file: syslog.
+    export SYSLOG_CONF='/etc/syslog.conf'
+
     # Yum repository related.
     export YUM_REPOS_DIR='/etc/yum.repos.d'
     export LOCAL_REPO_NAME="${PROG_NAME}"
@@ -192,15 +196,23 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
 
 elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
     # Ubuntu & Debian.
+    # System user: root. Note: not all OSes have group 'root'.
+    export SYS_ROOT_USER='root'
+    export SYS_ROOT_GROUP='root'
+
     # Package management.
     export install_pkg='install_pkg_debian'
     export remove_pkg='removel_pkg_debian'
-    export LIST_ALL_PKGS='rpm -qa'
-    export LIST_FILES_IN_PKG='rpm -ql'
+    export LIST_ALL_PKGS="dpkg -l |awk '{print $2}'"
+    export LIST_FILES_IN_PKG='dpkg -L'
 
     # Service control.
     export enable_service="enable_service_debian"
     export disable_service="disable_service_debian"
+
+    # Syslog config file: rsyslog.
+    export SYSLOG_CONF='/etc/rsyslog.conf'
+
 else
     # Not support yet.
     echo "Your distrobution is not supported yet."

@@ -12,11 +12,11 @@ amavisd_dkim()
 
     ECHO_INFO "Create directory to store CA files: ${AMAVISD_DKIM_DIR}." 
     mkdir -p ${AMAVISD_DKIM_DIR} 2>/dev/null && \
-    chown amavis:amavis ${AMAVISD_DKIM_DIR}
+    chown ${AMAVISD_USER}:${AMAVISD_GROUP} ${AMAVISD_DKIM_DIR}
 
     ECHO_INFO "Generate CA files: ${pem_file}." 
     amavisd genrsa ${pem_file} >/dev/null 2>&1 && \
-    setfacl -m u:amavis:r-- ${pem_file}
+    setfacl -m u:${AMAVISD_USER}:r-- ${pem_file}
 
     cat >> ${AMAVISD_CONF} <<EOF
 # The default set of header fields to be signed can be controlled
