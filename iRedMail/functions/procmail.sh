@@ -41,7 +41,7 @@ ${PROCMAIL_LOGFILE} {
     compressext .bz2 
 
     postrotate
-        /bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null || true
+        ${SYSLOG_POSTROTATE_CMD}
     endscript
 }
 EOF

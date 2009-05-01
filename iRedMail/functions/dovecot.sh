@@ -405,7 +405,7 @@ ${DOVECOT_LOG_FILE} {
     compressext .bz2 
 
     postrotate
-        /usr/bin/killall -HUP syslogd
+        ${SYSLOG_POSTROTATE_CMD}
     endscript
 }
 EOF
@@ -419,7 +419,7 @@ ${SIEVE_LOG_FILE} {
     create 0666 ${VMAIL_USER_NAME} ${VMAIL_GROUP_NAME}
     missingok
     postrotate
-        /usr/bin/killall -HUP syslogd
+        ${SYSLOG_POSTROTATE_CMD}
     endscript
 }
 EOF

@@ -173,8 +173,8 @@ awstats_config_crontab()
 {
     ECHO_INFO "Setting cronjob for awstats."
     cat >> ${CRON_SPOOL_DIR}/root <<EOF
-1   */1   *   *   *   perl /var/www/awstats/awstats.pl -config=${HOSTNAME} -update >/dev/null
-1   */1   *   *   *   perl /var/www/awstats/awstats.pl -config=mail -update >/dev/null
+1   */1   *   *   *   perl $(eval ${LIST_FILES_IN_PKG} awstats | grep '/awstats.pl$') -config=${HOSTNAME} -update >/dev/null
+1   */1   *   *   *   perl $(eval ${LIST_FILES_IN_PKG} awstats | grep '/awstats.pl$') -config=mail -update >/dev/null
 EOF
 
     echo 'export status_awstats_config_crontab="DONE"' >> ${STATUS_FILE}

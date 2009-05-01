@@ -253,7 +253,7 @@ ${AMAVISD_LOGFILE} {
     compressext .bz2 
 
     postrotate
-        /usr/bin/killall -HUP syslogd
+        ${SYSLOG_POSTROTATE_CMD}
     endscript
 }
 EOF

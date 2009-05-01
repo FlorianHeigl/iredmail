@@ -19,7 +19,7 @@ phpmyadmin_install()
 
     # Create symbol link, so that we don't need to modify apache
     # conf.d/phpmyadmin.conf file after upgrade this component.
-    ln -s ${PHPMYADMIN_HTTPD_ROOT} ${HTTPD_SERVERROOT}/phpmyadmin 2>/dev/null
+    ln -s ${PHPMYADMIN_HTTPD_ROOT} ${HTTPD_SERVERROOT}/phpmyadmin >/dev/null
 
     ECHO_INFO "Create directory alias for phpMyAdmin in Apache: ${HTTPD_CONF_DIR}/phpmyadmin.conf."
     cat > ${HTTPD_CONF_DIR}/phpmyadmin.conf <<EOF

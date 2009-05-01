@@ -39,6 +39,21 @@ TLSCACertificateFile ${SSL_CERT_FILE}
 TLSCertificateFile ${SSL_CERT_FILE}
 TLSCertificateKeyFile ${SSL_KEY_FILE}
 
+EOF
+
+    # Load bdb backend module. Required on Debian/Ubuntu.
+    if [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
+        cat >> ${OPENLDAP_SLAPD_CONF} <<EOF
+# Modules.
+modulepath  ${OPENLDAP_MODULE_PATH}
+moduleload  back_hdb
+
+EOF
+    else
+        :
+    fi
+
+    cat >> ${OPENLDAP_SLAPD_CONF} <<EOF
 #
 # Disallow bind as anonymous.
 #
@@ -230,7 +245,7 @@ ${OPENLDAP_LOGFILE} {
     compressext .bz2 
 
     postrotate
-        /usr/bin/killall -HUP syslogd
+        ${SYSLOG_POSTROTATE_CMD}
     endscript
 }
 EOF
@@ -371,7 +386,6 @@ EOF
     [ X"${HOME_MAILBOX}" == X"mbox" ] && \
         perl -pi -e 's#^(mailMessageStore.*)/#${1}#' ${LDAP_INIT_LDIF}
 
-    echo ldapadd -x -D "${LDAP_ROOTDN}" -w"${LDAP_ROOTPW}" -f ${LDAP_INIT_LDIF}
     ldapadd -x -D "${LDAP_ROOTDN}" -w"${LDAP_ROOTPW}" -f ${LDAP_INIT_LDIF}
 
     cat >> ${TIP_FILE} <<EOF

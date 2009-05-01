@@ -14,7 +14,13 @@ export AWSTATS_HTTPD_ROOT="${HTTPD_SERVERROOT}/awstats"
 export AWSTATS_HTPASSWD_FILE="${HTTPD_CONF_DIR}/awstats.users"
 
 # Config files.
-export AWSTATS_CONF_SAMPLE="${AWSTATS_CONF_DIR}/awstats.localhost.localdomain.conf"
+if [ X"${DISTRO}" == X"RHEL" ]; then
+    export AWSTATS_CONF_SAMPLE="${AWSTATS_CONF_DIR}/awstats.localhost.localdomain.conf"
+elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
+    export AWSTATS_CONF_SAMPLE="${AWSTATS_CONF_DIR}/awstats.conf"
+else
+    :
+fi
 export AWSTATS_CONF_WEB="${AWSTATS_CONF_DIR}/awstats.${HOSTNAME}.conf"
 export AWSTATS_CONF_MAIL="${AWSTATS_CONF_DIR}/awstats.mail.conf"
 

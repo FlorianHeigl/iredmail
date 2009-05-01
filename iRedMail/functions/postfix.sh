@@ -690,8 +690,9 @@ ${CONF_MSG}
     compressext .bz2 
 
     postrotate
-        /bin/kill -HUP \`cat /var/run/syslogd.pid 2> /dev/null\` 2> /dev/null || true
-        /bin/kill -HUP \`cat /var/run/rsyslogd.pid 2> /dev/null\` 2> /dev/null || true
+        ${SYSLOG_POSTROTATE_CMD}
+        #/bin/kill -HUP \`cat /var/run/syslogd.pid 2> /dev/null\` 2> /dev/null || true
+        #/bin/kill -HUP \`cat /var/run/rsyslogd.pid 2> /dev/null\` 2> /dev/null || true
     endscript
 }
 EOF

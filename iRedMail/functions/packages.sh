@@ -135,7 +135,7 @@ install_all()
         ENABLED_SERVICES="${ENABLED_SERVICES} amavisd clamd"
         DISABLED_SERVICES="${DISABLED_SERVICES} spamassassin"
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        ALL_PKGS="${ALL_PKGS} amavisd-new clamav-freshclam clamav-daemon spamassassin"
+        ALL_PKGS="${ALL_PKGS} amavisd-new libcrypt-openssl-rsa-perl libmail-dkim-perl clamav-freshclam clamav-daemon spamassassin"
         ENABLED_SERVICES="${ENABLED_SERVICES} amavis clamav-daemon clamav-freshclam"
         DISABLED_SERVICES="${DISABLED_SERVICES} spamassassin"
     else

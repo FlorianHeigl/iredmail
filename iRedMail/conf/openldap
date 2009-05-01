@@ -22,6 +22,8 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     export OPENLDAP_CONF_ROOT="/etc/openldap"
 
     # Database type.
+    # RHEL/CentOS 5.x ships openldap-2.3, bdb is the recommended
+    # database backend.
     export OPENLDAP_DEFAULT_DBTYPE='bdb'
     export OPENLDAP_DB_CONFIG_SAMPLE="${OPENLDAP_CONF_ROOT}/DB_CONFIG.example"
 
@@ -36,8 +38,14 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     # Configuration files.
     export OPENLDAP_CONF_ROOT="/etc/ldap"
 
+    # Module related.
+    export OPENLDAP_MODULE_PATH='/usr/lib/ldap'
+
     # Database type.
-    export OPENLDAP_DEFAULT_DBTYPE='bdb'
+    # HDB is the recommended database backend in openldap-2.4. It's
+    # the same as BDB but allows some additional operations. Refer to
+    # /usr/share/doc/slapd/README.Debian.gz for more details.
+    export OPENLDAP_DEFAULT_DBTYPE='hdb'
     export OPENLDAP_DB_CONFIG_SAMPLE="/usr/share/slapd/DB_CONFIG"
 
     # RC script.
@@ -56,7 +64,6 @@ export OPENLDAP_LOGROTATE_FILE="${LOGROTATE_DIR}/openldap"
 
 # Setting for one instance. You can edit ${OPENLDAP_SLAPD_CONF} manually to hold
 # multi instances.
-export LDAP_DATA_DIR="${OPENLDAP_DATA_DIR}/${dn2dnsname}/"
 export LDAP_INIT_LDIF="${CONF_DIR}/ldap_init.ldif"
 
 # ---------- LDAP schema related -----------
