@@ -17,7 +17,7 @@ FETCH_CMD="wget -cq --referer ${PROG_NAME}-${PROG_VERSION}"
 # Site directory structure:
 #
 #   ${MIRROR}/
-#           |- rpms/
+#           |- pkgs/
 #               |- 5/
 #               |- 6/ (not present yet)
 #           |- misc/
@@ -28,7 +28,7 @@ FETCH_CMD="wget -cq --referer ${PROG_NAME}-${PROG_VERSION}"
 MIRROR='http://www.iredmail.org/yum'
 
 # Where to store packages and software source tarball.
-PKG_DIR="${ROOTDIR}/rpms"
+PKG_DIR="${ROOTDIR}/pkgs"
 MISC_DIR="${ROOTDIR}/misc"
 
 # RPM file list and misc file list.
@@ -100,7 +100,7 @@ check_pkg_createrepo()
     fi
 }
 
-fetch_rpms()
+fetch_pkgs()
 {
     if [ X"${DOWNLOAD_PKGS}" == X"YES" ]; then
         cd ${PKG_DIR}
@@ -163,7 +163,7 @@ check_md5()
             exit 255
         else
             echo -e "\t[ OK ]"
-            echo 'export status_fetch_rpms="DONE"' >> ${STATUS_FILE}
+            echo 'export status_fetch_pkgs="DONE"' >> ${STATUS_FILE}
             echo 'export status_fetch_misc="DONE"' >> ${STATUS_FILE}
             echo 'export status_check_md5="DONE"' >> ${STATUS_FILE}
         fi
@@ -195,6 +195,17 @@ EOF
     echo 'export status_create_yum_repo="DONE"' >> ${STATUS_FILE}
 }
 
+create_apt_repo()
+{
+    # Use dpkg-scanpackages to create a local apt repository.
+    ECHO_INFO -n "Generating apt repository..."
+    cd ${PKG_DIR} && createrepo . >/dev/null 2>&1 && echo -e "\t[ OK ]"
+
+    cd /var/cache/apt
+    dpkg-scanpackages archives /dev/null archives/Packages
+    gzip archives/Packages
+}
+
 echo_end_msg()
 {
     cat <<EOF
@@ -220,7 +231,7 @@ check_arch && \
 check_status_before_run check_pkg_which && \
 check_status_before_run check_pkg_createrepo && \
 prepare_dirs && \
-fetch_rpms && \
+fetch_pkgs && \
 fetch_misc && \
 check_md5 && \
 create_yum_repo && \

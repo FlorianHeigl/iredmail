@@ -1,9 +1,10 @@
 #
 # This schema is shipped within iRedMail project:
-#   http://iRedMail.googlecode.com/
+#   http://code.google.com/p/iredmail/
 #
 # It should be localed at:
-#   /etc/openldap/schema/iredmail.schema
+#   - RHEL/CentOS: /etc/openldap/schema/iredmail.schema
+#   - Debian: /etc/ldap/schema/iredmail.schema
 #
 # The offical iredmail OID assigned by IANA is 32349, you can find it in url:
 # http://www.iana.org/assignments/enterprise-numbers
@@ -32,7 +33,7 @@ attributetype ( 1.3.6.1.4.1.32349.1.2.1.3 NAME 'domainStatus'
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
 attributetype ( 1.3.6.1.4.1.32349.1.2.1.4 NAME 'domainBackupMX'
-    DESC 'Backup MX: yes'
+    DESC 'Backup MX: yes, no'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
@@ -122,17 +123,17 @@ attributetype ( 1.3.6.1.4.1.32349.1.2.2.7 NAME 'mailForwardingAddress'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320} )
 attributetype ( 1.3.6.1.4.1.32349.1.2.2.8 NAME 'accountStatus'
-    DESC 'The status of a user account: active, nopop, disabled'
+    DESC 'The status of a user account: active, disabled'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
 attributetype ( 1.3.6.1.4.1.32349.1.2.2.9 NAME 'userRecipientBccAddress'
-    DESC 'Recipient BCC address'
+    DESC 'Recipient BCC address for single user: must be a valid email address'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320}
     SINGLE-VALUE )
 attributetype ( 1.3.6.1.4.1.32349.1.2.2.10 NAME 'userSenderBccAddress'
-    DESC 'Sender BCC address for single user'
+    DESC 'Sender BCC address for single user: must be a valid email address'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320}
     SINGLE-VALUE )
@@ -142,11 +143,11 @@ attributetype ( 1.3.6.1.4.1.32349.1.2.2.11 NAME 'backupMailAddress'
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320}
     SINGLE-VALUE )
 attributetype ( 1.3.6.1.4.1.32349.1.2.2.12 NAME 'userRank'
-    DESC 'Rank: boss, manager, normal'
+    DESC 'Rank: boss, manager, normal or whatever'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
 attributetype ( 1.3.6.1.4.1.32349.1.2.2.13 NAME 'enabledService'
-    DESC 'Enabled service name: mail, smtp, imap, pop3, deliver, forward'
+    DESC 'Enabled service: mail, smtp, imap, pop3, deliver, forward, senderbcc, recipientbcc'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
 
@@ -159,12 +160,12 @@ attributetype ( 1.3.6.1.4.1.32349.1.2.3.1 NAME 'accessPolicy'
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
 attributetype ( 1.3.6.1.4.1.32349.1.2.3.2 NAME 'hasMember'
-    DESC 'Group has member: yes, no'
+    DESC 'Group has members: yes, no'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
 attributetype ( 1.3.6.1.4.1.32349.1.2.3.3 NAME 'listAllowedUser'
-    DESC 'User allowed to mail to list: must be email address for mail deliver'
+    DESC 'User allowed to mail to list: must be a valid email address for mail deliver'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320} )
 

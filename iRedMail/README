@@ -11,9 +11,9 @@ Quick Installation Guide:
 
     *) on Debian:
 
-        * Install 'acl':
+        * Install necessary packages:
 
-            # apt-get install acl
+            # apt-get install dialog acl dpkg-dev
 
         * Add mount option 'acl' in /etc/fstab which contains '/etc/' directory:
 
