@@ -29,7 +29,7 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     # ---- PHP ----
     export PHP_INI='/etc/php.ini'
 
-elif [ X"${DISTRO}" == X"DEBIAN" ]; then
+elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     # Apache configuration files.
     export HTTPD_CONF_ROOT="/etc/apache2"
     export HTTPD_CONF="${HTTPD_CONF_ROOT}/apache2.conf"

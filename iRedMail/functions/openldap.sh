@@ -41,7 +41,7 @@ TLSCertificateKeyFile ${SSL_KEY_FILE}
 
 EOF
 
-    # Load bdb backend module. Required on Debian/Ubuntu.
+    # Load hdb backend module. Required on Debian/Ubuntu.
     if [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
         cat >> ${OPENLDAP_SLAPD_CONF} <<EOF
 # Modules.

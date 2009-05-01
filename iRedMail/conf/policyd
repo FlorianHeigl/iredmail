@@ -6,9 +6,12 @@
 # Policyd.
 # ------------------------------------------------
 if [ X"${DISTRO}" == X"RHEL" ]; then
+    export PKG_POLICYD='policyd'
     export POLICYD_CONF='/etc/policyd.conf'
     export POLICYD_INIT_SCRIPT='/etc/init.d/policyd'
+
 elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+    export PKG_POLICYD='postfix-policyd'
     export POLICYD_CONF='/etc/postfix-policyd.conf'
     export POLICYD_INIT_SCRIPT='/etc/init.d/postfix-policyd'
 else

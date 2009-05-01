@@ -152,9 +152,6 @@ else
     export TERM='pcconsole'
 fi
 
-# Crontab related.
-export CRON_SPOOL_DIR="/var/spool/cron"
-
 # Logrotate configuration directory.
 export LOGROTATE_DIR='/etc/logrotate.d'
 
@@ -189,6 +186,9 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     export SYSLOG_CONF='/etc/syslog.conf'
     export SYSLOG_POSTROTATE_CMD='/bin/kill -HUP $(cat /var/run/syslogd.pid 2> /dev/null) 2> /dev/null || true'
 
+    # Crontab related.
+    export CRON_SPOOL_DIR="/var/spool/cron"
+
     # Yum repository related.
     export YUM_REPOS_DIR='/etc/yum.repos.d'
     export LOCAL_REPO_NAME="${PROG_NAME}"
@@ -214,6 +214,9 @@ elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
     # Syslog config: rsyslog.
     export SYSLOG_CONF='/etc/rsyslog.conf'
     export SYSLOG_POSTROTATE_CMD='invoke-rc.d rsyslog reload > /dev/null'
+
+    # Crontab related.
+    export CRON_SPOOL_DIR="/var/spool/cron/crontabs"
 
 else
     # Not support yet.

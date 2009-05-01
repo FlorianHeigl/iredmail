@@ -12,6 +12,20 @@ export LDAP_BIND='yes'
 export LDAP_BIND_VERSION='3'
 export LDAP_BINDPW="$(${RANDOM_STRING})"
 
+export OPENLDAP_DATA_DIR='/var/lib/ldap' # Do *NOT* end with '/'.
+export OPENLDAP_SCHEMA_DIR="${OPENLDAP_CONF_ROOT}/schema"
+export OPENLDAP_SLAPD_CONF="${OPENLDAP_CONF_ROOT}/slapd.conf"
+export OPENLDAP_LDAP_CONF="${OPENLDAP_CONF_ROOT}/ldap.conf"
+export OPENLDAP_LOGFILE='/var/log/openldap.log'
+export OPENLDAP_LOGROTATE_FILE="${LOGROTATE_DIR}/openldap"
+
+# LDAP data directory.
+export LDAP_DATA_DIR="${OPENLDAP_DATA_DIR}/${dn2dnsname}"
+
+# Setting for one instance. You can edit ${OPENLDAP_SLAPD_CONF} manually to hold
+# multi instances.
+export LDAP_INIT_LDIF="${CONF_DIR}/ldap_init.ldif"
+
 # Configure.
 if [ X"${DISTRO}" == X"RHEL" ]; then
     # LDAP daemon user & group.
@@ -54,17 +68,6 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
 else
     :
 fi
-
-export OPENLDAP_SCHEMA_DIR="${OPENLDAP_CONF_ROOT}/schema"
-export OPENLDAP_SLAPD_CONF="${OPENLDAP_CONF_ROOT}/slapd.conf"
-export OPENLDAP_LDAP_CONF="${OPENLDAP_CONF_ROOT}/ldap.conf"
-export OPENLDAP_LOGFILE='/var/log/openldap.log'
-export OPENLDAP_DATA_DIR='/var/lib/ldap' # Do *NOT* end with '/'.
-export OPENLDAP_LOGROTATE_FILE="${LOGROTATE_DIR}/openldap"
-
-# Setting for one instance. You can edit ${OPENLDAP_SLAPD_CONF} manually to hold
-# multi instances.
-export LDAP_INIT_LDIF="${CONF_DIR}/ldap_init.ldif"
 
 # ---------- LDAP schema related -----------
 # objectClass

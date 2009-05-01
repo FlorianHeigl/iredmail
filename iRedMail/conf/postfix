@@ -4,12 +4,6 @@
 
 # Variables for Postfix and related.
 
-# Set 'message_size_limit', in 'byte'. Default is 10M.
-export MESSAGE_SIZE_LIMIT='15728640'
-
-# virtual_maildir_limit_message.
-export MAILDIR_LIMIT_MESSAGE="Sorry, the user's maildir has overdrawn the disk quota, please notice the user and try again later."
-
 #
 # You do *NOT* need to modify them.
 #
@@ -24,9 +18,23 @@ export POSTFIX_FILE_ALIASES="${POSTFIX_ROOTDIR}/aliases"
 export POSTFIX_FILE_HEADER_CHECKS="${POSTFIX_ROOTDIR}/header_checks.pcre"
 export POSTFIX_FILE_HELO_ACCESS="${POSTFIX_ROOTDIR}/helo_access.pcre"
 
+if [ X"${DISTRO}" == X"RHEL" ]; then
+    export MAILLOG='/var/log/maillog'
+elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+    export MAILLOG='/var/log/mail.log'
+else
+    :
+fi
+
 # If you use courier-maildrop, transport should be 'maildrop'
 # We use dovecot here.
 export TRANSPORT='dovecot'
+
+# Set 'message_size_limit', in 'byte'. Default is 10M.
+export MESSAGE_SIZE_LIMIT='15728640'
+
+# virtual_maildir_limit_message.
+export MAILDIR_LIMIT_MESSAGE="Sorry, the user's maildir has overdrawn the disk quota, please notice the user and try again later."
 
 # LDAP/MYSQL lookup configuration files.
 # LDAP lookup.

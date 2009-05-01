@@ -38,7 +38,6 @@ export LDAP_ADMIN_DN="cn=${VMAIL_ADMIN_USER_NAME},${LDAP_SUFFIX}"
 export LDAP_ROOTDN="cn=Manager,${LDAP_SUFFIX}"
 export LDAP_BASEDN_NAME='domains'
 export LDAP_BASEDN="o=${LDAP_BASEDN_NAME},${LDAP_SUFFIX}"
-export LDAP_DATA_DIR="${OPENLDAP_DATA_DIR}/${dn2dnsname}/"
 rm -f /tmp/ldap_suffix
 
 cat >> ${CONFIG_FILE} <<EOF
@@ -49,7 +48,6 @@ export LDAP_ADMIN_DN="${LDAP_ADMIN_DN}"
 export LDAP_ROOTDN="cn=Manager,${LDAP_SUFFIX}"
 export LDAP_BASEDN_NAME="domains"
 export LDAP_BASEDN="o=${LDAP_BASEDN_NAME},${LDAP_SUFFIX}"
-export LDAP_DATA_DIR="${OPENLDAP_DATA_DIR}/${dn2dnsname}/"
 EOF
 
 # LDAP rootpw.

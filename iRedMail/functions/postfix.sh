@@ -619,26 +619,14 @@ postfix_config_tls()
 {
     ECHO_INFO "Enable TLS/SSL support in Postfix."
 
-    cat >> ${POSTFIX_FILE_MAIN_CF} <<EOF
-#
-# Postfix TLS support. Please refer to:
-#   * http://www.postfix.org/TLS_README.html
-#   * http://code.google.com/p/${PROG_NAME_LOWERCASE}/wiki/${PROG_NAME}_tut_Postfix#TLS_Support
-#
-# Example:
-#    $ openssl req -newkey rsa:1024 -x509 -nodes -out postfixCert.pem -keyout postfixKey.pem
-#
-# Enable TLS. Note: 'smtpd_use_tls' equal to 'smtpd_tls_security_level'.
-#
-smtpd_tls_security_level = may
-smtpd_enforce_tls = no
-smtpd_tls_loglevel = 0
-smtpd_tls_key_file = ${SSL_KEY_FILE}
-smtpd_tls_cert_file = ${SSL_CERT_FILE}
-#smtpd_tls_CAfile = 
-tls_random_source = dev:/dev/urandom
-tls_daemon_random_source = dev:/dev/urandom
-EOF
+    postconf -e smtpd_tls_security_level='may'
+    postconf -e smtpd_enforce_tls='no'
+    postconf -e smtpd_tls_loglevel='0'
+    postconf -e smtpd_tls_key_file="${SSL_KEY_FILE}"
+    postconf -e smtpd_tls_cert_file="${SSL_CERT_FILE}"
+    #postconf -e #smtpd_tls_CAfile = 
+    postconf -e tls_random_source='dev:/dev/urandom'
+    postconf -e tls_daemon_random_source='dev:/dev/urandom'
 
     cat >> ${POSTFIX_FILE_MASTER_CF} <<EOF
 submission inet n       -       n       -       -       smtpd
@@ -665,9 +653,14 @@ postfix_config_syslog()
     #
 
     ECHO_INFO "Setting up logrotate for maillog as a daily work."
-
-    # Remove maillog from ${LOGROTATE_DIR}/syslog.
-    perl -pi -e 's#/var/log/maillog ##' ${LOGROTATE_DIR}/syslog
+    # Remove maillog from ${LOGROTATE_DIR}/(r)syslog.
+    if [ X"${DISTRO}" == X"RHEL" ]; then
+        perl -pi -e 's#/var/log/maillog ##' ${LOGROTATE_DIR}/syslog
+    elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
+        perl -pi -e 's#/var/log/mail.*##' ${LOGROTATE_DIR}/rsyslog
+    else
+        :
+    fi
 
     # Make maillog as standalone logrotated job.
     cat >> ${LOGROTATE_DIR}/maillog <<EOF
@@ -676,7 +669,7 @@ ${CONF_MSG}
 # Logrotate file for postfix maillog.
 #
  
-/var/log/maillog {
+/var/log/mail* {
     compress
     daily
     rotate 30
@@ -691,8 +684,6 @@ ${CONF_MSG}
 
     postrotate
         ${SYSLOG_POSTROTATE_CMD}
-        #/bin/kill -HUP \`cat /var/run/syslogd.pid 2> /dev/null\` 2> /dev/null || true
-        #/bin/kill -HUP \`cat /var/run/rsyslogd.pid 2> /dev/null\` 2> /dev/null || true
     endscript
 }
 EOF

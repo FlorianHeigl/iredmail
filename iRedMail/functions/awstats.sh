@@ -129,7 +129,7 @@ awstats_config_maillog()
     cp -f ${AWSTATS_CONF_MAIL} ${AWSTATS_CONF_DIR}/awstats.conf
 
     export maillogconvert_pl="$(which maillogconvert.pl)"
-    perl -pi -e 's#^(LogFile=)(.*)#${1}"perl $ENV{'maillogconvert_pl'} standard < /var/log/maillog |"#' ${AWSTATS_CONF_MAIL}
+    perl -pi -e 's#^(LogFile=)(.*)#${1}"perl $ENV{'maillogconvert_pl'} standard < $ENV{MAILLOG} |"#' ${AWSTATS_CONF_MAIL}
     perl -pi -e 's#^(LogType=)(.*)#${1}M#' ${AWSTATS_CONF_MAIL}
     perl -pi -e 's#^(LogFormat=)(.*)#${1}"%time2 %email %email_r %host %host_r %method %url %code %bytesd"#' ${AWSTATS_CONF_MAIL}
     perl -pi -e 's#^(LevelForBrowsersDetection=)(.*)#${1}0#' ${AWSTATS_CONF_MAIL}

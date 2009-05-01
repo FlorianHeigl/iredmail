@@ -13,7 +13,7 @@ Quick Installation Guide:
 
         * Install necessary packages:
 
-            # apt-get install dialog acl dpkg-dev
+            # apt-get install dialog acl dpkg-dev mktemp
 
         * Add mount option 'acl' in /etc/fstab which contains '/etc/' directory:
 

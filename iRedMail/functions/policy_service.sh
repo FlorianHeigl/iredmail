@@ -46,32 +46,50 @@ policyd_user()
 
 policyd_config()
 {
-    # Different package name on each distribution.
+    ECHO_INFO "Initialize MySQL database for policyd."
+
+    export MYSQL_SERVER MYSQL_PORT MYSQL_ROOT_USER MYSQL_ROOT_PASSWD
+    tmp_sql="$(mktemp)"
+    cat > ${tmp_sql} <<EOF
+# Import SQL structure.
+SOURCE $(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep 'DATABASE.mysql');
+
+# Grant privileges.
+GRANT SELECT,INSERT,UPDATE,DELETE ON ${POLICYD_DB_NAME}.* TO ${POLICYD_DB_USER}@localhost IDENTIFIED BY "${POLICYD_DB_PASSWD}";
+FLUSH PRIVILEGES;
+
+USE ${POLICYD_DB_NAME}
+SOURCE ${SAMPLE_DIR}/policyd_blacklist_helo.sql;
+EOF
+
+    # Import whitelist/blacklist shipped in policyd and provided by iRedMail.
     if [ X"${DISTRO}" == X"RHEL" ]; then
-        export pkg_policyd='policyd'
+        cat >> ${tmp_sql} <<EOF
+SOURCE $(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep 'whitelist.sql');
+SOURCE $(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep 'blacklist_helo.sql');
+EOF
+
     elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
-        export pkg_policyd='postfix-policyd'
+        # Create a temp directory.
+        tmp_dir="$(mktemp)" && mkdir -p ${tmp_dir}
+
+        for i in $( eval ${LIST_FILES_IN_PKG} postfix-policyd | grep 'sql.gz$'); do
+            cp $i ${tmp_dir}
+            gunzip ${tmp_dir}/$(basename $i)
+
+            cat >> ${tmp_sql} <<EOF
+SOURCE /tmp/$(echo $i | awk -F'.gz' '{print $1}');
+EOF
     else
         :
     fi
 
-    ECHO_INFO "Initialize MySQL database for policyd."
-
-    export MYSQL_SERVER MYSQL_PORT MYSQL_ROOT_USER MYSQL_ROOT_PASSWD
     mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
-# Import SQL structure.
-SOURCE $(eval ${LIST_FILES_IN_PKG} ${pkg_policyd} | grep 'DATABASE.mysql');
-
-# Grant privileges.
-GRANT SELECT,INSERT,UPDATE,DELETE ON ${POLICYD_DB_NAME}.* TO ${POLICYD_DB_USER}@localhost IDENTIFIED BY "${POLICYD_DB_PASSWD}";
-
-# Please do 'GRANT' before all other actions for fail-safe.
-SOURCE $(eval ${LIST_FILES_IN_PKG} ${pkg_policyd} | grep 'whitelist.sql');
-SOURCE $(eval ${LIST_FILES_IN_PKG} ${pkg_policyd} | grep 'blacklist_helo.sql');
-SOURCE ${SAMPLE_DIR}/policyd_blacklist_helo.sql;
-
-FLUSH PRIVILEGES;
+$(cat ${tmp_sql})
 EOF
+
+    rm -rf ${tmp_sql} ${tmp_dir}
+    unset tmp_sql tmp_dir
 
     # Configure policyd.
     ECHO_INFO "Configure policyd: ${POLICYD_CONF}."
@@ -166,7 +184,11 @@ EOF
     perl -pi -e 's#^(RECIPIENTTHROTTLE=)(.*)#${1}1#' ${POLICYD_CONF} 
 
     # ---- RCPT ACL ----
-    perl -pi -e 's#^(RCPT_ACL=)(.*)#${1}1#' ${POLICYD_CONF} 
+    if [ X"${DISTRO}" == X"RHEL" ]; then
+        perl -pi -e 's#^(RCPT_ACL=)(.*)#${1}1#' ${POLICYD_CONF} 
+    else
+        :
+    fi
 
     # -------------------------------------------------------------
     # Policyd config for recipient throttle only.
@@ -228,7 +250,11 @@ EOF
     perl -pi -e 's#^(SENDERMSGLIMIT=)(.*)#${1}60#' ${POLICYD_SENDER_THROTTLE_CONF} 
 
     # ---- RCPT ACL ----
-    perl -pi -e 's#^(RCPT_ACL=)(.*)#${1}0#' ${POLICYD_SENDER_THROTTLE_CONF} 
+    if [ X"${DISTRO}" == X"RHEL" ]; then
+        perl -pi -e 's#^(RCPT_ACL=)(.*)#${1}0#' ${POLICYD_SENDER_THROTTLE_CONF} 
+    else
+        :
+    fi
 
     # -----------------
     # Syslog Setting
@@ -265,8 +291,8 @@ EOF
     ECHO_INFO "Setting cron job for policyd user: ${POLICYD_USER_NAME}."
     cat > ${CRON_SPOOL_DIR}/${POLICYD_USER_NAME} <<EOF
 ${CONF_MSG}
-1       */2       *       *       *       /usr/sbin/policyd-cleanup -c ${POLICYD_CONF}
-1       */2       *       *       *       /usr/sbin/policyd-cleanup -c ${POLICYD_SENDER_THROTTLE_CONF}
+1       */2       *       *       *       $(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep 'cleanup' | grep 'sbin') -c ${POLICYD_CONF}
+1       */2       *       *       *       $(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep 'cleanup' | grep 'sbin') -c ${POLICYD_SENDER_THROTTLE_CONF}
 EOF
 
     # Set cron file permission: root:root, 0600.
@@ -289,7 +315,7 @@ Policyd:
         - /etc/init.d/policyd
     * Misc:
         - /etc/cron.daily/policyd-cleanup
-        - $(eval ${LIST_FILES_IN_PKG} ${pkg_policyd} | grep 'policyd.cron$')
+        - $(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep 'policyd.cron$')
         - crontab -l ${POLICYD_USER_NAME}
 EOF
 
