@@ -16,7 +16,7 @@ openldap_config()
     setfacl -m u:${LDAP_USER}:r-- ${SSL_KEY_FILE}
 
     # Copy ${PROG_NAME}.schema.
-    cp -f ${SAMPLE_DIR}/${PROG_NAME_LOWERCASE}.schema ${OPENLDAP_SCHEMA_DIR}
+    cp -f ${SAMPLE_DIR}/iredmail.schema ${OPENLDAP_SCHEMA_DIR}
 
     ECHO_INFO "Generate new configuration file: ${OPENLDAP_SLAPD_CONF}."
     cat > ${OPENLDAP_SLAPD_CONF} <<EOF
@@ -42,7 +42,7 @@ TLSCertificateKeyFile ${SSL_KEY_FILE}
 EOF
 
     # Load hdb backend module. Required on Debian/Ubuntu.
-    if [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
+    if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
         cat >> ${OPENLDAP_SLAPD_CONF} <<EOF
 # Modules.
 modulepath  ${OPENLDAP_MODULE_PATH}
@@ -287,7 +287,7 @@ openldap_data_initialize()
     done
     echo '.'
 
-    ECHO_INFO "Initialization LDAP tree."
+    ECHO_INFO "Initialize LDAP tree."
     # home_mailbox format is 'maildir/' by default.
     cat > ${LDAP_INIT_LDIF} <<EOF
 dn: ${LDAP_SUFFIX}
@@ -386,7 +386,7 @@ EOF
     [ X"${HOME_MAILBOX}" == X"mbox" ] && \
         perl -pi -e 's#^(mailMessageStore.*)/#${1}#' ${LDAP_INIT_LDIF}
 
-    ldapadd -x -D "${LDAP_ROOTDN}" -w"${LDAP_ROOTPW}" -f ${LDAP_INIT_LDIF}
+    ldapadd -x -D "${LDAP_ROOTDN}" -w "${LDAP_ROOTPW}" -f ${LDAP_INIT_LDIF}
 
     cat >> ${TIP_FILE} <<EOF
 OpenLDAP:

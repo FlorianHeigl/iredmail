@@ -9,7 +9,7 @@ Quick Installation Guide:
         # cd ../
         # sh iRedMail.sh
 
-    *) on Debian:
+    *) on Debian (Lenny):
 
         * Install necessary packages:
 
@@ -22,6 +22,19 @@ Quick Installation Guide:
         * Remount the mount point:
 
             # mount -o remount,rw,acl /
+
+        * Update /etc/apt/sources.list, use 'testing' version. e.g.
+
+            deb http://mirrors.163.com/debian testing main contrib non-free
+
+        * Run 'apt-get update' to update your apt repository info.
+
+            # apt-get update
+
+        * Run iRedMail main script:
+
+            # cd /path/to/iRedMail-x.y.z/
+            # sh iRedMail.sh
 
 ========
 Full Installation Guide:

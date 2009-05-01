@@ -71,7 +71,7 @@ EOF
 
     elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
         # Create a temp directory.
-        tmp_dir="$(mktemp)" && mkdir -p ${tmp_dir}
+        tmp_dir="/tmp/$(eval ${RANDOM_STRING})" && mkdir -p ${tmp_dir}
 
         for i in $( eval ${LIST_FILES_IN_PKG} postfix-policyd | grep 'sql.gz$'); do
             cp $i ${tmp_dir}
@@ -80,6 +80,7 @@ EOF
             cat >> ${tmp_sql} <<EOF
 SOURCE /tmp/$(echo $i | awk -F'.gz' '{print $1}');
 EOF
+        done
     else
         :
     fi

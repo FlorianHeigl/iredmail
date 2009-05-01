@@ -1,4 +1,5 @@
 iRedMail-0.4.1:
+    * Add priority (=1) in iRedMail repo file. Thanks scrummie02@forum.
     * Update phpLDAPadmin to 1.1.0.7.
     * Add bcc control in postfix bcc lookup map.
     * LDAP attribute 'domainStatus' is deprecated, use accountStatus instead.

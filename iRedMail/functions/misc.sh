@@ -48,6 +48,7 @@ name=${LOCAL_REPO_NAME}
 baseurl=${YUM_UPDATE_REPO}
 enabled=1
 gpgcheck=0
+priority=1
 EOF
 
     echo 'export status_re_generate_iredmail_repo="DONE"' >> ${STATUS_FILE}

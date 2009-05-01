@@ -18,7 +18,7 @@ amavisd_dkim()
     ${AMAVISD_BIN} genrsa ${pem_file} >/dev/null 2>&1 && \
     setfacl -m u:${AMAVISD_USER}:r-- ${pem_file}
 
-    cat >> ${AMAVISD_CONF} <<EOF
+    cat >> ${AMAVISD_DKIM_CONF} <<EOF
 # The default set of header fields to be signed can be controlled
 # by setting %signed_header_fields elements to true (to sign) or
 # to false (not to sign). Keys must be in lowercase, e.g.:
@@ -78,21 +78,21 @@ EOF
     echo 'export status_amavisd_dkim="DONE"' >> ${STATUS_FILE}
 }
 
-amavisd_config()
+amavisd_config_rhel()
 {
     ECHO_INFO "==================== Amavisd-new ===================="
-    backup_file ${AMAVISD_CONF}
+    backup_file ${AMAVISD_CONF} ${AMAVISD_DKIM_CONF}
 
     ECHO_INFO "Configure amavisd-new: ${AMAVISD_CONF}."
 
     #perl -pi -e 's/^(\$max_servers)/$1\ =\ 15\;\t#/' ${AMAVISD_CONF}
-    # ---- Use amavisd daemon user. ----
+    # ---- Set amavisd daemon user. ----
     #perl -pi -e 's/^(\$daemon_user)/$1\ =\ "clamav"\;\t#/' ${AMAVISD_CONF}
     #perl -pi -e 's/^(\$daemon_group)/$1\ =\ "clamav"\;\t#/' ${AMAVISD_CONF}
 
     export FIRST_DOMAIN
     perl -pi -e 's/^(\$mydomain)/$1\ =\ \"$ENV{'HOSTNAME'}\"\;\t#/' ${AMAVISD_CONF}
-    perl -pi -e 's/(.*local_domains_maps.*)(].*)/${1},"$ENV{'FIRST_DOMAIN'}"${2}/' ${AMAVISD_CONF}
+    perl -pi -e 's/(.*local_domains_maps.*)(].*)/${1}, "$ENV{FIRST_DOMAIN}"${2}/' ${AMAVISD_CONF}
 
     # Set default score.
     #perl -pi -e 's/(.*)(sa_tag_level_deflt)(.*)/${1}${2} = 4.0; #${3}/' ${AMAVISD_CONF}
@@ -116,7 +116,7 @@ amavisd_config()
     perl -pi -e 's#(.*defang_banned = )1(;.*)#${1}0${2}#' ${AMAVISD_CONF}
 
     # Reset $sa_spam_subject_tag, default is '***SPAM***'.
-    perl -pi -e 's#(.*sa_spam_subject_tag.*=)(.*SPAM.*)#${1} "[SPAM] ";#' ${AMAVISD_CONF}
+    #perl -pi -e 's#(.*sa_spam_subject_tag.*=)(.*SPAM.*)#${1} "[SPAM] ";#' ${AMAVISD_CONF}
 
     # Allow clients on my internal network to bypass scanning.
     #perl -pi -e 's#(.*policy_bank.*MYNETS.*\{)(.*)#${1} bypass_spam_checks_maps => [1], bypass_banned_checks_maps => [1], bypass_header_checks_maps => [1], ${2}#' ${AMAVISD_CONF}
@@ -132,6 +132,47 @@ amavisd_config()
     # Set pid_file.
     #echo '$pid_file = "/var/run/clamav/amavisd.pid";' >> ${AMAVISD_CONF}
 
+    echo 'export status_amavisd_config_rhel="DONE"' >> ${STATUS_FILE}
+}
+
+amavisd_config_debian()
+{
+    ECHO_INFO "==================== Amavisd-new ===================="
+    backup_file ${AMAVISD_CONF_DIR}/{05-domain_id,20-debian_defaults,} ${AMAVISD_DKIM_CONF}
+
+    ECHO_INFO "Configure amavisd-new: ${AMAVISD_CONF}."
+
+    # ---- Set amavisd daemon user. ----
+    #perl -pi -e 's/^(\$daemon_user)/$1\ =\ "clamav"\;\t#/' ${AMAVISD_CONF_DIR}
+    #perl -pi -e 's/^(\$daemon_group)/$1\ =\ "clamav"\;\t#/' ${AMAVISD_CONF}
+
+    perl -pi -e 's#^(chmop.*\$mydomain.*=).*#${1} "$ENV{'HOSTNAME'}";#' ${AMAVISD_CONF_DIR}/05-domain_id
+
+    # Set admin address.
+    perl -pi -e 's#(virus_admin.*= ")(virusalert)(.*)#${1}root${3}#' ${AMAVISD_CONF_DIR}/20-debian_defaults
+    perl -pi -e 's#(mailfrom_notify_admin.*= ")(virusalert)(.*)#${1}root${3}#' ${AMAVISD_CONF_DIR}/20-debian_defaults
+    perl -pi -e 's#(mailfrom_notify_recip.*= ")(virusalert)(.*)#${1}root${3}#' ${AMAVISD_CONF_DIR}/20-debian_defaults
+    perl -pi -e 's#(mailfrom_notify_spamadmin.*= ")(spam.police)(.*)#${1}root${3}#' ${AMAVISD_CONF_DIR}/20-debian_defaults
+
+
+    cat >> ${AMAVISD_CONF} <<EOF
+${CONF}
+# Daemon user & group.
+\$daemon_user  = "${AMAVISD_DAEMON_USER}";
+\$daemon_group = "${AMAVISD_DAEMON_GROUP}";
+
+@local_domains_maps = ( [".$mydomain", "${FIRST_DOMAIN}"] );  # list of all local domains
+
+# Disable defang banned mail.
+\$defang_banned = 0;  # MIME-wrap passed mail containing banned name
+
+EOF
+
+    echo 'export status_amavisd_config_debian="DONE"' >> ${STATUS_FILE}
+}
+
+amavisd_config_generic()
+{
     cat >> ${AMAVISD_CONF} <<EOF
 # Set listen IP/PORT.
 \$notify_method  = 'smtp:[${SMTP_SERVER}]:10025';
@@ -182,7 +223,7 @@ amavisd_config()
 # Note: '\$log_level' variable above is required for SA debug.
 \$sa_debug = 0;
 
-# Modify email subject, add '$sa_spam_subject_tag'.
+# Modify email subject, add '\$sa_spam_subject_tag'.
 #   0:  disable
 #   1:  enable
 \$sa_spam_modifies_subj = 1;
@@ -233,11 +274,30 @@ EOF
 
     # Enable/Disable DKIM feature.
     if [ X"${ENABLE_DKIM}" == X"YES" ]; then
-        perl -pi -e 's/^(\$enable_dkim_verification = )\d(;.*)/${1}1${2}/' ${AMAVISD_CONF}
-        perl -pi -e 's/^(\$enable_dkim_signing = )\d(;.*)/${1}1${2}/' ${AMAVISD_CONF}
+        if [ X"${DISTRO}" == X"RHEL" ]; then
+            perl -pi -e 's/^(\$enable_dkim_verification = )\d(;.*)/${1}1${2}/' ${AMAVISD_CONF}
+            perl -pi -e 's/^(\$enable_dkim_signing = )\d(;.*)/${1}1${2}/' ${AMAVISD_CONF}
+        elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+            cat >> ${AMAVISD_CONF} <<EOF
+\$enable_dkim_verification = 1;  # enable DKIM signatures verification
+\$enable_dkim_signing = 1;    # load DKIM signing code, keys defined by dkim_key
+EOF
+        else
+            :
+        fi
+
     else
-        perl -pi -e 's/^(\$enable_dkim_verification = )\d(;.*)/${1}0${2}/' ${AMAVISD_CONF}
-        perl -pi -e 's/^(\$enable_dkim_signing = )\d(;.*)/${1}0${2}/' ${AMAVISD_CONF}
+        if [ X"${DISTRO}" == X"RHEL" ]; then
+            perl -pi -e 's/^(\$enable_dkim_verification = )\d(;.*)/${1}0${2}/' ${AMAVISD_CONF}
+            perl -pi -e 's/^(\$enable_dkim_signing = )\d(;.*)/${1}0${2}/' ${AMAVISD_CONF}
+        elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+            cat >> ${AMAVISD_CONF} <<EOF
+\$enable_dkim_verification = 0;  # enable DKIM signatures verification
+\$enable_dkim_signing = 0;    # load DKIM signing code, keys defined by dkim_key
+EOF
+        else
+            :
+        fi
     fi
 
     cat >> ${AMAVISD_CONF} <<EOF
@@ -326,5 +386,18 @@ Amavisd-new:
 
 EOF
 
-    echo 'export status_amavisd_config="DONE"' >> ${STATUS_FILE}
+    echo 'export status_amavisd_config_generic="DONE"' >> ${STATUS_FILE}
+}
+
+amavisd_config()
+{
+    if [ X"${DISTRO}" == X"RHEL" ]; then
+        check_status_before_run amavisd_config_rhel
+    elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+        check_status_before_run amavisd_config_debian
+    else
+        :
+    fi
+
+    check_status_before_run amavisd_config_generic
 }

@@ -5,16 +5,22 @@
 export AMAVISD_SERVER='127.0.0.1'
 export AMAVISD_USER='amavis'
 export AMAVISD_GROUP='amavis'
-export AMAVISD_CONF='/etc/amavisd.conf'
 export AMAVISD_LOGFILE='/var/log/amavisd.log'
 export AMAVISD_LOGROTATE_FILE="${LOGROTATE_DIR}/amavisd"
 export AMAVISD_DKIM_DIR='/var/lib/dkim'
 export AMAVISD_DKIM_SELECTOR='dkim'
+export AMAVISD_DAEMON_USER='amavis'
+export AMAVISD_DAEMON_GROUP='amavis'
 
 if [ X"${DISTRO}" == X"RHEL" ]; then
-    AMAVISD_BIN='amavisd'
-elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
-    AMAVISD_BIN='amavisd-new'
+    export AMAVISD_BIN='amavisd'
+    export AMAVISD_CONF='/etc/amavisd.conf'
+    export AMAVISD_DKIM_CONF='/etc/amavisd.conf'
+elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+    export AMAVISD_BIN='amavisd-new'
+    export AMAVISD_CONF_DIR='/etc/amavis/conf.d'
+    export AMAVISD_CONF='/etc/amavis/conf.d/50-user'
+    export AMAVISD_DKIM_CONF='/etc/amavis/conf.d/50-user'
 else
     :
 fi
