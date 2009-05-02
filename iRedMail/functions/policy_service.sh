@@ -54,10 +54,7 @@ policyd_config()
         export policyd_init_sql_file="$(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep '/DATABASE.mysql$')"
         echo '' > ${tmp_sql}    # Template file contains commands to create policyd database.
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        policyd_init_sql_file_tmp="$(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep '/install/mysql$')"
-        cp -f ${policyd_init_sql_file_tmp} /tmp/
-        gunzip /tmp/$(basename ${policyd_init_sql_file_tmp})
-        export policyd_init_sql_file="/tmp/$(basename ${policyd_init_sql_file_tmp})"
+        export policyd_init_sql_file="$(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep '/install/mysql$')"
         cat > ${tmp_sql} <<EOF
 CREATE DATABASE ${POLICYD_DB_NAME} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE ${POLICYD_DB_NAME};

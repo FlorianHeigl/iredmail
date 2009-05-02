@@ -34,7 +34,8 @@ apache_php_config()
 
     # Enable ssl, ldap module on Debian/Ubuntu.
     if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        a2enmod ssl ldap > /dev/null
+        [ X"${BACKEND}" == X"OpenLDAP" ] && a2enmod ssl authnz_ldap > /dev/null
+        [ X"${BACKEND}" == X"MySQL" ] && a2enmod ssl auth_mysql > /dev/null
     else
         :
     fi
