@@ -19,7 +19,7 @@ Quick Installation Guide:
 
            /dev/hda1       /               ext3    acl,errors=remount-ro 0       1
 
-        * Remount the mount point:
+        * Remount the mount point which contains '/etc/' directory:
 
             # mount -o remount,rw,acl /
 

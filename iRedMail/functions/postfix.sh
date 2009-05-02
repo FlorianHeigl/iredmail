@@ -669,7 +669,7 @@ ${CONF_MSG}
 # Logrotate file for postfix maillog.
 #
  
-/var/log/mail* {
+${MAILLOG} {
     compress
     daily
     rotate 30

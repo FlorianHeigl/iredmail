@@ -104,7 +104,7 @@ managesieve_config()
     if [ X"${USE_MANAGESIEVE}" == X"YES" ]; then
         # Use pysieved.
         if [ X"${USE_PYSIEVED}" == X"YES" ]; then
-            check_status_before_run pysieved_config
+            [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run pysieved_config
         else
             :
         fi

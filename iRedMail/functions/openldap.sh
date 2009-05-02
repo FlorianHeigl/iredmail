@@ -30,9 +30,12 @@ include     ${OPENLDAP_SCHEMA_DIR}/nis.schema
 # Schema provided by ${PROG_NAME}.
 include     ${OPENLDAP_SCHEMA_DIR}/${PROG_NAME_LOWERCASE}.schema
 
-# PID.
-pidfile     /var/run/openldap/slapd.pid
-argsfile    /var/run/openldap/slapd.args
+# Where the pid file is put. The init.d script will not stop the
+# server if you change this.
+pidfile     ${OPENLDAP_PID_FILE}
+
+# List of arguments that were passed to the server
+argsfile    ${OPENLDAP_ARGS_FILE}
 
 # TLS files.
 TLSCACertificateFile ${SSL_CERT_FILE}
@@ -41,14 +44,27 @@ TLSCertificateKeyFile ${SSL_KEY_FILE}
 
 EOF
 
-    # Load hdb backend module. Required on Debian/Ubuntu.
+    # Load backend module. Required on Debian/Ubuntu.
     if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        cat >> ${OPENLDAP_SLAPD_CONF} <<EOF
+        if [ X"${OPENLDAP_DEFAULT_DBTYPE}" == X"bdb" ]; then
+            # bdb, Berkeley DB.
+            cat >> ${OPENLDAP_SLAPD_CONF} <<EOF
+# Modules.
+modulepath  ${OPENLDAP_MODULE_PATH}
+moduleload  back_bdb
+
+EOF
+        elif [ X"${OPENLDAP_DEFAULT_DBTYPE}" == X"hdb" ]; then
+            # hdb.
+            cat >> ${OPENLDAP_SLAPD_CONF} <<EOF
 # Modules.
 modulepath  ${OPENLDAP_MODULE_PATH}
 moduleload  back_hdb
 
 EOF
+        else
+            :
+        fi
     else
         :
     fi
@@ -174,10 +190,10 @@ access to *
 #######################################################################
 
 database    ${OPENLDAP_DEFAULT_DBTYPE}
-suffix      "${LDAP_SUFFIX}"
+suffix      ${LDAP_SUFFIX}
 directory   ${LDAP_DATA_DIR}
 
-rootdn      "${LDAP_ROOTDN}"
+rootdn      ${LDAP_ROOTDN}
 rootpw      $(gen_ldap_passwd "${LDAP_ROOTPW}")
 
 sizelimit   500

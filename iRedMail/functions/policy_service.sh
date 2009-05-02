@@ -46,13 +46,29 @@ policyd_user()
 
 policyd_config()
 {
-    ECHO_INFO "Initialize MySQL database for policyd."
+    ECHO_INFO "Initialize MySQL database of policyd."
 
-    export MYSQL_SERVER MYSQL_PORT MYSQL_ROOT_USER MYSQL_ROOT_PASSWD
+    # Get SQL structure template file.
     tmp_sql="$(mktemp)"
-    cat > ${tmp_sql} <<EOF
-# Import SQL structure.
-SOURCE $(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep 'DATABASE.mysql');
+    if [ X"${DISTRO}" == X"RHEL" ]; then
+        export policyd_init_sql_file="$(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep '/DATABASE.mysql$')"
+        echo '' > ${tmp_sql}    # Template file contains commands to create policyd database.
+    elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+        policyd_init_sql_file_tmp="$(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep '/install/mysql$')"
+        cp -f ${policyd_init_sql_file_tmp} /tmp/
+        gunzip /tmp/$(basename ${policyd_init_sql_file_tmp})
+        export policyd_init_sql_file="/tmp/$(basename ${policyd_init_sql_file_tmp})"
+        cat > ${tmp_sql} <<EOF
+CREATE DATABASE ${POLICYD_DB_NAME} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE ${POLICYD_DB_NAME};
+EOF
+    else
+        :
+    fi
+
+    cat >> ${tmp_sql} <<EOF
+# Import SQL structure template.
+SOURCE ${policyd_init_sql_file};
 
 # Grant privileges.
 GRANT SELECT,INSERT,UPDATE,DELETE ON ${POLICYD_DB_NAME}.* TO ${POLICYD_DB_USER}@localhost IDENTIFIED BY "${POLICYD_DB_PASSWD}";
@@ -69,9 +85,9 @@ SOURCE $(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep 'whitelist.sql');
 SOURCE $(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep 'blacklist_helo.sql');
 EOF
 
-    elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
+    elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
         # Create a temp directory.
-        tmp_dir="/tmp/$(eval ${RANDOM_STRING})" && mkdir -p ${tmp_dir}
+        tmp_dir="/tmp/$(${RANDOM_STRING})" && mkdir -p ${tmp_dir}
 
         for i in $( eval ${LIST_FILES_IN_PKG} postfix-policyd | grep 'sql.gz$'); do
             cp $i ${tmp_dir}
@@ -90,6 +106,7 @@ $(cat ${tmp_sql})
 EOF
 
     rm -rf ${tmp_sql} ${tmp_dir}
+    [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ] && rm -f ${policyd_init_sql_file}
     unset tmp_sql tmp_dir
 
     # Configure policyd.
