@@ -1,0 +1,130 @@
+*) Overview
+
+Required components:
+    - Apache (2.2+), shipped within RHEL/CentOS 5.x.
+    - mod_wsgi (2.1+)
+    - Python (2.4+), shipped within RHEL/CentOS 5.x.
+    - webpy (0.31+)
+    - MySQL-python
+    - python-ldap
+
+Optional components:
+    - DBUtils
+
+*) Installation
+
+    - Install webpy:
+
+      Get the lastest development version:
+
+        $ git clone git://github.com/webpy/webpy.git
+        $ cd webpy
+        $ sudo python setup.py install
+
+      Test:
+
+        $ python
+        >>> import web
+        >>>
+
+    - Install python related modules and packages: 
+
+        # ---- For i386 ----
+        $ sudo yum install python-setuptools gcc.i386 gcc-c++.i386 openssl-devel.i386 python-devel.i386 openldap-devel.i386 mysql-devel.i386
+
+        # ---- For x86_64 ----
+        $ sudo yum install python-setuptools gcc.i386 gcc-c++.i386 openssl-devel.i386 python-devel.i386 openldap-devel.i386 mysql-devel.i386
+
+        # ---- Install python packages ----
+        $ sudo easy_install dbutils jinja2 python-ldap MySQL-python
+
+    - Install mod_wsgi from EPEL repository:
+
+        # ---- For i386 ----
+        $ sudo rpm -ivh http://download.fedora.redhat.com/pub/epel/5/i386/mod_wsgi-2.1-2.el5.i386.rpm
+
+        # ---- For x86_64 ----
+        $ sudo rpm -ivh http://download.fedora.redhat.com/pub/epel/5/x86_64/mod_wsgi-2.1-2.el5.x86_64.rpm
+
+*) Setup
+
+    - Copy iRedAdmin to /var/www/:
+
+        $ tar xjf iRedAdmin-x.y.z.tar.bz2
+        $ sudo mv iRedAdmin-x.y.z /var/www/
+        $ cd /var/www/
+        $ sudo chown -R root:root iRedAdmin-x.y.z
+        $ sudo chmod -R 0755 iRedAdmin-x.y.z
+
+    - Add apache configure file: /etc/httpd/conf.d/iredadmin.conf.
+
+        # ----
+        WSGIScriptAlias /iredadmin /var/www/iRedAdmin/iredadmin.py/
+
+        Alias /iredadmin/static /var/www/iRedAdmin/static/
+        AddType text/html .py
+
+        <Directory /var/www/iRedAdmin/>
+            Order deny,allow
+            Allow from all
+        </Directory>
+        # ----
+
+      Restart apache to enable it:
+
+        $ sudo /etc/init.d/httpd restart
+
+    - Create MySQL database:
+
+        $ mysql -uroot -p
+        mysql> CREATE DATABASE iredadmin DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+        mysql> USE iredadmin;
+        mysql> create table sessions ( session_id char(128) UNIQUE NOT NULL, atime timestamp NOT NULL default current_timestamp, data text);
+
+      Add MySQL user:
+
+        mysql> GRANT ALL ON iredadmin.* TO iredadmin@localhost IDENTIFIED BY 'secret_passwd';
+        mysql> flush privileges;
+
+*) Configuration:
+
+    - Copy example config file:
+
+        $ cd /var/www/iRedAdmin-x.y.z/config/
+        $ cp iredconf.py.example iredconf.py
+        $ cp ldapconf.py.example ldapconf.py
+
+    - Edit iredconf.py to set several variables:
+
+        # ----
+        ADMIN = 'Zhang Huangbin <michaelbibby@gmail.com>'
+
+        # MySQL configure.
+        DB_SERVER_ADDR = 'localhost'
+        DB_SERVER_PORT = 3306
+
+        # Session relate config.
+        SESSION_DB_DBN = 'mysql'        # Database type: mysql.
+        SESSION_DB_NAME = 'iredadmin'   # Database name.
+        SESSION_DB_USER = 'iredadmin'   # Database user.
+        SESSION_DB_PASSWD = 'secret_passwd'    # Database password.
+        SESSION_DB_TABLE_SESSION = 'sessions'
+        # ----
+
+    - Edit ldapconf.py to set several variables:
+
+        # ----
+        LDAP_SERVER_URI = 'ldap://127.0.0.1:389/'
+        LDAP_USE_TLS = 'NO'     # Values: YES, NO.
+        LDAP_SUFFIX = 'dc=iredmail,dc=org'
+
+        # Bind.
+        LDAP_BIND_DN = 'cn=vmailadmin,' + LDAP_SUFFIX
+        LDAP_BIND_PW = 'passwd'
+        # ----
+
+    Done.
+
+*) Visit below url in your web browser for test:
+
+    http://your_server_ip_address/iredadmin/
