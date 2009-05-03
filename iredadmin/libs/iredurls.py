@@ -7,27 +7,30 @@ import iredconf
 
 urls_ldap = (
         # Make url ending with or without '/' going to the same class.
-        "/(.*)/", "models.mbase.redirect",
+        "/(.*)/", "mbase.redirect",
 
-        '/', 'models.mldap.login',
-        '/login', 'models.mldap.login',
-        '/logout', 'models.mldap.logout',
-        '/preference/change_passwd', 'models.mldap.change_passwd',
-        '/preferences', 'models.mldap.preferences',
+        '/', 'mldap.login',
+        '/login', 'mldap.login',
+        '/logout', 'mldap.logout',
+        '/preference/change_passwd', 'mldap.change_passwd',
+        '/preferences', 'mldap.preferences',
 
-        '/dashboard', 'models.mldap.dashboard',
+        '/dashboard', 'mldap.dashboard',
 
         # Domain related.
-        '/domain/list', 'models.mldap.domain_list',
-        '/domain/add', 'models.mldap.domain_add',
+        '/domain/list', 'mldap.domain_list',
+        '/domain/add', 'mldap.domain_add',
 
         # Admin related.
-        '/admin/list', 'models.mldap.admin_list',
-        '/admin/add', 'models.mldap.admin_add',
+        '/admin/list', 'mldap.admin_list',
+        '/admin/add', 'mldap.admin_add',
 
         # User related.
-        '/user/list', 'models.mldap.user_list',
-        '/user/delete', 'models.mldap.user_delete',
+        '/user/list', 'mldap.user_list',
+        '/user/delete', 'mldap.user_delete',
+
+        # Group related.
+        '/group/list', 'mldap.group_list',
 
         # Policyd related spam control.
         '/antispam', 'libs.policyd.antispam',

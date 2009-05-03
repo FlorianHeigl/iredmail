@@ -47,7 +47,7 @@
     <tr><td colspan="2"><input type="submit" value="Add now" class="button float_right"></td></tr>
     </table>
 
-    <p>{{ _('Hint:') }}</p>
+    <p>{{ _('Note:') }}</p>
     <ul>
         <li>{{ _('Do <strong>NOT</strong> include domain name.') }}</li>
         <li>{{ _('Multiple accounts <strong>MUST</strong> be sperated by <strong>SPACE</strong>.') }}</li>
@@ -58,7 +58,8 @@
 
 {% block rightcolumn %}
 {# Show system message #}
-{% if msg is not none %}
+{#
+{% if msg is defined and msg is not none %}
     <div class="note">
         <p>{{ _('System message:') }}</p>
 
@@ -69,6 +70,7 @@
         </ul>
     </div>
 {% endif %}
+#}
 
 {# List all users. #}
 <h4>{{ _('All users under domain %s:') |format(domainName)}} </strong></h4>
@@ -143,6 +145,7 @@
                     <input type="hidden" name="domainName" value="{{ domainName }}">
                     <input type="image" src="{{ctx.homepath}}/static/{{skin}}/images/delete.png" alt="{{ _('Delete') }}">
                 </form>
+                <a href="{{ctx.homepath}}/user/list?action=delete&dn={{dn}}" onclick="return confirm('{{ _('Delete this user?') }} ');" alt="{{_('Delete')}}"><img src="{{ctx.homepath}}/static/{{skin}}/images/delete.png" /></a>
             </td>
         </tr>
     {% endfor %}

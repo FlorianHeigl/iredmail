@@ -15,3 +15,7 @@ def convEmailToAdminDN(email):
     admindn = '%s=%s,%s' % ( ldapconf.LDAP_ATTR_USER_RDN, email, ldapconf.LDAP_DOMAINADMIN_DN)
 
     return admindn
+
+def removeSpaceAndDot(string):
+    """Remove leading and trailing dot and all whitespace."""
+    return str(string).strip(' .').replace(' ', '')

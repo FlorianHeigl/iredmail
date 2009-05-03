@@ -1,3 +1,5 @@
+* libs/ldapoperation.py: delete_dn() should check privilege.
+* Duplicate: ou=Groups, ou=Aliases, ou=Users
 * Show Aliases in user list.
 * Show 'backup mx' status in domain list.
 * Safe Filters

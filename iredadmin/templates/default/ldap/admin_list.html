@@ -28,7 +28,7 @@
                 <tr><td colspan="2"><input type="checkbox" name="domainGlobalAdmin" value="yes" /> {{ _('As Global Admin') }} <input type="submit" value="{{ _('Add now') }}" class="button"/></td>
             </table>
 
-            <p>{{ _('Hint:') }}
+            <p>{{ _('Note:') }}
                 <ul>
                     <li>{{ _('Do <strong>NOT</strong> specify multiple accounts.') }}</li>
                 </ul>
@@ -94,7 +94,8 @@
             <td>{{ set_status_img(domainGlobalAdmin) }}</td>
             <td>{{ list_enabled_services(enabledService) }}</td>
             <td>
-                <input type="image" src="{{ctx.homepath}}/static/{{skin}}/images/delete.png" alt="{{ _('Delete') }}" onclick="location.href='{{ctx.homepath}}/user/list?dn={{ dn }}'" />
+                {#<input type="image" src="{{ctx.homepath}}/static/{{skin}}/images/delete.png" alt="{{ _('Delete') }}" onclick="location.href='{{ctx.homepath}}/user/list?dn={{ dn }}'" />#}
+
                 {# Edit #}
                 <form method="post" action="{{ctx.homepath}}/admin/edit" class="inline">
                     <input type="hidden" name="adminDN" value="{{ dn }}">
@@ -102,11 +103,12 @@
                 </form>
 
                 {# Delete #}
-                <form method="post" action="{{ctx.homepath}}/admin/list" class="inline">
+                {#<form method="post" action="{{ctx.homepath}}/admin/list" class="inline">
                     <input type="hidden" name="action" value="delete">
                     <input type="hidden" name="dn" value="{{ dn }}">
                     <input type="image" src="{{ctx.homepath}}/static/{{skin}}/images/delete.png" alt="{{ _('Delete') }}" />
-                </form>
+                </form>#}
+                <a href="{{ctx.homepath}}/admin/list?action=delete&dn={{dn}}" onclick="return confirm('{{ _('Delete this admin?') }} ');" alt="{{_('Delete')}}"><img src="{{ctx.homepath}}/static/{{skin}}/images/delete.png" /></a>
 
 {#
                 <form method="post" action="{{ctx.homepath}}/domain/users">

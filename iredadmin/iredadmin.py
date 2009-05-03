@@ -21,11 +21,6 @@ app = iredbase.app
 app.notfound = iredbase.notfound
 session = web.config.get('_session')
 
-# Directory to be used as the Python egg cache directory.
-# Note that the directory specified must exist and be writable by the
-# user that the daemon process run as. 
-os.environ['PYTHON_EGG_CACHE'] = '/tmp/.iredadmin-eggs'
-
 if __name__ == '__main__':
     # Use webpy builtin http server.
     app.run()

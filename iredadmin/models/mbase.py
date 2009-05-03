@@ -4,6 +4,7 @@
 # Author: Zhang Huangbin <michaelbibby (at) gmail.com>
 
 import web
+from web import form, ctx
 
 session = web.config.get('_session')
 

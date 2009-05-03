@@ -3,8 +3,7 @@
 
 # Author: Zhang Huangbin <michaelbibby (at) gmail.com>
 
-import os
-import sys
+import os, sys, time
 import web
 import ldap
 from gettext import gettext as _
@@ -17,7 +16,7 @@ import iredutils
 def ldif_domain(domainName):
     ldif = [
             ('objectCLass',     ['mailDomain']),
-            ('domainName',      [domainName]),
+            ('domainName',      [domainName.lower()]),
             ('mtaTransport',    ['dovecot']),
             ('domainStatus',    ['active']),
             ('enabledService',  ['mail']),
@@ -49,13 +48,15 @@ def ldif_admin(admin, passwd, domainGlobalAdmin):
 def ldif_user(domainName, username, passwd, quota):
     domain = domainName
     quota = str(quota*1048576)  # quota = UserInput (MB) * 1048576 (1MB)
-    mail = username + '@' + domain
+    username = iredutils.removeSpaceAndDot(username)
+    mail = username.lower() + '@' + domain
 
+    date = time.strftime('%Y.%m.%d.%H.%M.%S')
     if iredconf.MAILBOX_STYLE == 'hashed':
-        if len(username) < 2:
-            mailMessageStore = "%s/%s/%s/%s/" % (domain, username[:1], username[:1]*2, username)
+        if len(username) >= 2:
+            mailMessageStore = "%s/%s/%s/%s-%s/" % (domain, username[:1], username[:2], username, date)
         else:
-            mailMessageStore = "%s/%s/%s/%s/" % (domain, username[:1], username[:2], username)
+            mailMessageStore = "%s/%s/%s/%s-%s/" % (domain, username[:1], username[:1]*2, username, date)
     else:
         mailMessageStore = "%s/%s/" % (domain, username)
 
@@ -73,7 +74,7 @@ def ldif_user(domainName, username, passwd, quota):
         ('mailMessageStore',    [mailMessageStore]),
         ('accountStatus',       ['active']),
         ('mtaTransport',        ['dovecot']),
-        ('enabledService',      ['mail', 'smtp', 'pop3', 'imap', 'deliver']),
+        ('enabledService',      ['mail', 'smtp', 'pop3', 'imap', 'deliver', 'forward']),
         ]
 
     return ldif
@@ -214,21 +215,24 @@ class DBWrap:
         # msg: {'domainName': 'result'}
         msg = {}
         for domain in domainName:
-            domain = str(domain)
+            domain = iredutils.removeSpaceAndDot(str(domain)).lower()
             dn = "domainName=" + domain + "," + ldapconf.LDAP_BASEDN
             ldif = ldif_domain(domain)
 
             # ou: Groups, Users.
             dn_groups = 'ou=Groups,' + dn
             dn_users = 'ou=Users,' + dn
+            dn_aliases = 'ou=Aliases,' + dn
 
             ldif_groups = ldif_ou('Groups')
             ldif_users = ldif_ou('Users')
+            ldif_aliases = ldif_ou('Aliases')
 
             try:
                 result = self.conn.add_s(dn, ldif)
                 self.conn.add_s(dn_groups, ldif_groups)
                 self.conn.add_s(dn_users, ldif_users)
+                self.conn.add_s(dn_aliases, ldif_aliases)
                 msg[domain] = _('Added success')
             except ldap.ALREADY_EXISTS:
                 msg[domain] = _('Already exists')
@@ -255,16 +259,18 @@ class DBWrap:
 
         return self.domains
 
-    def delete_dn(self, dnlist, type=None):
+    def delete_dn(self, dnlist):
         # msg: {'dn': 'result'}
         msg = {}
         for dn in dnlist:
             try:
                 # If object is domain, we should remove user/group container first.
-                if type == 'domain':
+                #if type == 'domain':
+                if dn.lower().startswith(ldapconf.LDAP_ATTR_DOMAIN_RDN.lower()):
                     dn_groups = 'ou=Groups,' + str(dn)
                     dn_users = 'ou=Users,' + str(dn)
-                    for i in dn_groups, dn_users:
+                    dn_aliases = 'ou=Aliases,' + str(dn)
+                    for i in dn_groups, dn_users, dn_aliases:
                         try:
                             self.conn.delete_s(i)
                         except ldap.NO_SUCH_OBJECT:
@@ -347,11 +353,8 @@ class DBWrap:
         domain = str(domainName)
         quota = int(quota)
 
-        print >> sys.stderr, userList
-
         for user in userList.split():
-            print >> sys.stderr, user
-            user = str(user)
+            user = iredutils.removeSpaceAndDot(user).lower()
             dn = 'mail=%s,ou=Users,%s' % (
                     user +'@'+ domain,
                     domainDN,

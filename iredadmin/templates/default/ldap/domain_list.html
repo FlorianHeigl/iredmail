@@ -31,7 +31,7 @@
             <tr><td colspan="2"><input type="submit" value="Add now" class="button float_right" /></td></tr>
         </table>
 
-        <p>{{ _('Hint:') }}</p>
+        <p>{{ _('Note:') }}</p>
         <ul>
             <li>{{ _('Multiple domains <strong>MUST</strong> be seperated by <strong>SPACE</strong>.') }}</li>
         </ul>
@@ -93,17 +93,16 @@
             <td>{{ list_enabled_services(enabledService) }}</td>
             <td>
                 {# List groups #}
+                <a href="{{ctx.homepath}}/group/list?dn={{dn}}&domain={{domainName}}"><img src="{{ctx.homepath}}/static/{{skin}}/images/group.png" alt="{{ _('List all groups') }}" /></a>
+{#
                 <form action="{{ctx.homepath}}/group/list" method="post" class="inline">
                     <input type="hidden" name="domain" value="{{dn}}" />
                     <input type="image" src="{{ctx.homepath}}/static/{{skin}}/images/group.png" alt="{{ _('List all groups') }}" />
                 </form>
+#}
 
                 {# List users #}
-                <form action="{{ctx.homepath}}/user/list" method="post" class="inline">
-                    <input type="hidden" name="domainDN" value="{{dn}}" />
-                    <input type="hidden" name="domainName" value="{{domainName}}" />
-                    <input type="image" src="{{ctx.homepath}}/static/{{skin}}/images/user.png" alt="{{ _('List all users') }}" />
-                </form>
+                <a href="{{ctx.homepath}}/user/list?dn={{dn}}&domainName={{domainName}}" alt="{{_('Delete')}}"><img src="{{ctx.homepath}}/static/{{skin}}/images/user.png" /></a>
 
                 {# Edit #}
                 <form action="{{ctx.homepath}}/domain/edit" method="post" class="inline">
@@ -112,12 +111,8 @@
                 </form>
 
                 {# Delete #}
-                <form action="{{ctx.homepath}}/domain/list" method="post" class="inline">
-                    <input type="hidden" name="action" value="delete" />
-                    <input type="hidden" name="type" value="domain" />
-                    <input type="hidden" name="dn" value="{{dn}}" />
-                    <input type="image" src="{{ctx.homepath}}/static/{{skin}}/images/delete.png" alt="{{ _('Delete') }}" />
-                </form>
+                <a href="{{ctx.homepath}}/domain/list?action=delete&dn={{dn}}" onclick="return confirm('{{ _('Delete this domain?') }} ');" alt="{{_('Delete')}}"><img src="{{ctx.homepath}}/static/{{skin}}/images/delete.png" /></a>
+
             </td>
         </tr>
     {% endfor %}

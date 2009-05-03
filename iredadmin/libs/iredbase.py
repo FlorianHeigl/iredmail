@@ -17,6 +17,11 @@ from gettext import gettext as _
 import iredconf
 import iredurls     # URLs map.
 
+# Directory to be used as the Python egg cache directory.
+# Note that the directory specified must exist and be writable by the
+# user that the daemon process run as. 
+os.environ['PYTHON_EGG_CACHE'] = '/tmp/.iredadmin-eggs'
+
 # File location directory.
 rootdir = os.path.abspath(os.path.dirname(__file__)) + '/../'
 

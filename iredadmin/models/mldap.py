@@ -3,8 +3,11 @@
 
 # Author: Zhang Huangbin <michaelbibby (at) gmail.com>
 
+import sys
 import web
+from gettext import gettext as _
 import iredbase
+import iredutils
 import mbase
 import ldapoperation
 
@@ -47,7 +50,7 @@ class login:
 
             web.seeother('./dashboard')
         else:
-            return render.login(form=f, msg=self.auth_result)
+            return render.login() #form=f, msg=self.auth_result)
 
 class logout:
     def GET(self):
@@ -99,8 +102,22 @@ class change_passwd(dbinit):
 class domain_list(dbinit):
     @mbase.protected
     def GET(self):
+        i = web.input(dn=[])
+        action = i.get('action', None)
+
+        if action is None:
+            msg = None
+        elif action == 'delete':
+            dn = i.get('dn', [])
+
+            if len(dn) >= 1:
+                # Delete dn(s).
+                msg = self.dbwrap.delete_dn(dn)
+            else:
+                msg = {_('Empty'): _('Please select at least one domain to delete.')}
+
         self.domains = self.dbwrap.domain_list(admin=session.get('username'))
-        return render.domain_list(domains=self.domains, msg=None)
+        return render.domain_list(domains=self.domains, msg=msg)
 
     @mbase.check_global_admin
     @mbase.protected
@@ -146,9 +163,19 @@ class domain_add(dbinit):
 # User related.
 #
 class user_list(dbinit):
-    #@mbase.protected
-    #def GET(self):
-    #    pass
+    @mbase.protected
+    def GET(self):
+        i = web.input()
+
+        action = i.get('action', None)
+        domainDN = i.get('dn', None)
+        domainName = i.get('domainName', None)
+
+        users = self.dbwrap.user_list(
+                domainDN = domainDN,
+                domainName = domainName,
+                )
+        return render.user_list(users=users, domainDN=domainDN, domainName=domainName, msg=None)
 
     @mbase.protected
     def POST(self):
@@ -202,6 +229,25 @@ class admin_list(dbinit):
     @mbase.check_global_admin
     @mbase.protected
     def GET(self):
+        i = web.input(dn=[])
+
+        # Post method: add, delete.
+        action = i.get('action', None)
+
+        if action is None:
+            pass
+        elif action == 'delete':
+            dn = i.get('dn', [])
+
+            if len(dn) >= 1:
+                # Delete dn(s).
+                results = self.dbwrap.delete_dn(dn)
+            else:
+                # Show system message.
+                return render.admin_list()
+        else:
+            pass
+
         self.admins = self.dbwrap.admin_list()
         return render.admin_list(admins=self.admins)
 
@@ -261,6 +307,17 @@ class user_delete(dbinit):
         dn = i.dn
         return render.user_delete(dn=dn)
 
+
+#
+# Group related.
+#
+class group_list(dbinit):
+    @mbase.protected
+    def GET(self):
+        i = web.input()
+        dn = i.dn
+        domain = i.domain
+        return render.group_list(dn=dn, domain=domain)
 
 #
 # Policyd related.
