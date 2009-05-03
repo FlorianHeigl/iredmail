@@ -128,3 +128,27 @@ Optional components:
 *) Visit below url in your web browser for test:
 
     http://your_server_ip_address/iredadmin/
+
+i18n support
+============
+*) Translate 'i18n/iredadmin.po' file to your language.
+*) Convert po file to mo:
+
+    # msgfmt iredadmin.po
+
+   You will get 'messages.mo' under current directory.
+
+*) Create directory under 'i18n/' and copy 'messages.mo' greneated
+   above into it. e.g. for French language(fr_FR):
+
+    # cd /path/to/iRedAdmin-x.y.z/i18n/
+    # mkdir -p fr_FR/LC_MESSAGES/
+    # cp /path/to/your/messages.mo fr_FR/LC_MESSAGES/
+
+   Directory format is '{LANGUAGE}/LC_MESSAGES/'.
+
+*) Configure iRedAdmin to use your translation in config/iredconf.py:
+
+    LANG = 'fr_FR'      # The name of directory name created above.
+
+*) Restart your apache web server, it should work now.
