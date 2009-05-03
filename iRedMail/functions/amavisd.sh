@@ -138,13 +138,9 @@ amavisd_config_rhel()
 amavisd_config_debian()
 {
     ECHO_INFO "==================== Amavisd-new ===================="
-    backup_file ${AMAVISD_CONF_DIR}/{05-domain_id,20-debian_defaults,} ${AMAVISD_DKIM_CONF}
+    backup_file ${AMAVISD_CONF_DIR}/{05-domain_id,20-debian_defaults} ${AMAVISD_CONF} ${AMAVISD_DKIM_CONF}
 
     ECHO_INFO "Configure amavisd-new: ${AMAVISD_CONF}."
-
-    # ---- Set amavisd daemon user. ----
-    #perl -pi -e 's/^(\$daemon_user)/$1\ =\ "clamav"\;\t#/' ${AMAVISD_CONF_DIR}
-    #perl -pi -e 's/^(\$daemon_group)/$1\ =\ "clamav"\;\t#/' ${AMAVISD_CONF}
 
     perl -pi -e 's#^(chmop.*\$mydomain.*=).*#${1} "$ENV{'HOSTNAME'}";#' ${AMAVISD_CONF_DIR}/05-domain_id
 
@@ -154,6 +150,7 @@ amavisd_config_debian()
     perl -pi -e 's#(mailfrom_notify_recip.*= ")(virusalert)(.*)#${1}root${3}#' ${AMAVISD_CONF_DIR}/20-debian_defaults
     perl -pi -e 's#(mailfrom_notify_spamadmin.*= ")(spam.police)(.*)#${1}root${3}#' ${AMAVISD_CONF_DIR}/20-debian_defaults
 
+    perl -pi -e 's/^(1;.*)/#{1}/' ${AMAVISD_CONF}
 
     cat >> ${AMAVISD_CONF} <<EOF
 ${CONF}

@@ -119,8 +119,8 @@ system account 'root'.
 
 EXAMPLE:
 
-    * michaelbibby@gmail.com
-" 20 76 2>/tmp/mail_alias_root
+    * ${FIRST_USER}@${FIRST_DOMAIN}
+" 20 76 "${FIRST_USER}@${FIRST_DOMAIN}" 2>/tmp/mail_alias_root
 
 MAIL_ALIAS_ROOT=$(cat /tmp/mail_alias_root)
 rm -f /tmp/mail_alias_root

@@ -144,8 +144,8 @@ start_postfix_now()
     # Start postfix without reboot your system.
     ECHO_QUESTION -n "Would you like to start postfix now? [y|N]"
     read ANSWER
-    case $ANSWER in
-        Y|y ) 
+    case ${ANSWER} in
+        Y|y )
             # Disable SELinux.
             SETENFORCE="$(which setenforce 2>/dev/null)"
             if [ ! -z ${SETENFORCE} ]; then
@@ -158,9 +158,9 @@ start_postfix_now()
             # Start/Restart necessary services.
             for i in ${ENABLED_SERVICES}
             do
-                /etc/init.d/${i} restart
+                service_control ${i} restart
             done
-        ;;
+            ;;
         N|n|* )
             :
             ;;

@@ -91,7 +91,7 @@ EOF
             gunzip ${tmp_dir}/$(basename $i)
 
             cat >> ${tmp_sql} <<EOF
-SOURCE /tmp/$(echo $i | awk -F'.gz' '{print $1}');
+SOURCE ${tmp_dir}/$(basename $i | awk -F'.gz' '{print $1}');
 EOF
         done
     else

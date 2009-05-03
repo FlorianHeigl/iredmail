@@ -129,10 +129,10 @@ Optional components:
 
     http://your_server_ip_address/iredadmin/
 
-i18n support
-============
+i18n support HOWTO
+==================
 *) Translate 'i18n/iredadmin.po' file to your language.
-*) Convert po file to mo:
+*) Convert po file to mo format:
 
     # msgfmt iredadmin.po
 
