@@ -134,16 +134,16 @@ i18n support HOWTO
 *) Translate 'i18n/iredadmin.po' file to your language.
 *) Convert po file to mo format:
 
-    # msgfmt iredadmin.po
+    # msgfmt iredadmin.po -o iredadmin.mo
 
-   You will get 'messages.mo' under current directory.
+   You will get 'iredadmin.mo' under current directory.
 
 *) Create directory under 'i18n/' and copy 'messages.mo' greneated
    above into it. e.g. for French language(fr_FR):
 
     # cd /path/to/iRedAdmin-x.y.z/i18n/
     # mkdir -p fr_FR/LC_MESSAGES/
-    # cp /path/to/your/messages.mo fr_FR/LC_MESSAGES/
+    # cp /path/to/your/iredadmin.mo fr_FR/LC_MESSAGES/
 
    Directory format is '{LANGUAGE}/LC_MESSAGES/'.
 
