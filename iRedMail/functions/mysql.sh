@@ -23,13 +23,8 @@ mysql_initialize()
     echo '' > ${MYSQL_INIT_SQL}
 
     if [ X"${MYSQL_FRESH_INSTALLATION}" == X"YES" ]; then
-        if [ X"${DISTRO}" == X"RHEL" ]; then
-            ECHO_INFO "Setting MySQL admin's password: ${MYSQL_ROOT_USER}."
-            /usr/bin/mysqladmin -u root password "${MYSQL_ROOT_PASSWD}"
-        else
-            # Debian: debconf will prompt admin to set root password during installation.
-            :
-        fi
+        ECHO_INFO "Setting MySQL admin's password: ${MYSQL_ROOT_USER}."
+        mysqladmin -u root password "${MYSQL_ROOT_PASSWD}"
 
         cat >> ${MYSQL_INIT_SQL} <<EOF
 /* Delete empty username. */

@@ -164,7 +164,7 @@ install_all()
         ALL_PKGS="${ALL_PKGS} pysieved.noarch"
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
         # TODO add pysieved
-        #ALL_PKGS="${ALL_PKGS} "
+        #ALL_PKGS="${ALL_PKGS} pysieved"
         :
     else
         :

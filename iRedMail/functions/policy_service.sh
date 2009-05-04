@@ -51,27 +51,30 @@ policyd_config()
     # Get SQL structure template file.
     tmp_sql="$(mktemp)"
     if [ X"${DISTRO}" == X"RHEL" ]; then
-        export policyd_init_sql_file="$(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep '/DATABASE.mysql$')"
-        echo '' > ${tmp_sql}    # Template file contains commands to create policyd database.
-    elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        export policyd_init_sql_file="$(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep '/install/mysql$')"
         cat > ${tmp_sql} <<EOF
-CREATE DATABASE ${POLICYD_DB_NAME} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE ${POLICYD_DB_NAME};
+# Import SQL structure template.
+SOURCE $(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep '/DATABASE.mysql$');
+
+# Grant privileges.
+GRANT SELECT,INSERT,UPDATE,DELETE ON ${POLICYD_DB_NAME}.* TO ${POLICYD_DB_USER}@localhost IDENTIFIED BY "${POLICYD_DB_PASSWD}";
+FLUSH PRIVILEGES;
 EOF
+
+    elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+        # dbconfig-common will initialize policyd database, grant privileges.
+        cat > ${tmp_sql} <<EOF
+# Reset password.
+USE mysql;
+UPDATE user SET Password=password("${POLICYD_DB_PASSWD}") WHERE User="${POLICYD_DB_USER}";
+FLUSH PRIVILEGES;
+EOF
+
     else
         :
     fi
 
     cat >> ${tmp_sql} <<EOF
-# Import SQL structure template.
-SOURCE ${policyd_init_sql_file};
-
-# Grant privileges.
-GRANT SELECT,INSERT,UPDATE,DELETE ON ${POLICYD_DB_NAME}.* TO ${POLICYD_DB_USER}@localhost IDENTIFIED BY "${POLICYD_DB_PASSWD}";
-FLUSH PRIVILEGES;
-
-USE ${POLICYD_DB_NAME}
+USE ${POLICYD_DB_NAME};
 SOURCE ${SAMPLE_DIR}/policyd_blacklist_helo.sql;
 EOF
 
@@ -102,8 +105,7 @@ EOF
 $(cat ${tmp_sql})
 EOF
 
-    rm -rf ${tmp_sql} ${tmp_dir}
-    [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ] && rm -f ${policyd_init_sql_file}
+    #rm -rf ${tmp_sql} ${tmp_dir}
     unset tmp_sql tmp_dir
 
     # Configure policyd.

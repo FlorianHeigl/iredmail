@@ -72,29 +72,9 @@ else
     exit 255
 fi
 
-# Directory /etc/sysconfig/ on RHEL/CentOS, /etc/default/ on Debian/Ubuntu.
-if [ X"${DISTRO}" == X"RHEL" ]; then
-    export ETC_SYSCONFIG_DIR='/etc/sysconfig'
-elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-    export ETC_SYSCONFIG_DIR='/etc/default'
-else
-    :
-fi
-
-# Iptables rule file.
-export IPTABLES_CONFIG="${ETC_SYSCONFIG_DIR}/iptables"
-
 # Hostname.
 export HOSTNAME="$(hostname --fqdn)"
 
-# SSL/TLS support.
-if [ X"${DISTRO}" == X"RHEL" ]; then
-    export SSL_FILE_DIR="/etc/pki/${PROG_NAME}"
-elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-    export SSL_FILE_DIR="/etc/ssl/${PROG_NAME}"
-else
-    :
-fi
 export SSL_CERT_FILE="${SSL_FILE_DIR}/SSL_Cert.pem"
 export SSL_KEY_FILE="${SSL_FILE_DIR}/SSL_Key.pem"
 export TLS_COUNTRY='CN'
@@ -189,14 +169,24 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     # Crontab related.
     export CRON_SPOOL_DIR="/var/spool/cron"
 
+    # Directory /etc/sysconfig/ on RHEL/CentOS.
+    export ETC_SYSCONFIG_DIR='/etc/sysconfig'
+    # Iptables rule file.
+    export IPTABLES_CONFIG="${ETC_SYSCONFIG_DIR}/iptables"
+
+    # SSL/TLS support.
+    export SSL_FILE_DIR="/etc/pki/${PROG_NAME}"
+
     # Yum repository related.
     export YUM_REPOS_DIR='/etc/yum.repos.d'
     export LOCAL_REPO_NAME="${PROG_NAME}"
     export LOCAL_REPO_FILE="${YUM_REPOS_DIR}/${LOCAL_REPO_NAME}.repo"
     export YUM_UPDATE_REPO='http://www.iredmail.org/yum/rpms/5/'
 
-elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
+elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     # Ubuntu & Debian.
+    export DEBIAN_FRONTEND='noninteractive'
+
     # System user: root. Note: not all OSes have group 'root'.
     export SYS_ROOT_USER='root'
     export SYS_ROOT_GROUP='root'
@@ -218,6 +208,11 @@ elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
     # Crontab related.
     export CRON_SPOOL_DIR="/var/spool/cron/crontabs"
 
+    # Directory /etc/default/ on Debian/Ubuntu.
+    export ETC_SYSCONFIG_DIR='/etc/default'
+
+    # SSL/TLS support.
+    export SSL_FILE_DIR="/etc/ssl/${PROG_NAME}"
 else
     # Not support yet.
     echo "Your distrobution is not supported yet."

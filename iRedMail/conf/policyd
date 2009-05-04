@@ -10,10 +10,19 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     export POLICYD_CONF='/etc/policyd.conf'
     export POLICYD_INIT_SCRIPT='/etc/init.d/policyd'
 
+    # Database.
+    export POLICYD_DB_NAME='policyd'
+    export POLICYD_DB_USER='policyd'
+
 elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     export PKG_POLICYD='postfix-policyd'
     export POLICYD_CONF='/etc/postfix-policyd.conf'
     export POLICYD_INIT_SCRIPT='/etc/init.d/postfix-policyd'
+
+    # Database.
+    export POLICYD_DB_NAME='postfixpolicyd'
+    export POLICYD_DB_USER='postfix-policyd'
+
 else
     :
 fi
@@ -21,8 +30,6 @@ fi
 export POLICYD_BINDHOST='127.0.0.1' # Default value in policyd.conf.
 export POLICYD_BINDPORT='10031' # Default value in policyd.conf.
 
-export POLICYD_DB_NAME='policyd'
-export POLICYD_DB_USER='policyd'
 export POLICYD_DB_PASSWD="$(${RANDOM_STRING})"
 
 export POLICYD_USER_NAME='policyd'
