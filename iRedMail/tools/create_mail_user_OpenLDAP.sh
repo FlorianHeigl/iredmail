@@ -28,14 +28,12 @@
 #   - In 'Virtual Domains & Users' section:
 #       * QUOTA
 #       * TRANSPORT
-#       * CREATE_MAILDIR
 #       * CRYPT_MECH                # SSHA is recommended.
 #       * DEFAULT_PASSWD
 #       * USE_DEFAULT_PASSWD
 #       * USE_NAME_AS_PASSWD
 
 #   - Optional variables:
-#       * CREATE_MAILDIR
 #       * SEND_WELCOME_MSG
 # ------------------------------------------------------------------
 
@@ -97,13 +95,8 @@ QUOTA='104857600'
 # Default MTA Transport (Defined in postfix master.cf).
 TRANSPORT='dovecot'
 
-# Create maildir in file system after user created.
-# NOTE: We do *NOT* need this step, because dovecot will create user
-# mailbox automatic when user login via IMAP/POP3 successfully.
-CREATE_MAILDIR='NO'
-
 # Password setting.
-CRYPT_MECH='SSHA'   # MD5, SSHA
+CRYPT_MECH='SSHA'   # MD5, SSHA. SSHA is recommended.
 DEFAULT_PASSWD='888888'
 USE_DEFAULT_PASSWD='NO'
 USE_NAME_AS_PASSWD='YES'
@@ -121,6 +114,9 @@ WELCOME_MSG_BODY="Welcome, new user."
 # -------------------------------------------
 # ----------- End Global Setting ------------
 # -------------------------------------------
+
+# Time stamp, will be appended in maildir.
+DATE="$(date +%Y.%m.%d.%H.%M.%S)"
 
 add_new_domain()
 {
@@ -174,11 +170,11 @@ add_new_user()
 
     # For maildir format.
     if [ X"${MAILDIR_IN_MAILBOX}" == X"YES" -a X"${MAILDIR_STRING}" != X"" ]; then
-        [ X"${HOME_MAILBOX}" == X"Maildir" ] && mailMessageStore="${DOMAIN_NAME}/${USERNAME}/${MAILDIR_STRING}/"
+        [ X"${HOME_MAILBOX}" == X"Maildir" ] && mailMessageStore="${DOMAIN_NAME}/${USERNAME}-${DATE}/${MAILDIR_STRING}/"
     else
-        [ X"${HOME_MAILBOX}" == X"Maildir" ] && mailMessageStore="${DOMAIN_NAME}/${USERNAME}/"
+        [ X"${HOME_MAILBOX}" == X"Maildir" ] && mailMessageStore="${DOMAIN_NAME}/${USERNAME}-${DATE}/"
     fi
-    [ X"${HOME_MAILBOX}" == X"mbox" ] && mailMessageStore="${DOMAIN_NAME}/${USERNAME}"
+    [ X"${HOME_MAILBOX}" == X"mbox" ] && mailMessageStore="${DOMAIN_NAME}/${USERNAME}-${DATE}"
 
     # Generate user password.
     if [ X"${USE_DEFAULT_PASSWD}" == X"YES" ]; then
@@ -214,22 +210,6 @@ enabledService: recipientbcc
 EOF
 }
 
-create_maildir()
-{
-    DOMAIN_NAME="$1"
-    USERNAME="$2"
-
-    domain_dir="${VMAIL_USER_HOME_DIR}/${DOMAIN_NAME}/"
-    user_maildir="${VMAIL_USER_HOME_DIR}/${DOMAIN_NAME}/${USERNAME}/"
-    # Use 'maildirmake' to create Maildir before send welcome mail to user.
-    echo "Create Maildir: ${user_maildir}."
-    mkdir -p ${domain_dir}/{cur,new,tmp,.Junk}
-
-    # Set permission.
-    chown -R ${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} ${VMAIL_USER_HOME_DIR}/${DOMAIN_NAME}/${USERNAME}/
-    chmod -R 0700 ${VMAIL_USER_HOME_DIR}/${DOMAIN_NAME}/${USERNAME}/
-}
-
 send_welcome_mail()
 {
     MAIL="$1"
@@ -263,9 +243,6 @@ else
 
         # Add new user in LDAP.
         add_new_user ${USERNAME} ${MAIL}
-
-        # Create maildir in file system.
-        [ X"${CREATE_MAILDIR}" == X"YES" ] && create_maildir ${DOMAIN_NAME} ${USERNAME}
 
         # Send welcome msg to new user.
         [ X"${SEND_WELCOME_MSG}" == X"YES" ] && send_welcome_mail ${MAIL}
