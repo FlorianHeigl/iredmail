@@ -35,7 +35,7 @@ Example:
     while : ; do
         ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
         --title "Password for awstats user: ${AWSTATS_USERNAME}" \
-        --insecure --passwordbox "\
+        --passwordbox "\
 Please specify password for awstats user: ${AWSTATS_USERNAME}
 
 Warning:

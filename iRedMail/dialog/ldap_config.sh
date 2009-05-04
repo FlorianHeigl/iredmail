@@ -54,7 +54,7 @@ EOF
 while : ; do
     ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --title "Password for LDAP rootdn: ${LDAP_ROOTDN}" \
-    --insecure --passwordbox "\
+    --passwordbox "\
 Please specify password for LDAP rootdn:
 
     * ${LDAP_ROOTDN}
@@ -77,7 +77,7 @@ rm -f /tmp/ldap_rootpw
 while : ; do
     ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --title "Password for vmail LDAP admin user" \
-    --insecure --passwordbox "\
+    --passwordbox "\
 Please specify password for vmail LDAP admin user:
 
     * admin dn: ${LDAP_ADMIN_DN}

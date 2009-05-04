@@ -47,7 +47,7 @@ rm -f /tmp/first_domain_admin_name
 while : ; do
     ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --title "Password for the administrator of your domain" \
-    --insecure --passwordbox "\
+    --passwordbox "\
 Please specify password for the administrator user:
 
     * ${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}
@@ -93,7 +93,7 @@ rm -f /tmp/first_user
 while : ; do
     ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --title "Password for your first user" \
-    --insecure --passwordbox "\
+    --passwordbox "\
 Please specify password for your first user:
 
     * ${FIRST_USER}@${FIRST_DOMAIN}

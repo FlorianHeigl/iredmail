@@ -34,7 +34,7 @@ if [ X"${SITE_ADMIN_NAME}" != X"${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}" ]; then
     while : ; do
         ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
         --title "Password of PostfixAdmin site admin" \
-        --insecure --passwordbox "\
+        --passwordbox "\
 Please specify the password of site admin in PostfixAdmin:
 
     * ${SITE_ADMIN_NAME}

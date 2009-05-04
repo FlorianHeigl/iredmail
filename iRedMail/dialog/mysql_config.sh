@@ -12,7 +12,7 @@
 while : ; do
     ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --title "Password for MySQL administrator: root" \
-    --insecure --passwordbox "\
+    --passwordbox "\
 Please specify password for MySQL administrator: root
 
 Warning:
@@ -32,7 +32,7 @@ if [ X"${BACKEND}" == X"MySQL" ]; then
     while : ; do
         ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
         --title "Password for virtual hosts bind user and admin user" \
-        --insecure --passwordbox "\
+        --passwordbox "\
 Please specify password for virtual hosts database admin user:
 
     * ${VMAIL_DB} admin user: ${MYSQL_ADMIN_USER}
