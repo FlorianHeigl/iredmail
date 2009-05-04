@@ -14,14 +14,12 @@ check_arch
 # Initialize config file.
 echo '' > ${CONFIG_FILE}
 
-DIALOG='dialog --no-collapse'
+DIALOG='dialog --no-collapse --insecure --ok-label Next --cancel-label Exit'
 DIALOG_BACKTITLE="${PROG_NAME}: Mail Server Installation Wizard for RHEL/CentOS 5.x"
 
 # Welcome message.
 ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --title "Welcome and thanks for use" \
-    --yes-label "Continue" \
-    --no-label "Exit" \
     --yesno "\
 Thanks for your use of ${PROG_NAME}.
 Feedback, bug report, communication are all welcome.

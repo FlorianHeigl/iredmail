@@ -20,8 +20,6 @@
     Some are imported from policyd blacklist_helo.sql.
 */
 
-USE policyd;
-
 INSERT INTO blacklist_helo (_helo) VALUES ("sina.com");
 INSERT INTO blacklist_helo (_helo) VALUES ("126.com");
 INSERT INTO blacklist_helo (_helo) VALUES ("163.com");
