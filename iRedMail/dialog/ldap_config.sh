@@ -61,7 +61,7 @@ Please specify password for LDAP rootdn:
 
 Warning:
 
-    * EMPTY password is *NOT* permit.
+    * EMPTY password is *NOT* permitted.
 " 20 76 2>/tmp/ldap_rootpw
 
     LDAP_ROOTPW="$(cat /tmp/ldap_rootpw)"
@@ -84,7 +84,7 @@ Please specify password for vmail LDAP admin user:
 
 Warning:
 
-    * EMPTY password in *NOT* permit.
+    * EMPTY password in *NOT* permitted.
 
 " 20 76 2>/tmp/vmail_user_passwd
 

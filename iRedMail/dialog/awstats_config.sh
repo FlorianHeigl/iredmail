@@ -40,7 +40,7 @@ Please specify password for awstats user: ${AWSTATS_USERNAME}
 
 Warning:
 
-    * EMPTY password is *NOT* permit.
+    * EMPTY password is *NOT* permitted.
 
 " 20 76 2>/tmp/awstats_passwd
 

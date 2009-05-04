@@ -41,7 +41,7 @@ Please specify the password of site admin in PostfixAdmin:
 
 Warning:
 
-    * EMPTY password in *NOT* permit.
+    * EMPTY password in *NOT* permitted.
 
 " 20 76 2>/tmp/site_admin_passwd
 

@@ -54,7 +54,7 @@ Please specify password for the administrator user:
 
 Warning:
 
-    * EMPTY password is *NOT* permit.
+    * EMPTY password is *NOT* permitted.
 
 " 20 76 2>/tmp/first_domain_admin_passwd
 
@@ -100,7 +100,7 @@ Please specify password for your first user:
 
 Warning:
 
-    * EMPTY password is *NOT* permit.
+    * EMPTY password is *NOT* permitted.
 
 " 20 76 2>/tmp/first_user_passwd
 

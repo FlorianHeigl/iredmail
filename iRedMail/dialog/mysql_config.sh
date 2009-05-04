@@ -17,7 +17,7 @@ Please specify password for MySQL administrator: root
 
 Warning:
 
-    * EMPTY password is *NOT* permit.
+    * EMPTY password is *NOT* permitted.
 " 20 76 2>/tmp/mysql_rootpw
 
     MYSQL_ROOT_PASSWD="$(cat /tmp/mysql_rootpw)"
@@ -39,7 +39,7 @@ Please specify password for virtual hosts database admin user:
 
 Warning:
 
-    * EMPTY password in *NOT* permit.
+    * EMPTY password in *NOT* permitted.
 
 " 20 76 2>/tmp/mysql_user_and_passwd
 
