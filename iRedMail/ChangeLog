@@ -1,4 +1,5 @@
-iRedMail-0.4.1:
+iRedMail-0.5.0-beta1
+    * Works on Debian (Lenny, 5.0.1) now.
     * Add priority (=1) in iRedMail repo file. Thanks scrummie02@forum.
     * Update phpLDAPadmin to 1.1.0.7.
     * Add bcc control in postfix bcc lookup map.
@@ -42,7 +43,7 @@ iRedMail-0.4.1:
       Thanks shake.chen@gmail.
     * Add script for mysql database backup: tools/backup_MySQL.sh.
 
-iRedMail-0.4:
+iRedMail-0.4.0:
     * Say goodbye to mailgraph.
     * Say goodbye to ExtMail.
     * Add two tool scripts for winwebmail and extmail mailbox migration.
