@@ -201,44 +201,52 @@ check_env()
 
     ECHO_INFO -n "Check configuration file: ${CONFIG_FILE}..."
     if [ -f ${CONFIG_FILE} ]; then
-        echo -e "\tFound."
-        ECHO_QUESTION -n "Use it for mail server setting? [y|N]"
-        read ANSWER
+        grep '^#EOF$' ${CONFIG_FILE} >/dev/null
 
-        case  $ANSWER in
-            Y|y )
-                ECHO_INFO "Use configuration file: ${CONFIG_FILE} for mail server setting."
-                . ${CONFIG_FILE}
+        if [ X"$?" == X"0" ]; then
+            echo -e "\tFound."
+            ECHO_QUESTION -n "Use it for mail server setting? [y|N]"
+            read ANSWER
 
-                # Check installation status.
-                # After each component installation was completed, there
-                # should be a variable in ${STATUS_FILE}, e.g.
-                #
-                #   export STATUS_PHP_INSTALLATION='DONE'
-                #   export STATUS_PHP_CONFIGURATION='DONE'
-                #
-                if [ -e ${STATUS_FILE} ]; then
-                    . ${STATUS_FILE}
-                else
-                    echo '' > ${STATUS_FILE}
-                fi
+            case  $ANSWER in
+                Y|y )
+                    ECHO_INFO "Use configuration file: ${CONFIG_FILE} for mail server setting."
+                    . ${CONFIG_FILE}
 
-                if [ ! -e ${TIP_FILE} ]; then
-                    cat > ${TIP_FILE} <<EOF
+                    # Check installation status.
+                    # After each component installation was completed, there
+                    # should be a variable in ${STATUS_FILE}, e.g.
+                    #
+                    #   export STATUS_PHP_INSTALLATION='DONE'
+                    #   export STATUS_PHP_CONFIGURATION='DONE'
+                    #
+                    if [ -e ${STATUS_FILE} ]; then
+                        . ${STATUS_FILE}
+                    else
+                        echo '' > ${STATUS_FILE}
+                    fi
+
+                    # Initialize tip file.
+                    if [ ! -e ${TIP_FILE} ]; then
+                        cat > ${TIP_FILE} <<EOF
 ${CONF_MSG}
 If you consider here should be put some more infomation, please contact us:
     - http://code.google.com/p/iredmail/
 
 EOF
-                else
-                    :
-                fi
-                ;;
-            N|n|* )
-                echo "Skip configuration file: ${CONFIG_FILE}."
-                . ${CONFIG_VIA_DIALOG}
-                ;;
-        esac
+                    else
+                        :
+                    fi
+                    ;;
+                N|n|* )
+                    echo "Skip configuration file: ${CONFIG_FILE}."
+                    . ${CONFIG_VIA_DIALOG}
+                    ;;
+            esac
+        else
+            echo -e "\tFound, but not finished."
+            . ${CONFIG_VIA_DIALOG}
+        fi
     else
         echo -e "\tNone."
         . ${CONFIG_VIA_DIALOG}

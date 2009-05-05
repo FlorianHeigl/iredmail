@@ -121,8 +121,11 @@ EXAMPLE:
 " 20 76 "${FIRST_USER}@${FIRST_DOMAIN}" 2>/tmp/mail_alias_root
 
 MAIL_ALIAS_ROOT=$(cat /tmp/mail_alias_root)
-rm -f /tmp/mail_alias_root
 echo "export MAIL_ALIAS_ROOT='${MAIL_ALIAS_ROOT}'" >> ${CONFIG_FILE}
+rm -f /tmp/mail_alias_root
+
+# Append EOF tag in config file.
+echo "#EOF" >> ${CONFIG_FILE}
 
 #
 # Ending message.
