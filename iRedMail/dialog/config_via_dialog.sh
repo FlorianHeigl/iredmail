@@ -15,7 +15,7 @@ check_arch
 echo '' > ${CONFIG_FILE}
 
 DIALOG='dialog --no-collapse --insecure --ok-label Next --cancel-label Exit'
-DIALOG_BACKTITLE="${PROG_NAME}: Mail Server Installation Wizard for RHEL/CentOS 5.x"
+DIALOG_BACKTITLE="${PROG_NAME}: Open Source Mail Server Solution for RHEL/CentOS/Debian."
 
 # Welcome message.
 ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \

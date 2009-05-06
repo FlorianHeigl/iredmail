@@ -29,7 +29,7 @@ install_all()
     if [ X"${DISTRO}" == X"RHEL" ]; then
         ALL_PKGS="${ALL_PKGS} postfix.${ARCH}"
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        ALL_PKGS="${ALL_PKGS} postfix postfix-pcre postfix-mysql postfix-ldap"
+        ALL_PKGS="${ALL_PKGS} postfix postfix-pcre"
     else
         :
     fi
@@ -63,7 +63,7 @@ install_all()
             ENABLED_SERVICES="${ENABLED_SERVICES} ldap mysqld"
 
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-            ALL_PKGS="${ALL_PKGS} slapd ldap-utils mysql-server-5.0 mysql-client-5.0"
+            ALL_PKGS="${ALL_PKGS} postfix-ldap slapd ldap-utils mysql-server-5.0 mysql-client-5.0"
 
             ENABLED_SERVICES="${ENABLED_SERVICES} slapd mysql"
         else
@@ -81,7 +81,7 @@ install_all()
                 ENABLED_SERVICES="${ENABLED_SERVICES} mysqld"
 
             elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-                ALL_PKGS="${ALL_PKGS} mysql-server.${ARCH} mysql.${ARCH}"
+                ALL_PKGS="${ALL_PKGS} postfix-mysql mysql-server.${ARCH} mysql.${ARCH}"
 
                 # For Awstats.
                 [ X"${USE_AWSTATS}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} mod_auth_mysql.${ARCH}"
