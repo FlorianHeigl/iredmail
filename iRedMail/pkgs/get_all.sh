@@ -17,31 +17,49 @@ FETCH_CMD="wget -cq --referer ${PROG_NAME}-${PROG_VERSION}"
 # Site directory structure:
 #
 #   ${MIRROR}/
-#           |- pkgs/
-#               |- 5/
-#               |- 6/ (not present yet)
-#           |- misc/
+#           |- yum/         # for RHEL/CentOS
+#               |- pkgs/
+#                   |- 5/
+#                   |- 6/ (not present yet)
+#               |- misc/
+#           |- apt/             # for Debian/Ubuntu
+#               |- debian/      # For Debian
+#                   |- lenny/   # For Debian (Lenny)
 #
 # You can find nearest mirror in this page:
 #   http://code.google.com/p/iredmail/wiki/Mirrors
 #
-MIRROR='http://www.iredmail.org/yum'
 
 # Where to store binary packages and source tarball.
 PKG_DIR="${ROOTDIR}/pkgs"
 MISC_DIR="${ROOTDIR}/misc"
 
 if [ X"${DISTRO}" == X"RHEL" ]; then
+    export MIRROR='http://www.iredmail.org/yum'
     export PKGFILE="MD5.rhel"               # File contains MD5.
     export PKGLIST="$( cat ${ROOTDIR}/${PKGFILE} | grep -E "(\.${ARCH}\.|\.noarch\.)" | awk -F'pkgs/' '{print $2}' )"
+    export MD5LIST="$( cat ${ROOTDIR}/${PKGFILE} | grep -E "(\.${ARCH}\.|\.noarch\.)" )"
     export fetch_pkgs="fetch_pkgs_rhel"     # Function used to fetch binary packages.
     export create_repo="create_repo_rhel"   # Function used to create yum repository.
 
+    # Special package.
+    export PKG_WHICH="which.${ARCH}"            # Package which contains command 'which'.
+    export PKG_CREATEREPO="createrepo.${ARCH}"  # Package which contains command 'createrepo'.
+    export BIN_CREATEREPO="createrepo"          # Command name which used to create repository.
+
 elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+    export MIRROR='http://www.iredmail.org/apt'
     export PKGFILE="MD5.debian"             # File contains MD5.
-    export PKGLIST="$( cat ${ROOTDIR}/${PKGFILE} | grep -E "(_${ARCH}|_all)" | awk -F'pkgs/' '{print $2}' )"
+    [ X"${ARCH}" == X"x86_64" ] && export pkg_arch='amd64'
+    export PKGLIST="$( cat ${ROOTDIR}/${PKGFILE} | grep -E "(_${pkg_arch}|_all)" | awk -F'pkgs/' '{print $2}' )"
+    export MD5LIST="$( cat ${ROOTDIR}/${PKGFILE} | grep -E "(_${pkg_arch}|_all)" )"
     export fetch_pkgs="fetch_pkgs_debian"   # Function used to fetch binary packages.
     export create_repo="create_repo_debian" # Function used to create apt repository.
+
+    # Special package.
+    export PKG_WHICH="debianutils"              # Package which contains command 'which'.
+    export PKG_CREATEREPO="dpkg-dev"            # Package which contains command 'dpkg-scanpackages'.
+    export BIN_CREATEREPO="dpkg-scanpackages"   # Command name which used to create repository.
 else
     :
 fi
@@ -51,7 +69,8 @@ export pkg_total=$(echo ${PKGLIST} | wc -w | awk '{print $1}')
 export pkg_counter=1
 
 # Misc file (source tarball) list.
-MISCLIST="$(cat ${ROOTDIR}/MD5.misc | awk -F'misc/' '{print $2}')"
+PKGMISC='MD5.misc'
+MISCLIST="$(cat ${ROOTDIR}/${PKGMISC} | awk -F'misc/' '{print $2}')"
 
 
 mirror_notify()
@@ -82,15 +101,15 @@ prepare_dirs()
 
 check_pkg_which()
 {
-    ECHO_INFO "Checking necessary package: which.${ARCH}..."
+    ECHO_INFO "Checking necessary package: ${PKG_WHICH} ..."
     for i in $(echo $PATH|sed 's/:/ /g'); do
         [ -x $i/which ] && export HAS_WHICH='YES'
     done
 
     if [ X"${HAS_WHICH}" != X'YES' ]; then
-        eval ${install_pkg} which.${ARCH}
+        eval ${install_pkg} ${PKG_WHICH}
         if [ X"$?" != X"0" ]; then
-            ECHO_INFO "Please install package 'createrepo' first." && exit 255
+            ECHO_INFO "Please install package ${PKG_WHICH} first." && exit 255
         else
             echo 'export status_check_pkg_which="DONE"' >> ${STATUS_FILE}
         fi
@@ -101,13 +120,14 @@ check_pkg_which()
 
 check_pkg_createrepo()
 {
-    ECHO_INFO "Checking necessary package: createrepo.noarch..."
-    which createrepo >/dev/null 2>&1
+    ECHO_INFO "Checking necessary package: ${PKG_CREATEREPO} ..."
+
+    which ${BIN_CREATEREPO} >/dev/null 2>&1
 
     if [ X"$?" != X"0" ]; then
-        eval ${install_pkg} createrepo.noarch
+        eval ${install_pkg} ${PKG_CREATEREPO}
         if [ X"$?" != X"0" ]; then
-            ECHO_INFO "Please install package 'createrepo' first." && exit 255
+            ECHO_INFO "Please install package ${PKG_CREATEREPO} first." && exit 255
         else
             echo 'export status_check_createrepo="DONE"' >> ${STATUS_FILE}
         fi
@@ -120,6 +140,8 @@ fetch_pkgs_rhel()
 {
     if [ X"${DOWNLOAD_PKGS}" == X"YES" ]; then
         cd ${PKG_DIR}
+
+        ECHO_INFO "==================== Fetching Binary Packages ===================="
 
         for i in ${PKGLIST}; do
             url="${MIRROR}/rpms/5/${i}"
@@ -138,13 +160,18 @@ fetch_pkgs_debian()
     if [ X"${DOWNLOAD_PKGS}" == X"YES" ]; then
         cd ${PKG_DIR}
 
-        for i in ${PKGLIST}; do
-            url="${MIRROR}/apt/debian/lenny/${i}"
-            ECHO_INFO "* ${pkg_counter}/${pkg_total}: ${url}"
-            ${FETCH_CMD} ${url}
+        if [ X"${PKGLIST}" != X"0" ]; then
+            ECHO_INFO "==================== Fetching Binary Packages ===================="
+            for i in ${PKGLIST}; do
+                url="${MIRROR}/debian/lenny/${i}"
+                ECHO_INFO "* ${pkg_counter}/${pkg_total}: ${url}"
+                ${FETCH_CMD} ${url}
 
-            pkg_counter=$((pkg_counter+1))
-        done
+                pkg_counter=$((pkg_counter+1))
+            done
+        else
+            ECHO_INFO "============== Fetching Binary Packages [ SKIP ] =============="
+        fi
     else
         :
     fi
@@ -180,29 +207,32 @@ check_md5()
 {
     cd ${ROOTDIR}
 
-    ECHO_INFO "==================== Validate Packages via md5sum. ===================="
+    ECHO_INFO -n "Validate Packages via md5sum ..."
 
-    for i in ${PKGFILE} MD5.misc; do
-        ECHO_INFO -n "Validating via file: ${i}..."
-        md5sum -c ${ROOTDIR}/${i} |grep 'FAILED'
+    md5file="$(mktemp)"
+    echo -e "${MD5LIST}" > ${md5file}
+    cat MD5.misc >> ${md5file}
 
-        if [ X"$?" == X"0" ]; then
-            echo -e "\n${INFO_FLAG} MD5 check failed. Check your rpm packages. Script exit...\n"
-            exit 255
-        else
-            echo -e "\t[ OK ]"
-            echo 'export status_fetch_pkgs="DONE"' >> ${STATUS_FILE}
-            echo 'export status_fetch_misc="DONE"' >> ${STATUS_FILE}
-            echo 'export status_check_md5="DONE"' >> ${STATUS_FILE}
-        fi
-    done
+    md5sum -c ${md5file} |grep 'FAILED' >/dev/null
+
+    if [ X"$?" == X"0" ]; then
+        echo -e "\n${INFO_FLAG} MD5 check failed. Check your rpm packages. Script exit...\n"
+        exit 255
+    else
+        echo -e "\t[ OK ]"
+        echo 'export status_fetch_pkgs="DONE"' >> ${STATUS_FILE}
+        echo 'export status_fetch_misc="DONE"' >> ${STATUS_FILE}
+        echo 'export status_check_md5="DONE"' >> ${STATUS_FILE}
+    fi
+
+    rm -f ${md5file}
 }
 
 create_repo_rhel()
 {
     # createrepo
     ECHO_INFO -n "Generating yum repository..."
-    cd ${PKG_DIR} && createrepo . >/dev/null 2>&1 && echo -e "\t[ OK ]"
+    cd ${PKG_DIR} && ${BIN_CREATEREPO} . >/dev/null 2>&1 && echo -e "\t[ OK ]"
 
     # Backup old repo file.
     if [ -f ${LOCAL_REPO_FILE} ]; then
@@ -227,14 +257,24 @@ EOF
 create_repo_debian()
 {
     # Use dpkg-scanpackages to create a local apt repository.
-    ECHO_INFO "Generating apt repository..."
+    ECHO_INFO -n "Generating apt repository..."
 
     cd ${ROOTDIR} && \
-    dpkg-scanpackages ${PKG_DIR} /dev/null | gzip > ${PKG_DIR}/Packages.gz
+    ( ${BIN_CREATEREPO} ${PKG_DIR} /dev/null | gzip > ${PKG_DIR}/Packages.gz ) 2>/dev/null
 
-    ECHO_INFO "Append local repository to /etc/apt/sources.list."
-    grep 'iRedMail_Local$' /etc/apt/sources.list
+    echo -e "\t[ OK ]"
+
+    ECHO_INFO -n "Append local repository to /etc/apt/sources.list ..."
+    grep 'iRedMail_Local$' /etc/apt/sources.list >/dev/null
     [ X"$?" != X"0" ] && echo -e "deb file:${PKG_DIR}/ ./   # iRedMail_Local" >> /etc/apt/sources.list
+
+    echo -e "\t[ OK ]"
+
+    ECHO_INFO -n "Update apt repository data ..."
+    apt-get update >/dev/null
+
+    echo -e "\t[ OK ]"
+
 }
 
 echo_end_msg()
@@ -262,10 +302,9 @@ check_arch && \
 check_status_before_run check_pkg_which && \
 check_status_before_run check_pkg_createrepo && \
 prepare_dirs && \
-ECHO_INFO "==================== Fetching Binary Packages ====================" && \
-${fetch_pkgs} && \
+eval ${fetch_pkgs} && \
 fetch_misc && \
 check_md5 && \
-${create_repo} && \
+eval ${create_repo} && \
 check_dialog && \
 echo_end_msg
