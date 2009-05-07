@@ -27,16 +27,32 @@ FETCH_CMD="wget -cq --referer ${PROG_NAME}-${PROG_VERSION}"
 #
 MIRROR='http://www.iredmail.org/yum'
 
-# Where to store packages and software source tarball.
+# Where to store binary packages and source tarball.
 PKG_DIR="${ROOTDIR}/pkgs"
 MISC_DIR="${ROOTDIR}/misc"
 
-# RPM file list and misc file list.
-RPMLIST="$(cat ${ROOTDIR}/MD5.${ARCH} | awk -F'/' '{print $2}')"
-NOARCHLIST="$(cat ${ROOTDIR}/MD5.noarch | awk -F'/' '{print $2}')"
-MISCLIST="$(cat ${ROOTDIR}/MD5.misc | awk -F'/' '{print $2}')"
+if [ X"${DISTRO}" == X"RHEL" ]; then
+    export PKGFILE="MD5.rhel"               # File contains MD5.
+    export PKGLIST="$( cat ${ROOTDIR}/${PKGFILE} | grep -E "(\.${ARCH}\.|\.noarch\.)" | awk -F'pkgs/' '{print $2}' )"
+    export fetch_pkgs="fetch_pkgs_rhel"     # Function used to fetch binary packages.
+    export create_repo="create_repo_rhel"   # Function used to create yum repository.
 
-MD5_FILES="MD5.${ARCH} MD5.noarch MD5.misc"
+elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+    export PKGFILE="MD5.debian"             # File contains MD5.
+    export PKGLIST="$( cat ${ROOTDIR}/${PKGFILE} | grep -E "(_${ARCH}|_all)" | awk -F'pkgs/' '{print $2}' )"
+    export fetch_pkgs="fetch_pkgs_debian"   # Function used to fetch binary packages.
+    export create_repo="create_repo_debian" # Function used to create apt repository.
+else
+    :
+fi
+
+# Binary packages.
+export pkg_total=$(echo ${PKGLIST} | wc -w | awk '{print $1}')
+export pkg_counter=1
+
+# Misc file (source tarball) list.
+MISCLIST="$(cat ${ROOTDIR}/MD5.misc | awk -F'misc/' '{print $2}')"
+
 
 mirror_notify()
 {
@@ -100,22 +116,34 @@ check_pkg_createrepo()
     fi
 }
 
-fetch_pkgs()
+fetch_pkgs_rhel()
 {
     if [ X"${DOWNLOAD_PKGS}" == X"YES" ]; then
         cd ${PKG_DIR}
 
-        rpm_total=$(echo ${RPMLIST} ${NOARCHLIST} | wc -w | awk '{print $1}')
-        rpm_count=1
-
-        ECHO_INFO "==================== Fetching RPM Packages ===================="
-
-        for i in ${RPMLIST} ${NOARCHLIST}; do
+        for i in ${PKGLIST}; do
             url="${MIRROR}/rpms/5/${i}"
-            ECHO_INFO "* ${rpm_count}/${rpm_total}: ${url}"
+            ECHO_INFO "* ${pkg_counter}/${pkg_total}: ${url}"
             ${FETCH_CMD} ${url}
 
-            rpm_count=$((rpm_count+1))
+            pkg_counter=$((pkg_counter+1))
+        done
+    else
+        :
+    fi
+}
+
+fetch_pkgs_debian()
+{
+    if [ X"${DOWNLOAD_PKGS}" == X"YES" ]; then
+        cd ${PKG_DIR}
+
+        for i in ${PKGLIST}; do
+            url="${MIRROR}/apt/debian/lenny/${i}"
+            ECHO_INFO "* ${pkg_counter}/${pkg_total}: ${url}"
+            ${FETCH_CMD} ${url}
+
+            pkg_counter=$((pkg_counter+1))
         done
     else
         :
@@ -154,7 +182,7 @@ check_md5()
 
     ECHO_INFO "==================== Validate Packages via md5sum. ===================="
 
-    for i in ${MD5_FILES}; do
+    for i in ${PKGFILE} MD5.misc; do
         ECHO_INFO -n "Validating via file: ${i}..."
         md5sum -c ${ROOTDIR}/${i} |grep 'FAILED'
 
@@ -170,7 +198,7 @@ check_md5()
     done
 }
 
-create_yum_repo()
+create_repo_rhel()
 {
     # createrepo
     ECHO_INFO -n "Generating yum repository..."
@@ -196,15 +224,17 @@ EOF
     echo 'export status_create_yum_repo="DONE"' >> ${STATUS_FILE}
 }
 
-create_apt_repo()
+create_repo_debian()
 {
     # Use dpkg-scanpackages to create a local apt repository.
-    ECHO_INFO -n "Generating apt repository..."
-    cd ${PKG_DIR} && createrepo . >/dev/null 2>&1 && echo -e "\t[ OK ]"
+    ECHO_INFO "Generating apt repository..."
 
-    cd /var/cache/apt
-    dpkg-scanpackages archives /dev/null archives/Packages
-    gzip archives/Packages
+    cd ${ROOTDIR} && \
+    dpkg-scanpackages ${PKG_DIR} /dev/null | gzip > ${PKG_DIR}/Packages.gz
+
+    ECHO_INFO "Append local repository to /etc/apt/sources.list."
+    grep 'iRedMail_Local$' /etc/apt/sources.list
+    [ X"$?" != X"0" ] && echo -e "deb file:${PKG_DIR}/ ./   # iRedMail_Local" >> /etc/apt/sources.list
 }
 
 echo_end_msg()
@@ -232,9 +262,10 @@ check_arch && \
 check_status_before_run check_pkg_which && \
 check_status_before_run check_pkg_createrepo && \
 prepare_dirs && \
-fetch_pkgs && \
+ECHO_INFO "==================== Fetching Binary Packages ====================" && \
+${fetch_pkgs} && \
 fetch_misc && \
 check_md5 && \
-create_yum_repo && \
+${create_repo} && \
 check_dialog && \
 echo_end_msg

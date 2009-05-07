@@ -149,7 +149,7 @@ awstats_config_weblog()
     perl -pi -e 's#^(SiteDomain=)(.*)#${1}"$ENV{'HOSTNAME'}"#' ${AWSTATS_CONF_WEB}
 
     if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        perl -pi -e 's#^(LogFile=)(.*)#${1}"/var/log/apache2/access.log"#' ${AWSTATS_CONF_MAIL}
+        perl -pi -e 's#^(LogFile=)(.*)#${1}"/var/log/apache2/access.log"#' ${AWSTATS_CONF_WEB}
     else
         :
     fi
