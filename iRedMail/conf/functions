@@ -75,7 +75,7 @@ install_pkg_rhel()
 install_pkg_debian()
 {
     ECHO_INFO "Installing package(s): $@"
-    apt-get install -y $@
+    apt-get install -y --force-yes $@
     if [ X"$?" != X"0" ]; then
         ECHO_INFO "Installation failed, please check the terminal output."
         exit 255

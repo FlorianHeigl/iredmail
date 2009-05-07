@@ -64,7 +64,7 @@ replace_iptables_rule()
         Y|y|* ) 
             ECHO_INFO "Copy iptables sample rules: ${IPTABLES_CONFIG}."
             backup_file ${IPTABLES_CONFIG}
-            cp ${SAMPLE_DIR}/iptables ${IPTABLES_CONFIG}
+            cp -f ${SAMPLE_DIR}/iptables.rules ${IPTABLES_CONFIG}
 
             if [ X"${HTTPD_PORT}" != X"80" ]; then
                 perl -pi -e 's#(.*)80(,.*)#${1}$ENV{HTTPD_PORT}${2}#' ${IPTABLES_CONFIG}
@@ -72,12 +72,13 @@ replace_iptables_rule()
                 :
             fi
 
+            # Copy sample rc script for Debian.
+            [ X"${DISTRO}" == X"DEBIAN" ] && \
+                cp -f ${SAMPLE_DIR}/iptables.init.debian /etc/init.d/iptables && \
+                chmod +x /etc/init.d/iptables
+
             # Mark iptables as enabled service.
-            if [ X"${DISTRO}" == X"RHEL" ]; then
-                eval ${enable_service} iptables
-            else
-                :
-            fi
+            eval ${enable_service} iptables >/dev/null
 
             # Prompt to restart iptables.
             ECHO_QUESTION -n "Restart iptables now? [y|N]"

@@ -49,47 +49,42 @@ install_all()
         :
     fi
 
+    # Note: mysql server is required, used to store extra data,
+    #       such as policyd, roundcube webmail data.
+    if [ X"${DISTRO}" == X"RHEL" ]; then
+        ALL_PKGS="${ALL_PKGS} mysql-server.${ARCH} mysql.${ARCH}"
+        ENABLED_SERVICES="${ENABLED_SERVICES} mysqld"
+    elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+        ALL_PKGS="${ALL_PKGS} mysql-server-5.0 mysql-client-5.0"
+        ENABLED_SERVICES="${ENABLED_SERVICES} mysql"
+    else
+        :
+    fi
+    
     # Backend: OpenLDAP or MySQL.
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
         # OpenLDAP server & client.
-        # Note: mysql server is required, used to store extra data,
-        #       such as policyd, roundcube webmail data.
         if [ X"${DISTRO}" == X"RHEL" ]; then
             ALL_PKGS="${ALL_PKGS} openldap.${ARCH} openldap-clients.${ARCH} openldap-servers.${ARCH}"
-
-            # MySQL server. Used to store extra data, such as policyd, roundcube webmail.
-            ALL_PKGS="${ALL_PKGS} mysql-server.${ARCH} mysql.${ARCH}"
-
-            ENABLED_SERVICES="${ENABLED_SERVICES} ldap mysqld"
+            ENABLED_SERVICES="${ENABLED_SERVICES} ldap"
 
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-            ALL_PKGS="${ALL_PKGS} postfix-ldap slapd ldap-utils mysql-server-5.0 mysql-client-5.0"
-
-            ENABLED_SERVICES="${ENABLED_SERVICES} slapd mysql"
+            ALL_PKGS="${ALL_PKGS} postfix-ldap slapd ldap-utils"
+            ENABLED_SERVICES="${ENABLED_SERVICES} slapd"
         else
             :
         fi
     elif [ X"${BACKEND}" == X"MySQL" ]; then
         # MySQL server & client.
-        if [ X"${MYSQL_FRESH_INSTALLATION}" == X'YES' ]; then 
-            if [ X"${DISTRO}" == X"RHEL" ]; then
-                ALL_PKGS="${ALL_PKGS} mysql-server.${ARCH} mysql.${ARCH}"
+        if [ X"${DISTRO}" == X"RHEL" ]; then
+            # For Awstats.
+            [ X"${USE_AWSTATS}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} mod_auth_mysql.${ARCH}"
 
-                # For Awstats.
-                [ X"${USE_AWSTATS}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} mod_auth_mysql.${ARCH}"
+        elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+            ALL_PKGS="${ALL_PKGS} postfix-mysql"
 
-                ENABLED_SERVICES="${ENABLED_SERVICES} mysqld"
-
-            elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-                ALL_PKGS="${ALL_PKGS} postfix-mysql mysql-server.${ARCH} mysql.${ARCH}"
-
-                # For Awstats.
-                [ X"${USE_AWSTATS}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} mod_auth_mysql.${ARCH}"
-
-                ENABLED_SERVICES="${ENABLED_SERVICES} mysql"
-            else
-                :
-            fi
+            # For Awstats.
+            [ X"${USE_AWSTATS}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} libapache2-mod-auth-mysql"
         else
             :
         fi

@@ -20,7 +20,7 @@ ${CONF_MSG}
 EOF
 
         cat >> ${AWSTATS_HTTPD_CONF} <<EOF
-<Directory ${AWSTATS_HTTPD_ROOT}/>
+<Directory ${AWSTATS_CGI_DIR}/>
     DirectoryIndex awstats.pl
     Options ExecCGI
     order deny,allow
@@ -48,7 +48,8 @@ EOF
         [ X"${LDAP_USE_TLS}" == X"YES" ] && perl -pi -e 's#(AuthLDAPUrl.*)(ldap://)(.*)#${1}ldaps://${3}#' ${AWSTATS_HTTPD_CONF}
     elif [ X"${BACKEND}" == X"MySQL" ]; then
         # Use mod_auth_mysql.
-        cat >> ${AWSTATS_HTTPD_CONF} <<EOF
+        if [ X"${DISTRO}" == X"RHEL" ]; then
+            cat >> ${AWSTATS_HTTPD_CONF} <<EOF
     AuthType Basic
 
     AuthMYSQLEnable on
@@ -59,6 +60,33 @@ EOF
     AuthMySQLNameField username
     AuthMySQLPasswordField password
 EOF
+        elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+            cat >> ${AWSTATS_HTTPD_CONF} <<EOF
+    AuthType Basic
+
+    AuthMYSQL on
+    AuthBasicAuthoritative Off
+    AuthUserFile /dev/null
+
+    # MySQL server, username, password.
+    Auth_MySQL_Host ${MYSQL_SERVER}
+    Auth_MySQL_User ${MYSQL_BIND_USER}
+    Auth_MySQL_Password ${MYSQL_BIND_PW}
+
+    # Database related.
+    AuthMySQL_DB ${VMAIL_DB}
+    AuthMySQL_Password_Table admin
+    Auth_MySQL_Username_Field username
+    Auth_MySQL_Password_Field password
+
+    # Password related.
+    AuthMySQL_Empty_Passwords off
+    AuthMySQL_Encryption_Types Crypt_MD5
+    Auth_MySQL_Authoritative On
+EOF
+        else
+            :
+        fi
     else
         # Use basic auth mech.
         cat >> ${AWSTATS_HTTPD_CONF} <<EOF
@@ -80,8 +108,15 @@ EOF
 EOF
 
     # Make Awstats can be accessed via HTTPS.
-    sed -i "s#\(</VirtualHost>\)#Alias /awstats/icon ${AWSTATS_HTTPD_ROOT}/icon/\n\1#" ${HTTPD_SSL_CONF}
-    sed -i "s#\(</VirtualHost>\)#ScriptAlias /awstats ${AWSTATS_HTTPD_ROOT}/\n\1#" ${HTTPD_SSL_CONF}
+    if [ X"${DISTRO}" == X"RHEL" ]; then
+        sed -i "s#\(</VirtualHost>\)#Alias /awstats/icon ${AWSTATS_HTTPD_ROOT}/icon/\n\1#" ${HTTPD_SSL_CONF}
+        sed -i "s#\(</VirtualHost>\)#ScriptAlias /awstats ${AWSTATS_HTTPD_ROOT}/\n\1#" ${HTTPD_SSL_CONF}
+    elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+        sed -i "s#\(</VirtualHost>\)#Alias /awstats-icon ${AWSTATS_HTTPD_ROOT}/icon/\n\1#" ${HTTPD_SSL_CONF}
+        sed -i "s#\(</VirtualHost>\)#ScriptAlias /awstats ${AWSTATS_CGI_DIR}/\n\1#" ${HTTPD_SSL_CONF}
+    else
+        :
+    fi
 
     cat >> ${TIP_FILE} <<EOF
 Awstats:
@@ -112,6 +147,12 @@ awstats_config_weblog()
     cp -f ${AWSTATS_CONF_SAMPLE} ${AWSTATS_CONF_WEB}
 
     perl -pi -e 's#^(SiteDomain=)(.*)#${1}"$ENV{'HOSTNAME'}"#' ${AWSTATS_CONF_WEB}
+
+    if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+        perl -pi -e 's#^(LogFile=)(.*)#${1}"/var/log/apache2/access.log"#' ${AWSTATS_CONF_MAIL}
+    else
+        :
+    fi
 
     perl -pi -e 's#^(Lang=)(.*)#${1}$ENV{'AWSTATS_LANGUAGE'}#' ${AWSTATS_CONF_WEB}
 

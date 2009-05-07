@@ -8,7 +8,6 @@
 
 export AWSTATS_CONF_DIR='/etc/awstats'
 export AWSTATS_HTTPD_CONF="${HTTPD_CONF_DIR}/awstats.conf"
-export AWSTATS_HTTPD_ROOT="${HTTPD_SERVERROOT}/awstats"
 
 # Used for apache directory access list. Generated via 'htpasswd' command.
 export AWSTATS_HTPASSWD_FILE="${HTTPD_CONF_DIR}/awstats.users"
@@ -16,8 +15,12 @@ export AWSTATS_HTPASSWD_FILE="${HTTPD_CONF_DIR}/awstats.users"
 # Config files.
 if [ X"${DISTRO}" == X"RHEL" ]; then
     export AWSTATS_CONF_SAMPLE="${AWSTATS_CONF_DIR}/awstats.localhost.localdomain.conf"
+    export AWSTATS_HTTPD_ROOT="${HTTPD_SERVERROOT}/awstats"
+    export AWSTATS_CGI_DIR="${AWSTATS_HTTPD_ROOT}"
 elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
     export AWSTATS_CONF_SAMPLE="${AWSTATS_CONF_DIR}/awstats.conf"
+    export AWSTATS_HTTPD_ROOT="/usr/share/awstats"
+    export AWSTATS_CGI_DIR="/usr/lib/cgi-bin/"
 else
     :
 fi
