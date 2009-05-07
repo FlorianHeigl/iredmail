@@ -150,6 +150,10 @@ awstats_config_weblog()
 
     if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
         perl -pi -e 's#^(LogFile=)(.*)#${1}"/var/log/apache2/access.log"#' ${AWSTATS_CONF_WEB}
+
+        # On debian, ${AWSTATS_CONF_SAMPLE} is default config file. Overrided here.
+        backup_file ${AWSTATS_CONF_SAMPLE}
+        cp -f ${AWSTATS_CONF_WEB} ${AWSTATS_CONF_SAMPLE}
     else
         :
     fi
@@ -170,6 +174,7 @@ awstats_config_maillog()
     cp -f ${AWSTATS_CONF_MAIL} ${AWSTATS_CONF_DIR}/awstats.conf
 
     export maillogconvert_pl="$( eval ${LIST_FILES_IN_PKG} awstats | grep 'maillogconvert.pl')"
+    perl -pi -e 's#^(SiteDomain=)(.*)#${1}"mail"#' ${AWSTATS_CONF_MAIL}
     perl -pi -e 's#^(LogFile=)(.*)#${1}"perl $ENV{'maillogconvert_pl'} standard < $ENV{MAILLOG} |"#' ${AWSTATS_CONF_MAIL}
     perl -pi -e 's#^(LogType=)(.*)#${1}M#' ${AWSTATS_CONF_MAIL}
     perl -pi -e 's#^(LogFormat=)(.*)#${1}"%time2 %email %email_r %host %host_r %method %url %code %bytesd"#' ${AWSTATS_CONF_MAIL}
