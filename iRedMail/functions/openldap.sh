@@ -269,8 +269,11 @@ EOF
     ECHO_INFO "Restarting syslog."
     if [ X"${DISTRO}" == X"RHEL" ]; then
         service_control syslog restart >/dev/null
-    elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
-        service_control rsyslog restart >/dev/null
+    elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+        # Debian 4  -> /etc/init.d/sysklogd
+        # Debian 5  -> /etc/init.d/rsyslog
+        [ -x /etc/init.d/sysklogd ] && service_control sysklogd restart >/dev/null
+        [ -x /etc/init.d/rsyslog ] && service_control rsyslog restart >/dev/null
     else
         :
     fi
@@ -395,6 +398,7 @@ ${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_IMAP}
 ${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_DELIVER}
 ${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_FORWARD}
 ${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_SENDER_BCC}
+${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_RECIPIENT_BCC}
 ${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_MANAGESIEVE}
 EOF
 

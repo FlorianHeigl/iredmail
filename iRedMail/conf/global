@@ -46,8 +46,7 @@ export VMAIL_ADMIN_USER_NAME="${VMAIL_USER_NAME}admin"
 # Default virtual domain admin name without domain name (@example.com).
 export DOMAIN_ADMIN_NAME='postmaster'
 
-# Arch.
-export ARCH="$(uname -m)"
+# Kernel name.
 export KERNEL_NAME="$(uname -s)"
 
 # Check distribution.
@@ -210,6 +209,8 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
 
     # Directory /etc/default/ on Debian/Ubuntu.
     export ETC_SYSCONFIG_DIR='/etc/default'
+    # Iptables rule file.
+    export IPTABLES_CONFIG="${ETC_SYSCONFIG_DIR}/iptables"
 
     # SSL/TLS support.
     export SSL_FILE_DIR="/etc/ssl/${PROG_NAME}"

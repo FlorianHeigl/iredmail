@@ -45,7 +45,7 @@ rcm_config_sieverules()
     perl -pi -e 's#(.*managesieve_port.*=).*#${1} $ENV{'MANAGESIEVE_PORT'};#' config.inc.php
     perl -pi -e 's#(.*usetls.*=).*#${1} FALSE;#' config.inc.php
     perl -pi -e 's#(.*include_imap_root.*=).*#${1} TRUE;#' config.inc.php
-    perl -pi -e 's#(.*ruleset_name.*=).*#${1}"sieve";#' config.inc.php
+    perl -pi -e 's#(.*ruleset_name.*=).*#${1}".roundcube";#' config.inc.php
 
     echo 'export status_rcm_config_sieverules="DONE"' >> ${STATUS_FILE}
 }

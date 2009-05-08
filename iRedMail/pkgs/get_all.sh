@@ -10,6 +10,8 @@ CONF_DIR="${ROOTDIR}/../conf"
 . ${CONF_DIR}/global
 . ${CONF_DIR}/functions
 
+check_user root && check_arch   # Check and export variable: ARCH.
+
 FETCH_CMD="wget -cq --referer ${PROG_NAME}-${PROG_VERSION}"
 
 #
@@ -50,7 +52,11 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
 elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     export MIRROR='http://www.iredmail.org/apt'
     export PKGFILE="MD5.debian"             # File contains MD5.
-    [ X"${ARCH}" == X"x86_64" ] && export pkg_arch='amd64'
+    if [ X"${ARCH}" == X"x86_64" ]; then
+        export pkg_arch='amd64'
+    else
+        export pkg_arch="${ARCH}"
+    fi
     export PKGLIST="$( cat ${ROOTDIR}/${PKGFILE} | grep -E "(_${pkg_arch}|_all)" | awk -F'pkgs/' '{print $2}' )"
     export MD5LIST="$( cat ${ROOTDIR}/${PKGFILE} | grep -E "(_${pkg_arch}|_all)" )"
     export fetch_pkgs="fetch_pkgs_debian"   # Function used to fetch binary packages.
@@ -92,7 +98,7 @@ EOF
 
 prepare_dirs()
 {
-    ECHO_INFO "Creating necessary directories..."
+    ECHO_INFO "Creating necessary directories ..."
     for i in ${PKG_DIR} ${MISC_DIR}
     do
         [ -d "${i}" ] || mkdir -p "${i}"
@@ -193,7 +199,6 @@ fetch_misc()
             url="${MIRROR}/misc/${i}"
             ECHO_INFO "* ${misc_count}/${misc_total}: ${url}"
 
-            cd ${MISC_DIR}
             ${FETCH_CMD} ${url}
 
             misc_count=$((misc_count + 1))
@@ -216,7 +221,7 @@ check_md5()
     md5sum -c ${md5file} |grep 'FAILED' >/dev/null
 
     if [ X"$?" == X"0" ]; then
-        echo -e "\n${INFO_FLAG} MD5 check failed. Check your rpm packages. Script exit...\n"
+        echo -e "\n${INFO_FLAG} MD5 check failed. Check your rpm packages. Script exit ...\n"
         exit 255
     else
         echo -e "\t[ OK ]"
@@ -231,7 +236,7 @@ check_md5()
 create_repo_rhel()
 {
     # createrepo
-    ECHO_INFO -n "Generating yum repository..."
+    ECHO_INFO -n "Generating yum repository ..."
     cd ${PKG_DIR} && ${BIN_CREATEREPO} . >/dev/null 2>&1 && echo -e "\t[ OK ]"
 
     # Backup old repo file.
@@ -257,20 +262,20 @@ EOF
 create_repo_debian()
 {
     # Use dpkg-scanpackages to create a local apt repository.
-    ECHO_INFO -n "Generating apt repository..."
+    ECHO_INFO -n "Generating local apt repository ..."
 
     cd ${ROOTDIR} && \
-    ( ${BIN_CREATEREPO} ${PKG_DIR} /dev/null | gzip > ${PKG_DIR}/Packages.gz ) 2>/dev/null
+    ( ${BIN_CREATEREPO} ${PKG_DIR} > ${PKG_DIR}/Packages ) 2>/dev/null
 
     echo -e "\t[ OK ]"
 
     ECHO_INFO -n "Append local repository to /etc/apt/sources.list ..."
     grep 'iRedMail_Local$' /etc/apt/sources.list >/dev/null
-    [ X"$?" != X"0" ] && echo -e "deb file:${PKG_DIR}/ ./   # iRedMail_Local" >> /etc/apt/sources.list
+    [ X"$?" != X"0" ] && echo -e "deb file://${ROOTDIR} $(basename ${PKG_DIR})/   # iRedMail_Local" >> /etc/apt/sources.list
 
     echo -e "\t[ OK ]"
 
-    ECHO_INFO -n "Update apt repository data ..."
+    ECHO_INFO -n "Update apt repository data (apt-get update) ..."
     apt-get update >/dev/null
 
     echo -e "\t[ OK ]"
@@ -297,8 +302,6 @@ else
     echo '' > ${STATUS_FILE}
 fi
 
-check_user root && \
-check_arch && \
 check_status_before_run check_pkg_which && \
 check_status_before_run check_pkg_createrepo && \
 prepare_dirs && \

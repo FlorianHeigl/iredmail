@@ -657,7 +657,8 @@ postfix_config_syslog()
     if [ X"${DISTRO}" == X"RHEL" ]; then
         perl -pi -e 's#/var/log/maillog ##' ${LOGROTATE_DIR}/syslog
     elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
-        perl -pi -e 's#/var/log/mail.*##' ${LOGROTATE_DIR}/rsyslog
+        # File not available while upgrade from Debian 4.
+        [ -f ${LOGROTATE_DIR}/rsyslog ] && perl -pi -e 's#/var/log/mail.*##' ${LOGROTATE_DIR}/rsyslog
     else
         :
     fi

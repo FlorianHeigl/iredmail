@@ -118,7 +118,7 @@ protocol managesieve {
     sieve = ${SIEVE_RULE_FILENAME}
 
     # This specifies the path to the directory where the uploaded scripts are stored.
-    sieve_storage = ${SIEVE_DIR}/%Lh/%Ln/
+    sieve_storage = ${SIEVE_DIR}/%Ld/%Ln/
 
     # Login executable location.
     login_executable = /usr/lib/dovecot/managesieve-login
