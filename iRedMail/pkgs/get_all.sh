@@ -264,8 +264,9 @@ create_repo_debian()
     # Use dpkg-scanpackages to create a local apt repository.
     ECHO_INFO -n "Generating local apt repository ..."
 
+    # Warning: Use relative path of binary packages.
     cd ${ROOTDIR} && \
-    ( ${BIN_CREATEREPO} ${PKG_DIR} > ${PKG_DIR}/Packages ) 2>/dev/null
+    ( ${BIN_CREATEREPO} $(basename ${PKG_DIR}) > ${PKG_DIR}/Packages ) 2>/dev/null
 
     echo -e "\t[ OK ]"
 
@@ -276,6 +277,8 @@ create_repo_debian()
     echo -e "\t[ OK ]"
 
     ECHO_INFO -n "Update apt repository data (apt-get update) ..."
+    rm -f /var/lib/apt/lists/*Packages* >/dev/null
+    apt-get clean >/dev/null
     apt-get update >/dev/null
 
     echo -e "\t[ OK ]"
