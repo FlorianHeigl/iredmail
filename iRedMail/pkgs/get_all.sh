@@ -46,6 +46,7 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
 
     # Special package.
     export PKG_WHICH="which.${ARCH}"            # Package which contains command 'which'.
+    export PKG_WGET="wget.${ARCH}"              # Package used to fetch packages.
     export PKG_CREATEREPO="createrepo.${ARCH}"  # Package which contains command 'createrepo'.
     export BIN_CREATEREPO="createrepo"          # Command name which used to create repository.
 
@@ -64,6 +65,7 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
 
     # Special package.
     export PKG_WHICH="debianutils"              # Package which contains command 'which'.
+    export PKG_WGET="wget"                      # Package used to fetch packages.
     export PKG_CREATEREPO="dpkg-dev"            # Package which contains command 'dpkg-scanpackages'.
     export BIN_CREATEREPO="dpkg-scanpackages"   # Command name which used to create repository.
 else
@@ -103,6 +105,25 @@ prepare_dirs()
     do
         [ -d "${i}" ] || mkdir -p "${i}"
     done
+}
+
+check_pkg_wget()
+{
+    ECHO_INFO "Checking necessary package: ${PKG_WGET} ..."
+    for i in $(echo $PATH|sed 's/:/ /g'); do
+        [ -x $i/wget ] && export HAS_WGET='YES'
+    done
+
+    if [ X"${HAS_WGET}" != X'YES' ]; then
+        eval ${install_pkg} ${PKG_WGET}
+        if [ X"$?" != X"0" ]; then
+            ECHO_INFO "Please install package ${PKG_WGET} first." && exit 255
+        else
+            echo 'export status_check_pkg_wget="DONE"' >> ${STATUS_FILE}
+        fi
+    else
+        :
+    fi
 }
 
 check_pkg_which()
@@ -305,6 +326,7 @@ else
     echo '' > ${STATUS_FILE}
 fi
 
+check_status_before_run check_pkg_wget && \
 check_status_before_run check_pkg_which && \
 check_status_before_run check_pkg_createrepo && \
 prepare_dirs && \
