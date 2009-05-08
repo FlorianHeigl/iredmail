@@ -16,5 +16,5 @@ export PYSIEVED_RULE_DIR='.sieve'
 export PYSIEVED_PIDFILE='/var/run/pysieved/pysieved.pid'
 
 # Variables for managesieve service.
-export MANAGESIEVE_SERVER="${PYSIEVED_BINDADDR}"
+export MANAGESIEVE_BINDADDR="${PYSIEVED_BINDADDR}"
 export MANAGESIEVE_PORT="${PYSIEVED_PORT}"

@@ -39,12 +39,13 @@ rcm_config_sieverules()
 {
     ECHO_INFO "Config managesieve interface for roundcube webmail."
 
-    export MANAGESIEVE_SERVER MANAGESIEVE_PORT
+    export MANAGESIEVE_BINDADDR MANAGESIEVE_PORT
     cd ${RCM_HTTPD_ROOT}/plugins/sieverules/ && \
-    perl -pi -e 's#(.*managesieve_host.*=).*#${1} "$ENV{'MANAGESIEVE_SERVER'}";#' config.inc.php
+    perl -pi -e 's#(.*managesieve_host.*=).*#${1} "$ENV{'MANAGESIEVE_BINDADDR'}";#' config.inc.php
     perl -pi -e 's#(.*managesieve_port.*=).*#${1} $ENV{'MANAGESIEVE_PORT'};#' config.inc.php
     perl -pi -e 's#(.*usetls.*=).*#${1} FALSE;#' config.inc.php
     perl -pi -e 's#(.*include_imap_root.*=).*#${1} TRUE;#' config.inc.php
+    perl -pi -e 's#(.*ruleset_name.*=).*#${1}"sieve";#' config.inc.php
 
     echo 'export status_rcm_config_sieverules="DONE"' >> ${STATUS_FILE}
 }

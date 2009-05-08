@@ -92,7 +92,7 @@ pysieved:
     * Configuration files:
         - ${PYSIEVED_INI}
     * RC script:
-        - /etc/init.d/pysieved
+        - /etc/init.d/pysieved (RHEL/CentOS only)
 
 EOF
 
@@ -102,9 +102,40 @@ EOF
 managesieve_config()
 {
     if [ X"${USE_MANAGESIEVE}" == X"YES" ]; then
-        # Use pysieved.
-        if [ X"${USE_PYSIEVED}" == X"YES" ]; then
-            [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run pysieved_config
+        if [ X"${DISTRO}" == X"RHEL" ]; then
+            # Use pysieved.
+            check_status_before_run pysieved_config
+        elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+            # Dovecot is patched and ships managesieve protocal.
+            perl -pi -e 's#^(protocols =.*)#${1} managesieve#' ${DOVECOT_CONF}
+            cat >> ${DOVECOT_CONF} <<EOF
+protocol managesieve {
+    # IP or host address where to listen in for connections.
+    listen = ${MANAGESIEVE_BINDADDR}:${MANAGESIEVE_PORT}
+
+    # Specifies the location of the symbolic link pointing to the
+    # active script in the sieve storage directory.
+    sieve = ${SIEVE_RULE_FILENAME}
+
+    # This specifies the path to the directory where the uploaded scripts are stored.
+    sieve_storage = ${SIEVE_DIR}/%Lh/%Ln/
+
+    # Login executable location.
+    login_executable = /usr/lib/dovecot/managesieve-login
+
+    # managesieve executable location. See mail_executable for IMAP for
+    # examples how this could be changed.
+    mail_executable = /usr/lib/dovecot/managesieve
+
+    # Maximum managesieve command line length in bytes.
+    managesieve_max_line_length = 65536
+
+    # To fool ManageSieve clients that are focused on CMU's timesieved
+    # you can specify the IMPLEMENTATION capability that the dovecot
+    # reports to clients (e.g. 'Cyrus timsieved v2.2.13').
+    managesieve_implementation_string = dovecot
+}
+EOF
         else
             :
         fi

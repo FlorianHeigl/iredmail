@@ -147,18 +147,13 @@ awstats_config_weblog()
     cp -f ${AWSTATS_CONF_SAMPLE} ${AWSTATS_CONF_WEB}
 
     perl -pi -e 's#^(SiteDomain=)(.*)#${1}"$ENV{'HOSTNAME'}"#' ${AWSTATS_CONF_WEB}
-
-    if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        perl -pi -e 's#^(LogFile=)(.*)#${1}"/var/log/apache2/access.log"#' ${AWSTATS_CONF_WEB}
-
-        # On debian, ${AWSTATS_CONF_SAMPLE} is default config file. Overrided here.
-        backup_file ${AWSTATS_CONF_SAMPLE}
-        cp -f ${AWSTATS_CONF_WEB} ${AWSTATS_CONF_SAMPLE}
-    else
-        :
-    fi
+    perl -pi -e 's#^(LogFile=)(.*)#${1}"$ENV{'HTTPD_LOG_ACCESSLOG'}"#' ${AWSTATS_CONF_WEB}
 
     perl -pi -e 's#^(Lang=)(.*)#${1}$ENV{'AWSTATS_LANGUAGE'}#' ${AWSTATS_CONF_WEB}
+
+    # On RHEL/CentOS/Debian, ${AWSTATS_CONF_SAMPLE} is default config file. Overrided here.
+    backup_file ${AWSTATS_CONF_SAMPLE}
+    cp -f ${AWSTATS_CONF_WEB} ${AWSTATS_CONF_SAMPLE}
 
     echo 'export status_awstats_config_weblog="DONE"' >> ${STATUS_FILE}
 }

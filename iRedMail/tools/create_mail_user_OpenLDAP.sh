@@ -207,6 +207,7 @@ enabledService: deliver
 enabledService: forward
 enabledService: senderbcc
 enabledService: recipientbcc
+enabledService: managesieve
 EOF
 }
 

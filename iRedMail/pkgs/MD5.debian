@@ -6,3 +6,4 @@ e53dea37f57b777bbe2841ad0caf881b  pkgs/postfix-policyd_1.82-2_i386.deb
 6ab7fd7747a049ea769afe338990a59a  pkgs/dovecot-imapd_1.1.13-2~bpo50+1_amd64.deb
 f47ea91922acd21f25f728c0239ee643  pkgs/dovecot-pop3d_1.1.13-2~bpo50+1_amd64.deb
 4619ce17206fc493cf8cb5e1eb9476fd  pkgs/postfix-policyd_1.82-2_amd64.deb
+1096622642b22871246fde84b2750d58  pkgs/pysieved_1.0-1_all.deb

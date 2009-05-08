@@ -183,7 +183,7 @@ EOF
     [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run disable_selinux
     check_status_before_run remove_sendmail
     [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run re_generate_iredmail_repo
-    [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run replace_iptables_rule
+    check_status_before_run replace_iptables_rule
     [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run replace_mysql_config
     check_status_before_run run_freshclam_now
     check_status_before_run start_postfix_now
