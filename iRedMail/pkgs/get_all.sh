@@ -45,10 +45,18 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     export create_repo="create_repo_rhel"   # Function used to create yum repository.
 
     # Special package.
-    export PKG_WHICH="which.${ARCH}"            # Package which contains command 'which'.
-    export PKG_WGET="wget.${ARCH}"              # Package used to fetch packages.
-    export PKG_CREATEREPO="createrepo.${ARCH}"  # Package which contains command 'createrepo'.
-    export BIN_CREATEREPO="createrepo"          # Command name which used to create repository.
+    # command: which.
+    export BIN_WHICH='which'
+    export PKG_WHICH="which.${ARCH}"
+    # command: wget.
+    export BIN_WGET='wget'
+    export PKG_WGET="wget.${ARCH}"
+    # command: createrepo.
+    export BIN_CREATEREPO="createrepo"
+    export PKG_CREATEREPO="createrepo.${ARCH}"
+    # command: dialog.
+    export BIN_DIALOG="dialog"
+    export PKG_DIALOG="dialog.${ARCH}"
 
 elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     export MIRROR='http://www.iredmail.org/apt'
@@ -64,10 +72,18 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     export create_repo="create_repo_debian" # Function used to create apt repository.
 
     # Special package.
-    export PKG_WHICH="debianutils"              # Package which contains command 'which'.
-    export PKG_WGET="wget"                      # Package used to fetch packages.
-    export PKG_CREATEREPO="dpkg-dev"            # Package which contains command 'dpkg-scanpackages'.
-    export BIN_CREATEREPO="dpkg-scanpackages"   # Command name which used to create repository.
+    # command: which.
+    export BIN_WHICH='which'
+    export PKG_WHICH="debianutils"
+    # command: wget.
+    export BIN_WGET='wget'
+    export PKG_WGET="wget"
+    # command: dpkg-scanpackages.
+    export BIN_CREATEREPO="dpkg-scanpackages"
+    export PKG_CREATEREPO="dpkg-dev"
+    # command: dialog.
+    export BIN_DIALOG="dialog"
+    export PKG_DIALOG="dialog"
 else
     :
 fi
@@ -107,56 +123,24 @@ prepare_dirs()
     done
 }
 
-check_pkg_wget()
+check_pkg()
 {
-    ECHO_INFO "Checking necessary package: ${PKG_WGET} ..."
+    # Usage: check_pkg <command> <package>
+    # It means: <package> owns <command>
+    cmd="$1"
+    pkg="$2"
+
+    ECHO_INFO "Checking necessary command: ${cmd} ..."
     for i in $(echo $PATH|sed 's/:/ /g'); do
-        [ -x $i/wget ] && export HAS_WGET='YES'
+        [ -x $i/${cmd} ] && export HAS_CMD='YES'
     done
 
-    if [ X"${HAS_WGET}" != X'YES' ]; then
-        eval ${install_pkg} ${PKG_WGET}
+    if [ X"${HAS_CMD}" != X'YES' ]; then
+        eval ${install_pkg} ${pkg}
         if [ X"$?" != X"0" ]; then
-            ECHO_INFO "Please install package ${PKG_WGET} first." && exit 255
+            ECHO_INFO "Please install package ${pkg} first." && exit 255
         else
-            echo 'export status_check_pkg_wget="DONE"' >> ${STATUS_FILE}
-        fi
-    else
-        :
-    fi
-}
-
-check_pkg_which()
-{
-    ECHO_INFO "Checking necessary package: ${PKG_WHICH} ..."
-    for i in $(echo $PATH|sed 's/:/ /g'); do
-        [ -x $i/which ] && export HAS_WHICH='YES'
-    done
-
-    if [ X"${HAS_WHICH}" != X'YES' ]; then
-        eval ${install_pkg} ${PKG_WHICH}
-        if [ X"$?" != X"0" ]; then
-            ECHO_INFO "Please install package ${PKG_WHICH} first." && exit 255
-        else
-            echo 'export status_check_pkg_which="DONE"' >> ${STATUS_FILE}
-        fi
-    else
-        :
-    fi
-}
-
-check_pkg_createrepo()
-{
-    ECHO_INFO "Checking necessary package: ${PKG_CREATEREPO} ..."
-
-    which ${BIN_CREATEREPO} >/dev/null 2>&1
-
-    if [ X"$?" != X"0" ]; then
-        eval ${install_pkg} ${PKG_CREATEREPO}
-        if [ X"$?" != X"0" ]; then
-            ECHO_INFO "Please install package ${PKG_CREATEREPO} first." && exit 255
-        else
-            echo 'export status_check_createrepo="DONE"' >> ${STATUS_FILE}
+            :
         fi
     else
         :
@@ -326,13 +310,13 @@ else
     echo '' > ${STATUS_FILE}
 fi
 
-check_status_before_run check_pkg_wget && \
-check_status_before_run check_pkg_which && \
-check_status_before_run check_pkg_createrepo && \
+check_pkg ${BIN_WHICH} ${PKG_WHICH} && \
+check_pkg ${BIN_WGET} ${PKG_WGET} && \
+check_pkg ${BIN_CREATEREPO} ${PKG_CREATEREPO} && \
+check_pkg ${BIN_DIALOG} ${PKG_DIALOG} && \
 prepare_dirs && \
 eval ${fetch_pkgs} && \
 fetch_misc && \
 check_md5 && \
 eval ${create_repo} && \
-check_dialog && \
 echo_end_msg

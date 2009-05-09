@@ -60,44 +60,6 @@ backup_file()
     fi
 }
 
-install_pkg_rhel()
-{
-    ECHO_INFO "Installing package(s): $@"
-    yum -d 2 -y install $@
-    if [ X"$?" != X"0" ]; then
-        ECHO_INFO "Installation failed, please check the terminal output."
-        exit 255
-    else
-        :
-    fi
-}
-
-install_pkg_debian()
-{
-    ECHO_INFO "Installing package(s): $@"
-    apt-get install -y --force-yes $@
-    if [ X"$?" != X"0" ]; then
-        ECHO_INFO "Installation failed, please check the terminal output."
-        exit 255
-    else
-        :
-    fi
-}
-
-remove_pkg_rhel()
-{
-    ECHO_INFO "Removing package(s): $@"
-    yum remove -y $@
-    [ X"$?" != X"0" ] && ECHO_INFO "Package removed failed, please check the terminal output."
-}
-
-remove_pkg_debian()
-{
-    ECHO_INFO "Removing package(s): $@"
-    apt-get purge -y $@
-    [ X"$?" != X"0" ] && ECHO_INFO "Package removed failed, please check the terminal output."
-}
-
 extract_pkg()
 {
     if [ X"$2" = X"" ]; then
@@ -153,40 +115,6 @@ check_user()
         else
             :
         fi
-    fi
-}
-
-check_os_version()
-{
-    :
-}
-
-check_dialog()
-{
-    if [ X"${DISTRO}" == X"RHEL" ]; then
-        pkg="dialog.${ARCH}"
-    elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        pkg="dialog"
-    else
-        :
-    fi
-
-    ECHO_INFO "Checking necessary package: ${pkg} ..."
-    # -------------------------------------------------------------
-    # Use 'dialog' for configuration.
-    # -------------------------------------------------------------
-    # Install 'dialog' first.
-    which dialog >/dev/null 2>&1
-
-    if [ X"$?" != X"0" ]; then
-        eval ${install_pkg} ${pkg}
-
-        #[ X"$?" != X"0" ] && \
-        #    echo "${INFO_FLAG} Install 'dialog' failed. Please install it first and make" && \
-        #    echo "${INFO_FLAG} sure your yum client works well." && \
-        #    exit 255
-    else
-        :
     fi
 }
 
@@ -317,3 +245,42 @@ gen_ldap_passwd()
 {
     slappasswd -h {SSHA} -s "${1}"
 }
+
+install_pkg_rhel()
+{
+    ECHO_INFO "Installing package(s): $@"
+    yum -d 2 -y install $@
+    if [ X"$?" != X"0" ]; then
+        ECHO_INFO "Installation failed, please check the terminal output."
+        exit 255
+    else
+        :
+    fi
+}
+
+install_pkg_debian()
+{
+    ECHO_INFO "Installing package(s): $@"
+    apt-get install -y --force-yes $@
+    if [ X"$?" != X"0" ]; then
+        ECHO_INFO "Installation failed, please check the terminal output."
+        exit 255
+    else
+        :
+    fi
+}
+
+remove_pkg_rhel()
+{
+    ECHO_INFO "Removing package(s): $@"
+    yum remove -y $@
+    [ X"$?" != X"0" ] && ECHO_INFO "Package removed failed, please check the terminal output."
+}
+
+remove_pkg_debian()
+{
+    ECHO_INFO "Removing package(s): $@"
+    apt-get purge -y $@
+    [ X"$?" != X"0" ] && ECHO_INFO "Package removed failed, please check the terminal output."
+}
+
