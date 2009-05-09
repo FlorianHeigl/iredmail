@@ -14,15 +14,15 @@ check_arch
 # Initialize config file.
 echo '' > ${CONFIG_FILE}
 
-DIALOG='dialog --no-collapse --insecure --ok-label Next --cancel-label Exit'
-DIALOG_BACKTITLE="${PROG_NAME}: Open Source Mail Server Solution for RHEL/CentOS/Debian."
+DIALOG='dialog --no-collapse --insecure --ok-label Next --no-cancel'
+DIALOG_BACKTITLE="${PROG_NAME}: Open Source Mail Server Solution for RHEL/CentOS/Debian/Ubuntu."
 
 # Welcome message.
 ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --title "Welcome and thanks for use" \
     --yesno "\
 Thanks for your use of ${PROG_NAME}.
-Feedback, bug report, communication are all welcome.
+Bug report, feedback, suggestion are always welcome.
 
 Contact us:
 
@@ -88,11 +88,12 @@ rm -f /tmp/backend
 
 if [ X"${BACKEND}" == X"OpenLDAP" ]; then
     . ${DIALOG_DIR}/ldap_config.sh
-elif [ X"${BACKEND}" == X"MySQL" ]; then
-    . ${DIALOG_DIR}/mysql_config.sh
 else
     :
 fi
+
+# MySQL server is required as backend or used to store policyd/roundcube data.
+. ${DIALOG_DIR}/mysql_config.sh
 
 #
 # Virtual domain configuration.

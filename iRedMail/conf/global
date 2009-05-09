@@ -73,6 +73,8 @@ fi
 
 # Hostname.
 export HOSTNAME="$(hostname --fqdn)"
+echo ${HOSTNAME} | grep '\.' >/dev/null 2>&1
+[ X"$?" == X"0" ] || echo "Please configure a fully qualified domain name (FQDN) before we go further."
 
 export SSL_CERT_FILE="${SSL_FILE_DIR}/SSL_Cert.pem"
 export SSL_KEY_FILE="${SSL_FILE_DIR}/SSL_Key.pem"
