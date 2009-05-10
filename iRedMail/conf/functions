@@ -202,6 +202,45 @@ check_status_before_run()
     fi
 }
 
+# Hash maildir string.
+hash_maildir()
+{
+    # Usage: hash_maildir username
+    username="$1"
+
+    # Different maildir style: hashed, normal.
+    if [ X"${MAILDIR_STYLE}" == X"hashed" ]; then
+        length="$(echo ${username} | wc -L)"
+        str1="$(echo ${username} | cut -c1)"
+        str2="$(echo ${username} | cut -c2)"
+        str3="$(echo ${username} | cut -c3)"
+
+        if [ X"${length}" == X"1" ]; then
+            str2="${str1}"
+            str3="${str1}"
+        elif [ X"${length}" == X"2" ]; then
+            str3="${str2}"
+        else
+            :
+        fi
+
+        # Use mbox, will be changed later.
+        maildir="${str1}/${str1}${str2}/${str1}${str2}${str3}/${username}-${DATE}"
+    else
+        # Use mbox, will be changed later.
+        maildir="${username}-${DATE}"
+    fi
+
+    # For maildir format.
+    [ X"${MAILBOX_FORMAT}" == X"Maildir" ] && maildir="${maildir}/"
+    [ X"${MAILBOX_FORMAT}" == X"mbox" ] && maildir="${maildir}"
+
+    echo ${maildir}
+}
+
+# -----------------------------------------------------------------
+# - OS/OS_Version/Arch dependent.
+# -----------------------------------------------------------------
 enable_service_rh()
 {
     services="$@"

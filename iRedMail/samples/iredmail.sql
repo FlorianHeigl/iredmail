@@ -69,6 +69,7 @@ CREATE TABLE mailbox (
     username varchar(255) NOT NULL DEFAULT '',
     password varchar(255) NOT NULL DEFAULT '',
     name varchar(255) NOT NULL DEFAULT '',
+    storagebasedirectory varchar(255) NOT NULL DEFAULT '',
     maildir varchar(255) NOT NULL DEFAULT '',
     quota bigint(20) NOT NULL DEFAULT '0',
     domain varchar(255) NOT NULL DEFAULT '',

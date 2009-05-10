@@ -100,53 +100,58 @@ attributetype ( 1.3.6.1.4.1.32349.1.2.2.2 NAME 'mailGID'
     EQUALITY integerMatch
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.3 NAME 'mailMessageStore'
+attributetype ( 1.3.6.1.4.1.32349.1.2.2.3 NAME 'storageBaseDirectory'
+    DESC 'Path to mail storage base directory'
+    EQUALITY caseExactIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+    SINGLE-VALUE )
+attributetype ( 1.3.6.1.4.1.32349.1.2.2.4 NAME 'mailMessageStore'
     DESC 'Path to the maildir/mbox on the mail system'
     EQUALITY caseExactIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.4 NAME 'mailQuota'
+attributetype ( 1.3.6.1.4.1.32349.1.2.2.5 NAME 'mailQuota'
     DESC 'The amount of space the user can use until all further messages get bounced'
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.44
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.5 NAME 'mailQuotaMessageLimit'
+attributetype ( 1.3.6.1.4.1.32349.1.2.2.6 NAME 'mailQuotaMessageLimit'
     DESC 'Quota limit in number of messages, 0 means unlimited'
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.44
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.6 NAME 'mailHost'
+attributetype ( 1.3.6.1.4.1.32349.1.2.2.7 NAME 'mailHost'
     DESC 'On which mail server the messagestore of this user is located'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.7 NAME 'mailForwardingAddress'
+attributetype ( 1.3.6.1.4.1.32349.1.2.2.8 NAME 'mailForwardingAddress'
     DESC 'Address(es) to forward all incoming messages to.'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320} )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.8 NAME 'accountStatus'
+attributetype ( 1.3.6.1.4.1.32349.1.2.2.9 NAME 'accountStatus'
     DESC 'The status of a user account: active, disabled'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.9 NAME 'userRecipientBccAddress'
+attributetype ( 1.3.6.1.4.1.32349.1.2.2.10 NAME 'userRecipientBccAddress'
     DESC 'Recipient BCC address for single user: must be a valid email address'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320}
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.10 NAME 'userSenderBccAddress'
+attributetype ( 1.3.6.1.4.1.32349.1.2.2.11 NAME 'userSenderBccAddress'
     DESC 'Sender BCC address for single user: must be a valid email address'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320}
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.11 NAME 'backupMailAddress'
+attributetype ( 1.3.6.1.4.1.32349.1.2.2.12 NAME 'backupMailAddress'
     DESC 'Backup mail address, used to reset password or whatever'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320}
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.12 NAME 'userRank'
+attributetype ( 1.3.6.1.4.1.32349.1.2.2.13 NAME 'userRank'
     DESC 'Rank: boss, manager, normal or whatever'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.13 NAME 'enabledService'
+attributetype ( 1.3.6.1.4.1.32349.1.2.2.14 NAME 'enabledService'
     DESC 'Enabled service: mail, smtp, imap, pop3, deliver, forward, senderbcc, recipientbcc'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
@@ -190,9 +195,10 @@ objectclass ( 1.3.6.1.4.1.32349.1.2.4.2 NAME 'mailAdmin'
 objectclass ( 1.3.6.1.4.1.32349.1.2.4.3 NAME 'mailUser'
     DESC 'Mail User' SUP top AUXILIARY
     MUST ( mail $ uid )
-    MAY ( mailMessageStore $ homeDirectory $ userPassword $
-        mailUID $ mailGID $ mailQuota $ mailQuotaMessageLimit $
-        mailHost $ mailForwardingAddress $ accountStatus $
+    MAY ( storageBaseDirectory $ mailMessageStore $ homeDirectory $
+        userPassword $ mailHost $ mailUID $ mailGID $
+        mailQuota $ mailQuotaMessageLimit $
+        mailForwardingAddress $ accountStatus $
         userRecipientBccAddress $ userSenderBccAddress $
         enabledService $ telephoneNumber $ backupMailAddress $
         mtaTransport ))

@@ -11,6 +11,7 @@
 # -------------------------------------------------------------------
 # Usage:
 #   * Edit these variables:
+#       STORAGE_BASE_DIRECTORY
 #       DEFAULT_PASSWD='888888'
 #       USE_DEFAULT_PASSWD='NO'
 #       DEFAULT_QUOTA='100'   # 100 -> 100M
@@ -38,6 +39,9 @@
 #   - Drop output message of 'which dos2unix'.
 
 # --------- CHANGE THESE VALUES ----------
+# Storage base directory used to store users' mail.
+STORAGE_BASE_DIRECTORY="/home/vmail"
+
 # Password setting.
 # Note: password will be crypted in MD5.
 DEFAULT_PASSWD='88888888'
@@ -64,10 +68,8 @@ MAILDIR_STRING='Maildir/'
 # Default hash level is 3.
 MAILDIR_STYLE='hashed'      # hashed, normal.
 
-# Include ${MAILDIR_STRING} in maildir.
-#   YES ->  domain.ltd/username/${MAILDIR_STRING}/
-#   No  ->  domain.ltd/username/
-EXTRA_STR_IN_MAILDIR='NO'
+# Time stamp, will be appended in maildir.
+DATE="$(date +%Y.%m.%d.%H.%M.%S)"
 
 # Path to SQL template file.
 SQL="output.sql"
@@ -102,38 +104,34 @@ generate_sql()
             str2="$(echo ${username} | cut -c2)"
             str3="$(echo ${username} | cut -c3)"
 
-            if [ ${length} == 1 ]; then
+            if [ X"${length}" == X"1" ]; then
                 str2="${str1}"
                 str3="${str1}"
-            elif [ ${length} == 2 ]; then
+            elif [ X"${length}" == X"2" ]; then
                 str3="${str2}"
             else
                 :
             fi
 
             # Use mbox, will be changed later.
-            maildir="${DOMAIN}/${str1}/${str1}${str2}/${str1}${str2}${str3}/${username}"
+            maildir="${DOMAIN}/${str1}/${str1}${str2}/${str1}${str2}${str3}/${username}-${DATE}"
         else
             # Use mbox, will be changed later.
-            maildir="${DOMAIN}/${username}"
+            maildir="${DOMAIN}/${username}-${DATE}"
         fi
 
         # Different maildir format: maildir, mbox.
         if [ X"${MAILBOX_FORMAT}" == X"Maildir" ]; then
             # Append slash to make it 'maildir' format.
-            if [ X"${EXTRA_STR_IN_MAILDIR}" == X"YES" ]; then
-                maildir="${maildir}/${MAILDIR_STRING}/"
-            else
-                maildir="${maildir}/"
-            fi
+            maildir="${maildir}/"
         else
             # It's already mbox format.
             :
         fi
 
         cat >> ${SQL} <<EOF
-INSERT INTO mailbox (username, password, name, maildir, quota, domain, active)
-    VALUES ('${username}@${DOMAIN}', '${CRYPT_PASSWD}', '${username}', '${maildir}', '${DEFAULT_QUOTA}', '${DOMAIN}', '1');
+INSERT INTO mailbox (username, password, name, storagebasedirectory, maildir, quota, domain, active)
+    VALUES ('${username}@${DOMAIN}', '${CRYPT_PASSWD}', '${username}', '${STORAGE_BASE_DIRECTORY}', '${maildir}', '${DEFAULT_QUOTA}', '${DOMAIN}', '1');
 EOF
         # Don't insert alias.
         #INSERT INTO alias (address, goto, domain, active)
@@ -153,7 +151,7 @@ SQL template file was generated successfully, Please import it
 
     - ${SQL}
 
-Steps looks like below:
+Steps to import these users looks like below:
 
     # mysql -uroot -p
     mysql> USE vmail;

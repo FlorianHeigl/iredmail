@@ -4,8 +4,9 @@
 # Author:   Zhang Huangbin (michaelbibby#gmail.com)
 # Lastest update date:  2009.02.19
 # Purpose: Add new OpenLDAP user for postfix mail server.
+#
 # Shipped within iRedMail project:
-#   * http://iRedMail.googlecode.com/
+#   * http://code.google.com/p/iredmail/
 
 # --------------------------- WARNING ------------------------------
 # This script only works under iRedMail >= 0.3.3 due to ldap schema
@@ -15,9 +16,9 @@
 # --------------------------- USAGE --------------------------------
 # Please change variables below to fit your env:
 #   - In 'Global Setting' section:
+#       * STORAGE_BASE_DIRECTORY
 #       * VMAIL_USER_NAME
 #       * VMAIL_GROUP_NAME
-#       * VMAIL_USER_HOME_DIR
 #
 #   - In 'LDAP Setting' section:
 #       * LDAP_SUFFIX
@@ -40,15 +41,15 @@
 # ----------------------------------------------
 # ------------ Global Setting ------------------
 # ----------------------------------------------
-
-# Mailbox format: mbox, Maildir.
-HOME_MAILBOX='Maildir'
-
-# Maildir format.
-# YES:  domain.ltd/username/Maildir/
-# No:   domain.ltd/username/
-MAILDIR_IN_MAILBOX='NO'
-MAILDIR_STRING='Maildir/'
+# Storage base directory used to store users' mail.
+# mailbox of LDAP user will be:
+#    ${STORAGE_BASE_DIRECTORY}/${DOMAIN_NAME}/${USERNAME}/
+# Such as:
+#    /home/vmail/domains/domain1.com/bibby/
+#   -------------------|===========|-----|
+#   STORAGE_BASE_DIRECTORY|DOMAIN_NAME|USERNAME
+#
+STORAGE_BASE_DIRECTORY="/home/vmail"
 
 # All mails will be stored under user vmail's home directory.
 # Files and directories will be ownned as 'vmail:vmail'.
@@ -56,15 +57,11 @@ MAILDIR_STRING='Maildir/'
 VMAIL_USER_NAME="vmail"
 VMAIL_GROUP_NAME='vmail'
 
-# HOME directory for LDAP user.
-# mailbox of LDAP user will be:
-#    ${VMAIL_USER_HOME_DIR}/${DOMAIN_NAME}/${USERNAME}/
-# Such as:
-#    /home/vmail/domains/domain1.com/bibby/
-#   -------------------|===========|-----|
-#   VMAIL_USER_HOME_DIR|DOMAIN_NAME|USERNAME
-#
-VMAIL_USER_HOME_DIR="/home/vmail"
+# Mailbox format: mbox, Maildir.
+MAILBOX_FORMAT='Maildir'
+
+# Mailbox style: hashed, normal.
+MAILDIR_STYLE='hashed'
 
 # ------------------------------------------------------------------
 # -------------------------- LDAP Setting --------------------------
@@ -108,7 +105,7 @@ USE_NAME_AS_PASSWD='YES'
 SEND_WELCOME_MSG='NO'
 
 # Set welcome mail info.
-WELCOME_MSG_TITLE="Welcome!"
+WELCOME_MSG_SUBJECT="Welcome!"
 WELCOME_MSG_BODY="Welcome, new user."
 
 # -------------------------------------------
@@ -168,13 +165,32 @@ add_new_user()
     # If you do *NOT* want to keep rootpw in script, use '-W' instead of 
     # '-w "${BINDPW}".
 
-    # For maildir format.
-    if [ X"${MAILDIR_IN_MAILBOX}" == X"YES" -a X"${MAILDIR_STRING}" != X"" ]; then
-        [ X"${HOME_MAILBOX}" == X"Maildir" ] && mailMessageStore="${DOMAIN_NAME}/${USERNAME}-${DATE}/${MAILDIR_STRING}/"
+    # Different maildir style: hashed, normal.
+    if [ X"${MAILDIR_STYLE}" == X"hashed" ]; then
+        length="$(echo ${USERNAME} | wc -L)"
+        str1="$(echo ${USERNAME} | cut -c1)"
+        str2="$(echo ${USERNAME} | cut -c2)"
+        str3="$(echo ${USERNAME} | cut -c3)"
+
+        if [ X"${length}" == X"1" ]; then
+            str2="${str1}"
+            str3="${str1}"
+        elif [ X"${length}" == X"2" ]; then
+            str3="${str2}"
+        else
+            :
+        fi
+
+        # Use mbox, will be changed later.
+        maildir="${DOMAIN_NAME}/${str1}/${str1}${str2}/${str1}${str2}${str3}/${USERNAME}-${DATE}"
     else
-        [ X"${HOME_MAILBOX}" == X"Maildir" ] && mailMessageStore="${DOMAIN_NAME}/${USERNAME}-${DATE}/"
+        # Use mbox, will be changed later.
+        maildir="${DOMAIN_NAME}/${USERNAME}-${DATE}"
     fi
-    [ X"${HOME_MAILBOX}" == X"mbox" ] && mailMessageStore="${DOMAIN_NAME}/${USERNAME}-${DATE}"
+
+    # For maildir format.
+    [ X"${MAILBOX_FORMAT}" == X"Maildir" ] && mailMessageStore="${maildir}/"
+    [ X"${MAILBOX_FORMAT}" == X"mbox" ] && mailMessageStore="${maildir}"
 
     # Generate user password.
     if [ X"${USE_DEFAULT_PASSWD}" == X"YES" ]; then
@@ -189,7 +205,8 @@ objectClass: inetOrgPerson
 objectClass: shadowAccount
 objectClass: mailUser
 objectClass: top
-homeDirectory: ${VMAIL_USER_HOME_DIR}
+storageBaseDirectory: ${STORAGE_BASE_DIRECTORY}
+homeDirectory: ${STORAGE_BASE_DIRECTORY}/${mailMessageStore}
 accountStatus: active
 mailMessageStore: ${mailMessageStore}
 mail: ${MAIL}
@@ -216,7 +233,7 @@ send_welcome_mail()
     MAIL="$1"
     echo "Send a welcome mail to new user: ${MAIL}"
 
-    echo "${WELCOME_MSG_BODY}" | mail -s "${WELCOME_MSG_TITLE}" ${MAIL}
+    echo "${WELCOME_MSG_BODY}" | mail -s "${WELCOME_MSG_SUBJECT}" ${MAIL}
 }
 
 usage()

@@ -84,9 +84,9 @@ EOF
     postconf -e disable_vrfy_command='yes'
 
     # We use 'maildir' format, not 'mbox'.
-    if [ X"${HOME_MAILBOX}" == X"Maildir" ]; then
+    if [ X"${MAILBOX_FORMAT}" == X"Maildir" ]; then
         postconf -e home_mailbox="Maildir/"
-    elif [ X"${HOME_MAILBOX}" == X"mbox" ]; then
+    elif [ X"${MAILBOX_FORMAT}" == X"mbox" ]; then
         postconf -e home_mailbox="Mailbox"
         postconf -e mailbox_delivery_lock='fcntl, dotlock'
         postconf -e virtual_mailbox_lock='fcntl'

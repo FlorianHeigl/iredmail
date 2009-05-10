@@ -129,7 +129,7 @@ EOF
     [ X"${ENABLE_DOVECOT_SSL}" == X"YES" ] && dovecot_ssl_config
 
     # Mailbox format.
-    if [ X"${HOME_MAILBOX}" == X"Maildir" ]; then
+    if [ X"${MAILBOX_FORMAT}" == X"Maildir" ]; then
         cat >> ${DOVECOT_CONF} <<EOF
 # Maildir format and location.
 # Such as: /home/vmail/iredmail.org/www/
@@ -186,7 +186,7 @@ plugin {
 }
 
 EOF
-    elif [ X"${HOME_MAILBOX}" == X"mbox" ]; then
+    elif [ X"${MAILBOX_FORMAT}" == X"mbox" ]; then
         cat >> ${DOVECOT_CONF} <<EOF
 # Mailbox format and location.
 # Such as: /home/vmail/iredmail.org/www
@@ -280,12 +280,12 @@ pass_attrs      = ${LDAP_ATTR_USER_PASSWD}=password
 default_pass_scheme = CRYPT
 EOF
         # Maildir format.
-        [ X"${HOME_MAILBOX}" == X"Maildir" ] && cat >> ${DOVECOT_LDAP_CONF} <<EOF
-user_attrs      = =sieve_dir=${SIEVE_DIR}/%Ld/%Ln/,mailMessageStore=home=${VMAIL_USER_HOME_DIR}/%\$,${LDAP_ATTR_USER_QUOTA}=quota_rule=*:bytes=%\$
+        [ X"${MAILBOX_FORMAT}" == X"Maildir" ] && cat >> ${DOVECOT_LDAP_CONF} <<EOF
+user_attrs      = =sieve_dir=${SIEVE_DIR}/%Ld/%Ln/,${LDAP_ATTR_USER_STORAGE_BASE_DIRECTORY}=home,mailMessageStore=mail=~/%\$/Maildir/,${LDAP_ATTR_USER_QUOTA}=quota_rule=*:bytes=%\$
 EOF
-        [ X"${HOME_MAILBOX}" == X"mbox" ] && cat >> ${DOVECOT_LDAP_CONF} <<EOF
+        [ X"${MAILBOX_FORMAT}" == X"mbox" ] && cat >> ${DOVECOT_LDAP_CONF} <<EOF
 #    sieve = /%Lh/%Ld/.%Ln${SIEVE_RULE_FILENAME}
-user_attrs      = homeDirectory=home,=sieve_dir=${SIEVE_DIR}/%Ld/%Ln/,mailMessageStore=dirsize:mail,${LDAP_ATTR_USER_QUOTA}=quota_rule=*:bytes=%\$
+user_attrs      = ${LDAP_ATTR_USER_STORAGE_BASE_DIRECTORY}=home,=sieve_dir=${SIEVE_DIR}/%Ld/%Ln/,mailMessageStore=mail=dirsize:~/%\$,${LDAP_ATTR_USER_QUOTA}=quota_rule=*:bytes=%\$
 EOF
     else
         cat >> ${DOVECOT_CONF} <<EOF
@@ -305,15 +305,15 @@ connect = host=${MYSQL_SERVER} dbname=${VMAIL_DB} user=${MYSQL_BIND_USER} passwo
 password_query = SELECT password FROM mailbox WHERE username='%u' AND active='1' AND expired >= NOW()
 EOF
         # Maildir format.
-        [ X"${HOME_MAILBOX}" == X"Maildir" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
-user_query = SELECT CONCAT("${VMAIL_USER_HOME_DIR}/", maildir) AS home, \
+        [ X"${MAILBOX_FORMAT}" == X"Maildir" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
+user_query = SELECT CONCAT(storagebasedirectory, '/', maildir) AS home, \
 "${SIEVE_DIR}/%Ld/%Ln/" AS sieve_dir, \
 CONCAT('*:bytes=', quota*1048576) AS quota_rule \
 FROM mailbox WHERE username='%u' \
 AND active='1' AND enable%Ls='1' AND expired >= NOW()
 EOF
-        [ X"${HOME_MAILBOX}" == X"mbox" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
-user_query = SELECT "${VMAIL_USER_HOME_DIR}" AS home, \
+        [ X"${MAILBOX_FORMAT}" == X"mbox" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
+user_query = SELECT CONCAT(storagebasedirectory, '/', maildir) AS home, \
     "${SIEVE_DIR}/%Ld/%Ln/" AS sieve_dir, \
     CONCAT('*:bytes=', quota*1048576) AS quota_rule, \
     maildir FROM mailbox \

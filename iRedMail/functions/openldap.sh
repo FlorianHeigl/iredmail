@@ -387,8 +387,9 @@ uid: ${FIRST_USER}
 givenName: ${FIRST_USER}
 ${LDAP_ATTR_USER_RDN}: ${FIRST_USER}@${FIRST_DOMAIN}
 ${LDAP_ATTR_ACCOUNT_STATUS}: ${LDAP_STATUS_ACTIVE}
-homeDirectory: ${VMAIL_USER_HOME_DIR}
-mailMessageStore: ${FIRST_DOMAIN}/${FIRST_USER}/
+${LDAP_ATTR_USER_STORAGE_BASE_DIRECTORY}: ${VMAIL_USER_HOME_DIR}
+mailMessageStore: ${FIRST_DOMAIN}/$( hash_maildir ${FIRST_USER} )
+homeDirectory: ${VMAIL_USER_HOME_DIR}/${FIRST_DOMAIN}/${FIRST_USER}/
 ${LDAP_ATTR_USER_QUOTA}: 104857600
 ${LDAP_ATTR_USER_PASSWD}: $(gen_ldap_passwd "${FIRST_USER_PASSWD}")
 ${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_MAIL}
@@ -402,11 +403,7 @@ ${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_RECIPIENT_BCC}
 ${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_MANAGESIEVE}
 EOF
 
-    # Maildir format.
-    [ X"${HOME_MAILBOX}" == X"mbox" ] && \
-        perl -pi -e 's#^(mailMessageStore.*)/#${1}#' ${LDAP_INIT_LDIF}
-
-    ldapadd -x -D "${LDAP_ROOTDN}" -w "${LDAP_ROOTPW}" -f ${LDAP_INIT_LDIF}
+    ldapadd -x -D "${LDAP_ROOTDN}" -w "${LDAP_ROOTPW}" -f ${LDAP_INIT_LDIF} >/dev/null
 
     cat >> ${TIP_FILE} <<EOF
 OpenLDAP:
