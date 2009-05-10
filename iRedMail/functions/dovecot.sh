@@ -306,7 +306,7 @@ password_query = SELECT password FROM mailbox WHERE username='%u' AND active='1'
 EOF
         # Maildir format.
         [ X"${MAILBOX_FORMAT}" == X"Maildir" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
-user_query = SELECT CONCAT(storagebasedirectory, '/', maildir) AS home, \
+user_query = SELECT CONCAT(storagebasedirectory, '/', maildir, '/Maildir/') AS home, \
 "${SIEVE_DIR}/%Ld/%Ln/" AS sieve_dir, \
 CONCAT('*:bytes=', quota*1048576) AS quota_rule \
 FROM mailbox WHERE username='%u' \

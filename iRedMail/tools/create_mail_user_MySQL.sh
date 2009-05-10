@@ -123,7 +123,7 @@ generate_sql()
         # Different maildir format: maildir, mbox.
         if [ X"${MAILBOX_FORMAT}" == X"Maildir" ]; then
             # Append slash to make it 'maildir' format.
-            maildir="${maildir}/"
+            maildir="${maildir}/Maildir/"
         else
             # It's already mbox format.
             :
