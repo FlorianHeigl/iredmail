@@ -306,7 +306,7 @@ openldap_data_initialize()
     done
     echo '.'
 
-    ECHO_INFO "Initialize LDAP tree."
+    ECHO_INFO -n "Initialize LDAP tree."
     # home_mailbox format is 'maildir/' by default.
     cat > ${LDAP_INIT_LDIF} <<EOF
 dn: ${LDAP_SUFFIX}
@@ -403,7 +403,7 @@ ${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_RECIPIENT_BCC}
 ${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_MANAGESIEVE}
 EOF
 
-    ldapadd -x -D "${LDAP_ROOTDN}" -w "${LDAP_ROOTPW}" -f ${LDAP_INIT_LDIF} >/dev/null
+    ldapadd -x -D "${LDAP_ROOTDN}" -w "${LDAP_ROOTPW}" -f ${LDAP_INIT_LDIF} >/dev/null && echo -e "\t[ OK ]"
 
     cat >> ${TIP_FILE} <<EOF
 OpenLDAP:

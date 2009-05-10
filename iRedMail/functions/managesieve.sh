@@ -75,7 +75,7 @@ EOF
     chown ${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} ${pysieved_pid_dir}
 
     # Copy init script and enable it.
-    cp -f ${SAMPLE_DIR}/pysieved.init /etc/init.d/pysieved
+    cp -f ${SAMPLE_DIR}/pysieved.init.rhel /etc/init.d/pysieved
     chmod +x /etc/init.d/pysieved
     eval ${enable_service} pysieved
 

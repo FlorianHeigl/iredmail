@@ -71,7 +71,7 @@ if [ X"${KERNEL_NAME}" == X"Linux" ]; then
     fi
 else
     # Not support *BSD and other distrobutions yet.
-    echo "Your OS is not supported yet."
+    echo "Error: Your OS is not supported yet."
     exit 255
 fi
 
@@ -187,6 +187,10 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     export LOCAL_REPO_FILE="${YUM_REPOS_DIR}/${LOCAL_REPO_NAME}.repo"
     export YUM_UPDATE_REPO='http://www.iredmail.org/yum/rpms/5/'
 
+    # command: dialog.
+    export BIN_DIALOG="dialog"
+    export PKG_DIALOG="dialog.${ARCH}"
+
 elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     # Ubuntu & Debian.
     export DEBIAN_FRONTEND='noninteractive'
@@ -219,6 +223,10 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
 
     # SSL/TLS support.
     export SSL_FILE_DIR="/etc/ssl/${PROG_NAME}"
+
+    # command: dialog.
+    export BIN_DIALOG="dialog"
+    export PKG_DIALOG="dialog"
 else
     # Not support yet.
     echo "Your distrobution is not supported yet."

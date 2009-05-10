@@ -55,10 +55,7 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     export PKG_WGET="wget.${ARCH}"
     # command: createrepo.
     export BIN_CREATEREPO="createrepo"
-    export PKG_CREATEREPO="createrepo.${ARCH}"
-    # command: dialog.
-    export BIN_DIALOG="dialog"
-    export PKG_DIALOG="dialog.${ARCH}"
+    export PKG_CREATEREPO="createrepo.noarch"
 
 elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     export MIRROR='http://www.iredmail.org/apt'
@@ -89,9 +86,6 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     # command: dpkg-scanpackages.
     export BIN_CREATEREPO="dpkg-scanpackages"
     export PKG_CREATEREPO="dpkg-dev"
-    # command: dialog.
-    export BIN_DIALOG="dialog"
-    export PKG_DIALOG="dialog"
 else
     :
 fi
@@ -129,32 +123,6 @@ prepare_dirs()
     do
         [ -d "${i}" ] || mkdir -p "${i}"
     done
-}
-
-check_pkg()
-{
-    # Usage: check_pkg <command> <package>
-    # It means: <package> owns <command>
-    cmd="$1"
-    pkg="$2"
-
-    ECHO_INFO "Checking necessary command: ${cmd} ..."
-    for i in $(echo $PATH|sed 's/:/ /g'); do
-        [ -x $i/${cmd} ] && export HAS_CMD='YES'
-    done
-
-    if [ X"${HAS_CMD}" != X'YES' ]; then
-        eval ${install_pkg} ${pkg}
-        if [ X"$?" != X"0" ]; then
-            ECHO_INFO "Please install package ${pkg} first." && exit 255
-        else
-            :
-        fi
-    else
-        :
-    fi
-
-    unset HAS_CMD
 }
 
 fetch_pkgs_rhel()
@@ -316,6 +284,11 @@ echo_end_msg()
 
 EOF
 }
+
+# It's not required to download extra packages on Ubuntu (Jaunty, 9.04).
+if [ X"${DISTRO}" == X"UBUNTU" -a X"${DISTRO_CODENAME}" == "jaunty" ]; then
+    echo_end_msg && exit 0
+fi
 
 if [ -e ${STATUS_FILE} ]; then
     . ${STATUS_FILE}
