@@ -11,7 +11,6 @@ CONF_DIR="${ROOTDIR}/../conf"
 . ${CONF_DIR}/functions
 
 check_user root
-check_arch   # Check and export variable: ARCH.
 check_hostname
 
 FETCH_CMD="wget -cq --referer ${PROG_NAME}-${PROG_VERSION}"

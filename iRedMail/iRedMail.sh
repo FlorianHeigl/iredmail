@@ -20,7 +20,7 @@ export PATCH_DIR="${ROOTDIR}/patches"
 # ------------------------------
 # Check target platform and environment.
 # ------------------------------
-check_arch && check_env
+check_env
 
 # ------------------------------
 # Import variables.

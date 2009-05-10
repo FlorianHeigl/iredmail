@@ -228,6 +228,10 @@ index homeDirectory,mailMessageStore,${LDAP_ATTR_USER_FORWARD}   eq,pres
 index ${LDAP_ATTR_USER_BACKUP_MAIL_ADDRESS}   eq,pres
 EOF
 
+    # Make slapd use slapd.conf insteald of slapd.d (cn=config backend).
+    [ X"${DISTRO}" == X"UBUNTU" -a X"${DISTRO_CODENAME}" == X"jaunty" ] && \
+        perl -pi -e 's#^(SLAPD_CONF=).*#${1}"${OPENLDAP_SLAPD_CONF}"#' /etc/default/slapd
+
     ECHO_INFO "Generating new LDAP client configuration file: ${OPENLDAP_LDAP_CONF}"
     cat > ${OPENLDAP_LDAP_CONF} <<EOF
 BASE    ${LDAP_SUFFIX}
@@ -270,7 +274,7 @@ EOF
     if [ X"${DISTRO}" == X"RHEL" ]; then
         service_control syslog restart >/dev/null
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        # Debian 4  -> /etc/init.d/sysklogd
+        # Debian 4, Ubuntu 9.04 -> /etc/init.d/sysklogd
         # Debian 5  -> /etc/init.d/rsyslog
         [ -x /etc/init.d/sysklogd ] && service_control sysklogd restart >/dev/null
         [ -x /etc/init.d/rsyslog ] && service_control rsyslog restart >/dev/null
@@ -403,7 +407,7 @@ ${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_RECIPIENT_BCC}
 ${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_MANAGESIEVE}
 EOF
 
-    ldapadd -x -D "${LDAP_ROOTDN}" -w "${LDAP_ROOTPW}" -f ${LDAP_INIT_LDIF} >/dev/null && echo -e "\t[ OK ]"
+    ldapadd -x -D "${LDAP_ROOTDN}" -w "${LDAP_ROOTPW}" -f ${LDAP_INIT_LDIF}
 
     cat >> ${TIP_FILE} <<EOF
 OpenLDAP:

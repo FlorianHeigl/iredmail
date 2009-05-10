@@ -9,8 +9,6 @@
 
 trap "exit 255" 2
 
-check_arch
-
 # Initialize config file.
 echo '' > ${CONFIG_FILE}
 

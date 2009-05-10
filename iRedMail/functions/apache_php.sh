@@ -14,11 +14,11 @@ apache_php_config()
     # --------------------------
     # Apache Setting.
     # --------------------------
-    ECHO_INFO "Hide apache software version: ${HTTPD_CONF}."
+    ECHO_INFO "Hide apache version number in ${HTTPD_CONF}."
     perl -pi -e 's#^(ServerTokens).*#${1} ProductOnly#' ${HTTPD_CONF}
     perl -pi -e 's#^(ServerSignature).*#${1} EMail#' ${HTTPD_CONF}
 
-    ECHO_INFO "Disable 'AddDefaultCharset' in Apache: ${HTTPD_CONF}."
+    ECHO_INFO "Disable 'AddDefaultCharset' in ${HTTPD_CONF}."
     perl -pi -e 's/^(AddDefaultCharset UTF-8)/#${1}/' ${HTTPD_CONF}
 
     # SSL Cert/Key file.

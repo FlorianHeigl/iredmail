@@ -78,8 +78,8 @@ fi
 # Hostname.
 export HOSTNAME="$(hostname --fqdn)"
 
-export SSL_CERT_FILE="${SSL_FILE_DIR}/SSL_Cert.pem"
-export SSL_KEY_FILE="${SSL_FILE_DIR}/SSL_Key.pem"
+export SSL_CERT_FILE="${SSL_FILE_DIR}/iRedMail.key"
+export SSL_KEY_FILE="${SSL_FILE_DIR}/iRedMail.crt"
 export TLS_COUNTRY='CN'
 export TLS_STATE='GuangDong'
 export TLS_CITY='ShenZhen'
@@ -143,6 +143,18 @@ export LOGROTATE_DIR='/etc/logrotate.d'
 # Usage:
 #   str="$(${RANDOM_STRING})"
 export RANDOM_STRING='eval </dev/urandom tr -dc A-Za-z0-9| (head -c $1 > /dev/null 2>&1 || head -c 30)'
+
+# Check hardware architecture.
+arch="$(uname -m)"
+case $arch in
+    i[3456]86) export ARCH='i386' ;;
+    x86_64) export ARCH='x86_64' ;;
+    *)
+        echo "Your architecture is not supported yet: ${arch}."
+        echo "Both i386 and x86_64 are supported by ${PROG_NAME}."
+        exit 255
+        ;;
+esac
 
 # install_pkg: function used to install packages without confirm.
 # remove_pkg: function used to remove packages without confirm.
@@ -210,8 +222,14 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     export disable_service="disable_service_debian"
 
     # Syslog config: rsyslog.
-    export SYSLOG_CONF='/etc/rsyslog.conf'
-    export SYSLOG_POSTROTATE_CMD='invoke-rc.d rsyslog reload > /dev/null'
+    if [ X"${DISTRO}" == X"UBUNTU" -a X"${DISTRO_CODENAME}" == X"jaunty" ]; then
+        # Ubuntu (Jaunty, 9.04) use /etc/syslog.conf.
+        export SYSLOG_CONF='/etc/syslog.conf'
+        export SYSLOG_POSTROTATE_CMD='invoke-rc.d sysklogd reload > /dev/null'
+    else
+        export SYSLOG_CONF='/etc/rsyslog.conf'
+        export SYSLOG_POSTROTATE_CMD='invoke-rc.d rsyslog reload > /dev/null'
+    fi
 
     # Crontab related.
     export CRON_SPOOL_DIR="/var/spool/cron/crontabs"
