@@ -38,6 +38,24 @@ ECHO_QUESTION()
     fi
 }
 
+ECHO_ERROR()
+{
+    if [ X"$1" == X"-n" ]; then
+        shift 1
+        if [ X"${TERM}" == X"xterm" -o X"${TERM}" == X"linux" -o X"${TERM}" == X"pcconsole" ]; then
+            echo -ne "\033[41m${ERROR_FLAG}\033[0m $@"
+        else
+            echo -ne "${ERROR_FLAG} $@"
+        fi
+    else
+        if [ X"${TERM}" == X"xterm" -o X"${TERM}" == X"linux" -o X"${TERM}" == X"pcconsole" ]; then
+            echo -e "\033[41m${ERROR_FLAG}\033[0m $@"
+        else
+            echo -e "${ERROR_FLAG} $@"
+        fi
+    fi
+}
+
 backup_file()
 {
     # Usage: backup_file file1 [file2 file3 ... fileN]
@@ -118,11 +136,20 @@ check_user()
     fi
 }
 
+check_hostname()
+{
+    echo ${HOSTNAME} | grep '\.' >/dev/null 2>&1
+    [ X"$?" != X"0" ] && ECHO_ERROR "Please configure a fully qualified domain name (FQDN) before we go further." && exit 255
+}
+
 # Check necessery privileges/files/dirs.
 check_env()
 {
     # Check user privilege.
     check_user root
+
+    # Check FQDN hostname.
+    check_hostname
 
     # Check config tool: dialog.
     check_dialog
@@ -290,7 +317,7 @@ install_pkg_rhel()
     ECHO_INFO "Installing package(s): $@"
     yum -d 2 -y install $@
     if [ X"$?" != X"0" ]; then
-        ECHO_INFO "Installation failed, please check the terminal output."
+        ECHO_ERROR "Installation failed, please check the terminal output."
         exit 255
     else
         :
@@ -302,7 +329,7 @@ install_pkg_debian()
     ECHO_INFO "Installing package(s): $@"
     apt-get install -y --force-yes $@
     if [ X"$?" != X"0" ]; then
-        ECHO_INFO "Installation failed, please check the terminal output."
+        ECHO_ERROR "Installation failed, please check the terminal output."
         exit 255
     else
         :
@@ -313,13 +340,13 @@ remove_pkg_rhel()
 {
     ECHO_INFO "Removing package(s): $@"
     yum remove -y $@
-    [ X"$?" != X"0" ] && ECHO_INFO "Package removed failed, please check the terminal output."
+    [ X"$?" != X"0" ] && ECHO_ERROR "Package removed failed, please check the terminal output."
 }
 
 remove_pkg_debian()
 {
     ECHO_INFO "Removing package(s): $@"
     apt-get purge -y $@
-    [ X"$?" != X"0" ] && ECHO_INFO "Package removed failed, please check the terminal output."
+    [ X"$?" != X"0" ] && ECHO_ERROR "Package removed failed, please check the terminal output."
 }
 

@@ -10,7 +10,9 @@ CONF_DIR="${ROOTDIR}/../conf"
 . ${CONF_DIR}/global
 . ${CONF_DIR}/functions
 
-check_user root && check_arch   # Check and export variable: ARCH.
+check_user root
+check_arch   # Check and export variable: ARCH.
+check_hostname
 
 FETCH_CMD="wget -cq --referer ${PROG_NAME}-${PROG_VERSION}"
 
@@ -60,7 +62,13 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
 
 elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     export MIRROR='http://www.iredmail.org/apt'
-    export PKGFILE="MD5.debian"             # File contains MD5.
+
+    if [ X"${DISTRO}" == X"DEBIAN" ]; then
+        export PKGFILE="MD5.debian"             # File contains MD5.
+    elif [ X"${DISTRO}" == X"UBUNTU" ]; then
+        export PKGFILE="MD5.ubuntu.${DISTRO_CODENAME}"             # File contains MD5.
+    fi
+
     if [ X"${ARCH}" == X"x86_64" ]; then
         export pkg_arch='amd64'
     else
@@ -145,6 +153,8 @@ check_pkg()
     else
         :
     fi
+
+    unset HAS_CMD
 }
 
 fetch_pkgs_rhel()
@@ -157,7 +167,7 @@ fetch_pkgs_rhel()
         for i in ${PKGLIST}; do
             url="${MIRROR}/rpms/5/${i}"
             ECHO_INFO "* ${pkg_counter}/${pkg_total}: ${url}"
-            ${FETCH_CMD} ${url}
+            ${FETCH_CMD} "${url}"
 
             pkg_counter=$((pkg_counter+1))
         done
@@ -174,9 +184,14 @@ fetch_pkgs_debian()
         if [ X"${PKGLIST}" != X"0" ]; then
             ECHO_INFO "==================== Fetching Binary Packages ===================="
             for i in ${PKGLIST}; do
-                url="${MIRROR}/debian/lenny/${i}"
+                if [ X"${DISTRO}" == X"DEBIAN" ]; then
+                    url="${MIRROR}/debian/lenny/${i}"
+                elif [ X"${DISTRO}" == X"UBUNTU" ]; then
+                    url="${MIRROR}/ubuntu/${DISTRO_CODENAME}/${i}"
+                fi
+
                 ECHO_INFO "* ${pkg_counter}/${pkg_total}: ${url}"
-                ${FETCH_CMD} ${url}
+                ${FETCH_CMD} "${url}"
 
                 pkg_counter=$((pkg_counter+1))
             done
@@ -204,7 +219,7 @@ fetch_misc()
             url="${MIRROR}/misc/${i}"
             ECHO_INFO "* ${misc_count}/${misc_total}: ${url}"
 
-            ${FETCH_CMD} ${url}
+            ${FETCH_CMD} "${url}"
 
             misc_count=$((misc_count + 1))
         done
@@ -226,7 +241,7 @@ check_md5()
     md5sum -c ${md5file} |grep 'FAILED' >/dev/null
 
     if [ X"$?" == X"0" ]; then
-        echo -e "\n${INFO_FLAG} MD5 check failed. Check your rpm packages. Script exit ...\n"
+        ECHO_ERROR "MD5 check failed. Check your rpm packages. Script exit ...\n"
         exit 255
     else
         echo -e "\t[ OK ]"
@@ -282,8 +297,6 @@ create_repo_debian()
     echo -e "\t[ OK ]"
 
     ECHO_INFO -n "Update apt repository data (apt-get update) ..."
-    rm -f /var/lib/apt/lists/*Packages* >/dev/null
-    apt-get clean >/dev/null
     apt-get update >/dev/null
 
     echo -e "\t[ OK ]"

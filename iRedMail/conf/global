@@ -57,12 +57,13 @@ if [ X"${KERNEL_NAME}" == X"Linux" ]; then
     if [ -f /etc/redhat-release ]; then
         # RHEL/CentOS
         export DISTRO='RHEL'
-    elif [ -f /etc/debian_version ]; then
-        # Debian
-        export DISTRO='DEBIAN'
     elif [ -f /etc/lsb-release ]; then
         # Ubuntu
         export DISTRO='UBUNTU'
+        export DISTRO_CODENAME="$( grep 'DISTRIB_CODENAME' /etc/lsb-release | awk -F'=' '{print $2}' )"
+    elif [ -f /etc/debian_version ]; then
+        # Debian
+        export DISTRO='DEBIAN'
     else
         # Not support yet.
         echo "Your distrobution is not supported yet."
@@ -76,8 +77,6 @@ fi
 
 # Hostname.
 export HOSTNAME="$(hostname --fqdn)"
-echo ${HOSTNAME} | grep '\.' >/dev/null 2>&1
-[ X"$?" == X"0" ] || echo "Please configure a fully qualified domain name (FQDN) before we go further."
 
 export SSL_CERT_FILE="${SSL_FILE_DIR}/SSL_Cert.pem"
 export SSL_KEY_FILE="${SSL_FILE_DIR}/SSL_Key.pem"
@@ -103,6 +102,7 @@ export STATUS_FILE="${ROOTDIR}/.${PROG_NAME}.installation.status"
 
 # Output flag.
 export INFO_FLAG="< INFO >"
+export ERROR_FLAG="< ERROR >"
 export QUESTION_FLAG="< Question >"
 export BACKUP_FLAG="< Backup >"
 

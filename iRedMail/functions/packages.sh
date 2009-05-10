@@ -158,8 +158,7 @@ install_all()
     if [ X"${DISTRO}" == X"RHEL" ]; then
         ALL_PKGS="${ALL_PKGS} pysieved.noarch"
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        # TODO add pysieved
-        #ALL_PKGS="${ALL_PKGS} pysieved"
+        # Dovecot shipped in Debian/Ubuntu has managesieve plugin patched.
         :
     else
         :
@@ -175,6 +174,9 @@ install_all()
     else
         :
     fi
+
+    # Disable Ubuntu firewall rules, we have own iptables init script and rule file.
+    [ X"${DISTRO}" == X"UBUNTU" ] && export DISABLED_SERVICES="${DISABLED_SERVICES} ufw"
 
     export ALL_PKGS ENABLED_SERVICES
 

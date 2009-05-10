@@ -1,0 +1,8 @@
+5a76a413384eb3a953e4858622bdf678  pkgs/amavisd-new_2.6.3-1ubuntu1~hardy1_all.deb
+acfa8d34540405fc173ffe8bf619dff2  pkgs/dovecot-common_1.1.11-0ubuntu4~hardy1_amd64.deb
+cba5922aeaefc7f367e5da933ce731c0  pkgs/dovecot-common_1.1.11-0ubuntu4~hardy1_i386.deb
+5a1ea6f734192d03b6531e0ce66e14bd  pkgs/dovecot-imapd_1.1.11-0ubuntu4~hardy1_amd64.deb
+a59481a8c2d8779a22cdd449adda5bf3  pkgs/dovecot-imapd_1.1.11-0ubuntu4~hardy1_i386.deb
+e3ef3ff218d55848189ccd1fa1f275a3  pkgs/dovecot-pop3d_1.1.11-0ubuntu4~hardy1_amd64.deb
+0d2394fff79d3488d4b91a9fe2872fba  pkgs/dovecot-pop3d_1.1.11-0ubuntu4~hardy1_i386.deb
+7c4762208baeead8f1fba915e72471de  pkgs/dovecot-postfix_1.1.11-0ubuntu4~hardy1_all.deb
