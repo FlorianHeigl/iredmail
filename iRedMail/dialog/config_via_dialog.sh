@@ -136,7 +136,7 @@ Configuration completed.
 ***************************** WARNING ***********************************
 *************************************************************************
 *                                                                       *
-* Please do remember to *REMOVE* configuration file after installation  *
+* Please do remember to *MOVE* configuration file after installation    *
 * completed successfully.                                               *
 *                                                                       *
 *   * ${CONFIG_FILE}

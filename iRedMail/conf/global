@@ -78,8 +78,8 @@ fi
 # Hostname.
 export HOSTNAME="$(hostname --fqdn)"
 
-export SSL_CERT_FILE="${SSL_FILE_DIR}/iRedMail.key"
-export SSL_KEY_FILE="${SSL_FILE_DIR}/iRedMail.crt"
+export SSL_CERT_FILE="${SSL_FILE_DIR}/certs/iRedMail_CA.pem"
+export SSL_KEY_FILE="${SSL_FILE_DIR}/private/iRedMail.key"
 export TLS_COUNTRY='CN'
 export TLS_STATE='GuangDong'
 export TLS_CITY='ShenZhen'
@@ -190,8 +190,8 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     # Iptables rule file.
     export IPTABLES_CONFIG="${ETC_SYSCONFIG_DIR}/iptables"
 
-    # SSL/TLS support.
-    export SSL_FILE_DIR="/etc/pki/${PROG_NAME}"
+    # Directory used to store SSL/TLS key/cert file.
+    export SSL_FILE_DIR="/etc/pki"
 
     # Yum repository related.
     export YUM_REPOS_DIR='/etc/yum.repos.d'
@@ -239,8 +239,9 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     # Iptables rule file.
     export IPTABLES_CONFIG="${ETC_SYSCONFIG_DIR}/iptables"
 
-    # SSL/TLS support.
-    export SSL_FILE_DIR="/etc/ssl/${PROG_NAME}"
+    # Directory used to store SSL/TLS key/cert file.
+    export SSL_FILE_DIR="/etc/ssl"
+
 
     # command: dialog.
     export BIN_DIALOG="dialog"

@@ -73,7 +73,7 @@ replace_iptables_rule()
             fi
 
             # Copy sample rc script for Debian.
-            [ X"${DISTRO}" == X"DEBIAN" ] && \
+            [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ] && \
                 cp -f ${SAMPLE_DIR}/iptables.init.debian /etc/init.d/iptables && \
                 chmod +x /etc/init.d/iptables
 

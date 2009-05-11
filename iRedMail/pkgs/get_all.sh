@@ -70,8 +70,15 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     else
         export pkg_arch="${ARCH}"
     fi
-    export PKGLIST="$( cat ${ROOTDIR}/${PKGFILE} | grep -E "(_${pkg_arch}|_all)" | awk -F'pkgs/' '{print $2}' )"
-    export MD5LIST="$( cat ${ROOTDIR}/${PKGFILE} | grep -E "(_${pkg_arch}|_all)" )"
+
+    # Ubuntu (Jaunty, 9.04) has all packages we need.
+    if [ X"${DISTRO_CODENAME}" != X"jaunty" ]; then
+        export PKGLIST="$( cat ${ROOTDIR}/${PKGFILE} | grep -E "(_${pkg_arch}|_all)" | awk -F'pkgs/' '{print $2}' )"
+        export MD5LIST="$( cat ${ROOTDIR}/${PKGFILE} | grep -E "(_${pkg_arch}|_all)" )"
+    else
+        :
+    fi
+
     export fetch_pkgs="fetch_pkgs_debian"   # Function used to fetch binary packages.
     export create_repo="create_repo_debian" # Function used to create apt repository.
 
@@ -285,7 +292,7 @@ EOF
 }
 
 # It's not required to download extra packages on Ubuntu (Jaunty, 9.04).
-if [ X"${DISTRO}" == X"UBUNTU" -a X"${DISTRO_CODENAME}" == "jaunty" ]; then
+if [ X"${DISTRO}" == X"UBUNTU" -a X"${DISTRO_CODENAME}" == X"jaunty" ]; then
     echo_end_msg && exit 0
 fi
 

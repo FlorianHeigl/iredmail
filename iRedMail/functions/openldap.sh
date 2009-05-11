@@ -15,6 +15,9 @@ openldap_config()
     ECHO_INFO "Set file permission on TLS cert key file: ${SSL_KEY_FILE}."
     setfacl -m u:${LDAP_USER}:r-- ${SSL_KEY_FILE}
 
+    # Add ${LDAP_USER} to 'ssl-cert' group, so that slapd service can read the SSL key.
+    [ X"${DISTRO}" == X"UBUNTU" -a X"${DISTRO_CODENAME}" == X"jaunty" ] && usermod -G ssl-cert ${LDAP_USER}
+
     # Copy ${PROG_NAME}.schema.
     cp -f ${SAMPLE_DIR}/iredmail.schema ${OPENLDAP_SCHEMA_DIR}
 
@@ -230,7 +233,8 @@ EOF
 
     # Make slapd use slapd.conf insteald of slapd.d (cn=config backend).
     [ X"${DISTRO}" == X"UBUNTU" -a X"${DISTRO_CODENAME}" == X"jaunty" ] && \
-        perl -pi -e 's#^(SLAPD_CONF=).*#${1}"${OPENLDAP_SLAPD_CONF}"#' /etc/default/slapd
+        perl -pi -e 's#^(SLAPD_CONF=).*#${1}"$ENV{OPENLDAP_SLAPD_CONF}"#' ${ETC_SYSCONFIG_DIR}/slapd && \
+        perl -pi -e 's#^(SLAPD_PIDFILE=).*#${1}"$ENV{OPENLDAP_PID_FILE}"#' ${ETC_SYSCONFIG_DIR}/slapd
 
     ECHO_INFO "Generating new LDAP client configuration file: ${OPENLDAP_LDAP_CONF}"
     cat > ${OPENLDAP_LDAP_CONF} <<EOF
@@ -310,7 +314,7 @@ openldap_data_initialize()
     done
     echo '.'
 
-    ECHO_INFO -n "Initialize LDAP tree."
+    ECHO_INFO "Initialize LDAP tree."
     # home_mailbox format is 'maildir/' by default.
     cat > ${LDAP_INIT_LDIF} <<EOF
 dn: ${LDAP_SUFFIX}

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 ### BEGIN INIT INFO
 # Provides:          iptables
@@ -31,12 +31,12 @@ VAR_SUBSYS_IPTABLES="/var/lock/subsys/$IPTABLES"
 [ -d $(dirname ${VAR_SUBSYS_IPTABLES}) ] || mkdir -p $(dirname ${VAR_SUBSYS_IPTABLES})
 
 if [ ! -x /sbin/$IPTABLES ]; then
-    log_daemon_msg $"/sbin/$IPTABLES does not exist." "iptables"
+    log_daemon_msg "/sbin/$IPTABLES does not exist." "iptables"
     exit 0
 fi
 
 if lsmod 2>/dev/null | grep -q ipchains ; then
-    log_daemon_msg  $"ipchains and $IPTABLES can not be used together." "iptables"
+    log_daemon_msg  "ipchains and $IPTABLES can not be used together." "iptables"
     exit 0
 fi
 
@@ -94,7 +94,7 @@ flush_n_delete() {
     tables=`cat $PROC_IPTABLES_NAMES 2>/dev/null`
     [ -z "$tables" ] && return 1
 
-    log_daemon_msg $"Flushing firewall rules" "iptables"
+    log_daemon_msg "Flushing firewall rules" "iptables"
     ret=0
     # For all tables
     for i in $tables; do
@@ -126,7 +126,7 @@ set_policy() {
     tables=`cat $PROC_IPTABLES_NAMES 2>/dev/null`
     [ -z "$tables" ] && return 1
 
-    log_daemon_msg $"Setting chains to policy $policy"
+    log_daemon_msg "Setting chains to policy $policy"
     ret=0
     for i in $tables; do
         echo -n " $i"
@@ -170,7 +170,7 @@ start() {
     # Do not start if there is no config file.
     [ -f "$IPTABLES_DATA" ] || return 1
 
-    echo -n $"Applying $IPTABLES firewall rules"
+    echo -n "Applying $IPTABLES firewall rules"
 
     OPT=
     [ "x$IPTABLES_SAVE_COUNTER" = "xyes" ] && OPT="-c"
@@ -184,7 +184,7 @@ start() {
     
     # Load additional modules (helpers)
     if [ -n "$IPTABLES_MODULES" ]; then
-	echo -n $"Loading additional $IPTABLES modules"
+	echo -n "Loading additional $IPTABLES modules"
 	ret=0
 	for mod in $IPTABLES_MODULES; do
 	    echo -n "$mod "
@@ -206,7 +206,7 @@ stop() {
     set_policy ACCEPT
     
     if [ "x$IPTABLES_MODULES_UNLOAD" = "xyes" ]; then
-	echo -n $"Unloading $IPTABLES modules"
+	echo -n "Unloading $IPTABLES modules"
 	ret=0
 	rmmod_r ${IPV}_tables
 	let ret+=$?;
@@ -227,7 +227,7 @@ save() {
     tables=`cat $PROC_IPTABLES_NAMES 2>/dev/null`
     [ -z "$tables" ] && return 1
 
-    echo -n $"Saving firewall rules to $IPTABLES_DATA"
+    echo -n "Saving firewall rules to $IPTABLES_DATA"
 
     OPT=
     [ "x$IPTABLES_SAVE_COUNTER" = "xyes" ] && OPT="-c"
@@ -263,17 +263,17 @@ status() {
     # loaded.
     # Check if iptable module is loaded
     if [ ! -f "$VAR_SUBSYS_IPTABLES" -a -z "$tables" ]; then
-	echo $"Firewall is stopped."
+	echo "Firewall is stopped."
 	return 1
     fi
 
     # Check if firewall is configured (has tables)
     if [ ! -e "$PROC_IPTABLES_NAMES" ]; then
-	echo $"Firewall is not configured. "
+	echo "Firewall is not configured. "
 	return 1
     fi
     if [ -z "$tables" ]; then
-	echo $"Firewall is not configured. "
+	echo "Firewall is not configured. "
 	return 1
     fi
 
@@ -285,7 +285,7 @@ status() {
     [ "x$IPTABLES_STATUS_LINENUMBERS" = "xyes" ] && COUNT="--line-numbers"
 
     for table in $tables; do
-	echo $"Table: $table"
+	echo "Table: $table"
 	$IPTABLES -t $table --list $NUM $VERBOSE $COUNT && echo
     done
 
@@ -330,7 +330,7 @@ case "$1" in
 	RETVAL=$?
 	;;
     *)
-	echo $"Usage: $0 {start|stop|restart|condrestart|status|panic|save}"
+	echo "Usage: $0 {start|stop|restart|condrestart|status|panic|save}"
 	exit 1
 	;;
 esac

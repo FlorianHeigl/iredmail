@@ -8,6 +8,7 @@
 if [ X"${DISTRO}" == X"RHEL" ]; then
     export PKG_POLICYD='policyd'
     export POLICYD_CONF='/etc/policyd.conf'
+    export POLICYD_SENDER_THROTTLE_CONF='/etc/policyd_sender_throttle.conf'
     export POLICYD_INIT_SCRIPT='/etc/init.d/policyd'
 
     # Database.
@@ -17,6 +18,7 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
 elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     export PKG_POLICYD='postfix-policyd'
     export POLICYD_CONF='/etc/postfix-policyd.conf'
+    export POLICYD_SENDER_THROTTLE_CONF='/etc/postfix-policyd_sender_throttle.conf'
     export POLICYD_INIT_SCRIPT='/etc/init.d/postfix-policyd'
 
     # Database.
@@ -39,7 +41,6 @@ export POLICYD_USER_HOME='/home/policyd'
 #
 # Another policyd instance for recipient throttle feature only.
 #
-export POLICYD_SENDER_THROTTLE_CONF='/etc/policyd_sender_throttle.conf'
 export POLICYD_SENDER_THROTTLE_PIDFILE='/var/run/policyd_sender_throttle.pid'
 
 export POLICYD_SENDER_THROTTLE_BINDHOST="${POLICYD_BINDHOST}"
