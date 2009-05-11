@@ -54,9 +54,6 @@ DEFAULT_QUOTA='100'   # 100 -> 100M
 # Mailbox format: mbox, Maildir.
 MAILBOX_FORMAT='Maildir'
 
-# String in maildir.
-MAILDIR_STRING='Maildir/'
-
 # ---- Maildir settings ----
 # Maildir style: hashed, normal.
 # Hashed maildir style, so that there won't be many large directories
@@ -123,7 +120,7 @@ generate_sql()
         # Different maildir format: maildir, mbox.
         if [ X"${MAILBOX_FORMAT}" == X"Maildir" ]; then
             # Append slash to make it 'maildir' format.
-            maildir="${maildir}/Maildir/"
+            maildir="${maildir}/"
         else
             # It's already mbox format.
             :
