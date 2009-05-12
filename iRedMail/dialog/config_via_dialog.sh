@@ -22,9 +22,8 @@ ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
 Thanks for your use of ${PROG_NAME}.
 Bug report, feedback, suggestion are always welcome.
 
-Contact us:
-
-    * Forum: http://www.iredmail.org/forum/
+Contact the author via mail: michaelbibby@gmail.com
+Community: http://www.iredmail.org/forum/
 
 NOTE:
 

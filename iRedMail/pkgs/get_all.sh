@@ -284,7 +284,7 @@ echo_end_msg()
 * All tasks had been finished Successfully. Next step:
 *
 *   # cd ..
-*   # sh ${PROG_NAME}.sh
+*   # bash ${PROG_NAME}.sh
 *
 ********************************************************
 

@@ -135,7 +135,6 @@ export LDAP_VALUE_GROUP_HASMEMBER='yes'
 # Attributes of user object.
 export LDAP_ATTR_USER_RDN='mail'
 export LDAP_ATTR_USER_PASSWD='userPassword'
-export LDAP_ATTR_USER_STORAGE_BASE_DIRECTORY='storageBaseDirectory'
 export LDAP_ATTR_USER_SENDER_BCC_ADDRESS='userSenderBccAddress'
 export LDAP_ATTR_USER_RECIPIENT_BCC_ADDRESS='userRecipientBccAddress'
 export LDAP_ATTR_USER_BACKUP_MAIL_ADDRESS='backupMailAddress'
