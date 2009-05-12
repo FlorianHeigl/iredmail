@@ -42,7 +42,7 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
 
     # Web data.
     export HTTPD_SERVERROOT='/usr/share/apache2'
-    export HTTPD_DOCUMENTROOT="${HTTPD_SERVERROOT}/default-site"
+    export HTTPD_DOCUMENTROOT="/var/www"
 
     # Daemon user.
     export HTTPD_USER='www-data'
