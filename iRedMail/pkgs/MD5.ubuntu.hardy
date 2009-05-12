@@ -6,3 +6,4 @@
 eee0553b064611ac6ca4468ec3b144a3  pkgs/dovecot-pop3d_1.1.11-0ubuntu4~hardy2_amd64.deb
 2e8e613e2cbd1e29f6ceb36ebdbc6232  pkgs/dovecot-pop3d_1.1.11-0ubuntu4~hardy2_i386.deb
 88674683a291e769ec35c540ca7199b9  pkgs/dovecot-postfix_1.1.11-0ubuntu4~hardy2_all.deb
+e7518e5bcfb256cf11996ac4a70c8be0  pkgs/libmail-dkim-perl_0.33-1~hardy1_all.deb

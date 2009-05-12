@@ -16,7 +16,7 @@ openldap_config()
     setfacl -m u:${LDAP_USER}:r-- ${SSL_KEY_FILE}
 
     # Add ${LDAP_USER} to 'ssl-cert' group, so that slapd service can read the SSL key.
-    [ X"${DISTRO}" == X"UBUNTU" -a X"${DISTRO_CODENAME}" == X"jaunty" ] && usermod -G ssl-cert ${LDAP_USER}
+    [ X"${DISTRO}" == X"UBUNTU" ] && usermod -G ssl-cert ${LDAP_USER}
 
     # Copy ${PROG_NAME}.schema.
     cp -f ${SAMPLE_DIR}/iredmail.schema ${OPENLDAP_SCHEMA_DIR}

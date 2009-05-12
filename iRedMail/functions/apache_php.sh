@@ -9,6 +9,18 @@
 apache_php_config()
 {
     ECHO_INFO "==================== Apache & PHP ===================="
+
+    # Copy a sample default-ssl site config file.
+    if [ X"${DISTRO}" == X"UBUNTU" -a X"${DISTRO_CODENAME}" == X"hardy" ]; then
+        sample="$( eval ${LIST_FILES_IN_PKG} apache2-common | grep 'httpd-ssl.conf.gz' )"
+        [ ! -z ${sample} ] && gunzip -c ${sample} > ${HTTPD_SSL_CONF}
+
+        # Set document root.
+        perl -pi -e 's#^(DocumentRoot).*#${1} "$ENV{HTTPD_DOCUMENTROOT}"#' ${HTTPD_SSL_CONF}
+    else
+        :
+    fi
+
     backup_file ${HTTPD_CONF} ${HTTPD_SSL_CONF}
 
     # --------------------------
@@ -34,7 +46,7 @@ apache_php_config()
 
     # Enable ssl, ldap, mysql module on Debian/Ubuntu.
     if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        a2ensite default-ssl >/dev/null
+        a2ensite $(basename ${HTTPD_SSL_CONF}) >/dev/null
         a2enmod ssl >/dev/null
         [ X"${BACKEND}" == X"OpenLDAP" ] && a2enmod authnz_ldap > /dev/null
         [ X"${BACKEND}" == X"MySQL" ] && a2enmod auth_mysql > /dev/null

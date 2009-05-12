@@ -134,7 +134,7 @@ check_pkg()
     cmd="$1"
     pkg="$2"
 
-    ECHO_INFO "Checking necessary command: ${cmd} ..."
+    ECHO_INFO "Checking necessary command/package: ${cmd}/${pkg} ..."
     for i in $(echo $PATH|sed 's/:/ /g'); do
         [ -x $i/${cmd} ] && export HAS_CMD='YES'
     done

@@ -260,7 +260,7 @@ create_repo_debian()
 
     # Warning: Use relative path of binary packages.
     cd ${ROOTDIR} && \
-    ( ${BIN_CREATEREPO} $(basename ${PKG_DIR}) > ${PKG_DIR}/Packages ) 2>/dev/null
+    ( ${BIN_CREATEREPO} $(basename ${PKG_DIR}) /dev/null > ${PKG_DIR}/Packages ) 2>/dev/null
 
     echo -e "\t[ OK ]"
 
@@ -271,9 +271,7 @@ create_repo_debian()
     echo -e "\t[ OK ]"
 
     ECHO_INFO -n "Update apt repository data (apt-get update) ..."
-    apt-get update >/dev/null
-
-    echo -e "\t[ OK ]"
+    apt-get update
 
 }
 
