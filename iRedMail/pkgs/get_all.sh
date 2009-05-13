@@ -21,13 +21,16 @@ FETCH_CMD="wget -cq --referer ${PROG_NAME}-${PROG_VERSION}"
 #
 #   ${MIRROR}/
 #           |- yum/         # for RHEL/CentOS
-#               |- pkgs/
+#               |- rpms/
 #                   |- 5/
-#                   |- 6/ (not present yet)
-#               |- misc/
+#                   |- 6/   # Not present yet.
+#               |- misc/    # Source tarballs.
+#               |- srpms/   # Source RPMs.
 #           |- apt/             # for Debian/Ubuntu
 #               |- debian/      # For Debian
 #                   |- lenny/   # For Debian (Lenny)
+#               |- ubuntu/      # For Ubuntu
+#                   |- hardy/   # For Ubuntu (Hardy, 8.04 LTS)
 #
 # You can find nearest mirror in this page:
 #   http://code.google.com/p/iredmail/wiki/Mirrors
