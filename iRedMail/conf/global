@@ -178,7 +178,7 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     export IPTABLES_CONFIG="${ETC_SYSCONFIG_DIR}/iptables"
 
     # Directory used to store SSL/TLS key/cert file.
-    export SSL_FILE_DIR="/etc/pki"
+    export SSL_FILE_DIR="/etc/pki/tls"
 
     # Yum repository related.
     export YUM_REPOS_DIR='/etc/yum.repos.d'
