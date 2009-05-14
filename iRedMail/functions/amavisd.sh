@@ -156,6 +156,14 @@ ${CONF}
 
 EOF
 
+    # Add postfix alias for user: amavis.
+    if [ ! -z ${MAIL_ALIAS_ROOT} ]; then
+        echo "${AMAVISD_USER}: root" >> ${POSTFIX_FILE_ALIASES}
+        postalias hash:${POSTFIX_FILE_ALIASES}
+    else
+        :
+    fi
+
     echo 'export status_amavisd_config_debian="DONE"' >> ${STATUS_FILE}
 }
 
