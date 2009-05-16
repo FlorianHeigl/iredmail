@@ -80,7 +80,7 @@ CREATE TABLE mailbox (
     enablepop3 tinyint(1) NOT NULL DEFAULT '1',
     enableimap tinyint(1) NOT NULL DEFAULT '1',
     enabledeliver tinyint(1) NOT NULL DEFAULT '1',
-    enablesieve tinyint(1) NOT NULL DEFAULT '1',
+    enablemanagesieve tinyint(1) NOT NULL DEFAULT '1',
     created datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
     modified datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
     expired datetime NOT NULL DEFAULT '9999-12-31 00:00:00',

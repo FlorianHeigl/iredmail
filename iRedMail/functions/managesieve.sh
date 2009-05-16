@@ -18,7 +18,7 @@ ${CONF_MSG}
 auth    = Dovecot
 
 # User DB back-end to use
-userdb  = Virtual
+userdb  = Dovecot
 
 # Storage back-end to use
 storage = Dovecot
@@ -44,6 +44,9 @@ gid = ${VMAIL_USER_GID}
 hostdirs = True
 
 [Dovecot]
+# How do we identify ourself to Dovecot? Default is 'pysieved'.
+service = managesieve
+
 # Path to Dovecot's auth socket (do not set unless you're using
 # Dovecot auth)
 mux = ${DOVECOT_SOCKET_MUX}

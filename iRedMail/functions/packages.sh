@@ -206,7 +206,7 @@ install_all()
 gen_pem_key()
 {
     # Create necessary directories.
-    mkdir -p ${SSL_FILE_DIR}/{certs,private}
+    mkdir -p ${SSL_FILE_DIR}/{certs,private} 2>/dev/null
 
     openssl req \
         -x509 -nodes -days 3650 -newkey rsa:1024 \
