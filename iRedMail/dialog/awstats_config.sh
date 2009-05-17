@@ -14,9 +14,9 @@ else
     # Set username for awstats access.
     while : ; do
         ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-        --title "Specify username for access awstats from web browser" \
+        --title "Specify \Zb\Z2username\Zn for access awstats from web browser" \
         --inputbox "\
-Please specify username for access awstats from web browser.
+Please specify \Zb\Z2username\Zn for access awstats from web browser.
 
 Example:
 
@@ -34,13 +34,13 @@ Example:
     # Set password for awstats user.
     while : ; do
         ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-        --title "Password for awstats user: ${AWSTATS_USERNAME}" \
+        --title "\Zb\Z2Password\Zn for awstats user: ${AWSTATS_USERNAME}" \
         --passwordbox "\
-Please specify password for awstats user: ${AWSTATS_USERNAME}
+Please specify \Zb\Z2password\Zn for awstats user: ${AWSTATS_USERNAME}
 
 Warning:
 
-    * EMPTY password is *NOT* permitted.
+    * \Zb\Z1EMPTY password is *NOT* permitted.\Zn
 
 " 20 76 2>/tmp/awstats_passwd
 

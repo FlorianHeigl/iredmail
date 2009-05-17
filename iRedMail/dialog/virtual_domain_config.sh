@@ -5,9 +5,9 @@
 # First domain name.
 while : ; do
     ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-    --title "Your first virtual domain" \
+    --title "Your first virtual \Zb\Z2domain name\Zn" \
     --inputbox "\
-Please specify your first virtual domain name.
+Please specify your first virtual \Zb\Z2domain name\Zn.
 
 EXAMPLES:
 
@@ -25,9 +25,9 @@ rm -f /tmp/first_domain
 
 #DOMAIN_ADMIN_NAME
 ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-    --title "Specify administrator' name of your virtual domain" \
+    --title "Specify \Zb\Z2administrator' name\Zn of your virtual domain" \
     --inputbox "\
-Please specify administrator' name of your virtual domain.
+Please specify \Zb\Z2administrator' name\Zn of your virtual domain.
 
 EXAMPLE:
 
@@ -35,8 +35,8 @@ EXAMPLE:
 
 Warning:
 
-    * This account is used only for system administration.
-    * It's *NOT* a normal mail user.
+    * \Zb\Z1This account is used only for system administration.\Zn
+    * \Zb\Z1It's *NOT* a normal mail user.\Zn
 " 20 76 "postmaster" 2>/tmp/first_domain_admin_name
 
 DOMAIN_ADMIN_NAME="$(cat /tmp/first_domain_admin_name)"
@@ -46,15 +46,15 @@ rm -f /tmp/first_domain_admin_name
 # DOMAIN_ADMIN_PASSWD
 while : ; do
     ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-    --title "Password for the administrator of your domain" \
+    --title "\Zb\Z2Password\Zn for the administrator of your domain" \
     --passwordbox "\
-Please specify password for the administrator user:
+Please specify \Zb\Z2password\Zn for the administrator user:
 
     * ${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}
 
 Warning:
 
-    * EMPTY password is *NOT* permitted.
+    * \Zb\Z1EMPTY password is *NOT* permitted.\Zn
 
 " 20 76 2>/tmp/first_domain_admin_passwd
 
@@ -71,7 +71,7 @@ while : ; do
     ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
         --title "Add a user for your domain" \
         --inputbox "\
-Please specify the username of your first domain: ${FIRST_DOMAIN}.
+Please specify \Zb\Z2username\Zn of your first user for domain: ${FIRST_DOMAIN}.
 
 EXAMPLE:
 
@@ -79,7 +79,7 @@ EXAMPLE:
 
 Note:
 
-    * This account is a normal mail user.
+    * \Zb\Z1This account is a normal mail user.\Zn
 " 20 76 "www" 2>/tmp/first_user
 
     FIRST_USER="$(cat /tmp/first_user)"
@@ -92,15 +92,15 @@ rm -f /tmp/first_user
 # FIRST_USER_PASSWD
 while : ; do
     ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-    --title "Password for your first user" \
+    --title "\Zb\Z2Password\Zn for your first user" \
     --passwordbox "\
-Please specify password for your first user:
+Please specify \Zb\Z2password\Zn for your first user:
 
     * ${FIRST_USER}@${FIRST_DOMAIN}
 
 Warning:
 
-    * EMPTY password is *NOT* permitted.
+    * \Zb\Z1EMPTY password is *NOT* permitted.\Zn
 
 " 20 76 2>/tmp/first_user_passwd
 

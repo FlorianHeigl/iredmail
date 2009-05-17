@@ -9,9 +9,9 @@
 # LDAP suffix.
 while : ; do
     ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-        --title "LDAP suffix (root dn)" \
+        --title "\Zb\Z2LDAP suffix (root dn)\Zn" \
         --inputbox "\
-Please specify your LDAP suffix (root dn).
+Please specify your \Zb\Z2LDAP suffix (root dn)\Zn.
 
 EXAMPLE:
 
@@ -53,15 +53,15 @@ EOF
 # LDAP rootpw.
 while : ; do
     ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-    --title "Password for LDAP rootdn: ${LDAP_ROOTDN}" \
+    --title "\Zb\Z2Password\Zn for LDAP rootdn: ${LDAP_ROOTDN}" \
     --passwordbox "\
-Please specify password for LDAP rootdn:
+Please specify \Zb\Z2password\Zn for LDAP rootdn:
 
     * ${LDAP_ROOTDN}
 
 Warning:
 
-    * EMPTY password is *NOT* permitted.
+    * \Zb\Z1EMPTY password is *NOT* permitted.\Zn
 " 20 76 2>/tmp/ldap_rootpw
 
     LDAP_ROOTPW="$(cat /tmp/ldap_rootpw)"
@@ -76,15 +76,15 @@ rm -f /tmp/ldap_rootpw
 # LDAP admin dn passwd.
 while : ; do
     ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-    --title "Password for vmail LDAP admin user" \
+    --title "\Zb\Z2Password\Zn for vmail LDAP admin user" \
     --passwordbox "\
-Please specify password for vmail LDAP admin user:
+Please specify \Zb\Z2password\Zn for vmail LDAP admin user:
 
     * admin dn: ${LDAP_ADMIN_DN}
 
 Warning:
 
-    * EMPTY password in *NOT* permitted.
+    * \Zb\Z1EMPTY password is *NOT* permitted.\Zn
 
 " 20 76 2>/tmp/vmail_user_passwd
 

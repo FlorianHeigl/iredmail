@@ -27,10 +27,9 @@ pickup    fifo  n       -       n       60      1       pickup
 EOF
 
 
-    ECHO_INFO "Copy /etc/{hosts,resolv.conf} to chrooted postfix directory ${POSTFIX_CHROOT_DIR}."
+    ECHO_INFO "Copy /etc/{hosts,resolv.conf,localtime} to chrooted postfix directory ${POSTFIX_CHROOT_DIR}."
     mkdir -p "${POSTFIX_CHROOT_DIR}/etc/"
-    cp -f /etc/hosts ${POSTFIX_CHROOT_DIR}/etc/
-    cp -f /etc/resolv.conf ${POSTFIX_CHROOT_DIR}/etc/
+    cp -f /etc/{hosts,resolv.conf,localtime} ${POSTFIX_CHROOT_DIR}/etc/
 
     # Normally, myhostname is the same as myorigin.
     postconf -e myhostname="${HOSTNAME}"

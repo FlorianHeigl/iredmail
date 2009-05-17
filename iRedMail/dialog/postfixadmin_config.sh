@@ -9,13 +9,13 @@
 # Username of PostfixAdmin site admin.
 while :; do
     ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-    --title "Username of PostfixAdmin site admin" \
+    --title "\Zb\Z2Username\Zn of PostfixAdmin site admin" \
     --inputbox "\
-Please specify the username of PostfixAdmin site admin.
+Please specify the \Zb\Z2username\Zn of PostfixAdmin site admin.
 
 EXAMPLE:
 
-    * michaelbibby@gmail.com
+    * ${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}
 
 " 20 76 "${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}" 2>/tmp/site_admin_name
 
@@ -33,15 +33,15 @@ if [ X"${SITE_ADMIN_NAME}" != X"${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}" ]; then
     # Prompt to set password.
     while : ; do
         ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-        --title "Password of PostfixAdmin site admin" \
+        --title "\Zb\Z2Password\Zn of PostfixAdmin site admin" \
         --passwordbox "\
-Please specify the password of site admin in PostfixAdmin:
+Please specify the \Zb\Z2password\Zn of site admin in PostfixAdmin:
 
     * ${SITE_ADMIN_NAME}
 
 Warning:
 
-    * EMPTY password in *NOT* permitted.
+    * \Zb\Z2EMPTY password in *NOT* permitted.\Zn
 
 " 20 76 2>/tmp/site_admin_passwd
 

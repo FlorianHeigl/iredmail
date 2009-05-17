@@ -5,9 +5,9 @@
 # Set default language for webmails.
 
 ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-    --title "Choose the default language for your webmail(s)" \
+    --title "Choose the \Zb\Z2default language\Zn for your webmail(s)" \
     --radiolist "\
-Choose the default language for your webmail(s):
+Choose the \Zb\Z2default language\Zn for your webmail(s):
 
 TIP:
     * Use 'Space' key to select item.

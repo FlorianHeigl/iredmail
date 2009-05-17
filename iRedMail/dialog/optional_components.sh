@@ -36,9 +36,9 @@ fi
 # ------------- SPF & DKIM -------------------------
 # --------------------------------------------------
 ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-    --title "SPF & DKIM" \
+    --title "\Zb\Z2SPF & DKIM\Zn" \
         --checklist "\
-Do you want to support SPF and DKIM?
+Do you want to support \Zb\Z2SPF and DKIM\Zn?
 
 Note:
     * DKIM is recommended.
@@ -68,9 +68,9 @@ echo ${SPF_DKIM} | grep -i '\<DKIM\>' >/dev/null 2>&1
 
 if [ X"${BACKEND}" == X"OpenLDAP" ]; then
     ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-    --title "Optional Components for ${BACKEND} backend" \
+    --title "\Zb\Z2Optional Components\Zn for ${BACKEND} backend" \
     --checklist "\
-${PROG_NAME} provides several optional components for LDAP backend, you can
+${PROG_NAME} provides several \Zb\Z2optional components\Zn for LDAP backend, you can
 use them by your own:
 " 20 76 5 \
     "Roundcubemail" "WebMail program (PHP, XHTML, CSS2, AJAX)." "on" \
@@ -81,9 +81,9 @@ use them by your own:
 
 elif [ X"${BACKEND}" == X"MySQL" ]; then
     ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-    --title "Optional Components for ${BACKEND} backend" \
+    --title "\Zb\Z2Optional Components\Zn for ${BACKEND} backend" \
     --checklist "\
-${PROG_NAME} provides several optional components for MySQL backend, you can use
+${PROG_NAME} provides several \Zb\Z2optional components\Zn for MySQL backend, you can use
 them by your own:
 " 20 76 5 \
     "Roundcubemail" "WebMail program (PHP, XHTML, CSS2, AJAX)." "on" \

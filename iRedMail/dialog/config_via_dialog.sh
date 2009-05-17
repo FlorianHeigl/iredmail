@@ -12,7 +12,7 @@ trap "exit 255" 2
 # Initialize config file.
 echo '' > ${CONFIG_FILE}
 
-DIALOG='dialog --no-collapse --insecure --ok-label Next --no-cancel'
+DIALOG='dialog --colors --no-collapse --insecure --ok-label Next --no-cancel'
 DIALOG_BACKTITLE="${PROG_NAME}: Open Source Mail Server Solution for RHEL/CentOS/Debian/Ubuntu."
 
 # Welcome message.
@@ -22,12 +22,12 @@ ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
 Thanks for your use of ${PROG_NAME}.
 Bug report, feedback, suggestion are always welcome.
 
-Contact the author via mail: michaelbibby@gmail.com
-Community: http://www.iredmail.org/forum/
+Contact author via mail: \Zb\Z2michaelbibby@gmail.com\Zn
+Community: \Zb\Z2http://www.iredmail.org/forum/\Zn
 
 NOTE:
 
-    Ctrl-C will abort this wizard.
+    \Zb\Z1Ctrl-C will abort this wizard.\Zn
 " 20 76
 
 # Exit when user choose 'exit'.
@@ -46,7 +46,7 @@ EXAMPLE:
 
 NOTE:
 
-    * All mails will be stored in this HOME directory, so it may take
+    * \Zb\Z1All mails will be stored in this HOME directory\Zn, so it may take
       large disk space.
 " 20 76 "${VMAIL_USER_HOME_DIR}" 2>/tmp/vmail_user_home_dir
 
@@ -59,7 +59,7 @@ rm -f /tmp/vmail_user_home_dir
 # --------------------- Backend --------------------
 # --------------------------------------------------
 ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-    --title "Choose your prefer backend" \
+    --title "Choose your \Zb\Z2prefer backend\Zn" \
     --radiolist "\
 We provide two backends and the homologous webmail programs:
 
@@ -106,12 +106,12 @@ fi
 # Set mail alias for root.
 #
 ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-    --title "Specify mail alias for 'root' user" \
+    --title "Specify \Zb\Z2mail alias\Zn for 'root' user" \
     --inputbox "\
-Please specify a *E-Mail* address for 'root' user alias.
+Please specify an \Zb\Z2E-Mail\Zn address for 'root' user alias.
 
-Mail deliver failure notice will send to this alias address instead of
-system account 'root'.
+\Zb\Z1Mail deliver failure notice and other system notify mails will be
+send to this alias address instead of system account 'root'.\Zn
 
 EXAMPLE:
 
@@ -138,7 +138,7 @@ Configuration completed.
 * Please do remember to *MOVE* configuration file after installation    *
 * completed successfully.                                               *
 *                                                                       *
-*   * ${CONFIG_FILE}
+*   * \Zb\Z2${CONFIG_FILE}\Zn
 *                                                                       *
 *************************************************************************
 EOF
