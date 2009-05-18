@@ -18,7 +18,7 @@ ${CONF_MSG}
 auth    = Dovecot
 
 # User DB back-end to use
-userdb  = Virtual
+userdb  = Dovecot
 
 # Storage back-end to use
 storage = Dovecot
@@ -31,17 +31,6 @@ port    = ${PYSIEVED_PORT}
 
 # Write a pidfile here
 pidfile = ${PYSIEVED_PIDFILE}
-
-[Virtual]
-# Append username to this for home directories
-base = ${SIEVE_DIR}
-
-# What UID and GID should own all files?  -1 to not bother
-uid = ${VMAIL_USER_UID}
-gid = ${VMAIL_USER_GID}
-
-# Switch user@host.name to host.name/user?
-hostdirs = True
 
 [Dovecot]
 # How do we identify ourself to Dovecot? Default is 'pysieved'.
@@ -57,8 +46,8 @@ master = ${DOVECOT_SOCKET_MASTER}
 # Path to sievec
 sievec = ${DOVECOT_SIEVEC}
 
-# Where in user directory to store scripts
-scripts = ${PYSIEVED_RULE_DIR}
+# Where in user directory to store scripts.
+scripts = .
 
 # Filename used for the active SIEVE filter (see README.Dovecot)
 active = ${SIEVE_RULE_FILENAME}
@@ -121,7 +110,7 @@ protocol managesieve {
     sieve = ${SIEVE_RULE_FILENAME}
 
     # This specifies the path to the directory where the uploaded scripts are stored.
-    sieve_storage = ${SIEVE_DIR}/%Ld/%Ln/
+    sieve_storage = /%Lh/
 
     # Login executable location.
     login_executable = /usr/lib/dovecot/managesieve-login

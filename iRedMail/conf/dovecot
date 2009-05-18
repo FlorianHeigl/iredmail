@@ -34,7 +34,8 @@ export DOVECOT_SIEVEC='/usr/libexec/dovecot/sievec'
 export DOVECOT_LOG_FILE='/var/log/dovecot.log'
 
 export SIEVE_LOG_FILE='/var/log/sieve.log'
-export SIEVE_RULE_FILENAME='.dovecot.sieve'
+# Do not starts with dot (.).
+export SIEVE_RULE_FILENAME='dovecot.sieve'
 export SIEVE_FILTER_FILE="${VMAIL_USER_HOME_DIR}/${SIEVE_RULE_FILENAME}"
 
 # Dovecot plugin: Expire.
