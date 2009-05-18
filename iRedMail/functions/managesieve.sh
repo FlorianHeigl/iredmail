@@ -18,7 +18,7 @@ ${CONF_MSG}
 auth    = Dovecot
 
 # User DB back-end to use
-userdb  = Dovecot
+userdb  = Virtual
 
 # Storage back-end to use
 storage = Dovecot
