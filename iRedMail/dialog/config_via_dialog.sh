@@ -137,7 +137,7 @@ Configuration completed.
 * Please do remember to *MOVE* configuration file after installation    *
 * completed successfully.                                               *
 *                                                                       *
-*   * \Zb\Z2${CONFIG_FILE}\Zn
+*   * ${CONFIG_FILE}
 *                                                                       *
 *************************************************************************
 EOF
