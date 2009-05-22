@@ -18,6 +18,7 @@ sa_config()
     #perl -pi -e 's/(^loadplugin.*Mail.*SpamAssassin.*Plugin.*URIDNSBL.*)/#${1}/' ${SA_INIT_PRE}
 
     ECHO_INFO "Enable crontabs for SpamAssassin update."
+    chmod 0644 /etc/cron.d/sa-update
     if [ X"${DISTRO}" == X"RHEL" ]; then
         perl -pi -e 's/#(10.*)/${1}/' /etc/cron.d/sa-update
     elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
