@@ -308,8 +308,8 @@ EOF
     ECHO_INFO "Setting cron job for policyd user: ${POLICYD_USER_NAME}."
     cat > ${CRON_SPOOL_DIR}/${POLICYD_USER_NAME} <<EOF
 ${CONF_MSG}
-1       */2       *       *       *       $(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep 'cleanup' | grep 'sbin') -c ${POLICYD_CONF}
-1       */2       *       *       *       $(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep 'cleanup' | grep 'sbin') -c ${POLICYD_SENDER_THROTTLE_CONF}
+1       */2       *       *       *       $(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep 'cleanup$' ) -c ${POLICYD_CONF}
+1       */2       *       *       *       $(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep 'cleanup$' ) -c ${POLICYD_SENDER_THROTTLE_CONF}
 EOF
 
     # Set cron file permission: root:root, 0600.
