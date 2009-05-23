@@ -19,7 +19,7 @@ sm_install()
     cp -f ${SM_HTTPD_ROOT}/config/config_default.php ${SM_HTTPD_ROOT}/config/config.php
 
     ECHO_INFO "Set correct permission for squirrelmail: ${SM_HTTPD_ROOT}."
-    chown -R apache:apache ${SM_HTTPD_ROOT}
+    chown -R ${HTTPD_USER}:${HTTPD_GROUP} ${SM_HTTPD_ROOT}
     chmod -R 755 ${SM_HTTPD_ROOT}
     chmod 0000 ${SM_HTTPD_ROOT}/{AUTHORS,ChangeLog,COPYING,INSTALL,README,ReleaseNotes,UPGRADE}
 
@@ -53,7 +53,7 @@ EOF
     ECHO_INFO "Create directories to storage squirrelmail data and attachments: ${SM_DATA_DIR}, ${SM_ATTACHMENT_DIR}."
 
     mkdir -p ${SM_DATA_DIR} ${SM_ATTACHMENT_DIR}
-    chown apache:apache ${SM_DATA_DIR} ${SM_ATTACHMENT_DIR}
+    chown ${HTTPD_USER}:${HTTPD_GROUP} ${SM_DATA_DIR} ${SM_ATTACHMENT_DIR}
     chmod 730 ${SM_ATTACHMENT_DIR}
 
     cat >> ${TIP_FILE} <<EOF
@@ -216,7 +216,7 @@ sm_plugin_compatibility()
 
     ECHO_INFO "Move plugin to: ${SM_PLUGIN_DIR}."
     mv compatibility ${SM_PLUGIN_DIR}
-    chown -R apache:apache ${SM_PLUGIN_DIR}/compatibility/
+    chown -R ${HTTPD_USER}:${HTTPD_GROUP} ${SM_PLUGIN_DIR}/compatibility/
     chmod -R 0755 ${SM_PLUGIN_DIR}/compatibility/
 
     echo 'export status_sm_plugin_compatibility="DONE"' >> ${STATUS_FILE}
@@ -234,13 +234,13 @@ sm_plugin_check_quota()
 
     ECHO_INFO "Move plugin to: ${SM_PLUGIN_DIR}."
     mv check_quota ${SM_PLUGIN_DIR}
-    chown -R apache:apache ${SM_PLUGIN_DIR}/check_quota/
+    chown -R ${HTTPD_USER}:${HTTPD_GROUP} ${SM_PLUGIN_DIR}/check_quota/
     chmod -R 0755 ${SM_PLUGIN_DIR}/check_quota/
 
     # Configure.
     ECHO_INFO "Generate configuration file for plugin: check_quota."
     cp ${SM_PLUGIN_DIR}/check_quota/config.sample.php ${SM_PLUGIN_DIR}/check_quota/config.php
-    chown -R apache:apache ${SM_PLUGIN_DIR}/check_quota/config.php
+    chown -R ${HTTPD_USER}:${HTTPD_GROUP} ${SM_PLUGIN_DIR}/check_quota/config.php
     chmod -R 0755 ${SM_PLUGIN_DIR}/check_quota/config.php
 
     ECHO_INFO "Configure plugin: check_quota."
@@ -259,7 +259,7 @@ sm_plugin_select_language()
 
     cd ${MISC_DIR}
     extract_pkg ${PLUGIN_SELECT_LANGUAGE_TARBALL} ${SM_PLUGIN_DIR}
-    chown -R apache:apache ${SM_PLUGIN_DIR}/select_language
+    chown -R ${HTTPD_USER}:${HTTPD_GROUP} ${SM_PLUGIN_DIR}/select_language
     chmod -R 755 ${SM_PLUGIN_DIR}/select_language
 
     echo 'export status_sm_plugin_select_language="DONE"' >> ${STATUS_FILE}
@@ -274,7 +274,7 @@ sm_plugin_autosubscribe()
 
     cd ${MISC_DIR}
     extract_pkg ${PLUGIN_AUTOSUBSCRIBE_TARBALL} ${SM_PLUGIN_DIR}
-    chown -R apache:apache ${SM_PLUGIN_DIR}/autosubscribe
+    chown -R ${HTTPD_USER}:${HTTPD_GROUP} ${SM_PLUGIN_DIR}/autosubscribe
     chmod -R 755 ${SM_PLUGIN_DIR}/autosubscribe
 
     cat > ${SM_PLUGIN_DIR}/autosubscribe/config.php <<EOF
@@ -297,7 +297,7 @@ sm_plugin_email_footer()
 
     cd ${MISC_DIR}
     extract_pkg ${PLUGIN_EMAIL_FOOTER_TARBALL} ${SM_PLUGIN_DIR}
-    chown -R apache:apache ${SM_PLUGIN_DIR}/email_footer
+    chown -R ${HTTPD_USER}:${HTTPD_GROUP} ${SM_PLUGIN_DIR}/email_footer
     chmod -R 755 ${SM_PLUGIN_DIR}/email_footer
 
     cd ${SM_PLUGIN_DIR}/email_footer/ && \
@@ -317,7 +317,7 @@ sm_plugin_login_auto()
 
     cd ${MISC_DIR}
     extract_pkg ${PLUGIN_LOGIN_AUTO} ${SM_PLUGIN_DIR}
-    chown -R apache:apache ${SM_PLUGIN_DIR}/login_auto
+    chown -R ${HTTPD_USER}:${HTTPD_GROUP} ${SM_PLUGIN_DIR}/login_auto
     chmod -R 755 ${SM_PLUGIN_DIR}/login_auto
 
     cd ${SM_PLUGIN_DIR}/login_auto/ && \
@@ -338,7 +338,7 @@ sm_plugin_add_address()
 
     cd ${MISC_DIR}
     extract_pkg ${PLUGIN_ADD_ADDRESS} ${SM_PLUGIN_DIR}
-    chown -R apache:apache ${SM_PLUGIN_DIR}/add_address/
+    chown -R ${HTTPD_USER}:${HTTPD_GROUP} ${SM_PLUGIN_DIR}/add_address/
     chmod -R 0755 ${SM_PLUGIN_DIR}/add_address/
 
     echo 'export status_sm_plugin_add_address="DONE"' >> ${STATUS_FILE}
@@ -353,7 +353,7 @@ sm_plugin_avelsieve()
 
     cd ${MISC_DIR}
     extract_pkg ${PLUGIN_AVELSIEVE} ${SM_PLUGIN_DIR}
-    chown -R apache:apache ${SM_PLUGIN_DIR}/avelsieve
+    chown -R ${HTTPD_USER}:${HTTPD_GROUP} ${SM_PLUGIN_DIR}/avelsieve
     chmod -R 755 ${SM_PLUGIN_DIR}/avelsieve
 
     # Patch file reference:
@@ -379,7 +379,7 @@ sm_plugin_change_ldappass()
 
     ECHO_INFO "Move plugin to: ${SM_PLUGIN_DIR}."
     mv change_ldappass ${SM_PLUGIN_DIR}
-    chown -R apache:apache ${SM_PLUGIN_DIR}
+    chown -R ${HTTPD_USER}:${HTTPD_GROUP} ${SM_PLUGIN_DIR}
     chmod -R 0755 ${SM_PLUGIN_DIR}
 
     cd ${SM_PLUGIN_DIR}/change_ldappass/
@@ -405,7 +405,7 @@ ${CONF_MSG}
 ?>
 EOF
 
-    chown apache:apache ${PLUGIN_CHANGE_LDAPPASS_CONFIG}
+    chown ${HTTPD_USER}:${HTTPD_GROUP} ${PLUGIN_CHANGE_LDAPPASS_CONFIG}
     chmod 644 ${PLUGIN_CHANGE_LDAPPASS_CONFIG}
 
     echo 'export status_sm_plugin_change_ldappass="DONE"' >> ${STATUS_FILE}
@@ -421,7 +421,7 @@ sm_plugin_change_sqlpass()
 
     ECHO_INFO "Move plugin to: ${SM_PLUGIN_DIR}."
     mv change_sqlpass ${SM_PLUGIN_DIR}
-    chown -R apache:apache ${SM_PLUGIN_DIR}
+    chown -R ${HTTPD_USER}:${HTTPD_GROUP} ${SM_PLUGIN_DIR}
     chmod -R 0755 ${SM_PLUGIN_DIR}
 
     cd ${SM_PLUGIN_DIR}/change_sqlpass/
@@ -457,7 +457,7 @@ sm_plugin_change_sqlpass()
 ?>
 EOF
 
-    chown apache:apache ${PLUGIN_CHANGE_SQLPASS_CONFIG}
+    chown ${HTTPD_USER}:${HTTPD_GROUP} ${PLUGIN_CHANGE_SQLPASS_CONFIG}
     chmod 644 ${PLUGIN_CHANGE_SQLPASS_CONFIG}
 
     echo 'export status_sm_plugin_change_sqlpass="DONE"' >> ${STATUS_FILE}

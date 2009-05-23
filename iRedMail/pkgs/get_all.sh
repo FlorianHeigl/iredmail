@@ -293,9 +293,9 @@ EOF
 }
 
 # It's not required to download extra packages on Ubuntu (Jaunty, 9.04).
-if [ X"${DISTRO}" == X"UBUNTU" -a X"${DISTRO_CODENAME}" == X"jaunty" ]; then
-    echo_end_msg && exit 0
-fi
+#if [ X"${DISTRO}" == X"UBUNTU" -a X"${DISTRO_CODENAME}" == X"jaunty" ]; then
+#    echo_end_msg && exit 0
+#fi
 
 if [ -e ${STATUS_FILE} ]; then
     . ${STATUS_FILE}
@@ -303,13 +303,19 @@ else
     echo '' > ${STATUS_FILE}
 fi
 
-check_pkg ${BIN_WHICH} ${PKG_WHICH} && \
-check_pkg ${BIN_WGET} ${PKG_WGET} && \
-check_pkg ${BIN_CREATEREPO} ${PKG_CREATEREPO} && \
-check_pkg ${BIN_DIALOG} ${PKG_DIALOG} && \
+# Ubuntu 9.04 doesn't need to download extra binary packages.
+if [ X"${DISTRO_CODENAME}" != X"jaunty" ]; then
+    check_pkg ${BIN_WHICH} ${PKG_WHICH} && \
+    check_pkg ${BIN_WGET} ${PKG_WGET} && \
+    check_pkg ${BIN_CREATEREPO} ${PKG_CREATEREPO} && \
+    eval ${fetch_pkgs} && \
+    eval ${create_repo}
+else
+    :
+fi
+
 prepare_dirs && \
-eval ${fetch_pkgs} && \
+check_pkg ${BIN_DIALOG} ${PKG_DIALOG}
 fetch_misc && \
 check_md5 && \
-eval ${create_repo} && \
 echo_end_msg
