@@ -7,7 +7,7 @@
 # ----------------------------------------
 
 # Version number for core program: SquirrelMail.
-export SM_VERSION='1.4.17'
+export SM_VERSION='1.4.19'
 export SM_TARBALL="squirrelmail-${SM_VERSION}.tar.bz2"
 
 # ----------------------------------------
@@ -48,7 +48,7 @@ export PLUGIN_LOGIN_AUTO='login_auto-1.1-1.2.tar.gz'
 export PLUGIN_AVELSIEVE='avelsieve-1.0.1.tar.gz'
 
 # add_address.
-export PLUGIN_ADD_ADDRESS='add_address-1.0-1.4.0.tar.gz'
+export PLUGIN_ADD_ADDRESS='add_address-1.0.1-1.4.0.tar.gz'
 
 
 # ----------------------------------------
