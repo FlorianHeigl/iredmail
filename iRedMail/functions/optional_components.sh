@@ -7,6 +7,29 @@
 # -------------------------------------------
 optional_components()
 {
+    # SquirrelMail.
+    if [ X"${USE_SM}" == X"YES" ]; then
+        # ------------------------------------------------
+        # SquirrelMail and plugins.
+        # ------------------------------------------------
+        check_status_before_run sm_install && \
+        check_status_before_run sm_config_basic
+
+        if [ X"${BACKEND}" == X"OpenLDAP" ]; then
+            check_status_before_run sm_config_ldap_address_book
+        else
+            :
+        fi
+        
+        # SquirrelMail Translations.
+        check_status_before_run sm_translations
+
+        # Plugins.
+        check_status_before_run sm_plugin_all
+    else
+        :
+    fi
+
     # Roundcubemail.
     [ X"${USE_RCM}" == X"YES" ] && \
         check_status_before_run rcm_install && \

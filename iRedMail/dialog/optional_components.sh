@@ -74,6 +74,7 @@ ${PROG_NAME} provides several \Zb\Z2optional components\Zn for LDAP backend, you
 use them by your own:
 " 20 76 5 \
     "Roundcubemail" "WebMail program (PHP, XHTML, CSS2, AJAX)." "on" \
+    "SquirrelMail" "WebMail program, written in PHP." "off" \
     "phpLDAPadmin" "Web-based LDAP browser to manage your LDAP server." "on" \
     "phpMyAdmin" "Web-based MySQL database management." "on" \
     "Awstats" "Advanced web and mail log analyzer." "on" \
@@ -87,6 +88,7 @@ ${PROG_NAME} provides several \Zb\Z2optional components\Zn for MySQL backend, yo
 them by your own:
 " 20 76 5 \
     "Roundcubemail" "WebMail program (PHP, XHTML, CSS2, AJAX)." "on" \
+    "SquirrelMail" "WebMail program, written in PHP." "off" \
     "phpMyAdmin" "Web-based MySQL database management." "on" \
     "PostfixAdmin" "Web-based program to manage domains and users stored in MySQL." "on" \
     "Awstats" "Advanced web and mail log analyzer." "on" \
@@ -101,6 +103,9 @@ rm -f /tmp/optional_components
 
 echo ${OPTIONAL_COMPONENTS} | grep -i 'roundcubemail' >/dev/null 2>&1
 [ X"$?" == X"0" ] && export USE_WEBMAIL='YES' && export USE_RCM='YES' && echo "export USE_RCM='YES'" >> ${CONFIG_FILE}
+
+echo ${webmail} | grep -i 'squirrelmail' >/dev/null 2>&1
+[ X"$?" == X"0" ] && export USE_WEBMAIL='YES' && export USE_SM='YES' && echo "export USE_SM='YES'" >>${CONFIG_FILE}
 
 echo ${OPTIONAL_COMPONENTS} | grep -i 'phpldapadmin' >/dev/null 2>&1
 [ X"$?" == X"0" ] && USE_PHPLDAPADMIN='YES' && echo "export USE_PHPLDAPADMIN='YES'" >>${CONFIG_FILE}

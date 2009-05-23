@@ -155,11 +155,19 @@ install_all()
     # pysieved.
     # Warning: Do *NOT* add 'pysieved' service in 'ENABLED_SERVICES'.
     #          We don't have rc/init script under /etc/init.d/ now.
-    if [ X"${DISTRO}" == X"RHEL" ]; then
-        ALL_PKGS="${ALL_PKGS} pysieved.noarch"
-    elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+    if [ X"${USE_MANAGESIEVE}" == X"YES" ]; then
+        # Note for Ubuntu & Debian:
         # Dovecot shipped in Debian/Ubuntu has managesieve plugin patched.
+        [ X"${DISTRO}" == X"RHEL" ] && ALL_PKGS="${ALL_PKGS} pysieved.noarch"
+    else
         :
+    fi
+
+    # SquirrelMail.
+    if [ X"${USE_SM}" == X"YES" ]; then
+        [ X"${DISTRO}" == X"RHEL" ] && ALL_PKGS="${ALL_PKGS} php-pear-db.noarch"
+        [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ] && \
+            ALL_PKGS="${ALL_PKGS} php-db"
     else
         :
     fi
