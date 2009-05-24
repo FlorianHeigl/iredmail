@@ -21,7 +21,7 @@ sm_install()
     ECHO_INFO "Set correct permission for squirrelmail: ${SM_HTTPD_ROOT}."
     chown -R ${HTTPD_USER}:${HTTPD_GROUP} ${SM_HTTPD_ROOT}
     chmod -R 755 ${SM_HTTPD_ROOT}
-    chmod 0000 ${SM_HTTPD_ROOT}/{AUTHORS,ChangeLog,COPYING,INSTALL,README,ReleaseNotes,UPGRADE}
+    chmod 0000 ${SM_HTTPD_ROOT}/{README,doc}
 
     ECHO_INFO "Create directory alias for squirrelmail in Apache: ${HTTPD_DOCUMENTROOT}/mail/."
     cat > ${HTTPD_CONF_DIR}/squirrelmail.conf <<EOF

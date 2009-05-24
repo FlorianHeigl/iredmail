@@ -303,6 +303,8 @@ else
     echo '' > ${STATUS_FILE}
 fi
 
+prepare_dirs
+
 # Ubuntu 9.04 doesn't need to download extra binary packages.
 if [ X"${DISTRO_CODENAME}" != X"jaunty" ]; then
     check_pkg ${BIN_WHICH} ${PKG_WHICH} && \
@@ -314,8 +316,7 @@ else
     :
 fi
 
-prepare_dirs && \
-check_pkg ${BIN_DIALOG} ${PKG_DIALOG}
 fetch_misc && \
 check_md5 && \
+check_pkg ${BIN_DIALOG} ${PKG_DIALOG} && \
 echo_end_msg

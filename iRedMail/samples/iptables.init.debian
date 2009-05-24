@@ -170,7 +170,7 @@ start() {
     # Do not start if there is no config file.
     [ -f "$IPTABLES_DATA" ] || return 1
 
-    echo -n "Applying $IPTABLES firewall rules"
+    log_daemon_msg "Applying $IPTABLES firewall rules"
 
     OPT=
     [ "x$IPTABLES_SAVE_COUNTER" = "xyes" ] && OPT="-c"
