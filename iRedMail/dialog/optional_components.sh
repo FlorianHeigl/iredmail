@@ -104,7 +104,7 @@ rm -f /tmp/optional_components
 echo ${OPTIONAL_COMPONENTS} | grep -i 'roundcubemail' >/dev/null 2>&1
 [ X"$?" == X"0" ] && export USE_WEBMAIL='YES' && export USE_RCM='YES' && echo "export USE_RCM='YES'" >> ${CONFIG_FILE}
 
-echo ${webmail} | grep -i 'squirrelmail' >/dev/null 2>&1
+echo ${OPTIONAL_COMPONENTS} | grep -i 'squirrelmail' >/dev/null 2>&1
 [ X"$?" == X"0" ] && export USE_WEBMAIL='YES' && export USE_SM='YES' && echo "export USE_SM='YES'" >>${CONFIG_FILE}
 
 echo ${OPTIONAL_COMPONENTS} | grep -i 'phpldapadmin' >/dev/null 2>&1
