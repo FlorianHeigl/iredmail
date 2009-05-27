@@ -4,7 +4,7 @@
 
 export PROG_NAME='iRedMail'
 export PROG_NAME_LOWERCASE='iredmail'
-export PROG_VERSION='0.5.0-beta3'
+export PROG_VERSION='0.5.0-beta4'
 
 # -----------------
 # ---- Generic ----
