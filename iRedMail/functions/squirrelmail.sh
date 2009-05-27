@@ -122,6 +122,8 @@ sm_config_ldap_address_book()
     ECHO_INFO "Setting up global LDAP address book."
     ${SM_CONF_PL} >/dev/null <<EOF
 6
+2
+y
 1
 +
 ${LDAP_SERVER_HOST}
@@ -393,7 +395,7 @@ ${CONF_MSG}
 \$ldap_password_field = "${LDAP_ATTR_USER_PASSWD}";
 \$ldap_user_field = "${LDAP_ATTR_USER_RDN}";
 \$ldap_base_dn = '${LDAP_BASEDN}';
-\$ldap_filter = "(&(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_USER_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))";
+\$ldap_filter = "(&(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_ACCOUNT_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}:${LDAP_SERVICE_DELIVER})";
 \$query_dn="${LDAP_BINDDN}";
 \$query_pw="${LDAP_BINDPW}";
 \$ldap_bind_as_manager = false;
