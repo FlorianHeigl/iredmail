@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # -------------------------------------------------------------------
 # Filename: create_mail_user_MySQL.sh

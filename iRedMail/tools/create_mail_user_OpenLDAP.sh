@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Filename: create_mail_ldap_user.sh
 # Author:   Zhang Huangbin (michaelbibby#gmail.com)
@@ -198,6 +198,7 @@ enabledService: forward
 enabledService: senderbcc
 enabledService: recipientbcc
 enabledService: managesieve
+memberOfGroup: all@${DOMAIN_NAME}
 EOF
 }
 

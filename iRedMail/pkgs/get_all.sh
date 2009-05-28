@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Author:   Zhang Huangbin (michaelbibby <at> gmail.com)
 # Date:     $LastChangedDate: 2008-03-02 21:11:40 +0800 (Sun, 02 Mar 2008) $
@@ -13,7 +13,7 @@ CONF_DIR="${ROOTDIR}/../conf"
 check_user root
 check_hostname
 
-FETCH_CMD="wget -cq --referer ${PROG_NAME}-${PROG_VERSION}"
+FETCH_CMD="wget -cq --referer ${PROG_NAME}-${PROG_VERSION}-${DISTRO}-X${DISTRO_CODENAME}-${ARCH}"
 
 #
 # Mirror site.
@@ -29,8 +29,6 @@ FETCH_CMD="wget -cq --referer ${PROG_NAME}-${PROG_VERSION}"
 #           |- apt/             # for Debian/Ubuntu
 #               |- debian/      # For Debian
 #                   |- lenny/   # For Debian (Lenny)
-#               |- ubuntu/      # For Ubuntu
-#                   |- hardy/   # For Ubuntu (Hardy, 8.04 LTS)
 #
 # You can find nearest mirror in this page:
 #   http://code.google.com/p/iredmail/wiki/Mirrors
@@ -64,22 +62,12 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
 
     if [ X"${DISTRO}" == X"DEBIAN" ]; then
         export PKGFILE="MD5.debian"             # File contains MD5.
-    elif [ X"${DISTRO}" == X"UBUNTU" ]; then
-        export PKGFILE="MD5.ubuntu.${DISTRO_CODENAME}"             # File contains MD5.
     fi
 
     if [ X"${ARCH}" == X"x86_64" ]; then
         export pkg_arch='amd64'
     else
         export pkg_arch="${ARCH}"
-    fi
-
-    # Ubuntu (Jaunty, 9.04) has all packages we need.
-    if [ X"${DISTRO_CODENAME}" != X"jaunty" ]; then
-        export PKGLIST="$( cat ${ROOTDIR}/${PKGFILE} | grep -E "(_${pkg_arch}|_all)" | awk -F'pkgs/' '{print $2}' )"
-        export MD5LIST="$( cat ${ROOTDIR}/${PKGFILE} | grep -E "(_${pkg_arch}|_all)" )"
-    else
-        :
     fi
 
     export fetch_pkgs="fetch_pkgs_debian"   # Function used to fetch binary packages.
@@ -292,11 +280,6 @@ echo_end_msg()
 EOF
 }
 
-# It's not required to download extra packages on Ubuntu (Jaunty, 9.04).
-#if [ X"${DISTRO}" == X"UBUNTU" -a X"${DISTRO_CODENAME}" == X"jaunty" ]; then
-#    echo_end_msg && exit 0
-#fi
-
 if [ -e ${STATUS_FILE} ]; then
     . ${STATUS_FILE}
 else
@@ -306,7 +289,7 @@ fi
 prepare_dirs
 
 # Ubuntu 9.04 doesn't need to download extra binary packages.
-if [ X"${DISTRO_CODENAME}" != X"jaunty" ]; then
+if [ X"${DISTRO}" != X"UBUNTU" ]; then
     check_pkg ${BIN_WHICH} ${PKG_WHICH} && \
     check_pkg ${BIN_WGET} ${PKG_WGET} && \
     check_pkg ${BIN_CREATEREPO} ${PKG_CREATEREPO} && \

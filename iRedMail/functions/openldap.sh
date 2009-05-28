@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Author:   Zhang Huangbin <michaelbibby (at) gmail.com>
 
@@ -408,6 +408,7 @@ ${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_FORWARD}
 ${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_SENDER_BCC}
 ${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_RECIPIENT_BCC}
 ${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_MANAGESIEVE}
+${LDAP_ATTR_USER_MEMBER_OF_GROUP}: all@${FIRST_DOMAIN}
 EOF
 
     ldapadd -x -D "${LDAP_ROOTDN}" -w "${LDAP_ROOTPW}" -f ${LDAP_INIT_LDIF}

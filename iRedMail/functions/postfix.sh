@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Author: Zhang Huangbin <michaelbibby (at) gmail.com>
 
@@ -341,6 +341,7 @@ query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_USER_
 result_attribute= ${LDAP_ATTR_USER_RDN}
 debuglevel      = 0
 EOF
+
     cat > ${ldap_recipient_bcc_maps_domain_cf} <<EOF
 ${CONF_MSG}
 server_host     = ${LDAP_SERVER_HOST}
