@@ -10,18 +10,28 @@ apache_php_config()
 {
     ECHO_INFO "==================== Apache & PHP ===================="
 
-    # Copy a sample default-ssl site config file.
+    backup_file ${HTTPD_CONF} ${HTTPD_SSL_CONF}
+
+    # Generate a sample default-ssl site config file.
     if [ X"${DISTRO}" == X"UBUNTU" -a X"${DISTRO_CODENAME}" == X"hardy" ]; then
-        sample="$( eval ${LIST_FILES_IN_PKG} apache2-common | grep 'httpd-ssl.conf.gz' )"
-        [ ! -z ${sample} ] && gunzip -c ${sample} > ${HTTPD_SSL_CONF}
+        cat > ${HTTPD_SSL_CONF} <<EOF
+NameVirtualHost *:443
+<VirtualHost *:443>
+    ServerAdmin ${FIRST_USER}@${FIRST_DOMAIN}
+    DocumentRoot ${HTTPD_DOCUMENTROOT}
+
+    # Enable SSL.
+    SSLEngine On
+    SSLCertificateFile ${SSL_CERT_FILE}
+    SSLCertificateKeyFile ${SSL_KEY_FILE}
+</VirtualHost>
+EOF
 
         # Set document root.
         perl -pi -e 's#^(DocumentRoot).*#${1} "$ENV{HTTPD_DOCUMENTROOT}"#' ${HTTPD_SSL_CONF}
     else
         :
     fi
-
-    backup_file ${HTTPD_CONF} ${HTTPD_SSL_CONF}
 
     # --------------------------
     # Apache Setting.

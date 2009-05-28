@@ -27,7 +27,7 @@ pickup    fifo  n       -       n       60      1       pickup
 EOF
 
 
-    ECHO_INFO "Copy /etc/{hosts,resolv.conf,localtime} to chrooted postfix directory ${POSTFIX_CHROOT_DIR}."
+    ECHO_INFO "Copy /etc/{hosts,resolv.conf,localtime} -> ${POSTFIX_CHROOT_DIR}/etc/."
     mkdir -p "${POSTFIX_CHROOT_DIR}/etc/"
     cp -f /etc/{hosts,resolv.conf,localtime} ${POSTFIX_CHROOT_DIR}/etc/
 
@@ -103,7 +103,7 @@ EOF
 
     postconf -e alias_maps="hash:${POSTFIX_FILE_ALIASES}"
     postconf -e alias_database="hash:${POSTFIX_FILE_ALIASES}"
-    postalias hash:${POSTFIX_FILE_ALIASES}
+    postalias hash:${POSTFIX_FILE_ALIASES} 2>/dev/null
     newaliases >/dev/null 2>&1
 
     # Set message_size_limit.
