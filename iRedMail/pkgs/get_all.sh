@@ -60,14 +60,17 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
 elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     export MIRROR='http://www.iredmail.org/apt'
 
-    if [ X"${DISTRO}" == X"DEBIAN" ]; then
-        export PKGFILE="MD5.debian"             # File contains MD5.
-    fi
-
     if [ X"${ARCH}" == X"x86_64" ]; then
         export pkg_arch='amd64'
     else
         export pkg_arch="${ARCH}"
+    fi
+
+    if [ X"${DISTRO}" == X"DEBIAN" ]; then
+        export PKGFILE="MD5.debian"             # File contains MD5.
+        export PKGLIST="$( cat ${ROOTDIR}/${PKGFILE} | grep -E "(_${pkg_arch}|_all)" | awk -F'pkgs/' '{print $2}' )"
+        export MD5LIST="$( cat ${ROOTDIR}/${PKGFILE} | grep -E "(_${pkg_arch}|_all)" )"
+
     fi
 
     export fetch_pkgs="fetch_pkgs_debian"   # Function used to fetch binary packages.
@@ -151,8 +154,6 @@ fetch_pkgs_debian()
             for i in ${PKGLIST}; do
                 if [ X"${DISTRO}" == X"DEBIAN" ]; then
                     url="${MIRROR}/debian/lenny/${i}"
-                elif [ X"${DISTRO}" == X"UBUNTU" ]; then
-                    url="${MIRROR}/ubuntu/${DISTRO_CODENAME}/${i}"
                 fi
 
                 ECHO_INFO "* ${pkg_counter}/${pkg_total}: ${url}"
