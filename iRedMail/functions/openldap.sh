@@ -292,23 +292,25 @@ EOF
 openldap_data_initialize()
 {
     if [ X"${DISTRO_CODENAME}" == X"hardy" -a -f /etc/apparmor.d/usr.sbin.slapd ]; then
+        sed -i "s|\(}\)| # Added by ${PROG_NAME}-${PROG_VERSION}. \n\1|" /etc/apparmor.d/usr.sbin.slapd
+        sed -i "s#\(}\)# ${LDAP_DATA_DIR}/ r,\n\1#" /etc/apparmor.d/usr.sbin.slapd
         sed -i "s#\(}\)# ${LDAP_DATA_DIR}/* rw,\n\1#" /etc/apparmor.d/usr.sbin.slapd
+        sed -i "s#\(}\)# ${LDAP_DATA_DIR}/alock kw,\n\1#" /etc/apparmor.d/usr.sbin.slapd
         service_control apparmor restart >/dev/null
     else
         :
     fi
 
-    ECHO_INFO "Generate DB_CONFIG for instance: ${LDAP_DATA_DIR}/DB_CONFIG."
-    cp -f ${OPENLDAP_DB_CONFIG_SAMPLE} ${LDAP_DATA_DIR}/DB_CONFIG
-
     ECHO_INFO "Create instance directory for openldap tree: ${LDAP_DATA_DIR}."
     mkdir -p ${LDAP_DATA_DIR}
+    cp -f ${OPENLDAP_DB_CONFIG_SAMPLE} ${LDAP_DATA_DIR}/DB_CONFIG
     chown -R ${LDAP_USER}:${LDAP_GROUP} ${OPENLDAP_DATA_DIR}
     chmod -R 0700 ${OPENLDAP_DATA_DIR}
 
     ECHO_INFO "Starting OpenLDAP."
     if [ X"${DISTRO}" == X"RHEL" ]; then
-        service_control ldap restart >/dev/null
+        #service_control ldap restart >/dev/null
+        service_control ldap restart
     elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
         service_control slapd restart >/dev/null
     else
