@@ -27,8 +27,6 @@ NameVirtualHost *:443
 </VirtualHost>
 EOF
 
-        # Set document root.
-        perl -pi -e 's#^(DocumentRoot).*#${1} "$ENV{HTTPD_DOCUMENTROOT}"#' ${HTTPD_SSL_CONF}
     else
         :
     fi

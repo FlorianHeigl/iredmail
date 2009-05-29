@@ -232,7 +232,7 @@ index ${LDAP_ATTR_USER_BACKUP_MAIL_ADDRESS}   eq,pres
 EOF
 
     # Make slapd use slapd.conf insteald of slapd.d (cn=config backend).
-    [ X"${DISTRO}" == X"UBUNTU" -a X"${DISTRO_CODENAME}" == X"jaunty" ] && \
+    [ X"${DISTRO}" == X"UBUNTU" ] && \
         perl -pi -e 's#^(SLAPD_CONF=).*#${1}"$ENV{OPENLDAP_SLAPD_CONF}"#' ${ETC_SYSCONFIG_DIR}/slapd && \
         perl -pi -e 's#^(SLAPD_PIDFILE=).*#${1}"$ENV{OPENLDAP_PID_FILE}"#' ${ETC_SYSCONFIG_DIR}/slapd
 
@@ -291,13 +291,20 @@ EOF
 
 openldap_data_initialize()
 {
+    if [ X"${DISTRO_CODENAME}" == X"hardy" -a -f /etc/apparmor.d/usr.sbin.slapd ]; then
+        sed -i "s#\(}\)# ${LDAP_DATA_DIR}/* rw,\n\1#" /etc/apparmor.d/usr.sbin.slapd
+        service_control apparmor restart >/dev/null
+    else
+        :
+    fi
+
+    ECHO_INFO "Generate DB_CONFIG for instance: ${LDAP_DATA_DIR}/DB_CONFIG."
+    cp -f ${OPENLDAP_DB_CONFIG_SAMPLE} ${LDAP_DATA_DIR}/DB_CONFIG
+
     ECHO_INFO "Create instance directory for openldap tree: ${LDAP_DATA_DIR}."
     mkdir -p ${LDAP_DATA_DIR}
     chown -R ${LDAP_USER}:${LDAP_GROUP} ${OPENLDAP_DATA_DIR}
     chmod -R 0700 ${OPENLDAP_DATA_DIR}
-
-    ECHO_INFO "Generate DB_CONFIG for instance: ${LDAP_DATA_DIR}/DB_CONFIG."
-    cp -f ${OPENLDAP_DB_CONFIG_SAMPLE} ${LDAP_DATA_DIR}/DB_CONFIG
 
     ECHO_INFO "Starting OpenLDAP."
     if [ X"${DISTRO}" == X"RHEL" ]; then
