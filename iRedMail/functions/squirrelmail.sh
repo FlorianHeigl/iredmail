@@ -214,10 +214,8 @@ sm_translations()
 sm_plugin_compatibility()
 {
     cd ${MISC_DIR}
-    extract_pkg ${PLUGIN_COMPATIBILITY_TARBALL}
+    extract_pkg ${PLUGIN_COMPATIBILITY_TARBALL} ${SM_PLUGIN_DIR}
 
-    ECHO_INFO "Move plugin to: ${SM_PLUGIN_DIR}."
-    mv compatibility ${SM_PLUGIN_DIR}
     chown -R ${HTTPD_USER}:${HTTPD_GROUP} ${SM_PLUGIN_DIR}/compatibility/
     chmod -R 0755 ${SM_PLUGIN_DIR}/compatibility/
 
@@ -232,10 +230,8 @@ sm_plugin_check_quota()
 {
     # Installation.
     cd ${MISC_DIR}
-    extract_pkg ${PLUGIN_CHECK_QUOTA_TARBALL}
+    extract_pkg ${PLUGIN_CHECK_QUOTA_TARBALL} ${SM_PLUGIN_DIR}
 
-    ECHO_INFO "Move plugin to: ${SM_PLUGIN_DIR}."
-    mv check_quota ${SM_PLUGIN_DIR}
     chown -R ${HTTPD_USER}:${HTTPD_GROUP} ${SM_PLUGIN_DIR}/check_quota/
     chmod -R 0755 ${SM_PLUGIN_DIR}/check_quota/
 
@@ -377,10 +373,8 @@ sm_plugin_avelsieve()
 sm_plugin_change_ldappass()
 {
     cd ${MISC_DIR}
-    extract_pkg ${PLUGIN_CHANGE_LDAPPASS_TARBALL}
+    extract_pkg ${PLUGIN_CHANGE_LDAPPASS_TARBALL} ${SM_PLUGIN_DIR}
 
-    ECHO_INFO "Move plugin to: ${SM_PLUGIN_DIR}."
-    mv change_ldappass ${SM_PLUGIN_DIR}
     chown -R ${HTTPD_USER}:${HTTPD_GROUP} ${SM_PLUGIN_DIR}
     chmod -R 0755 ${SM_PLUGIN_DIR}
 
@@ -419,10 +413,8 @@ EOF
 sm_plugin_change_sqlpass()
 {
     cd ${MISC_DIR}
-    extract_pkg ${PLUGIN_CHANGE_SQLPASS_TARBALL}
+    extract_pkg ${PLUGIN_CHANGE_SQLPASS_TARBALL} ${SM_PLUGIN_DIR}
 
-    ECHO_INFO "Move plugin to: ${SM_PLUGIN_DIR}."
-    mv change_sqlpass ${SM_PLUGIN_DIR}
     chown -R ${HTTPD_USER}:${HTTPD_GROUP} ${SM_PLUGIN_DIR}
     chmod -R 0755 ${SM_PLUGIN_DIR}
 

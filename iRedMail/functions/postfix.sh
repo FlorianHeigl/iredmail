@@ -418,6 +418,7 @@ EOF
         ${ldap_accounts_cf} \
         ${ldap_virtual_mailbox_maps_cf} \
         ${ldap_virtual_alias_maps_cf} \
+        ${ldap_virtual_group_maps_cf} \
         ${ldap_recipient_bcc_maps_domain_cf} \
         ${ldap_recipient_bcc_maps_user_cf} \
         ${ldap_sender_bcc_maps_domain_cf} \
