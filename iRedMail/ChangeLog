@@ -1,5 +1,6 @@
 iRedMail-0.5.0-beta4
-    * Update perl-Mail-DKIM to 0.35. hope to fix dkim issue in amavisd.
+    * Update perl-Mail-DKIM to 0.35. hope to fix dkim issue in amavisd:
+      Reference: http://marc.info/?t=124300167400002&r=1&w=2
     * Add new ldap attribute: memberOfGroup.
 
 iRedMail-0.5.0-beta3
