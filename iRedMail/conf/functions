@@ -101,6 +101,30 @@ check_hostname()
         exit 255
 }
 
+check_acl()
+{
+    #ECHO_INFO "Check advance file system acl ..."
+    tmp_file="/tmp/$(${RANDOM_STRING})"
+    setfacl -m u:bin:--- ${tmp_file} 2>/dev/null
+    if [ X"$?" != X"0" ]; then
+        ECHO_ERROR "Your system doesn't support advance file system access control list (acl). Please setup acl support in /etc/fstab before we go further."
+        cat <<EOF
+Reference:
+
+* Setup acl on Ubuntu:
+  http://code.google.com/p/iredmail/wiki/Installation_on_Ubuntu#Install_and_configure_necessary_package(s)
+
+* Setup acl on Debian:
+  http://code.google.com/p/iredmail/wiki/Installation_on_Debian#Install_necessary_packages
+
+EOF
+        rm -f ${tmp_file}
+        exit 255
+    else
+        rm -f ${tmp_file}
+    fi
+}
+
 check_pkg()
 {
     # Usage: check_pkg <command> <package>
@@ -135,6 +159,9 @@ check_env()
 
     # Check FQDN hostname.
     check_hostname
+
+    # Check acl support.
+    check_acl
 
     # Check config tool: dialog.
     check_pkg ${BIN_DIALOG} ${PKG_DIALOG}
