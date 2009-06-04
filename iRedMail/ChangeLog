@@ -1,4 +1,5 @@
 iRedMail-0.5.0-rc2:
+    * Add group 'all@domain.ltd' by default for ldap solution.
     * Add 'enabledService=displayedInGlobalAddressBook' for ldap solution,
       used to control mail address displayed in global ldap address book or
       not.
