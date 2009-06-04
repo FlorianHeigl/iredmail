@@ -198,6 +198,7 @@ enabledService: forward
 enabledService: senderbcc
 enabledService: recipientbcc
 enabledService: managesieve
+enabledService: displayedInGlobalAddressBook
 memberOfGroup: all@${DOMAIN_NAME}
 EOF
 }

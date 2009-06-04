@@ -1,9 +1,12 @@
-iRedMail-0.5.0-beta4
+iRedMail-0.5.0-rc2:
+    * Add 'enabledService=displayedInGlobalAddressBook' for ldap solution,
+      used to control mail address displayed in global ldap address book or
+      not.
+
+iRedMail-0.5.0-rc1:
     * Update perl-Mail-DKIM to 0.35. hope to fix dkim issue in amavisd:
       Reference: http://marc.info/?t=124300167400002&r=1&w=2
     * Add new ldap attribute: memberOfGroup.
-
-iRedMail-0.5.0-beta3
     * Update SquirrelMail to 1.4.19.
     * Works on Ubuntu 9.04 (Juanty) now.
     * Add rc script for iptables used on Debian.
