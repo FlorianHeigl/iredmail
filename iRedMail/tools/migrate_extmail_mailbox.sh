@@ -51,6 +51,6 @@ while read line; do
     fi
 
     cat >> ${OUTPUT_SQL} <<EOF
-INSERT INTO mailbox (username, password, maildir, quota, netdiskquota, domain, created, active) values ("$username", "$password", "$maildir", $quota, "$domain", "$createdate", "$active");
+INSERT INTO mailbox (username, password, maildir, quota, netdiskquota, domain, created, active) values ("$username", "$password", "$maildir", $quota, $quota, "$domain", "$createdate", "$active");
 EOF
 done < $1
