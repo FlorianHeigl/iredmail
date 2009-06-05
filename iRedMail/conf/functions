@@ -105,6 +105,7 @@ check_acl()
 {
     #ECHO_INFO "Check advance file system acl ..."
     tmp_file="/tmp/$(${RANDOM_STRING})"
+    touch ${tmp_file}
     setfacl -m u:bin:--- ${tmp_file} 2>/dev/null
     if [ X"$?" != X"0" ]; then
         ECHO_ERROR "Your system doesn't support advance file system access control list (acl). Please setup acl support in /etc/fstab before we go further."
@@ -123,6 +124,8 @@ EOF
     else
         rm -f ${tmp_file}
     fi
+
+    unset tmp_file
 }
 
 check_pkg()
