@@ -35,7 +35,7 @@ echo ''> ${OUTPUT_SQL}
 while read line; do
     username="$(echo $line | awk '{print $1}')"
     password="$(echo $line | awk '{print $2}')"
-    maildir="$(echo $line | awk '{print $3}')"
+    maildir="$(echo $line | awk '{print $3}' | awk -F'Maildir/' '{print $1}' | tr [A-Z] [a-z] )"
     quota="$(echo $line | awk '{print $4}')"
     netdiskquota="$(echo $line | awk '{print $5}')"
     domain="$(echo $line | awk '{print $6}')"
@@ -54,3 +54,10 @@ while read line; do
 INSERT INTO mailbox (username, password, maildir, quota, netdiskquota, domain, created, active) values ("$username", "$password", "$maildir", $quota, $quota, "$domain", "$createdate", "$active");
 EOF
 done < $1
+
+cat <<EOF
+Warning: you may want to change 'mail_location' setting in /etc/dovecot.conf like below:
+
+    mail_location = maildir:/%Lh/Maildir/:INDEX=/%Lh/Maildir/
+
+EOF
