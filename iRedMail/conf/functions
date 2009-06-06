@@ -103,13 +103,14 @@ check_hostname()
 
 check_acl()
 {
-    #ECHO_INFO "Check advance file system acl ..."
-    tmp_file="/tmp/$(${RANDOM_STRING})"
-    touch ${tmp_file}
-    setfacl -m u:bin:--- ${tmp_file} 2>/dev/null
-    if [ X"$?" != X"0" ]; then
-        ECHO_ERROR "Your system doesn't support advance file system access control list (acl). Please setup acl support in /etc/fstab before we go further."
-        cat <<EOF
+    #ECHO_INFO "Check advance file system access control ..."
+    if [ X"${DISTRO}" != X"RHEL" ]; then
+        tmp_file="/tmp/$(${RANDOM_STRING})"
+        touch ${tmp_file}
+        setfacl -m u:bin:--- ${tmp_file} 2>/dev/null
+        if [ X"$?" != X"0" ]; then
+            ECHO_ERROR "Your system doesn't support advance file system access control list (acl). Please setup acl support in /etc/fstab before we go further."
+            cat <<EOF
 Reference:
 
 * Setup acl on Ubuntu:
@@ -119,10 +120,13 @@ Reference:
   http://code.google.com/p/iredmail/wiki/Installation_on_Debian#Install_necessary_packages
 
 EOF
-        rm -f ${tmp_file}
-        exit 255
+            rm -f ${tmp_file}
+            exit 255
+        else
+            rm -f ${tmp_file}
+        fi
     else
-        rm -f ${tmp_file}
+        :
     fi
 
     unset tmp_file
