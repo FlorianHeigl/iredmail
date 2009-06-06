@@ -325,7 +325,6 @@ debuglevel      = 0
 EOF
 
     ECHO_INFO "Setting up LDAP virtual group: ${ldap_virtual_group_maps_cf}."
-
     cat > ${ldap_virtual_group_maps_cf} <<EOF
 ${CONF_MSG}
 server_host     = ${LDAP_SERVER_HOST}

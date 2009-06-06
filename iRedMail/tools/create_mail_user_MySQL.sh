@@ -11,6 +11,7 @@
 # -------------------------------------------------------------------
 # Usage:
 #   * Edit these variables:
+#       STORAGE_BASE_DIRECTORY
 #       DEFAULT_PASSWD='888888'
 #       USE_DEFAULT_PASSWD='NO'
 #       DEFAULT_QUOTA='100'   # 100 -> 100M
@@ -33,10 +34,14 @@
 # -------------------------------------------------------------------
 
 # ChangeLog:
+#   - 2009.05.07 Add hashed maildir style support.
 #   - Improve file detect.
 #   - Drop output message of 'which dos2unix'.
 
 # --------- CHANGE THESE VALUES ----------
+# Storage base directory used to store users' mail.
+STORAGE_BASE_DIRECTORY="/home/vmail"
+
 # Password setting.
 # Note: password will be crypted in MD5.
 DEFAULT_PASSWD='88888888'
@@ -48,6 +53,17 @@ DEFAULT_QUOTA='100'   # 100 -> 100M
 # -------------- You may not need to change variables below -------------------
 # Mailbox format: mbox, Maildir.
 MAILBOX_FORMAT='Maildir'
+
+# ---- Maildir settings ----
+# Maildir style: hashed, normal.
+# Hashed maildir style, so that there won't be many large directories
+# in your mail storage file system. Better performance in large scale
+# deployment.
+# Format: e.g. username@domain.td
+#   hashed  -> domain.ltd/u/us/use/username/
+#   normal  -> domain.ltd/username/
+# Default hash level is 3.
+MAILDIR_STYLE='hashed'      # hashed, normal.
 
 # Time stamp, will be appended in maildir.
 DATE="$(date +%Y.%m.%d.%H.%M.%S)"
@@ -78,16 +94,41 @@ generate_sql()
             :
         fi
 
-        # Different maildir format: maildir, mbox.
-        if [ X"${MAILBOX_FORMAT}" == X"Maildir" ]; then
-            maildir="${DOMAIN}/${username}-${DATE}/"
+        # Different maildir style: hashed, normal.
+        if [ X"${MAILDIR_STYLE}" == X"hashed" ]; then
+            length="$(echo ${username} | wc -L)"
+            str1="$(echo ${username} | cut -c1)"
+            str2="$(echo ${username} | cut -c2)"
+            str3="$(echo ${username} | cut -c3)"
+
+            if [ X"${length}" == X"1" ]; then
+                str2="${str1}"
+                str3="${str1}"
+            elif [ X"${length}" == X"2" ]; then
+                str3="${str2}"
+            else
+                :
+            fi
+
+            # Use mbox, will be changed later.
+            maildir="${DOMAIN}/${str1}/${str1}${str2}/${str1}${str2}${str3}/${username}-${DATE}"
         else
+            # Use mbox, will be changed later.
             maildir="${DOMAIN}/${username}-${DATE}"
         fi
 
+        # Different maildir format: maildir, mbox.
+        if [ X"${MAILBOX_FORMAT}" == X"Maildir" ]; then
+            # Append slash to make it 'maildir' format.
+            maildir="${maildir}/"
+        else
+            # It's already mbox format.
+            :
+        fi
+
         cat >> ${SQL} <<EOF
-INSERT INTO mailbox (username, password, name, maildir, quota, domain, active)
-    VALUES ('${username}@${DOMAIN}', '${CRYPT_PASSWD}', '${username}', '${maildir}', '${DEFAULT_QUOTA}', '${DOMAIN}', '1');
+INSERT INTO mailbox (username, password, name, storagebasedirectory, maildir, quota, domain, active)
+    VALUES ('${username}@${DOMAIN}', '${CRYPT_PASSWD}', '${username}', '${STORAGE_BASE_DIRECTORY}', '${maildir}', '${DEFAULT_QUOTA}', '${DOMAIN}', '1');
 EOF
         # Don't insert alias.
         #INSERT INTO alias (address, goto, domain, active)

@@ -309,8 +309,7 @@ openldap_data_initialize()
 
     ECHO_INFO "Starting OpenLDAP."
     if [ X"${DISTRO}" == X"RHEL" ]; then
-        #service_control ldap restart >/dev/null
-        service_control ldap restart
+        service_control ldap restart >/dev/null
     elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
         service_control slapd restart >/dev/null
     else
@@ -413,8 +412,9 @@ uid: ${FIRST_USER}
 givenName: ${FIRST_USER}
 ${LDAP_ATTR_USER_RDN}: ${FIRST_USER}@${FIRST_DOMAIN}
 ${LDAP_ATTR_ACCOUNT_STATUS}: ${LDAP_STATUS_ACTIVE}
-mailMessageStore: ${FIRST_DOMAIN}/${FIRST_USER}/
-homeDirectory: ${VMAIL_USER_HOME_DIR}
+${LDAP_ATTR_USER_STORAGE_BASE_DIRECTORY}: ${VMAIL_USER_HOME_DIR}
+mailMessageStore: ${FIRST_DOMAIN}/$( hash_maildir ${FIRST_USER} )
+homeDirectory: ${VMAIL_USER_HOME_DIR}/${FIRST_DOMAIN}/$( hash_maildir ${FIRST_USER} )
 ${LDAP_ATTR_USER_QUOTA}: 104857600
 ${LDAP_ATTR_USER_PASSWD}: $(gen_ldap_passwd "${FIRST_USER_PASSWD}")
 ${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_MAIL}
