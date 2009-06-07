@@ -6,6 +6,7 @@
 
 . ./conf/global
 . ./conf/functions
+. ./conf/core
 
 trap "exit 255" 2
 

@@ -9,6 +9,7 @@ CONF_DIR="${ROOTDIR}/../conf"
 
 . ${CONF_DIR}/global
 . ${CONF_DIR}/functions
+. ${CONF_DIR}/core
 
 check_user root
 check_hostname

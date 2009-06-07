@@ -85,7 +85,7 @@ export DATE="$(/bin/date +%Y.%m.%d.%H.%M.%S)"
 
 # Tools.
 export CONFIG_VIA_DIALOG="${DIALOG_DIR}/config_via_dialog.sh"
-# Note: config file will be sourced in file 'conf/functions', function 'check_env()'.
+# Note: config file will be sourced in file 'conf/core', function 'check_env()'.
 export CONFIG_FILE="${ROOTDIR}/config"
 export TIP_FILE="${ROOTDIR}/${PROG_NAME}.tips"
 export STATUS_FILE="${ROOTDIR}/.${PROG_NAME}.installation.status"
@@ -144,8 +144,8 @@ esac
 # remove_pkg: function used to remove packages without confirm.
 # LIST_ALL_PKGS: command used to list all installed packages.
 # LIST_FILES_IN_PKG: command used to list files installed by special package.
-# enable_service: function (defined in conf/functions) used to enable services.
-# disable_service: function (defined in conf/functions) used to disable services.
+# enable_service: function (defined in conf/core) used to enable services.
+# disable_service: function (defined in conf/core) used to disable services.
 if [ X"${DISTRO}" == X"RHEL" ]; then
     # RHEL/CentOS.
     # System user: root. Note: not all OSes have group 'root'.

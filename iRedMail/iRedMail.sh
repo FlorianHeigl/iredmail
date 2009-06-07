@@ -16,6 +16,7 @@ export PATCH_DIR="${ROOTDIR}/patches"
 
 . ${CONF_DIR}/global
 . ${CONF_DIR}/functions
+. ${CONF_DIR}/core
 
 # ------------------------------
 # Check target platform and environment.
