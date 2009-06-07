@@ -93,7 +93,7 @@ EOF
     #perl -pi -e 's#^(error_reporting.*=)#${1} E_ERROR;#' ${PHP_INI}
 
     ECHO_INFO "Disable several functions: ${PHP_INI}."
-    perl -pi -e 's#^(disable_functions.*=)(.*)#${1}show_source,system,shell_exec,passthru,exec,phpinfo,popen,proc_open ; ${2}#' ${PHP_INI}
+    perl -pi -e 's#^(disable_functions.*=)(.*)#${1}show_source,system,shell_exec,passthru,exec,phpinfo,proc_open ; ${2}#' ${PHP_INI}
 
     ECHO_INFO "Hide PHP Version in Apache from remote users requests: ${PHP_INI}."
     perl -pi -e 's#^(expose_php.*=)#${1} Off;#' ${PHP_INI}

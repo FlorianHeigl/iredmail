@@ -38,6 +38,10 @@
 #       * SEND_WELCOME_MSG
 # ------------------------------------------------------------------
 
+# Source functions.
+. ../conf/global
+. ../conf/functions
+
 # ----------------------------------------------
 # ------------ Global Setting ------------------
 # ----------------------------------------------
@@ -165,32 +169,7 @@ add_new_user()
     # If you do *NOT* want to keep rootpw in script, use '-W' instead of 
     # '-w "${BINDPW}".
 
-    # Different maildir style: hashed, normal.
-    if [ X"${MAILDIR_STYLE}" == X"hashed" ]; then
-        length="$(echo ${USERNAME} | wc -L)"
-        str1="$(echo ${USERNAME} | cut -c1)"
-        str2="$(echo ${USERNAME} | cut -c2)"
-        str3="$(echo ${USERNAME} | cut -c3)"
-
-        if [ X"${length}" == X"1" ]; then
-            str2="${str1}"
-            str3="${str1}"
-        elif [ X"${length}" == X"2" ]; then
-            str3="${str2}"
-        else
-            :
-        fi
-
-        # Use mbox, will be changed later.
-        maildir="${DOMAIN_NAME}/${str1}/${str1}${str2}/${str1}${str2}${str3}/${USERNAME}-${DATE}"
-    else
-        # Use mbox, will be changed later.
-        maildir="${DOMAIN_NAME}/${USERNAME}-${DATE}"
-    fi
-
-    # For maildir format.
-    [ X"${MAILBOX_FORMAT}" == X"Maildir" ] && mailMessageStore="${maildir}/"
-    [ X"${MAILBOX_FORMAT}" == X"mbox" ] && mailMessageStore="${maildir}"
+    maildir="$( hash_domain ${DOMAIN_NAME})/$( hash_maildir ${USERNAME} )"
 
     # Generate user password.
     if [ X"${USE_DEFAULT_PASSWD}" == X"YES" ]; then
@@ -206,9 +185,9 @@ objectClass: shadowAccount
 objectClass: mailUser
 objectClass: top
 storageBaseDirectory: ${STORAGE_BASE_DIRECTORY}
-homeDirectory: ${STORAGE_BASE_DIRECTORY}/${mailMessageStore}
+homeDirectory: ${STORAGE_BASE_DIRECTORY}/${maildir}
 accountStatus: active
-mailMessageStore: ${mailMessageStore}
+mailMessageStore: ${maildir}
 mail: ${MAIL}
 mailQuota: ${QUOTA}
 userPassword: ${PASSWD}

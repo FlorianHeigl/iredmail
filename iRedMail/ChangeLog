@@ -1,12 +1,21 @@
 iRedMail-0.5.0-rc2:
+    * Hashed maildir string: hash_domain(), hash_maildir in conf/functions.
     * Flexible storage base directory used to store users' mail data, easy
       to change, useful for large-scale deployment. e.g.:
-        You mail data are all stored in /home/vmail01, but it's nearly full,
-        it's easy to make new users use new storage like /home/vmail10/:
+        Your mail data are all stored in /home/vmail01, but disk storage is
+        nearly full, it's easy to make new users use new storage like
+        /home/vmail02, /home/vmail03 or whatever:
             - Prevous maildir: /home/vmail01/z/zh/zha/zhang/
-            - Current maildir: /home/vmail20/h/hu/hua/huang/
-      Set it in storagebasedirectory (for MySQL backend) or
-      storageBaseDirectory (for LDAP backend).
+            - Current maildir: /home/vmail02/h/hu/hua/huang/
+      You can set the storage base directory in either MySQL (column:
+      vmail.storagebasedirectory) or OpenLDAP backend (attribute:
+      storageBaseDirectory).
+
+      In addition, maildir and user's HOME directory are seperated (maildir
+      is $HOME/Maildir/ by default), so that you can integrate more
+      applications against LDAP user auth like OpenSSH, FTP service, SugarCRM
+      or whatever you want, data stored in disk storage of each service will
+      not be mixed.
     * Add group 'all@domain.ltd' by default for ldap solution.
     * Add 'enabledService=displayedInGlobalAddressBook' for ldap solution,
       used to control mail address displayed in global ldap address book or
