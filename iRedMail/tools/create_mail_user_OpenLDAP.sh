@@ -33,7 +33,11 @@
 #       * DEFAULT_PASSWD
 #       * USE_DEFAULT_PASSWD
 #       * USE_NAME_AS_PASSWD
-
+#
+#   - Pure-FTPd integration:
+#       * PUREFTPD_INTEGRATION      # <- set to 'YES' if you want to integrate it.
+#       * FTP_STORAGE_BASE_DIRECTORY    # <- directory used to store FTP data.
+#
 #   - Optional variables:
 #       * SEND_WELCOME_MSG
 # ------------------------------------------------------------------
@@ -196,7 +200,7 @@ FTPDownloadBandwidth: 50
 FTPUploadBandwidth: 50
 FTPDownloadRatio: 5
 FTPUploadRatio: 1
-FTPHomeDir: ${FTP_STORAGE_BASE_DIRECTORY}/${maildir}
+FTPHomeDir: ${FTP_STORAGE_BASE_DIRECTORY}/${maildir}/ftp/
 "
     else
         LDIF_PUREFTPD_USER=''

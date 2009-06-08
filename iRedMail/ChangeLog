@@ -1,4 +1,7 @@
 iRedMail-0.5.0-rc2:
+    * Add /extra/ directory for 3rd-party service integration.
+    * Improve tools/create_mail_user_OpenLDAP.sh to integrate pureftpd
+      schema.
     * Hashed maildir string: hash_domain(), hash_maildir in conf/functions.
     * Flexible storage base directory used to store users' mail data, easy
       to change, useful for large-scale deployment. e.g.:
