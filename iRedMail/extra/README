@@ -1,0 +1,24 @@
+This directory is used to store third-party service integrations:
+
+Directory structure:
+
+    /
+    |- conf/
+    |- dialog/
+    |- extra/
+        |- pureftpd/
+            |- README
+            |- conf/        # <- files contain pre-defined variables.
+            |- dialog/      # <- dialog pages as setup wizard.
+            |- functions/   # <- functions used to install, configure, cleanup program.
+            |- patches/     # <- patches
+            |- pureftpd.sh  # <- Main script
+            |- ...
+        |- app_name2/ 
+        |- app_name3/ 
+    |- functions/
+    |- iRedMail.sh
+    |- patches/
+    |- pkgs/
+    |- samples/
+    |- tools
