@@ -1,4 +1,6 @@
 iRedMail-0.5.0-rc2:
+    * Update Mail-DKIM to 0.36. Thanks to lidaobing@gmail for ubuntu 8.04 and
+      debian lenny packages.
     * Add /extra/ directory for 3rd-party service integration.
     * Improve tools/create_mail_user_OpenLDAP.sh to integrate pureftpd
       schema.
