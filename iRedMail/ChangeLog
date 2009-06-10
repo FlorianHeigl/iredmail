@@ -1,4 +1,7 @@
 iRedMail-0.5.0-rc2:
+    * Add quota warning report tool: tools/dovecot-quota-warning.sh.
+    * Automatically add a disclaimer to outgoing emails with Amavisd-new +
+      alterMIME (v0.3.10).
     * Update Mail-DKIM to 0.36. Thanks to lidaobing@gmail for ubuntu 8.04 and
       debian lenny packages.
     * Add /extra/ directory for 3rd-party service integration.

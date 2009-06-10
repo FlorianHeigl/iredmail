@@ -133,6 +133,9 @@ amavisd_config_rhel()
     # Set pid_file.
     #echo '$pid_file = "/var/run/clamav/amavisd.pid";' >> ${AMAVISD_CONF}
 
+    # Enable disclaimer if available.
+    sed -i '/os_fingerprint_method => undef,/ a\  allow_disclaimers => 1, # enables disclaimer insertion if available' ${AMAVISD_CONF}
+
     echo 'export status_amavisd_config_rhel="DONE"' >> ${STATUS_FILE}
 }
 
@@ -163,6 +166,27 @@ ${CONF}
 
 # Disable defang banned mail.
 \$defang_banned = 0;  # MIME-wrap passed mail containing banned name
+
+\$policy_bank{'MYNETS'} = {   # mail originating from @mynetworks
+  originating => 1,  # is true in MYNETS by default, but let's make it explicit
+  os_fingerprint_method => undef,  # don't query p0f for internal clients
+  allow_disclaimers => 1,  # enables disclaimer insertion if available
+};
+
+\$policy_bank{'ORIGINATING'} = {  # mail supposedly originating from our users
+  originating => 1,  # declare that mail was submitted by our smtp client
+  allow_disclaimers => 1,  # enables disclaimer insertion if available
+  # notify administrator of locally originating malware
+  virus_admin_maps => ["root\@$mydomain"],
+  spam_admin_maps  => ["root\@$mydomain"],
+  warnbadhsender   => 1,
+  # forward to a smtpd service providing DKIM signing service
+  forward_method => 'smtp:[127.0.0.1]:10027',
+  # force MTA conversion to 7-bit (e.g. before DKIM signing)
+  smtpd_discard_ehlo_keywords => ['8BITMIME'],
+  bypass_banned_checks_maps => [1],  # allow sending any file names and types
+  terminate_dsn_on_notify_success => 0,  # don't remove NOTIFY=SUCCESS option
+};
 
 EOF
 
@@ -305,6 +329,36 @@ EOF
             :
         fi
     fi
+
+    # Enable disclaimer if available.
+    cat >> ${AMAVISD_CONF} <<EOF
+# ------------ Disclaimer Setting ---------------
+#\$altermime = '${ALTERMIME_BIN}';
+#\$defang_maps_by_ccat{+CC_CATCHALL} = [ 'disclaimer' ];
+
+# Disclaimer in plain text formart.
+#@altermime_args_disclaimer = qw(--disclaimer=${DISCLAIMER_DIR}/_OPTION_.txt);
+
+#@disclaimer_options_bysender_maps = ({
+    # Per-domain disclaimer setting: ${DISCLAIMER_DIR}/host1.iredmail.org.txt
+    #'host1.iredmail.org' => 'host1.iredmail.org',
+
+    # Sub-domain disclaimer setting: ${DISCLAIMER_DIR}/iredmail.org.txt
+    #'.iredmail.org'      => 'iredmail.org',
+
+    # Per-user disclaimer setting: ${DISCLAIMER_DIR}/boss.iredmail.org.txt
+    #'boss@iredmail.org'  => 'boss.iredmail.org',
+
+    # Catch-all disclaimer setting: ${DISCLAIMER_DIR}/default.txt
+#    '.' => 'default',
+#},);
+# ------------ End Disclaimer Setting ---------------
+EOF
+
+    # Create directory to store disclaimer files if not exist.
+    [ -d ${DISCLAIMER_DIR} ] || mkdir -p ${DISCLAIMER_DIR} 2>/dev/null
+    # Create a empty disclaimer.
+    echo '' > ${DISCLAIMER_DIR}/default.txt
 
     cat >> ${AMAVISD_CONF} <<EOF
 

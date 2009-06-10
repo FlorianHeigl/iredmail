@@ -12,6 +12,10 @@ export AMAVISD_DKIM_SELECTOR='dkim'
 export AMAVISD_DAEMON_USER='amavis'
 export AMAVISD_DAEMON_GROUP='amavis'
 
+# Altermime.
+export ALTERMIME_BIN='/usr/bin/altermime'
+export DISCLAIMER_DIR="${POSTFIX_ROOTDIR}/disclaimer"
+
 if [ X"${DISTRO}" == X"RHEL" ]; then
     export AMAVISD_BIN='amavisd'
     export AMAVISD_CONF='/etc/amavisd.conf'

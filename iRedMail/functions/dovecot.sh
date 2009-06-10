@@ -118,9 +118,9 @@ plugin {
     # If user suddenly receives a huge mail and the quota jumps from
     # 85% to 95%, only the 95% script is executed.
     #
-    #quota_warning = storage=95%% /usr/bin/dovecot-quota-warning.sh 95
-    #quota_warning2 = storage=80%% /usr/bin/dovecot-quota-warning.sh 90
-    #quota_warning3 = storage=80%% /usr/bin/dovecot-quota-warning.sh 85
+    #quota_warning = storage=85%% /usr/bin/dovecot-quota-warning.sh 85
+    #quota_warning2 = storage=90%% /usr/bin/dovecot-quota-warning.sh 90
+    #quota_warning3 = storage=95%% /usr/bin/dovecot-quota-warning.sh 95
 }
 
 EOF

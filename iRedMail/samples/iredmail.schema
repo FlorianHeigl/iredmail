@@ -6,8 +6,16 @@
 #   - RHEL/CentOS: /etc/openldap/schema/iredmail.schema
 #   - Debian: /etc/ldap/schema/iredmail.schema
 #
+#--------------------------------------------------------------------
 # The offical iredmail OID assigned by IANA is 32349, you can find it in url:
 # http://www.iana.org/assignments/enterprise-numbers
+#
+# 1.3.6.1.4.1.32349         OID of iRedMail.org
+# 1.3.6.1.4.1.32349.1       iRedMail
+# 1.3.6.1.4.1.32349.1.2     iRedMail LDAP Elements
+# 1.3.6.1.4.1.32349.1.2.1   AttributeTypes
+# 1.3.6.1.4.1.32349.1.2.2   ObjectClasses
+#--------------------------------------------------------------------
 #
 # This schema depends on:
 #       - core.schema
