@@ -153,6 +153,11 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     export SYS_ROOT_GROUP='root'
 
     # Package management.
+    if [ X"${YUM}" != X"" ]; then
+        export YUM="${YUM}"
+    else
+        export YUM="yum -d 2"
+    fi
     export install_pkg='install_pkg_rhel'
     export remove_pkg="remove_pkg_rhel"
     export LIST_ALL_PKGS='rpm -qa'

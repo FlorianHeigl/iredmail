@@ -108,7 +108,7 @@ check_env
 . ${FUNCTIONS_DIR}/optional_components.sh
 
 # Misc.
-. ${FUNCTIONS_DIR}/misc.sh
+. ${FUNCTIONS_DIR}/cleanup.sh
 
 # ************************************************************************
 # *************************** Script Main ********************************
@@ -179,4 +179,4 @@ optional_components
 # -----------------------------------------------
 # Clear away.
 # -----------------------------------------------
-check_status_before_run clear_away
+check_status_before_run cleanup

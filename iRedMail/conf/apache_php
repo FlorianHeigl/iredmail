@@ -6,9 +6,6 @@
 
 # ---- Apache ----
 
-# Refer to files:
-#   - functions/apache_php.sh
-#   - functions/misc.sh
 export HTTPD_PORT='80'
 
 if [ X"${DISTRO}" == X"RHEL" ]; then

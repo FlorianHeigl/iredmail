@@ -127,19 +127,6 @@ replace_mysql_config()
     echo 'export status_replace_mysql_config="DONE"' >> ${STATUS_FILE}
 }
 
-run_freshclam_now()
-{
-    # Run freshclam.
-    ECHO_QUESTION -n "Would you like to run freshclam now? [y|N]"
-    read ANSWER
-    case $ANSWER in
-        Y|y ) freshclam 2>/dev/null ;;
-        N|n|* ) ECHO_INFO "Skip freshclam." ;;
-    esac
-
-    echo 'export status_run_freshclam_now="DONE"' >> ${STATUS_FILE}
-}
-
 start_postfix_now()
 {
     # Start postfix without reboot your system.
@@ -170,7 +157,7 @@ start_postfix_now()
     echo 'export status_start_postfix_now="DONE"' >> ${STATUS_FILE}
 }
 
-clear_away()
+cleanup()
 {
     cat <<EOF
 
@@ -185,7 +172,6 @@ EOF
     [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run re_generate_iredmail_repo
     check_status_before_run replace_iptables_rule
     [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run replace_mysql_config
-    check_status_before_run run_freshclam_now
     check_status_before_run start_postfix_now
 
     cat <<EOF
@@ -200,6 +186,6 @@ EOF
 ********************************************************************
 
 EOF
-    echo 'export status_clear_away="DONE"' >> ${STATUS_FILE}
+    echo 'export status_cleanup="DONE"' >> ${STATUS_FILE}
 }
 

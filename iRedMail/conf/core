@@ -327,7 +327,7 @@ gen_ldap_passwd()
 install_pkg_rhel()
 {
     ECHO_INFO "Installing package(s): $@"
-    yum -d 2 -y install $@
+    ${YUM} -y install $@
     if [ X"$?" != X"0" ]; then
         ECHO_ERROR "Installation failed, please check the terminal output."
         exit 255
@@ -351,7 +351,7 @@ install_pkg_debian()
 remove_pkg_rhel()
 {
     ECHO_INFO "Removing package(s): $@"
-    yum remove -y $@
+    ${YUM} remove -y $@
     [ X"$?" != X"0" ] && ECHO_ERROR "Package removed failed, please check the terminal output."
 }
 
