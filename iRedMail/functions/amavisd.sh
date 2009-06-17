@@ -158,11 +158,27 @@ amavisd_config_debian()
 
     cat >> ${AMAVISD_CONF} <<EOF
 ${CONF}
-# Daemon user & group.
-\$daemon_user  = "${AMAVISD_DAEMON_USER}";
-\$daemon_group = "${AMAVISD_DAEMON_GROUP}";
-
 @local_domains_maps = ( [".$mydomain", "${FIRST_DOMAIN}"] );  # list of all local domains
+
+# Enable virus check.
+@bypass_virus_checks_maps = (
+   \%bypass_virus_checks,
+   \@bypass_virus_checks_acl,
+   \$bypass_virus_checks_re,
+   );
+
+# Enable spam check.
+@bypass_spam_checks_maps = (
+    \%bypass_spam_checks,
+    \@bypass_spam_checks_acl,
+    \$bypass_spam_checks_re,
+    );
+
+# Mail notify.
+$mailfrom_notify_admin     = "root\@$mydomain";  # notifications sender
+$mailfrom_notify_recip     = "root\@$mydomain";  # notifications sender
+$mailfrom_notify_spamadmin = "root\@$mydomain"; # notifications sender
+$mailfrom_to_quarantine = ''; # null return path; uses original sender if undef
 
 # Disable defang banned mail.
 \$defang_banned = 0;  # MIME-wrap passed mail containing banned name

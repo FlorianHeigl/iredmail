@@ -134,6 +134,10 @@ EOF
     perl -pi -e 's#(.*syslog_facility.*=).*#${1} LOG_MAIL;#' main.inc.php
     perl -pi -e 's#(.*log_logins.*=).*#${1} TRUE;#' main.inc.php
 
+    # Delete always.
+    # This make client users confused why mail not been deleted as 'EXPECT'.
+    perl -pi -e 's#(.*delete_always.*=).*#${1} TRUE;#' main.inc.php
+
     ECHO_INFO "Create directory alias for Roundcubemail."
     cat > ${HTTPD_CONF_DIR}/roundcubemail.conf <<EOF
 ${CONF_MSG}

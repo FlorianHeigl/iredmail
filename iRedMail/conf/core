@@ -5,7 +5,7 @@ backup_file()
         for conf_file in $@; do
             if [ -f ${conf_file} ]; then
                 if [ X"${TERM}" == X"xterm" -o X"${TERM}" == X"linux" -o X"${TERM}" == X"pcconsole" ]; then
-                    echo -e "\033[43m${BACKUP_FLAG}\033[0m Backup file: ${conf_file} -> ${conf_file}.${DATE}."
+                    echo -e "\033[43m${BACKUP_FLAG}\033[0m ${conf_file} -> ${conf_file}.${DATE}."
                 else
                     echo -e "${BACKUP_FLAG} ${conf_file} -> ${conf_file}.${DATE}."
                 fi
