@@ -72,19 +72,32 @@ HASHED_MAILDIR = True
 
 def usage():
     print '''
-    CSV file format: domain name, username, password, common name, quota
-    Example #1:      iredmail.org, zhang, secret_pw, Zhang Huangbin, 1024
-    Example #2:      iredmail.org, zhang, secret_pw, Zhang Huangbin, ,
-    Example #3:      iredmail.org, zhang, secret_pw, , 1024
+CSV file format:
+
+    domain name, username, password, common name, quota, groups
+
+Example #1:
+    iredmail.org, zhang, secret_pw, Zhang Huangbin, 1024, group1:group2
+Example #2:
+    iredmail.org, zhang, secret_pw, Zhang Huangbin, , ,
+Example #3:
+    iredmail.org, zhang, secret_pw, , 1024, group1:group2
      
-    Note:
-        - Domain name, username and password are REQUIRED, others are optinal:
-            + common name. It will be the same as username if it's empty.
-            + quota. It will be 0 (unlimited quota) if it's empty.
-        - Leading and trailing Space will be ignored.
-        - Non-ascii character is allowed, such Chinese, Korea, Japanese.
-          They will be encoded automaticly.
-    '''
+Note:
+    - Domain name, username and password are REQUIRED, others are optinal:
+        + common name.
+            * It will be the same as username if it's empty.
+            * Non-ascii character is allowed in this field, they will be
+              encoded automaticly. Such as Chinese, Korea, Japanese, etc.
+        + quota. It will be 0 (unlimited quota) if it's empty.
+        + groups.
+            * valid group name (hr@a.cn): hr
+            * incorrect group name: hr@a.cn
+            * Do *NOT* include domain name in group name, it will be
+              appended automaticly.
+            * Multiple groups must be seperated by colon.
+    - Leading and trailing Space will be ignored.
+'''
 
 def removeSpaceAndDot(string):
     """Remove leading and trailing dot and all whitespace."""
@@ -104,7 +117,7 @@ def convEmailToUserDN(email):
 
     return dn
 
-def ldif_mailuser(domain, username, passwd, cn, quota=1024):
+def ldif_mailuser(domain, username, passwd, cn, quota=1024, groups=''):
     domain = str(domain)
     if quota.strip() == '':
         quota = 0
@@ -114,6 +127,12 @@ def ldif_mailuser(domain, username, passwd, cn, quota=1024):
     if cn.strip() == '': cn = username
     mail = username.lower() + '@' + domain
     dn = convEmailToUserDN(mail)
+    if groups.strip() != '':
+        groups = groups.strip().split(':')
+        print groups
+        for i in range(len(groups)):
+            groups[i] = groups[i] + '@' + domain
+        print groups
 
     if HASHED_MAILDIR is True:
         # Hashed. Length of domain name are always >= 2.
@@ -156,9 +175,10 @@ def ldif_mailuser(domain, username, passwd, cn, quota=1024):
         ('enabledService',      ['mail', 'smtp', 'pop3', 'imap', 'deliver', 'forward',
                                 'senderbcc', 'recipientbcc', 'managesieve',
                                 'displayedInGlobalAddressBook',]),
-        ('memberOfGroup',       ['all@'+domain]), # Make all users belong to group 'all@domain.ltd'.
+        ('memberOfGroup',       groups),
         ]
 
+    print ldif
     return dn, ldif
 
 if len(sys.argv) != 2 or len(sys.argv) > 2:
@@ -183,8 +203,8 @@ userList = open(CSV, 'r')
 
 # Convert to LDIF format.
 for entry in userList.readlines():
-    domain, username, passwd, cn, quota = entry.split(',')
-    dn, data = ldif_mailuser(domain, username, passwd, cn, quota)
+    domain, username, passwd, cn, quota, groups = entry.split(',')
+    dn, data = ldif_mailuser(domain, username, passwd, cn, quota, groups)
 
     # Write LDIF data.
     result = open(ldif_file, 'a')

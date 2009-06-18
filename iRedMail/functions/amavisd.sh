@@ -158,7 +158,7 @@ amavisd_config_debian()
 
     cat >> ${AMAVISD_CONF} <<EOF
 ${CONF}
-@local_domains_maps = ( [".$mydomain", "${FIRST_DOMAIN}"] );  # list of all local domains
+@local_domains_maps = ( [".\$mydomain", "${FIRST_DOMAIN}"] );  # list of all local domains
 
 # Enable virus check.
 @bypass_virus_checks_maps = (
@@ -175,9 +175,9 @@ ${CONF}
     );
 
 # Mail notify.
-$mailfrom_notify_admin     = "root\@$mydomain";  # notifications sender
-$mailfrom_notify_recip     = "root\@$mydomain";  # notifications sender
-$mailfrom_notify_spamadmin = "root\@$mydomain"; # notifications sender
+$mailfrom_notify_admin     = "root\@\$mydomain";  # notifications sender
+$mailfrom_notify_recip     = "root\@\$mydomain";  # notifications sender
+$mailfrom_notify_spamadmin = "root\@\$mydomain"; # notifications sender
 $mailfrom_to_quarantine = ''; # null return path; uses original sender if undef
 
 # Disable defang banned mail.
@@ -193,7 +193,7 @@ $mailfrom_to_quarantine = ''; # null return path; uses original sender if undef
   originating => 1,  # declare that mail was submitted by our smtp client
   allow_disclaimers => 1,  # enables disclaimer insertion if available
   # notify administrator of locally originating malware
-  virus_admin_maps => ["root\@$mydomain"],
+  virus_admin_maps => ["root\@\$mydomain"],
   spam_admin_maps  => ["root\@$mydomain"],
   warnbadhsender   => 1,
   # forward to a smtpd service providing DKIM signing service
