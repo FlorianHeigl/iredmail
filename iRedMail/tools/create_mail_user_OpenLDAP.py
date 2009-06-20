@@ -12,7 +12,7 @@
 #   * http://code.google.com/p/iredmail/
 
 # --------------------------- WARNING ------------------------------
-# This script only works under iRedMail >= 0.3.3 due to ldap schema
+# This script only works under iRedMail >= 0.4.0 due to ldap schema
 # changes.
 # ------------------------------------------------------------------
 
@@ -20,7 +20,7 @@
 # Put your user list in a csv format file, e.g. users.csv, and then
 # import users listed in the file:
 #
-#   $ sudo python create_mail_user_OpenLDAP.py users.csv
+#   $ python create_mail_user_OpenLDAP.py users.csv
 #
 # ------------------------------------------------------------------
 
@@ -129,10 +129,8 @@ def ldif_mailuser(domain, username, passwd, cn, quota=1024, groups=''):
     dn = convEmailToUserDN(mail)
     if groups.strip() != '':
         groups = groups.strip().split(':')
-        print groups
         for i in range(len(groups)):
             groups[i] = groups[i] + '@' + domain
-        print groups
 
     if HASHED_MAILDIR is True:
         # Hashed. Length of domain name are always >= 2.
@@ -178,7 +176,6 @@ def ldif_mailuser(domain, username, passwd, cn, quota=1024, groups=''):
         ('memberOfGroup',       groups),
         ]
 
-    print ldif
     return dn, ldif
 
 if len(sys.argv) != 2 or len(sys.argv) > 2:
