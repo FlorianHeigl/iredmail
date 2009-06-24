@@ -26,6 +26,7 @@
 
 import os
 import sys
+import re
 
 try:
     import ldap
@@ -99,38 +100,37 @@ Note:
     - Leading and trailing Space will be ignored.
 '''
 
-def removeSpaceAndDot(string):
+def removeSpaceAndDot(s):
     """Remove leading and trailing dot and all whitespace."""
-    return str(string).strip(' .').replace(' ', '')
+    return re.sub('\.|\s', '', s)
 
 def convEmailToUserDN(email):
     """Convert email address to ldap dn of normail mail user."""
-    email = str(email).strip()
-    if len(email.split('@')) == 2:
-        user, domain = email.split('@')
-    else:
-        return False
+    if email.count('@') != 1: return ''
+
+    user, domain = email.split('@')
 
     # User DN format.
     # mail=user@domain.ltd,domainName=domain.ltd,[LDAP_BASEDN]
-    dn = 'mail=%s,ou=Users,domainName=%s,%s' % ( email, domain, BASEDN)
+    dn = 'mail=%s,ou=Users,domainName=%s,%s' % (email, domain, BASEDN)
 
     return dn
 
-def ldif_mailuser(domain, username, passwd, cn, quota=1024, groups=''):
-    domain = str(domain)
-    if quota.strip() == '':
-        quota = 0
+def ldif_mailuser(domain, username, passwd, cn, quota, groups=''):
+    if quota == '':
+        quota = '0'
     else:
-        quota = int(quota)
-    username = removeSpaceAndDot(str(username))
-    if cn.strip() == '': cn = username
+        quota = '1024'
+    username = removeSpaceAndDot(username)
+    if cn == '': cn = username
     mail = username.lower() + '@' + domain
     dn = convEmailToUserDN(mail)
-    if groups.strip() != '':
-        groups = groups.strip().split(':')
-        for i in range(len(groups)):
-            groups[i] = groups[i] + '@' + domain
+
+    # Get group list.
+    groups = groups.split(':')
+    print groups
+    for i, g in enumerate(groups[:]): 
+        groups[i] = g + '@' + domain
 
     if HASHED_MAILDIR is True:
         # Hashed. Length of domain name are always >= 2.
@@ -160,8 +160,8 @@ def ldif_mailuser(domain, username, passwd, cn, quota=1024, groups=''):
     ldif = [
         ('objectCLass',         ['inetOrgPerson', 'mailUser', 'shadowAccount']),
         ('mail',                [mail]),
-        ('userPassword',        [str(passwd)]),
-        ('mailQuota',           [str(quota)]),
+        ('userPassword',        [passwd]),
+        ('mailQuota',           [quota]),
         ('cn',                  [cn]),
         ('sn',                  [username]),
         ('uid',                 [username]),
@@ -196,16 +196,17 @@ if os.path.exists(ldif_file):
     os.remove(ldif_file)
 
 # Read user list.
-userList = open(CSV, 'r')
+userList = open(CSV, 'rb')
 
 # Convert to LDIF format.
 for entry in userList.readlines():
-    domain, username, passwd, cn, quota, groups = entry.split(',')
+    entry = entry.rstrip()
+    domain, username, passwd, cn, quota, groups = re.split('\s?,\s?', entry)
     dn, data = ldif_mailuser(domain, username, passwd, cn, quota, groups)
 
     # Write LDIF data.
     result = open(ldif_file, 'a')
-    ldif_writer=ldif.LDIFWriter(result)
+    ldif_writer = ldif.LDIFWriter(result)
     ldif_writer.unparse(dn, data)
 
 # Prompt to import user data.
