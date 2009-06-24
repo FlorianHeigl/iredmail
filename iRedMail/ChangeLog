@@ -1,5 +1,5 @@
 iRedMail-0.5.0-rc2:
-    * Add missing package vixie-cron in RHEL/CentOS.
+    * Add missing package vixie-cron & tmpwatch in RHEL/CentOS.
     * Enable anti-spam & anti-virus on Debian & Ubuntu by default. Thanks
       Falador@forum.
     * Add quota warning report tool: tools/dovecot-quota-warning.sh.
