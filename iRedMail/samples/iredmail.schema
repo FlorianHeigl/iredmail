@@ -40,57 +40,67 @@ attributetype ( 1.3.6.1.4.1.32349.1.2.1.3 NAME 'domainStatus'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.1.4 NAME 'domainBackupMX'
+attributetype ( 1.3.6.1.4.1.32349.1.2.1.4 NAME 'domainAdmin'
+    DESC 'Domain admin'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320} )
+attributetype ( 1.3.6.1.4.1.32349.1.2.1.5 NAME 'domainGlobalAdmin'
+    DESC 'Site wide domin admin: yes'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+    SINGLE-VALUE )
+attributetype ( 1.3.6.1.4.1.32349.1.2.1.6 NAME 'domainBackupMX'
     DESC 'Backup MX: yes, no'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.1.5 NAME 'domainSenderBccAddress'
+attributetype ( 1.3.6.1.4.1.32349.1.2.1.7 NAME 'domainSenderBccAddress'
     DESC 'Sender BCC address for whole domain'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320}
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.1.6 NAME 'domainRecipientBccAddress'
+attributetype ( 1.3.6.1.4.1.32349.1.2.1.8 NAME 'domainRecipientBccAddress'
     DESC 'Recipient BCC address for whole domain'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320}
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.1.7 NAME 'domainMaxQuotaSize'
+attributetype ( 1.3.6.1.4.1.32349.1.2.1.9 NAME 'domainMaxQuotaSize'
     DESC 'Max quota size limit for single domain'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.1.8 NAME 'domainCurrentQuotaSize'
+attributetype ( 1.3.6.1.4.1.32349.1.2.1.10 NAME 'domainCurrentQuotaSize'
     DESC 'Current quota size limit for single domain'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.1.9 NAME 'domainMaxUserNumber'
+attributetype ( 1.3.6.1.4.1.32349.1.2.1.11 NAME 'domainMaxUserNumber'
     DESC 'Max user number limit for single domain'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.1.10 NAME 'domainCurrentUserNumber'
-    DESC 'Max user number limit for single domain'
+attributetype ( 1.3.6.1.4.1.32349.1.2.1.12 NAME 'domainCurrentUserNumber'
+    DESC 'Current user number limit for single domain'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.1.11 NAME 'domainMaxAliasNumber'
-    DESC 'Max user number limit for single domain'
+attributetype ( 1.3.6.1.4.1.32349.1.2.1.13 NAME 'domainMaxAliasNumber'
+    DESC 'Max alias number limit for single domain'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.1.12 NAME 'domainCurrentAliasNumber'
-    DESC 'Max user number limit for single domain'
+attributetype ( 1.3.6.1.4.1.32349.1.2.1.14 NAME 'domainCurrentAliasNumber'
+    DESC 'Current alias number limit for single domain'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.1.13 NAME 'domainAdmin'
-    DESC 'Domain admin'
+attributetype ( 1.3.6.1.4.1.32349.1.2.1.15 NAME 'domainMaxListNumber'
+    DESC 'Max mail list number limit for single domain'
     EQUALITY caseIgnoreIA5Match
-    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320} )
-attributetype ( 1.3.6.1.4.1.32349.1.2.1.14 NAME 'domainGlobalAdmin'
-    DESC 'Site wide domin admin: yes'
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+    SINGLE-VALUE )
+attributetype ( 1.3.6.1.4.1.32349.1.2.1.16 NAME 'domainCurrentListNumber'
+    DESC 'Current mail list number limit for single domain'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
@@ -198,6 +208,7 @@ objectclass ( 1.3.6.1.4.1.32349.1.2.4.1 NAME 'mailDomain'
         domainMaxQuotaSize $ domainCurrentQuotaSize $
         domainMaxUserNumber $ domainCurrentUserNumber $
         domainMaxAliasNumber $ domainCurrentAliasNumber $
+        domainMaxListNumber $ domainCurrentListNumber $
         description $ streetAddress $ telephoneNumber $ fax ))
 objectclass ( 1.3.6.1.4.1.32349.1.2.4.2 NAME 'mailAdmin'
     DESC 'Mail Domain Admin' SUP top STRUCTURAL

@@ -1,4 +1,6 @@
 iRedMail-0.5.0-rc2:
+    * Add two more LDAP attributes in iredmail.schema:
+      domainMaxListNumber, domainCurrentListNumber.
     * Add missing package vixie-cron & tmpwatch in RHEL/CentOS.
     * Enable anti-spam & anti-virus on Debian & Ubuntu by default. Thanks
       Falador@forum.
