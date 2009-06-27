@@ -1,5 +1,5 @@
 iRedMail-0.5.0-rc2:
-    * Update: clamav -> 0.95.2, awstats -> 6.9-2.
+    * Update: clamav -> 0.95.2, awstats -> 6.9-2, dovecot -> 1.1.16.
     * Add two more LDAP attributes in iredmail.schema:
       domainMaxListNumber, domainCurrentListNumber.
     * Add missing package vixie-cron & tmpwatch in RHEL/CentOS.
