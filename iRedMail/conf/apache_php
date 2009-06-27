@@ -24,8 +24,8 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     export HTTPD_GROUP='apache'
 
     # Log file location.
-    export HTTPD_LOG_ACCESSLOG='/var/log/httpd/access.log'
-    export HTTPD_LOG_ERRORLOG='/var/log/httpd/error.log'
+    export HTTPD_LOG_ACCESSLOG='/var/log/httpd/access_log'
+    export HTTPD_LOG_ERRORLOG='/var/log/httpd/error_log'
 
     # ---- PHP ----
     export PHP_INI='/etc/php.ini'
