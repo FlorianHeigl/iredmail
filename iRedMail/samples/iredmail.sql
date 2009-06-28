@@ -9,6 +9,7 @@
 CREATE TABLE admin (
     username varchar(255) NOT NULL DEFAULT '',
     password varchar(255) NOT NULL DEFAULT '',
+    language varchar(255) NOT NULL DEFAULT 'en_US',
     created datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
     modified datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
     expired datetime NOT NULL DEFAULT '9999-12-31 00:00:00',
