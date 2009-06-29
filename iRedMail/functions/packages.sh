@@ -158,7 +158,12 @@ install_all()
     if [ X"${USE_MANAGESIEVE}" == X"YES" ]; then
         # Note for Ubuntu & Debian:
         # Dovecot shipped in Debian/Ubuntu has managesieve plugin patched.
-        [ X"${DISTRO}" == X"RHEL" ] && ALL_PKGS="${ALL_PKGS} pysieved.noarch"
+        if [ X"${DISTRO}" == X"RHEL" ]; then
+            ALL_PKGS="${ALL_PKGS} pysieved.noarch"
+            ENABLED_SERVICES="${ENABLED_SERVICES} pysieved"
+        else
+            :
+        fi
     else
         :
     fi

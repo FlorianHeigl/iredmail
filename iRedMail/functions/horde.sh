@@ -50,8 +50,7 @@ EOF
     php ${HORDE_HTTPD_ROOT}/scripts/setup.php >/dev/null 2>&1 <<EOF
 /horde
 1
-mysql
-0
+mysqli
 ${HORDE_DB_USER}
 ${HORDE_DB_PASSWD}
 unix
@@ -59,6 +58,8 @@ ${MYSQL_SOCKET}
 ${HORDE_DB_NAME}
 utf-8
 false
+0
+
 0
 EOF
 
@@ -160,13 +161,14 @@ horde_config_turba()
                                  'params' => array('server'    => "${LDAP_SERVER_HOST}",
                                                    'port'      => "${LDAP_SERVER_PORT}",
                                                    'tls'       => false,
-                                                   'root'      => "${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=${FIRST_DOMAIN},${LDAP_BASEDN}",
+                                                   'root'      => "${LDAP_ATTR_DOMAIN_RDN}=${FIRST_DOMAIN},${LDAP_BASEDN}",
                                                    'bind_dn'   => "${LDAP_BINDDN}",
                                                    'bind_password' => "${LDAP_BINDPW}",
                                                    'version'   => ${LDAP_BIND_VERSION},
-                                                   'scope'     => 'one',
+                                                    'filter'   => "(&(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DELIVER})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DISPLAYED_IN_ADDRBOOK})(|(&(objectClass=${LDAP_OBJECTCLASS_MAILGROUP})(${LDAP_ATTR_GROUP_HASMEMBER}=${LDAP_VALUE_GROUP_HASMEMBER}))(objectClass=${LDAP_OBJECTCLASS_MAILALIAS})(objectClass=${LDAP_OBJECTCLASS_MAILUSER})))", // Search mail users, lists, aliases.
+                                                   'scope'     => 'sub',
                                                    'charset'   => 'utf-8',
-                                                   'sizelimit' => 1000),
+                                                   'sizelimit' => 100),
                                  'map'    => array('__key'     => 'dn',
                                                    'name'      => 'cn',
                                                    'email'     => 'mail'),

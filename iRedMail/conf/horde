@@ -5,7 +5,7 @@
 # Variables for horde-webmail and related.
 
 # ---- Horde WebMail ----
-export HORDE_VERSION='1.2'
+export HORDE_VERSION='1.2.3'
 export HORDE_TARBALL="horde-webmail-${HORDE_VERSION}.tar.gz"
 
 export HORDE_HTTPD_ROOT='/var/www/html/horde'

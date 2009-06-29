@@ -182,7 +182,13 @@ EOF
 *
 *   - ${TIP_FILE}
 *
-* Please reboot your system to enable mail service.
+* Please reboot your system to enable mail services or start them
+* manually without reboot:
+*
+*   # for i in ${ENABLED_SERVICES}; do
+*         /etc/init.d/\${i} restart
+*     done
+*
 ********************************************************************
 
 EOF

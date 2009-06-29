@@ -114,7 +114,6 @@ EOF
     postconf -e virtual_overquota_bounce="yes"
     postconf -e virtual_mailbox_limit_message="${MAILDIR_LIMIT_MESSAGE}"
 
-    ECHO_INFO "Setting up virtual domain in Postfix."
     postconf -e virtual_minimum_uid="${VMAIL_USER_UID}"
     postconf -e virtual_uid_maps="static:${VMAIL_USER_UID}"
     postconf -e virtual_gid_maps="static:${VMAIL_USER_GID}"
@@ -193,12 +192,13 @@ EOF
 
 postfix_config_ldap()
 {
+    ECHO_INFO "Configure Postfix for LDAP lookup."
+
     # LDAP search filters.
     ldap_search_base_domain="${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}"
     ldap_search_base_user="${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}"
     ldap_search_base_group="${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_GROUPS},${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}"
 
-    ECHO_INFO "Setting up LDAP lookup in Postfix."
     postconf -e transport_maps="ldap:${ldap_transport_maps_cf}"
     postconf -e virtual_mailbox_domains="ldap:${ldap_virtual_mailbox_domains_cf}"
     postconf -e virtual_mailbox_maps="ldap:${ldap_accounts_cf}, ldap:${ldap_virtual_mailbox_maps_cf}"
@@ -209,11 +209,6 @@ postfix_config_ldap()
 
     postconf -e smtpd_sender_login_maps="ldap:${ldap_sender_login_maps_cf}"
     postconf -e smtpd_reject_unlisted_sender='yes'
-
-    #
-    # For mydestination = ldap:virtualdomains
-    #
-    ECHO_INFO "Setting up LDAP virtual domains: ${ldap_virtual_mailbox_domains_cf}."
 
     cat > ${ldap_virtual_mailbox_domains_cf} <<EOF
 ${CONF_MSG}
@@ -234,8 +229,6 @@ EOF
     #
     # LDAP transport maps
     #
-    ECHO_INFO "Setting up LDAP transport_maps: ${ldap_transport_maps_cf}."
-
     cat > ${ldap_transport_maps_cf} <<EOF
 ${CONF_MSG}
 server_host     = ${LDAP_SERVER_HOST}
@@ -255,8 +248,6 @@ EOF
     #
     # LDAP Virtual Users.
     #
-    ECHO_INFO "Setting up LDAP virtual users: ${ldap_accounts_cf}, ${ldap_virtual_mailbox_maps_cf}."
-
     cat > ${ldap_accounts_cf} <<EOF
 ${CONF_MSG}
 server_host     = ${LDAP_SERVER_HOST}
@@ -289,7 +280,6 @@ result_attribute= ${LDAP_ATTR_USER_RDN}
 debuglevel      = 0
 EOF
 
-    ECHO_INFO "Setting up LDAP sender login maps: ${ldap_sender_login_maps_cf}."
     cat > ${ldap_sender_login_maps_cf} <<EOF
 ${CONF_MSG}
 server_host     = ${LDAP_SERVER_HOST}
@@ -305,8 +295,6 @@ query_filter    = (&(${LDAP_ATTR_USER_RDN}=%s)(objectClass=${LDAP_OBJECTCLASS_MA
 result_attribute= ${LDAP_ATTR_USER_RDN}
 debuglevel      = 0
 EOF
-
-    ECHO_INFO "Setting up LDAP virtual aliases: ${ldap_virtual_alias_maps_cf}."
 
     cat > ${ldap_virtual_alias_maps_cf} <<EOF
 ${CONF_MSG}
@@ -324,7 +312,6 @@ result_attribute= ${LDAP_ATTR_USER_FORWARD}
 debuglevel      = 0
 EOF
 
-    ECHO_INFO "Setting up LDAP virtual group: ${ldap_virtual_group_maps_cf}."
     cat > ${ldap_virtual_group_maps_cf} <<EOF
 ${CONF_MSG}
 server_host     = ${LDAP_SERVER_HOST}
