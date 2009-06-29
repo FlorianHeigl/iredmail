@@ -148,6 +148,7 @@ start_postfix_now()
             do
                 service_control ${i} restart
             done
+            export POSTFIX_STARTED='YES'
             ;;
         N|n|* )
             :
@@ -182,6 +183,10 @@ EOF
 *
 *   - ${TIP_FILE}
 *
+EOF
+
+if [ X"${POSTFIX_STARTED}" != X"YES" ]; then
+    cat <<EOF
 * Please reboot your system to enable mail services or start them
 * manually without reboot:
 *
@@ -189,6 +194,10 @@ EOF
 *         /etc/init.d/\${i} restart
 *     done
 *
+EOF
+fi
+
+    cat <<EOF
 ********************************************************************
 
 EOF
