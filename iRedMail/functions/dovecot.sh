@@ -135,7 +135,7 @@ EOF
 # Such as: /home/vmail/iredmail.org/www/
 #          ----------- ================
 #          homeDirectory  mailMessageStore
-mail_location = maildir:/%Lh/:INDEX=/%Lh/
+mail_location = maildir:/%Lh/Maildir/:INDEX=/%Lh/Maildir/
 
 plugin {
     quota = maildir
@@ -192,7 +192,7 @@ EOF
 # Such as: /home/vmail/iredmail.org/www
 #          ----------- ====================
 #          homeDirectory  mailMessageStore
-mail_location = mbox:/%Lh/%Ld/%Ln:INBOX=/%Lh/%Ld/%Ln/inbox:INDEX=/%Lh/%Ld/%Ln/indexes
+mail_location = mbox:/%Lh/:INBOX=/%Lh/inbox:INDEX=/%Lh/indexes
 
 # mbox performance optimizations.
 mbox_lazy_writes=yes
@@ -306,7 +306,7 @@ password_query = SELECT password FROM mailbox WHERE username='%u' AND active='1'
 EOF
         # Maildir format.
         [ X"${MAILBOX_FORMAT}" == X"Maildir" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
-user_query = SELECT CONCAT('maildir:', storagebasedirectory, '/', maildir, '/Maildir/') AS home, \
+user_query = SELECT CONCAT(storagebasedirectory, '/', maildir) AS home, \
 CONCAT('*:bytes=', quota*1048576) AS quota_rule \
 FROM mailbox WHERE username='%u' \
 AND active='1' AND enable%Ls='1' AND expired >= NOW()
