@@ -1,0 +1,3 @@
+# For SpamAssassin.
+
+export SA_LOCAL_CF='/etc/mail/spamassassin/local.cf'

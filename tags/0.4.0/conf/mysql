@@ -1,0 +1,39 @@
+#!/bin/sh
+
+# Author: Zhang Huangbin (michaelbibby <at> gmail.com)
+
+# Variables for MySQL database server and related.
+
+export MYSQL_FRESH_INSTALLATION='YES'
+
+# If your host is "localhost" MySQL (the commandline tool 'mysql' as well)
+# always tries to use the socket connection for speeding up things. If you
+# enter "127.0.0.1" as hostname, MySQL uses the TCP connection.
+export MYSQL_SERVER='localhost'
+export MYSQL_PORT='3306'
+export MYSQL_SOCKET='/var/lib/mysql/mysql.sock'
+export MYSQL_ROOT_USER='root'
+
+# Use lowercase variable name for IP address.
+if [ X"${MYSQL_SERVER}" == X"localhost" ]; then
+    export mysql_server='127.0.0.1'
+else
+    export mysql_server="${MYSQL_SERVER}"
+fi
+
+# MySQL config file.
+export MYSQL_MY_CNF='/etc/my.cnf'
+
+# For virtual user query in Postfix, Dovecot.
+export MYSQL_BIND_USER="${VMAIL_USER_NAME}"
+export MYSQL_BIND_PW="$(${RANDOM_STRING})"
+
+# For vmail database management.
+export MYSQL_ADMIN_USER="${VMAIL_ADMIN_USER_NAME}"
+
+export MYSQL_INIT_SQL="${CONF_DIR}/mysql_init.sql"
+export MYSQL_VMAIL_SQL="${CONF_DIR}/mysql_vmail.sql"
+
+# MySQL database to store virtual hosts.
+export VMAIL_DB='vmail'
+export SAMPLE_SQL="${SAMPLE_DIR}/iredmail.sql"

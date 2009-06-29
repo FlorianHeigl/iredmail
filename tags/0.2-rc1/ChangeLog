@@ -1,0 +1,220 @@
+iRedMail-0.2-rc1:
+    * Add more amavisd options.
+    * Adjust mailgraph filter rule, add greylist graph.
+    * Fix quota config in dovecot for 1.1.x. Thanks chenwei. :)
+      Warning: we use '10' as '10M' now. please refer dovecot userbd
+      setting file: /etc/dovecot-{mysql,ldap}.conf.
+    * Make amavisd log to /var/log/maillog by default, so that
+      mailgraph will detect spam mails.
+    * Fix SQL while SITE_ADMIN_NAME equal to FIRST_DOMAIN_ADMIN_NAME.
+      Reported by muniao. Thanks :)
+    * Add script to convert WinMail user mailboxes to standard IMAP
+      directory structure.
+    * Fix ExtMail configuration about 'SYS_MAILDIR_BASE' in webmail.cf,
+      Thanks xcrossbow@gmail.
+    * Typo in Roundcubemail display_username.patch. remove 'dot' after
+      username, so that it won't make user confused. Thanks
+      xcrossbow@gmail.
+    * Fix typo error in 'create_mail_mysql_user.sh'. Thanks muniao.
+    * Remove roundcubemail version info in 'useragent' option in
+      'config/main.inc.php', less is more.
+    * Add 'signed_header_fields' in amavisd.conf.
+    * Update dovecot to 1.1.1.
+    * Update amavisd-new to 2.6.1.
+
+iRedMail-0.1:
+    * Add 'policy_time_limit=3600'. Reminded by Edison. Thanks :)
+    * Add 'delay_warning_time=30m'. Reminded by muniao. Thanks :)
+    * Add perl-Mail-SPF-Query.noarch as mandatory for SPF feature.
+    * Initialize version of iRedMail. based on rhms-0.5.0-rc2.
+      rhms ChangeLog please check:
+      http://rhms.googlecode.com/svn/trunk/rhms/ChangeLog
+
+0.5.0-rc2:
+    * Project renamed: iRedMail:
+      http://iRedMail.googlecode.com/
+    * Update clamav to 0.93.1.
+    * Set 'smtpd_sasl_authenticated_header=no' by default.
+    * Add 'reject_unverified_recipient' in smtpd_recipient_restrictions.
+    * Fix incorrect order of smtpd_recipient_restriction variables.
+    * Add rhms project info in mailgraph cgi page.
+    * Remove variables which used for SA 3.2.x only.
+    * Add missing packages for SpamAssassin SPF feature. Thanks muniao.
+    * Sync SpamAssassin local.cf.
+    * Add patch to disable postfixadmin try to create usre maildir
+      via send mail to user without smtp auth. Dovecot will create
+      necessary directories while user login via pop3/imap.
+    * Set 'enable_original_recipient=no' by default. Reference:
+      http://code.google.com/p/rhms/wiki/rhms_Admin_Guide#mail_to_normal_user_and_alias
+    * Add 'department', 'rank/userRank' fields in rhms.sql/rhms.schema.
+
+0.5.0-rc1:
+    * Update dovecot to 1.0.15.
+    * Seperate POP3 and IMAP user verify in Dovecot.
+      - Add 'enableSMTP', 'enablePOP3', 'enableIMAP', 'enableDELIVER'
+        attrs in rhms LDAP template.
+      - Add 'enablesmtp', 'enablepop3', 'enableimap', 'enabledeliver'
+        columns in rhms SQL template.
+    * Add status info for each function after function completed.
+    * Support to use exist MySQL database now, reference:
+      http://code.google.com/p/rhms/wiki/rhms_Usage#Exist_MySQL
+    * Sync phpLDAPadmin template.
+    * Config wizard code clean up, virtual domain config was merged.
+    * Add one more plugin for SquirrelMail: Email Footer.
+    * Add MySQL index for 'mailbox' table.
+    * Initialize import horde webmail(v1.1). Disabled by default in
+      dialog config wizard.
+    * Install mod_ssl by default to provide TLS/SSL support for Apache.
+      Enabled by default.
+    * Re-generated roundcubemail patch for forward & password setting
+      feature. Split core function and skin field.
+    * Re-generated roundcubemail patch: display_username.patch. User
+      login name will be displayed in taskbar now.
+    * Add another roundcubemail skin: default-lables. Also add icon
+      set created by huangminghu <at> gmail. Thanks huangminghu. :)
+    * Add script to migrate ExtMail 'mailbox' table to rhms format.
+    * Split clear_away()(functions/misc.sh) to multi small functions.
+      KISS?
+    * Add sample rules for header_checks in Postfix.
+    * Add 'smtpd_sasl_authenticated_header=yes' in Postfix, so that
+      it will report the SASL authenticated user name in the smtpd(8)
+      Received message header. Refer postconf(5) for details.
+    * Update Dovecot and sieve to lastest version.
+      Dovecot -> 1.0.14, sieve -> 1.0.3.
+      Global sieve rule file name was changed to .dovecot.sieve.
+    * Seperate policyd log to /var/log/policyd.log. Disabled by default.
+      Reference: conf/policyd -> POLICYD_SEPERATE_LOG.
+    * Disable training mode in policyd.
+    * Set 'smtp_auth_type' to 'LOGIN'(default) in Roundcubemail-0.1.1.
+    * Set 'default_charset' to 'UTF-8' in Roundcubemail-0.1.1.
+    * Update postfix to 2.3.14.
+    * Update amavisd-new to 2.6.0-1.rhms. DKIM is implemented now.
+    * Enable RCPT_ACL in policyd by default.
+    * Prompt to remove sendmail. Idea from Edison. Thanks :)
+    * Initialize import SPF(RFC4408) feature, implemented via
+      SpamAssassin module Mail::SPF. It's an optional component too.
+      Enabled by default in dialog config wizard.
+    * Fix incorrect transport field in mysql query.
+    * Fix incorrect message_size_limit. Thanks Edison :)
+
+0.4.4.0:
+    * Fix incorrect test in check root privilege. Thanks hylinux <at>
+      hotmail.com.
+    * Use random password for ldap bind dn.
+    * qmail.schema was extended and renamed rhms.schema:
+      - Add bcc attributes for both user and domain.
+      - Add qmailDomain objectclass for virtual domain.
+      - Add domainName, mtaTransport, domainStatus, domainSenderBccAddress
+        domainRecipientBccAddress, domainMaxQuotaSize,
+        domainMaxUserNumber for qmailDomain objectclass.
+    * Update SquirrelMail to 1.4.15.
+    * Add ARCH info($(uname -i)) while install packages.
+    * Improve bcc feature, support both per-domain and per-user.
+    * Convert mysql query format to postfix version 2.2 and later.
+    * Fix incorrect variable in tools/mysql_config.sh.
+    * Fix incorrect logic 'AND'. Thanks eddiechen.
+    * Fix incorrect quota size in PostfixAdmin. Thanks muniao@gmail.
+    * Upgrade phpMyAdmin to 2.11.6-all-languages.
+    * If dovecot is disabled, procmail will be used as transport in
+      Postfix.
+    * Add 'localhost.localdomain' in mydestination. Thanks Edison.
+    * Add mbox format support in OpenLDAP, MySQL, Dovecot,
+      PostfixAdmin, Roundcubemail.
+
+0.4.3.1:
+    * Add LC_ALL variable for perl.
+    * Increase 'memory_limit' to '128M' for large attachment in
+      Roundcubemail-0.1.1.
+    * SENDERMSGSIZE(/etc/policyd.conf) == MESSAGE_SIZE_LIMIT(conf/postfix).
+
+0.4.3.0:
+    * Dovecot is another optional component now.
+    * Install all packages, enable/disable services at the same time. rhms
+      installation is faster.
+    * Fix error while create new user in Postfix:
+      Error log: 'The EMAIL is not valid!'
+      Fixed in config.inc.php: $CONF['emailcheck_resolve_domain']='NO';
+      Thanks edisonwang2007 <at> gmail.com for the bug report.
+    * Add missing config option in policyd: MYSQLPASS.
+    * Fix incorrect 'MYSQL_ADMIN_PW'.
+    * Fix possible error in saslauthd configuration file:
+      /etc/sysconfig/saslauthd. Thanks edisonwang2007 <at> gmail.com.
+      FLAGS='-r -O localhost' --> FLAGS='-r -O 127.0.0.1'
+    * Use new mirror site to store all packages: http://www.osspinc.com/.
+
+0.4.2.12:
+    * Fix incorrect SQL structure of sender_bcc_maps & recipient_bcc_maps.
+    * Create basedir for non-exist directory of vmail home directory.
+    * Add 'X-HEADER-TAG' and 'X-HEADER-LINE' in amavisd.conf, commented
+      by default.
+    * Make amavisd log to standalone log file: /var/log/amavisd.log. 
+      logrotate is ready.
+    * Automatic install package: crontabs.
+    * Add patch for roundcubemail-0.1.1: display login username.
+    * Merge policyd patch from mostlyharmless <at> optonline.net, update
+      policyd to policyd-1.82-2.rhms.
+    * Redirect MySQL initialize SQL template to file: conf/mysql_init.sql.
+    * Initialize import and enable policyd for MySQL based solution, run
+      as user 'policyd', group 'policyd'.
+    * Fix incorrect perl regular express while config roundcubemail skin
+      path.
+    * Disable SELinux and reload iptables rules while start postfix
+      after installation.
+    * Fix incorrect PostfixAdmin tarball name: '-' -> '_'.
+    * Add MySQL table 'bcc' for sender_bcc_maps and recipient_bcc_maps.
+    * Fix incorrect command order in pkgs/get_all.sh.
+    * Fix incorrect MD5 for clamav packages.
+
+0.4.2.11:
+    * Update PostfixAdmin: 2.2.0-rc3 -> 2.2.0.
+    * Add roundcubemail button images with Chinese labels. Thanks 
+      huangminghu <at> gmail.
+    * Fix incorrect command order in 'tools/optional_components.sh'.
+    * Add FIRST_DOMAIN in @local_domains_maps for amavisd-new, so that
+      amavisd-new will add 'X-Spam-Level' tag to mail header.
+    * Regenerate patch for roundcubemail-0.1.1. Thanks huangminghu <at>
+      gmail.
+    * Prompt to start postfix immediately.
+    * Remove conflict patch for roundcubemail-0.1.1:
+      patches/roundcubemail/roundcube-import-contacts-0.3-RC0.1.1.patch
+    * New patch for roundcubemail-0.1.1 performance improvement:
+      patches/roundcubemail/performance-jh1.diff.
+    * Install all necessary RPM packages before config them.
+    * Add parameter for default domain in Dovecot: auth_default_realm.
+    * Add one more parameter for Postfix: allow_min_user=no.
+
+0.4.2.10:
+    * Add alias entries for first domain and first user.
+    * Add new patch: roundcubemail-0.1.1_chpwd_forward.patch for
+      roundcubemail-0.1.1. It was wrote by Jungle <at> gmail, based on
+      patch for hMailServer. Many thanks to Jungle.
+    * Fix incorrect MD5 value of extmail-1.0.4.tar.gz.
+    * Use random password for 'roundcube@localhost' and 'vmail@localhost'
+      in MySQL.
+    * Add 'saslauthd_path' in smtpd.conf.
+    * Update phpMyAdmin to '2.11.5.2-all-languages'.
+    * Fix incorrect 'smtpd_sender_restrictions' in postfix. Thanks muniao <at>
+      gmail.
+    * Use 'Junk' to store Spam mail.
+    * Oops, forget to remove /tmp/backend while config rhms with dialog.
+    * Add tow more items in smtpd_recipient_restrictions.
+    * Add small script to import users from a plain text file. Thanks
+      huangminghu and jabincn.
+
+0.4.2.9:
+    * Add patch to provide import csv address book feature in Roundcubemail.
+      Thanks jabincn <at> gmail.
+    * Add Chinese ruls from www.ccert.edu.cn for SpamAssassin.
+    * Fix one incorrect MD5 value. Thanks ipostfix <at> gmail.
+    * Split MD5 value of misc files into standalone file: MD5.misc.
+    * Fix incorrect smtpd_sender_login_maps, remove alias_maps.
+    * Fix incorrect setting of smtps in master.cf. Thanks huangminghu <at>
+      gmail.
+    * Add 'username_domain' in Roundcubemail as default domain, so that user
+      can login only with username part of their email address.
+    * Fix incorrect privilege for 'roundcube' user on 'vmail.mailbox'.
+    * Remove svn tag in 'samples/freshclam'.
+
+0.4.2.8:
+    * Check full changelog for old version:
+    http://rhms.googlecode.com/svn/tags/rhms/0.4.2.8/ChangeLog

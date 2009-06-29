@@ -1,0 +1,20 @@
+# Author: Zhang Huangbin (michaelbibby <at> gmail.com)
+# Variables for horde-webmail and related.
+
+# ---- Horde WebMail ----
+export HORDE_VERSION='1.1.2'
+export HORDE_TARBALL="horde-webmail-${HORDE_VERSION}.tar.gz"
+
+export HORDE_HTTPD_ROOT='/var/www/html/horde'
+
+# Database setting.
+export HORDE_DB_NAME="horde"
+export HORDE_DB_USER="horde"
+export HORDE_DB_PASSWD="$(echo $RANDOM\$$RANDOM\@$RANDOM\!$RANDOM\&$RANDOM\*$RANDOM\)$RANDOM)"
+export HORDE_DB_TEMPLATE="${HORDE_HTTPD_ROOT}/scripts/sql/groupware.mysql.sql"
+
+# Default language of user interface.
+#   en_US: English(US)
+#   zh_CN: Simp Chinese.
+#   zh_TW: Tradition Chinese.
+export HORDE_DEFAULT_LANGUAGE='en_US'

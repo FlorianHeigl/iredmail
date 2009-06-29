@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Author: Zhang Huangbin (michaelbibby <at> gmail.com)
+
+# Variables for managesieve service.
+
+# NOTE: Please source 'conf/pysieved' first.
+
+export MANAGESIEVE_SERVER="${PYSIEVED_BINDADDR}"
+export MANAGESIEVE_PORT="${PYSIEVED_PORT}"

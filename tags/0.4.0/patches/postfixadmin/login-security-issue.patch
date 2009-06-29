@@ -1,0 +1,58 @@
+--- login.php	2007-12-30 09:32:33.000000000 +0800
++++ login.php.ired	2008-10-28 22:25:21.000000000 +0800
+@@ -71,14 +71,14 @@
+         if ($result['rows'] != 1)
+         {
+             $error = 1;
+-            $tMessage = $PALANG['pLogin_password_incorrect'];
++            $tMessage = $PALANG['pLogin_incorrect'];
+             $tUsername = $fUsername;
+         }
+     }
+     else
+     {
+         $error = 1;
+-        $tMessage = $PALANG['pLogin_username_incorrect'];
++        $tMessage = $PALANG['pLogin_incorrect'];
+     }
+ 
+     if ($error != 1)
+--- users/login.php	2007-12-30 09:32:33.000000000 +0800
++++ users/login.php.ired	2008-10-28 22:24:57.000000000 +0800
+@@ -64,14 +64,14 @@
+       if ($result['rows'] != 1)
+       {
+          $error = 1;
+-         $tMessage = $PALANG['pLogin_password_incorrect'];
++         $tMessage = $PALANG['pLogin_incorrect'];
+          $tUsername = $fUsername;
+       }
+    }
+    else
+    {
+       $error = 1;
+-      $tMessage = $PALANG['pLogin_username_incorrect'];
++      $tMessage = $PALANG['pLogin_incorrect'];
+    }
+ 
+    if ($error != 1)
+--- languages/en.lang	2007-12-29 05:42:09.000000000 +0800
++++ languages/en.lang.ired	2008-10-28 22:01:48.000000000 +0800
+@@ -24,6 +24,7 @@
+ $PALANG['pLogin_username'] = 'Login (email)';
+ $PALANG['pLogin_password'] = 'Password';
+ $PALANG['pLogin_button'] = 'Login';
++$PALANG['pLogin_incorrect'] = '<span class="error_msg">Username or password in not correct!</span>';
+ $PALANG['pLogin_username_incorrect'] = '<span class="error_msg">Your login is not correct. Make sure that you login with your email address!</span>';
+ $PALANG['pLogin_password_incorrect'] = '<span class="error_msg">Your password is not correct!</span>';
+ $PALANG['pLogin_login_users'] = 'Users click here to login to the user section.';
+--- languages/cn.lang	2008-06-18 04:44:30.000000000 +0800
++++ languages/cn.lang.ired	2008-10-28 22:01:41.000000000 +0800
+@@ -22,6 +22,7 @@
+ $PALANG['pLogin_username'] = '帐号 (邮件地址)';
+ $PALANG['pLogin_password'] = '密码';
+ $PALANG['pLogin_button'] = '登录';
++$PALANG['pLogin_incorrect'] = '<span class="error_msg">用户名或密码错误！</span>';
+ $PALANG['pLogin_username_incorrect'] = '<span class="error_msg">登录失败, 请确认你是使用你的邮件地址登录!</span>';
+ $PALANG['pLogin_password_incorrect'] = '<span class="error_msg">密码错误!</span>';
+ $PALANG['pLogin_login_users'] = '普通用户点击这里进入用户控制面板.';
