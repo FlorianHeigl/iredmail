@@ -28,6 +28,10 @@ horde_install()
     chmod a-rwx ${HORDE_HTTPD_ROOT}/test.php
     chmod a-rwx ${HORDE_HTTPD_ROOT}/*/test.php
 
+    # Patch: make turba use normal ldap filter.
+    cd ${HORDE_HTTPD_ROOT} && \
+    patch -p0 < ${PATCH_DIR}/horde/turba.ldap.filter.patch >/dev/null
+
     echo 'export status_horde_install="DONE"' >> ${STATUS_FILE}
 }
 
@@ -165,14 +169,15 @@ horde_config_turba()
                                                    'bind_dn'   => "${LDAP_BINDDN}",
                                                    'bind_password' => "${LDAP_BINDPW}",
                                                    'version'   => ${LDAP_BIND_VERSION},
-                                                    'filter'   => "(&(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DELIVER})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DISPLAYED_IN_ADDRBOOK})(|(&(objectClass=${LDAP_OBJECTCLASS_MAILGROUP})(${LDAP_ATTR_GROUP_HASMEMBER}=${LDAP_VALUE_GROUP_HASMEMBER}))(objectClass=${LDAP_OBJECTCLASS_MAILALIAS})(objectClass=${LDAP_OBJECTCLASS_MAILUSER})))", // Search mail users, lists, aliases.
+                                                   'filter'   => "(&(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DELIVER})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DISPLAYED_IN_ADDRBOOK})(|(&(objectClass=${LDAP_OBJECTCLASS_MAILGROUP})(${LDAP_ATTR_GROUP_HASMEMBER}=${LDAP_VALUE_GROUP_HASMEMBER}))(objectClass=${LDAP_OBJECTCLASS_MAILALIAS})(objectClass=${LDAP_OBJECTCLASS_MAILUSER})))", // Search mail users, lists, aliases.
                                                    'scope'     => 'sub',
                                                    'charset'   => 'utf-8',
                                                    'sizelimit' => 100),
                                  'map'    => array('__key'     => 'dn',
                                                    'name'      => 'cn',
-                                                   'email'     => 'mail'),
-                                 'search' => array('name', 'email'),
+                                                   'email'     => 'mail',
+                                                   'workPhone' => 'telephonenumber'),
+                                 'search' => array('name', 'email', 'workPhone'),
                                  'strict' => array('dn'),
                                  'admin' => array(),
                                  'public' => true,
