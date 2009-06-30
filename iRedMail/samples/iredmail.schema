@@ -170,7 +170,7 @@ attributetype ( 1.3.6.1.4.1.32349.1.2.2.13 NAME 'userRank'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
 attributetype ( 1.3.6.1.4.1.32349.1.2.2.14 NAME 'enabledService'
-    DESC 'Enabled service: mail, smtp, imap, pop3, deliver, forward, senderbcc, recipientbcc'
+    DESC 'Enabled service: mail, smtp, imap, pop3, deliver, forward, senderbcc, recipientbcc, displayedInGlobalAddressBook'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
 attributetype ( 1.3.6.1.4.1.32349.1.2.2.15 NAME 'memberOfGroup'
