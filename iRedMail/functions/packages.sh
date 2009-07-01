@@ -154,16 +154,12 @@ install_all()
 
     # pysieved.
     # Warning: Do *NOT* add 'pysieved' service in 'ENABLED_SERVICES'.
-    #          We don't have rc/init script under /etc/init.d/ now.
+    #          We don't have rc/init script under /etc/init.d/ till
+    #          package is installed.
     if [ X"${USE_MANAGESIEVE}" == X"YES" ]; then
         # Note for Ubuntu & Debian:
         # Dovecot shipped in Debian/Ubuntu has managesieve plugin patched.
-        if [ X"${DISTRO}" == X"RHEL" ]; then
-            ALL_PKGS="${ALL_PKGS} pysieved.noarch"
-            ENABLED_SERVICES="${ENABLED_SERVICES} pysieved"
-        else
-            :
-        fi
+        [ X"${DISTRO}" == X"RHEL" ] && ALL_PKGS="${ALL_PKGS} pysieved.noarch"
     else
         :
     fi

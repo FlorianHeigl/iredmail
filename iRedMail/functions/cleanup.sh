@@ -186,6 +186,9 @@ EOF
 EOF
 
 if [ X"${POSTFIX_STARTED}" != X"YES" ]; then
+    [ X"${DISTRO} == X"RHEL" ] && export ENABLED_SERVICES="${ENABLED_SERVICES} pysieved"
+    export ENABLED_SERVICES="${ENABLED_SERVICES} iptables"
+
     cat <<EOF
 * Please reboot your system to enable mail services or start them
 * manually without reboot:
