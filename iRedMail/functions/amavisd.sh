@@ -92,7 +92,7 @@ amavisd_config_rhel()
 
     export FIRST_DOMAIN
     perl -pi -e 's/^(\$mydomain)/$1\ =\ \"$ENV{'HOSTNAME'}\"\;\t#/' ${AMAVISD_CONF}
-    perl -pi -e 's/(.*local_domains_maps.*)(].*)/${1}, "$ENV{FIRST_DOMAIN}"${2}/' ${AMAVISD_CONF}
+    perl -pi -e 's/^(@local_domains_maps)(.*)/${1} = (read_hash("$ENV{'AMAVISD_LOCAL_DOMAINS_MAPS'}"));/' ${AMAVISD_CONF}
 
     # Set default score.
     #perl -pi -e 's/(.*)(sa_tag_level_deflt)(.*)/${1}${2} = 4.0; #${3}/' ${AMAVISD_CONF}
@@ -158,7 +158,7 @@ amavisd_config_debian()
 
     cat >> ${AMAVISD_CONF} <<EOF
 ${CONF}
-@local_domains_maps = ( [".\$mydomain", "${FIRST_DOMAIN}"] );  # list of all local domains
+@local_domains_maps = ( read_hash("${AMAVISD_LOCAL_DOMAINS_MAPS}") );
 
 # Enable virus check.
 @bypass_virus_checks_maps = (
@@ -349,13 +349,16 @@ EOF
     # Enable disclaimer if available.
     cat >> ${AMAVISD_CONF} <<EOF
 # ------------ Disclaimer Setting ---------------
-#\$altermime = '${ALTERMIME_BIN}';
+# Uncomment this line to enable singing disclaimer in outgoing mails.
 #\$defang_maps_by_ccat{+CC_CATCHALL} = [ 'disclaimer' ];
 
-# Disclaimer in plain text formart.
-#@altermime_args_disclaimer = qw(--disclaimer=${DISCLAIMER_DIR}/_OPTION_.txt);
+# Program used to signing disclaimer in outgoing mails.
+\$altermime = '${ALTERMIME_BIN}';
 
-#@disclaimer_options_bysender_maps = ({
+# Disclaimer in plain text formart.
+@altermime_args_disclaimer = qw(--disclaimer=${DISCLAIMER_DIR}/_OPTION_.txt);
+
+@disclaimer_options_bysender_maps = ({
     # Per-domain disclaimer setting: ${DISCLAIMER_DIR}/host1.iredmail.org.txt
     #'host1.iredmail.org' => 'host1.iredmail.org',
 
@@ -366,15 +369,15 @@ EOF
     #'boss@iredmail.org'  => 'boss.iredmail.org',
 
     # Catch-all disclaimer setting: ${DISCLAIMER_DIR}/default.txt
-#    '.' => 'default',
-#},);
+    '.' => 'default',
+},);
 # ------------ End Disclaimer Setting ---------------
 EOF
 
     # Create directory to store disclaimer files if not exist.
     [ -d ${DISCLAIMER_DIR} ] || mkdir -p ${DISCLAIMER_DIR} 2>/dev/null
     # Create a empty disclaimer.
-    echo '' > ${DISCLAIMER_DIR}/default.txt
+    echo -e '\n----' > ${DISCLAIMER_DIR}/default.txt
 
     cat >> ${AMAVISD_CONF} <<EOF
 

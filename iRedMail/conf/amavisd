@@ -2,6 +2,8 @@
 
 # Author: Zhang Huangbin (michaelbibby <at> gmail.com)
 
+# Warning: Please source 'conf/postfix' first.
+
 export AMAVISD_SERVER='127.0.0.1'
 export AMAVISD_USER='amavis'
 export AMAVISD_GROUP='amavis'
@@ -11,6 +13,8 @@ export AMAVISD_DKIM_DIR='/var/lib/dkim'
 export AMAVISD_DKIM_SELECTOR='dkim'
 export AMAVISD_DAEMON_USER='amavis'
 export AMAVISD_DAEMON_GROUP='amavis'
+
+export AMAVISD_LOCAL_DOMAINS_MAPS="${POSTFIX_ROOTDIR}/amavis_local_domains_maps"
 
 # Altermime.
 export ALTERMIME_BIN='/usr/bin/altermime'
