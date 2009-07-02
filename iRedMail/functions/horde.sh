@@ -198,7 +198,7 @@ Horde Turba Address Book:
         - ${HORDE_TURBA_CONFIG_DIR}/sources.php
 EOF
 
-    echo 'export status_horde_config_turba="YES"' >> ${STATUS_FILE}
+    echo 'export status_horde_config_turba="DONE"' >> ${STATUS_FILE}
 }
 
 # Ingo is Email Filter Rules Manager.
@@ -241,5 +241,5 @@ Horde Ingo Mail Filter Rule Manager:
         - ${HORDE_INGO_CONFIG_DIR}/backends.php
 EOF
 
-    echo 'export status_horde_config_ingo="YES"' >> ${STATUS_FILE}
+    echo 'export status_horde_config_ingo="DONE"' >> ${STATUS_FILE}
 }

@@ -219,6 +219,8 @@ EOF
 
 amavisd_config_generic()
 {
+    echo -e "${HOSTNAME}\n${FIRST_DOMAIN}" > ${AMAVISD_LOCAL_DOMAINS_MAPS}
+
     cat >> ${AMAVISD_CONF} <<EOF
 # Set listen IP/PORT.
 \$notify_method  = 'smtp:[${SMTP_SERVER}]:10025';
