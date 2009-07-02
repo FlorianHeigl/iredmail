@@ -9,7 +9,7 @@
 # For dovecot SSL support.
 dovecot_ssl_config()
 {
-    ECHO_INFO "Enable TLS support in Dovecot."
+    ECHO_INFO "Enable TLS support."
 
     [ X"${ENABLE_DOVECOT_SSL}" == X"YES" ] && cat >> ${DOVECOT_CONF} <<EOF
 # SSL support.
@@ -31,7 +31,7 @@ dovecot_config()
     [ X"${ENABLE_DOVECOT}" == X"YES" ] && \
         backup_file ${DOVECOT_CONF} && \
         chmod 0755 ${DOVECOT_CONF} && \
-        ECHO_INFO "Setup dovecot: ${DOVECOT_CONF}." && \
+        ECHO_INFO "Configure dovecot: ${DOVECOT_CONF}." && \
         cat > ${DOVECOT_CONF} <<EOF
 ${CONF_MSG}
 # Provided services.
@@ -340,7 +340,7 @@ EOF
 }
 EOF
 
-    ECHO_INFO "Generate dovecot sieve global filter rule file: ${SIEVE_FILTER_FILE}.sample."
+    ECHO_INFO "Copy sample sieve global filter rule file: ${SIEVE_FILTER_FILE}.sample."
     cp -f ${SAMPLE_DIR}/dovecot.sieve ${SIEVE_FILTER_FILE}.sample
     chown ${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} ${SIEVE_FILTER_FILE}.sample
     chmod 0500 ${SIEVE_FILTER_FILE}.sample
@@ -353,7 +353,7 @@ EOF
     # Sieve log file must be world-writable.
     chmod 0666 ${SIEVE_LOG_FILE}
 
-    ECHO_INFO "Enable dovecot in postfix: ${POSTFIX_FILE_MAIN_CF}."
+    ECHO_INFO "Enable dovecot SASL support in postfix: ${POSTFIX_FILE_MAIN_CF}."
     postconf -e mailbox_command="${DOVECOT_DELIVER}"
     postconf -e virtual_transport="${TRANSPORT}"
     postconf -e dovecot_destination_recipient_limit='1'

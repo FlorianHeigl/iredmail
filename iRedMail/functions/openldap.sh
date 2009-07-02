@@ -21,7 +21,7 @@ openldap_config()
     # Copy ${PROG_NAME}.schema.
     cp -f ${SAMPLE_DIR}/iredmail.schema ${OPENLDAP_SCHEMA_DIR}
 
-    ECHO_INFO "Generate new configuration file: ${OPENLDAP_SLAPD_CONF}."
+    ECHO_INFO "Generate new server configuration file: ${OPENLDAP_SLAPD_CONF}."
     cat > ${OPENLDAP_SLAPD_CONF} <<EOF
 ${CONF_MSG}
 # Schemas.
@@ -236,7 +236,7 @@ EOF
         perl -pi -e 's#^(SLAPD_CONF=).*#${1}"$ENV{OPENLDAP_SLAPD_CONF}"#' ${ETC_SYSCONFIG_DIR}/slapd && \
         perl -pi -e 's#^(SLAPD_PIDFILE=).*#${1}"$ENV{OPENLDAP_PID_FILE}"#' ${ETC_SYSCONFIG_DIR}/slapd
 
-    ECHO_INFO "Generating new LDAP client configuration file: ${OPENLDAP_LDAP_CONF}"
+    ECHO_INFO "Generate new client configuration file: ${OPENLDAP_LDAP_CONF}"
     cat > ${OPENLDAP_LDAP_CONF} <<EOF
 BASE    ${LDAP_SUFFIX}
 URI     ldap://${LDAP_SERVER_HOST}:${LDAP_SERVER_PORT}

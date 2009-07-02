@@ -10,11 +10,11 @@ amavisd_dkim()
 {
     pem_file="${AMAVISD_DKIM_DIR}/${FIRST_DOMAIN}.pem"
 
-    ECHO_INFO "Create directory to store CA files: ${AMAVISD_DKIM_DIR}." 
+    ECHO_INFO "Create directory to store DKIM pem files: ${AMAVISD_DKIM_DIR}." 
     mkdir -p ${AMAVISD_DKIM_DIR} 2>/dev/null && \
     chown ${AMAVISD_USER}:${AMAVISD_GROUP} ${AMAVISD_DKIM_DIR}
 
-    ECHO_INFO "Generate CA files: ${pem_file}." 
+    ECHO_INFO "Generate DKIM pem files: ${pem_file}." 
     ${AMAVISD_BIN} genrsa ${pem_file} >/dev/null 2>&1 && \
     setfacl -m u:${AMAVISD_USER}:r-- ${pem_file}
 
@@ -175,10 +175,10 @@ ${CONF}
     );
 
 # Mail notify.
-$mailfrom_notify_admin     = "root\@\$mydomain";  # notifications sender
-$mailfrom_notify_recip     = "root\@\$mydomain";  # notifications sender
-$mailfrom_notify_spamadmin = "root\@\$mydomain"; # notifications sender
-$mailfrom_to_quarantine = ''; # null return path; uses original sender if undef
+\$mailfrom_notify_admin     = "root\@\$mydomain";  # notifications sender
+\$mailfrom_notify_recip     = "root\@\$mydomain";  # notifications sender
+\$mailfrom_notify_spamadmin = "root\@\$mydomain"; # notifications sender
+\$mailfrom_to_quarantine = ''; # null return path; uses original sender if undef
 
 # Disable defang banned mail.
 \$defang_banned = 0;  # MIME-wrap passed mail containing banned name

@@ -4,6 +4,7 @@
 
 horde_install()
 {
+    ECHO_INFO "================== Horde WebMail/Groupware =================="
     cd ${MISC_DIR}
 
     # Extract source tarball.
@@ -12,8 +13,8 @@ horde_install()
 
     ECHO_INFO "Set correct permission for Horde webmail: ${HORDE_HTTPD_ROOT}."
     # Secure config files.
-    chown -R apache:root ${HORDE_HTTPD_ROOT}/config
-    chown -R apache:root ${HORDE_HTTPD_ROOT}/*/config
+    chown -R root:root ${HORDE_HTTPD_ROOT}/config
+    chown -R root:root ${HORDE_HTTPD_ROOT}/*/config
     chmod -R 0000 ${HORDE_HTTPD_ROOT}/docs/
     chmod -R 0700 ${HORDE_HTTPD_ROOT}/config
     chmod -R 0700 ${HORDE_HTTPD_ROOT}/*/config
@@ -205,7 +206,7 @@ EOF
 horde_config_ingo()
 {
     if [ X"${USE_MANAGESIEVE}" == X"YES" ]; then
-        ECHO_INFO "Setting up managesieve service (pysieved) for Horde (Ingo)."
+        ECHO_INFO "Setting up managesieve service in Horde (Ingo)."
 
         backup_file ${HORDE_INGO_CONFIG_DIR}/backends.php
         cat > ${HORDE_INGO_CONFIG_DIR}/backends.php <<EOF

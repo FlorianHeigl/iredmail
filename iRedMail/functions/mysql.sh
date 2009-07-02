@@ -23,7 +23,7 @@ mysql_initialize()
     echo '' > ${MYSQL_INIT_SQL}
 
     if [ X"${MYSQL_FRESH_INSTALLATION}" == X"YES" ]; then
-        ECHO_INFO "Setting MySQL admin's password: ${MYSQL_ROOT_USER}."
+        ECHO_INFO "Setting password for MySQL admin (${MYSQL_ROOT_USER})."
         mysqladmin -u root password "${MYSQL_ROOT_PASSWD}"
 
         cat >> ${MYSQL_INIT_SQL} <<EOF

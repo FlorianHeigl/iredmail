@@ -50,7 +50,7 @@ EOF
         sed -i 's#\(</VirtualHost>\)#Alias /webmail '${SM_HTTPD_ROOT}'/\n\1#' ${HTTPD_SSL_CONF}
     fi
 
-    ECHO_INFO "Create directories to storage squirrelmail data and attachments: ${SM_DATA_DIR}, ${SM_ATTACHMENT_DIR}."
+    ECHO_INFO "Create directories to store data and attachments: ${SM_DATA_DIR}, ${SM_ATTACHMENT_DIR}."
 
     mkdir -p ${SM_DATA_DIR} ${SM_ATTACHMENT_DIR}
     chown ${HTTPD_USER}:${HTTPD_GROUP} ${SM_DATA_DIR} ${SM_ATTACHMENT_DIR}

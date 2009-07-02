@@ -10,14 +10,13 @@ postfix_config_basic()
 {
     ECHO_INFO "==================== Postfix ===================="
 
-    backup_file ${POSTFIX_FILE_MAIN_CF}
+    backup_file ${POSTFIX_FILE_MAIN_CF} ${POSTFIX_FILE_MASTER_CF}
 
-    ECHO_INFO "Enable chroot for Postfix."
-    backup_file ${POSTFIX_FILE_MASTER_CF}
+    ECHO_INFO "Enable chroot."
     perl -pi -e 's/^(smtp.*inet)(.*)(n)(.*)(n)(.*smtpd)$/${1}${2}${3}${4}-${6}/' ${POSTFIX_FILE_MASTER_CF}
 
     ECHO_INFO "Bypass checks for internally generated mail: ${POSTFIX_FILE_MASTER_CF}."
-    # comment out
+    # comment out postfix default setting.
     perl -pi -e 's/^(pickup.*)/#${1}/' ${POSTFIX_FILE_MASTER_CF}
     # Add new option to 'pickup' daemon.
     cat >> ${POSTFIX_FILE_MASTER_CF} <<EOF
@@ -26,9 +25,8 @@ pickup    fifo  n       -       n       60      1       pickup
   -o content_filter=
 EOF
 
-
-    ECHO_INFO "Copy /etc/{hosts,resolv.conf,localtime} -> ${POSTFIX_CHROOT_DIR}/etc/."
-    mkdir -p "${POSTFIX_CHROOT_DIR}/etc/"
+    ECHO_INFO "Copy files: /etc/{hosts,resolv.conf,localtime} -> ${POSTFIX_CHROOT_DIR}/etc/"
+    mkdir -p ${POSTFIX_CHROOT_DIR}/etc/ 2>/dev/null
     cp -f /etc/{hosts,resolv.conf,localtime} ${POSTFIX_CHROOT_DIR}/etc/
 
     # Normally, myhostname is the same as myorigin.
@@ -601,7 +599,7 @@ postfix_config_virtual_host()
 
 postfix_config_sasl()
 {
-    ECHO_INFO "Setting up SASL configration for Postfix."
+    ECHO_INFO "Configure SMTP SASL authentication."
 
     # For SASL auth
     postconf -e smtpd_sasl_auth_enable="yes"

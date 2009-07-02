@@ -116,6 +116,8 @@ export LC_ALL=C
 # TERM.
 if [ X"${TERM}" == X"xterm" -o X"${TERM}" == X"linux" ]; then
     export TERM='xterm'
+elif [ X"${TERM}" == X"xterm-color" ]; then
+    export TERM='xterm-color'
 else
     export TERM='pcconsole'
 fi

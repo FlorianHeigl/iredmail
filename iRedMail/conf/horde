@@ -3,12 +3,13 @@
 # Author: Zhang Huangbin (michaelbibby <at> gmail.com)
 
 # Variables for horde-webmail and related.
+# Warning: Source 'conf/apache_php' first.
 
 # ---- Horde WebMail ----
 export HORDE_VERSION='1.2.3'
 export HORDE_TARBALL="horde-webmail-${HORDE_VERSION}.tar.gz"
 
-export HORDE_HTTPD_ROOT='/var/www/html/horde'
+export HORDE_HTTPD_ROOT="${HTTPD_DOCUMENTROOT}/horde"
 
 # Database setting.
 export HORDE_DB_NAME="horde"
