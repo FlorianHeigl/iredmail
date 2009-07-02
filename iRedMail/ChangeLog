@@ -1,4 +1,6 @@
 iRedMail-0.5.0-rc2:
+    * Improve global ldap address book in roundcube, make it search only users
+      in the same domain.
     * Horde webmail (+groupware) is back and update to 1.2.3.
     * Fix dovecot setting for mysql backend.
     * Update: clamav -> 0.95.2, awstats -> 6.9-2, dovecot -> 1.1.16.
