@@ -92,7 +92,7 @@ amavisd_config_rhel()
 
     export FIRST_DOMAIN
     perl -pi -e 's/^(\$mydomain)/$1\ =\ \"$ENV{'HOSTNAME'}\"\;\t#/' ${AMAVISD_CONF}
-    perl -pi -e 's/^(@local_domains_maps)(.*)/${1} = (read_hash("$ENV{'AMAVISD_LOCAL_DOMAINS_MAPS'}"));/' ${AMAVISD_CONF}
+    perl -pi -e 's/^(\@local_domains_maps)(.*)/${1} = (read_hash("$ENV{AMAVISD_LOCAL_DOMAINS_MAPS}")); #${2}/' ${AMAVISD_CONF}
 
     # Set default score.
     #perl -pi -e 's/(.*)(sa_tag_level_deflt)(.*)/${1}${2} = 4.0; #${3}/' ${AMAVISD_CONF}
