@@ -214,6 +214,11 @@ EOF
         :
     fi
 
+    # Make sure that clamav is configured to init supplementary
+    # groups when it drops priviledges, and that you add the
+    # clamav user to the amavis group.
+    adduser --quiet ${CLAMAV_USER} ${AMAVISD_GROUP}
+
     echo 'export status_amavisd_config_debian="DONE"' >> ${STATUS_FILE}
 }
 

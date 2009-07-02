@@ -2,6 +2,9 @@
 
 # Author: Zhang Huangbin (michaelbibby <at> gmail.com)
 
+export CLAMAV_USER='clamav'
+export CLAMAV_GROUP='clamav'
+
 # Clamav.
 if [ X"${DISTRO}" == X"RHEL" ]; then
     export CLAMD_CONF='/etc/clamd.conf'
