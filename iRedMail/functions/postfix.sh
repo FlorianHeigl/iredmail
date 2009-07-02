@@ -206,6 +206,8 @@ postfix_config_ldap()
     #postconf -e local_recipient_maps='$alias_maps $virtual_alias_maps $virtual_mailbox_maps'
     postconf -e sender_bcc_maps="ldap:${ldap_sender_bcc_maps_domain_cf}, ldap:${ldap_sender_bcc_maps_user_cf}"
     postconf -e recipient_bcc_maps="ldap:${ldap_recipient_bcc_maps_domain_cf}, ldap:${ldap_recipient_bcc_maps_user_cf}"
+    postconf -e relay_domains="$mydestination, ldap:${ldap_relay_domains_cf}"
+    postconf -e relay_recipient_maps="ldap:${ldap_accounts_cf}, ldap:${ldap_virtual_mailbox_maps_cf}"
 
     postconf -e smtpd_sender_login_maps="ldap:${ldap_sender_login_maps_cf}"
     postconf -e smtpd_reject_unlisted_sender='yes'
@@ -222,6 +224,23 @@ bind_pw         = ${LDAP_BINDPW}
 search_base     = ${LDAP_BASEDN}
 scope           = one
 query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_MAILDOMAIN})(${LDAP_ATTR_DOMAIN_RDN}=%s)(!(${LDAP_ATTR_DOMAIN_BACKUPMX}=${LDAP_VALUE_DOMAIN_BACKUPMX}))(${LDAP_ATTR_ACCOUNT_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
+result_attribute= ${LDAP_ATTR_DOMAIN_RDN}
+debuglevel      = 0
+EOF
+
+    # LDAP relay domains.
+    cat > ${ldap_relay_domains_cf} <<EOF
+${CONF_MSG}
+server_host     = ${LDAP_SERVER_HOST}
+server_port     = ${LDAP_SERVER_PORT}
+bind            = ${LDAP_BIND}
+start_tls       = no
+version         = ${LDAP_BIND_VERSION}
+bind_dn         = ${LDAP_BINDDN}
+bind_pw         = ${LDAP_BINDPW}
+search_base     = ${LDAP_BASEDN}
+scope           = one
+query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_MAILDOMAIN})(${LDAP_ATTR_DOMAIN_RDN}=%s)(${LDAP_ATTR_DOMAIN_BACKUPMX}=${LDAP_VALUE_DOMAIN_BACKUPMX})(${LDAP_ATTR_ACCOUNT_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
 result_attribute= ${LDAP_ATTR_DOMAIN_RDN}
 debuglevel      = 0
 EOF
@@ -432,9 +451,10 @@ postfix_config_mysql()
     postconf -e virtual_mailbox_maps="mysql:${mysql_virtual_mailbox_maps_cf}"
     postconf -e virtual_mailbox_limit_maps="mysql:${mysql_virtual_mailbox_limit_maps_cf}"
     postconf -e virtual_alias_maps="mysql:${mysql_virtual_alias_maps_cf}"
-    #postconf -e local_recipient_maps='$alias_maps $virtual_alias_maps $virtual_mailbox_maps'
     postconf -e sender_bcc_maps="mysql:${mysql_sender_bcc_maps_domain_cf}, mysql:${mysql_sender_bcc_maps_user_cf}"
     postconf -e recipient_bcc_maps="mysql:${mysql_recipient_bcc_maps_domain_cf}, mysql:${mysql_recipient_bcc_maps_user_cf}"
+    postconf -e relay_domains="$mydestination, mysql:${mysql_relay_domains_cf}"
+    postconf -e relay_recipient_maps="mysql:${mysql_virtual_mailbox_maps_cf}"
 
     postconf -e smtpd_sender_login_maps="mysql:${mysql_sender_login_maps_cf}"
     postconf -e smtpd_reject_unlisted_sender='yes'
@@ -455,6 +475,15 @@ hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
 query       = SELECT domain FROM domain WHERE domain='%s' AND backupmx='0' AND active='1' AND expired >= NOW()
+EOF
+
+    cat > ${mysql_relay_domains_cf} <<EOF
+user        = ${MYSQL_BIND_USER}
+password    = ${MYSQL_BIND_PW}
+hosts       = ${mysql_server}
+port        = ${MYSQL_PORT}
+dbname      = ${VMAIL_DB}
+query       = SELECT domain FROM domain WHERE domain='%s' AND backupmx='1' AND active='1' AND expired >= NOW()
 EOF
 
     cat > ${mysql_virtual_mailbox_maps_cf} <<EOF
