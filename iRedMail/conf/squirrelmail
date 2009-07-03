@@ -65,6 +65,7 @@ export SM_DEFAULT_CHARSET='utf-8'
 export SM_HTTPD_ROOT="${HTTPD_SERVERROOT}/squirrelmail-${SM_VERSION}"
 export SM_CONF_PL="${SM_HTTPD_ROOT}/config/conf.pl"
 export SM_CONFIG="${SM_HTTPD_ROOT}/config/config.php"
+export SM_LOCAL_CONF="${SM_HTTPD_ROOT}/config/config_local.php"
 export SM_PLUGIN_DIR="${SM_HTTPD_ROOT}/plugins/"
 
 export PLUGIN_CHANGE_LDAPPASS_CONFIG="${SM_PLUGIN_DIR}/change_ldappass/config.php"

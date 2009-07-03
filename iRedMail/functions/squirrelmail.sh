@@ -75,43 +75,47 @@ sm_config_basic()
 {
     ECHO_INFO "Setting up configuration file for SquirrelMail."
 
-    # Set domain name displayed in squirrelmail.
-    perl -pi -e 's#(.*domain.*=)(.*)#${1}"$ENV{HOSTNAME}";#' ${SM_CONFIG}
+    cat >> ${SM_LOCAL_CONF} <<EOF
+${CONF_MSG}
+# Set domain name displayed in squirrelmail.
+\$domain = "${HOSTNAME}";
 
-    # IMAP server address.
-    perl -pi -e 's#(.*imapServerAddress.*=)(.*)#${1}"$ENV{IMAP_SERVER}";#' ${SM_CONFIG}
+# IMAP server address.
+\$imapServerAddress = "${IMAP_SERVER}";
 
-    # IMAP server type: dovecot.
-    perl -pi -e 's#(.*imap_server_type.*=)(.*)#${1}"dovecot";#' ${SM_CONFIG}
+# IMAP server type: dovecot.
+\$imap_server_type = 'dovecot';
 
-    # SMTP server address.
-    perl -pi -e 's#(.*smtpServerAddress.*=)(.*)#${1}"$ENV{SMTP_SERVER}";#' ${SM_CONFIG}
+# SMTP server address.
+\$smtpServerAddress = "${SMTP_SERVER}";
 
-    # Enable SMTP AUTH while sending email.
-    perl -pi -e 's#(.*smtp_auth_mech.*=)(.*)#${1}"login";#' ${SM_CONFIG}
+# Enable SMTP AUTH while sending email.
+\$smtp_auth_mech = 'login';
 
-    # attachment_dir
-    perl -pi -e 's#(.*attachment_dir.*=)(.*)#${1}"$ENV{SM_ATTACHMENT_DIR}";#' ${SM_CONFIG}
+# attachment_dir
+\$attachment_dir = "${SM_ATTACHMENT_DIR}";
 
-    # data_dir
-    perl -pi -e 's#(.*data_dir.*=)(.*)#${1}"$ENV{SM_DATA_DIR}";#' ${SM_CONFIG}
+# data_dir
+\$data_dir = "${SM_DATA_DIR}";
     
-    # squirrelmail_default_language
-    perl -pi -e 's#(.*squirrelmail_default_language.*=)(.*)#${1}"$ENV{'DEFAULT_LANG'}";#' ${SM_CONFIG}
+# squirrelmail_default_language
+\$squirrelmail_default_language = "${DEFAULT_LANG}";
 
-    # default_charset
-    perl -pi -e 's#(.*default_charset.*=)(.*)#${1}"$ENV{SM_DEFAULT_CHARSET}";#' ${SM_CONFIG}
+# default_charset
+\$default_charset = "${SM_DEFAULT_CHARSET}";
 
-    # Disable multiple identities.
-    perl -pi -e 's#(.*edit_identity.*)true(.*)#${1}false${2}#' ${SM_CONFIG}
+# Disable multiple identities.
+\$edit_identity = false;
 
-    # Hide SM version number and other attributions in login page.
-    perl -pi -e 's#(.*hide_sm_attributions.*)false(.*)#${1}true${2}#' ${SM_CONFIG}
+# Hide SM version number and other attributions in login page.
+\$hide_sm_attributions = true;
 
-    # Folder name.
-    perl -pi -e 's#(.*trash_folder.*)INBOX.Trash(.*)#${1}Trash${2}#' ${SM_CONFIG}
-    perl -pi -e 's#(.*sent_folder.*)INBOX.Sent(.*)#${1}Sent${2}#' ${SM_CONFIG}
-    perl -pi -e 's#(.*draft_folder.*)INBOX.Draft(.*)#${1}Draft${2}#' ${SM_CONFIG}
+# Folder name.
+\$trash_folder = 'Trash';
+\$sent_folder = 'Sent';
+\$draft_folder = 'Draft';
+
+EOF
 
     echo 'export status_sm_config_basic="DONE"' >> ${STATUS_FILE}
 }
@@ -483,7 +487,7 @@ enable_sm_plugins()
         counter=0
 
         for i in ${ENABLED_SM_PLUGINS}; do
-            echo "\$plugins[${counter}]='$(echo $i)';" >> ${SM_CONFIG}
+            echo "\$plugins[${counter}]='$(echo $i)';" >> ${SM_LOCAL_CONF}
             counter=$((counter+1))
         done
     else
