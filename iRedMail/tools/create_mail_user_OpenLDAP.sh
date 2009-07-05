@@ -145,7 +145,7 @@ objectClass: mailDomain
 domainName: ${DOMAIN_NAME}
 mtaTransport: ${TRANSPORT}
 accountStatus: active
-enableMailService: yes
+enabledService: mail
 EOF
     else
         :
