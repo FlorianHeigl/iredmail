@@ -78,7 +78,7 @@ sm_config_basic()
     cat >> ${SM_LOCAL_CONF} <<EOF
 ${CONF_MSG}
 # Set domain name displayed in squirrelmail.
-\$domain = "${HOSTNAME}";
+\$domain = "${FIRST_DOMAIN}";
 
 # IMAP server address.
 \$imapServerAddress = "${IMAP_SERVER}";
