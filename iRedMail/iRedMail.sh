@@ -5,7 +5,7 @@
 # ------------------------------
 # Define some global variables.
 # ------------------------------
-export ROOTDIR="$(pwd)"
+export ROOTDIR="$(dirname $0)"
 export CONF_DIR="${ROOTDIR}/conf"
 export FUNCTIONS_DIR="${ROOTDIR}/functions"
 export DIALOG_DIR="${ROOTDIR}/dialog"
