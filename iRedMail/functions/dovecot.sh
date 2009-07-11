@@ -132,7 +132,7 @@ EOF
     if [ X"${MAILBOX_FORMAT}" == X"Maildir" ]; then
         cat >> ${DOVECOT_CONF} <<EOF
 # Maildir format and location.
-# Such as: /home/vmail/iredmail.org/www/
+# Such as: /var/mail/vmail01/iredmail.org/www/
 #          ----------- ================
 #          homeDirectory  mailMessageStore
 mail_location = maildir:/%Lh/Maildir/:INDEX=/%Lh/Maildir/
@@ -189,7 +189,7 @@ EOF
     elif [ X"${MAILBOX_FORMAT}" == X"mbox" ]; then
         cat >> ${DOVECOT_CONF} <<EOF
 # Mailbox format and location.
-# Such as: /home/vmail/iredmail.org/www
+# Such as: /var/mail/vmail01/iredmail.org/www
 #          ----------- ====================
 #          homeDirectory  mailMessageStore
 mail_location = mbox:/%Lh/:INBOX=/%Lh/inbox:INDEX=/%Lh/indexes

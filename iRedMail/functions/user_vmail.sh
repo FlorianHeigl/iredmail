@@ -11,6 +11,7 @@ adduser_vmail()
 
     homedir="$(dirname $(echo ${VMAIL_USER_HOME_DIR} | sed 's#/$##'))"
     [ -d ${homedir} ] || mkdir -p ${homedir}
+    [ -d ${STORAGE_BASE_DIR} ] || mkdir -p ${STORAGE_BASE_DIR}
 
     ECHO_INFO "Add user/group: vmail."
     # It will create a group with the same name as vmail user name.
@@ -32,11 +33,8 @@ adduser_vmail()
     cat >> ${TIP_FILE} <<EOF
 Mail Storage:
     - Path:
-        ${VMAIL_USER_HOME_DIR}
-    - Format:
-        ${VMAIL_USER_HOME_DIR}/DomainName/UserName/
-    - Example:
-        ${VMAIL_USER_HOME_DIR}/${FIRST_DOMAIN}/${FIRST_USER}/
+        + ${VMAIL_USER_HOME_DIR}
+        + ${STORAGE_BASE_DIR}
 
 EOF
 

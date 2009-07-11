@@ -115,7 +115,7 @@ EOF
     postconf -e virtual_minimum_uid="${VMAIL_USER_UID}"
     postconf -e virtual_uid_maps="static:${VMAIL_USER_UID}"
     postconf -e virtual_gid_maps="static:${VMAIL_USER_GID}"
-    postconf -e virtual_mailbox_base="${VMAIL_USER_HOME_DIR}"
+    postconf -e virtual_mailbox_base="${STORAGE_BASE_DIR}"
 
     postconf -e check_sender_access="hash:${POSTFIX_ROOTDIR}/sender_access"
     cat > ${POSTFIX_ROOTDIR}/sender_access <<EOF

@@ -86,7 +86,7 @@ POSTFIX="/etc/postfix/
 DOVECOT="/etc/dovecot*.conf*
 /etc/logrotate.d/dovecot
 /etc/rc.d/init.d/dovecot
-/home/vmail/.dovecot.sieve
+/var/mail/.dovecot.sieve
 /var/lib/dovecot/
 /var/www/sieve/
 "
@@ -157,7 +157,7 @@ cat <<EOF
 Script does *NOT* backup below files/data, please do it *MANUALLY*.
 
     - MySQL databases (Default: /var/lib/mysql).
-    - Users' mailboxes (Default: /home/vmail).
+    - Users' mailboxes (Default: /var/mail).
     - Postfix queues (Default: /var/spool/postfix).
 
 EOF

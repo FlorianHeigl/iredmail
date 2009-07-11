@@ -1,6 +1,6 @@
 #
 # Sample dovecot sieve global rules. It should be localted at:
-#   /home/vmail/.dovecot.sieve
+#   /var/mail/.dovecot.sieve
 # Refer to 'sieve_global_path' parameter for the file localtion
 # in dovecot.conf on your server.
 #

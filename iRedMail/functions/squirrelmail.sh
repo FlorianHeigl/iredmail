@@ -28,7 +28,7 @@ sm_install()
 ${CONF_MSG}
 Alias /squirrelmail "${HTTPD_SERVERROOT}/squirrelmail/"
 Alias /squirrel "${HTTPD_SERVERROOT}/squirrelmail/"
-<Directory "${SM_HTTPD_ROOT}/">
+<Directory "${HTTPD_SERVERROOT}/squirrelmail/">
     Options -Indexes
 </Directory>
 EOF

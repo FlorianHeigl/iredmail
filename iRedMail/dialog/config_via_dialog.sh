@@ -35,11 +35,12 @@ NOTE:
 [ X"$?" != X"0" ] && ECHO_INFO "Exit." && exit 0
 
 # VMAIL_USER_HOME_DIR
-VMAIL_USER_HOME_DIR="/home/vmail"
+VMAIL_USER_HOME_DIR="/var/mail"
 ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-    --title "HOME directory of VMAIL user" \
+    --title "Default mail storage path" \
     --inputbox "\
-Please specify the HOME directory of vmail user: ${VMAIL_USER_NAME}.
+Please specify a directory for mail storage.
+Default is: ${VMAIL_USER_HOME_DIR}
 
 EXAMPLE:
 
@@ -47,12 +48,12 @@ EXAMPLE:
 
 NOTE:
 
-    * \Zb\Z1All mails will be stored in this HOME directory\Zn, so it may take
-      large disk space.
+    * It may take large disk space.
 " 20 76 "${VMAIL_USER_HOME_DIR}" 2>/tmp/vmail_user_home_dir
 
 VMAIL_USER_HOME_DIR="$(cat /tmp/vmail_user_home_dir)"
-export VMAIL_USER_HOME_DIR="${VMAIL_USER_HOME_DIR}" && echo "export VMAIL_USER_HOME_DIR='${VMAIL_USER_HOME_DIR}'" >>${CONFIG_FILE}
+export VMAIL_USER_HOME_DIR="${VMAIL_USER_HOME_DIR}" && echo "export VMAIL_USER_HOME_DIR='${VMAIL_USER_HOME_DIR}'" >> ${CONFIG_FILE}
+export STORAGE_BASE_DIR="${VMAIL_USER_HOME_DIR}/vmail01" && echo "export STORAGE_BASE_DIR='${VMAIL_USER_HOME_DIR}/vmail01'" >> ${CONFIG_FILE}
 rm -f /tmp/vmail_user_home_dir
 
 # --------------------------------------------------
