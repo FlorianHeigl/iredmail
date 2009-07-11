@@ -142,22 +142,18 @@ amavisd_config_rhel()
 amavisd_config_debian()
 {
     ECHO_INFO "==================== Amavisd-new ===================="
-    backup_file ${AMAVISD_CONF_DIR}/{05-domain_id,20-debian_defaults} ${AMAVISD_CONF} ${AMAVISD_DKIM_CONF}
+    backup_file ${AMAVISD_CONF} ${AMAVISD_DKIM_CONF}
 
     ECHO_INFO "Configure amavisd-new: ${AMAVISD_CONF}."
 
     perl -pi -e 's#^(chmop.*\$mydomain.*=).*#${1} "$ENV{'HOSTNAME'}";#' ${AMAVISD_CONF_DIR}/05-domain_id
 
-    # Set admin address.
-    perl -pi -e 's#(virus_admin.*= ")(virusalert)(.*)#${1}root${3}#' ${AMAVISD_CONF_DIR}/20-debian_defaults
-    perl -pi -e 's#(mailfrom_notify_admin.*= ")(virusalert)(.*)#${1}root${3}#' ${AMAVISD_CONF_DIR}/20-debian_defaults
-    perl -pi -e 's#(mailfrom_notify_recip.*= ")(virusalert)(.*)#${1}root${3}#' ${AMAVISD_CONF_DIR}/20-debian_defaults
-    perl -pi -e 's#(mailfrom_notify_spamadmin.*= ")(spam.police)(.*)#${1}root${3}#' ${AMAVISD_CONF_DIR}/20-debian_defaults
-
     perl -pi -e 's/^(1;.*)/#{1}/' ${AMAVISD_CONF}
 
     cat >> ${AMAVISD_CONF} <<EOF
 ${CONF}
+
+chomp(\$mydomain = "${HOSTNAME}");
 @local_domains_maps = ( read_hash("${AMAVISD_LOCAL_DOMAINS_MAPS}") );
 
 # Enable virus check.
@@ -173,6 +169,11 @@ ${CONF}
     \@bypass_spam_checks_acl,
     \$bypass_spam_checks_re,
     );
+
+\$virus_admin = "root\@\$mydomain"; # due to D_DISCARD default
+\$mailfrom_notify_admin = "root\@\$mydomain";
+\$mailfrom_notify_recip = "root\@\$mydomain";
+\$mailfrom_notify_spamadmin = "root\@\$mydomain";
 
 # Mail notify.
 \$mailfrom_notify_admin     = "root\@\$mydomain";  # notifications sender
@@ -197,7 +198,7 @@ ${CONF}
   spam_admin_maps  => ["root\@$mydomain"],
   warnbadhsender   => 1,
   # forward to a smtpd service providing DKIM signing service
-  forward_method => 'smtp:[127.0.0.1]:10027',
+  #forward_method => 'smtp:[127.0.0.1]:10027',
   # force MTA conversion to 7-bit (e.g. before DKIM signing)
   smtpd_discard_ehlo_keywords => ['8BITMIME'],
   bypass_banned_checks_maps => [1],  # allow sending any file names and types
@@ -274,6 +275,7 @@ amavisd_config_generic()
 
 # SpamAssassin debugging. Default if off(0).
 # Note: '\$log_level' variable above is required for SA debug.
+\$log_level = 0;              # verbosity 0..5, -d
 \$sa_debug = 0;
 
 # Modify email subject, add '\$sa_spam_subject_tag'.

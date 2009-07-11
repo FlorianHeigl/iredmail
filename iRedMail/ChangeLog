@@ -1,3 +1,11 @@
+iRedMail-0.5.0:
+    * Move default mail storage directory: /home/vmail -> /var/mail/. Use
+      /var/mail/vmail01 as default storage base directory. Thanks mbsouth
+      @forum.
+    * Only modify /etc/amavis/conf.d/50-user in debian & ubuntu.
+    * Fix DKIM singing issue: disable 'forward_method' in policy_bank
+      'ORIGINATING'. Thanks webstudio@forum.
+
 iRedMail-0.5.0-rc2:
     * Add relay_domains & relay_recipient_maps in postfix, used for backup mx.
     * Improve global ldap address book in roundcube, make it search accounts
