@@ -130,9 +130,6 @@ generate_sql()
 INSERT INTO mailbox (username, password, name, storagebasedirectory, maildir, quota, domain, active)
     VALUES ('${username}@${DOMAIN}', '${CRYPT_PASSWD}', '${username}', '${STORAGE_BASE_DIRECTORY}', '${maildir}', '${DEFAULT_QUOTA}', '${DOMAIN}', '1');
 EOF
-        # Don't insert alias.
-        #INSERT INTO alias (address, goto, domain, active)
-        #    VALUES ('${username}@${DOMAIN}', '${username}@${DOMAIN}', '${DOMAIN}', '1');
     done
 }
 

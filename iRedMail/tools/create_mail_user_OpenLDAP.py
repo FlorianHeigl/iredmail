@@ -209,9 +209,11 @@ for entry in userList.readlines():
     ldif_writer = ldif.LDIFWriter(result)
     ldif_writer.unparse(dn, data)
 
+# Notify info.
+print "\tUser data are store in %s, you can verify it before import it."
+
 # Prompt to import user data.
 '''
-print """User data are store in %s, you can verify it before import it.
 Would you like to import them now?""" % (ldif_file)
 
 answer = raw_input('[Y|n] ').lower().strip()
