@@ -32,6 +32,17 @@ port    = ${PYSIEVED_PORT}
 # Write a pidfile here
 pidfile = ${PYSIEVED_PIDFILE}
 
+[Virtual]
+# Append username to this for home directories
+base = ${SIEVE_DIR}
+
+# What UID and GID should own all files?  -1 to not bother
+uid = ${VMAIL_USER_UID}
+gid = ${VMAIL_USER_GID}
+
+# Switch user@host.name to host.name/user?
+hostdirs = True
+
 [Dovecot]
 # How do we identify ourself to Dovecot? Default is 'pysieved'.
 service = managesieve
@@ -110,7 +121,7 @@ protocol managesieve {
     sieve = ${SIEVE_RULE_FILENAME}
 
     # This specifies the path to the directory where the uploaded scripts are stored.
-    sieve_storage = /%Lh/
+    sieve_storage = ${SIEVE_DIR}/%Ld/%Ln/
 
     # Login executable location.
     login_executable = /usr/lib/dovecot/managesieve-login

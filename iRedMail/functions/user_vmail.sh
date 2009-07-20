@@ -10,6 +10,7 @@ adduser_vmail()
     ECHO_INFO "==================== User/Group: vmail ===================="
 
     homedir="$(dirname $(echo ${VMAIL_USER_HOME_DIR} | sed 's#/$##'))"
+    [ -L ${homedir} ] && rm -f ${homedir}
     [ -d ${homedir} ] || mkdir -p ${homedir}
     [ -d ${STORAGE_BASE_DIR} ] || mkdir -p ${STORAGE_BASE_DIR}
 
@@ -29,6 +30,11 @@ adduser_vmail()
     else
         :
     fi
+
+    ECHO_INFO "Create directory to store user sieve rule files: ${SIEVE_DIR}."
+    mkdir -p ${SIEVE_DIR} && \
+    chown -R ${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} ${SIEVE_DIR} && \
+    chmod -R 0700 ${SIEVE_DIR}
 
     cat >> ${TIP_FILE} <<EOF
 Mail Storage:

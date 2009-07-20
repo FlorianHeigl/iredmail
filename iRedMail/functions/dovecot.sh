@@ -122,7 +122,7 @@ plugin {
 
 EOF
 
-    # Copy dovecot quota warning sample script.
+    # Generate dovecot quota warning script.
     backup_file ${DOVECOT_QUOTA_WARNING_BIN}
     rm -rf ${DOVECOT_QUOTA_WARNING_BIN} 2>/dev/null
     cat > ${DOVECOT_QUOTA_WARNING_BIN} <<FOE
@@ -135,10 +135,8 @@ cat << EOF | ${DOVECOT_DELIVER} -d \${USER} -c ${DOVECOT_CONF}
 From: no-reply@${HOSTNAME}
 Subject: Mailbox Quota Warning: \${PERCENT}% Full.
 
-Mailbox quota report:
-
-    * Your mailbox is now \${PERCENT}% full, please clear some files for
-      further mails.
+Your mailbox is now \${PERCENT}% full, please clean up some mails for
+further incoming mails.
 
 EOF
 FOE
@@ -203,7 +201,7 @@ plugin {
 plugin {
     # NOTE: %variable expansion works only with Dovecot v1.0.2+.
     # For maildir format.
-    sieve = /%Lh/${SIEVE_RULE_FILENAME}
+    sieve = ${SIEVE_DIR}/%Ld/%Ln/${SIEVE_RULE_FILENAME}
 }
 
 EOF
@@ -234,7 +232,7 @@ plugin {
 plugin {
     # NOTE: %variable expansion works only with Dovecot v1.0.2+.
     # For mbox format.
-    sieve = /%Lh/${SIEVE_RULE_FILENAME}
+    sieve = ${SIEVE_DIR}/%Ld/.%Ln${SIEVE_RULE_FILENAME}
 }
 EOF
     else
@@ -302,11 +300,11 @@ default_pass_scheme = CRYPT
 EOF
         # Maildir format.
         [ X"${MAILBOX_FORMAT}" == X"Maildir" ] && cat >> ${DOVECOT_LDAP_CONF} <<EOF
-user_attrs      = ${LDAP_ATTR_USER_STORAGE_BASE_DIRECTORY}=home,mailMessageStore=mail=maildir:~/%\$/Maildir/,${LDAP_ATTR_USER_QUOTA}=quota_rule=*:bytes=%\$
+user_attrs      = ${LDAP_ATTR_USER_STORAGE_BASE_DIRECTORY}=home,=sieve_dir=${SIEVE_DIR}/%Ld/%Ln/,mailMessageStore=mail=maildir:~/%\$/Maildir/,${LDAP_ATTR_USER_QUOTA}=quota_rule=*:bytes=%\$
 EOF
         [ X"${MAILBOX_FORMAT}" == X"mbox" ] && cat >> ${DOVECOT_LDAP_CONF} <<EOF
 #    sieve = /%Lh/%Ld/.%Ln${SIEVE_RULE_FILENAME}
-user_attrs      = ${LDAP_ATTR_USER_STORAGE_BASE_DIRECTORY}=home,mailMessageStore=mail=dirsize:~/%\$,${LDAP_ATTR_USER_QUOTA}=quota_rule=*:bytes=%\$
+user_attrs      = ${LDAP_ATTR_USER_STORAGE_BASE_DIRECTORY}=home,=sieve_dir=${SIEVE_DIR}/%Ld/%Ln/,mailMessageStore=mail=dirsize:~/%\$,${LDAP_ATTR_USER_QUOTA}=quota_rule=*:bytes=%\$
 EOF
     else
         cat >> ${DOVECOT_CONF} <<EOF
@@ -328,12 +326,14 @@ EOF
         # Maildir format.
         [ X"${MAILBOX_FORMAT}" == X"Maildir" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
 user_query = SELECT CONCAT(storagebasedirectory, '/', maildir) AS home, \
+"${SIEVE_DIR}/%Ld/%Ln/" AS sieve_dir, \
 CONCAT('*:bytes=', quota*1048576) AS quota_rule \
 FROM mailbox WHERE username='%u' \
 AND active='1' AND enable%Ls='1' AND expired >= NOW()
 EOF
         [ X"${MAILBOX_FORMAT}" == X"mbox" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
 user_query = SELECT CONCAT('mbox:', storagebasedirectory, '/', maildir, '/Maildir/') AS home, \
+"${SIEVE_DIR}/%Ld/%Ln/" AS sieve_dir, \
 CONCAT('*:bytes=', quota*1048576) AS quota_rule, \
 maildir FROM mailbox \
 WHERE username='%u' \

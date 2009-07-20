@@ -81,7 +81,7 @@ replace_iptables_rule()
             eval ${enable_service} iptables >/dev/null
 
             # Prompt to restart iptables.
-            ECHO_QUESTION -n "Restart iptables now? [y|N]"
+            ECHO_QUESTION -n "Restart iptables now (with OpenSSH port 22)? [y|N]"
             read ANSWER
             case $ANSWER in
                 Y|y )

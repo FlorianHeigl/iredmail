@@ -35,7 +35,7 @@ NOTE:
 [ X"$?" != X"0" ] && ECHO_INFO "Exit." && exit 0
 
 # VMAIL_USER_HOME_DIR
-VMAIL_USER_HOME_DIR="/var/spool/mail"
+VMAIL_USER_HOME_DIR="/var/vmail"
 ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --title "Default mail storage path" \
     --inputbox "\
@@ -54,6 +54,7 @@ NOTE:
 VMAIL_USER_HOME_DIR="$(cat /tmp/vmail_user_home_dir)"
 export VMAIL_USER_HOME_DIR="${VMAIL_USER_HOME_DIR}" && echo "export VMAIL_USER_HOME_DIR='${VMAIL_USER_HOME_DIR}'" >> ${CONFIG_FILE}
 export STORAGE_BASE_DIR="${VMAIL_USER_HOME_DIR}/vmail01" && echo "export STORAGE_BASE_DIR='${VMAIL_USER_HOME_DIR}/vmail01'" >> ${CONFIG_FILE}
+export SIEVE_DIR="${VMAIL_USER_HOME_DIR}/sieve" && echo "export SIEVE_DIR='${SIEVE_DIR}'" >>${CONFIG_FILE}
 rm -f /tmp/vmail_user_home_dir
 
 # --------------------------------------------------
