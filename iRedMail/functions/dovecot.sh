@@ -124,7 +124,25 @@ EOF
 
     # Copy dovecot quota warning sample script.
     backup_file ${DOVECOT_QUOTA_WARNING_BIN}
-    cp -f ${TOOL_DIR}/dovecot-quota-warning.sh ${DOVECOT_QUOTA_WARNING_BIN}
+    rm -rf ${DOVECOT_QUOTA_WARNING_BIN} 2>/dev/null
+    cat > ${DOVECOT_QUOTA_WARNING_BIN} <<FOE
+#!/usr/bin/env bash
+${CONF_MSG}
+
+PERCENT=\${1}
+
+cat << EOF | ${DOVECOT_DELIVER} -d \${USER} -c ${DOVECOT_CONF}
+From: no-reply@${HOSTNAME}
+Subject: Mailbox Quota Warning: \${PERCENT}% Full.
+
+Mailbox quota report:
+
+    * Your mailbox is now \${PERCENT}% full, please clear some files for
+      further mails.
+
+EOF
+FOE
+
     chown root ${DOVECOT_QUOTA_WARNING_BIN}
     chmod 0755 ${DOVECOT_QUOTA_WARNING_BIN}
 
