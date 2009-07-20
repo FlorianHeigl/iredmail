@@ -41,3 +41,6 @@ export SIEVE_FILTER_FILE="${VMAIL_USER_HOME_DIR}/${SIEVE_RULE_FILENAME}"
 # Dovecot plugin: Expire.
 # NOTE: dict process currently runs as root, so this file will be owned as root.
 export DOVECOT_EXPIRE_DICT_BDB='/var/lib/dovecot/expire/expire.db'
+
+# Dovecot quota warning.
+export DOVECOT_QUOTA_WARNING_BIN='/usr/bin/dovecot-quota-warning.sh'

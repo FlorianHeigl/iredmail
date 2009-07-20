@@ -15,7 +15,7 @@ adduser_vmail()
 
     ECHO_INFO "Add user/group: vmail."
     # It will create a group with the same name as vmail user name.
-    useradd -m -d ${VMAIL_USER_HOME_DIR} -s /sbin/nologin ${VMAIL_USER_NAME}
+    useradd -m -d ${VMAIL_USER_HOME_DIR} -s /sbin/nologin ${VMAIL_USER_NAME} 2>/dev/null
     rm -f ${VMAIL_USER_HOME_DIR}/.* 2>/dev/null
 
     # Export vmail user uid/gid.

@@ -109,21 +109,24 @@ auth_default_realm = ${FIRST_DOMAIN}
 plugin {
     # Quota warning.
     #
-    # You can find sample script from iRedMail Support mail list:
-    #   http://groups.google.com/group/iredmailsupport/
-    #
-    # Or you can find sample script from Dovecot wiki:
-    #   http://wiki.dovecot.org/Quota/1.1#head-03d8c4f6fb28e2e2f1cb63ec623810b45bec1734
+    # You can find sample script from Dovecot wiki:
+    # http://wiki.dovecot.org/Quota/1.1#head-03d8c4f6fb28e2e2f1cb63ec623810b45bec1734
     #
     # If user suddenly receives a huge mail and the quota jumps from
     # 85% to 95%, only the 95% script is executed.
     #
-    #quota_warning = storage=85%% /usr/bin/dovecot-quota-warning.sh 85
-    #quota_warning2 = storage=90%% /usr/bin/dovecot-quota-warning.sh 90
-    #quota_warning3 = storage=95%% /usr/bin/dovecot-quota-warning.sh 95
+    quota_warning = storage=85%% /usr/bin/dovecot-quota-warning.sh 85
+    quota_warning2 = storage=90%% /usr/bin/dovecot-quota-warning.sh 90
+    quota_warning3 = storage=95%% /usr/bin/dovecot-quota-warning.sh 95
 }
 
 EOF
+
+    # Copy dovecot quota warning sample script.
+    backup_file ${DOVECOT_QUOTA_WARNING_BIN}
+    cp -f ${TOOL_DIR}/dovecot-quota-warning.sh ${DOVECOT_QUOTA_WARNING_BIN}
+    chown root ${DOVECOT_QUOTA_WARNING_BIN}
+    chmod 0755 ${DOVECOT_QUOTA_WARNING_BIN}
 
     # Enable SSL support.
     [ X"${ENABLE_DOVECOT_SSL}" == X"YES" ] && dovecot_ssl_config

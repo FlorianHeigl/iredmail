@@ -28,7 +28,6 @@ ced6000f91e2f64a92753bee0236ff67  pkgs/php-eaccelerator-5.1.6_0.9.5.2-4.el5.rf.i
 22d658bf51faea079610696e202d7969  pkgs/amavisd-new-2.6.2-2.ired.i386.rpm
 a59545217ea8945415b441ce88bba39a  pkgs/lzo-1.08-5.el5.rf.i386.rpm
 8c269f2addf7920c59e663ce65dc8556  pkgs/nomarch-1.4-2.el5.i386.rpm
-e0a28dd761a13453cccf71f6a02b1db7  pkgs/dovecot-1.1.14-0_92.el5.i386.rpm
 0df2fe02ee65f5c6b245126515ee2a7f  pkgs/zoo-2.10-2.2.el5.rf.x86_64.rpm
 1bec48d168cb06bafe72c6c8f6060292  pkgs/ripole-0.2.0-1.2.el5.rf.x86_64.rpm
 1c5fd7f0b133e720afab31ee539b0de6  pkgs/lzop-1.01-2.el5.rf.x86_64.rpm
@@ -59,7 +58,6 @@ b763f87639929cc513f8176f0b8b23b2  pkgs/php-eaccelerator-5.1.6_0.9.5.2-4.el5.rf.x
 be56f8829bb6d8570dc8228a26574223  pkgs/amavisd-new-2.6.2-2.ired.x86_64.rpm
 e326b2121b87add97262333bebfb3040  pkgs/lzo-1.08-5.el5.rf.x86_64.rpm
 21c60912200abf9a9768590d3f0c3441  pkgs/nomarch-1.4-2.el5.x86_64.rpm
-444d7fd4376a1889483c713c8b238e99  pkgs/dovecot-1.1.14-0_92.el5.x86_64.rpm
 32ea9448a86dd2b243698d5810190b3d  pkgs/perl-Convert-TNEF-0.17-3.2.el5.rf.noarch.rpm
 3d3ccfe75e4e37c7469e8c0951c71480  pkgs/perl-Net-Server-0.97-1.el5.rf.noarch.rpm
 43fd4b937e8cdc422e147b2783631ab9  pkgs/perl-IO-stringy-2.110-1.2.el5.rf.noarch.rpm
@@ -86,5 +84,5 @@ d45f23a6bc32e3097c2680b951237760  pkgs/clamav-db-0.95.2-4.el5.rf.i386.rpm
 1adc33bacb73be1c1e84697a3fe58082  pkgs/clamd-0.95.2-4.el5.rf.i386.rpm
 3d32bbd0e5c91ecd048342b2e51bbec6  pkgs/clamd-0.95.2-4.el5.rf.x86_64.rpm
 c5354087e0e55153880572353e6bffc3  pkgs/awstats-6.9-2.el5.rf.noarch.rpm
-835f96d795376f7b948405a181ca9a4e  pkgs/dovecot-1.1.16-0_94.el5.i386.rpm
-0d90ea2be612149776eb383bc4240be9  pkgs/dovecot-1.1.16-0_94.el5.x86_64.rpm
+899b0dee1b718675484b200ea289070c  pkgs/dovecot-1.1.17-0_94.el5.i386.rpm
+354aa01d33419f614938660c3b0f5faf  pkgs/dovecot-1.1.17-0_94.el5.x86_64.rpm

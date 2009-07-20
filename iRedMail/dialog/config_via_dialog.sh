@@ -35,7 +35,7 @@ NOTE:
 [ X"$?" != X"0" ] && ECHO_INFO "Exit." && exit 0
 
 # VMAIL_USER_HOME_DIR
-VMAIL_USER_HOME_DIR="/var/mail"
+VMAIL_USER_HOME_DIR="/var/spool/mail"
 ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --title "Default mail storage path" \
     --inputbox "\
