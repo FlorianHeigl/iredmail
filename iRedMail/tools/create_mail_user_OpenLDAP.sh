@@ -175,7 +175,7 @@ EOF
 
 add_new_user()
 {
-    USERNAME="$1"
+    USERNAME="$(echo $1 | tr [A-Z] [a-z])"
     MAIL="$2"
 
     # Create template LDIF file for this new user and add it.
