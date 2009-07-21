@@ -24,30 +24,7 @@
 #
 # ------------------------------------------------------------------
 
-import os
-import sys
-import re
-
-try:
-    import ldap
-    import ldif
-except ImportError:
-    print '''
-    Error: You don't have python-ldap installed, Please install it first.
-    
-    You can install it like this:
-
-    - On RHEL/CentOS 5.x:
-
-        $ sudo yum install python-ldap
-
-    - On Debian & Ubuntu:
-
-        $ sudo apt-get install python-ldap
-    '''
-    sys.exit()
-
-
+# ------------------------- SETTINGS -------------------------------
 # LDAP server address.
 LDAP_URI = 'ldap://127.0.0.1:389'
 
@@ -70,12 +47,38 @@ STORAGE_BASE_DIRECTORY = '/var/mail/vmail01'
 #       - hashed: d/do/domain.ltd/z/zh/zha/zhang/
 #       - normal: domain.ltd/zhang/
 HASHED_MAILDIR = True
+# ------------------------------------------------------------------
+
+import os
+import sys
+import time
+import re
+
+try:
+    import ldap
+    import ldif
+except ImportError:
+    print '''
+    Error: You don't have python-ldap installed, Please install it first.
+    
+    You can install it like this:
+
+    - On RHEL/CentOS 5.x:
+
+        $ sudo yum install python-ldap
+
+    - On Debian & Ubuntu:
+
+        $ sudo apt-get install python-ldap
+    '''
+    sys.exit()
+
 
 def usage():
     print '''
 CSV file format:
 
-    domain name, username, password, common name, quota, groups
+    domain name, username, password, [common name], [quota], [groups]
 
 Example #1:
     iredmail.org, zhang, secret_pw, Zhang Huangbin, 1024, group1:group2
@@ -85,7 +88,7 @@ Example #3:
     iredmail.org, zhang, secret_pw, , 1024, group1:group2
      
 Note:
-    - Domain name, username and password are REQUIRED, others are optinal:
+    - Domain name, username and password are REQUIRED, others are optional:
         + common name.
             * It will be the same as username if it's empty.
             * Non-ascii character is allowed in this field, they will be
@@ -117,6 +120,7 @@ def convEmailToUserDN(email):
     return dn
 
 def ldif_mailuser(domain, username, passwd, cn, quota, groups=''):
+    DATE = time.strftime('%Y.%m.%d.%H.%M.%S')
     if quota == '':
         quota = '0'
     else:
@@ -128,7 +132,6 @@ def ldif_mailuser(domain, username, passwd, cn, quota, groups=''):
 
     # Get group list.
     groups = groups.split(':')
-    print groups
     for i, g in enumerate(groups[:]): 
         groups[i] = g + '@' + domain
 
@@ -136,24 +139,26 @@ def ldif_mailuser(domain, username, passwd, cn, quota, groups=''):
         # Hashed. Length of domain name are always >= 2.
         maildir_domain = "%s/%s/%s/" % (domain[:1], domain[:2], domain)
         if len(username) >= 3:
-            maildir_user = "%s/%s/%s/%s/" % (username[:1], username[:2], username[:3], username)
+            maildir_user = "%s/%s/%s/%s-%s/" % (username[:1], username[:2], username[:3], username, DATE,)
         elif len(username) == 2:
-            maildir_user = "%s/%s/%s/%s/" % (
+            maildir_user = "%s/%s/%s/%s-%s/" % (
                     username[:1],
                     username[:],
                     username[:] + username[-1],
                     username,
+                    DATE,
                     )
         else:
-            maildir_user = "%s/%s/%s/%s/" % (
+            maildir_user = "%s/%s/%s/%s-%s/" % (
                     username[0],
                     username[0] * 2,
                     username[0] * 3,
                     username,
+                    DATE,
                     )
         mailMessageStore = maildir_domain + maildir_user
     else:
-        mailMessageStore = "%s/%s/" % (domain, username)
+        mailMessageStore = "%s/%s-%s/" % (domain, username, DATE)
 
     homeDirectory = STORAGE_BASE_DIRECTORY + '/' + mailMessageStore
 
@@ -192,7 +197,7 @@ ldif_file = CSV + '.ldif'
 
 # Remove exist LDIF file.
 if os.path.exists(ldif_file):
-    print '''Remove exist file:''', ldif_file
+    print '''< INFO > Remove exist file:''', ldif_file
     os.remove(ldif_file)
 
 # Read user list.
@@ -202,6 +207,7 @@ userList = open(CSV, 'rb')
 for entry in userList.readlines():
     entry = entry.rstrip()
     domain, username, passwd, cn, quota, groups = re.split('\s?,\s?', entry)
+    print username
     dn, data = ldif_mailuser(domain, username, passwd, cn, quota, groups)
 
     # Write LDIF data.
@@ -210,7 +216,7 @@ for entry in userList.readlines():
     ldif_writer.unparse(dn, data)
 
 # Notify info.
-print "\tUser data are store in %s, you can verify it before import it."
+print "< INFO > User data are stored in %s, you can verify it before import it." % os.path.abspath(ldif_file)
 
 # Prompt to import user data.
 '''

@@ -36,7 +36,8 @@ CREATE TABLE alias (
 #
 CREATE TABLE domain (
     domain varchar(255) NOT NULL DEFAULT '',
-    description varchar(255) NOT NULL DEFAULT '',
+    description text NOT NULL DEFAULT '',
+    disclaimer text NOT NULL DEFAULT '',
     aliases int(10) NOT NULL DEFAULT '0',
     mailboxes int(10) NOT NULL DEFAULT '0',
     maxquota bigint(20) NOT NULL DEFAULT '0',

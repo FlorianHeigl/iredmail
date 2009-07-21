@@ -1,3 +1,7 @@
+#!/usr/bin/env bash
+
+# Author: Zhang Huangbin (michaelbibby <at> gmail.com)
+
 backup_file()
 {
     # Usage: backup_file file1 [file2 file3 ... fileN]
