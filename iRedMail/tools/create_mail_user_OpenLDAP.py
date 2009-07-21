@@ -207,7 +207,6 @@ userList = open(CSV, 'rb')
 for entry in userList.readlines():
     entry = entry.rstrip()
     domain, username, passwd, cn, quota, groups = re.split('\s?,\s?', entry)
-    print username
     dn, data = ldif_mailuser(domain, username, passwd, cn, quota, groups)
 
     # Write LDIF data.
