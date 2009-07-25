@@ -37,7 +37,7 @@ BINDDN = 'cn=vmailadmin,dc=iredmail,dc=org'
 BINDPW = 'passwd'
 
 # Storage base directory.
-STORAGE_BASE_DIRECTORY = '/var/mail/vmail01'
+STORAGE_BASE_DIRECTORY = '/var/vmail/vmail01'
 
 # Hashed maildir: True, False.
 # Example:

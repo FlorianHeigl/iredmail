@@ -40,7 +40,7 @@
 
 # --------- CHANGE THESE VALUES ----------
 # Storage base directory used to store users' mail.
-STORAGE_BASE_DIRECTORY="/var/mail/vmail01"
+STORAGE_BASE_DIRECTORY="/var/vmail/vmail01"
 
 # Password setting.
 # Note: password will be crypted in MD5.
