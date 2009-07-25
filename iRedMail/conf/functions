@@ -33,7 +33,7 @@ ECHO_QUESTION()
         if [ X"${TERM}" == X"xterm" -o X"${TERM}" == X"linux" -o X"${TERM}" == X"pcconsole" ]; then
             echo -e "\033[45m${QUESTION_FLAG}\033[0m $@"
         else
-            echo -e "\n${QUESTION_FLAG} $@"
+            echo -e "${QUESTION_FLAG} $@"
         fi
     fi
 }

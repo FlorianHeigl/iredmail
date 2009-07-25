@@ -70,6 +70,9 @@ mysql_import_vmail_users()
     export FIRST_USER_PASSWD="$(openssl passwd -1 ${FIRST_USER_PASSWD})"
 
     # Generate SQL.
+    # Modify default SQL template, set storagebasedirectory.
+    perl -pi -e 's#(.*storagebasedirectory.*DEFAULT).*#${1} "$ENV{STORAGE_BASE_DIR}",#' ${SAMPLE_SQL}
+
     # Mailbox format is 'Maildir/' by default.
     cat >> ${MYSQL_VMAIL_SQL} <<EOF
 /* Create database for virtual hosts. */
