@@ -198,14 +198,14 @@ postfix_config_ldap()
     ldap_search_base_group="${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_GROUPS},${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}"
 
     postconf -e transport_maps="ldap:${ldap_transport_maps_cf}"
-    postconf -e virtual_mailbox_domains="ldap:${ldap_virtual_mailbox_domains_cf}"
-    postconf -e virtual_mailbox_maps="ldap:${ldap_accounts_cf}, ldap:${ldap_virtual_mailbox_maps_cf}"
     postconf -e virtual_alias_maps="ldap:${ldap_virtual_alias_maps_cf}, ldap:${ldap_virtual_group_maps_cf}"
+    postconf -e virtual_mailbox_domains="ldap:${ldap_virtual_mailbox_domains_cf}"
+    postconf -e virtual_mailbox_maps="ldap:${ldap_virtual_mailbox_maps_cf}"
     #postconf -e local_recipient_maps='$alias_maps $virtual_alias_maps $virtual_mailbox_maps'
     postconf -e sender_bcc_maps="ldap:${ldap_sender_bcc_maps_domain_cf}, ldap:${ldap_sender_bcc_maps_user_cf}"
     postconf -e recipient_bcc_maps="ldap:${ldap_recipient_bcc_maps_domain_cf}, ldap:${ldap_recipient_bcc_maps_user_cf}"
     postconf -e relay_domains="\$mydestination, ldap:${ldap_relay_domains_cf}"
-    postconf -e relay_recipient_maps="ldap:${ldap_accounts_cf}, ldap:${ldap_virtual_mailbox_maps_cf}"
+    postconf -e relay_recipient_maps="ldap:${ldap_virtual_mailbox_maps_cf}"
 
     postconf -e smtpd_sender_login_maps="ldap:${ldap_sender_login_maps_cf}"
     postconf -e smtpd_reject_unlisted_sender='yes'
@@ -265,7 +265,7 @@ EOF
     #
     # LDAP Virtual Users.
     #
-    cat > ${ldap_accounts_cf} <<EOF
+    cat > ${ldap_virtual_mailbox_maps_cf} <<EOF
 ${CONF_MSG}
 server_host     = ${LDAP_SERVER_HOST}
 server_port     = ${LDAP_SERVER_PORT}
@@ -278,22 +278,6 @@ search_base     = ${ldap_search_base_user}
 scope           = one
 query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_USER_RDN}=%s)(${LDAP_ATTR_ACCOUNT_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
 result_attribute= mailMessageStore
-debuglevel      = 0
-EOF
-
-    cat > ${ldap_virtual_mailbox_maps_cf} <<EOF
-${CONF_MSG}
-server_host     = ${LDAP_SERVER_HOST}
-server_port     = ${LDAP_SERVER_PORT}
-version         = ${LDAP_BIND_VERSION}
-bind            = ${LDAP_BIND}
-start_tls       = no
-bind_dn         = ${LDAP_BINDDN}
-bind_pw         = ${LDAP_BINDPW}
-search_base     = ${ldap_search_base_user}
-scope           = one
-query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_USER_RDN}=%s)(${LDAP_ATTR_ACCOUNT_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DELIVER}))
-result_attribute= ${LDAP_ATTR_USER_RDN}
 debuglevel      = 0
 EOF
 
@@ -418,7 +402,6 @@ EOF
 
     for i in ${ldap_virtual_mailbox_domains_cf} \
         ${ldap_transport_maps_cf} \
-        ${ldap_accounts_cf} \
         ${ldap_virtual_mailbox_maps_cf} \
         ${ldap_virtual_alias_maps_cf} \
         ${ldap_virtual_group_maps_cf} \

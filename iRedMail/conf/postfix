@@ -40,7 +40,6 @@ export MAILDIR_LIMIT_MESSAGE="Sorry, the user's maildir has overdrawn the disk q
 # LDAP lookup.
 export ldap_virtual_mailbox_domains_cf="${POSTFIX_ROOTDIR}/ldap_virtual_mailbox_domains.cf"
 export ldap_transport_maps_cf="${POSTFIX_ROOTDIR}/ldap_transport_maps.cf"
-export ldap_accounts_cf="${POSTFIX_ROOTDIR}/ldap_accounts.cf"
 export ldap_virtual_mailbox_maps_cf="${POSTFIX_ROOTDIR}/ldap_virtual_mailbox_maps.cf"
 export ldap_virtual_alias_maps_cf="${POSTFIX_ROOTDIR}/ldap_virtual_alias_maps.cf"
 export ldap_virtual_group_maps_cf="${POSTFIX_ROOTDIR}/ldap_virtual_group_maps.cf"
