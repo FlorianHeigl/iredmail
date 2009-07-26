@@ -239,7 +239,7 @@ protocol lda {
     auth_socket_path = ${DOVECOT_SOCKET_MASTER}
     #mail_plugins = cmusieve quota expire
     mail_plugins = cmusieve quota
-    sieve_global_path = ${SIEVE_FILTER_FILE}
+    sieve_global_path = ${GLOBAL_SIEVE_FILE}
     log_path = ${SIEVE_LOG_FILE}
 }
 
@@ -352,10 +352,10 @@ EOF
 }
 EOF
 
-    ECHO_INFO "Copy sample sieve global filter rule file: ${SIEVE_FILTER_FILE}.sample."
-    cp -f ${SAMPLE_DIR}/dovecot.sieve ${SIEVE_FILTER_FILE}.sample
-    chown ${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} ${SIEVE_FILTER_FILE}.sample
-    chmod 0500 ${SIEVE_FILTER_FILE}.sample
+    ECHO_INFO "Copy sample sieve global filter rule file: ${GLOBAL_SIEVE_FILE}.sample."
+    cp -f ${SAMPLE_DIR}/dovecot.sieve ${GLOBAL_SIEVE_FILE}.sample
+    chown ${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} ${GLOBAL_SIEVE_FILE}.sample
+    chmod 0500 ${GLOBAL_SIEVE_FILE}.sample
 
     ECHO_INFO "Create dovecot log file: ${DOVECOT_LOG_FILE}, ${SIEVE_LOG_FILE}."
     touch ${DOVECOT_LOG_FILE} ${SIEVE_LOG_FILE}
@@ -449,7 +449,7 @@ Dovecot:
         - ${DOVECOT_LOG_FILE}
         - ${SIEVE_LOG_FILE}
     * See also:
-        - ${SIEVE_FILTER_FILE}
+        - ${GLOBAL_SIEVE_FILE}
 
 EOF
 
