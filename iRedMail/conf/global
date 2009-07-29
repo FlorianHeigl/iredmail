@@ -198,6 +198,10 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     export BIN_BZIP2='bzip2'
     export PKG_BZIP2="bzip2.${ARCH}"
 
+    # command: getfacl & setfacl
+    export BIN_ACL='setfacl'
+    export PKG_ACL="acl.${ARCH}"
+
 elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     # Ubuntu & Debian.
     export DEBIAN_FRONTEND='noninteractive'
@@ -245,6 +249,11 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     # command: bzip2.
     export BIN_BZIP2='bzip2'
     export PKG_BZIP2='bzip2'
+
+    # command: getfacl & setfacl
+    export BIN_ACL='setfacl'
+    export PKG_ACL='acl'
+
 else
     # Not support yet.
     echo "Your distrobution is not supported yet."
