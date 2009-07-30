@@ -193,9 +193,7 @@ if [ X"${POSTFIX_STARTED}" != X"YES" ]; then
 * Please reboot your system to enable mail services or start them
 * manually without reboot:
 *
-*   # for i in ${ENABLED_SERVICES}; do
-*         /etc/init.d/\${i} restart
-*     done
+*   # for i in ${ENABLED_SERVICES}; do /etc/init.d/\${i} restart; done
 *
 EOF
 fi

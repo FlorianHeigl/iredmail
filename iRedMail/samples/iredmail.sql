@@ -75,6 +75,7 @@ CREATE TABLE mailbox (
     maildir VARCHAR(255) NOT NULL DEFAULT '',
     quota bigINT(20) NOT NULL DEFAULT '0',
     domain VARCHAR(255) NOT NULL DEFAULT '',
+    transport VARCHAR(255) NOT NULL DEFAULT 'dovecot',
     department VARCHAR(255) NOT NULL DEFAULT '',
     rank VARCHAR(255) NOT NULL DEFAULT 'normal',
     employeeid VARCHAR(255) DEFAULT NULL,

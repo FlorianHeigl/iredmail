@@ -197,7 +197,7 @@ postfix_config_ldap()
     ldap_search_base_user="${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}"
     ldap_search_base_group="${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_GROUPS},${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}"
 
-    postconf -e transport_maps="ldap:${ldap_transport_maps_cf}"
+    postconf -e transport_maps="ldap:${ldap_transport_maps_user_cf}, ldap:${ldap_transport_maps_domain_cf}"
     postconf -e virtual_alias_maps="ldap:${ldap_virtual_alias_maps_cf}, ldap:${ldap_virtual_group_maps_cf}"
     postconf -e virtual_mailbox_domains="ldap:${ldap_virtual_mailbox_domains_cf}"
     postconf -e virtual_mailbox_maps="ldap:${ldap_virtual_mailbox_maps_cf}"
@@ -246,7 +246,8 @@ EOF
     #
     # LDAP transport maps
     #
-    cat > ${ldap_transport_maps_cf} <<EOF
+    # Per-domain transport maps
+    cat > ${ldap_transport_maps_domain_cf} <<EOF
 ${CONF_MSG}
 server_host     = ${LDAP_SERVER_HOST}
 server_port     = ${LDAP_SERVER_PORT}
@@ -258,7 +259,24 @@ bind_pw         = ${LDAP_BINDPW}
 search_base     = ${LDAP_BASEDN}
 scope           = one
 query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_MAILDOMAIN})(${LDAP_ATTR_DOMAIN_RDN}=%s)(${LDAP_ATTR_ACCOUNT_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
-result_attribute= ${LDAP_ATTR_DOMAIN_TRANSPORT}
+result_attribute= ${LDAP_ATTR_MTA_TRANSPORT}
+debuglevel      = 0
+EOF
+
+    # Per-user transport maps
+    cat > ${ldap_transport_maps_user_cf} <<EOF
+${CONF_MSG}
+server_host     = ${LDAP_SERVER_HOST}
+server_port     = ${LDAP_SERVER_PORT}
+version         = ${LDAP_BIND_VERSION}
+bind            = ${LDAP_BIND}
+start_tls       = no
+bind_dn         = ${LDAP_BINDDN}
+bind_pw         = ${LDAP_BINDPW}
+search_base     = ${ldap_search_base_user}
+scope           = one
+query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_USER_RDN}=%s)(${LDAP_ATTR_ACCOUNT_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL}))
+result_attribute= ${LDAP_ATTR_MTA_TRANSPORT}
 debuglevel      = 0
 EOF
 
@@ -401,7 +419,8 @@ Postfix (LDAP):
 EOF
 
     for i in ${ldap_virtual_mailbox_domains_cf} \
-        ${ldap_transport_maps_cf} \
+        ${ldap_transport_maps_domain_cf} \
+        ${ldap_transport_maps_user_cf} \
         ${ldap_virtual_mailbox_maps_cf} \
         ${ldap_virtual_alias_maps_cf} \
         ${ldap_virtual_group_maps_cf} \
@@ -427,7 +446,7 @@ postfix_config_mysql()
     # Postfix doesn't work while mysql server is 'localhost', should be
     # changed to '127.0.0.1'.
 
-    postconf -e transport_maps="mysql:${mysql_transport_maps_cf}"
+    postconf -e transport_maps="mysql:${mysql_transport_maps_user_cf}, mysql:${mysql_transport_maps_domain_cf}"
     postconf -e virtual_mailbox_domains="mysql:${mysql_virtual_mailbox_domains_cf}"
     postconf -e virtual_mailbox_maps="mysql:${mysql_virtual_mailbox_maps_cf}"
     postconf -e virtual_mailbox_limit_maps="mysql:${mysql_virtual_mailbox_limit_maps_cf}"
@@ -440,13 +459,24 @@ postfix_config_mysql()
     postconf -e smtpd_sender_login_maps="mysql:${mysql_sender_login_maps_cf}"
     postconf -e smtpd_reject_unlisted_sender='yes'
 
-    cat > ${mysql_transport_maps_cf} <<EOF
+    # Per-domain transport maps.
+    cat > ${mysql_transport_maps_domain_cf} <<EOF
 user        = ${MYSQL_BIND_USER}
 password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
 query       = SELECT transport FROM domain WHERE domain='%s' AND active='1'
+EOF
+
+    # Per-user transport maps.
+    cat > ${mysql_transport_maps_user_cf} <<EOF
+user        = ${MYSQL_BIND_USER}
+password    = ${MYSQL_BIND_PW}
+hosts       = ${mysql_server}
+port        = ${MYSQL_PORT}
+dbname      = ${VMAIL_DB}
+query       = SELECT transport FROM mailbox WHERE username='%s' AND active='1' AND enabledeliver='1' AND expired >= NOW()
 EOF
 
     cat > ${mysql_virtual_mailbox_domains_cf} <<EOF
@@ -545,7 +575,8 @@ Postfix (MySQL):
     * Configuration files:
 EOF
     for i in ${mysql_virtual_mailbox_domains_cf} \
-        ${mysql_transport_maps_cf} \
+        ${mysql_transport_maps_domain_cf} \
+        ${mysql_transport_maps_user_cf} \
         ${mysql_virtual_mailbox_maps_cf} \
         ${mysql_virtual_mailbox_limit_maps_cf} \
         ${mysql_virtual_alias_maps_cf} \

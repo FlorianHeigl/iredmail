@@ -101,13 +101,13 @@ export LDAP_SERVICE_DISPLAYED_IN_ADDRBOOK='displayedInGlobalAddressBook'
 
 # Shared attributes.
 export LDAP_ATTR_ACCOUNT_STATUS='accountStatus'
+export LDAP_ATTR_MTA_TRANSPORT='mtaTransport'
 
 # Domain admin related.
 export LDAP_ATTR_DOMAINADMIN_DN_NAME='domainAdmins'
 
 # Domain related attributes.
 export LDAP_ATTR_DOMAIN_RDN='domainName'
-export LDAP_ATTR_DOMAIN_TRANSPORT='mtaTransport'
 export LDAP_ATTR_DOMAIN_ADMIN='domainAdmin'
 export LDAP_ATTR_DOMAIN_GLOBALADMIN='domainGlobalAdmin'
 export LDAP_ATTR_DOMAIN_BACKUPMX='domainBackupMX'

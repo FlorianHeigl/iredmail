@@ -1,4 +1,5 @@
 iRedMail-0.5.0:
+    * Support per-user transport maps, enabled by default.
     * Remove unnecessary ldap lookup in postfix.
     * Set storagebasedirectory in MySQL template.
     * Add ldap attribute and mysql column 'disclaimer' to store disclaimer

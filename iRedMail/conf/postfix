@@ -39,7 +39,8 @@ export MAILDIR_LIMIT_MESSAGE="Sorry, the user's maildir has overdrawn the disk q
 # LDAP/MYSQL lookup configuration files.
 # LDAP lookup.
 export ldap_virtual_mailbox_domains_cf="${POSTFIX_ROOTDIR}/ldap_virtual_mailbox_domains.cf"
-export ldap_transport_maps_cf="${POSTFIX_ROOTDIR}/ldap_transport_maps.cf"
+export ldap_transport_maps_user_cf="${POSTFIX_ROOTDIR}/ldap_transport_maps_user.cf"
+export ldap_transport_maps_domain_cf="${POSTFIX_ROOTDIR}/ldap_transport_maps_domain.cf"
 export ldap_virtual_mailbox_maps_cf="${POSTFIX_ROOTDIR}/ldap_virtual_mailbox_maps.cf"
 export ldap_virtual_alias_maps_cf="${POSTFIX_ROOTDIR}/ldap_virtual_alias_maps.cf"
 export ldap_virtual_group_maps_cf="${POSTFIX_ROOTDIR}/ldap_virtual_group_maps.cf"
@@ -53,7 +54,8 @@ export ldap_relay_domains_cf="${POSTFIX_ROOTDIR}/ldap_relay_domains.cf"
 
 # MySQL lookup.
 export mysql_virtual_mailbox_domains_cf="${POSTFIX_ROOTDIR}/mysql_virtual_mailbox_domains.cf"
-export mysql_transport_maps_cf="${POSTFIX_ROOTDIR}/mysql_transport_maps.cf"
+export mysql_transport_maps_user_cf="${POSTFIX_ROOTDIR}/mysql_transport_maps_user.cf"
+export mysql_transport_maps_domain_cf="${POSTFIX_ROOTDIR}/mysql_transport_maps_domain.cf"
 export mysql_virtual_mailbox_maps_cf="${POSTFIX_ROOTDIR}/mysql_virtual_mailbox_maps.cf"
 export mysql_virtual_mailbox_limit_maps_cf="${POSTFIX_ROOTDIR}/mysql_virtual_mailbox_limit_maps.cf"
 export mysql_virtual_alias_maps_cf="${POSTFIX_ROOTDIR}/mysql_virtual_alias_maps.cf"
