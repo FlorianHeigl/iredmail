@@ -464,11 +464,11 @@ EOF
     cat >> ${TIP_FILE} <<EOF
 Amavisd-new:
     * Configuration files:
-        - /etc/amavisd.conf
+        - ${AMAVISD_CONF}
         - ${POSTFIX_FILE_MASTER_CF}
         - ${POSTFIX_FILE_MAIN_CF}
     * RC script:
-        - /etc/init.d/amavisd
+        - /etc/init.d/${AMAVISD_RC_SCRIPT_NAME}
 
 EOF
 

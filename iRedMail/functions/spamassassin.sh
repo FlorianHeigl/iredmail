@@ -32,9 +32,6 @@ SpamAssassin:
     * Configuration files:
         - /etc/mail/spamassassin/
 
-    * RC script:
-        - /etc/init.d/spamd
-
     - Rules:
         * /usr/share/spamassassin/
 

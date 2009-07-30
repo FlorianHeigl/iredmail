@@ -108,9 +108,9 @@ EOF
     cat >> ${TIP_FILE} <<EOF
 Apache & PHP:
     * Configuration files:
-        - /etc/httpd/conf/
-        - /etc/httpd/conf.d/
-        - /etc/php.ini
+        - ${HTTPD_CONF_ROOT}
+        - ${HTTPD_CONF_DIR}
+        - ${PHP_INI}
     * Directories:
         - ${HTTPD_SERVERROOT}
         - ${HTTPD_DOCUMENTROOT}
