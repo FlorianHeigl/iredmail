@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% from "macros.html" import display_account_status, %}
+
+{% block js_tablesorter %}{% endblock %}
+
+{% block title %}{{ _('Add new domain(s)') }}{% endblock title %}
+
+{% block main %}
+
+{# Display input field for adding new domain. #}
+<div class="main-content main-frm">
+<form class="frm-form" method="post" method="{{ctx.homepath}}/{{domain}}/create/user">
+
+    <fieldset class="frm-group">
+        <legend class="group-legend"><strong>{{ _('Mail address') }}</strong></legend>
+        <div class="sf-set">
+            <div class="sf-box text">
+                <label><span>{{ _('Mail address') }}</span></label>
+                <span class="fld-input"><input type="text" name="mail" size="25" />@
+                    <select name="domainName">
+                        {% for domain in domains %}
+                            <option value="{{domain}}" {% if domain == domainName %}selected{%endif%}>{{domain}}</option>
+                        {% endfor %}
+                    </select>
+                </span>
+            </div>
+        </div>
+    </fieldset>
+
+    <div class="frm-buttons">
+        <span class="submit">
+            <input type="submit" value="{{ _('Create') }}" />
+        </span>
+    </div>
+
+</form>
+</div>
+
+{% endblock main %}

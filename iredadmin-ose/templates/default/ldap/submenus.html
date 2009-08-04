@@ -1,0 +1,20 @@
+{% macro submenu_domains(homepath, domain, active) -%}
+    <div class="admin-submenu gen-content">
+        <ul>
+            {# Edit domain profile #}
+            <li class="{% if active == 'domain' %}active{%else%}normal{%endif%}"><a href="{{homepath |e}}/profile/domain/{{domain}}" title="{{ _('Edit domain profile.') }}">{{domain}}</a></strong></li>
+
+            {# List all mail users #}
+            <li class="{% if active == 'users' %}active{%else%}normal{%endif%}"><a href="{{homepath|e}}/{{domain|e}}/users" title="{{ _('List all mail users under domain: %s.') |format(domain) }}">{{ _('Users') }}</a></li>
+
+        </ul>
+    </div>
+
+    {% if active != 'domain' %}
+        <div id="brd-visit" class="gen-content">
+            {% if active == 'users' %}
+                <p><span><a href="{{ctx.homepath}}/create/user/{{domain}}">{{ _('Create new mail user') }}</a></span></p>
+            {% endif %}
+        </div>
+    {% endif %}
+{%- endmacro %}
