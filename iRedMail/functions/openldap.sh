@@ -146,12 +146,14 @@ access to dn="${LDAP_ADMIN_DN}"
 
 #
 # Allow users to access their own domain subtree.
+# Allow domain admin to modify accounts under same domain.
 #
 access to dn.regex="${LDAP_ATTR_DOMAIN_RDN}=([^,]+),${LDAP_BASEDN}\$"
     by anonymous                    auth
     by self                         write
     by dn.exact="${LDAP_BINDDN}"   read
     by dn.exact="${LDAP_ADMIN_DN}"  write
+    by dn.regex="${LDAP_ATTR_USER_RDN}=[^,]+@\$1,o=${LDAP_ATTR_DOMAINADMIN_DN_NAME},${LDAP_BASEDN}\$" write
     by dn.regex="${LDAP_ATTR_USER_RDN}=[^,]+,${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=\$1,${LDAP_BASEDN}\$" read
     by users                        none
 
