@@ -1,7 +1,5 @@
 {% extends "layout.html" %}
 
-{% from "macros.html" import display_account_status, %}
-
 {% block js_tablesorter %}{% endblock %}
 
 {% block title %}{{ _('Add new domain(s)') }}{% endblock title %}
@@ -27,6 +25,8 @@
             </div>
         </div>
     </fieldset>
+
+    {{ display_cn(accountType='user') }}
 
     <div class="frm-buttons">
         <span class="submit">

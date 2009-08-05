@@ -24,12 +24,17 @@
     <input type="hidden" name="{{ name }}" value="{{ value }}">
 {%- endmacro %}
 
-{% macro display_cn(value='') -%}
+{% macro display_cn(value='', accountType='domain') -%}
     <fieldset class="frm-group">
-        <legend class="group-legend"><strong>{{ _('Company/Organization name') }}</strong></legend>
         <div class="sf-set">
             <div class="sf-box text">
-                <label><span>{{ _('Company/Organization') }}</span></label>
+                <label><span>
+                {% if accountType == 'domain' %}
+                    {{ _('Company/Organization name') }}
+                {% else %}
+                    {{ _('Display Name') }}
+                {% endif %}
+                </span></label>
                 <span class="fld-input"><input type="text" name="cn" value="{{value}}" size="50" /></span>
             </div>
         </div>
