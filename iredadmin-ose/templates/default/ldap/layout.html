@@ -84,19 +84,7 @@
             {% endif %}
 
             <div id="main">
-                {% block main %}
-                    <div id="col1">
-                        <div id="col1_content" class="clearfix">
-                            {% block rightcolumn %}{% endblock %}
-                        </div>
-                    </div>
-
-                    <div id="col3">
-                        <div id="col3_content" class="clearfix">
-                            {% block leftcolumn %}{% endblock %}
-                        </div>
-                    </div>
-                {% endblock main %}
+                {% block main %}{% endblock main %}
             </div>
 
             {% block footer %}
