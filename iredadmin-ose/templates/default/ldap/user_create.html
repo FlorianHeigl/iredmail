@@ -1,14 +1,18 @@
 {% extends "layout.html" %}
 
-{% block js_tablesorter %}{% endblock %}
+{% from "macros.html" import display_cn, display_reset_password, %}
 
-{% block title %}{{ _('Add new domain(s)') }}{% endblock title %}
+{% block js %}{% endblock js %}
+{% block js_tablesorter %}{% endblock %}
+{% block jquery_docoment_ready %} {% endblock %}
+
+{% block title %}{{ _('Create new mail user') }}{% endblock title %}
 
 {% block main %}
 
 {# Display input field for adding new domain. #}
 <div class="main-content main-frm">
-<form class="frm-form" method="post" method="{{ctx.homepath}}/{{domain}}/create/user">
+    <form class="frm-form" method="post" method="{{ctx.homepath}}/create/user">
 
     <fieldset class="frm-group">
         <legend class="group-legend"><strong>{{ _('Mail address') }}</strong></legend>
