@@ -135,3 +135,33 @@
         </div>
     </fieldset>
 {%- endmacro %}
+
+{% macro display_reset_password(oldpw='no', confirmpw='yes') -%}
+    <fieldset class="frm-group">
+        <legend class="group-legend"><strong>Required information</strong></legend>
+        {% if oldpw == 'yes' %}
+        <div class="sf-set">
+            <div class="sf-box text required">
+                <label for="oldpw"><span>{{ _('Old password') }} <em>{{ _('(Required)') }}</em></span></label><br />
+                <span class="fld-input"><input type="password" id="oldpw" name="oldpw" size="35" value=""/></span><br />
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="sf-set">
+            <div class="sf-box text required">
+                <label for="newpw"><span>{{ _('New password') }} <em>{{ _('(Required)') }}</em></span></label><br />
+                <span class="fld-input"><input type="password" id="newpw" name="newpw" size="35" value=""/></span><br />
+            </div>
+        </div>
+
+        {% if confirmpw == 'yes' %}
+        <div class="sf-set">
+            <div class="sf-box text required">
+                <label for="confirmpw"><span>{{ _('Confirm new password') }} <em>{{ _('(Required)') }}</em></span> <small>{{ _('Re-enter your password exactly as before.') }}</small></label><br />
+                <span class="fld-input"><input type="password" id="confirmpw" name="confirmpw" size="35" value=""/></span><br />
+            </div>
+        </div>
+        {% endif %}
+    </fieldset>
+{%- endmacro %}
