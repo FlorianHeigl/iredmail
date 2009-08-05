@@ -129,6 +129,13 @@ class create(dbinit):
         for d in self.domains:
             if d[1].has_key('domainName'):
                 domains += d[1].get('domainName')
+        default_quota = cfg.general.get('default_quota', 1024)
+        return render.user_create(
+                domainName=domainName,
+                domains=domains,
+                default_quota=default_quota,
+                )
+
         return render.user_create(domainName=domainName, domains=domains)
 
     @base.protected
