@@ -8,9 +8,8 @@
 
 {% block main %}
 {# Sub-menu #}
-<div id="brd-visit" class="gen-content">
-    <p><span>{{ _('View/Update your preferences (%s).') |format(session.get('username')) }}</span>
-    </p>
+<div id="brd-crumbs-top" class="crumbs gen-content">
+    <p><span class="crumblast">{{ _('View/Update your preferences (%s).') |format(session.get('username')) }}</span>
 </div>
 
 {% if msg is not none %}

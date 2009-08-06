@@ -242,7 +242,8 @@ objectclass ( 1.3.6.1.4.1.32349.1.2.4.2 NAME 'mailAdmin'
     MUST ( mail )
     MAY ( domainGlobalAdmin $ description $ enabledService $
         userPassword $ accountStatus $ cn $ sn $ gn $
-        preferredLanguage $ givenName $ expiredDate ))
+        preferredLanguage $ givenName $ expiredDate $
+        lastLoginDate ))
 objectclass ( 1.3.6.1.4.1.32349.1.2.4.3 NAME 'mailUser'
     DESC 'Mail User' SUP top AUXILIARY
     MUST ( mail $ uid )

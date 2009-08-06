@@ -16,21 +16,8 @@
 {% endblock jquery_snippets %}
 
 {% block main %}
-{# Sub-menu #}
-<div class="admin-submenu gen-content">
-    <ul>
-        <li><strong>{{ _('Create new') }}</strong></li>
-        {% if session.get('domainGlobalAdmin') == 'yes' %}
-            <li><a href="{{ctx.homepath}}/create/domain">mail domain</a></li>
-        {% endif %}
-        <li><a href="{{ctx.homepath}}/create/user/">mail user</a></li>
-        <li><a href="{{ctx.homepath}}/create/maillist/">mail list</a></li>
-        <li><a href="{{ctx.homepath}}/create/alias/">mail alias</a></li>
-    </ul>
-</div>
-
-<div id="brd-visit" class="gen-content">
-    <p><span>{{ _('All mail domains under your control.') }} {{ _('Total: %s.') |format(domains|length) }}</span></p>
+<div id="brd-crumbs-top" class="crumbs gen-content">
+    <p><span class="crumblast">{{ _('All mail domains under your control.') }} {{ _('Total: %s.') |format(domains|length) }}</span></p>
 </div>
 
 {# Show system message #}

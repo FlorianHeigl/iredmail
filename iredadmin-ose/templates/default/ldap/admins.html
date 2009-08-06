@@ -50,17 +50,8 @@ $("#admin_list").tablesorter( {
 #}
 
 {% block main %}
-{# Sub-menu #}
-{% if session.get('domainGlobalAdmin') == 'yes' %}
-<div class="admin-submenu gen-content">
-    <ul>
-        <li><a href="{{ctx.homepath}}/create/admin">Create new admin</a></li>
-    </ul>
-</div>
-{% endif %}
-
-<div id="brd-visit" class="gen-content">
-    <p><span>{{ _('All mail administrators.') }} {{ _('Total: %s.') |format(admins |length) }}</span></p>
+<div id="brd-crumbs-top" class="crumbs gen-content">
+    <p><span class="crumblast">{{ _('All mail administrators.') }} {{ _('Total: %s.') |format(admins |length) }}</span></p>
 </div>
 
 {# Show system message #}

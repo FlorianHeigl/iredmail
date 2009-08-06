@@ -1,20 +1,13 @@
 {% macro submenu_domains(homepath, domain, active) -%}
-    <div class="admin-submenu gen-content">
-        <ul>
+    <div id="brd-crumbs-top" class="crumbs gen-content">
+        <p class="float_right">
             {# Edit domain profile #}
-            <li class="{% if active == 'domain' %}active{%else%}normal{%endif%}"><a href="{{homepath |e}}/profile/domain/{{domain}}" title="{{ _('Edit domain profile.') }}">{{domain}}</a></strong></li>
+            <span class="crumb {% if active == 'domain' %}crumblast{%endif%}">{{ _('View/Update domain profile:') }} <a href="{{homepath |e}}/profile/domain/{{domain}}" title="{{ _('Edit domain profile.') }}">{{domain}}</a></strong></span>
+        </p>
 
+        <p class="float_left">
             {# List all mail users #}
-            <li class="{% if active == 'users' %}active{%else%}normal{%endif%}"><a href="{{homepath|e}}/{{domain|e}}/users" title="{{ _('List all mail users under domain: %s.') |format(domain) }}">{{ _('Users') }}</a></li>
-
-        </ul>
+            <span>{{ _('List all mail accounts:') }} </span><span class="crumb {% if active == 'users' %}crumblast{%endif%}"><a href="{{homepath|e}}/{{domain|e}}/users" title="{{ _('List all mail users under domain: %s.') |format(domain) }}">{{ _('Users') }}</a></span>
+        </p>
     </div>
-
-    {% if active != 'domain' %}
-        <div id="brd-visit" class="gen-content">
-            {% if active == 'users' %}
-                <p><span><a href="{{ctx.homepath}}/create/user/{{domain}}">{{ _('Create new mail user') }}</a></span></p>
-            {% endif %}
-        </div>
-    {% endif %}
 {%- endmacro %}

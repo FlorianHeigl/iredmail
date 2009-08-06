@@ -9,13 +9,11 @@
 
 {% block main %}
 
-{# Display input field for adding new domain. #}
-{% if session.get('domainGlobalAdmin') == 'yes' %}
-<div id="brd-visit" class="gen-content">
-    <p><span>{{ _('Create new domain') }}</span></p>
+<div id="brd-crumbs-top" class="crumbs gen-content">
+    <p><span class="crumblast">{{ _('Create new mail domain') }}</span></p>
 </div>
 
-<div class="main-content main-frm">
+<div class="main-frm">
 <form class="frm-form" method="post" action="{{ctx.homepath}}/create/domain">
 
     <fieldset class="frm-group">
@@ -38,6 +36,5 @@
 
 </form>
 </div>
-{% endif %}
 
 {% endblock main %}
