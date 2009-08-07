@@ -44,7 +44,7 @@ $("#user_list").tablesorter( {
                 <div class="sf-box text">
                     <label><span>{{ _('View users under domain:') }} </span></label>
                     <span class="fld-input">
-                        <select id="domainSelect" name="domainName" onchange="listAccountsUnderDomain(this, {{ctx.homepath}}/users/)">
+                        <select id="domainSelect" name="domainName" onchange="listAccountsUnderDomain(this, baseurl='{{ctx.homepath}}/users/');">
                             <option value="none" {% if cur_domain is sameas none %}selected{%endif%}>{{ _('Select one domain') }}</option>
                             {% for d in allDomains %}
                                 <option value="{{d}}" {% if cur_domain == d %}selected{%endif%}>{{d}}</option>

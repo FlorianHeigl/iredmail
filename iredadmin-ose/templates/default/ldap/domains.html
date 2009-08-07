@@ -75,7 +75,7 @@
                 <td>{{ display_current_quota_size( entries.get('domainCurrentQuotaSize', [0])[0] |string ) }}/{{ display_max_quota_size( entries.get('domainMaxQuotaSize', [0])[0] |string ) }}</td>
 
                 {# Mail user count #}
-                <td><a href="{{ctx.homepath}}/{{domain}}/users" title="{{ _('List all mail users.') }}">{{ entries.get('domainCurrentUserNumber', [0])[0] }}/{{ display_max_number( entries.get('domainMaxUserNumber', [0])[0] |string ) }}</a></td>
+                <td><a href="{{ctx.homepath}}/users/{{domain}}" title="{{ _('List all mail users.') }}">{{ entries.get('domainCurrentUserNumber', [0])[0] }}/{{ display_max_number( entries.get('domainMaxUserNumber', [0])[0] |string ) }}</a></td>
             </tr>
         {% endfor %}
         </tbody>
