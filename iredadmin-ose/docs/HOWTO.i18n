@@ -5,14 +5,14 @@ i18n support HOWTO
 
     # msgfmt iredadmin.po
 
-   You will get 'messages.mo' under current directory.
+   You will get 'iredadmin.mo' under current directory.
 
-*) Create directory under 'i18n/' and copy 'messages.mo' greneated
+*) Create directory under 'i18n/' and copy 'iredadmin.mo' greneated
    above into it. e.g. for French language(fr_FR):
 
     # cd /path/to/iRedAdmin-x.y.z/i18n/
     # mkdir -p fr_FR/LC_MESSAGES/
-    # cp /path/to/your/messages.mo fr_FR/LC_MESSAGES/
+    # cp /path/to/your/iredadmin.mo fr_FR/LC_MESSAGES/
 
    Directory format is '{LANGUAGE}/LC_MESSAGES/'.
 

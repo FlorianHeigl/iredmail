@@ -32,6 +32,7 @@ class list(dbinit):
         for d in result:
             if d[1].has_key('domainName'):
                 allDomains += d[1].get('domainName')
+        allDomains.sort()
 
         if domain is '' or domain is None:
             return render.users(allDomains=allDomains)
@@ -137,14 +138,16 @@ class create(dbinit):
             domainName = web.safestr(domainName)
 
         self.domains = domainLib.list(attrs=['domainName'])
-        domains = []
+        allDomains = []
         for d in self.domains:
             if d[1].has_key('domainName'):
-                domains += d[1].get('domainName')
+                allDomains += d[1].get('domainName')
+        allDomains.sort()
+
         default_quota = cfg.general.get('default_quota', 1024)
         return render.user_create(
                 domainName=domainName,
-                domains=domains,
+                domains=allDomains,
                 default_quota=default_quota,
                 )
 
