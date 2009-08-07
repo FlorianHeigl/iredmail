@@ -89,19 +89,20 @@
                         <li class="normal"><a href="{{ctx.homepath}}/admins">{{ _('Admins') }}</a></li>
                     {% endif %}
                     <li class="normal"><a href="{{ctx.homepath}}/users">{{ _('Users') }}</a></li>
-                    <li class="normal"><a href="{{ctx.homepath}}/users">{{ _('Mail Lists') }}</a></li>
-                    <li class="normal"><a href="{{ctx.homepath}}/users">{{ _('Aliases') }}</a></li>
                 </ul>
             </div>
 
             <div id="brd-visit" class="admin-submenu gen-content">
+                <p id="welcome">{% block id_welcome %}{% endblock id_welcome %}</p>
                 <p id="visit-links" class="options">
-                    <span><strong>{{ _('You can create new') }}</strong></span>
+                    <span><strong>{{ _('Create new') }}</strong></span>
                     {% if session.get('domainGlobalAdmin') == 'yes' %}
                         <span><a href="{{ctx.homepath}}/create/domain">Domain</a></span>
                         <span><a href="{{ctx.homepath}}/create/admin">Admin</a></span>
                     {% endif %}
                     <span><a href="{{ctx.homepath}}/create/user/">User</a></span>
+                    <span><a href="{{ctx.homepath}}/create/maillist/">Mail list</a></span>
+                    <span><a href="{{ctx.homepath}}/create/alias/">Alias</a></span>
                 </p>
             </div>
         {% endif %}

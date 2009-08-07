@@ -25,7 +25,7 @@ html, body, /* remove this line if necessary for site integration */
 
 .brd table {
     width: 100%;
-    table-layout: auto;
+    table-layout: fixed;
     empty-cells: show;
     }
 
@@ -1686,17 +1686,15 @@ H - MAIN TABLES
 
 .brd table {
     width: 100%;
-    table-layout: auto;
+    table-layout: fixed;
     empty-cells: show;
     border-spacing: 0;
-    border-style: solid;
-    border-width: 1px;
     line-height: 1.3333em;
     }
 
 .brd table * {
     font-family: "Trebuchet MS", Verdana, Helvetica, Arial, sans-serif;
-    }
+}
 
 .brd td {
     overflow: hidden;
@@ -1893,31 +1891,3 @@ H - MAIN CONTENT - ODDMENTS
 
 .float_left { float: left; display:inline; margin-right: 0.1em; margin-bottom: 0.15em; }
 .float_right { float: right; display:inline; margin-left: 0.1em; margin-bottom: 0.15em; }
-
-.info, .success, .warning, .error, .validation {
-    border: 1px solid;
-    margin: 10px 0px;
-    padding:15px 10px 15px 50px;
-    background-repeat: no-repeat;
-    background-position: 10px center;
-}
-.info {
-    color: #00529B;
-    background-color: #BDE5F8;
-    background-image: url('../images/info.png');
-}
-.success {
-    color: #4F8A10;
-    background-color: #DFF2BF;
-    background-image:url('../images/success.png');
-}
-.warning {
-    color: #9F6000;
-    background-color: #FEEFB3;
-    background-image: url('../images/warning.png');
-}
-.error {
-    color: #D8000C;
-    background-color: #FFBABA;
-    background-image: url('../images/error.png');
-}

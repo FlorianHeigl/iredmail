@@ -13,6 +13,19 @@ $("#user_list").tablesorter( {
 });
 {% endblock jquery_snippets %}
 
+{# Show search form #}
+{% block id_welcome %}
+<span>{{ _('View users under domain:') }} </span>
+<span>
+    <select id="domainSelect" name="domainName" onchange="listAccountsUnderDomain(this, baseurl='{{ctx.homepath}}/users/');">
+        <option value="none" {% if cur_domain is sameas none %}selected{%endif%}>{{ _('Select one domain') }}</option>
+        {% for d in allDomains %}
+            <option value="{{d}}" {% if cur_domain == d %}selected{%endif%}>{{d}}</option>
+        {% endfor %}
+    </select>
+</span>
+{% endblock id_welcome %}
+
 {% block main %}
 {# Show system message #}
 {#
@@ -35,28 +48,6 @@ $("#user_list").tablesorter( {
 {% endif %}
 #}
 
-{# Show search form #}
-<form id="afocus" method="get" action="http://www.iredmail.org/forum/userlist.php">
-    <div class="frm-form">
-        <fieldset class="frm-group">
-            <legend class="group-legend"><strong>{{ _('Mail address') }}</strong></legend>
-            <div class="sf-set">
-                <div class="sf-box text">
-                    <label><span>{{ _('View users under domain:') }} </span></label>
-                    <span class="fld-input">
-                        <select id="domainSelect" name="domainName" onchange="listAccountsUnderDomain(this, baseurl='{{ctx.homepath}}/users/');">
-                            <option value="none" {% if cur_domain is sameas none %}selected{%endif%}>{{ _('Select one domain') }}</option>
-                            {% for d in allDomains %}
-                                <option value="{{d}}" {% if cur_domain == d %}selected{%endif%}>{{d}}</option>
-                            {% endfor %}
-                        </select>
-                    </span>
-                </div>
-            </div>
-        </fieldset>
-    </div>
-</form>
-
 {% if users is defined %}
     {% if showLoginDate is sameas true %}
         {% set time_title = _('Last Login Date') %}
@@ -75,8 +66,8 @@ $("#user_list").tablesorter( {
         <thead>
         <tr>
             <th>{{ _('Name') }}/{{ users |length}}</th>
-            <th>{{ _('Mail') }}</th>
-            <th>{{ _('Mail Quota') }}</th>
+            <th>{{ _('Mail Address') }}</th>
+            <th>{{ _('Quota') }}</th>
             <th>{{ _('Created Date') }}</th>
         </tr>
         </thead>

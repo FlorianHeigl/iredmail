@@ -1,6 +1,5 @@
 {% extends "layout.html" %}
 
-{% from "submenus.html" import submenu_domains %}
 {% from "macros.html" import display_account_status, %}
 
 {% block title %}{{ _('Edit user profile') }}{% endblock %}
@@ -29,8 +28,6 @@
 {% set createTimestamp = entries.get('createTimestamp', ['--------------'])[0] %}
 
 {# Sub-menu #}
-{{ submenu_domains(homepath=ctx.homepath,domain=domain, active='users') }}
-
 <div id="brd-visit" class="gen-content">
     <p><span>{{ _('User profile') }}</span></p>
 </div>

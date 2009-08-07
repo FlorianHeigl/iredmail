@@ -1,6 +1,5 @@
 {% extends "layout.html" %}
 
-{% from "submenus.html" import submenu_domains %}
 {% from "macros.html" import
         display_cn,
         display_max_quota_size,
@@ -15,24 +14,17 @@
 
 {% block title %}{{ _('Edit domain profile.') }}{% endblock %}
 
+{% block id_welcome %}
+<span class="float_right">{{ _('View/Update domain profile:') }} <a href="{{homepath |e}}/profile/domain/{{domain}}">{{domain}}</a></strong></span>
+{% endblock id_welcome %}
+
 {# Domain profile. #}
 {% block main %}
-{# Sub-menu #}
-{{ submenu_domains(homepath=ctx.homepath,domain=domain, active='domain') }}
-
 <div id="brd-visit" class="gen-content">
     <p><span>{{ _('Domain profile.') }}</span></p>
 </div>
-{#
-<div class="admin-submenu gen-content">
-    <ul>
-        <li><strong>{{ _('Domain profile.') }}</strong></li>
-    </ul>
-</div>
-#}
 
 {# Domain profile. #}
-
 {% set p = profile[0] %}
 {% set dn = p[0] %}
 {% set entries = p[1] %}

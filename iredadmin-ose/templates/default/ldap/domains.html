@@ -15,11 +15,11 @@
     });
 {% endblock jquery_snippets %}
 
-{% block main %}
-<div class="main-subhead">
-    <h2 class="hn"><span>{{ _('All mail domains under your control.') }} {{ _('Total: %s.') |format(domains|length) }}</span></h2>
-</div>
+{% block id_welcome %}
+<span>{{ _('All domains under your control.') }} {{ _('Total: %s.') |format(domains|length) }}</span>
+{% endblock id_welcome %}
 
+{% block main %}
 {# Show system message #}
 {#
 {% if msg is not none %}

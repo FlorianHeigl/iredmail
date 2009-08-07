@@ -49,11 +49,11 @@ $("#admin_list").tablesorter( {
 {% endblock %}
 #}
 
-{% block main %}
-<div class="main-subhead">
-    <h2 class="hn"><span>{{ _('All mail administrators.') }} {{ _('Total: %s.') |format(admins |length) }}</span></h2>
-</div>
+{% block id_welcome %}
+<span>{{ _('All mail administrators.') }} {{ _('Total: %s.') |format(admins |length) }}</span>
+{% endblock id_welcome %}
 
+{% block main %}
 {# Show system message #}
 {#
 {% if msg is defined %}
