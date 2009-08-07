@@ -51,6 +51,13 @@
             $(".success").show().fadeOut(1500);
             {% block jquery_snippets %}{% endblock jquery_snippets %}
         });
+
+        function listAccountsUnderDomain(domain, baseurl) {
+            d = $('#domainSelect').val();
+            if ( d != 'none' ) {
+                location.href = baseurl + d;
+            }
+        }
     </script>
     {% endblock jquery_docoment_ready %}
 
@@ -62,6 +69,11 @@
 
             {# Header #}
             <div id="brd-head" class="gen-content">
+                <p class="options">
+                    <span>{{ _("Logged in as <strong>%s</strong>." |format(session.get('username'))) }}</span>
+                    <span><a href="{{ctx.homepath}}/preferences">{{ _('Preferences') }}</a></span>
+                    <span><a href="{{ctx.homepath}}/logout">{{ _('Logout') }}</a></span>
+                </p>
                 {# Preferences #}
                 <p id="brd-title"><a href="{{ctx.homepath}}/">iRedAdmin</a></p>
                 <p id="brd-desc">{{_('iRedMail Management') }}</p>
@@ -76,15 +88,13 @@
                     {% if session.get('domainGlobalAdmin') == 'yes' %}
                         <li class="normal"><a href="{{ctx.homepath}}/admins">{{ _('Admins') }}</a></li>
                     {% endif %}
-                    <li><a href="{{ctx.homepath}}/preferences">{{ _('Preferences') }}</a></li>
-                    <li><a href="{{ctx.homepath}}/logout">{{ _('Logout') }}</a></li>
+                    <li class="normal"><a href="{{ctx.homepath}}/users">{{ _('Users') }}</a></li>
+                    <li class="normal"><a href="{{ctx.homepath}}/users">{{ _('Mail Lists') }}</a></li>
+                    <li class="normal"><a href="{{ctx.homepath}}/users">{{ _('Aliases') }}</a></li>
                 </ul>
             </div>
 
             <div id="brd-visit" class="admin-submenu gen-content">
-                <p id="welcome">
-                    <span>{{ _("Logged in as <strong>%s</strong>." |format(session.get('username'))) }}</span>
-                </p>
                 <p id="visit-links" class="options">
                     <span><strong>{{ _('You can create new') }}</strong></span>
                     {% if session.get('domainGlobalAdmin') == 'yes' %}

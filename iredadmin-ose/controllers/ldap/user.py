@@ -24,14 +24,26 @@ class list(dbinit):
         pass
 
     @base.protected
-    def GET(self, domain=None):
+    def GET(self, domain=''):
         domain = web.safestr(domain.split('/')[0])
+
+        result = domainLib.list(attrs=['domainName'])
+        allDomains = []
+        for d in result:
+            if d[1].has_key('domainName'):
+                allDomains += d[1].get('domainName')
+
         if domain is '' or domain is None:
-            web.seeother('/domains?msg=NO_SUCH_DOMAIN')
+            return render.users(allDomains=allDomains)
 
         users = userLib.list(domain=domain)
         if users is not False:
-            return render.users(users=users, domain=domain, msg=None)
+            return render.users(
+                    users=users, cur_domain=domain,
+                    allDomains=allDomains,
+                    showLoginDate=eval(cfg.general.get('show_login_date', False)),
+                    msg=None,
+                    )
         else:
             web.seeother('/domains?msg=NO_SUCH_DOMAIN')
 

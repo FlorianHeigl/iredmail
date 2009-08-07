@@ -19,7 +19,16 @@
 # * List all accounts:
 #   - /domains
 #   - /admins
-#   - /example.com/{accountType}
+#
+# * Show a search form for user to choose domain.
+#   - /users
+#   - /maillists
+#   - /aliases
+#
+# * List all accounts under single domain.
+#   - /users/{domain}
+#   - /maillists/{domain}
+#   - /aliases/{domain}
 #
 # * View & Update account profile:
 #   - /profile/{accountType}/{account}
@@ -54,7 +63,8 @@ urls = (
 
         # User related.
         # /domain.ltd/users
-        '/(.*\..*)/users',                  'controllers.ldap.user.list',
+        '/users',                           'controllers.ldap.user.list',
+        '/users/(.*\..*)',                  'controllers.ldap.user.list',
         '/profile/user/(.*@.*\..*)',        'controllers.ldap.user.profile',
         '/create/user/(.*\..*)',            'controllers.ldap.user.create',
         '/create/user',                     'controllers.ldap.user.create',

@@ -1,7 +1,8 @@
+{# users, cur_domain, allDomains, showLoginDate, msg #}
+
 {% extends "layout.html" %}
 
 {% from "macros.html" import set_account_status_img %}
-{% from "submenus.html" import submenu_domains %}
 
 {% block title %}{{ _('Mail users') }}{% endblock %}
 
@@ -13,9 +14,6 @@ $("#user_list").tablesorter( {
 {% endblock jquery_snippets %}
 
 {% block main %}
-{# Sub-menu #}
-{{ submenu_domains(homepath=ctx.homepath,domain=domain, active='users') }}
-
 {# Show system message #}
 {#
 {% if msg is defined and msg is not none %}
@@ -37,49 +35,80 @@ $("#user_list").tablesorter( {
 {% endif %}
 #}
 
-{# List all users. #}
-<div class="main-frm">
-<form name="list_table" id="list_table" action="{{ctx.homepath}}/delete/user" method="post">
-<input type="hidden" name="domain" value="{{ domain }}" />
-<table id="user_list" class="full tablesorter headerSortUp">
-    {# Table header. #}
-    <thead>
-    <tr>
-        <th>{{ _('Name') }}/{{ users |length}}</th>
-        <th>{{ _('Mail') }}</th>
-        <th>{{ _('Mail Quota') }}</th>
-        <th>{{ _('Created Date') }}</th>
-    </tr>
-    </thead>
-
-    {# List user attributes/avalues. #}
-    <tbody>
-    {% if users is not string or users |length != 0 %}
-        {% for i in users %}
-            {% set entries = i[1] %}
-            {#{% set cn = entries.get('cn', [''])[0].decode('utf-8') %}#}
-            {% set mail = entries.get('mail')[0] |string %}
-            {# If not present, mark as 'disabled'. #}
-            {% set accountStatus = entries.get('accountStatus', ['disabled'])[0] %} 
-            {% set createTimestamp = entries.get('createTimestamp', ['--------------'])[0] %}
-
-            <tr class="{{ loop.cycle('odd', 'even') }} {{ accountStatus |lower }}">
-                <td>
-                    <span class="float_left">
-                        <a href="{{ctx.homepath}}/profile/user/{{mail}}" title="{{ _('Edit user profile.') }}">{{ entries.get('cn', [''])[0].decode('utf-8') }}</a>
+{# Show search form #}
+<form id="afocus" method="get" action="http://www.iredmail.org/forum/userlist.php">
+    <div class="frm-form">
+        <fieldset class="frm-group">
+            <legend class="group-legend"><strong>{{ _('Mail address') }}</strong></legend>
+            <div class="sf-set">
+                <div class="sf-box text">
+                    <label><span>{{ _('View users under domain:') }} </span></label>
+                    <span class="fld-input">
+                        <select id="domainSelect" name="domainName" onchange="listAccountsUnderDomain(this, {{ctx.homepath}}/users/)">
+                            <option value="none" {% if cur_domain is sameas none %}selected{%endif%}>{{ _('Select one domain') }}</option>
+                            {% for d in allDomains %}
+                                <option value="{{d}}" {% if cur_domain == d %}selected{%endif%}>{{d}}</option>
+                            {% endfor %}
+                        </select>
                     </span>
-                    <span class="float_right">{{ set_account_status_img(accountStatus) }}</span>
-                </td>
-                <td><a href="mailto:{{mail}}" title="{{ _('Send mail to %s.') |format(mail) }}">{{ mail }}</a></td>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</form>
 
-            {# mail quota #}
-            <td>{{ entries.get('mailQuota', [0])[0] |filesizeformat }}</td>
+{% if users is defined %}
+    {% if showLoginDate is sameas true %}
+        {% set time_title = _('Last Login Date') %}
+        {% set time_var = 'lastLoginDate' %}
+    {% else %}
+        {% set time_title = _('Created Date') %}
+        {% set time_var = 'createTimeStamp' %}
+    {% endif %}
 
-            <td>{{createTimestamp[:4]}}-{{createTimestamp[4:6]}}-{{createTimestamp[6:8]}} {{createTimestamp[8:10]}}:{{createTimestamp[10:12]}}:{{createTimestamp[12:14]}}</td>
+    {# List all users. #}
+    <div class="main-frm">
+    <form name="list_table" id="list_table" action="{{ctx.homepath}}/delete/user" method="post">
+    <input type="hidden" name="domain" value="{{ cur_domain }}" />
+    <table id="user_list" class="full tablesorter headerSortUp">
+        {# Table header. #}
+        <thead>
+        <tr>
+            <th>{{ _('Name') }}/{{ users |length}}</th>
+            <th>{{ _('Mail') }}</th>
+            <th>{{ _('Mail Quota') }}</th>
+            <th>{{ _('Created Date') }}</th>
         </tr>
-    {% endfor %}
-    </tbody>
-</table>
+        </thead>
+
+        {# List user attributes/avalues. #}
+        <tbody>
+        {% if users is not string or users |length != 0 %}
+            {% for i in users %}
+                {% set entries = i[1] %}
+                {#{% set cn = entries.get('cn', [''])[0].decode('utf-8') %}#}
+                {% set mail = entries.get('mail')[0] |string %}
+                {# If not present, mark as 'disabled'. #}
+                {% set accountStatus = entries.get('accountStatus', ['disabled'])[0] %} 
+                {% set createTimestamp = entries.get('createTimestamp', ['--------------'])[0] %}
+
+                <tr class="{{ loop.cycle('odd', 'even') }} {{ accountStatus |lower }}">
+                    <td>
+                        <span class="float_left">
+                            <a href="{{ctx.homepath}}/profile/user/{{mail}}" title="{{ _('Edit user profile.') }}">{{ entries.get('cn', [''])[0].decode('utf-8') }}</a>
+                        </span>
+                        <span class="float_right">{{ set_account_status_img(accountStatus) }}</span>
+                    </td>
+                    <td><a href="mailto:{{mail}}" title="{{ _('Send mail to %s.') |format(mail) }}">{{ mail }}</a></td>
+
+                {# mail quota #}
+                <td>{{ entries.get('mailQuota', [0])[0] |filesizeformat }}</td>
+
+                <td>{{createTimestamp[:4]}}-{{createTimestamp[4:6]}}-{{createTimestamp[6:8]}} {{createTimestamp[8:10]}}:{{createTimestamp[10:12]}}:{{createTimestamp[12:14]}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
     <div class="frm-buttons">
         <span class="submit">
