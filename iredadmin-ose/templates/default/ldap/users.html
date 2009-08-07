@@ -38,17 +38,14 @@ $("#user_list").tablesorter( {
 #}
 
 {# List all users. #}
-<div> {# id="main-content" class="main-pagepost gen-content">#}
+<div class="main-frm">
 <form name="list_table" id="list_table" action="{{ctx.homepath}}/delete/user" method="post">
 <input type="hidden" name="domain" value="{{ domain }}" />
 <table id="user_list" class="full tablesorter headerSortUp">
     {# Table header. #}
     <thead>
     <tr>
-        <th>
-            <input type="checkbox" name="checkall" id="checkall" />
-            {{ _('Name') }}/{{ users |length}}
-        </th>
+        <th>{{ _('Name') }}/{{ users |length}}</th>
         <th>{{ _('Mail') }}</th>
         <th>{{ _('Mail Quota') }}</th>
         <th>{{ _('Created Date') }}</th>

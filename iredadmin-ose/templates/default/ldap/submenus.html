@@ -1,13 +1,11 @@
 {% macro submenu_domains(homepath, domain, active) -%}
-    <div id="brd-crumbs-top" class="crumbs gen-content">
-        <p class="float_right">
+    <div class="main-subhead">
+        <h2 class="hn">
             {# Edit domain profile #}
-            <span class="crumb {% if active == 'domain' %}crumblast{%endif%}">{{ _('View/Update domain profile:') }} <a href="{{homepath |e}}/profile/domain/{{domain}}" title="{{ _('Edit domain profile.') }}">{{domain}}</a></strong></span>
-        </p>
+            <span class="float_right">{{ _('View/Update domain profile:') }} <a href="{{homepath |e}}/profile/domain/{{domain}}" title="{{ _('Edit domain profile.') }}">{{domain}}</a></strong></span>
 
-        <p class="float_left">
             {# List all mail users #}
-            <span>{{ _('List all mail accounts:') }} </span><span class="crumb {% if active == 'users' %}crumblast{%endif%}"><a href="{{homepath|e}}/{{domain|e}}/users" title="{{ _('List all mail users under domain: %s.') |format(domain) }}">{{ _('Users') }}</a></span>
-        </p>
+            <span>{{ _('List all mail accounts under domain <strong>%s</strong>:') |format(domain) }} </span><span class="{% if active == 'users' %}active{%endif%}"><a href="{{homepath|e}}/{{domain|e}}/users" title="{{ _('List all mail users under domain: %s.') |format(domain) }}">{{ _('Users') }}</a></span>
+        </h2>
     </div>
 {%- endmacro %}

@@ -50,8 +50,8 @@ $("#admin_list").tablesorter( {
 #}
 
 {% block main %}
-<div id="brd-crumbs-top" class="crumbs gen-content">
-    <p><span class="crumblast">{{ _('All mail administrators.') }} {{ _('Total: %s.') |format(admins |length) }}</span></p>
+<div class="main-subhead">
+    <h2 class="hn"><span>{{ _('All mail administrators.') }} {{ _('Total: %s.') |format(admins |length) }}</span></h2>
 </div>
 
 {# Show system message #}
@@ -80,7 +80,7 @@ $("#admin_list").tablesorter( {
         <table id="admin_list" class="full tablesorter headerSortUp">
         <thead>
         <tr>
-            <th><input type="checkbox" name="checkall" id="checkall" />{{ _('Name') }}</th>
+            <th>{{ _('Name') }}</th>
             <th>{{ _('Mail') }}</th>
             <th>{{ _('Global Admin') }}</th>
         </tr>

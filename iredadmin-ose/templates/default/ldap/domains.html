@@ -16,8 +16,8 @@
 {% endblock jquery_snippets %}
 
 {% block main %}
-<div id="brd-crumbs-top" class="crumbs gen-content">
-    <p><span class="crumblast">{{ _('All mail domains under your control.') }} {{ _('Total: %s.') |format(domains|length) }}</span></p>
+<div class="main-subhead">
+    <h2 class="hn"><span>{{ _('All mail domains under your control.') }} {{ _('Total: %s.') |format(domains|length) }}</span></h2>
 </div>
 
 {# Show system message #}

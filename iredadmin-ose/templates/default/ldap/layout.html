@@ -57,60 +57,61 @@
 </head>
 <body>
     <div id="brd-wrap" class="brd">
-            {% if session.get('username') is not none %}
+    <div id="brd-message" class="brd-page basic-page">
+        {% if session.get('username') is not none %}
 
-                {# Header #}
-                <div id="brd-head" class="gen-content">
-                    {# Preferences #}
-                    <p id="brd-title"><a href="{{ctx.homepath}}/">iRedAdmin</a></p>
-                    <p id="brd-desc">{{_('iRedMail Management') }}</p>
-                </div>
+            {# Header #}
+            <div id="brd-head" class="gen-content">
+                {# Preferences #}
+                <p id="brd-title"><a href="{{ctx.homepath}}/">iRedAdmin</a></p>
+                <p id="brd-desc">{{_('iRedMail Management') }}</p>
+            </div>
 
-                {# Main navigation #}
-                <div class="admin-menu gen-content">
-                    <ul>
-                        <li class="normal first-item"><a href="{{ctx.homepath}}/dashboard"><span>{{ _('Dashboard') }}</span></a></li>
-                        <li class="normal"><a href="{{ctx.homepath}}/domains"><span>{{ _('Mail Domains') }}</span></a></li>
-                        {# Display extra menus for global admin. #}
-                        {% if session.get('domainGlobalAdmin') == 'yes' %}
-                            <li class="normal"><a href="{{ctx.homepath}}/admins"><span>{{ _('Admins') }}</span></a></li>
-                        {% endif %}
-                        <li class="normal"><a href="{{ctx.homepath}}/preferences">{{ _('Preferences') }}</a></li>
-                        <li class="normal"><a href="{{ctx.homepath}}/logout">{{ _('Logout') }}</a></li>
-                    </ul>
-                </div>
+            {# Main navigation #}
+            <div id="brd-navlinks" class="gen-content">
+                <ul>
+                    <li><a href="{{ctx.homepath}}/dashboard">{{ _('Dashboard') }}</a></li>
+                    <li><a href="{{ctx.homepath}}/domains">{{ _('Mail Domains') }}</a></li>
+                    {# Display extra menus for global admin. #}
+                    {% if session.get('domainGlobalAdmin') == 'yes' %}
+                        <li class="normal"><a href="{{ctx.homepath}}/admins">{{ _('Admins') }}</a></li>
+                    {% endif %}
+                    <li><a href="{{ctx.homepath}}/preferences">{{ _('Preferences') }}</a></li>
+                    <li><a href="{{ctx.homepath}}/logout">{{ _('Logout') }}</a></li>
+                </ul>
+            </div>
 
-                <div id="brd-visit" class="admin-submenu gen-content">
-                    <p id="welcome"><span class="float_right">{{ _("Logged in as <strong>%s</strong>." |format(session.get('username'))) }}</span></p>
-                    <p id="visit-links" class="options">
-                        <span><strong>{{ _('You can create new') }}</strong></span>
-                        {% if session.get('domainGlobalAdmin') == 'yes' %}
-                            <span><a href="{{ctx.homepath}}/create/domain">Domain</a></span>
-                            <span>&bull;</span><span<a href="{{ctx.homepath}}/create/admin">Admin</a></span>
-                            <span>&bull;</span>
-                        {% endif %}
-                        <span><a href="{{ctx.homepath}}/create/user/">User</a></span>
-                        <span>&bull;</span><span><a href="{{ctx.homepath}}/create/maillist/">Mail list</a></span>
-                        <span>&bull;</span><span><a href="{{ctx.homepath}}/create/alias/">Alias</a></span>
-                    </p>
-                </div>
+            <div id="brd-visit" class="admin-submenu gen-content">
+                <p id="welcome">
+                    <span>{{ _("Logged in as <strong>%s</strong>." |format(session.get('username'))) }}</span>
+                </p>
+                <p id="visit-links" class="options">
+                    <span><strong>{{ _('You can create new') }}</strong></span>
+                    {% if session.get('domainGlobalAdmin') == 'yes' %}
+                        <span><a href="{{ctx.homepath}}/create/domain">Domain</a></span>
+                        <span><a href="{{ctx.homepath}}/create/admin">Admin</a></span>
+                    {% endif %}
+                    <span><a href="{{ctx.homepath}}/create/user/">User</a></span>
+                </p>
+            </div>
+        {% endif %}
+
+        <div id="main" class="main-content">
+            {% block main %}{% endblock main %}
+        </div>
+
+        {% block footer %}
+        <div id="main-foot" class="gen-content">
+            &copy 2009
+            | <a href="http://code.google.com/p/iredmail/">iRedMail Project</a>
+            {% if session.get('domainGlobalAdmin') == 'yes' %}
+                | <a href="mailto:michaelbibby@gmail.com">{{ _('Get support') }}</a>
+            {% else %}
+                | <a href="mailto:{{session.get('webmaster')}}">{{ _('Get support') }}</a>
             {% endif %}
-
-            <div id="main" class="main-content">
-                {% block main %}{% endblock main %}
-            </div>
-
-            {% block footer %}
-            <div id="main-foot" class="gen-content">
-                &copy 2009
-                | <a href="http://code.google.com/p/iredmail/">iRedMail Project</a>
-                {% if session.get('domainGlobalAdmin') == 'yes' %}
-                    | <a href="mailto:michaelbibby@gmail.com">{{ _('Get support') }}</a>
-                {% else %}
-                    | <a href="mailto:{{session.get('webmaster')}}">{{ _('Get support') }}</a>
-                {% endif %}
-            </div>
-            {% endblock footer %}
+        </div>
+        {% endblock footer %}
+    </div>
     </div>
 </body>
 </html>

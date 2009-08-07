@@ -7,9 +7,8 @@
 {% block title %}{{ _('Preferences') }}{% endblock %}
 
 {% block main %}
-{# Sub-menu #}
-<div id="brd-crumbs-top" class="crumbs gen-content">
-    <p><span class="crumblast">{{ _('View/Update your preferences (%s).') |format(session.get('username')) }}</span>
+<div class="main-subhead">
+    <h2 class="hn"><span>{{ _('View/Update your preferences (%s).') |format(session.get('username')) }}</span></h2>
 </div>
 
 {% if msg is not none %}
