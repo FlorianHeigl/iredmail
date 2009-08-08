@@ -57,28 +57,5 @@ class User(core.LDAPWrap):
 
         return self.user_profile
 
-    def add(self, domain, userList, passwd, quota):
-        domain = str(domain)
-        domainDN = iredutils.convDomainToDN(domain)
-        quota = int(quota)
-
-        msg = None
-
-        for user in userList.split():
-            user = iredutils.removeSpaceAndDot(user).lower()
-            dn = 'mail=%s,ou=Users,%s' % (
-                    user +'@'+ domain,
-                    domainDN,
-                    )
-            ldif = iredldif.ldif_mailuser(domain, user, passwd, quota)
-
-            try:
-                result = self.conn.add_s(dn, ldif)
-                msg = 'ADDED_SUCCESS'
-            except ldap.ALREADY_EXISTS:
-                msg = 'ALREADY_EXISTS'
-            except ldap.LDAPError, e:
-                msg = str(e)
-
-        return msg
-
+    def add(self, dn, ldif):
+        print >> sys.stderr, 'dn:', dn, '\nldif:', ldif

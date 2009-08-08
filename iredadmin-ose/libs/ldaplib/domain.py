@@ -69,26 +69,7 @@ class Domain(core.LDAPWrap):
 
     # List all domains.
     def list(self, attrs=attrs.DOMAIN_SEARCH_ATTRS):
-        admin = session.get('username', None)
-        if admin is None: return False
-
-        # Check whether admin is a site wide admin.
-        if session.get('domainGlobalAdmin') == 'yes':
-            filter = '(objectClass=mailDomain)'
-        else:
-            filter = '(&(objectClass=mailDomain)(domainAdmin=%s))' % (admin)
-
-        # List all domains under control.
-        try:
-            self.domains = self.conn.search_s(
-                    self.basedn,
-                    ldap.SCOPE_ONELEVEL,
-                    filter,
-                    attrs,
-                    )
-            return self.domains
-        except Exception, e:
-            return str(e)
+        return core.get_all_domains(attrs)
 
     # Delete domain.
     def delete(self, domainName=[]):

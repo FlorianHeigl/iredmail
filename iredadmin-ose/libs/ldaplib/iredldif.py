@@ -111,7 +111,6 @@ def ldif_mailuser(domain, username, cn, passwd, quota=cfg.general.get('default_q
         ('mail',                [mail]),
         ('userPassword',        [str(passwd)]),
         ('mailQuota',           [str(quota)]),
-        ('cn',                  [username]),
         ('sn',                  [username]),
         ('uid',                 [username]),
         ('storageBaseDirectory', [STORAGE_BASE_DIRECTORY]),
@@ -125,6 +124,7 @@ def ldif_mailuser(domain, username, cn, passwd, quota=cfg.general.get('default_q
         ('memberOfGroup',       ['all@'+domain]), # Make all users belong to group 'all@domain.ltd'.
         ]
 
-    #return dn, ldif
-    return ldif
+    if cn is not None and cn != '':
+        ldif += [('cn', [cn.encode('utf-8')])]
 
+    return ldif

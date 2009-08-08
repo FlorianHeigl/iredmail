@@ -23,7 +23,7 @@
         <div class="sf-set">
             <div class="sf-box text">
                 <label><span>{{ _('Mail address') }}</span></label>
-                <span class="fld-input"><input type="text" name="mail" size="25" />@
+                <span class="fld-input"><input type="text" name="username" size="25" />@
                     <select name="domainName">
                         {% for domain in domains %}
                             <option value="{{domain}}" {% if domain == domainName %}selected{%endif%}>{{domain}}</option>

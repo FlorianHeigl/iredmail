@@ -27,14 +27,9 @@ class list(dbinit):
     def GET(self, domain=''):
         domain = web.safestr(domain.split('/')[0])
 
-        result = domainLib.list(attrs=['domainName'])
-        allDomains = []
-        for d in result:
-            if d[1].has_key('domainName'):
-                allDomains += d[1].get('domainName')
-        allDomains.sort()
+        allDomains = domainLib.list()
 
-        if domain is '' or domain is None:
+        if domain == '' or domain is None:
             return render.users(allDomains=allDomains)
 
         users = userLib.list(domain=domain)
@@ -137,12 +132,7 @@ class create(dbinit):
         else:
             domainName = web.safestr(domainName)
 
-        self.domains = domainLib.list(attrs=['domainName'])
-        allDomains = []
-        for d in self.domains:
-            if d[1].has_key('domainName'):
-                allDomains += d[1].get('domainName')
-        allDomains.sort()
+        allDomains = domainLib.list()
 
         default_quota = cfg.general.get('default_quota', 1024)
         return render.user_create(
