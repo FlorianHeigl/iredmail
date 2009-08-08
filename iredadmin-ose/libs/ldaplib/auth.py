@@ -4,7 +4,7 @@
 # Author: Zhang Huangbin <michaelbibby (at) gmail.com>
 
 import web
-import ldap
+import ldap, ldap.filter
 
 cfg = web.iredconfig
 
@@ -20,7 +20,7 @@ def Auth(dn, pw, session=web.config.get('_session')):
             except ldap.LDAPError, e:
                 return e
 
-        dn = web.safestr(dn.strip())
+        dn = ldap.filter.escape_filter_chars(web.safestr(dn.strip()))
         pw = pw.strip()
 
         try:
