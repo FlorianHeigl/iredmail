@@ -27,6 +27,9 @@ amavisd_dkim()
 \$signed_header_fields{'received'} = 0;
 \$signed_header_fields{'to'} = 1;
 
+# Make sure it sings all inbound mails, avoid error log like this:
+# 'dkim: not signing inbound mail'.
+\$originating = 1;
 
 # Add dkim_key here.
 dkim_key("${FIRST_DOMAIN}", "${AMAVISD_DKIM_SELECTOR}", "${pem_file}");
