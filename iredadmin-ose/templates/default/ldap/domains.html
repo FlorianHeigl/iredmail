@@ -1,10 +1,6 @@
 {% extends "layout.html" %}
 
-{% from "macros.html" import set_account_status_img,
-        display_max_number,
-        display_max_quota_size,
-        display_current_quota_size,
-        %}
+{% from "macros.html" import set_account_status_img, %}
 
 {% block title %}{{ _('Mail domains') }}{% endblock %}
 
@@ -49,7 +45,6 @@
         <thead>
         <tr>
             <th>{{ _('Domain Name') }}</th>
-            <th>{{ _('Quota') }}</th>
             <th>{{ _('Users') }}</th>
         </tr>
         </thead>
@@ -72,10 +67,9 @@
                     </span>
                     <span class="float_right">{{ set_account_status_img(accountStatus) }}</span>
                 </td>
-                <td>{{ display_current_quota_size( entries.get('domainCurrentQuotaSize', [0])[0] |string ) }}/{{ display_max_quota_size( entries.get('domainMaxQuotaSize', [0])[0] |string ) }}</td>
 
                 {# Mail user count #}
-                <td><a href="{{ctx.homepath}}/users/{{domain}}" title="{{ _('List all mail users.') }}">{{ entries.get('domainCurrentUserNumber', [0])[0] }}/{{ display_max_number( entries.get('domainMaxUserNumber', [0])[0] |string ) }}</a></td>
+                <td><a href="{{ctx.homepath}}/users/{{domain}}" title="{{ _('List all mail users.') }}">{{ entries.get('domainCurrentUserNumber', [0])[0] }}</a></td>
             </tr>
         {% endfor %}
         </tbody>

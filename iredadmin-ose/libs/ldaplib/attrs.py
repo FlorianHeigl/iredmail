@@ -43,9 +43,7 @@ DEFAULT_GROUPS = ['Users', 'Groups', 'Aliases',]    # Don't list unicode str her
 
 DOMAIN_SEARCH_ATTRS = [
         # Normal attributes.
-        'domainName', 'accountStatus',
-        'domainMaxQuotaSize', 'domainCurrentQuotaSize',
-        'domainMaxUserNumber', 'domainCurrentUserNumber',
+        'domainName', 'accountStatus', 'domainCurrentUserNumber',
         # Internal/System attributes.
         'createTimestamp',
         ]

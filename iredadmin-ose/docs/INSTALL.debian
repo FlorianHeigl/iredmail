@@ -67,39 +67,9 @@ Required components:
     - Copy example config file:
 
         $ cd /usr/share/apache2/iRedAdmin-x.y.z/config/
-        $ cp iredconf.py.example iredconf.py
-        $ cp ldapconf.py.example ldapconf.py
+        $ cp settings.ini.sample settings.ini
 
-    - Edit iredconf.py to set several variables:
-
-        # ----
-        ADMIN = 'Zhang Huangbin <michaelbibby@gmail.com>'
-
-        # MySQL configure.
-        DB_SERVER_ADDR = 'localhost'
-        DB_SERVER_PORT = 3306
-
-        # Session relate config.
-        SESSION_DB_DBN = 'mysql'        # Database type: mysql.
-        SESSION_DB_NAME = 'iredadmin'   # Database name.
-        SESSION_DB_USER = 'iredadmin'   # Database user.
-        SESSION_DB_PASSWD = 'secret_passwd'    # Database password.
-        SESSION_DB_TABLE_SESSION = 'sessions'
-        # ----
-
-    - Edit ldapconf.py to set several variables:
-
-        # ----
-        LDAP_SERVER_URI = 'ldap://127.0.0.1:389/'
-        LDAP_USE_TLS = 'NO'     # Values: YES, NO.
-        LDAP_SUFFIX = 'dc=iredmail,dc=org'
-
-        # Bind.
-        LDAP_BIND_DN = 'cn=vmailadmin,' + LDAP_SUFFIX
-        LDAP_BIND_PW = 'passwd'
-        # ----
-
-    Done.
+    - Edit settings.ini and set several variables:
 
 *) Visit below url in your web browser for test:
 

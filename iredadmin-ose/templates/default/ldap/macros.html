@@ -41,21 +41,6 @@
     </fieldset>
 {%- endmacro %}
 
-{# Used to display domainMaxXXXNumber #}
-{% macro display_max_number(value) -%}
-    {% if value == '0' %}{{ _('Unlimited') }}{%else%}{{value}}{%endif%}
-{%- endmacro %}
-
-{# Used to display domainMaxQuotaSize #}
-{% macro display_max_quota_size(value) -%}
-    {% if value == '0' %}{{ _('Unlimited') }}{%else%}{{value |filesizeformat }}{%endif%}
-{%- endmacro %}
-
-{# Used to display domainCurrentQuotaSize #}
-{% macro display_current_quota_size(value) -%}
-    {% if value == '0' %}-{%else%}{{value |filesizeformat }}{%endif%}
-{%- endmacro %}
-
 {# Display accountStatus #}
 {% macro display_account_status(accountStatus) %}
     <fieldset class="frm-group">
