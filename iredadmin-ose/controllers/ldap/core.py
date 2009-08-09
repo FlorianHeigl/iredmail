@@ -26,10 +26,6 @@ class login:
         i = web.input()
 
         username = web.safestr(i.get('username').strip())
-
-        # TODO Username validater: must be a validate email address.
-        # ',' is not allowed in username due to LDAP dn format.
-
         password = i.get('password').strip()
         save_pass = web.safestr(i.get('save_pass', 'no').strip())
 

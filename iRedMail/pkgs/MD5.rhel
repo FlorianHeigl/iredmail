@@ -84,5 +84,5 @@ d45f23a6bc32e3097c2680b951237760  pkgs/clamav-db-0.95.2-4.el5.rf.i386.rpm
 1adc33bacb73be1c1e84697a3fe58082  pkgs/clamd-0.95.2-4.el5.rf.i386.rpm
 3d32bbd0e5c91ecd048342b2e51bbec6  pkgs/clamd-0.95.2-4.el5.rf.x86_64.rpm
 c5354087e0e55153880572353e6bffc3  pkgs/awstats-6.9-2.el5.rf.noarch.rpm
-899b0dee1b718675484b200ea289070c  pkgs/dovecot-1.1.17-0_94.el5.i386.rpm
-354aa01d33419f614938660c3b0f5faf  pkgs/dovecot-1.1.17-0_94.el5.x86_64.rpm
+cece2e86226ad864f99335fe6f17dd9d  pkgs/dovecot-1.1.18-1_95.el5.i386.rpm
+854ac2a01d89cbd072cd0432842c9ed0  pkgs/dovecot-1.1.18-1_95.el5.x86_64.rpm
