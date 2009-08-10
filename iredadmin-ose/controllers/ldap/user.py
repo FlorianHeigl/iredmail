@@ -7,9 +7,9 @@ import sys
 import web
 from web import render
 from web import iredconfig as cfg
-from controllers import base
+from controllers.ldap import base
 from controllers.ldap.core import dbinit
-from libs.ldaplib import domain, user, iredutils
+from libs.ldaplib import domain, user, iredldif, iredutils
 
 session = web.config.get('_session')
 
@@ -58,7 +58,7 @@ class list(dbinit):
             if action == 'add':
                 username = i.get('username', None)
                 password = web.safestr(i.get('password', ''))
-                quota = web.safestr(i.get('quota', cfg.general.get(default_quota)))
+                quota = web.safestr(i.get('quota', cfg.general.get('default_quota', '1024')))
 
                 if username is not None:
                     result = self.dbwrap.user_add(
@@ -132,19 +132,59 @@ class create(dbinit):
         else:
             domainName = web.safestr(domainName)
 
-        allDomains = domainLib.list()
-
-        default_quota = cfg.general.get('default_quota', 1024)
+        default_quota = cfg.general.get('default_quota', '1024')
         return render.user_create(
                 domainName=domainName,
-                domains=allDomains,
+                domains=domainLib.list(),
                 default_quota=default_quota,
                 )
 
-        return render.user_create(domainName=domainName, domains=domains)
-
     @base.protected
-    def POST(self, domain):
-        i = web.input(enabledService=[])
-        mod_attrs = iredutils.get_mod_attrs(accountType='user', data=i)
-        web.seeother('/domains')
+    def POST(self):
+        i = web.input()
+
+        # Get domain name, username, cn.
+        domain = i.get('domainName', None)
+        username = i.get('username', None)
+        cn = i.get('cn', None)
+        quota = i.get('quota', cfg.general.get('default_quota', '1024'))
+
+        # Check password.
+        newpw = web.safestr(i.get('newpw'))
+        confirmpw = web.safestr(i.get('confirmpw'))
+        if len(newpw) > 0 and len(confirmpw) > 0 and newpw == confirmpw:
+            passwd = newpw
+        elif domain is None or username is None:
+            return render.user_create(
+                    domainName=domain,
+                    allDomains=domainLib.list(),
+                    )
+
+        ldif = iredldif.ldif_mailuser(
+                domain=web.safestr(domain),
+                username=web.safestr(username),
+                cn=cn,
+                passwd=passwd,
+                quota=quota,)
+        dn = iredutils.convEmailToUserDN(username + '@' + domain)
+        result = userLib.add(dn, ldif)
+        if result is True:
+            web.seeother('/users/' + domain)
+        elif result == 'ALREADY_EXISTS':
+            web.seeother('/users/' + domain + '?msg=ALREADY_EXISTS')
+        else:
+            web.seeother('/users/' + domain)
+
+class delete(dbinit):
+    @base.protected
+    def POST(self):
+        i = web.input(mail=[])
+        domain = i.get('domain', None)
+        if domain is None:
+            web.seeother('/users?msg=NO_DOMAIN')
+
+        mails = i.get('mail', [])
+        for mail in mails:
+            dn = ldap.filter.escape_filter_chars(iredutils.convEmailToUserDN(mail))
+        print >> sys.stderr, i 
+        web.seeother('/users/' + web.safestr(domain))

@@ -69,7 +69,7 @@ class Domain(core.LDAPWrap):
 
     # List all domains.
     def list(self, attrs=attrs.DOMAIN_SEARCH_ATTRS):
-        return core.get_all_domains(attrs)
+        return self.get_all_domains(attrs)
 
     # Delete domain.
     def delete(self, domainName=[]):

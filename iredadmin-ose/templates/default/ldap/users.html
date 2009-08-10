@@ -20,7 +20,7 @@ $("#user_list").tablesorter( {
     <select id="domainSelect" name="domainName" onchange="listAccountsUnderDomain(this, baseurl='{{ctx.homepath}}/users/');">
         <option value="none" {% if cur_domain is sameas none %}selected{%endif%}>{{ _('Select one domain') }}</option>
         {% for d in allDomains %}
-            <option value="{{d}}" {% if cur_domain == d %}selected{%endif%}>{{d}}</option>
+            <option value="{{d[1].domainName[0]}}" {% if cur_domain == d[1].domainName[0] %}selected{%endif%}>{{d[1].domainName[0]}}</option>
         {% endfor %}
     </select>
 </span>
@@ -103,8 +103,8 @@ $("#user_list").tablesorter( {
 
     <div class="frm-buttons">
         <span class="submit">
-            <input type="checkbox" name="checkall" id="checkall" />{{ _('Select all') }}
-            <input type="submit" name="save" value="{{ _('Delete') }}" onclick="return confirm('{{ _('Are you sure want to delete selected group(s)?') }}');" }}" />
+            <input type="checkbox" id="checkall" />{{ _('Select all') }}
+            <input type="submit" value="{{ _('Delete') }}" onclick="return confirm('{{ _('Are you sure want to delete selected group(s)?') }}');" }}" />
         </span>
     </div>
     {%endif%}

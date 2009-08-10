@@ -4,7 +4,7 @@
 # Author: Zhang Huangbin <michaelbibby (at) gmail.com>
 
 import sys
-import ldap
+import ldap, ldap.filter
 import web
 from libs.ldaplib import core, attrs, iredutils
 
@@ -58,4 +58,10 @@ class User(core.LDAPWrap):
         return self.user_profile
 
     def add(self, dn, ldif):
-        print >> sys.stderr, 'dn:', dn, '\nldif:', ldif
+        try:
+            self.conn.add_s(ldap.filter.escape_filter_chars(dn), ldif,)
+            return True
+        except ldap.ALREADY_EXISTS:
+            return 'ALREADY_EXISTS'
+        except Exception, e:
+            return str(e)

@@ -5,6 +5,7 @@
 
 import time
 from web import iredconfig as cfg
+from libs.ldaplib import iredutils
 
 # Define and return LDIF structure of domain.
 def ldif_maildomain(domainName, cn=None,
@@ -74,14 +75,14 @@ def ldif_mailadmin(admin, passwd, domainGlobalAdmin):
 def ldif_mailuser(domain, username, cn, passwd, quota=cfg.general.get('default_quota')):
     DATE = time.strftime('%Y.%m.%d.%H.%M.%S')
     domain = str(domain)
-    quota = int(quota)
-    username = removeSpaceAndDot(str(username))
+    quota = int(quota) * 1024 * 1024
+    username = iredutils.removeSpaceAndDot(str(username))
     mail = username.lower() + '@' + domain
     #dn = convEmailToUserDN(mail)
 
-    if HASHED_MAILDIR is True:
+    if eval(cfg.general.get('hashed_maildir', True)) is True:
         # Hashed. Length of domain name are always >= 2.
-        maildir_domain = "%s/%s/%s-%s/" % (domain[:1], domain[:2], domain, DATE,)
+        maildir_domain = "%s/%s/%s/" % (domain[:1], domain[:2], domain,)
         if len(username) >= 3:
             maildir_user = "%s/%s/%s/%s-%s/" % (username[:1], username[:2], username[:3], username, DATE,)
         elif len(username) == 2:
@@ -104,7 +105,7 @@ def ldif_mailuser(domain, username, cn, passwd, quota=cfg.general.get('default_q
     else:
         mailMessageStore = "%s/%s-%s/" % (domain, username, DATE,)
 
-    homeDirectory = STORAGE_BASE_DIRECTORY + '/' + mailMessageStore
+    homeDirectory = cfg.general.get('storage_base_directory') + '/' + mailMessageStore
 
     ldif = [
         ('objectCLass',         ['inetOrgPerson', 'mailUser', 'shadowAccount']),

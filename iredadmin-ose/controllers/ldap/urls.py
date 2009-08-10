@@ -36,7 +36,7 @@
 
 urls = (
         # Make url ending with or without '/' going to the same class.
-        '/(.*)/',                       'controllers.base.redirect',
+        '/(.*)/',                           'controllers.ldap.base.redirect',
 
         # used to display jpegPhoto.
         '/img/(.*)',                        'controllers.ldap.utils.img',
@@ -53,13 +53,13 @@ urls = (
         '/domains',                         'controllers.ldap.domain.list',
         '/profile/domain/(.*\..*)',         'controllers.ldap.domain.profile',
         '/create/domain',                   'controllers.ldap.domain.create',
-        '/delete/(domain)/(.*\..*)',        'controllers.ldap.domain.delete',
+        '/delete/domain',                   'controllers.ldap.domain.delete',
 
         # Admin related.
         '/admins',                          'controllers.ldap.admin.list',
         '/profile/admin/(.*@.*\..*)',       'controllers.ldap.admin.profile',
         '/create/admin',                    'controllers.ldap.admin.create',
-        '/delete/(admin)/(.*@.*\..*)',      'controllers.ldap.admin.delete',
+        '/delete/admin',                    'controllers.ldap.admin.delete',
 
         # User related.
         # /domain.ltd/users
@@ -68,5 +68,5 @@ urls = (
         '/profile/user/(.*@.*\..*)',        'controllers.ldap.user.profile',
         '/create/user/(.*\..*)',            'controllers.ldap.user.create',
         '/create/user',                     'controllers.ldap.user.create',
-        '/delete/(user)/(.*@.*\..*)',       'controllers.ldap.user.delete',
+        '/delete/user',                     'controllers.ldap.user.delete',
         )

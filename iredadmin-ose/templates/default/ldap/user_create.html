@@ -26,7 +26,7 @@
                 <span class="fld-input"><input type="text" name="username" size="25" />@
                     <select name="domainName">
                         {% for domain in domains %}
-                            <option value="{{domain}}" {% if domain == domainName %}selected{%endif%}>{{domain}}</option>
+                            <option value="{{domain[1].domainName[0]}}" {% if domain[1].domainName[0] == domainName %}selected{%endif%}>{{domain[1].domainName[0]}}</option>
                         {% endfor %}
                     </select>
                 </span>

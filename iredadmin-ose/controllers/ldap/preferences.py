@@ -6,7 +6,7 @@
 import sys
 import web
 from web import render
-from controllers import base
+from controllers.ldap import base
 from controllers.ldap.core import dbinit
 from libs.ldaplib import preferences
 

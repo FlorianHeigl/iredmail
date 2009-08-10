@@ -5,7 +5,7 @@
 
 import web, sys
 from libs.ldaplib import core, auth, domain, iredutils
-from controllers import base
+from controllers.ldap import base
 
 session = web.config.get('_session')
 render = web.render
