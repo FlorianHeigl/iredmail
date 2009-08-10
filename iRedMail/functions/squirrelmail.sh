@@ -37,11 +37,6 @@ EOF
     sed -i 's#\(</VirtualHost>\)#Alias /squirrelmail '${HTTPD_SERVERROOT}/squirrelmail/'\n\1#' ${HTTPD_SSL_CONF}
     sed -i 's#\(</VirtualHost>\)#Alias /squirrel '${HTTPD_SERVERROOT}/squirrelmail/'\n\1#' ${HTTPD_SSL_CONF}
 
-    cat >> ${HTTPD_CONF_DIR}/squirrelmail.conf <<EOF
-Alias /squirrel "${HTTPD_SERVERROOT}/squirrelmail/"
-Alias /squirrelmail "${HTTPD_SERVERROOT}/squirrelmail/"
-EOF
-
     if [ X"${USE_RCM}" != X"YES" ]; then
         cat >> ${HTTPD_CONF_DIR}/squirrelmail.conf <<EOF
 Alias /mail "${HTTPD_SERVERROOT}/squirrelmail/"
