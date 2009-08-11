@@ -1,5 +1,5 @@
 [general]
-# Version.
+# Version number of iRedAdmin-OSE, don't touch it.
 version = 0.1
 
 # Site admin's mail address.

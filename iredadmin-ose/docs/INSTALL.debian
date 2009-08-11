@@ -71,6 +71,30 @@ Required components:
 
     - Edit settings.ini and set several variables:
 
+        [general]
+        admin = michaelbibby@gmail.com
+        debug = False
+        lang = en_US
+        backend = ldap
+        storage_base_directory = /var/vmail/vmail01
+
+        [iredadmin]
+        dbn = mysql
+        host = localhost
+        port = 3306
+        db = iredadmin
+        user = iredadmin
+        passwd = secret_passwd
+        db_table_session = sessions
+
+        [ldap]
+        uri = ldap://127.0.0.1:389
+        suffix = dc=iredmail,dc=org
+        basedn = o=domains,dc=iredmail,dc=org
+        domainadmin_dn = o=domainAdmins,dc=iredmail,dc=org
+        bind_dn = cn=vmailadmin,dc=iredmail,dc=org
+        bind_pw = passwd
+
 *) Visit below url in your web browser for test:
 
     http://your_server_ip_address/iredadmin/
