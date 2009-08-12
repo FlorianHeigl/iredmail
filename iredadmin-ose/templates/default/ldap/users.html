@@ -76,6 +76,7 @@ $("#user_list").tablesorter( {
                 <tr class="{{ loop.cycle('odd', 'even') }} {{ accountStatus |lower }}">
                     <td>
                         <span class="float_left">
+                            <input type="checkbox" name="mail" value="{{mail}}" />
                             <a href="{{ctx.homepath}}/profile/user/{{mail}}" title="{{ _('Edit user profile.') }}">{{ entries.get('cn', [''])[0].decode('utf-8') }}</a>
                         </span>
                         <span class="float_right">{{ set_account_status_img(accountStatus) }}</span>
