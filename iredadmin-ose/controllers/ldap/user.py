@@ -37,7 +37,6 @@ class list(dbinit):
             return render.users(
                     users=users, cur_domain=domain,
                     allDomains=allDomains,
-                    showLoginDate=eval(cfg.general.get('show_login_date', False)),
                     msg=None,
                     )
         else:
