@@ -62,6 +62,10 @@ domainadmin_dn = o=domainAdmins,dc=iredmail,dc=org
 bind_dn = cn=vmailadmin,dc=iredmail,dc=org
 bind_pw = passwd
 
+# Default password scheme: SSHA, PLAIN.
+# SSHA is recommended.
+default_pw_scheme = SSHA
+
 # Size limit.
 sizelimit = 500
 

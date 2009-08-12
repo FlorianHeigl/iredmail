@@ -153,7 +153,7 @@ class create(dbinit):
         newpw = web.safestr(i.get('newpw'))
         confirmpw = web.safestr(i.get('confirmpw'))
         if len(newpw) > 0 and len(confirmpw) > 0 and newpw == confirmpw:
-            passwd = newpw
+            passwd = iredutils.generatePasswd(newpw, pwscheme=cfg.general.get('default_pw_scheme', 'SSHA'))
         elif domain is None or username is None:
             return render.user_create(
                     domainName=domain,

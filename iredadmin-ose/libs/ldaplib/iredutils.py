@@ -3,7 +3,8 @@
 
 # Author: Zhang Huangbin <michaelbibby (at) gmail.com>
 
-import sys
+import os, sys
+from base64 import b64encode
 import web
 import ldap
 from libs.ldaplib import attrs
@@ -121,3 +122,26 @@ def get_mod_attrs(accountType, data):
             pass
     else:
         pass
+
+# Generate hashed password from plain text.
+def generatePasswd(password, pwscheme='SSHA'):
+    pwscheme = pwscheme.upper()
+    salt = os.urandom(8)
+    if sys.version_info[1] < 5: # Python 2.5
+        import sha
+        if pwscheme == 'SSHA':
+            h = sha.new(password)
+            h.update(salt)
+            hash = "{SSHA}" + b64encode( h.digest() + salt )
+        else:
+            hash = password
+    else:
+        import hashlib
+        if pwscheme == 'SSHA':
+            h = hashlib.sha1(password)
+            h.update(salt)
+            hash = "{SSHA}" + b64encode( h.digest() + salt )
+        else:
+            hash = password
+
+    return hash

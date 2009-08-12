@@ -131,9 +131,10 @@ def ldif_mailuser(domain, username, passwd, cn, quota, groups=''):
     dn = convEmailToUserDN(mail)
 
     # Get group list.
-    groups = groups.split(':')
-    for i, g in enumerate(groups[:]): 
-        groups[i] = g + '@' + domain
+    if groups.strip() != '':
+        groups = groups.strip().split(':')
+        for i in range(len(groups)):
+            groups[i] = groups[i] + '@' + domain
 
     if HASHED_MAILDIR is True:
         # Hashed. Length of domain name are always >= 2.
