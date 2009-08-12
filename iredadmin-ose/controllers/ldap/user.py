@@ -43,7 +43,7 @@ class list(dbinit):
             web.seeother('/domains?msg=NO_SUCH_DOMAIN')
 
     @base.protected
-    def POST(self):
+    def POST(self, domain):
         i = web.input(_unicode=False, mail=[])
         mails = i.mail
         result = userLib.delete(mails=mails)
