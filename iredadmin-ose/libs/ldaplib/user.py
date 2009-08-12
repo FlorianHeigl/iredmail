@@ -6,7 +6,7 @@
 import sys
 import ldap, ldap.filter
 import web
-from libs.ldaplib import core, attrs, iredutils
+from libs.ldaplib import core, attrs, iredutils, deltree
 
 session = web.config.get('_session')
 
@@ -65,3 +65,18 @@ class User(core.LDAPWrap):
             return 'ALREADY_EXISTS'
         except Exception, e:
             return str(e)
+
+    def delete(self, mails=[]):
+        if mails is None or len(mails) == 0: return False
+
+        msg = {}
+        for mail in mails:
+            dn = iredutils.convEmailToUserDN(mail)
+
+            try:
+                deltree.DelTree( self.conn, dn, ldap.SCOPE_SUBTREE )
+            except ldap.LDAPError, e:
+                msg[mail] = str(e)
+
+        if msg == {}: return True
+        else: return False

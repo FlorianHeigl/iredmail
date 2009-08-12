@@ -45,45 +45,10 @@ class list(dbinit):
 
     @base.protected
     def POST(self):
-        i = web.input(dn=[])
-
-        action = web.safestr(i.get('action', None))
-        domain = i.get('domain', None)
-
-        msg = ''
-
-        if domain is not None:
-            domain = web.safestr(domain)
-            domainDN = iredutils.convDomainToDN(domain)
-            if action == 'add':
-                username = i.get('username', None)
-                password = web.safestr(i.get('password', ''))
-                quota = web.safestr(i.get('quota', cfg.general.get('default_quota', '1024')))
-
-                if username is not None:
-                    result = self.dbwrap.user_add(
-                            domain=domain,
-                            userList=web.safestr(username),
-                            passwd=password,
-                            quota=int(quota),
-                            )
-                    msg = result
-                else:
-                    msg = 'NO_SUCH_USER'
-            elif action == 'delete':
-                dn = i.get('dn', None)
-
-                if dn is not None:
-                    result = self.dbwrap.delete_dn(dn)
-                    msg = result
-                else:
-                    msg = 'NO_SUCH_USER'
-            else:
-                msg = None
-
-            web.seeother('/user/list/' + web.safestr(domain))
-        else:
-            web.seeother('/domains?msg=NO_SUCH_DOMAIN')
+        i = web.input(_unicode=False, mail=[])
+        mails = i.mail
+        result = userLib.delete(mails=mails)
+        web.seeother('/users/' + str(domain))
 
 class profile(dbinit):
     @base.protected
@@ -100,27 +65,6 @@ class profile(dbinit):
                 return render.user_profile(user_profile=profile)
             else:
                 web.seeother('/domains')
-        else:
-            web.seeother('/domains')
-
-    @base.protected
-    def POST(self):
-        i = web.input()
-        web.seeother('/user/list/a.cn')
-
-class delete(dbinit):
-    @base.protected
-    def GET(self, username):
-        web.seeother('/domains')
-
-    @base.protected
-    def POST(self, dn=[]):
-        i = web.input(dn=[])
-        dn = i.get('dn', None)
-        domain = web.safestr(i.get('domain', None))
-        result = self.dbwrap.delete_dn(dnlist=dn)
-        if result:
-            web.seeother('/' + domain + '/users')
         else:
             web.seeother('/domains')
 

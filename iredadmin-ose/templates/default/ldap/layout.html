@@ -98,11 +98,9 @@
                     <span><strong>{{ _('Create new') }}</strong></span>
                     {% if session.get('domainGlobalAdmin') == 'yes' %}
                         <span><a href="{{ctx.homepath}}/create/domain">Domain</a></span>
-                        <span><a href="{{ctx.homepath}}/create/admin">Admin</a></span>
+                        {#<span><a href="{{ctx.homepath}}/create/admin">Admin</a></span>#}
                     {% endif %}
                     <span><a href="{{ctx.homepath}}/create/user/">User</a></span>
-                    <span><a href="{{ctx.homepath}}/create/maillist/">Mail list</a></span>
-                    <span><a href="{{ctx.homepath}}/create/alias/">Alias</a></span>
                 </p>
             </div>
         {% endif %}

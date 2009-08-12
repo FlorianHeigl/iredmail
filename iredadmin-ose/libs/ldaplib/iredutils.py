@@ -7,6 +7,7 @@ import os, sys
 from base64 import b64encode
 import web
 import ldap
+from ldap.filter import escape_filter_chars
 from libs.ldaplib import attrs
 
 cfg = web.iredconfig
@@ -28,7 +29,7 @@ def convEmailToAdminDN(email):
     # mail=user@domain.ltd,[LDAP_DOMAINADMIN_DN]
     dn = '%s=%s,%s' % ( attrs.USER_RDN, email, domainadmin_dn)
 
-    return dn
+    return escape_filter_chars(dn)
 
 def convEmailToUserDN(email):
     """Convert email address to ldap dn of normail mail user."""
@@ -45,14 +46,14 @@ def convEmailToUserDN(email):
             attrs.DOMAIN_RDN, domain,
             basedn)
 
-    return dn
+    return escape_filter_chars(dn)
 
 def convDomainToDN(domain):
     """Convert domain name to ldap dn."""
     domain = str(domain).strip().replace(' ', '')
     dn = attrs.DOMAIN_RDN + '=' + domain + ',' + basedn
 
-    return dn
+    return escape_filter_chars(dn)
 
 def extractValueFromDN(dn, attr):
     """Extract value of attribute from dn string."""

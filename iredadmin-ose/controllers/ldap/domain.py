@@ -11,8 +11,6 @@ from controllers.ldap import base
 from controllers.ldap.core import dbinit
 from libs.ldaplib import core, admin, domain, iredutils
 
-__all__ = ['list', 'create', 'delete', 'edit', ]
-
 session = web.config.get('_session')
 
 adminLib = admin.Admin()
