@@ -114,7 +114,7 @@ def ldif_mailuser(domain, username, cn, passwd, quota=cfg.general.get('default_q
         ('mailQuota',           [str(quota)]),
         ('sn',                  [username]),
         ('uid',                 [username]),
-        ('storageBaseDirectory', [STORAGE_BASE_DIRECTORY]),
+        ('storageBaseDirectory', [cfg.general.get('storage_base_directory')]),
         ('mailMessageStore',    [mailMessageStore]),
         ('homeDirectory',       [homeDirectory]),
         ('accountStatus',       ['active']),
