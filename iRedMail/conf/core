@@ -222,25 +222,25 @@ hash_domain()
     domain="$( echo $1 | tr [A-Z] [a-z] )"
 
     # Different domain style: hashed, normal.
-    if [ X"${MAILDIR_STYLE}" == X"hashed" ]; then
-        length="$(echo ${domain} | wc -L)"
-        str1="$(echo ${domain} | cut -c1)"
-        str2="$(echo ${domain} | cut -c2)"
+    #if [ X"${MAILDIR_STYLE}" == X"hashed" ]; then
+    #    length="$(echo ${domain} | wc -L)"
+    #    str1="$(echo ${domain} | cut -c1)"
+    #    str2="$(echo ${domain} | cut -c2)"
 
-        if [ X"${length}" == X"1" ]; then
-            str2="${str1}"
-        elif [ X"${length}" == X"2" ]; then
-            str2="${str2}"
-        else
-            :
-        fi
+    #    if [ X"${length}" == X"1" ]; then
+    #        str2="${str1}"
+    #    elif [ X"${length}" == X"2" ]; then
+    #        str2="${str2}"
+    #    else
+    #        :
+    #    fi
 
         # Use mbox, will be changed later.
-        domain="${str1}/${str1}${str2}/${domain}"
-    else
+    #    domain="${str1}/${str1}${str2}/${domain}"
+    #else
         # Use mbox, will be changed later.
-        domain="${domain}"
-    fi
+    #    domain="${domain}"
+    #fi
 
     echo ${domain}
 }
