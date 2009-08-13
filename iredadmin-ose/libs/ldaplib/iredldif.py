@@ -80,9 +80,10 @@ def ldif_mailuser(domain, username, cn, passwd, quota=cfg.general.get('default_q
     mail = username.lower() + '@' + domain
     #dn = convEmailToUserDN(mail)
 
+    maildir_domain = str(domain).lower()
     if eval(cfg.general.get('hashed_maildir', True)) is True:
         # Hashed. Length of domain name are always >= 2.
-        maildir_domain = "%s/%s/%s/" % (domain[:1], domain[:2], domain,)
+        #maildir_domain = "%s/%s/%s/" % (domain[:1], domain[:2], domain,)
         if len(username) >= 3:
             maildir_user = "%s/%s/%s/%s-%s/" % (username[:1], username[:2], username[:3], username, DATE,)
         elif len(username) == 2:
