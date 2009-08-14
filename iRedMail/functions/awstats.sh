@@ -127,7 +127,7 @@ Awstats:
         - ${AWSTATS_CONF_MAIL}
         - ${AWSTATS_HTTPD_CONF}
     * Login account:
-        - Username: ${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}, password: ${DOMAIN_ADMIN_PASSWD}
+        - Username: ${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}, password: ${DOMAIN_ADMIN_PASSWD_PLAIN}
     * URL:
         - https://${HOSTNAME}/awstats/awstats.pl
         - https://${HOSTNAME}/awstats/awstats.pl?config=${HOSTNAME}
