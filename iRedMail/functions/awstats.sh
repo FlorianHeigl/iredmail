@@ -68,13 +68,8 @@ EOF
     AuthBasicAuthoritative Off
     AuthUserFile /dev/null
 
-    # MySQL server, username, password.
-    Auth_MySQL_Host ${MYSQL_SERVER}
-    Auth_MySQL_User ${MYSQL_BIND_USER}
-    Auth_MySQL_Password ${MYSQL_BIND_PW}
 
     # Database related.
-    AuthMySQL_DB ${VMAIL_DB}
     AuthMySQL_Password_Table admin
     Auth_MySQL_Username_Field username
     Auth_MySQL_Password_Field password
@@ -83,6 +78,13 @@ EOF
     AuthMySQL_Empty_Passwords off
     AuthMySQL_Encryption_Types Crypt_MD5
     Auth_MySQL_Authoritative On
+EOF
+
+    cat >> ${HTTPD_CONF} <<EOF
+# MySQL auth (libapache2-mod-auth-apache2).
+# Global config of MySQL server, username, password.
+Auth_MySQL_Info ${MYSQL_SERVER} ${MYSQL_BIND_USER} ${MYSQL_BIND_PW}
+Auth_MySQL_General_DB ${VMAIL_DB}
 EOF
         else
             :

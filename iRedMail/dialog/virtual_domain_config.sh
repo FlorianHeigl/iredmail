@@ -63,6 +63,7 @@ Warning:
     [ X"${DOMAIN_ADMIN_PASSWD}" != X"" ] && break
 done
 
+export DOMAIN_ADMIN_PASSWD_PLAIN="${DOMAIN_ADMIN_PASSWD}"
 echo "export DOMAIN_ADMIN_PASSWD_PLAIN='${DOMAIN_ADMIN_PASSWD}'" >> ${CONFIG_FILE}
 echo "export DOMAIN_ADMIN_PASSWD='${DOMAIN_ADMIN_PASSWD}'" >> ${CONFIG_FILE}
 rm -f /tmp/first_domain_admin_passwd
