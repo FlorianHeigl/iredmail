@@ -252,7 +252,7 @@ WebMail(Roundcubemail):
         - http://${HOSTNAME}/mail/
         - http://${HOSTNAME}/webmail/
     * Login account:
-        - Username: ${FIRST_USER}@${FIRST_DOMAIN}, password: ${FIRST_USER_PASSWD}
+        - Username: ${FIRST_USER}@${FIRST_DOMAIN}, password: ${FIRST_USER_PASSWD_PLAIN}
     * See also:
         - ${HTTPD_CONF_DIR}/roundcubemail.conf
 
