@@ -110,6 +110,7 @@ Warning:
     [ X"${FIRST_USER_PASSWD}" != X"" ] && break
 done
 
+export FIRST_USER_PASSWD_PLAIN="${FIRST_USER_PASSWD}"
 echo "export FIRST_USER_PASSWD='${FIRST_USER_PASSWD}'" >>${CONFIG_FILE}
 rm -f /tmp/first_user_passwd
 
