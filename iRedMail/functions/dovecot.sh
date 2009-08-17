@@ -197,6 +197,11 @@ plugin {
     auth_socket_path = ${DOVECOT_SOCKET_MASTER}
 }
 
+# Per-user sieve mail filter.
+plugin {
+    # For maildir format.
+    sieve = ${SIEVE_DIR}/%Ld/%Ln/${SIEVE_RULE_FILENAME}
+}
 EOF
     elif [ X"${MAILBOX_FORMAT}" == X"mbox" ]; then
         cat >> ${DOVECOT_CONF} <<EOF
@@ -222,8 +227,8 @@ plugin {
     #quota_rule3 = Junk:ignore
 }
 
+# Per-user sieve mail filter.
 plugin {
-    # NOTE: %variable expansion works only with Dovecot v1.0.2+.
     # For mbox format.
     sieve = ${SIEVE_DIR}/%Ld/.%Ln${SIEVE_RULE_FILENAME}
 }
