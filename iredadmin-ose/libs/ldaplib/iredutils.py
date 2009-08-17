@@ -19,8 +19,8 @@ domainadmin_dn = cfg.ldap['domainadmin_dn']
 def convEmailToAdminDN(email):
     """Convert email address to ldap dn of mail domain admin."""
     email = str(email).strip()
-    if len(email.split('@')) == 2:
-        user, domain = email.split('@')
+    if len(email.split('@', 1)) == 2:
+        user, domain = email.split('@', 1)
     else:
         return False
 
@@ -34,8 +34,8 @@ def convEmailToAdminDN(email):
 def convEmailToUserDN(email):
     """Convert email address to ldap dn of normail mail user."""
     email = str(email).strip()
-    if len(email.split('@')) == 2:
-        user, domain = email.split('@')
+    if len(email.split('@', 1)) == 2:
+        user, domain = email.split('@', 1)
     else:
         return False
 

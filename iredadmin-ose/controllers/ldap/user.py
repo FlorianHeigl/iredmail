@@ -25,7 +25,7 @@ class list(dbinit):
 
     @base.protected
     def GET(self, domain=''):
-        domain = web.safestr(domain.split('/')[0])
+        domain = web.safestr(domain.split('/', 1)[0])
 
         allDomains = domainLib.list()
 
@@ -55,8 +55,8 @@ class profile(dbinit):
         #i = web.input()
         email = web.safestr(email)
 
-        if len(email.split('@')) == 2:
-            domain = email.split('@')[1]
+        if len(email.split('@', 1)) == 2:
+            domain = email.split('@', 1)[1]
             userdn = iredutils.convEmailToUserDN(email)
 
             if userdn:

@@ -35,8 +35,8 @@ mtaTransport = dovecot
 dbn = mysql
 host = localhost
 port = 3306
-db = iredadmin
-user = iredadmin
+db = iredadmin_ose
+user = iredadmin_ose
 passwd = secret_passwd
 db_table_session = sessions
 
