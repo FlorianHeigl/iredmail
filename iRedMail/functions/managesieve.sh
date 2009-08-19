@@ -118,7 +118,7 @@ protocol managesieve {
 
     # Specifies the location of the symbolic link pointing to the
     # active script in the sieve storage directory.
-    sieve = ${SIEVE_RULE_FILENAME}
+    sieve = ${SIEVE_DIR}/%Ld/%Ln/${SIEVE_RULE_FILENAME}
 
     # This specifies the path to the directory where the uploaded scripts are stored.
     sieve_storage = ${SIEVE_DIR}/%Ld/%Ln/

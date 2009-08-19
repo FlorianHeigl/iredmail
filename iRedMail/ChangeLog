@@ -1,5 +1,6 @@
 iRedMail-0.5.1:
-    * Fix per-user sieve setting in dovecot. Thanks Emidio Reggiani @forum.
+    * Fix per-user sieve setting in dovecot. Thanks Emidio Reggiani
+      and Caliban @forum.
 
 iRedMail-0.5.0:
     * Fix mod_auth_mysql config issue on Ubuntu.
