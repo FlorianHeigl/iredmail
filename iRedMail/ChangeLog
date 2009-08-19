@@ -1,4 +1,5 @@
 iRedMail-0.5.1:
+    * Add missing service control in postfix ldap lookup table.
     * Fix per-user sieve setting in dovecot. Thanks Emidio Reggiani
       and Caliban @forum.
 
