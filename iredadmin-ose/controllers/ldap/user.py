@@ -89,6 +89,13 @@ class create(dbinit):
         # Get domain name, username, cn.
         domain = i.get('domainName', None)
         username = i.get('username', None)
+
+        if domain is None or username is None:
+            return render.user_create(
+                    domainName=domain,
+                    allDomains=domainLib.list(),
+                    )
+
         cn = i.get('cn', None)
         quota = i.get('quota', cfg.general.get('default_quota', '1024'))
 
@@ -97,10 +104,11 @@ class create(dbinit):
         confirmpw = web.safestr(i.get('confirmpw'))
         if len(newpw) > 0 and len(confirmpw) > 0 and newpw == confirmpw:
             passwd = iredutils.generatePasswd(newpw, pwscheme=cfg.general.get('default_pw_scheme', 'SSHA'))
-        elif domain is None or username is None:
+        else:
             return render.user_create(
                     domainName=domain,
                     allDomains=domainLib.list(),
+                    msg='PW_ERROR',
                     )
 
         ldif = iredldif.ldif_mailuser(
