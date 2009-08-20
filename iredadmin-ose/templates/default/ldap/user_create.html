@@ -1,3 +1,4 @@
+{# allDomains, domainName, [username, newpw, confirmpw, ] #}
 {% extends "layout.html" %}
 
 {% from "macros.html" import display_cn, display_reset_password,
@@ -21,11 +22,11 @@
     <fieldset class="frm-group group1">
         <legend class="group-legend"><strong>{{ _('Mail address') }}</strong></legend>
         <div class="sf-set set1">
-            <div class="sf-box text">
-                <label><span>{{ _('Mail address') }}</span></label>
-                <span class="fld-input"><input type="text" name="username" size="25" />@
+            <div class="sf-box text required">
+                <label><span>{{ _('Mail address') }} <em>{{ _('(Required)') }}</em></span></label>
+                <span class="fld-input"><input type="text" size="25" name="username" value="{{username}}" />@
                     <select name="domainName">
-                        {% for domain in domains %}
+                        {% for domain in allDomains %}
                             <option value="{{domain[1].domainName[0]}}" {% if domain[1].domainName[0] == domainName %}selected{%endif%}>{{domain[1].domainName[0]}}</option>
                         {% endfor %}
                     </select>
@@ -34,7 +35,7 @@
         </div>
     </fieldset>
 
-    {{ display_cn(accountType='user') }}
+    {{ display_cn(value=cn, accountType='user') }}
 
     {{ display_quota(default_quota) }}
 

@@ -78,8 +78,8 @@ class create(dbinit):
         default_quota = cfg.general.get('default_quota', '1024')
         return render.user_create(
                 domainName=domainName,
-                domains=domainLib.list(),
-                default_quota=default_quota,
+                allDomains=domainLib.list(),
+                default_quota=session.get('default_quota'),
                 )
 
     @base.protected
@@ -97,7 +97,7 @@ class create(dbinit):
                     )
 
         cn = i.get('cn', None)
-        quota = i.get('quota', cfg.general.get('default_quota', '1024'))
+        quota = i.get('quota', session.get('default_quota'))
 
         # Check password.
         newpw = web.safestr(i.get('newpw'))
@@ -108,6 +108,8 @@ class create(dbinit):
             return render.user_create(
                     domainName=domain,
                     allDomains=domainLib.list(),
+                    username=username,
+                    cn=cn,
                     msg='PW_ERROR',
                     )
 
@@ -116,7 +118,9 @@ class create(dbinit):
                 username=web.safestr(username),
                 cn=cn,
                 passwd=passwd,
-                quota=quota,)
+                quota=quota,
+                )
+
         dn = iredutils.convEmailToUserDN(username + '@' + domain)
         result = userLib.add(dn, ldif)
         if result is True:
