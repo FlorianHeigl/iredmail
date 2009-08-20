@@ -51,8 +51,9 @@ check_acl()
 {
     #ECHO_INFO "Check advance file system access control ..."
     if [ X"${DISTRO}" != X"RHEL" ]; then
-        tmp_file="/tmp/$(${RANDOM_STRING})"
-        touch ${tmp_file}
+        tmp_dir="/etc/iredmail_testing/$(${RANDOM_STRING})"
+        tmp_file="${tmp_dir}/$(${RANDOM_STRING})"
+        mkdir -p ${tmp_dir} 2>/dev/null && touch ${tmp_file}
         setfacl -m u:bin:--- ${tmp_file} 2>/dev/null
         if [ X"$?" != X"0" ]; then
             ECHO_ERROR "Your system doesn't support advance file system access control list (acl). Please setup acl support in /etc/fstab before we go further."
@@ -66,7 +67,7 @@ Reference:
   http://code.google.com/p/iredmail/wiki/Installation_on_Debian#Install_necessary_packages
 
 EOF
-            rm -f ${tmp_file}
+            rm -rf ${tmp_dir}
             exit 255
         else
             rm -f ${tmp_file}
