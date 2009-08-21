@@ -6,10 +6,15 @@
 
 {# User profile. #}
 
+{# Show profile categories #}
+{% block id_welcome %}
+<span><a href="#">General</a>&nbsp;</span>
+<span><a href="#">Reset password</a>&nbsp;</span>
+{% endblock id_welcome %}
+
 {% block main %}
 
 {% set user = user_profile[0] %}
-{% set dn = user[0] %}
 {% set entries = user[1] %}
 {% set cn = entries.get('cn', [''])[0].decode('utf-8') %}
 {% set mail = entries.get('mail')[0] %}
@@ -27,11 +32,6 @@
 {% set userSenderBccAddress = entries.get('userSenderBccAddress', [''])[0] %}
 {% set createTimestamp = entries.get('createTimestamp', ['--------------'])[0] %}
 
-{# Sub-menu #}
-<div id="brd-visit" class="gen-content">
-    <p><span>{{ _('User profile') }}</span></p>
-</div>
-
 <form class="frm-form" method="post" method="{{ctx.homepath}}/user/edit">
 <div class="main-content main-frm">
     <div class="profile ct-group data-group vcard">
@@ -41,19 +41,19 @@
                     <li class="useravatar">{% if jpegPhoto |length != 0 %}<img src="{{ctx.homepath}}/img/{{jpegPhoto.encode('base64')}}" width="120" alt="" />{%else%}{{ _('No avatar available.') }}{%endif%}</li>
                 </ul>
                 <ul class="data-list">
-                    <li class="username fn nickname"><span>{{ _('Username:') }} <strong>{{cn}}</strong></span></li>
+                    <li class="username fn nickname"><span>{{ _('Name:') }} <strong>{{cn}}</strong></span></li>
                     <li><span>{{ _('Mail:') }} <strong>{{mail}}</strong></span></li>
                     <li><span>{{ _('Employee ID:') }} <strong>{{employeeNumber}}</strong></span></li>
-                    <li><span>{{ _('Creation date:') }} <strong>{{createTimestamp[:4]}}.{{createTimestamp[4:6]}}.{{createTimestamp[6:8]}} {{createTimestamp[8:10]}}:{{createTimestamp[10:12]}}:{{createTimestamp[12:14]}}</strong></span></li>
+                    <li><span>{{ _('Created:') }} <strong>{{createTimestamp[:4]}}.{{createTimestamp[4:6]}}.{{createTimestamp[6:8]}} {{createTimestamp[8:10]}}:{{createTimestamp[10:12]}}:{{createTimestamp[12:14]}}</strong></span></li>
                 </ul>
             </div>
         </div>
     </div>
 
     {# Modify #}
-        <fieldset class="frm-group">
-            <legend class="group-legend"><strong>{{ _('Username') }}</strong></legend>
-            <div class="sf-set">
+        <fieldset class="frm-group group1">
+            <legend class="group-legend"><strong>{{ _('Name') }}</strong></legend>
+            <div class="sf-set set1">
                 <div class="sf-box text">
                     <label><span>{{ _('Username') }}</span></label>
                     <span class="fld-input"><input type="text" name="cn" value="{{cn}}" size="25" /></span>

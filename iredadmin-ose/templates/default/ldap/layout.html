@@ -92,17 +92,11 @@
                 </ul>
             </div>
 
+            {% block submenu %}
             <div id="brd-visit" class="admin-submenu gen-content">
                 <p id="welcome">{% block id_welcome %}{% endblock id_welcome %}</p>
-                <p id="visit-links" class="options">
-                    <span><strong>{{ _('Create new') }}</strong></span>
-                    {% if session.get('domainGlobalAdmin') == 'yes' %}
-                        <span><a href="{{ctx.homepath}}/create/domain">Domain</a></span>
-                        {#<span><a href="{{ctx.homepath}}/create/admin">Admin</a></span>#}
-                    {% endif %}
-                    <span><a href="{{ctx.homepath}}/create/user/">User</a></span>
-                </p>
             </div>
+            {% endblock submenu %}
         {% endif %}
 
         <div id="main" class="main-content">
