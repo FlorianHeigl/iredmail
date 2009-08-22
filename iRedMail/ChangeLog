@@ -1,4 +1,6 @@
 iRedMail-0.5.1:
+    * Remove 'reject_sender_login_mismatch' from smtpd_sender_restrictions in
+      main.cf of postfix.
     * Remove php-eaccelerator, will abort installation process when php-5.2+
       already installed.
     * Add missing service control in postfix ldap lookup table.
