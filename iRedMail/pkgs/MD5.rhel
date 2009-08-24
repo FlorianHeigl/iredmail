@@ -75,6 +75,7 @@ e3583fdf37d7af599ccb7ad88848b033  pkgs/perl-Archive-Zip-1.26-1.el5.rf.noarch.rpm
 eca8f39262a056562f1001f47d564a88  pkgs/php-pear-db-1.7.13-2.el5.rf.noarch.rpm
 e945270ad46463bb05d1d26f6f814c5e  pkgs/perl-Mail-DKIM-0.36-1.ired.noarch.rpm
 1558ace8b3da6ddbb996437426dece97  pkgs/altermime-0.3.10-1.ired.x86_64.rpm
+4d9c5830b172b89e04683daab532d699  pkgs/altermime-0.3.10-1.ired.i386.rpm
 061d6fcd06b1d6a8e422dfec699a90cc  pkgs/clamav-0.95.2-4.el5.rf.i386.rpm
 739011469eda9a544d364c064a58cc97  pkgs/clamav-0.95.2-4.el5.rf.x86_64.rpm
 d45f23a6bc32e3097c2680b951237760  pkgs/clamav-db-0.95.2-4.el5.rf.i386.rpm
