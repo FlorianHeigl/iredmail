@@ -16,7 +16,7 @@ amavisd_dkim()
 
     ECHO_INFO "Generate DKIM pem files: ${pem_file}." 
     ${AMAVISD_BIN} genrsa ${pem_file} >/dev/null 2>&1
-    if [ X"ACL_AVAILABLE" != X"NO" ]; then
+    if [ X"${ACL_AVAILABLE}" != X"NO" ]; then
         setfacl -m u:${AMAVISD_USER}:r-- ${pem_file}
     else
         chmod +r ${pem_file}
