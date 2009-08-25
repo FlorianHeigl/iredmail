@@ -56,22 +56,9 @@ check_acl()
         mkdir -p ${tmp_dir} 2>/dev/null && touch ${tmp_file}
         setfacl -m u:bin:--- ${tmp_file} 2>/dev/null
         if [ X"$?" != X"0" ]; then
-            ECHO_ERROR "Your system doesn't support advance file system access control list (acl). Please setup acl support in /etc/fstab before we go further."
-            cat <<EOF
-Reference:
-
-* Setup acl on Ubuntu:
-  http://code.google.com/p/iredmail/wiki/Installation_on_Ubuntu#Install_and_configure_necessary_package(s)
-
-* Setup acl on Debian:
-  http://code.google.com/p/iredmail/wiki/Installation_on_Debian#Install_necessary_packages
-
-EOF
-            rm -rf ${tmp_dir}
-            exit 255
-        else
-            rm -f ${tmp_file}
+            export ACL_AVAILABLE='NO'
         fi
+        rm -rf ${tmp_dir}
     else
         :
     fi

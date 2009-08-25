@@ -1,4 +1,5 @@
 iRedMail-0.5.1:
+    * Make file world-readable if ACL is not available.
     * Add per-user alias address support in LDAP backend.
     * Add missing pkg: altermime for RHEL/CentOS (i386). Thanks to
       sdaniel@bbs.
