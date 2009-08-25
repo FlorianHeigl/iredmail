@@ -185,7 +185,6 @@ EOF
 
     # ---- GREYLISTING ----
     perl -pi -e 's#^(GREYLISTING=)(.*)#${1}1#' ${POLICYD_CONF} 
-    #perl -pi -e 's#^(GREYLIST_REJECTION=)(.*)#${1}"Greylist, please try again later."#' ${POLICYD_CONF} 
     perl -pi -e 's#^(TRAINING_MODE=)(.*)#${1}0#' ${POLICYD_CONF} 
     perl -pi -e 's#^(TRIPLET_TIME=)(.*)#${1}5m#' ${POLICYD_CONF} 
     perl -pi -e 's#^(TRIPLET_AUTH_TIMEOUT=)(.*)#${1}7d#' ${POLICYD_CONF} 

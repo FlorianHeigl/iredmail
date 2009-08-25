@@ -50,19 +50,14 @@ check_hostname()
 check_acl()
 {
     #ECHO_INFO "Check advance file system access control ..."
-    if [ X"${DISTRO}" != X"RHEL" ]; then
-        tmp_dir="/etc/iredmail_testing/$(${RANDOM_STRING})"
-        tmp_file="${tmp_dir}/$(${RANDOM_STRING})"
-        mkdir -p ${tmp_dir} 2>/dev/null && touch ${tmp_file}
-        setfacl -m u:bin:--- ${tmp_file} 2>/dev/null
-        if [ X"$?" != X"0" ]; then
-            export ACL_AVAILABLE='NO'
-        fi
-        rm -rf ${tmp_dir}
-    else
-        :
+    tmp_dir="/etc/iredmail_testing/$(${RANDOM_STRING})"
+    tmp_file="${tmp_dir}/$(${RANDOM_STRING})"
+    mkdir -p ${tmp_dir} 2>/dev/null && touch ${tmp_file}
+    setfacl -m u:bin:--- ${tmp_file} 2>/dev/null
+    if [ X"$?" != X"0" ]; then
+        export ACL_AVAILABLE='NO'
     fi
-
+    rm -rf ${tmp_dir}
     unset tmp_file
 }
 
