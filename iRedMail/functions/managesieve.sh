@@ -24,7 +24,7 @@ userdb  = Virtual
 storage = Dovecot
 
 # Bind to what address?  (Ignored with --stdin)
-bindaddr = ${PYSIEVED_BINDADDR}
+#bindaddr = ${PYSIEVED_BINDADDR}
 
 # Listen on what port?  (Ignored with --stdin)
 port    = ${PYSIEVED_PORT}
