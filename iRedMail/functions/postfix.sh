@@ -295,7 +295,7 @@ bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
 search_base     = ${ldap_search_base_user}
 scope           = one
-query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_USER_RDN}=%s)(${LDAP_ATTR_ACCOUNT_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DELIVER}))
+query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(|(${LDAP_ATTR_USER_RDN}=%s)(${LDAP_ATTR_USER_ALIAS_ADDRESS}=%s))(${LDAP_ATTR_ACCOUNT_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DELIVER}))
 result_attribute= mailMessageStore
 debuglevel      = 0
 EOF
