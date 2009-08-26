@@ -162,6 +162,8 @@ ${CONF}
 
 chomp(\$mydomain = "${HOSTNAME}");
 @local_domains_maps = ['${HOSTNAME}', '${FIRST_DOMAIN}'];
+@mynetworks = qw( 127.0.0.0/8 [::1] [FE80::]/10 [FEC0::]/10
+                  10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 )
 
 # Enable virus check.
 @bypass_virus_checks_maps = (
