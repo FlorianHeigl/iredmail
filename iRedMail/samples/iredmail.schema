@@ -203,8 +203,8 @@ attributetype ( 1.3.6.1.4.1.32349.1.2.2.19 NAME 'expiredDate'
     EQUALITY generalizedTimeMatch
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.24
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.2.20 NAME 'aliasAddress'
-    DESC 'Alias address for mail user'
+attributetype ( 1.3.6.1.4.1.32349.1.2.2.20 NAME 'shadowAddress'
+    DESC 'Shadow address for mail user'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{320} )
 
@@ -254,7 +254,7 @@ objectclass ( 1.3.6.1.4.1.32349.1.2.4.3 NAME 'mailUser'
     MAY ( storageBaseDirectory $ mailMessageStore $ homeDirectory $
         userPassword $ mailHost $ mailUID $ mailGID $
         mailQuota $ mailQuotaMessageLimit $
-        mailForwardingAddress $ aliasAddress $ accountStatus $
+        mailForwardingAddress $ shadowAddress $ accountStatus $
         userRecipientBccAddress $ userSenderBccAddress $
         enabledService $ telephoneNumber $ backupMailAddress $
         mtaTransport $ memberOfGroup $ expiredDate $
