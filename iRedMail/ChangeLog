@@ -4,8 +4,6 @@ iRedMail-0.5.1:
     * Add per-user shadow address support in LDAP backend.
     * Add missing pkg: altermime for RHEL/CentOS (i386). Thanks to
       sdaniel@bbs.
-    * Remove 'reject_sender_login_mismatch' from smtpd_sender_restrictions in
-      main.cf of postfix.
     * Remove php-eaccelerator, will abort installation process when php-5.2+
       already installed.
     * Add missing service control in postfix ldap lookup table.
