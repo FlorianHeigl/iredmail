@@ -1,4 +1,5 @@
 iRedMail-0.5.1:
+    * Replace sshd port number in default iptable rule by the current setting.
     * Add @mynetworks in amavisd config for Debian/Ubuntu.
     * Make file world-readable if ACL is not available.
     * Add per-user shadow address support in LDAP backend.

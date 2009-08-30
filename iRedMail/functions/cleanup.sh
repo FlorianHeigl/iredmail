@@ -74,8 +74,19 @@ EOF
 
 replace_iptables_rule()
 {
+    # Get SSH listen port, replace default port number in iptable rule file.
+    sshd_port="$(grep '^Port' ${SSHD_CONFIG} | awk '{print $2}' )"
+    if [ X"${sshd_port}" == X"" -o X"${sshd_port}" == X"22" ]; then
+        # No port number defined, use default (22).
+        export sshd_port='22'
+    else
+        # Replace port number in iptable rule file.
+        perl -pi -e 's#(.*multiport.*)22(.*)#${1}$ENV{sshd_port}${2}#' ${IPTABLES_CONFIG}
+        export sshd_port="${sshd_port}"
+    fi
+
     ECHO_QUESTION "Would you like to use iptables rules shipped within iRedMail now?"
-    ECHO_QUESTION -n "File: ${IPTABLES_CONFIG}. [Y|n]"
+    ECHO_QUESTION -n "File: ${IPTABLES_CONFIG}, with SSHD port: ${sshd_port}. [Y|n]"
     read ANSWER
     case $ANSWER in
         N|n ) ECHO_INFO "Skip iptable rules." ;;
@@ -99,7 +110,7 @@ replace_iptables_rule()
             eval ${enable_service} iptables >/dev/null
 
             # Prompt to restart iptables.
-            ECHO_QUESTION -n "Restart iptables now (with OpenSSH port 22)? [y|N]"
+            ECHO_QUESTION -n "Restart iptables now (with SSHD port ${sshd_port})? [y|N]"
             read ANSWER
             case $ANSWER in
                 Y|y )

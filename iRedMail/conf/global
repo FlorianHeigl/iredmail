@@ -278,6 +278,7 @@ else
     exit 255
 fi
 
+# SSL key.
 export SSL_CERT_FILE="${SSL_FILE_DIR}/certs/iRedMail_CA.pem"
 export SSL_KEY_FILE="${SSL_FILE_DIR}/private/iRedMail.key"
 export TLS_COUNTRY='CN'
@@ -287,3 +288,6 @@ export TLS_COMPANY="${HOSTNAME}"
 export TLS_DEPARTMENT='IT'
 export TLS_HOSTNAME="${HOSTNAME}"
 export TLS_ADMIN="root@${HOSTNAME}"
+
+# location of sshd_config
+export SSHD_CONFIG='/etc/ssh/sshd_config'
