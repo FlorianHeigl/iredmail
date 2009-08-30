@@ -332,7 +332,7 @@ Policyd:
     * Misc:
         - /etc/cron.daily/policyd-cleanup
         - $(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep 'policyd.cron$')
-        - crontab -l ${POLICYD_USER_NAME}
+        - crontab -l -u ${POLICYD_USER_NAME}
 EOF
 
     if [ X"${POLICYD_SEPERATE_LOG}" == X"YES" ]; then
