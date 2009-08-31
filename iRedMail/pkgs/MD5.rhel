@@ -51,7 +51,7 @@ d8f67576d493fc3f814bb7b57d96ee71  pkgs/unrar-3.8.2-1.el5.rf.x86_64.rpm
 37bf80e1e94d257bdcfda4fd3b4a0a41  pkgs/perl-BerkeleyDB-0.36-1.el5.rf.x86_64.rpm
 cb6045d305d3d837b82b92462160f8a9  pkgs/perl-Compress-Raw-Zlib-2.015-1.el5.rf.x86_64.rpm
 49356f67173dc13170e058f8a81c6324  pkgs/perl-Encode-Detect-1.01-1.el5.rf.x86_64.rpm
-116ce62aa19edfadd0e05c5507fccb33  pkgs/postfix-2.5.6-4.ired.x86_64.rpm
+bde7398676b412779369e78367efd6b9  pkgs/postfix-2.5.9-5.ired.x86_64.rpm
 809cac9250aad41e0696313d98fdd212  pkgs/dovecot-sieve-1.1.6-9.el5.x86_64.rpm
 be56f8829bb6d8570dc8228a26574223  pkgs/amavisd-new-2.6.2-2.ired.x86_64.rpm
 e326b2121b87add97262333bebfb3040  pkgs/lzo-1.08-5.el5.rf.x86_64.rpm

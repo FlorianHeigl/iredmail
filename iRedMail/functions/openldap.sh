@@ -251,7 +251,7 @@ index ${LDAP_ATTR_DOMAIN_SENDER_BCC_ADDRESS},${LDAP_ATTR_DOMAIN_RECIPIENT_BCC_AD
 # ---- Group related ----
 index ${LDAP_ATTR_GROUP_ACCESSPOLICY},${LDAP_ATTR_GROUP_HASMEMBER},${LDAP_ATTR_GROUP_ALLOWED_USER}   eq,pres
 # ---- User related ----
-index homeDirectory,mailMessageStore,${LDAP_ATTR_USER_FORWARD}   eq,pres
+index homeDirectory,mailMessageStore,${LDAP_ATTR_USER_FORWARD},${LDAP_ATTR_USER_SHADOW_ADDRESS}   eq,pres
 index ${LDAP_ATTR_USER_BACKUP_MAIL_ADDRESS},${LDAP_ATTR_USER_MEMBER_OF_GROUP}   eq,pres
 EOF
 
