@@ -22,7 +22,7 @@ e89ad55c67811e700c4e3cba55b097e5  pkgs/perl-Convert-UUlib-1.11-1.ired.i386.rpm
 73a4835924c0a22fa52fa7d2b8f5577e  pkgs/perl-BerkeleyDB-0.36-1.el5.rf.i386.rpm
 9f001e591572d88c6e035bd525f772fe  pkgs/perl-Compress-Raw-Zlib-2.015-1.el5.rf.i386.rpm
 96cada2fe843226ba531a60058810189  pkgs/perl-Encode-Detect-1.01-1.el5.rf.i386.rpm
-8101eb702e6e05b14a153aa54b553174  pkgs/postfix-2.5.6-4.ired.i386.rpm
+c8259ead263f75bf471fa1bf80816dc8  pkgs/postfix-2.5.9-5.ired.i386.rpm
 959211ca749f17da9219b916b00654d9  pkgs/dovecot-sieve-1.1.6-9.el5.i386.rpm
 22d658bf51faea079610696e202d7969  pkgs/amavisd-new-2.6.2-2.ired.i386.rpm
 a59545217ea8945415b441ce88bba39a  pkgs/lzo-1.08-5.el5.rf.i386.rpm
