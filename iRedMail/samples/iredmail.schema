@@ -122,7 +122,12 @@ attributetype ( 1.3.6.1.4.1.32349.1.2.1.16 NAME 'domainCurrentListNumber'
     EQUALITY caseIgnoreIA5Match
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
-attributetype ( 1.3.6.1.4.1.32349.1.2.1.17 NAME 'disclaimer'
+attributetype ( 1.3.6.1.4.1.32349.1.2.1.17 NAME 'domainDefaultUserQuota'
+    DESC 'Default quota for new user'
+    EQUALITY integerMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+    SINGLE-VALUE )
+attributetype ( 1.3.6.1.4.1.32349.1.2.1.18 NAME 'disclaimer'
     DESC 'Disclaimer text'
     EQUALITY caseIgnoreMatch
     SUBSTR caseIgnoreSubstringsMatch
@@ -257,7 +262,8 @@ objectclass ( 1.3.6.1.4.1.32349.1.2.4.1 NAME 'mailDomain'
         domainMaxUserNumber $ domainCurrentUserNumber $
         domainMaxAliasNumber $ domainCurrentAliasNumber $
         domainMaxListNumber $ domainCurrentListNumber $
-        disclaimer $ description $ streetAddress $ telephoneNumber $
+        domainDefaultUserQuota $ disclaimer $ 
+        description $ streetAddress $ telephoneNumber $
         fax $ expiredDate ))
 objectclass ( 1.3.6.1.4.1.32349.1.2.4.2 NAME 'mailAdmin'
     DESC 'Mail Domain Admin' SUP top STRUCTURAL
