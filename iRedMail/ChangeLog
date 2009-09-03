@@ -1,6 +1,7 @@
 iRedMail-0.5.1:
-    * Add one more ldap attribute and sql column: domainDefaultUserQuota,
-      defaultuserquota.
+    * Add more LDAP attributes: domainDefaultUserQuota,
+      domainMinPasswordLength, domainMaxPasswordLength.
+    * Add more sql columns: defaultuserquota, minpasswordlength, maxpasswordlength.
     * Update postfix to 2.5.9.
     * Replace sshd port number in default iptable rule by the current setting.
     * Add @mynetworks in amavisd config for Debian/Ubuntu.
