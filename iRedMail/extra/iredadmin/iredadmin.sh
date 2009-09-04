@@ -99,8 +99,8 @@ GRANT SELECT,INSERT,UPDATE,DELETE ON ${IREDADMIN_DB_NAME}.* TO ${IREDADMIN_DB_US
 FLUSH PRIVILEGES;
 EOF
 
-ECHO_INFO "Generating [iredadmin] section for iredadmin in ${ROOTDIR}/settings.ini"
-cat > settings.ini <<EOF
+ECHO_INFO "Generating [iredadmin] section for iredadmin in ${ROOTDIR}/settings.ini.part"
+cat > ${ROOTDIR}/settings.ini.part <<EOF
 [iredadmin]
 # Database used to store iRedAdmin data. e.g. sessions, log.
 dbn = mysql
