@@ -37,36 +37,36 @@ check_user root
 # Prepare all necessary packages.
 ALL_PKGS=''
 
-# Necessary devel packages, used to build python modules.
+# Necessary devel packages, used for building python modules.
 if [ X"${DISTRO}" == X"RHEL" ]; then
     ALL_PKGS="${ALL_PKGS} python-setuptools.noarch gcc.${ARCH} gcc-c++.${ARCH} openssl-devel.${ARCH} python-devel.${ARCH} openldap-devel.${ARCH} MySQL-python.${ARCH}"
-elif [ X"${DISTRO}" == X"DEBIAN" or X"${DISTRO}" == X"UBUNTU" ]; then
+elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     ALL_PKGS="${ALL_PKGS} gcc python-setuptools python-dev libldap2-dev libmysqlclient15-dev libsasl2-dev libssl-dev libapache2-mod-wsgi"
 fi
 
 # Install binary packages.
-ECHO_INFO "Install necessary devel packages, used to build python modules."
+ECHO_INFO "Install necessary devel packages, used for building python modules."
 ${install_pkg} ${ALL_PKGS}
 
 ECHO_INFO "Install necessary python modules as dependences."
-easy_install web.py Jinja2 python-ldap netifaces >/dev/null
+easy_install web.py Jinja2 python-ldap netifaces
 
 if [ X"${DISTRO}" == X"RHEL" ]; then
     ECHO_INFO "Install apache module: mod_wsgi."
     rpm -ivh http://download.fedora.redhat.com/pub/epel/5/${ARCH}/mod_wsgi-2.1-2.el5.${ARCH}.rpm
-elif [ X"${DISTRO}" == X"DEBIAN" or X"${DISTRO}" == X"UBUNTU" ]; then
-    ECHO_INFO "Enable apache module: mod-wsgi."
-    a2enmod mod-wsgi
+elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+    ECHO_INFO "Enable apache module: wsgi."
+    a2enmod wsgi
 fi
 
 ECHO_INFO "Configure apache."
 backup_file ${HTTPD_CONF_DIR}/iredadmin.conf
 cat > ${HTTPD_CONF_DIR}/iredadmin.conf <<EOF
-WSGIScriptAlias /iredadmin /var/www/iredadmin/iredadmin.py
-Alias /iredadmin/static /var/www/iredadmin/static
+WSGIScriptAlias /iredadmin ${HTTPD_SERVERROOT}/iredadmin/iredadmin.py/
+Alias /iredadmin/static ${HTTPD_SERVERROOT}/iredadmin/static/
 AddType text/html .py
 
-<Directory /var/www/iredadmin/>
+<Directory ${HTTPD_SERVERROOT}/iredadmin/>
     Order deny,allow
     Allow from all
 </Directory>
@@ -82,7 +82,7 @@ BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
 SetEnvIfNoCase Request_URI \\.(?:gif|jpe?g|png)$ no-gzip dont-vary
 SetEnvIfNoCase Request_URI .(?:exe|t?gz|zip|bz2|sit|rar)$ no-gzip dont-vary
 SetEnvIfNoCase Request_URI .(?:pdf|mov|avi|mp3|mp4|rm)$ no-gzip dont-vary
-Header append Vary User-Agent env=!dont-vary
+#Header append Vary User-Agent env=!dont-vary
 </Location>
 EOF
 
@@ -97,6 +97,19 @@ SOURCE ${ROOTDIR}/samples/iredadmin.sql;
 GRANT SELECT,INSERT,UPDATE,DELETE ON ${IREDADMIN_DB_NAME}.* TO ${IREDADMIN_DB_USER}@localhost IDENTIFIED BY "${IREDADMIN_DB_PASSWD}";
 
 FLUSH PRIVILEGES;
+EOF
+
+ECHO_INFO "Generating [iredadmin] section for iredadmin in ${ROOTDIR}/settings.ini"
+cat > settings.ini <<EOF
+[iredadmin]
+# Database used to store iRedAdmin data. e.g. sessions, log.
+dbn = mysql
+host = localhost
+port = 3306
+db = ${IREDADMIN_DB_NAME}
+user = ${IREDADMIN_DB_USER}
+passwd = ${IREDADMIN_DB_PASSWD}
+db_table_session = sessions
 EOF
 
 ECHO_INFO "Installation complete."

@@ -27,5 +27,5 @@ export MYSQL_ROOT_PASSWD='passwd'
 # MySQL database name, username and password.
 export IREDADMIN_DB_NAME='iredadmin'
 export IREDADMIN_DB_USER='iredadmin'
-# Generate a random password, 30 characters.
+# Generate a random password, 30 characters. RECOMMEND.
 export IREDADMIN_DB_PASSWD="$(${RANDOM_STRING})"
