@@ -206,12 +206,12 @@ EOF
 
     # Send tip file to the mail server admin or first mail user.
     if [ ! -z ${MAIL_ALIAS_ROOT} ]; then
-        tip_recepient="${MAIL_ALIAS_ROOT}"
+        tip_recipient="${MAIL_ALIAS_ROOT}"
     else
-        tip_recepient="${FIRST_USER}@${FIRST_DOMAIN}"
+        tip_recipient="${FIRST_USER}@${FIRST_DOMAIN}"
     fi
 
-    mail -s "iRedMail tips for mail server administrator." ${tip_recepient} < ${TIP_FILE} >/dev/null 2>&1
+    mail -s "iRedMail tips for mail server administrator." ${tip_recipient} < ${TIP_FILE} >/dev/null 2>&1
 
     cat <<EOF
 
@@ -221,7 +221,7 @@ EOF
 *
 *   - ${TIP_FILE}
 *
-* And it's sent to your mail account ${FIRST_USER}@${FIRST_DOMAIN}.
+* And it's sent to your mail account ${tip_recipient}.
 *
 EOF
 
