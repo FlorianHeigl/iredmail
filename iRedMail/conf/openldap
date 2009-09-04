@@ -115,6 +115,7 @@ export LDAP_SERVICE_RECIPIENT_BCC='recipientbcc'
 export LDAP_SERVICE_MANAGESIEVE='managesieve'
 export LDAP_SERVICE_WEBMAIL='webmail'
 export LDAP_SERVICE_AWSTATS='awstats'
+export LDAP_SERVICE_SHADOW_ADDRESS='shadowAddress'
 export LDAP_SERVICE_DISPLAYED_IN_ADDRBOOK='displayedInGlobalAddressBook'
 
 # Shared attributes.
