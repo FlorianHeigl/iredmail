@@ -204,8 +204,14 @@ EOF
     [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run replace_mysql_config
     check_status_before_run start_postfix_now
 
-    # Send tip file to the first mail user.
-    mail -s "iRedMail tips for mail server administrator." ${FIRST_USER}@${FIRST_DOMAIN} < ${TIP_FILE} >/dev/null 2>&1
+    # Send tip file to the mail server admin or first mail user.
+    if [ ! -z ${MAIL_ALIAS_ROOT} ]; then
+        tip_recepient="${MAIL_ALIAS_ROOT}"
+    else
+        tip_recepient="${FIRST_USER}@${FIRST_DOMAIN}"
+    fi
+
+    mail -s "iRedMail tips for mail server administrator." ${tip_recepient} < ${TIP_FILE} >/dev/null 2>&1
 
     cat <<EOF
 
