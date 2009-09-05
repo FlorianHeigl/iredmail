@@ -193,21 +193,20 @@ generate_iredadmin_settings()
         cat >> ${TIP_FILE} <<EOF
 Settings for iRedAdmin [ldap] section:
 
-[ldap]
-uri = ldap://${LDAP_SERVER_HOST}:${LDAP_SERVER_PORT}
-protocol_version = ${LDAP_BIND_VERSION}
-#use_tls = False
-debug_level = 0
+    [ldap]
+    uri = ldap://${LDAP_SERVER_HOST}:${LDAP_SERVER_PORT}
+    protocol_version = ${LDAP_BIND_VERSION}
+    debug_level = 0
 
-# LDAP suffix.
-suffix = ${LDAP_SUFFIX}
-basedn = o=domains,${LDAP_SUFFIX}
-domainadmin_dn = o=domainAdmins,${LDAP_SUFFIX}
-bind_dn = ${LDAP_ADMIN_DN}
-bind_pw = ${LDAP_ADMIN_PW}
+    # LDAP suffix.
+    suffix = ${LDAP_SUFFIX}
+    basedn = o=domains,${LDAP_SUFFIX}
+    domainadmin_dn = o=domainAdmins,${LDAP_SUFFIX}
+    bind_dn = ${LDAP_ADMIN_DN}
+    bind_pw = ${LDAP_ADMIN_PW}
 
-default_pw_scheme = SSHA
-sizelimit = 500
+    default_pw_scheme = SSHA
+    sizelimit = 500
 EOF
     fi
 }
