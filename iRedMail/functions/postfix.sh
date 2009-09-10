@@ -50,7 +50,6 @@ EOF
     postconf -e inet_interfaces="all"
     postconf -e mynetworks="127.0.0.0/8"
     postconf -e mynetworks_style="subnet"
-    postconf -e receive_override_options='no_address_mappings'
     postconf -e smtpd_data_restrictions='reject_unauth_pipelining'
     postconf -e smtpd_reject_unlisted_recipient='yes'   # Default
     postconf -e smtpd_sender_restrictions="permit_mynetworks, reject_sender_login_mismatch, permit_sasl_authenticated"

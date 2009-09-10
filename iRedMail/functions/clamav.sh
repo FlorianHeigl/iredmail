@@ -45,6 +45,7 @@ clamav_config()
         cp -f ${FRESHCLAM_INIT_FILE_SAMPLE} /etc/rc.d/init.d/freshclam
         chmod +x /etc/rc.d/init.d/freshclam
         eval ${enable_service} freshclam
+        export ENABLED_SERVICES="${ENABLED_SERVICES} freshclam"
     else
         :
     fi

@@ -445,7 +445,7 @@ ${AMAVISD_SERVER}:10025 inet n  -   -   -   -  smtpd
     -o smtpd_hard_error_limit=1000
     -o smtpd_client_connection_count_limit=0
     -o smtpd_client_connection_rate_limit=0
-    -o receive_override_options=no_header_body_checks,no_unknown_recipient_checks
+    -o receive_override_options=no_header_body_checks,no_unknown_recipient_checks,no_address_mappings
 EOF
 
     postconf -e content_filter="smtp-amavis:[${SMTP_SERVER}]:10024"

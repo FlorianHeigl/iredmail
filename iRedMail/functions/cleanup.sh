@@ -81,7 +81,7 @@ replace_iptables_rule()
         export sshd_port='22'
     else
         # Replace port number in iptable rule file.
-        perl -pi -e 's#(.*multiport.*)22(.*)#${1}$ENV{sshd_port}${2}#' ${IPTABLES_CONFIG}
+        perl -pi -e 's#(.*multiport.*)22(.*)#${1}$ENV{sshd_port}${2}#' ${SAMPLE_DIR}/iptables.rules
         export sshd_port="${sshd_port}"
     fi
 
