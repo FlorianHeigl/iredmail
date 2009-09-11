@@ -123,8 +123,7 @@ def ldif_mailuser(domain, username, passwd, cn, quota, groups=''):
     DATE = time.strftime('%Y.%m.%d.%H.%M.%S')
     if quota == '':
         quota = '0'
-    else:
-        quota = '1024'
+
     username = removeSpaceAndDot(username)
     if cn == '': cn = username
     mail = username.lower() + '@' + domain
@@ -158,7 +157,7 @@ def ldif_mailuser(domain, username, passwd, cn, quota, groups=''):
                     username,
                     DATE,
                     )
-        mailMessageStore = maildir_domain + maildir_user
+        mailMessageStore = maildir_domain + '/' + maildir_user
     else:
         mailMessageStore = "%s/%s-%s/" % (domain, username, DATE)
 

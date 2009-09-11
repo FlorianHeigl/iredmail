@@ -53,7 +53,7 @@ easy_install web.py Jinja2 python-ldap netifaces
 
 if [ X"${DISTRO}" == X"RHEL" ]; then
     ECHO_INFO "Install apache module: mod_wsgi."
-    rpm -ivh http://download.fedora.redhat.com/pub/epel/5/${ARCH}/mod_wsgi-2.1-2.el5.${ARCH}.rpm
+    rpm -ivh http://www.iredmail.org/yum/rpms/5/mod_wsgi-2.5-2.ired.${ARCH}.rpm
 elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     ECHO_INFO "Enable apache module: wsgi."
     a2enmod wsgi
@@ -109,7 +109,6 @@ port = 3306
 db = ${IREDADMIN_DB_NAME}
 user = ${IREDADMIN_DB_USER}
 passwd = ${IREDADMIN_DB_PASSWD}
-db_table_session = sessions
 EOF
 
 ECHO_INFO "Installation complete."
