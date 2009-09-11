@@ -1,4 +1,5 @@
 iRedMail-0.5.1:
+    * Allow to use multiple identities.
     * Fix incorrect postfix setting which will cause mail forwarding and bcc
       invalid after upgrade to 2.5.
     * Make user can't change employeeNumber.
