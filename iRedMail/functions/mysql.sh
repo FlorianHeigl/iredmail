@@ -128,12 +128,6 @@ SOURCE ${MYSQL_VMAIL_SQL};
 FLUSH PRIVILEGES;
 EOF
 
-    if [ X"$?" == X"0" ]; then
-        echo -e "\t\t[ OK ]"
-    else
-        echo -e "\t\t[ FAILED ]"
-    fi
-
     cat >> ${TIP_FILE} <<EOF
 Virtual Users:
     - ${MYSQL_VMAIL_SQL}

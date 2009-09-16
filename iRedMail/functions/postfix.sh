@@ -453,7 +453,7 @@ postfix_config_mysql()
     postconf -e virtual_alias_maps="mysql:${mysql_virtual_alias_maps_cf}"
     postconf -e sender_bcc_maps="mysql:${mysql_sender_bcc_maps_domain_cf}, mysql:${mysql_sender_bcc_maps_user_cf}"
     postconf -e recipient_bcc_maps="mysql:${mysql_recipient_bcc_maps_domain_cf}, mysql:${mysql_recipient_bcc_maps_user_cf}"
-    postconf -e relay_domains="$mydestination, mysql:${mysql_relay_domains_cf}"
+    postconf -e relay_domains="\$mydestination, mysql:${mysql_relay_domains_cf}"
     postconf -e relay_recipient_maps="mysql:${mysql_virtual_mailbox_maps_cf}"
 
     postconf -e smtpd_sender_login_maps="mysql:${mysql_sender_login_maps_cf}"
