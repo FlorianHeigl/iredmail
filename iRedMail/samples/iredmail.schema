@@ -307,3 +307,8 @@ objectclass ( 1.3.6.1.4.1.32349.1.2.4.5 NAME 'mailList'
     MAY ( accountStatus $ description $ accessPolicy $ 
         enabledService $ hasMember $ listAllowedUser $ cn $
         expiredDate ))
+objectclass ( 1.3.6.1.4.1.32349.1.2.4.6 NAME 'mailExternalUser'
+    DESC 'Mail External User' SUP top STRUCTURAL
+    MUST ( mail )
+    MAY ( accountStatus $ enabledService $ memberOfGroup $
+        description $ cn ))

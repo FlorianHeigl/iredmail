@@ -148,4 +148,5 @@ First mail user:
     Note:
         - This account is a normal mail user.
         - Account name is full email address.
+
 EOF
