@@ -206,7 +206,7 @@ Settings for iRedAdmin [ldap] section:
     bind_pw = ${LDAP_ADMIN_PW}
 
     default_pw_scheme = SSHA
-    sizelimit = 500
+    sizelimit = 1000
 EOF
     fi
 }

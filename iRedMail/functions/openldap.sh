@@ -223,8 +223,8 @@ directory   ${LDAP_DATA_DIR}
 rootdn      ${LDAP_ROOTDN}
 rootpw      $(gen_ldap_passwd "${LDAP_ROOTPW}")
 
-sizelimit   500
-cachesize   500
+sizelimit   1000
+cachesize   1000
 
 #
 # Set directory permission.
