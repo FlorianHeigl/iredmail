@@ -33,7 +33,7 @@ CREATE TABLE admin (
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
     PRIMARY KEY (username)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 #
 # Table structure for table alias
@@ -47,7 +47,7 @@ CREATE TABLE alias (
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
     PRIMARY KEY (address)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 #
 # Table structure for table domain
@@ -70,7 +70,7 @@ CREATE TABLE domain (
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
     PRIMARY KEY (domain)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 #
 # Table structure for table domain_admins
@@ -83,7 +83,7 @@ CREATE TABLE domain_admins (
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
     KEY username (username)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 #
 # Table structure for table mailbox
@@ -113,7 +113,7 @@ CREATE TABLE mailbox (
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
     PRIMARY KEY (username)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 #
 # Table structure for table sender_bcc_domain
@@ -126,7 +126,7 @@ CREATE TABLE sender_bcc_domain (
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
     PRIMARY KEY (domain)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 #
 # Table structure for table sender_bcc_user
@@ -140,7 +140,7 @@ CREATE TABLE sender_bcc_user (
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
     PRIMARY KEY (username)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 #
 # Table structure for table recipient_bcc_domain
@@ -153,7 +153,7 @@ CREATE TABLE recipient_bcc_domain (
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
     PRIMARY KEY (domain)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 #
 # Table structure for table recipient_bcc_user
@@ -167,7 +167,7 @@ CREATE TABLE recipient_bcc_user (
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
     PRIMARY KEY (username)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 #
 # Table structure for table log
@@ -179,7 +179,7 @@ CREATE TABLE log (
     action VARCHAR(255) NOT NULL DEFAULT '',
     data VARCHAR(255) NOT NULL DEFAULT '',
     KEY TIMESTAMP (TIMESTAMP)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 #
 # WARNING: We do not use postfixadmin style vacation mechanism.
@@ -199,7 +199,7 @@ CREATE TABLE vacation (
     active TINYINT(4) NOT NULL DEFAULT '1', 
     PRIMARY KEY (email), 
     KEY email (email) 
-) TYPE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
  
 #
 # vacation_notification table 
@@ -211,4 +211,4 @@ CREATE TABLE vacation_notification (
     notified_at TIMESTAMP NOT NULL DEFAULT now(), 
     CONSTRAINT vacation_notification_pkey PRIMARY KEY(on_vacation, notified), 
     FOREIGN KEY (on_vacation) REFERENCES vacation(email) ON DELETE CASCADE 
-) TYPE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
