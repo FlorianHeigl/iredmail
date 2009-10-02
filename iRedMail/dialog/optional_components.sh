@@ -104,7 +104,8 @@ elif [ X"${BACKEND}" == X"MySQL" ]; then
     --checklist "\
 ${PROG_NAME} provides several \Zb\Z2optional components\Zn for MySQL backend, you can use
 them by your own:
-" 20 76 5 \
+" 20 76 6 \
+    "iRedAdmin" "Official web-based iRedMail Admin Panel" "on" \
     "Roundcubemail" "WebMail program (PHP, XHTML, CSS2, AJAX)." "on" \
     "SquirrelMail" "WebMail program, written in PHP." "off" \
     "phpMyAdmin" "Web-based MySQL database management." "on" \
@@ -118,6 +119,9 @@ fi
 
 OPTIONAL_COMPONENTS="$(cat /tmp/optional_components)"
 rm -f /tmp/optional_components
+
+echo ${OPTIONAL_COMPONENTS} | grep -i 'iredadmin' >/dev/null 2>&1
+[ X"$?" == X"0" ] && export USE_IREDADMIN='YES' && export USE_IREDADMIN='YES' && echo "export USE_IREDADMIN='YES'" >> ${CONFIG_FILE}
 
 echo ${OPTIONAL_COMPONENTS} | grep -i 'roundcubemail' >/dev/null 2>&1
 [ X"$?" == X"0" ] && export USE_WEBMAIL='YES' && export USE_RCM='YES' && echo "export USE_RCM='YES'" >> ${CONFIG_FILE}

@@ -21,47 +21,16 @@
 # along with iRedMail.  If not, see <http://www.gnu.org/licenses/>.
 #---------------------------------------------------------------------
 
-ROOTDIR="$(pwd)"
-CONF_DIR="${ROOTDIR}/../../conf"
+iredadmin_config()
+{
+    if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+        ECHO_INFO "Enable apache module: wsgi."
+        a2enmod wsgi
+    fi
 
-. ${CONF_DIR}/global
-. ${CONF_DIR}/functions
-. ${CONF_DIR}/core
-
-. ${CONF_DIR}/apache_php
-
-. ${ROOTDIR}/conf/iredadmin
-
-check_user root
-
-# Prepare all necessary packages.
-ALL_PKGS=''
-
-# Necessary devel packages, used for building python modules.
-if [ X"${DISTRO}" == X"RHEL" ]; then
-    ALL_PKGS="${ALL_PKGS} python-setuptools.noarch gcc.${ARCH} gcc-c++.${ARCH} openssl-devel.${ARCH} python-devel.${ARCH} openldap-devel.${ARCH} MySQL-python.${ARCH}"
-elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-    ALL_PKGS="${ALL_PKGS} gcc python-setuptools python-dev libldap2-dev libmysqlclient15-dev libsasl2-dev libssl-dev libapache2-mod-wsgi"
-fi
-
-# Install binary packages.
-ECHO_INFO "Install necessary devel packages, used for building python modules."
-${install_pkg} ${ALL_PKGS}
-
-ECHO_INFO "Install necessary python modules as dependences."
-easy_install web.py Jinja2 python-ldap netifaces
-
-if [ X"${DISTRO}" == X"RHEL" ]; then
-    ECHO_INFO "Install apache module: mod_wsgi."
-    rpm -ivh http://www.iredmail.org/yum/rpms/5/mod_wsgi-2.5-2.ired.${ARCH}.rpm
-elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-    ECHO_INFO "Enable apache module: wsgi."
-    a2enmod wsgi
-fi
-
-ECHO_INFO "Configure apache."
-backup_file ${HTTPD_CONF_DIR}/iredadmin.conf
-cat > ${HTTPD_CONF_DIR}/iredadmin.conf <<EOF
+    ECHO_INFO "Configure apache."
+    backup_file ${HTTPD_CONF_DIR}/iredadmin.conf
+    cat > ${HTTPD_CONF_DIR}/iredadmin.conf <<EOF
 WSGIScriptAlias /iredadmin ${HTTPD_SERVERROOT}/iredadmin/iredadmin.py/
 Alias /iredadmin/static ${HTTPD_SERVERROOT}/iredadmin/static/
 AddType text/html .py
@@ -86,8 +55,8 @@ SetEnvIfNoCase Request_URI .(?:pdf|mov|avi|mp3|mp4|rm)$ no-gzip dont-vary
 </Location>
 EOF
 
-ECHO_INFO "Import sample database."
-mysql -u${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWD} <<EOF
+    ECHO_INFO "Import sample database."
+    mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
 # Create databases.
 CREATE DATABASE ${IREDADMIN_DB_NAME} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -99,8 +68,8 @@ GRANT SELECT,INSERT,UPDATE,DELETE ON ${IREDADMIN_DB_NAME}.* TO ${IREDADMIN_DB_US
 FLUSH PRIVILEGES;
 EOF
 
-ECHO_INFO "Generating [iredadmin] section for iredadmin in ${ROOTDIR}/settings.ini.part"
-cat > ${ROOTDIR}/settings.ini.part <<EOF
+    ECHO_INFO "Generating [iredadmin] section for iredadmin in ${ROOTDIR}/settings.ini.part"
+    cat > ${ROOTDIR}/settings.ini.part <<EOF
 [iredadmin]
 # Database used to store iRedAdmin data. e.g. sessions, log.
 dbn = mysql
@@ -110,5 +79,4 @@ db = ${IREDADMIN_DB_NAME}
 user = ${IREDADMIN_DB_USER}
 passwd = ${IREDADMIN_DB_PASSWD}
 EOF
-
-ECHO_INFO "Installation complete."
+}

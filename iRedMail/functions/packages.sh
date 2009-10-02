@@ -173,6 +173,17 @@ install_all()
         :
     fi
 
+    # iRedAdmin.
+    if [ X"${USE_IREDADMIN}" == X"YES" ]; then
+        [ X"${DISTRO}" == X"RHEL" ] && \
+        ALL_PKGS="${ALL_PKGS} python-jinja2.${ARCH} python-webpy.noarch python-ldap.${ARCH} MySQL-python.${ARCH} mod_wsgi.${ARCH}"
+
+        #[ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ] && \
+        #ALL_PKGS="${ALL_PKGS} libapache2-mod-wsgi"
+    else
+        :
+    fi
+
     # Misc.
     if [ X"${DISTRO}" == X"RHEL" ]; then
         ALL_PKGS="${ALL_PKGS} bzip2.${ARCH} acl.${ARCH} mailx.${ARCH} patch.${ARCH} vixie-cron.${ARCH} tmpwatch.${ARCH} crontabs.noarch dos2unix.${ARCH}"

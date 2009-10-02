@@ -64,6 +64,7 @@ check_env
 . ${CONF_DIR}/postfixadmin
 . ${CONF_DIR}/phpmyadmin
 . ${CONF_DIR}/awstats
+. ${CONF_DIR}/iredadmin
 
 # ------------------------------
 # Import functions.
@@ -121,6 +122,9 @@ check_env
 
 # Awstats.
 . ${FUNCTIONS_DIR}/awstats.sh
+
+# iRedAdmin.
+. ${FUNCTIONS_DIR}/iredadmin.sh
 
 # Optional components.
 . ${FUNCTIONS_DIR}/optional_components.sh
