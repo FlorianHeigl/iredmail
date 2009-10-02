@@ -175,7 +175,7 @@ access to dn.regex="${LDAP_ATTR_DOMAIN_RDN}=([^,]+),${LDAP_BASEDN}\$"
     by self                         write
     by dn.exact="${LDAP_BINDDN}"   read
     by dn.exact="${LDAP_ADMIN_DN}"  write
-    by dn.regex="${LDAP_ATTR_USER_RDN}=[^,]+@\$1,o=${LDAP_ATTR_DOMAINADMIN_DN_NAME},${LDAP_SUFFIX}\$" write
+    by dn.regex="${LDAP_ATTR_USER_RDN}=[^,]+@\$1,${LDAP_ADMIN_BASEDN}\$" write
     by dn.regex="${LDAP_ATTR_USER_RDN}=[^,]+@\$1,${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=\$1,${LDAP_BASEDN}\$" read
     by users                        none
 
@@ -190,7 +190,7 @@ access to dn.subtree="${LDAP_BASEDN}"
     by dn.regex="${LDAP_ATTR_USER_RDN}=[^,]+,${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=\$1,${LDAP_BASEDN}\$" read
     by users                        read
 
-access to dn.subtree="o=${LDAP_ATTR_DOMAINADMIN_DN_NAME},${LDAP_SUFFIX}"
+access to dn.subtree="${LDAP_ADMIN_BASEDN}"
     by anonymous                    auth
     by self                         write
     by dn.exact="${LDAP_BINDDN}"   read
@@ -373,11 +373,11 @@ sn: ${VMAIL_ADMIN_USER_NAME}
 uid: ${VMAIL_ADMIN_USER_NAME}
 ${LDAP_ATTR_USER_PASSWD}: $(gen_ldap_passwd "${LDAP_ADMIN_PW}")
 
-dn: o=${LDAP_BASEDN_NAME},${LDAP_SUFFIX}
+dn: ${LDAP_BASEDN}
 objectClass: Organization
 o: ${LDAP_BASEDN_NAME}
 
-dn: o=${LDAP_ATTR_DOMAINADMIN_DN_NAME},${LDAP_SUFFIX}
+dn: ${LDAP_ADMIN_BASEDN}
 objectClass: Organization
 o: ${LDAP_ATTR_DOMAINADMIN_DN_NAME}
 
@@ -405,7 +405,7 @@ objectClass: ${LDAP_OBJECTCLASS_OU}
 objectClass: top
 ou: ${LDAP_ATTR_GROUP_ALIASES}
 
-dn: ${LDAP_ATTR_USER_RDN}=${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN},o=${LDAP_ATTR_DOMAINADMIN_DN_NAME},${LDAP_SUFFIX}
+dn: ${LDAP_ATTR_USER_RDN}=${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN},${LDAP_ADMIN_BASEDN}
 objectClass: ${LDAP_OBJECTCLASS_MAILADMIN}
 objectClass: shadowAccount
 objectClass: top

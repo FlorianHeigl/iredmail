@@ -93,6 +93,12 @@ FLUSH PRIVILEGES;
 EOF
 
     ECHO_INFO "Configure iRedAdmin."
+
+    # General settings: [general] section.
+    [ ! -z ${MAIL_ALIAS_ROOT} ] && \
+        perl -pi -e 's#webmaster =# $ENV{MAIL_ALIAS_ROOT}#' settings.ini
+
+    # MySQL database related settings: [iredadmin] section.
     perl -pi -e 's#lang =# $ENV{DEFAULT_LANG}#' settings.ini
     perl -pi -e 's#host =# $ENV{MYSQL_SERVER}#' settings.ini
     perl -pi -e 's#port =# $ENV{MYSQL_PORT}#' settings.ini
@@ -100,4 +106,11 @@ EOF
     perl -pi -e 's#user =# $ENV{IREDADMIN_DB_USER}#' settings.ini
     perl -pi -e 's#passwd =# $ENV{IREDADMIN_DB_PASSWD}#' settings.ini
 
+    # LDAP related settings: [ldap] section.
+    perl -pi -e 's#uri =# ldap://$ENV{LDAP_SERVER_HOST}:$ENV{LDAP_SERVER_PORT}/#' settings.ini
+    perl -pi -e 's#suffix =# $ENV{LDAP_SUFFIX}#' settings.ini
+    perl -pi -e 's#basedn =# $ENV{LDAP_BASEDN}#' settings.ini
+    perl -pi -e 's#domainadmin_dn =# $ENV{LDAP_ADMIN_BASEDN}#' settings.ini
+    perl -pi -e 's#bind_dn =# $ENV{LDAP_BINDDN}#' settings.ini
+    perl -pi -e 's#bind_pw =# $ENV{LDAP_BINDPW}#' settings.ini
 }
