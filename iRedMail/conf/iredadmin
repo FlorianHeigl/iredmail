@@ -20,9 +20,11 @@
 # along with iRedMail.  If not, see <http://www.gnu.org/licenses/>.
 #---------------------------------------------------------------------
 
+export IREDADMIN_VERSION='0.1'
+export IREDADMIN_TARBALL="iRedAdmin-${IREDADMIN_VERSION}.tar.bz2"
+export IREDADMIN_HTTPD_ROOT="${HTTPD_SERVERROOT}/iRedAdmin-${RCM_VERSION}"
+
 # MySQL database name, username and password.
 export IREDADMIN_DB_NAME='iredadmin'
 export IREDADMIN_DB_USER='iredadmin'
-
-# Generate a random password, 30 characters. RECOMMEND.
 export IREDADMIN_DB_PASSWD="$(${RANDOM_STRING})"

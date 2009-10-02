@@ -41,12 +41,12 @@ ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
 Thanks for your use of ${PROG_NAME}.
 Bug report, feedback, suggestion are always welcome.
 
-Contact author via mail: \Zb\Z2michaelbibby@gmail.com\Zn
-Community: \Zb\Z2http://www.iredmail.org/forum/\Zn
+Contact author via mail: michaelbibby@gmail.com
+Community: http://www.iredmail.org/forum/
 
 NOTE:
 
-    \Zb\Z1Ctrl-C will abort this wizard.\Zn
+    Ctrl-C will abort this wizard.
 " 20 76
 
 # Exit when user choose 'exit'.
@@ -79,7 +79,7 @@ rm -f /tmp/vmail_user_home_dir
 # --------------------- Backend --------------------
 # --------------------------------------------------
 ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-    --title "Choose your \Zb\Z2prefer backend\Zn" \
+    --title "Choose your prefer backend" \
     --radiolist "\
 We provide two backends and the homologous webmail programs:
 
@@ -126,12 +126,12 @@ fi
 # Set mail alias for root.
 #
 ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-    --title "Specify \Zb\Z2mail alias\Zn for 'root' user" \
+    --title "Specify mail alias for 'root' user" \
     --inputbox "\
-Please specify an \Zb\Z2E-Mail\Zn address for 'root' user alias.
+Please specify an E-Mail address for 'root' user alias.
 
-\Zb\Z1Mail deliver failure notice and other system notify mails will be
-send to this alias address instead of system account 'root'.\Zn
+Mail deliver failure notice and other system notify mails will be
+send to this alias address instead of system account 'root'.
 
 EXAMPLE:
 

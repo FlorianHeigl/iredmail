@@ -23,16 +23,40 @@
 
 iredadmin_config()
 {
+    ECHO_INFO "======== iRedAdmin: Official Web-based Admin Panel  ========"
+
     if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
         ECHO_INFO "Enable apache module: wsgi."
         a2enmod wsgi
     fi
 
-    ECHO_INFO "Configure apache."
+    cd ${MISC_DIR}
+
+    # Extract source tarball.
+    extract_pkg ${IREDADMIN_TARBALL} ${HTTPD_SERVERROOT}
+
+    # Create symbol link, so that we don't need to modify apache
+    # conf.d/iredadmin.conf file after upgrade this component.
+    ln -s ${IREDADMIN_HTTPD_ROOT} ${HTTPD_SERVERROOT}/iredadmin 2>/dev/null
+
+    ECHO_INFO "Set correct permission for iRedAdmin: ${RCM_HTTPD_ROOT}."
+    chown -R ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${IREDADMIN_HTTPD_ROOT}
+    chmod -R 0555 ${IREDADMIN_HTTPD_ROOT}
+
+    # Copy sample configure file.
+    cd ${IREDADMIN_HTTPD_ROOT}/ && \
+    cp settings.ini.sample settings.ini
+    chmod 0555 settings.ini
+
+    ECHO_INFO "Create directory alias for iRedAdmin."
     backup_file ${HTTPD_CONF_DIR}/iredadmin.conf
     cat > ${HTTPD_CONF_DIR}/iredadmin.conf <<EOF
-WSGIScriptAlias /iredadmin ${HTTPD_SERVERROOT}/iredadmin/iredadmin.py/
-Alias /iredadmin/static ${HTTPD_SERVERROOT}/iredadmin/static/
+#
+# Note: Uncomment below two lines if you want to make iRedAdmin accessable via HTTP.
+#
+#WSGIScriptAlias /iredadmin ${HTTPD_SERVERROOT}/iredadmin/iredadmin.py/
+#Alias /iredadmin/static ${HTTPD_SERVERROOT}/iredadmin/static/
+
 AddType text/html .py
 
 <Directory ${HTTPD_SERVERROOT}/iredadmin/>
@@ -55,28 +79,25 @@ SetEnvIfNoCase Request_URI .(?:pdf|mov|avi|mp3|mp4|rm)$ no-gzip dont-vary
 </Location>
 EOF
 
-    ECHO_INFO "Import sample database."
+    ECHO_INFO "Import iredadmin database template."
     mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
 # Create databases.
 CREATE DATABASE ${IREDADMIN_DB_NAME} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # Import SQL template.
 USE ${IREDADMIN_DB_NAME};
-SOURCE ${ROOTDIR}/samples/iredadmin.sql;
+SOURCE ${IREDADMIN_HTTPD_ROOT}/docs/samples/iredadmin.sql;
 GRANT SELECT,INSERT,UPDATE,DELETE ON ${IREDADMIN_DB_NAME}.* TO ${IREDADMIN_DB_USER}@localhost IDENTIFIED BY "${IREDADMIN_DB_PASSWD}";
 
 FLUSH PRIVILEGES;
 EOF
 
-    ECHO_INFO "Generating [iredadmin] section for iredadmin in ${ROOTDIR}/settings.ini.part"
-    cat > ${ROOTDIR}/settings.ini.part <<EOF
-[iredadmin]
-# Database used to store iRedAdmin data. e.g. sessions, log.
-dbn = mysql
-host = localhost
-port = 3306
-db = ${IREDADMIN_DB_NAME}
-user = ${IREDADMIN_DB_USER}
-passwd = ${IREDADMIN_DB_PASSWD}
-EOF
+    ECHO_INFO "Configure iRedAdmin."
+    perl -pi -e 's#lang =# $ENV{DEFAULT_LANG}#' settings.ini
+    perl -pi -e 's#host =# $ENV{MYSQL_SERVER}#' settings.ini
+    perl -pi -e 's#port =# $ENV{MYSQL_PORT}#' settings.ini
+    perl -pi -e 's#db =# $ENV{IREDADMIN_DB_NAME}#' settings.ini
+    perl -pi -e 's#user =# $ENV{IREDADMIN_DB_USER}#' settings.ini
+    perl -pi -e 's#passwd =# $ENV{IREDADMIN_DB_PASSWD}#' settings.ini
+
 }
