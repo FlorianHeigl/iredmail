@@ -39,7 +39,7 @@ iredadmin_config()
     # conf.d/iredadmin.conf file after upgrade this component.
     ln -s ${IREDADMIN_HTTPD_ROOT} ${HTTPD_SERVERROOT}/iredadmin 2>/dev/null
 
-    ECHO_INFO "Set correct permission for iRedAdmin: ${RCM_HTTPD_ROOT}."
+    ECHO_INFO "Set correct permission for iRedAdmin: ${IREDADMIN_HTTPD_ROOT}."
     chown -R ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${IREDADMIN_HTTPD_ROOT}
     chmod -R 0555 ${IREDADMIN_HTTPD_ROOT}
 
@@ -50,6 +50,9 @@ iredadmin_config()
 
     ECHO_INFO "Create directory alias for iRedAdmin."
     backup_file ${HTTPD_CONF_DIR}/iredadmin.conf
+    sed -i 's#\(</VirtualHost>\)#WSGIScriptAlias /iredadmin '${HTTPD_SERVERROOT}/iredadmin/iredadmin.py/'\n\1#' ${HTTPD_SSL_CONF}
+    sed -i 's#\(</VirtualHost>\)#Alias /iredadmin/static '${HTTPD_SERVERROOT}/iredadmin/static/'\n\1#' ${HTTPD_SSL_CONF}
+
     cat > ${HTTPD_CONF_DIR}/iredadmin.conf <<EOF
 #
 # Note: Uncomment below two lines if you want to make iRedAdmin accessable via HTTP.
@@ -96,21 +99,30 @@ EOF
 
     # General settings: [general] section.
     [ ! -z ${MAIL_ALIAS_ROOT} ] && \
-        perl -pi -e 's#webmaster =# $ENV{MAIL_ALIAS_ROOT}#' settings.ini
+        perl -pi -e 's#(webmaster =).*#${1} $ENV{MAIL_ALIAS_ROOT}#' settings.ini
+
+    [ X"${MAILBOX_FORMAT}" != X"Maildir" ] && \
+        perl -pi -e 's#(mailbox_type =).*#${1} $ENV{MAILBOX_FORMAT}#' settings.ini
+
+    [ X"${MAILDIR_STYLE}" != X'hashed' ] && \
+        perl -pi -e 's#(hashed_maildir =).*#${1} False#' settings.ini
+
+    perl -pi -e 's#(mtaTransport =).*#${1} $ENV{TRANSPORT}#' settings.ini
+    perl -pi -e 's#(storage_base_directory =).*#${1} $ENV{STORAGE_BASE_DIR}#' settings.ini
 
     # MySQL database related settings: [iredadmin] section.
-    perl -pi -e 's#lang =# $ENV{DEFAULT_LANG}#' settings.ini
-    perl -pi -e 's#host =# $ENV{MYSQL_SERVER}#' settings.ini
-    perl -pi -e 's#port =# $ENV{MYSQL_PORT}#' settings.ini
-    perl -pi -e 's#db =# $ENV{IREDADMIN_DB_NAME}#' settings.ini
-    perl -pi -e 's#user =# $ENV{IREDADMIN_DB_USER}#' settings.ini
-    perl -pi -e 's#passwd =# $ENV{IREDADMIN_DB_PASSWD}#' settings.ini
+    perl -pi -e 's#(lang =).*#${1} $ENV{DEFAULT_LANG}#' settings.ini
+    perl -pi -e 's#(host =).*#${1} $ENV{MYSQL_SERVER}#' settings.ini
+    perl -pi -e 's#(port =).*#${1} $ENV{MYSQL_PORT}#' settings.ini
+    perl -pi -e 's#(db =).*#${1} $ENV{IREDADMIN_DB_NAME}#' settings.ini
+    perl -pi -e 's#(user =).*#${1} $ENV{IREDADMIN_DB_USER}#' settings.ini
+    perl -pi -e 's#(passwd =).*#${1} $ENV{IREDADMIN_DB_PASSWD}#' settings.ini
 
     # LDAP related settings: [ldap] section.
-    perl -pi -e 's#uri =# ldap://$ENV{LDAP_SERVER_HOST}:$ENV{LDAP_SERVER_PORT}/#' settings.ini
-    perl -pi -e 's#suffix =# $ENV{LDAP_SUFFIX}#' settings.ini
-    perl -pi -e 's#basedn =# $ENV{LDAP_BASEDN}#' settings.ini
-    perl -pi -e 's#domainadmin_dn =# $ENV{LDAP_ADMIN_BASEDN}#' settings.ini
-    perl -pi -e 's#bind_dn =# $ENV{LDAP_BINDDN}#' settings.ini
-    perl -pi -e 's#bind_pw =# $ENV{LDAP_BINDPW}#' settings.ini
+    perl -pi -e 's#(uri =).*#${1} ldap://$ENV{LDAP_SERVER_HOST}:$ENV{LDAP_SERVER_PORT}/#' settings.ini
+    perl -pi -e 's#(suffix =).*#${1} $ENV{LDAP_SUFFIX}#' settings.ini
+    perl -pi -e 's#(basedn =).*#${1} $ENV{LDAP_BASEDN}#' settings.ini
+    perl -pi -e 's#(domainadmin_dn =).*#${1} $ENV{LDAP_ADMIN_BASEDN}#' settings.ini
+    perl -pi -e 's#(bind_dn =).*#${1} $ENV{LDAP_BINDDN}#' settings.ini
+    perl -pi -e 's#(bind_pw =).*#${1} $ENV{LDAP_BINDPW}#' settings.ini
 }

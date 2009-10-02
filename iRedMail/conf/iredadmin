@@ -22,7 +22,7 @@
 
 export IREDADMIN_VERSION='0.1'
 export IREDADMIN_TARBALL="iRedAdmin-${IREDADMIN_VERSION}.tar.bz2"
-export IREDADMIN_HTTPD_ROOT="${HTTPD_SERVERROOT}/iRedAdmin-${RCM_VERSION}"
+export IREDADMIN_HTTPD_ROOT="${HTTPD_SERVERROOT}/iRedAdmin-${IREDADMIN_VERSION}"
 
 # MySQL database name, username and password.
 export IREDADMIN_DB_NAME='iredadmin'

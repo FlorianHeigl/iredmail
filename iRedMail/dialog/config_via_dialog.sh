@@ -25,6 +25,7 @@
 . ./conf/global
 . ./conf/functions
 . ./conf/core
+. ./conf/openldap
 
 trap "exit 255" 2
 
