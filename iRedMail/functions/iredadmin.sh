@@ -125,4 +125,18 @@ EOF
     perl -pi -e 's#(domainadmin_dn =).*#${1} $ENV{LDAP_ADMIN_BASEDN}#' settings.ini
     perl -pi -e 's#(bind_dn =).*#${1} $ENV{LDAP_BINDDN}#' settings.ini
     perl -pi -e 's#(bind_pw =).*#${1} $ENV{LDAP_BINDPW}#' settings.ini
+
+    cat >> ${TIP_FILE} <<EOF
+Official Web-based Admin Panel (iRedAdmin):
+    * Configuration files:
+        - ${HTTPD_SERVERROOT}/iRedAdmin-${IREDADMIN_VERSION}/
+        - ${HTTPD_SERVERROOT}/iRedAdmin-${IREDADMIN_VERSION}/settings.ini*
+    * URL:
+        - https://${HOSTNAME}/iredadmin/
+    * Login account:
+        - Username: ${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}, password: ${DOMAIN_ADMIN_PASSWD_PLAIN}
+    * See also:
+        - ${HTTPD_CONF_DIR}/iredadmin.conf
+
+EOF
 }
