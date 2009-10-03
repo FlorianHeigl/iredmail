@@ -106,7 +106,6 @@ elif [ X"${BACKEND}" == X"MySQL" ]; then
 ${PROG_NAME} provides several optional components for MySQL backend, you can use
 them by your own:
 " 20 76 6 \
-    "iRedAdmin" "Official web-based iRedMail Admin Panel" "on" \
     "Roundcubemail" "WebMail program (PHP, XHTML, CSS2, AJAX)." "on" \
     "SquirrelMail" "WebMail program, written in PHP." "off" \
     "phpMyAdmin" "Web-based MySQL database management." "on" \

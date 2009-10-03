@@ -99,6 +99,7 @@ export LDAP_OBJECTCLASS_MAILUSER='mailUser'
 export LDAP_OBJECTCLASS_MAILALIAS='mailAlias'
 export LDAP_OBJECTCLASS_MAILGROUP='mailList'
 export LDAP_OBJECTCLASS_MAILADMIN='mailAdmin'
+export LDAP_OBJECTCLASS_MAIL_EXTERNAL_USER='mailExternalUser'
 
 # Common attribute.
 export LDAP_ENABLED_SERVICE='enabledService'
@@ -143,6 +144,7 @@ export LDAP_ATTR_GROUP_RDN='ou'
 export LDAP_ATTR_GROUP_USERS='Users'
 export LDAP_ATTR_GROUP_GROUPS='Groups'
 export LDAP_ATTR_GROUP_ALIASES='Aliases'
+export LDAP_ATTR_GROUP_EXTERNALS='Externals'
 
 # Attributes of group object.
 export LDAP_ATTR_GROUP_ACCESSPOLICY='accessPolicy'
