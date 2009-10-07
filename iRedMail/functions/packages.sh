@@ -180,7 +180,7 @@ install_all()
 
         # TODO sill missing webpy-0.32, Jinja2, netifaces
         [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ] && \
-            ALL_PKGS="${ALL_PKGS} libapache2-mod-wsgi python-mysqldb python-ldap"
+            ALL_PKGS="${ALL_PKGS} libapache2-mod-wsgi python-mysqldb python-ldap python-jinja2 python-netifaces python-webpy"
     else
         :
     fi

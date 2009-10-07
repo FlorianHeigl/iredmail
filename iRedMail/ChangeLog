@@ -1,4 +1,5 @@
 iRedMail-0.5.1:
+    * Update dovecot to 1.1.19 on RHEL/CentOS.
     * Add 'preferredLanguage' in objectClass mailUser.
     * Increase ldap server-side sizelimit to 1000.
     * Add external user support in mail list.

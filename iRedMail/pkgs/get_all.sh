@@ -27,6 +27,7 @@ CONF_DIR="${ROOTDIR}/../conf"
 . ${CONF_DIR}/global
 . ${CONF_DIR}/functions
 . ${CONF_DIR}/core
+. ${CONF_DIR}/iredadmin
 
 check_user root
 check_hostname
@@ -207,6 +208,9 @@ fetch_misc()
 
             misc_count=$((misc_count + 1))
         done
+
+        ECHO_INFO "Fetch iRedAdmin (${IREDADMIN_VERSION}) - official iRedMail admin panel."
+        ${FETCH_CMD} http://iredmail.googlecode.com/files/${IREDADMIN_TARBALL}
     else
         :
     fi
