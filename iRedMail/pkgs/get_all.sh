@@ -194,7 +194,7 @@ fetch_misc()
         # Fetch all misc packages.
         cd ${MISC_DIR}
 
-        misc_total=$(echo ${MISCLIST} | wc -w | awk '{print $1}')
+        misc_total=$(( $(echo ${MISCLIST} | wc -w | awk '{print $1}') + 1 ))
         misc_count=1
 
         ECHO_INFO "==================== Fetching Source Tarballs ===================="
@@ -209,8 +209,7 @@ fetch_misc()
             misc_count=$((misc_count + 1))
         done
 
-        ECHO_INFO "Fetch iRedAdmin (${IREDADMIN_VERSION}) - official iRedMail admin panel."
-        ${FETCH_CMD} http://iredmail.googlecode.com/files/${IREDADMIN_TARBALL}
+        ECHO_INFO "* ${misc_total}/${misc_total}: iRedAdmin, http://iredmail.googlecode.com/files/${IREDADMIN_TARBALL}"
     else
         :
     fi
