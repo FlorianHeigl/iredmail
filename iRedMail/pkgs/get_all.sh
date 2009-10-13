@@ -209,7 +209,8 @@ fetch_misc()
             misc_count=$((misc_count + 1))
         done
 
-        ECHO_INFO "* ${misc_total}/${misc_total}: iRedAdmin, http://iredmail.googlecode.com/files/${IREDADMIN_TARBALL}"
+        ECHO_INFO "* ${misc_total}/${misc_total}: iRedAdmin, ${IREDADMIN_URL}"
+        ${FETCH_CMD} ${IREDADMIN_URL}
     else
         :
     fi
