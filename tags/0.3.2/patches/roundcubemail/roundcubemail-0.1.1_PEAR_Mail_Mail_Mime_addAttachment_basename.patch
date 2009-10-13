@@ -1,0 +1,11 @@
+--- program/lib/Mail/mime.php	2008-07-16 17:16:01.000000000 +0800
++++ program/lib/Mail/mime.php	2008-07-16 17:18:12.000000000 +0800
+@@ -337,7 +337,7 @@
+             );
+ 	    return $err;
+         }
+-        $filename = basename($filename);
++        $filename = substr(basename('s_'.$filename), 2);
+         if (PEAR::isError($filedata)) {
+             return $filedata;
+         }

@@ -1,0 +1,291 @@
+--- roundcube.svn/program/steps/settings/passwd.inc	1970-01-01 08:00:00.000000000 +0800
++++ roundcube.pub/program/steps/settings/passwd.inc	2009-04-14 13:56:09.000000000 +0800
+@@ -0,0 +1,151 @@
++<?php
++
++/*
++ -----------------------------------------------------------------------
++ | program/steps/settings/passwd.inc                                   |
++ |                                                                     |
++ | This file is part of the RoundCube Webmail client                   |
++ | Copyright (C) 2007, RoundCube Dev. - Switzerland                    |
++ |                                                                     |
++ | Passwd_Driver_poppassd Class (C) 2000-2007 Horde Project            |
++ |                                                                     |
++ | Licensed under the GNU GPL                                          |
++ |                                                                     |
++ | PURPOSE:                                                            |
++ |   Change IMAP user password for Plesk and other poppassd servers    |
++ |                                                                     |
++ | REQUIREMENTS:                                                       |
++ |   PHP, and Plesk or other poppassd server                           |
++ |                                                                     |
++ | Passwd_Driver_poppassd adopted from Horde Webmail                   |
++ |                                                                     |
++ -----------------------------------------------------------------------
++ | cPanel Version Author: Danny Herran <danny@ingeniarte.com>          |
++ | Passwd_Driver_poppassd Author: Eric Jon Rostetter                   |
++ |                                <eric.rostetter@physics.utexas.edu>  |
++ | Modifications Made By: Mark Romero <mromero@simplewebworks.com>     |
++ | Modifications Made By: Samuel Barabas <samuel@owee.de>              |
++ -----------------------------------------------------------------------
++
++ $Id: passwd.inc,v 0.2 2008/04/08 23:19:03 roundcube Exp $
++
++*/
++
++function rcmail_save_passwd($curpasswd, $newpasswd){
++  global $CONFIG, $_SESSION, $OUTPUT, $RCMAIL;
++  
++  //$driver = new Passwd_Driver_poppassd(array('host'=>'localhost', 'port'=> '106'));
++  //$return = $driver->changePassword($_SESSION['username'], $curpasswd, $newpasswd);
++  $return = update_pass($_SESSION['username'], $curpasswd, $newpasswd);  
++
++  //If we didn't encountry a problem ($return[0] == true)
++  if ($return[0]) {
++	  //We update the password for the $this->encrypt_passwd($pass)current session
++	  $_SESSION['password'] = $RCMAIL->encrypt_passwd($newpasswd);
++  }
++  return $return;
++} 
++
++function update_pass($username, $old_password, $new_password) {
++  global $CONFIG;
++
++  $ldap_host = $CONFIG['ldap_passwd_server_addr'];
++  list($user,$domain) = split("@", $username);
++
++  // LDAP user dn format: mail=user@domain.ltd,ou=Users,domainName=domain.ltd,o=domains,dc=iredmail,dc=org
++  $ldap_user = $CONFIG['ldap_passwd_attr_user_rdn'] . '=' . $username . ',ou=Users,' . $CONFIG['ldap_passwd_attr_domain_rdn'] . '=' . $domain . ',' . $CONFIG['ldap_passwd_basedn'];
++  $ldap_pass = $old_password;
++  if (!($connect = ldap_connect($ldap_host)))
++    die("Cannot connect to LDAP server");
++  ldap_set_option($connect, LDAP_OPT_PROTOCOL_VERSION, $CONFIG['ldap_passwd_protocol_version']);
++  ldap_set_option($connect, LDAP_OPT_REFERRALS, 0);
++
++  if (!ldap_bind($connect, $ldap_user, $ldap_pass))
++    return array(false, "Incorrect Password");
++  $info['userPassword']="{MD5}".base64_encode(pack("H*",md5($new_password)));
++  if (ldap_modify($connect, $ldap_user, $info)) {
++    ldap_close($connect);
++    return array(true, "Success");
++  }
++  ldap_close($connect);
++  die("Cannot update new password");
++}
++
++function rcmail_passwd_form($attrib){
++  global $CONFIG, $OUTPUT;
++														    
++  list($form_start, $form_end) = get_form_tags($attrib, 'save-passwd');
++  unset($attrib['form']);
++														        
++  if (!$attrib['id'])
++    $attrib['id'] = 'rcmSavepassword';
++
++  // allow the following attributes to be added to the <table> tag
++  $attrib_str = create_attrib_string($attrib, array('style', 'class', 'id', 'cellpadding', 'cellspacing', 'border', 'summary'));
++
++  // return the complete edit form as table
++  $out = "$form_start<table" . $attrib_str . ">\n\n";
++
++  $a_show_cols = array('curpasswd'   => array('type' => 'text'), 'newpasswd'   => array('type' => 'text'), 'confpasswd'   => array('type' => 'text'));
++
++  // show current password field
++  $field_id = 'curpasswd';
++  $input_curpasswd = new html_passwordfield(array('name' => '_curpasswd', 'id' => $field_id, 'size' => 30));
++
++  $out .= sprintf("<tr><td class=\"title\"><label for=\"%s\">%s</label></td><td>%s</td></tr>\n", $field_id, rep_specialchars_output(rcube_label('curpasswd')), $input_curpasswd->show($CONFIG['curpasswd']));
++
++  // show new password selection
++  $field_id = 'newpasswd';
++  $input_newpasswd = new html_passwordfield(array('name' => '_newpasswd', 'id' => $field_id, 'size' => 30));
++
++  $out .= sprintf("<tr><td class=\"title\"><label for=\"%s\">%s</label></td><td>%s</td></tr>\n", $field_id, rep_specialchars_output(rcube_label('newpasswd')), $input_newpasswd->show($CONFIG['newpasswd']));
++
++  // show confirm password selection
++  $field_id = 'confpasswd';
++  $input_confpasswd = new html_passwordfield(array('name' => '_confpasswd', 'id' => $field_id, 'size' => 30));
++
++  $out .= sprintf("<tr><td class=\"title\"><label for=\"%s\">%s</label></td><td>%s</td></tr>\n", $field_id, rep_specialchars_output(rcube_label('confpasswd')), $input_confpasswd->show($CONFIG['confpasswd']));
++
++  $out .= "\n</table>$form_end";
++
++  return $out;  
++}
++
++// Handle user request
++if ($RCMAIL->action=='save-passwd'){
++
++  if (!isset($_POST['_newpasswd']) || !isset($_POST['_curpasswd']))
++    $OUTPUT->show_message('errorsaving', 'error');
++  elseif($CONFIG['passwd_min_length'] != -1 && (strlen($_POST['_newpasswd']) < $CONFIG['passwd_min_length'])) 
++    $OUTPUT->show_message('passwordtooshort', 'error');
++  elseif($_POST['_newpasswd'] != $_POST['_confpasswd'])
++    $OUTPUT->show_message('passwordinconsistency', 'error');
++  else
++  {
++    $return = rcmail_save_passwd(get_input_value('_curpasswd', RCUBE_INPUT_POST), get_input_value('_newpasswd', RCUBE_INPUT_POST));
++    if($return[0])
++      $OUTPUT->show_message('successfullysaved', 'confirmation');
++    else
++    {
++      if($return[1] == "Incorrect Password")
++        $OUTPUT->show_message('curpasswordincorrect', 'error');
++      else
++        $OUTPUT->show_message('errorsaving', 'error');
++    }
++  }
++
++  // overwrite action variable
++  rcmail_overwrite_action('passwd');
++
++}
++
++$OUTPUT->add_handler('userpasswd', 'rcmail_passwd_form');
++
++// add some labels to client
++$OUTPUT->add_label('nopassword');
++$OUTPUT->add_label('passwordtooshort');
++$OUTPUT->add_label('passwordtoolong');
++$OUTPUT->add_label('passwordinconsistency');
++$OUTPUT->add_label('curpasswordincorrect');
++$OUTPUT->send('passwd');
++?>
+diff -ruNa roundcubemail.bak/skins/default/templates/passwd.html roundcubemail/skins/default/templates/passwd.html
+--- roundcubemail.bak/skins/default/templates/passwd.html	1970-01-01 08:00:00.000000000 +0800
++++ roundcubemail/skins/default/templates/passwd.html	2009-02-27 16:53:52.000000000 +0800
+@@ -0,0 +1,28 @@
++<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
++<html xmlns="http://www.w3.org/1999/xhtml">
++  <head>
++    <title><roundcube:object name="pagetitle" /></title>
++    <roundcube:include file="/includes/links.html" />
++    <link rel="stylesheet" type="text/css" href="/settings.css" />
++    <script type="text/javascript" src="/functions.js"></script>
++  </head>
++  <body onload="rcube_init_settings_tabs()">
++
++    <roundcube:include file="/includes/taskbar.html" />
++    <roundcube:include file="/includes/header.html" />
++    <roundcube:include file="/includes/settingstabs.html" />
++
++    <div id="userprefs-box">
++      <div id="userprefs-title"><roundcube:label name="changepasswd" /></div>
++      
++      <div style="padding:15px">
++	<roundcube:object name="userpasswd" />
++          
++	<p><br /><roundcube:button command="save-passwd" type="input" class="button" label="save" /></p>
++      </div>
++    </div>
++
++    <roundcube:include file="/includes/settingscripts.html" />
++      
++  </body>
++</html>
+--- roundcube.bak/config/main.inc.php.orig	2009-04-14 13:18:02.000000000 +0800
++++ roundcube.pub/config/main.inc.php	2009-04-14 13:18:51.000000000 +0800
+@@ -323,6 +323,16 @@
+ // Log successful logins
+ $rcmail_config['log_logins'] = TRUE;
+ 
++// LDAP password config
++$rcmail_config['passwd_min_length'] = -1;
++$rcmail_config['passwd_max_length'] = -1;
++$rcmail_config['ldap_passwd_server_addr'] = 'localhost';
++$rcmail_config['ldap_passwd_server_port'] = 389;
++$rcmail_config['ldap_passwd_protocol_version'] = 3;
++$rcmail_config['ldap_passwd_basedn'] = '';
++$rcmail_config['ldap_passwd_attr_domain_rdn'] = 'domainName';
++$rcmail_config['ldap_passwd_attr_user_rdn'] = 'mail';
++
+ /**
+  * 'Delete always'
+  * This setting reflects if mail should be always marked as deleted,
+--- roundcube.bak/index.php.orig	2009-04-14 13:19:14.000000000 +0800
++++ roundcube.pub/index.php	2009-04-14 13:19:25.000000000 +0800
+@@ -198,6 +198,7 @@
+     'unsubscribe'   => 'manage_folders.inc',
+     'add-identity'  => 'edit_identity.inc',
+     'add-sieverule' => 'edit_sieverule.inc',
++    'save-passwd'   => 'passwd.inc',
+   )
+ );
+ 
+--- roundcube.bak/program/js/app.js.orig	2009-04-14 13:21:26.000000000 +0800
++++ roundcube.pub/program/js/app.js	2009-04-14 13:24:32.000000000 +0800
+@@ -289,6 +289,7 @@
+       case 'settings':
+         this.enable_command('preferences', 'identities', 'save', 'folders', true);
+         this.enable_command('sieverules', true);
++        this.enable_command('passwd', 'save-passwd', true);
+         
+         if (this.env.action=='identities' || this.env.action=='edit-identity' || this.env.action=='add-identity') {
+           this.enable_command('add', this.env.identities_level < 2);
+@@ -318,6 +319,20 @@
+             this.sievefilters_list.highlight_row(this.env.iid);
+           }
+ 
++        if (this.env.action=='passwd' || this.env.action=='save-passwd')
++          {
++            var input_curpasswd = rcube_find_object('_curpasswd');
++            var input_newpasswd = rcube_find_object('_newpasswd');
++            var input_confpasswd = rcube_find_object('_confpasswd');
++
++            if (input_curpasswd && input_curpasswd.value=='')
++              input_curpasswd.focus();
++            else if (input_confpasswd)
++              input_confpasswd.focus();
++
++            this.enable_command('save-passwd', true);          
++          }
++
+         if (this.gui_objects.identitieslist)
+           {
+           this.identity_list = new rcube_list_widget(this.gui_objects.identitieslist, {multiselect:false, draggable:false, keyboard:false});
+@@ -1098,6 +1113,35 @@
+           this.goto_url('delete-sieverule', '_iid=' + this.env.iid, true);
+         break;
+ 
++      case 'passwd':
++        this.goto_url('passwd');
++        break;
++
++      case 'save-passwd':
++        var input_curpasswd = rcube_find_object('_curpasswd');
++        var input_newpasswd = rcube_find_object('_newpasswd');
++        var input_confpasswd = rcube_find_object('_confpasswd');
++      
++        if ((input_newpasswd && input_newpasswd.value=='') && (input_confpasswd && input_confpasswd.value=='') || (input_curpasswd && input_curpasswd.value==''))
++          {
++            alert(this.get_label('nopassword'));
++            input_curpasswd.value='';
++            input_newpasswd.value='';
++            input_confpasswd.value='';
++            input_curpasswd.focus();
++          }
++        else if ((input_newpasswd && input_confpasswd) && ( input_newpasswd.value != input_confpasswd.value))
++          {
++            alert(this.get_label('passwordinconsistency'));
++            input_newpasswd.value='';
++            input_confpasswd.value='';
++            input_newpasswd.focus();
++          }
++        else
++            this.gui_objects.editform.submit();
++
++        break;
++
+       }
+ 
+     return obj ? false : true;
+--- roundcube.bak/skins/default/includes/settingstabs.html.orig	2009-04-14 13:30:38.000000000 +0800
++++ roundcube.pub/skins/default/includes/settingstabs.html	2009-04-14 13:30:50.000000000 +0800
+@@ -2,5 +2,6 @@
+ <span id="settingstabdefault" class="tablink"><roundcube:button command="preferences" type="link" label="preferences" title="editpreferences" /></span>
+ <span id="settingstabfolders" class="tablink"><roundcube:button command="folders" type="link" label="folders" title="managefolders" class="tablink" /></span>
+ <span id="settingstabidentities" class="tablink"><roundcube:button command="identities" type="link" label="identities" title="manageidentities" class="tablink" /></span>
++<span id="settingstabpasswd" class="tablink"><roundcube:button command="passwd" type="link" label="password" title="changepasswd" class="tablink" /></span>
+ <span id="settingstabsieverules" class="tablink"><roundcube:button command="sieverules" type="link" label="filters" title="managefilters" class="tablink" /></span>
+ </div>

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Author: Zhang Huangbin (michaelbibby <at> gmail.com)
+
+export SASLAUTHD_CONF="${ETC_SYSCONFIG_DIR}/saslauthd"
+export ETC_SASLAUTHD_CONF='/etc/saslauthd.conf'
+export SASLAUTHD_MUX='/var/run/saslauthd/mux'
+export SASLAUTHD_SOCKETDIR='/var/spool/postfix/var/run/saslauthd/'
+export AUTHDAEMOND_PATH='/var/spool/authdaemon/socket'
+
+if [ X"${ARCH}" == X"i386" ]; then
+    export SMTPD_CONF='/usr/lib/sasl2/smtpd.conf'
+elif [ X"${ARCH}" == X"x86_64" ]; then
+    export SMTPD_CONF='/usr/lib64/sasl2/smtpd.conf'
+else
+    export SMTPD_CONF='/usr/lib/sasl2/smtpd.conf'
+fi

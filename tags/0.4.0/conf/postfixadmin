@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Author: Zhang Huangbin (michaelbibby <at> gmail.com)
+
+export POSTFIXADMIN_VERSION='2.2.1.1'
+export POSTFIXADMIN_TARBALL="postfixadmin-${POSTFIXADMIN_VERSION}.tar.gz"
+export POSTFIXADMIN_HTTPD_ROOT="${HTTPD_SERVERROOT}/postfixadmin-${POSTFIXADMIN_VERSION}"
+
+# Use config.local.php to store settings, so that you get smooth upgrade.
+export POSTFIXADMIN_CONF_LOCAL="${POSTFIXADMIN_HTTPD_ROOT}/config.local.php"
+
+# Default Language.
+export POSTFIXADMIN_DEFAULT_LANGUAGE='en'
+
+# Site admin name and password.
+export POSTFIXADMIN_ADMIN_NAME='admin'
+export POSTFIXADMIN_ADMIN_PASSWD='admin'

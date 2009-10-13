@@ -1,0 +1,38 @@
+===================================================================
+RCS file: /horde/cvs/horde/config/conf.xml,v
+retrieving revision 1.229
+retrieving revision 1.230
+diff -p --unified=3 -r1.229 -r1.230
+--- config/conf.xml	2008/05/19 23:22:04	1.229
++++ config/conf.xml	2008/05/26 11:51:43	1.230
+@@ -1132,8 +1132,10 @@
+    of Horde to ensure that a form can only be submitted once.">none
+     <case name="none" desc="Disable Form Tokens"/>
+     <case name="file" desc="Local filesystem token storage">
+-     <configstring name="token_dir" required="false" desc="The directory where
+-     to keep token files"/>
++     <configsection name="params">
++      <configstring name="token_dir" required="false" desc="The directory where
++      to keep token files"/>
++     </configsection>
+     </case>
+     <case name="sql" desc="SQL-based token storage">
+      <configsection name="params">
+===================================================================
+RCS file: /horde/cvs/imp/compose.php,v
+retrieving revision 2.1093
+retrieving revision 2.1094
+diff -p --unified=3 -r2.1093 -r2.1094
+--- imp/compose.php	2008/05/25 16:33:29	2.1093
++++ imp/compose.php	2008/05/26 11:51:45	2.1094
+@@ -111,7 +111,9 @@ $thismailbox = Util::getFormData('thisma
+ require_once 'Horde/Token.php';
+ if (isset($conf['token'])) {
+     /* If there is a configured token system, set it up. */
+-    $tokenSource = Horde_Token::factory($conf['token']['driver'], $conf['token']);
++    $tokenSource = Horde_Token::factory(
++        $conf['token']['driver'],
++        Horde::getDriverConfig('token', $conf['token']['driver']));
+ } else {
+     /* Default to the file system if no config. */
+     $tokenSource = Horde_Token::factory('file');

@@ -1,0 +1,72 @@
+diff -Nur includes/settingstabs.html includes/settingstabs.html
+--- includes/settingstabs.html    2005-09-25 22:18:03.000000000 +0800
++++ includes/settingstabs.html    2008-04-26 15:58:15.000000000 +0800
+@@ -1,3 +1,5 @@
+ <div id="tabsbar">
+ <span id="settingstabdefault" class="tablink"><roundcube:button command="preferences" type="link" label="preferences" title="editpreferences" /></span><span id="settingstabfolders" class="tablink"><roundcube:button command="folders" type="link" label="folders" title="managefolders" class="tablink" /></span><span id="settingstabidentities" class="tablink"><roundcube:button command="identities" type="link" label="identities" title="manageidentities" class="tablink" /></span>
++<span id="settingstabpasswd" class="tablink"><roundcube:button command="passwd" type="link" label="password" title="changepasswd" class="tablink" /></span>
++<span id="settingstabforwards" class="tablink"><roundcube:button command="forwards" type="link" label="forwards" title="changeforwards" class="tablink" /></span>
+ </div>
+diff -Nur templates/forwards.html templates/forwards.html
+--- templates/forwards.html   1970-01-01 08:00:00.000000000 +0800
++++ templates/forwards.html   2008-04-26 15:58:15.000000000 +0800
+@@ -0,0 +1,27 @@
++<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
++<html xmlns="http://www.w3.org/1999/xhtml">
++   <head>
++       <title><roundcube:object name="pagetitle" /></title>
++       <roundcube:include file="/includes/links.html" />
++       <link rel="stylesheet" type="text/css" href="/settings.css" />
++   </head>
++   <body>
++
++       <roundcube:include file="/includes/taskbar.html" />
++       <roundcube:include file="/includes/header.html" />
++       <roundcube:include file="/includes/settingstabs.html" />
++
++       <div id="userprefs-box">
++           <div id="userprefs-title"><roundcube:label name="changeforwards" /></div>
++
++           <div style="padding:15px">
++               <roundcube:object name="userforwards">
++
++               <p><br /><roundcube:button command="save-forwards" type="input" class="button" label="save" /></p>
++           </div>
++       </div>
++
++       <roundcube:include file="/includes/settingscripts.html" />
++
++   </body>
++</html>
+diff -Nur templates/passwd.html templates/passwd.html
+--- templates/passwd.html 1970-01-01 08:00:00.000000000 +0800
++++ templates/passwd.html 2008-04-26 15:58:15.000000000 +0800
+@@ -0,0 +1,27 @@
++<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
++<html xmlns="http://www.w3.org/1999/xhtml">
++   <head>
++       <title><roundcube:object name="pagetitle" /></title>
++       <roundcube:include file="/includes/links.html" />
++       <link rel="stylesheet" type="text/css" href="/settings.css" />
++   </head>
++   <body>
++
++       <roundcube:include file="/includes/taskbar.html" />
++       <roundcube:include file="/includes/header.html" />
++       <roundcube:include file="/includes/settingstabs.html" />
++
++       <div id="userprefs-box">
++           <div id="userprefs-title"><roundcube:label name="changepasswd" /></div>
++
++           <div style="padding:15px">
++               <roundcube:object name="userpasswd">
++
++               <p><br /><roundcube:button command="save-passwd" type="input" class="button" label="save" /></p>
++           </div>
++       </div>
++
++       <roundcube:include file="/includes/settingscripts.html" />
++
++   </body>
++</html>
+

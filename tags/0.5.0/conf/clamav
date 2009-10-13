@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# Author: Zhang Huangbin (michaelbibby <at> gmail.com)
+
+export CLAMAV_USER='clamav'
+export CLAMAV_GROUP='clamav'
+
+# Clamav.
+if [ X"${DISTRO}" == X"RHEL" ]; then
+    export CLAMD_CONF='/etc/clamd.conf'
+
+    # Freshclam.
+    export FRESHCLAM_CONF='/etc/freshclam.conf'
+    export FRESHCLAM_INIT_FILE_SAMPLE="${SAMPLE_DIR}/freshclam.init"
+
+elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+    export CLAMD_CONF='/etc/clamav/clamd.conf'
+
+    # Freshclam.
+    export FRESHCLAM_CONF='/etc/clamav/freshclam.conf'
+else
+    :
+fi
+
+# Clamd.
+export CLAMD_LISTEN_ADDR='127.0.0.1'            # Used to override default setting.
+export CLAMD_LOCAL_SOCKET='/tmp/clamd.socket'   # Used to override default setting.
+export CLAMD_LOGFILE='/var/log/clamav/clamd.log'
+export FRESHCLAM_LOGFILE='/var/log/clamav/freshclam.log'
+
+# Freshclam.
+export FRESHCLAM_PID_FILE='/var/run/clamav/freshclam.pid'   # Used to override default setting.
+export FRESHCLAM_DATABASE_MIRROR='db.us.clamav.net'     # db.cn.clamav.net is broken.

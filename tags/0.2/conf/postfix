@@ -1,0 +1,49 @@
+# Author: Zhang Huangbin (michaelbibby <at> gmail.com)
+# Variables for Postfix and related.
+
+# Set 'message_size_limit', in 'byte'. Default is 10M.
+export MESSAGE_SIZE_LIMIT='15728640'
+
+# virtual_maildir_limit_message.
+export MAILDIR_LIMIT_MESSAGE="Sorry, the user's maildir has overdrawn the disk quota, please notice the user and try again later."
+
+#
+# You do *NOT* need to modify them.
+#
+# ---- Postfix ----
+# You do *NOT* need to modify them.
+export POSTFIX_ROOTDIR='/etc/postfix'
+export POSTFIX_CHROOT_DIR='/var/spool/postfix'
+export POSTFIX_FILE_MAIN_CF="${POSTFIX_ROOTDIR}/main.cf"
+export POSTFIX_FILE_MASTER_CF="${POSTFIX_ROOTDIR}/master.cf"
+
+export SMTPD_CONF='/usr/lib/sasl2/smtpd.conf'
+
+# If you use courier-maildrop, transport should be 'maildrop'
+# We use dovecot here.
+export TRANSPORT='dovecot'
+
+# LDAP/MYSQL lookup configuration files.
+# LDAP lookup.
+export ldap_virtual_domains_cf="${POSTFIX_ROOTDIR}/virtual_domains.ldap"
+export ldap_transport_maps_cf="${POSTFIX_ROOTDIR}/transport_maps.ldap"
+export ldap_accounts_cf="${POSTFIX_ROOTDIR}/accounts.mysql"
+export ldap_virtual_mailbox_maps_cf="${POSTFIX_ROOTDIR}/virtual_mailbox_maps.ldap"
+export ldap_virtual_alias_maps_cf="${POSTFIX_ROOTDIR}/virtual_alias_maps.ldap"
+export ldap_sender_login_maps_cf="${POSTFIX_ROOTDIR}/ldap_sender_login_maps.ldap"
+export ldap_recipient_bcc_maps_domain_cf="${POSTFIX_ROOTDIR}/recipient_bcc_maps_domain.ldap"
+export ldap_recipient_bcc_maps_user_cf="${POSTFIX_ROOTDIR}/recipient_bcc_maps_user.ldap"
+export ldap_sender_bcc_maps_domain_cf="${POSTFIX_ROOTDIR}/sender_bcc_maps_domain.ldap"
+export ldap_sender_bcc_maps_user_cf="${POSTFIX_ROOTDIR}/sender_bcc_maps_user.ldap"
+
+# MySQL lookup.
+export mysql_virtual_domains_cf="${POSTFIX_ROOTDIR}/virtual_domains.mysql"
+export mysql_transport_maps_cf="${POSTFIX_ROOTDIR}/transport_maps.mysql"
+export mysql_virtual_mailbox_maps_cf="${POSTFIX_ROOTDIR}/virtual_mailbox_maps.mysql"
+export mysql_virtual_mailbox_limit_maps_cf="${POSTFIX_ROOTDIR}/virtual_mailbox_limit_maps.mysql"
+export mysql_virtual_alias_maps_cf="${POSTFIX_ROOTDIR}/virtual_alias_maps.mysql"
+export mysql_sender_login_maps_cf="${POSTFIX_ROOTDIR}/sender_login_maps.mysql"
+export mysql_sender_bcc_maps_domain_cf="${POSTFIX_ROOTDIR}/sender_bcc_maps_domain.mysql"
+export mysql_sender_bcc_maps_user_cf="${POSTFIX_ROOTDIR}/sender_bcc_maps_user.mysql"
+export mysql_recipient_bcc_maps_domain_cf="${POSTFIX_ROOTDIR}/recipient_bcc_maps_domain.mysql"
+export mysql_recipient_bcc_maps_user_cf="${POSTFIX_ROOTDIR}/recipient_bcc_maps_user.mysql"

@@ -1,0 +1,84 @@
+#
+# Sample procmail global filter rules. It should be localted at:
+#   /etc/procmailrc
+#
+# Shipped within iRedMail project:
+#   * http://iRedMail.googlecode.com/
+#
+
+# Global variables.
+SHELL='/bin/sh'
+PATH='/bin:/usr/bin:/usr/local/bin:/usr/X11R6/bin'
+DROPPRIVS=yes
+
+# Set log file and loglevel.
+LOGFILE='/var/log/procmail.log'
+
+# Enable verbose log.
+VERBOSE=no
+
+# Formail, shipped within Procmail.
+FORMAIL='formail'
+
+# Sendmail, shipped within Postfix.
+SENDMAIL='/usr/sbin/sendmail'
+
+# Set Maildir path.
+MAILBOX="$HOME/$DOMAIN/$USER/"
+DEFAULT="$MAILBOX"
+JUNK="${MAILBOX}/.Junk/"
+
+RECIPIENT="${RECIPIENT}"
+SENDER="${SENDER}"
+
+# Variables for vacation.
+#VACATION_ON="${MAILBOX}/.vacation.on"
+#VACATION_CACHE="${MAILBOX}/.vacation.cache"
+#VACATION_LOCK="${MAILBOX}/.vacation.lock"
+#VACATION_MSG="${MAILBOX}/.vacation.msg"
+#VACATION_SIGNATURE="${MAILBOX}/.vacation.signature"
+
+# Log some message to LOGFILE."
+#LOG="--------- Found something. ----------"
+
+# Make sure Maildir exist.
+:0
+* ? [ -d ${MAILBOX} ] || mkdir -p $MAILBOX
+{ }
+
+# Drop spam mail to Junk directory.
+:0 H
+* ^X-Spam-Status: YES
+${JUNK}
+
+# -------------------- Vacation ---------------------
+# This is actually two recipies. This is meant to go at the END of your .procmailrc
+# so it doesn't trigger on mailing lists that you're filtering above.
+
+#:0
+#* ? test -e ${VACATION_ON}
+#{
+    # Will add the sender to the vacation cache if not already in the vacation cache
+    # FROM_DAEMON is a macro for a lot of "system" addresses. see the
+    # procmailrc man page fordetails
+
+#    :0 Whc: ${VACATION_LOCK}
+#    * !^FROM_DAEMON
+#    * !^X-Loop: ${RECIPIENT}
+#    | formail -rD 8192 ${VACATION_CACHE}
+
+    # Only run this rule if the last rule didn't match, meaning it will only mail each
+    # user once.
+
+#    :0 ehc         # if the name was not in the cache
+#    | (${FORMAIL} -rA"Precedence: Junk" \
+#        -A"From: ${RECIPIENT}" \
+#        -A"To: ${SENDER}" \
+#        -A"Subject: I'm out of office." \
+#        -A"X-Loop: ${RECIPIENT}"; \
+#        cat ${VACATION_MSG}; \
+#        echo ""; \
+#        echo "-------- "; cat ${VACATION_SIGNATURE} \
+#        ) | $SENDMAIL -oi -t
+#}
+# ------------------ End vacation --------------------
