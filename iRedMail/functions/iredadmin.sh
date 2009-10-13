@@ -41,7 +41,7 @@ iredadmin_config()
 
     ECHO_INFO "Set correct permission for iRedAdmin: ${IREDADMIN_HTTPD_ROOT}."
     chown -R ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${IREDADMIN_HTTPD_ROOT}
-    chmod -R 0555 ${IREDADMIN_HTTPD_ROOT}
+    chmod -R 0755 ${IREDADMIN_HTTPD_ROOT}
 
     # Copy sample configure file.
     cd ${IREDADMIN_HTTPD_ROOT}/ && \
@@ -123,8 +123,8 @@ EOF
     perl -pi -e 's#(suffix =).*#${1} $ENV{LDAP_SUFFIX}#' settings.ini
     perl -pi -e 's#(basedn =).*#${1} $ENV{LDAP_BASEDN}#' settings.ini
     perl -pi -e 's#(domainadmin_dn =).*#${1} $ENV{LDAP_ADMIN_BASEDN}#' settings.ini
-    perl -pi -e 's#(bind_dn =).*#${1} $ENV{LDAP_BINDDN}#' settings.ini
-    perl -pi -e 's#(bind_pw =).*#${1} $ENV{LDAP_BINDPW}#' settings.ini
+    perl -pi -e 's#(bind_dn =).*#${1} $ENV{LDAP_ADMIN_DN}#' settings.ini
+    perl -pi -e 's#(bind_pw =).*#${1} $ENV{LDAP_ADMIN_PW}#' settings.ini
 
     cat >> ${TIP_FILE} <<EOF
 Official Web-based Admin Panel (iRedAdmin):

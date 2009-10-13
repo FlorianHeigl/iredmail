@@ -187,30 +187,6 @@ start_postfix_now()
     echo 'export status_start_postfix_now="DONE"' >> ${STATUS_FILE}
 }
 
-generate_iredadmin_settings()
-{
-    if [ X"${BACKEND}" == X"OpenLDAP" ]; then
-        cat >> ${TIP_FILE} <<EOF
-Settings for iRedAdmin [ldap] section:
-
-    [ldap]
-    uri = ldap://${LDAP_SERVER_HOST}:${LDAP_SERVER_PORT}
-    protocol_version = ${LDAP_BIND_VERSION}
-    debug_level = 0
-
-    # LDAP suffix.
-    suffix = ${LDAP_SUFFIX}
-    basedn = o=domains,${LDAP_SUFFIX}
-    domainadmin_dn = o=domainAdmins,${LDAP_SUFFIX}
-    bind_dn = ${LDAP_ADMIN_DN}
-    bind_pw = ${LDAP_ADMIN_PW}
-
-    default_pw_scheme = SSHA
-    sizelimit = 1000
-EOF
-    fi
-}
-
 cleanup()
 {
     cat <<EOF
@@ -227,7 +203,6 @@ EOF
     check_status_before_run replace_iptables_rule
     [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run replace_mysql_config
     check_status_before_run start_postfix_now
-    check_status_before_run generate_iredadmin_settings
 
     # Send tip file to the mail server admin or first mail user.
     if [ ! -z ${MAIL_ALIAS_ROOT} ]; then

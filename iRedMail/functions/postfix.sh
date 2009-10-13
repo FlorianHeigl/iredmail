@@ -433,6 +433,7 @@ EOF
         chmod 0644 ${i}
         cat >> ${TIP_FILE} <<EOF
         - ${i}
+
 EOF
     done
 
