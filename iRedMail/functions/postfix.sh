@@ -58,6 +58,7 @@ EOF
     postconf -e policy_time_limit='3600'
     postconf -e maximal_queue_lifetime='1d'
     postconf -e bounce_queue_lifetime='1d'
+    postconf -e proxy_read_maps='$canonical_maps $lmtp_generic_maps $local_recipient_maps $mydestination $mynetworks $recipient_bcc_maps $recipient_canonical_maps $relay_domains $relay_recipient_maps $relocated_maps $sender_bcc_maps $sender_canonical_maps $smtp_generic_maps $smtpd_sender_login_maps $transport_maps $virtual_alias_domains $virtual_alias_maps $virtual_mailbox_domains $virtual_mailbox_maps'
 
     #
     # Standalone smtpd_helo_restrictions.
@@ -197,17 +198,17 @@ postfix_config_ldap()
     ldap_search_base_user="${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}"
     ldap_search_base_group="${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_GROUPS},${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}"
 
-    postconf -e transport_maps="ldap:${ldap_transport_maps_user_cf}, ldap:${ldap_transport_maps_domain_cf}"
-    postconf -e virtual_alias_maps="ldap:${ldap_virtual_alias_maps_cf}, ldap:${ldap_virtual_group_maps_cf}"
-    postconf -e virtual_mailbox_domains="ldap:${ldap_virtual_mailbox_domains_cf}"
-    postconf -e virtual_mailbox_maps="ldap:${ldap_virtual_mailbox_maps_cf}"
+    postconf -e transport_maps="proxy:ldap:${ldap_transport_maps_user_cf}, proxy:ldap:${ldap_transport_maps_domain_cf}"
+    postconf -e virtual_alias_maps="proxy:ldap:${ldap_virtual_alias_maps_cf}, proxy:ldap:${ldap_virtual_group_maps_cf}"
+    postconf -e virtual_mailbox_domains="proxy:ldap:${ldap_virtual_mailbox_domains_cf}"
+    postconf -e virtual_mailbox_maps="proxy:ldap:${ldap_virtual_mailbox_maps_cf}"
     #postconf -e local_recipient_maps='$alias_maps $virtual_alias_maps $virtual_mailbox_maps'
-    postconf -e sender_bcc_maps="ldap:${ldap_sender_bcc_maps_domain_cf}, ldap:${ldap_sender_bcc_maps_user_cf}"
-    postconf -e recipient_bcc_maps="ldap:${ldap_recipient_bcc_maps_domain_cf}, ldap:${ldap_recipient_bcc_maps_user_cf}"
-    postconf -e relay_domains="\$mydestination, ldap:${ldap_relay_domains_cf}"
-    postconf -e relay_recipient_maps="ldap:${ldap_virtual_mailbox_maps_cf}"
+    postconf -e sender_bcc_maps="proxy:ldap:${ldap_sender_bcc_maps_domain_cf}, proxy:ldap:${ldap_sender_bcc_maps_user_cf}"
+    postconf -e recipient_bcc_maps="proxy:ldap:${ldap_recipient_bcc_maps_domain_cf}, proxy:ldap:${ldap_recipient_bcc_maps_user_cf}"
+    postconf -e relay_domains="\$mydestination, proxy:ldap:${ldap_relay_domains_cf}"
+    postconf -e relay_recipient_maps="proxy:ldap:${ldap_virtual_mailbox_maps_cf}"
 
-    postconf -e smtpd_sender_login_maps="ldap:${ldap_sender_login_maps_cf}"
+    postconf -e smtpd_sender_login_maps="proxy:ldap:${ldap_sender_login_maps_cf}"
     postconf -e smtpd_reject_unlisted_sender='yes'
 
     cat > ${ldap_virtual_mailbox_domains_cf} <<EOF
@@ -447,17 +448,17 @@ postfix_config_mysql()
     # Postfix doesn't work while mysql server is 'localhost', should be
     # changed to '127.0.0.1'.
 
-    postconf -e transport_maps="mysql:${mysql_transport_maps_user_cf}, mysql:${mysql_transport_maps_domain_cf}"
-    postconf -e virtual_mailbox_domains="mysql:${mysql_virtual_mailbox_domains_cf}"
-    postconf -e virtual_mailbox_maps="mysql:${mysql_virtual_mailbox_maps_cf}"
-    postconf -e virtual_mailbox_limit_maps="mysql:${mysql_virtual_mailbox_limit_maps_cf}"
-    postconf -e virtual_alias_maps="mysql:${mysql_virtual_alias_maps_cf}"
-    postconf -e sender_bcc_maps="mysql:${mysql_sender_bcc_maps_domain_cf}, mysql:${mysql_sender_bcc_maps_user_cf}"
-    postconf -e recipient_bcc_maps="mysql:${mysql_recipient_bcc_maps_domain_cf}, mysql:${mysql_recipient_bcc_maps_user_cf}"
-    postconf -e relay_domains="\$mydestination, mysql:${mysql_relay_domains_cf}"
-    postconf -e relay_recipient_maps="mysql:${mysql_virtual_mailbox_maps_cf}"
+    postconf -e transport_maps="proxy:mysql:${mysql_transport_maps_user_cf}, proxy:mysql:${mysql_transport_maps_domain_cf}"
+    postconf -e virtual_mailbox_domains="proxy:mysql:${mysql_virtual_mailbox_domains_cf}"
+    postconf -e virtual_mailbox_maps="proxy:mysql:${mysql_virtual_mailbox_maps_cf}"
+    postconf -e virtual_mailbox_limit_maps="proxy:mysql:${mysql_virtual_mailbox_limit_maps_cf}"
+    postconf -e virtual_alias_maps="proxy:mysql:${mysql_virtual_alias_maps_cf}"
+    postconf -e sender_bcc_maps="proxy:mysql:${mysql_sender_bcc_maps_domain_cf}, proxy:mysql:${mysql_sender_bcc_maps_user_cf}"
+    postconf -e recipient_bcc_maps="proxy:mysql:${mysql_recipient_bcc_maps_domain_cf}, proxy:mysql:${mysql_recipient_bcc_maps_user_cf}"
+    postconf -e relay_domains="\$mydestination, proxy:mysql:${mysql_relay_domains_cf}"
+    postconf -e relay_recipient_maps="proxy:mysql:${mysql_virtual_mailbox_maps_cf}"
 
-    postconf -e smtpd_sender_login_maps="mysql:${mysql_sender_login_maps_cf}"
+    postconf -e smtpd_sender_login_maps="proxy:mysql:${mysql_sender_login_maps_cf}"
     postconf -e smtpd_reject_unlisted_sender='yes'
 
     # Per-domain transport maps.
