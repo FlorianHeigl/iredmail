@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 # Author:   Zhang Huangbin (michaelbibby <at> gmail.com )
-# Date:     2008.06.11
 # Purpose:  Convert WinMail user mailboxs to standard IMAP directory
 #           structure (mailbox format).
 

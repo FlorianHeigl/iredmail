@@ -2,14 +2,8 @@
 # encoding: utf-8
 
 # Author: Zhang Huangbin <michaelbibby (at) gmail.com>
-
-# Filename: create_mail_user_OpenLDAP.py
-# Author:   Zhang Huangbin (michaelbibby#gmail.com)
-# Lastest update:   2009.06.15
 # Purpose: Add new OpenLDAP user for postfix mail server.
-#
-# Shipped within iRedMail project:
-#   * http://code.google.com/p/iredmail/
+# Project:  iRedMail (http://www.iredmail.org/)
 
 # --------------------------- WARNING ------------------------------
 # This script only works under iRedMail >= 0.4.0 due to ldap schema

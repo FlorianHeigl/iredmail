@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
 
-# -------------------------------------------------------------------
-# Filename: create_mail_user_MySQL.sh
 # Author:   Zhang Huangbin (michaelbibby <at> gmail.com)
-# Lastest update date:     2008.10.24
 # Purpose:  Import users to MySQL database from plain text file.
-# Project:  iRedMail (http://code.google.com/p/iredmail/)
-# -------------------------------------------------------------------
+# Project:  iRedMail (http://www.iredmail.org/)
 
 # -------------------------------------------------------------------
 # Usage:

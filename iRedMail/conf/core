@@ -142,6 +142,7 @@ check_env()
                     #   export STATUS_PHP_CONFIGURATION='DONE'
                     #
                     if [ -e ${STATUS_FILE} ]; then
+                        ECHO_INFO "Import installation process status from file: ${STATUS_FILE}."
                         . ${STATUS_FILE}
                     else
                         echo '' > ${STATUS_FILE}

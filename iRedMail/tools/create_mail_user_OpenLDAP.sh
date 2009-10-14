@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
 
-# Filename: create_mail_ldap_user.sh
 # Author:   Zhang Huangbin (michaelbibby#gmail.com)
-# Lastest update date:  2009.02.19
 # Purpose: Add new OpenLDAP user for postfix mail server.
-#
-# Shipped within iRedMail project:
-#   * http://code.google.com/p/iredmail/
+# Project:  iRedMail (http://www.iredmail.org/)
 
 # --------------------------- WARNING ------------------------------
 # This script only works under iRedMail >= 0.3.3 due to ldap schema

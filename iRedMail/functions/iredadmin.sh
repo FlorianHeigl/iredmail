@@ -139,4 +139,6 @@ Official Web-based Admin Panel (iRedAdmin):
         - ${HTTPD_CONF_DIR}/iredadmin.conf
 
 EOF
+
+    echo 'export status_iredadmin_config="DONE"' >> ${STATUS_FILE}
 }

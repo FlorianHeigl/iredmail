@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 # Author:   Zhang Huangbin (michaelbibby <at> gmail.com )
-# Date:     2008.06.11
 # Purpose:  Migrate ExtMail MySQL 'mailbox' table to iRedMail format.
-
+# Project:  iRedMail (http://www.iredmail.org/)
+#
 # Migration guide wrote in Chinese:
-#   http://code.google.com/p/iRedMail/wiki/iRedMail_tut_Migration
+#   http://www.iredmail.org/wiki/index.php?title=Migrate_from_ExtMail_Solution
 
 # Usage:
 #   English:

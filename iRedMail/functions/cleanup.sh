@@ -223,6 +223,19 @@ EOF
 *
 * And it's sent to your mail account ${tip_recipient}.
 *
+* If you want to remove and re-install iRedMail, here are steps:
+*
+*   - Run script to remove main components installed by iRedMail:
+*
+*       # cd tools/
+*       # bash clear_iredmail.sh
+*
+*   - Remove iRedMail installation process status:
+*
+*       # rm -f ${STATUS_FILE}
+*
+*   - Install iRedMail like you did before.
+*
 EOF
 
 if [ X"${POSTFIX_STARTED}" != X"YES" ]; then

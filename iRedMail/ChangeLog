@@ -1,4 +1,6 @@
 iRedMail-0.5.1:
+    * Add script (tools/clear_iredmail.sh) to remove main components
+      installed by iRedMail.
     * Use postfix proxymap(8) to reduce server load under high load.
     * Update dovecot to 1.1.19 on RHEL/CentOS.
     * Add 'preferredLanguage' in objectClass mailUser.

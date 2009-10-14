@@ -56,8 +56,8 @@ EOF
     perl -pi -e 's#^(ServerTokens).*#${1} ProductOnly#' ${HTTPD_CONF}
     perl -pi -e 's#^(ServerSignature).*#${1} EMail#' ${HTTPD_CONF}
 
-    ECHO_INFO "Disable 'AddDefaultCharset' in ${HTTPD_CONF}."
-    perl -pi -e 's/^(AddDefaultCharset UTF-8)/#${1}/' ${HTTPD_CONF}
+    #ECHO_INFO "Disable 'AddDefaultCharset' in ${HTTPD_CONF}."
+    #perl -pi -e 's/^(AddDefaultCharset UTF-8)/#${1}/' ${HTTPD_CONF}
 
     # SSL Cert/Key file.
     if [ X"${DISTRO}" == X"RHEL" ]; then
