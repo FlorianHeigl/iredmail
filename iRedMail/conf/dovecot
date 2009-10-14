@@ -40,6 +40,9 @@ fi
 export DOVECOT_USER='dovecot'
 export DOVECOT_GROUP='dovecot'
 
+# Log & logrotate files.
+export DOVECOT_LOG_FILE='/var/log/dovecot.log'
+export SIEVE_LOG_FILE='/var/log/sieve.log'
 export DOVECOT_LOGROTATE_FILE="${LOGROTATE_DIR}/dovecot"
 export SIEVE_LOGROTATE_FILE="${LOGROTATE_DIR}/sieve"
 
@@ -49,9 +52,7 @@ export DOVECOT_SOCKET_MASTER='/var/run/dovecot/auth-master'
 
 export DOVECOT_BIN='/usr/sbin/dovecot'
 export DOVECOT_SIEVEC='/usr/libexec/dovecot/sievec'
-export DOVECOT_LOG_FILE='/var/log/dovecot.log'
 
-export SIEVE_LOG_FILE='/var/log/sieve.log'
 # Do not starts with dot (.).
 export SIEVE_RULE_FILENAME='dovecot.sieve'
 export GLOBAL_SIEVE_FILE="${SIEVE_DIR}/${SIEVE_RULE_FILENAME}"

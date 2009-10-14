@@ -5,7 +5,11 @@
 #           you can re-install iRedMail.
 # Project:  iRedMail (http://www.iredmail.org/)
 
-# TODO remove non binary packages/files.
+# ------------ USAGE --------
+# Execute this file in the current directory.
+#
+#   # bash clear_iredmail.sh
+#
 
 export CONF_DIR='../conf'
 
@@ -45,15 +49,15 @@ confirm_to_remove()
 
     if [ ! -z ${DEST} ]; then
         if [ -e ${DEST} -o -L ${DEST} ]; then
-            ECHO_QUESTION -n "Remove ${DEST}? [y|N] "
+            ECHO_QUESTION -n "Remove ${DEST}? [Y|n] "
             read ANSWER
             case $ANSWER in
-                Y|y )
+                N|n ) : ;;
+                Y|y|* )
                     ECHO_INFO -n "Removing ${DEST} ..."
                     rm -rf ${DEST}
                     echo -e "\t[ DONE ]"
                     ;;
-                N|n|* ) : ;;
             esac
         else
             :
@@ -248,11 +252,59 @@ get_all_misc()
 {
     EXTRA_FILES=''
 
+    # SSL keys.
+    EXTRA_FILES="${EXTRA_FILES} ${SSL_CERT_FILE} ${SSL_KEY_FILE}"
+
+    # Apache & PHP.
+    EXTRA_FILES="${EXTRA_FILES} ${HTTPD_CONF_ROOT} ${PHP_INI}"
+
+    # MySQL.
+    EXTRA_FILES="${EXTRA_FILES} ${MYSQL_MY_CNF}"
+
+    # OpenLDAP.
+    EXTRA_FILES="${EXTRA_FILES} ${OPENLDAP_CONF_ROOT} ${OPENLDAP_DATA_DIR} ${OPENLDAP_LOGFILE} ${OPENLDAP_LOGROTATE_FILE}"
+
+    # Postfix.
+    EXTRA_FILES="${EXTRA_FILES} ${POSTFIX_ROOTDIR}"
+
+    # Dovecot.
+    EXTRA_FILES="${EXTRA_FILES} ${DOVECOT_CONF} ${DOVECOT_LDAP_CONF} ${DOVECOT_MYSQL_CONF} ${DOVECOT_LOG_FILE} ${SIEVE_LOG_FILE} ${DOVECOT_LOGROTATE_FILE} ${SIEVE_LOGROTATE_FILE} ${DOVECOT_EXPIRE_DICT_BDB} ${GLOBAL_SIEVE_FILE} ${DOVECOT_QUOTA_WARNING_BIN}"
+
+    # Procmail.
+    EXTRA_FILES="${EXTRA_FILES} ${PROCMAILRC} ${PROCMAIL_LOGFILE} ${PROCMAIL_LOGROTATE_FILE}"
+
+    # Policyd.
+    EXTRA_FILES="${EXTRA_FILES} ${POLICYD_CONF} ${POLICYD_SENDER_THROTTLE_CONF} ${POLICYD_LOGFILE} ${POLICYD_LOGROTATE_FILE}"
+
+    # Pysieved.
+    EXTRA_FILES="${EXTRA_FILES} ${PYSIEVED_INI} /etc/init.d/pysieved"
+
     # Amavisd.
-    EXTRA_FILES="${EXTRA_FILES} ${AMAVISD_CONF} ${AMAVISD_DKIM_CONF} ${AMAVISD_DKIM_DIR} ${AMAVISD_LOGFILE} ${AMAVISD_LOGROTATE_FILE}"
+    EXTRA_FILES="${EXTRA_FILES} ${AMAVISD_CONF} ${AMAVISD_DKIM_CONF} ${AMAVISD_DKIM_DIR} ${AMAVISD_LOGFILE} ${AMAVISD_LOGROTATE_FILE} ${DISCLAIMER_DIR}"
+
+    # ClamAV.
+    EXTRA_FILES="${EXTRA_FILES} ${CLAMD_CONF} ${FRESHCLAM_CONF} ${CLAMD_LOGFILE} ${FRESHCLAM_LOGFILE}"
+
+    # Awstats.
+    EXTRA_FILES="${EXTRA_FILES} ${AWSTATS_CONF_DIR} ${AWSTATS_HTTPD_ROOT} ${AWSTATS_CGI_DIR}"
+
+    # phpLDAPadmin.
+    EXTRA_FILES="${EXTRA_FILES} ${PLA_HTTPD_ROOT} ${HTTPD_SERVERROOT}/phpldapadmin"
+
+    # phpMyAdmin.
+    EXTRA_FILES="${EXTRA_FILES} ${PHPMYADMIN_HTTPD_ROOT} ${HTTPD_SERVERROOT}/phpmyadmin"
 
     # Roundcube webmail.
-    EXTRA_FILES="${EXTRA_FILES} ${RCM_HTTPD_ROOT} ${HTTPD_SERVERROOT}/roundcubemail"
+    EXTRA_FILES="${EXTRA_FILES} ${RCM_HTTPD_ROOT} ${HTTPD_SERVERROOT}/roundcubemail ${RCM_LOGFILE} ${RCM_LOGROTATE_FILE}"
+
+    # PostfixAdmin.
+    EXTRA_FILES="${EXTRA_FILES} ${POSTFIXADMIN_HTTPD_ROOT} ${HTTPD_SERVERROOT}/postfixadmin"
+
+    # SquirrelMail.
+    EXTRA_FILES="${EXTRA_FILES} ${SM_HTTPD_ROOT} ${HTTPD_SERVERROOT}/squirrelmail"
+
+    # iRedAdmin.
+    EXTRA_FILES="${EXTRA_FILES} ${IREDADMIN_HTTPD_ROOT} ${HTTPD_SERVERROOT}/iredadmin"
 
     export EXTRA_FILES
 }
