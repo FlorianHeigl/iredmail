@@ -37,9 +37,9 @@ EOF
 policyd_user()
 {
     ECHO_INFO "==================== Policyd ===================="
-    ECHO_INFO "Add user and group for policyd: ${POLICYD_USER_NAME}:${POLICYD_GROUP_NAME}."
-    groupadd ${POLICYD_GROUP_NAME}
-    useradd -m -d ${POLICYD_USER_HOME} -s /sbin/nologin -g ${POLICYD_GROUP_NAME} ${POLICYD_USER_NAME}
+    ECHO_INFO "Add user and group for policyd: ${POLICYD_USER}:${POLICYD_GROUP}."
+    groupadd ${POLICYD_GROUP}
+    useradd -m -d ${POLICYD_USER_HOME} -s /sbin/nologin -g ${POLICYD_GROUP} ${POLICYD_USER}
 
     echo 'export status_policyd_user="DONE"' >> ${STATUS_FILE}
 }
@@ -119,7 +119,7 @@ EOF
     [ X"${DISTRO}" == X"RHEL" ] && patch -p0 < ${PATCH_DIR}/policyd/policyd_init.patch >/dev/null
 
     # Set correct permission.
-    chown ${POLICYD_USER_NAME}:${POLICYD_GROUP_NAME} ${POLICYD_CONF} ${POLICYD_SENDER_THROTTLE_CONF}
+    chown ${POLICYD_USER}:${POLICYD_GROUP} ${POLICYD_CONF} ${POLICYD_SENDER_THROTTLE_CONF}
     chmod 0700 ${POLICYD_CONF} ${POLICYD_SENDER_THROTTLE_CONF}
 
     # Setup postfix for recipient throttle.
@@ -151,8 +151,8 @@ EOF
     perl -pi -e 's#^(BINDPORT=)(.*)#${1}"$ENV{POLICYD_BINDPORT}"#' ${POLICYD_CONF}
 
     # ---- CHROOT ----
-    export policyd_user_id="$(id -u ${POLICYD_USER_NAME})"
-    export policyd_group_id="$(id -g ${POLICYD_USER_NAME})"
+    export policyd_user_id="$(id -u ${POLICYD_USER})"
+    export policyd_group_id="$(id -g ${POLICYD_USER})"
     perl -pi -e 's#^(CHROOT=)(.*)#${1}$ENV{POLICYD_USER_HOME}#' ${POLICYD_CONF}
     perl -pi -e 's#^(UID=)(.*)#${1}$ENV{policyd_user_id}#' ${POLICYD_CONF}
     perl -pi -e 's#^(GID=)(.*)#${1}$ENV{policyd_group_id}#' ${POLICYD_CONF}
@@ -304,15 +304,15 @@ EOF
     fi
 
     # Setup crontab.
-    ECHO_INFO "Setting cron job for policyd user: ${POLICYD_USER_NAME}."
-    cat > ${CRON_SPOOL_DIR}/${POLICYD_USER_NAME} <<EOF
+    ECHO_INFO "Setting cron job for policyd user: ${POLICYD_USER}."
+    cat > ${CRON_SPOOL_DIR}/${POLICYD_USER} <<EOF
 ${CONF_MSG}
 1       */2       *       *       *       $(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep 'cleanup$' ) -c ${POLICYD_CONF}
 1       */2       *       *       *       $(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep 'cleanup$' ) -c ${POLICYD_SENDER_THROTTLE_CONF}
 EOF
 
     # Set cron file permission: root:root, 0600.
-    chmod 0600 ${CRON_SPOOL_DIR}/${POLICYD_USER_NAME}
+    chmod 0600 ${CRON_SPOOL_DIR}/${POLICYD_USER}
 
     # Add postfix alias.
     if [ ! -z ${MAIL_ALIAS_ROOT} ]; then
@@ -332,7 +332,7 @@ Policyd:
     * Misc:
         - /etc/cron.daily/policyd-cleanup
         - $(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep 'policyd.cron$')
-        - crontab -l -u ${POLICYD_USER_NAME}
+        - crontab -l -u ${POLICYD_USER}
 EOF
 
     if [ X"${POLICYD_SEPERATE_LOG}" == X"YES" ]; then

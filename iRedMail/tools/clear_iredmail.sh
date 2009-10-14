@@ -42,27 +42,62 @@ export CONF_DIR='../conf'
 # Source user configurations of iRedMail.
 . ../config
 
-confirm_to_remove()
+confirm_to_remove_pkg()
 {
-    # Usage: confirm_to_remove [FILE|DIR]
+    # Usage: confirm_to_remove_pkg [FILE|DIR]
     DEST="${1}"
 
     if [ ! -z ${DEST} ]; then
         if [ -e ${DEST} -o -L ${DEST} ]; then
-            ECHO_QUESTION -n "Remove ${DEST}? [Y|n] "
+            ECHO_QUESTION -n "Remove ${DEST}? [Y|n]"
             read ANSWER
             case $ANSWER in
                 N|n ) : ;;
                 Y|y|* )
                     ECHO_INFO -n "Removing ${DEST} ..."
                     rm -rf ${DEST}
-                    echo -e "\t[ DONE ]"
+                    echo -e "\t[ DONE ]\n--"
                     ;;
             esac
         else
             :
         fi
     else
+        :
+    fi
+}
+
+confirm_to_remove_account()
+{
+    # Usage: confirm_to_remove_account user USERNAME
+    #        confirm_to_remove_account group GROUPNAME
+    TYPE="${1}"
+    NAME="${2}"
+
+    if [ X"${TYPE}" == X"user" ]; then
+        id -u ${NAME} >/dev/null 2>&1
+        RETVAL="$?"
+        remove_cmd="userdel -r"
+    elif [ X"${TYPE}" == X"group" ]; then
+        id -g ${NAME} >/dev/null 2>&1
+        RETVAL="$?"
+        remove_cmd="groupdel"
+    fi
+
+    if [ X"${RETVAL}" == X"0" ]; then
+        ECHO_INFO -n "Remove ${TYPE} ${NAME}. [Y|n]"
+
+        read ANSWER
+        case $ANSWER in
+            N|n ) : ;;
+            Y|y|* )
+                ECHO_INFO -n "Removing ${TYPE} ${NAME} ..."
+                ${remove_cmd} ${NAME}
+                echo -e "\t[ DONE ]\n--"
+                ;;
+        esac
+    else
+        # Account not exist.
         :
     fi
 }
@@ -78,9 +113,10 @@ remove_pkg()
 }
 
 # ---- Below is code snippet of functions/packages.sh ----
+# Get all packages.
 get_all_pkgs()
 {
-    ALL_PKGS=''
+    export ALL_PKGS=''
 
     # Apache and PHP.
     if [ X"${USE_EXIST_AMP}" != X"YES" ]; then
@@ -238,13 +274,11 @@ get_all_pkgs()
     else
         :
     fi
-
-    export ALL_PKGS
 }
 
 get_all_misc()
 {
-    EXTRA_FILES=''
+    export EXTRA_FILES=''
 
     # SSL keys.
     EXTRA_FILES="${EXTRA_FILES} ${SSL_CERT_FILE} ${SSL_KEY_FILE}"
@@ -302,22 +336,61 @@ get_all_misc()
 
     # Misc.
     EXTRA_FILES="${EXTRA_FILES} ${LOCAL_REPO_FILE}"
+}
 
-    export EXTRA_FILES
+# Ge all users & groups
+get_all_accounts()
+{
+    export ALL_USERS=''
+    export ALL_GROUPS=''
+
+    # Vmail.
+    ALL_USERS="${ALL_USERS} ${VMAIL_USER_NAME}"
+    ALL_GROUPS="${ALL_GROUPS} ${VMAIL_GROUP_NAME}"
+
+    # Apache.
+    ALL_USERS="${ALL_USERS} ${HTTPD_USER}"
+    ALL_GROUPS="${ALL_GROUPS} ${HTTPD_GROUP}"
+
+    # OpenLDAP.
+    ALL_USERS="${ALL_USERS} ${LDAP_USER}"
+    ALL_GROUPS="${ALL_GROUPS} ${LDAP_GROUP}"
+
+    # Dovecot.
+    ALL_USERS="${ALL_USERS} ${DOVECOT_USER}"
+    ALL_GROUPS="${ALL_GROUPS} ${DOVECOT_GROUP}"
+
+    # Policyd.
+    ALL_USERS="${ALL_USERS} ${POLICYD_USER}"
+    ALL_GROUPS="${ALL_GROUPS} ${POLICYD_GROUP}"
+
+    # Amavisd.
+    ALL_USERS="${ALL_USERS} ${AMAVISD_USER}"
+    ALL_GROUPS="${ALL_GROUPS} ${AMAVISD_GROUP}"
+
+    # ClamAV.
+    ALL_USERS="${ALL_USERS} ${CLAMAV_USER}"
+    ALL_GROUPS="${ALL_GROUPS} ${CLAMAV_GROUP}"
 }
 
 get_all_pkgs
 get_all_misc
+get_all_accounts
+
+ECHO_INFO "=================== Remove binary packages ================"
 remove_pkg ${ALL_PKGS}
 
-for i in ${EXTRA_FILES}; do
-    confirm_to_remove ${i}
+ECHO_INFO "=================== Remove users ================"
+for user in ${ALL_USERS}; do
+    confirm_to_remove_account user ${user}
 done
 
-# Delete users created by iRedMail.
-id ${VMAIL_USER_NAME} >/dev/null 2>&1
-if [ X"$?" == X"0" ]; then
-    ECHO_INFO "Remove user & group: ${VMAIL_USER_NAME}/${VMAIL_GROUP_NAME}."
-    userdel -r ${VMAIL_USER_NAME}
-    groupdel ${VMAIL_GROUP_NAME}
-fi
+ECHO_INFO "=================== Remove groups ================"
+for group in ${ALL_GROUPS}; do
+    confirm_to_remove_account group ${group}
+done
+
+ECHO_INFO "=================== Remove configuration files ================"
+for i in ${EXTRA_FILES}; do
+    confirm_to_remove_pkg ${i}
+done

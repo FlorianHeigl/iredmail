@@ -76,6 +76,9 @@ EOF
         a2enmod ssl >/dev/null
         [ X"${BACKEND}" == X"OpenLDAP" ] && a2enmod authnz_ldap > /dev/null
         [ X"${BACKEND}" == X"MySQL" ] && a2enmod auth_mysql > /dev/null
+
+        # Enable mod_deflate to compress web content.
+        a2enmod deflate >/dev/null 2>&1
     else
         :
     fi

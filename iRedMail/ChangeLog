@@ -1,4 +1,5 @@
 iRedMail-0.5.1:
+    * Enable mod_deflate in apache by default.
     * Update dovecot to 1.1.16 on Debian 5, patched to fix security holes in
       CMU Sieve plugin. Reference:
       http://marc.info/?l=dovecot&m=125288621404279&w=2
