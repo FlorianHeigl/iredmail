@@ -1,4 +1,7 @@
 iRedMail-0.5.1:
+    * Update dovecot to 1.1.16 on Debian 5, patched to fix security holes in
+      CMU Sieve plugin. Reference:
+      http://marc.info/?l=dovecot&m=125288621404279&w=2
     * Add script (tools/clear_iredmail.sh) to remove main components
       installed by iRedMail.
     * Use postfix proxymap(8) to reduce server load under high load.

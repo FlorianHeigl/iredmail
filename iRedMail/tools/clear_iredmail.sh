@@ -74,7 +74,6 @@ remove_pkg()
         yum remove $@
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
         apt-get purge $@
-        apt-get autoremove
     fi
 }
 
@@ -187,7 +186,7 @@ get_all_pkgs()
     if [ X"${DISTRO}" == X"RHEL" ]; then
         ALL_PKGS="${ALL_PKGS} amavisd-new.${ARCH} clamd.${ARCH} clamav.${ARCH} clamav-db.${ARCH} spamassassin.${ARCH} altermime.${ARCH}"
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        ALL_PKGS="${ALL_PKGS} amavisd-new libcrypt-openssl-rsa-perl libmail-dkim-perl clamav-freshclam clamav-daemon spamassassin altermime"
+        ALL_PKGS="${ALL_PKGS} amavisd-new libcrypt-openssl-rsa-perl libmail-dkim-perl clamav-base clamav-freshclam clamav-daemon spamassassin altermime"
     else
         :
     fi
