@@ -114,5 +114,6 @@ Warning:
     fi
 done
 
+export LDAP_ADMIN_PW="${LDAP_ADMIN_PW}"
 echo "export LDAP_ADMIN_PW='${LDAP_ADMIN_PW}'" >>${CONFIG_FILE}
 rm -f /tmp/vmail_user_passwd
