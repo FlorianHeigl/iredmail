@@ -67,20 +67,15 @@ confirm_to_remove()
     fi
 }
 
-# ---- Below is code snippet of conf/core ----
-# Do NOT use '-y' in yum and apt-get, let user confirm this operation.
-remove_pkg_rhel()
+remove_pkg()
 {
     ECHO_INFO "Removing package(s): $@"
-    ${YUM} remove $@
-    [ X"$?" != X"0" ] && ECHO_ERROR "Package removed failed, please check the terminal output."
-}
-
-remove_pkg_debian()
-{
-    ECHO_INFO "Removing package(s): $@"
-    apt-get purge $@
-    [ X"$?" != X"0" ] && ECHO_ERROR "Package removed failed, please check the terminal output."
+    if [ X"${DISTRO}" == X"RHEL" ]; then
+        yum remove $@
+    elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+        apt-get purge $@
+        apt-get autoremove
+    fi
 }
 
 # ---- Below is code snippet of functions/packages.sh ----
@@ -92,7 +87,7 @@ get_all_pkgs()
     if [ X"${USE_EXIST_AMP}" != X"YES" ]; then
         # Apache & PHP.
         if [ X"${DISTRO}" == X"RHEL" ]; then
-            ALL_PKGS="${ALL_PKGS} httpd.${ARCH} mod_ssl.${ARCH} php.${ARCH} php-imap.${ARCH} php-gd.${ARCH} php-mbstring.${ARCH} libmcrypt.${ARCH} php-mcrypt.${ARCH} php-pear.noarch php-xml.${ARCH} php-pecl-fileinfo.${ARCH} php-mysql.${ARCH} php-ldap.${ARCH}"
+            ALL_PKGS="${ALL_PKGS} httpd.${ARCH} mod_ssl.${ARCH} php.${ARCH} php-common.${ARCH} php-imap.${ARCH} php-gd.${ARCH} php-mbstring.${ARCH} libmcrypt.${ARCH} php-mcrypt.${ARCH} php-pear.noarch php-xml.${ARCH} php-pecl-fileinfo.${ARCH} php-mysql.${ARCH} php-ldap.${ARCH}"
 
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
             ALL_PKGS="${ALL_PKGS} apache2 apache2-mpm-prefork apache2.2-common libapache2-mod-php5 libapache2-mod-auth-mysql php5-cli php5-imap php5-gd php5-mcrypt php5-mysql php5-ldap"
@@ -256,10 +251,10 @@ get_all_misc()
     EXTRA_FILES="${EXTRA_FILES} ${SSL_CERT_FILE} ${SSL_KEY_FILE}"
 
     # Apache & PHP.
-    EXTRA_FILES="${EXTRA_FILES} ${HTTPD_CONF_ROOT} ${PHP_INI}"
+    EXTRA_FILES="${EXTRA_FILES} ${HTTPD_CONF_ROOT} ${PHP_INI} /etc/php.d"
 
     # MySQL.
-    EXTRA_FILES="${EXTRA_FILES} ${MYSQL_MY_CNF}"
+    EXTRA_FILES="${EXTRA_FILES} ${MYSQL_MY_CNF} /var/lib/mysql /var/log/mysqld.log /var/log/mysql.log"
 
     # OpenLDAP.
     EXTRA_FILES="${EXTRA_FILES} ${OPENLDAP_CONF_ROOT} ${OPENLDAP_DATA_DIR} ${OPENLDAP_LOGFILE} ${OPENLDAP_LOGROTATE_FILE}"
@@ -306,17 +301,24 @@ get_all_misc()
     # iRedAdmin.
     EXTRA_FILES="${EXTRA_FILES} ${IREDADMIN_HTTPD_ROOT} ${HTTPD_SERVERROOT}/iredadmin"
 
+    # Misc.
+    EXTRA_FILES="${EXTRA_FILES} ${LOCAL_REPO_FILE}"
+
     export EXTRA_FILES
 }
 
 get_all_pkgs
 get_all_misc
-eval ${remove_pkg} ${ALL_PKGS}
+remove_pkg ${ALL_PKGS}
 
 for i in ${EXTRA_FILES}; do
     confirm_to_remove ${i}
 done
 
 # Delete users created by iRedMail.
-userdel -r ${VMAIL_USER_NAME}
-groupdel ${VMAIL_GROUP_NAME}
+id ${VMAIL_USER_NAME} >/dev/null 2>&1
+if [ X"$?" == X"0" ]; then
+    ECHO_INFO "Remove user & group: ${VMAIL_USER_NAME}/${VMAIL_GROUP_NAME}."
+    userdel -r ${VMAIL_USER_NAME}
+    groupdel ${VMAIL_GROUP_NAME}
+fi

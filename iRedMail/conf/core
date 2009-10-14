@@ -345,7 +345,7 @@ install_pkg_rhel()
 install_pkg_debian()
 {
     ECHO_INFO "Installing package(s): $@"
-    apt-get install -y --force-yes $@
+    ${APTGET} install -y --force-yes $@
     if [ X"$?" != X"0" ]; then
         ECHO_ERROR "Installation failed, please check the terminal output."
         exit 255
@@ -364,7 +364,7 @@ remove_pkg_rhel()
 remove_pkg_debian()
 {
     ECHO_INFO "Removing package(s): $@"
-    apt-get purge -y $@
+    ${APTGET} purge -y $@
     [ X"$?" != X"0" ] && ECHO_ERROR "Package removed failed, please check the terminal output."
 }
 

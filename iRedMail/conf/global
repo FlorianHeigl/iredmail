@@ -229,6 +229,12 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     export SYS_ROOT_GROUP='root'
 
     # Package management.
+    if [ X"${APTGET}" != X"" ]; then
+        export APTGET="${APTGET}"
+    else
+        export APTGET="apt-get"
+    fi
+    # Package management.
     export install_pkg='install_pkg_debian'
     export remove_pkg='removel_pkg_debian'
     export LIST_ALL_PKGS="dpkg -l |awk '{print $2}'"
