@@ -13,6 +13,9 @@
 
 export CONF_DIR='../conf'
 
+# For Ubuntu & Debian.
+export DEBIAN_FRONTEND='noninteractive'
+
 # Source functions.
 . ${CONF_DIR}/global
 . ${CONF_DIR}/functions
@@ -108,7 +111,8 @@ remove_pkg()
     if [ X"${DISTRO}" == X"RHEL" ]; then
         yum remove $@
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        apt-get purge $@
+        apt-get remove $@
+        apt-get autoremove --purge
     fi
 }
 
@@ -117,15 +121,18 @@ remove_pkg()
 get_all_pkgs()
 {
     export ALL_PKGS=''
+    export ENABLED_SERVICES=''
 
     # Apache and PHP.
     if [ X"${USE_EXIST_AMP}" != X"YES" ]; then
         # Apache & PHP.
         if [ X"${DISTRO}" == X"RHEL" ]; then
             ALL_PKGS="${ALL_PKGS} httpd.${ARCH} mod_ssl.${ARCH} php.${ARCH} php-common.${ARCH} php-imap.${ARCH} php-gd.${ARCH} php-mbstring.${ARCH} libmcrypt.${ARCH} php-mcrypt.${ARCH} php-pear.noarch php-xml.${ARCH} php-pecl-fileinfo.${ARCH} php-mysql.${ARCH} php-ldap.${ARCH}"
+            ENABLED_SERVICES="${ENABLED_SERVICES} httpd"
 
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-            ALL_PKGS="${ALL_PKGS} apache2 apache2-mpm-prefork apache2.2-common libapache2-mod-php5 libapache2-mod-auth-mysql php5-cli php5-imap php5-gd php5-mcrypt php5-mysql php5-ldap"
+            ALL_PKGS="${ALL_PKGS} apache2 apache2-mpm-prefork apache2.2-common libapache2-mod-php5 libapache2-mod-auth-mysql apache2-utils libaprutil1 php5-common php5-cli php5-imap php5-gd php5-mcrypt php5-mysql php5-ldap"
+            ENABLED_SERVICES="${ENABLED_SERVICES} apache2"
         else
             :
         fi
@@ -141,6 +148,8 @@ get_all_pkgs()
     else
         :
     fi
+
+    ENABLED_SERVICES="${ENABLED_SERVICES} postfix"
 
     # Awstats.
     if [ X"${USE_AWSTATS}" == X"YES" ]; then
@@ -159,8 +168,10 @@ get_all_pkgs()
     #       such as policyd, roundcube webmail data.
     if [ X"${DISTRO}" == X"RHEL" ]; then
         ALL_PKGS="${ALL_PKGS} mysql-server.${ARCH} mysql.${ARCH}"
+        ENABLED_SERVICES="${ENABLED_SERVICES} mysqld"
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        ALL_PKGS="${ALL_PKGS} mysql-server-5.0 mysql-client-5.0"
+        ALL_PKGS="${ALL_PKGS} mysql-common mysql-server-5.0 mysql-client mysql-client-5.0 libmysqlclient15off libdbd-mysql-perl"
+        ENABLED_SERVICES="${ENABLED_SERVICES} mysql"
     else
         :
     fi
@@ -170,9 +181,11 @@ get_all_pkgs()
         # OpenLDAP server & client.
         if [ X"${DISTRO}" == X"RHEL" ]; then
             ALL_PKGS="${ALL_PKGS} openldap.${ARCH} openldap-clients.${ARCH} openldap-servers.${ARCH}"
+            ENABLED_SERVICES="${ENABLED_SERVICES} ldap"
 
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
             ALL_PKGS="${ALL_PKGS} postfix-ldap slapd ldap-utils"
+            ENABLED_SERVICES="${ENABLED_SERVICES} slapd"
         else
             :
         fi
@@ -197,8 +210,10 @@ get_all_pkgs()
     # Policyd.
     if [ X"${DISTRO}" == X"RHEL" ]; then
         ALL_PKGS="${ALL_PKGS} policyd.${ARCH}"
+        ENABLED_SERVICES="${ENABLED_SERVICES} policyd"
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
         ALL_PKGS="${ALL_PKGS} postfix-policyd"
+        ENABLED_SERVICES="${ENABLED_SERVICES} postfix-policyd"
     else
         :
     fi
@@ -209,23 +224,29 @@ get_all_pkgs()
             ALL_PKGS="${ALL_PKGS} dovecot.${ARCH} dovecot-sieve.${ARCH}"
 
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-            ALL_PKGS="${ALL_PKGS} dovecot-imapd dovecot-pop3d"
+            ALL_PKGS="${ALL_PKGS} dovecot-common dovecot-imapd dovecot-pop3d"
         else
             :
         fi
 
+        ENABLED_SERVICES="${ENABLED_SERVICES} dovecot"
     else
-        ALL_PKGS="procmail.${ARCH}"
+        ALL_PKGS="procmail"
+        [ X"${DISTRO}" == X"RHEL" ] && ENABLED_SERVICES="${ENABLED_SERVICES} saslauthd"
     fi
 
     # Amavisd-new & ClamAV & Altermime.
     if [ X"${DISTRO}" == X"RHEL" ]; then
         ALL_PKGS="${ALL_PKGS} amavisd-new.${ARCH} clamd.${ARCH} clamav.${ARCH} clamav-db.${ARCH} spamassassin.${ARCH} altermime.${ARCH}"
+        ENABLED_SERVICES="${ENABLED_SERVICES} ${AMAVISD_RC_SCRIPT_NAME} clamd"
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        ALL_PKGS="${ALL_PKGS} amavisd-new libcrypt-openssl-rsa-perl libmail-dkim-perl clamav-base clamav-freshclam clamav-daemon spamassassin altermime"
+        ALL_PKGS="${ALL_PKGS} amavisd-new libcrypt-openssl-rsa-perl libmail-dkim-perl clamav clamav-base clamav-freshclam clamav-daemon spamassassin altermime"
+        ENABLED_SERVICES="${ENABLED_SERVICES} ${AMAVISD_RC_SCRIPT_NAME} clamav-daemon clamav-freshclam"
     else
         :
     fi
+
+    [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO_CODENAME}" == X"hardy" ] && ALL_PKGS="${ALL_PKGS} libclamav5"
 
     # SPF.
     if [ X"${ENABLE_SPF}" == X"YES" ]; then
@@ -268,7 +289,6 @@ get_all_pkgs()
         [ X"${DISTRO}" == X"RHEL" ] && \
         ALL_PKGS="${ALL_PKGS} python-jinja2.${ARCH} python-webpy.noarch python-ldap.${ARCH} MySQL-python.${ARCH} mod_wsgi.${ARCH}"
 
-        # TODO sill missing webpy-0.32, Jinja2, netifaces
         [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ] && \
             ALL_PKGS="${ALL_PKGS} libapache2-mod-wsgi python-mysqldb python-ldap python-jinja2 python-netifaces python-webpy"
     else
@@ -377,20 +397,33 @@ get_all_pkgs
 get_all_misc
 get_all_accounts
 
+ECHO_INFO "=================== Disable services ================"
+for i in ${ENABLED_SERVICES}; do
+    /etc/init.d/$i stop
+done
+
 ECHO_INFO "=================== Remove binary packages ================"
 remove_pkg ${ALL_PKGS}
 
-ECHO_INFO "=================== Remove users ================"
-for user in ${ALL_USERS}; do
-    confirm_to_remove_account user ${user}
-done
+#ECHO_INFO "=================== Remove users ================"
+#for user in ${ALL_USERS}; do
+#    confirm_to_remove_account user ${user}
+#done
 
-ECHO_INFO "=================== Remove groups ================"
-for group in ${ALL_GROUPS}; do
-    confirm_to_remove_account group ${group}
-done
+#ECHO_INFO "=================== Remove groups ================"
+#for group in ${ALL_GROUPS}; do
+#    confirm_to_remove_account group ${group}
+#done
 
 ECHO_INFO "=================== Remove configuration files ================"
 for i in ${EXTRA_FILES}; do
     confirm_to_remove_pkg ${i}
 done
+
+if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+    for i in $(dpkg-statoverride --list); do
+        file="$(echo $i | awk '{print $NF}')"
+        #rm -rf $file 2>/dev/null
+        [ ! -z ${file} ] && dpkg-statoverride --remove $file
+    done
+fi
