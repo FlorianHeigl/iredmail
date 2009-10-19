@@ -194,19 +194,22 @@ fetch_misc()
         # Fetch all misc packages.
         cd ${MISC_DIR}
 
-        misc_total=$(( $(echo ${MISCLIST} | wc -w | awk '{print $1}') + 1 ))
+        misc_total=$(( $(echo ${MISCLIST} | wc -w | awk '{print $1}') ))
         misc_count=1
 
         ECHO_INFO "==================== Fetching Source Tarballs ===================="
 
         for i in ${MISCLIST}
         do
-            url="${MIRROR}/misc/${i}"
-            ECHO_INFO "* ${misc_count}/${misc_total}: ${url}"
+            echo $i | grep -i 'iredadmin' >/dev/null
+            if [ X"$?" != X"0" ]; then
+                url="${MIRROR}/misc/${i}"
+                ECHO_INFO "* ${misc_count}/${misc_total}: ${url}"
 
-            ${FETCH_CMD} "${url}"
+                ${FETCH_CMD} "${url}"
 
-            misc_count=$((misc_count + 1))
+                misc_count=$((misc_count + 1))
+            fi
         done
 
         ECHO_INFO "* ${misc_total}/${misc_total}: iRedAdmin, ${IREDADMIN_URL}"

@@ -170,7 +170,8 @@ get_all_pkgs()
         ALL_PKGS="${ALL_PKGS} mysql-server.${ARCH} mysql.${ARCH}"
         ENABLED_SERVICES="${ENABLED_SERVICES} mysqld"
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        ALL_PKGS="${ALL_PKGS} mysql-common mysql-server-5.0 mysql-client mysql-client-5.0 libmysqlclient15off libdbd-mysql-perl"
+        [ X"${DISTRO_CODENAME}" == X"jaunty" ] && ALL_PKGS="${ALL_PKGS} mysql-server-core-5.0"
+        ALL_PKGS="${ALL_PKGS} libdbd-mysql-perl libmysqlclient15off mysql-common mysql-server-5.0 mysql-client mysql-client-5.0"
         ENABLED_SERVICES="${ENABLED_SERVICES} mysql"
     else
         :
@@ -399,7 +400,7 @@ get_all_pkgs
 get_all_misc
 get_all_accounts
 
-ECHO_INFO "=================== Disable services ================"
+ECHO_INFO "=================== Stop services ================"
 for i in ${ENABLED_SERVICES}; do
     /etc/init.d/$i stop
 done

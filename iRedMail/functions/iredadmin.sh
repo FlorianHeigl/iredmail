@@ -27,7 +27,7 @@ iredadmin_config()
 
     if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
         ECHO_INFO "Enable apache module: wsgi."
-        a2enmod wsgi
+        a2enmod wsgi >/dev/null 2>&1
     fi
 
     cd ${MISC_DIR}
