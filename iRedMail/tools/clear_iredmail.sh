@@ -111,8 +111,8 @@ remove_pkg()
     if [ X"${DISTRO}" == X"RHEL" ]; then
         yum remove $@
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        apt-get remove $@
-        apt-get autoremove --purge
+        dpkg -P postfix-policyd mailx bsd-mailx
+        dpkg -P $@
     fi
 }
 
@@ -369,28 +369,30 @@ get_all_accounts()
     ALL_GROUPS="${ALL_GROUPS} ${VMAIL_GROUP_NAME}"
 
     # Apache.
-    ALL_USERS="${ALL_USERS} ${HTTPD_USER}"
-    ALL_GROUPS="${ALL_GROUPS} ${HTTPD_GROUP}"
+    #ALL_USERS="${ALL_USERS} ${HTTPD_USER}"
+    #ALL_GROUPS="${ALL_GROUPS} ${HTTPD_GROUP}"
 
     # OpenLDAP.
-    ALL_USERS="${ALL_USERS} ${LDAP_USER}"
-    ALL_GROUPS="${ALL_GROUPS} ${LDAP_GROUP}"
+    #ALL_USERS="${ALL_USERS} ${LDAP_USER}"
+    #ALL_GROUPS="${ALL_GROUPS} ${LDAP_GROUP}"
 
     # Dovecot.
-    ALL_USERS="${ALL_USERS} ${DOVECOT_USER}"
-    ALL_GROUPS="${ALL_GROUPS} ${DOVECOT_GROUP}"
+    #ALL_USERS="${ALL_USERS} ${DOVECOT_USER}"
+    #ALL_GROUPS="${ALL_GROUPS} ${DOVECOT_GROUP}"
 
     # Policyd.
     ALL_USERS="${ALL_USERS} ${POLICYD_USER}"
     ALL_GROUPS="${ALL_GROUPS} ${POLICYD_GROUP}"
 
     # Amavisd.
-    ALL_USERS="${ALL_USERS} ${AMAVISD_USER}"
-    ALL_GROUPS="${ALL_GROUPS} ${AMAVISD_GROUP}"
+    if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+        ALL_USERS="${ALL_USERS} ${AMAVISD_USER}"
+        ALL_GROUPS="${ALL_GROUPS} ${AMAVISD_GROUP}"
+    fi
 
     # ClamAV.
-    ALL_USERS="${ALL_USERS} ${CLAMAV_USER}"
-    ALL_GROUPS="${ALL_GROUPS} ${CLAMAV_GROUP}"
+    #ALL_USERS="${ALL_USERS} ${CLAMAV_USER}"
+    #ALL_GROUPS="${ALL_GROUPS} ${CLAMAV_GROUP}"
 }
 
 get_all_pkgs
@@ -405,15 +407,15 @@ done
 ECHO_INFO "=================== Remove binary packages ================"
 remove_pkg ${ALL_PKGS}
 
-#ECHO_INFO "=================== Remove users ================"
-#for user in ${ALL_USERS}; do
-#    confirm_to_remove_account user ${user}
-#done
+ECHO_INFO "=================== Remove users ================"
+for user in ${ALL_USERS}; do
+    confirm_to_remove_account user ${user}
+done
 
-#ECHO_INFO "=================== Remove groups ================"
-#for group in ${ALL_GROUPS}; do
-#    confirm_to_remove_account group ${group}
-#done
+ECHO_INFO "=================== Remove groups ================"
+for group in ${ALL_GROUPS}; do
+    confirm_to_remove_account group ${group}
+done
 
 ECHO_INFO "=================== Remove configuration files ================"
 for i in ${EXTRA_FILES}; do
