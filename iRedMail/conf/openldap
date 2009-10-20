@@ -128,6 +128,7 @@ export LDAP_ATTR_DOMAINADMIN_DN_NAME='domainAdmins'
 
 # Domain related attributes.
 export LDAP_ATTR_DOMAIN_RDN='domainName'
+export LDAP_ATTR_DOMAIN_ALIAS_NAME='domainAliasName'
 export LDAP_ATTR_DOMAIN_ADMIN='domainAdmin'
 export LDAP_ATTR_DOMAIN_GLOBALADMIN='domainGlobalAdmin'
 export LDAP_ATTR_DOMAIN_BACKUPMX='domainBackupMX'

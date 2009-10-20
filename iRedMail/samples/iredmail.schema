@@ -143,6 +143,10 @@ attributetype ( 1.3.6.1.4.1.32349.1.2.1.20 NAME 'domainMaxPasswordLength'
     EQUALITY integerMatch
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
     SINGLE-VALUE )
+attributetype ( 1.3.6.1.4.1.32349.1.2.1.21 NAME 'domainAliasName'
+    DESC 'Domain Alias Name'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{255} )
 
 #
 # Mail Service: User related attributes.
@@ -274,7 +278,7 @@ objectclass ( 1.3.6.1.4.1.32349.1.2.4.1 NAME 'mailDomain'
         domainMaxUserNumber $ domainCurrentUserNumber $
         domainMaxAliasNumber $ domainCurrentAliasNumber $
         domainMaxListNumber $ domainCurrentListNumber $
-        domainDefaultUserQuota $ disclaimer $ 
+        domainDefaultUserQuota $ domainAliasName $ disclaimer $
         domainMinPasswordLength $ domainMaxPasswordLength $
         description $ streetAddress $ telephoneNumber $
         fax $ expiredDate ))
