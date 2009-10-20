@@ -220,8 +220,10 @@ sn: ${USERNAME}
 givenName: ${USERNAME}
 uid: ${USERNAME}
 enabledService: mail
-enabledService: imap
 enabledService: pop3
+enabledService: pop3secured
+enabledService: imap
+enabledService: imapsecured
 enabledService: smtp
 enabledService: deliver
 enabledService: forward
