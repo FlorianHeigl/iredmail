@@ -1,4 +1,5 @@
 iRedMail-0.5.1:
+    * Ability to restrict POP3S & IMAPS in dovecot now.
     * New LDAP attribute: domainAliasName. Used to store alias domain name.
     * Enable mod_deflate in apache by default.
     * Update dovecot to 1.1.16 on Debian 5, patched to fix security holes in

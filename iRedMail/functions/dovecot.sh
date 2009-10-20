@@ -309,7 +309,7 @@ dnpass          = ${LDAP_BINDPW}
 base            = ${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}
 scope           = subtree
 deref           = never
-user_filter     = (&(${LDAP_ATTR_USER_RDN}=%u)(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_ACCOUNT_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=%Ls))
+user_filter     = (&(${LDAP_ATTR_USER_RDN}=%u)(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_ACCOUNT_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=%Ls%Lc))
 pass_filter     = (${LDAP_ATTR_USER_RDN}=%u)
 pass_attrs      = ${LDAP_ATTR_USER_PASSWD}=password
 default_pass_scheme = CRYPT
@@ -344,7 +344,7 @@ EOF
 user_query = SELECT CONCAT(storagebasedirectory, '/', maildir) AS home, \
 CONCAT('*:bytes=', quota*1048576) AS quota_rule \
 FROM mailbox WHERE username='%u' \
-AND active='1' AND enable%Ls='1' AND expired >= NOW()
+AND active='1' AND enable%Ls%Lc='1' AND expired >= NOW()
 EOF
         [ X"${MAILBOX_FORMAT}" == X"mbox" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
 user_query = SELECT CONCAT('mbox:', storagebasedirectory, '/', maildir, '/Maildir/') AS home, \
