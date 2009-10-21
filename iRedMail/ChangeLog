@@ -1,4 +1,5 @@
 iRedMail-0.5.1:
+    * Add domain alias support.
     * Ability to restrict POP3S & IMAPS in dovecot now.
     * LDAP attribute 'domainName' now allow multi-value.
     * Enable mod_deflate in apache by default.
@@ -23,7 +24,8 @@ iRedMail-0.5.1:
     * Replace sshd port number in default iptable rule by the current setting.
     * Add @mynetworks in amavisd config for Debian/Ubuntu.
     * Make file world-readable if ACL is not available.
-    * Add per-user shadow address support in LDAP backend.
+    * Add per-user shadow address support in LDAP backend, and it's allowed to
+      login with shadow address.
     * Add missing pkg: altermime for RHEL/CentOS (i386). Thanks to
       sdaniel@bbs.
     * Remove php-eaccelerator, will abort installation process when php-5.2+

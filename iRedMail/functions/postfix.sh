@@ -309,9 +309,9 @@ bind            = ${LDAP_BIND}
 start_tls       = no
 bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
-search_base     = ${ldap_search_base_user}
-scope           = one
-query_filter    = (&(${LDAP_ATTR_USER_RDN}=%s)(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_ACCOUNT_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_SMTP}))
+search_base     = ${LDAP_BASEDN}
+scope           = sub
+query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_ACCOUNT_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_SMTP})(|(${LDAP_ATTR_USER_RDN}=%s)(&(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_SHADOW_ADDRESS})(${LDAP_ATTR_USER_SHADOW_ADDRESS}=%s))))
 result_attribute= ${LDAP_ATTR_USER_RDN}
 debuglevel      = 0
 EOF
