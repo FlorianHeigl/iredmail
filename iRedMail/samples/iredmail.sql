@@ -107,6 +107,7 @@ CREATE TABLE mailbox (
     enableimapsecured TINYINT(1) NOT NULL DEFAULT '1',
     enabledeliver TINYINT(1) NOT NULL DEFAULT '1',
     enablemanagesieve TINYINT(1) NOT NULL DEFAULT '1',
+    enablemanagesievesecured TINYINT(1) NOT NULL DEFAULT '1',
     lastlogindate DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     lastloginipv4 INT(4) UNSIGNED NOT NULL DEFAULT '0',
     lastloginprotocol CHAR(255) NOT NULL DEFAULT '',

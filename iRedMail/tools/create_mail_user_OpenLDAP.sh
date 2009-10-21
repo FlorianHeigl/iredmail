@@ -224,12 +224,13 @@ enabledService: pop3
 enabledService: pop3secured
 enabledService: imap
 enabledService: imapsecured
+enabledService: managesieve
+enabledService: managesievesecured
 enabledService: smtp
 enabledService: deliver
 enabledService: forward
 enabledService: senderbcc
 enabledService: recipientbcc
-enabledService: managesieve
 enabledService: displayedInGlobalAddressBook
 memberOfGroup: all@${DOMAIN_NAME}
 ${LDIF_PUREFTPD_USER}
