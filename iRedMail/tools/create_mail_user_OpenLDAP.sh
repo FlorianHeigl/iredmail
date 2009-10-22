@@ -231,6 +231,7 @@ enabledService: deliver
 enabledService: forward
 enabledService: senderbcc
 enabledService: recipientbcc
+enabledService: shadowaddress
 enabledService: displayedInGlobalAddressBook
 memberOfGroup: all@${DOMAIN_NAME}
 ${LDIF_PUREFTPD_USER}
