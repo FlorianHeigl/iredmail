@@ -1,5 +1,5 @@
 iRedMail-0.5.1:
-    * Add domain alias support.
+    * Add domain alias support with new ldap attribute: domainAliasName.
     * Ability to restrict POP3S & IMAPS in dovecot now.
     * LDAP attribute 'domainName' now allow multi-value.
     * Enable mod_deflate in apache by default.
