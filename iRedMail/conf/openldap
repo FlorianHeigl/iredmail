@@ -105,6 +105,7 @@ export LDAP_OBJECTCLASS_MAIL_EXTERNAL_USER='mailExternalUser'
 export LDAP_ENABLED_SERVICE='enabledService'
 
 # Values of service name.
+export LDAP_SERVICE_DOMAIN_ALIAS='domainalias'
 export LDAP_SERVICE_MAIL='mail'
 export LDAP_SERVICE_SMTP='smtp'
 export LDAP_SERVICE_POP3='pop3'
