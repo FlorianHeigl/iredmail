@@ -320,7 +320,7 @@ openldap_data_initialize()
         sed -i "s#\(}\)# ${LDAP_DATA_DIR}/ r,\n\1#" /etc/apparmor.d/usr.sbin.slapd
         sed -i "s#\(}\)# ${LDAP_DATA_DIR}/* rw,\n\1#" /etc/apparmor.d/usr.sbin.slapd
         sed -i "s#\(}\)# ${LDAP_DATA_DIR}/alock kw,\n\1#" /etc/apparmor.d/usr.sbin.slapd
-        service_control apparmor restart >/dev/null
+        [ -x /etc/init.d/apparmor ] && service_control apparmor restart >/dev/null
     else
         :
     fi
