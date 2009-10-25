@@ -128,6 +128,7 @@ EOF
 
     cat >> ${TIP_FILE} <<EOF
 Official Web-based Admin Panel (iRedAdmin):
+    * Version: ${IREDADMIN_VERSION}
     * Configuration files:
         - ${HTTPD_SERVERROOT}/iRedAdmin-${IREDADMIN_VERSION}/
         - ${HTTPD_SERVERROOT}/iRedAdmin-${IREDADMIN_VERSION}/settings.ini*
@@ -135,6 +136,10 @@ Official Web-based Admin Panel (iRedAdmin):
         - https://${HOSTNAME}/iredadmin/
     * Login account:
         - Username: ${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}, password: ${DOMAIN_ADMIN_PASSWD_PLAIN}
+    * MySQL database and account:
+        - Database name: ${IREDADMIN_DB_NAME}
+        - Database user: ${IREDADMIN_DB_USER}
+        - Database password: ${IREDADMIN_DB_PASSWD}
     * See also:
         - ${HTTPD_CONF_DIR}/iredadmin.conf
 
