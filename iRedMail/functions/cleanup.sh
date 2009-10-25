@@ -205,11 +205,8 @@ EOF
     check_status_before_run start_postfix_now
 
     # Send tip file to the mail server admin or first mail user.
-    if [ ! -z ${MAIL_ALIAS_ROOT} ]; then
-        tip_recipient="${MAIL_ALIAS_ROOT}"
-    else
-        tip_recipient="${FIRST_USER}@${FIRST_DOMAIN}"
-    fi
+    tip_recipient="${FIRST_USER}@${FIRST_DOMAIN}"
+    [ ! -z ${MAIL_ALIAS_ROOT} ] && tip_recipient="${tip_recipient},${MAIL_ALIAS_ROOT}"
 
     mail -s "iRedMail tips for mail server administrator." ${tip_recipient} < ${TIP_FILE} >/dev/null 2>&1
 
