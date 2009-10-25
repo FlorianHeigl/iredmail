@@ -29,6 +29,7 @@ export LDAP_USE_TLS='NO'
 export LDAP_BIND='yes'
 export LDAP_BIND_VERSION='3'
 export LDAP_BINDPW="$(${RANDOM_STRING})"
+export LDAP_ADMIN_PW="$(${RANDOM_STRING})"
 
 # Configure.
 if [ X"${DISTRO}" == X"RHEL" ]; then

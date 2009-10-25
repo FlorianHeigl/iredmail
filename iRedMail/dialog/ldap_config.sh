@@ -92,28 +92,3 @@ done
 
 echo "export LDAP_ROOTPW='${LDAP_ROOTPW}'" >>${CONFIG_FILE}
 rm -f /tmp/ldap_rootpw
-
-# LDAP admin dn passwd.
-while : ; do
-    ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-    --title "Password for vmail LDAP admin user" \
-    --passwordbox "\
-Please specify password for vmail LDAP admin user:
-
-    * admin dn: ${LDAP_ADMIN_DN}
-
-Warning:
-
-    * EMPTY password is *NOT* permitted.
-
-" 20 76 2>/tmp/vmail_user_passwd
-
-    LDAP_ADMIN_PW="$(cat /tmp/vmail_user_passwd)"
-    if [ ! -z "${LDAP_ADMIN_PW}" ]; then
-        break
-    fi
-done
-
-export LDAP_ADMIN_PW="${LDAP_ADMIN_PW}"
-echo "export LDAP_ADMIN_PW='${LDAP_ADMIN_PW}'" >>${CONFIG_FILE}
-rm -f /tmp/vmail_user_passwd
