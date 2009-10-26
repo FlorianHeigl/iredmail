@@ -145,8 +145,5 @@ echo ${OPTIONAL_COMPONENTS} | grep -i 'awstats' >/dev/null 2>&1
 # Promot to choose the prefer language for webmail.
 [ X"${USE_WEBMAIL}" == X"YES" ] && . ${DIALOG_DIR}/default_language.sh
 
-# Used when you use MySQL as backend.
-[ X"${USE_POSTFIXADMIN}" == X"YES" ] && . ${DIALOG_DIR}/postfixadmin_config.sh
-
 # Used when you use awstats.
 [ X"${USE_AWSTATS}" == X"YES" ] && . ${DIALOG_DIR}/awstats_config.sh

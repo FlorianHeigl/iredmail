@@ -62,6 +62,7 @@ export MYSQL_BIND_PW="$(${RANDOM_STRING})"
 
 # For vmail database management.
 export MYSQL_ADMIN_USER="${VMAIL_ADMIN_USER_NAME}"
+export MYSQL_ADMIN_PW="$(${RANDOM_STRING})"
 
 export MYSQL_INIT_SQL="${CONF_DIR}/mysql_init.sql"
 export MYSQL_VMAIL_SQL="${CONF_DIR}/mysql_vmail.sql"

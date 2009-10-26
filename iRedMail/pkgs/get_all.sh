@@ -229,7 +229,7 @@ check_md5()
     echo -e "${MD5LIST}" > ${md5file}
     cat MD5.misc >> ${md5file}
 
-    md5sum -c ${md5file} |grep 'FAILED' >/dev/null
+    md5sum -c ${md5file} |grep 'FAILED'
 
     if [ X"$?" == X"0" ]; then
         ECHO_ERROR "MD5 check failed. Check your rpm packages. Script exit ...\n"

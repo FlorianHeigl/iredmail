@@ -42,24 +42,10 @@ echo "export FIRST_DOMAIN='${FIRST_DOMAIN}'" >> ${CONFIG_FILE}
 rm -f /tmp/first_domain
 
 #DOMAIN_ADMIN_NAME
-${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-    --title "Specify administrator' name of your virtual domain" \
-    --inputbox "\
-Please specify administrator' name of your virtual domain.
-
-EXAMPLE:
-
-    * postmaster
-
-Warning:
-
-    * This account is used only for system administration.
-    * It's *NOT* a normal mail user.
-" 20 76 "postmaster" 2>/tmp/first_domain_admin_name
-
-DOMAIN_ADMIN_NAME="$(cat /tmp/first_domain_admin_name)"
+export DOMAIN_ADMIN_NAME='postmaster'
+export SITE_ADMIN_NAME="${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}"
 echo "export DOMAIN_ADMIN_NAME='${DOMAIN_ADMIN_NAME}'" >>${CONFIG_FILE}
-rm -f /tmp/first_domain_admin_name
+echo "export SITE_ADMIN_NAME='${SITE_ADMIN_NAME}'" >>${CONFIG_FILE}
 
 # DOMAIN_ADMIN_PASSWD
 while : ; do
@@ -69,6 +55,10 @@ while : ; do
 Please specify password for the administrator user:
 
     * ${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}
+
+Note:
+
+    * You can login PostfixAdmin (if installed) with this account.
 
 Warning:
 
@@ -82,32 +72,15 @@ Warning:
 done
 
 export DOMAIN_ADMIN_PASSWD_PLAIN="${DOMAIN_ADMIN_PASSWD}"
+export SITE_ADMIN_PASSWD="${DOMAIN_ADMIN_PASSWD_PLAIN}"
 echo "export DOMAIN_ADMIN_PASSWD_PLAIN='${DOMAIN_ADMIN_PASSWD}'" >> ${CONFIG_FILE}
 echo "export DOMAIN_ADMIN_PASSWD='${DOMAIN_ADMIN_PASSWD}'" >> ${CONFIG_FILE}
+echo "export SITE_ADMIN_PASSWD='${SITE_ADMIN_PASSWD}'" >> ${CONFIG_FILE}
 rm -f /tmp/first_domain_admin_passwd
 
 #FIRST_USER
-while : ; do
-    ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
-        --title "Add a user for your domain" \
-        --inputbox "\
-Please specify username of your first user for domain: ${FIRST_DOMAIN}.
-
-EXAMPLE:
-
-    * www
-
-Note:
-
-    * This account is a normal mail user.
-" 20 76 "www" 2>/tmp/first_user
-
-    FIRST_USER="$(cat /tmp/first_user)"
-    [ X"${FIRST_USER}" != X"" ] && break
-done
-
+export FIRST_USER='www'
 echo "export FIRST_USER='${FIRST_USER}'" >>${CONFIG_FILE}
-rm -f /tmp/first_user
 
 # FIRST_USER_PASSWD
 while : ; do
@@ -117,6 +90,10 @@ while : ; do
 Please specify password for your first user:
 
     * ${FIRST_USER}@${FIRST_DOMAIN}
+
+Note:
+
+    * You can login webmail with this account.
 
 Warning:
 
@@ -139,6 +116,7 @@ Admin of domain ${FIRST_DOMAIN}:
 
     Note:
         - This account is used only for system administrations, not a mail user.
+        - You can login PostfixAdmin (if it is installed) with this account.
         - Account name is full email address.
 
 First mail user:
