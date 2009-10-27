@@ -209,6 +209,7 @@ EOF
     [ ! -z ${MAIL_ALIAS_ROOT} ] && tip_recipient="${tip_recipient},${MAIL_ALIAS_ROOT}"
 
     mail -s "iRedMail tips for mail server administrator." ${tip_recipient} < ${TIP_FILE} >/dev/null 2>&1
+    mail -s "Useful links for iRedMail." ${tip_recipient} < ${DOC_FILE} >/dev/null 2>&1
 
     cat <<EOF
 

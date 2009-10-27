@@ -44,6 +44,7 @@ Bug report, feedback, suggestion are always welcome.
 
 Contact author via mail: michaelbibby@gmail.com
 Community: http://www.iredmail.org/forum/
+FAQ: http://www.iredmail.org/faq.html
 
 NOTE:
 
