@@ -116,7 +116,7 @@ Admin of domain ${FIRST_DOMAIN}:
 
     Note:
         - This account is used only for system administrations, not a mail user.
-        - You can login PostfixAdmin (if it is installed) with this account.
+        - You can login iRedAdmin or PostfixAdmin with this account.
         - Account name is full email address.
 
 First mail user:
