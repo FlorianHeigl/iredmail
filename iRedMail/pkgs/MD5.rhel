@@ -83,11 +83,11 @@ d45f23a6bc32e3097c2680b951237760  pkgs/clamav-db-0.95.2-4.el5.rf.i386.rpm
 1adc33bacb73be1c1e84697a3fe58082  pkgs/clamd-0.95.2-4.el5.rf.i386.rpm
 3d32bbd0e5c91ecd048342b2e51bbec6  pkgs/clamd-0.95.2-4.el5.rf.x86_64.rpm
 c5354087e0e55153880572353e6bffc3  pkgs/awstats-6.9-2.el5.rf.noarch.rpm
-d8124d4c170a0c1217d3fb90f9533131  pkgs/python-jinja2-2.2.1-1.ired.i386.rpm
-3408262bd7d4e063d7d9dda5f7fed233  pkgs/python-jinja2-2.2.1-1.ired.x86_64.rpm
+927fd0198ad56322d6949210def70380  pkgs/python-jinja2-2.2.1-1.el5.i386.rpm
+e97fa9eb7eae9eb3968bd865180dddce  pkgs/python-jinja2-2.2.1-1.el5.x86_64.rpm
+b70276741c4757d8b7e16a9c1da3df1e  pkgs/python-webpy-0.32-3.el5.noarch.rpm
 73c54a0e1f5570c0fd0500bfd6c421f1  pkgs/python-ldap-2.3.9-1.ired.i386.rpm
 b60330abadc5a6bf11e52863e1a0caa5  pkgs/python-ldap-2.3.9-1.ired.x86_64.rpm
-5ab35715791dcfdd77fdbc01a9579e51  pkgs/python-webpy-0.32-1.ired.noarch.rpm
 faa844c1182eafc97d47c9241fc5cbad  pkgs/mod_wsgi-2.5-2.ired.i386.rpm
 283ffe8c34f8361f19eace9da8628edb  pkgs/mod_wsgi-2.5-2.ired.x86_64.rpm
 121a163dbb8a94fa367d4b38b2668ad9  pkgs/dovecot-1.1.19-1_96.el5.i386.rpm
