@@ -233,7 +233,8 @@ EOF
 
 if [ X"${POSTFIX_STARTED}" != X"YES" ]; then
     [ X"${DISTRO}" == X"RHEL" ] && export ENABLED_SERVICES="syslog ${ENABLED_SERVICES} pysieved"
-    [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ] && export ENABLED_SERVICES="sysklogd ${ENABLED_SERVICES}"
+    [ X"${DISTRO}" == X"DEBIAN" ] && export ENABLED_SERVICES="rsyslog ${ENABLED_SERVICES}"
+    [ X"${DISTRO}" == X"UBUNTU" ] && export ENABLED_SERVICES="sysklogd ${ENABLED_SERVICES}"
     export ENABLED_SERVICES="${ENABLED_SERVICES} iptables"
 
     cat <<EOF
