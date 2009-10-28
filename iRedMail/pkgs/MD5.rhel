@@ -83,6 +83,7 @@ d45f23a6bc32e3097c2680b951237760  pkgs/clamav-db-0.95.2-4.el5.rf.i386.rpm
 1adc33bacb73be1c1e84697a3fe58082  pkgs/clamd-0.95.2-4.el5.rf.i386.rpm
 3d32bbd0e5c91ecd048342b2e51bbec6  pkgs/clamd-0.95.2-4.el5.rf.x86_64.rpm
 c5354087e0e55153880572353e6bffc3  pkgs/awstats-6.9-2.el5.rf.noarch.rpm
+0877b2f825561f32eb9d887849b74cb1  pkgs/python-babel-0.9.4-1.el5.noarch.rpm
 927fd0198ad56322d6949210def70380  pkgs/python-jinja2-2.2.1-1.el5.i386.rpm
 e97fa9eb7eae9eb3968bd865180dddce  pkgs/python-jinja2-2.2.1-1.el5.x86_64.rpm
 b70276741c4757d8b7e16a9c1da3df1e  pkgs/python-webpy-0.32-3.el5.noarch.rpm
