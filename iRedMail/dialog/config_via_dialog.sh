@@ -85,13 +85,13 @@ ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
     --radiolist "\
 We provide two backends and the homologous webmail programs:
 
-    +----------+---------------+--------------+
-    | Backend  | Web Mail      | Admin tool   |
-    +----------+---------------+--------------+
-    | OpenLDAP |               | phpLDAPadmin |
-    +----------+ RoundcubeMail +--------------+
-    | MySQL    |               | PostfixAdmin |
-    +----------+---------------+--------------+
+    +----------+---------------+---------------------------+
+    | Backend  | Web Mail      | Web-based management tool |
+    +----------+---------------+---------------------------+
+    | OpenLDAP | RoundcubeMail | iRedAdmin, phpLDAPadmin   |
+    +----------+     or        +---------------------------+
+    | MySQL    | SquirrelMail  | PostfixAdmin              |
+    +----------+---------------+---------------------------+
 
 TIP:
     * Use 'Space' key to select item.

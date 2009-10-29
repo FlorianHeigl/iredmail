@@ -58,7 +58,7 @@ Please specify password for the administrator user:
 
 Note:
 
-    * You can login PostfixAdmin (if installed) with this account.
+    * You can login iRedAdmin or PostfixAdmin with this account.
 
 Warning:
 
