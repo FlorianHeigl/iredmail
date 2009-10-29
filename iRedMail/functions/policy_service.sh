@@ -105,7 +105,6 @@ EOF
 $(cat ${tmp_sql})
 USE ${POLICYD_DB_NAME};
 ALTER TABLE blacklist MODIFY COLUMN _description CHAR(60) CHARACTER SET utf8;
-ALTER TABLE blacklist_dnsname MODIFY COLUMN _description CHAR(60) CHARACTER SET utf8;
 ALTER TABLE blacklist_sender MODIFY COLUMN _description CHAR(60) CHARACTER SET utf8;
 ALTER TABLE whitelist MODIFY COLUMN _description CHAR(60) CHARACTER SET utf8;
 ALTER TABLE whitelist_dnsname MODIFY COLUMN _description CHAR(60) CHARACTER SET utf8;
