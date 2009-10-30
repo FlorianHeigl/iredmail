@@ -8,6 +8,11 @@ install_all()
     ENABLED_SERVICES=''
     DISABLED_SERVICES=''
 
+    # Enable syslog.
+    [ X"${DISTRO}" == X"RHEL" ] && ENABLED_SERVICES="syslog ${ENABLED_SERVICES} "
+    [ X"${DISTRO}" == X"DEBIAN" ] && ENABLED_SERVICES="rsyslog ${ENABLED_SERVICES}"
+    [ X"${DISTRO}" == X"UBUNTU" ] && ENABLED_SERVICES="sysklogd ${ENABLED_SERVICES}"
+
     # Apache and PHP.
     if [ X"${USE_EXIST_AMP}" != X"YES" ]; then
         # Apache & PHP.
