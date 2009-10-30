@@ -201,19 +201,13 @@ fetch_misc()
 
         for i in ${MISCLIST}
         do
-            echo $i | grep -i 'iredadmin' >/dev/null
-            if [ X"$?" != X"0" ]; then
-                url="${MIRROR}/misc/${i}"
-                ECHO_INFO "* ${misc_count}/${misc_total}: ${url}"
+            url="${MIRROR}/misc/${i}"
+            ECHO_INFO "* ${misc_count}/${misc_total}: ${url}"
 
-                ${FETCH_CMD} "${url}"
+            ${FETCH_CMD} "${url}"
 
-                misc_count=$((misc_count + 1))
-            fi
+            misc_count=$((misc_count + 1))
         done
-
-        ECHO_INFO "* ${misc_total}/${misc_total}: iRedAdmin, ${IREDADMIN_URL}"
-        ${FETCH_CMD} ${IREDADMIN_URL}
     else
         :
     fi
