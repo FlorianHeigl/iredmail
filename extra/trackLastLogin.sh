@@ -3,7 +3,7 @@
 # =========================================================
 # Author:   Zhang Huangbin (michaelbibby@gmail.com)
 # Date:     2009.07.28
-# Purpose:  Track user last login date & ip address.
+# Purpose:  Track user last login date & ip address with Dovecot.
 # Project:  iRedMail open source mail server solution.
 #           http://www.iredmail.org/
 # =========================================================
