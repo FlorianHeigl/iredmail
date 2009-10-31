@@ -4,6 +4,8 @@
 # Author:   Zhang Huangbin (michaelbibby@gmail.com)
 # Date:     2009.07.28
 # Purpose:  Track user last login date & ip address.
+# Project:  iRedMail open source mail server solution.
+#           http://www.iredmail.org/
 # =========================================================
 
 # $USER -> login username. It should be a valid email address.
