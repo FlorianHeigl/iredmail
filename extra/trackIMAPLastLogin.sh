@@ -52,9 +52,9 @@ BIND_PW='plain_passwd'
 
 if [ X"${USER}" != X"dump-capability" ]; then
     ldapmodify -c -x \
-        -H ${LDAP_URI} \
+        -H "${LDAP_URI}" \
         -D "${BIND_DN}" \
-        -w${BIND_PW} <<EOF
+        -w "${BIND_PW}" <<EOF
 dn: mail=${USER},ou=Users,domainName=$(echo ${USER} | awk -F'@' '{print $2}'),${LDAP_BASEDN}
 changetype: modify
 replace: lastLoginDate
