@@ -10,13 +10,12 @@
 
 # $USER -> login username. It should be a valid email address.
 # $IP   -> remote ip address (IPv4).
-# ${1}  -> mail protocol: imap, pop3
 
 # ------------------------------------------------------------------
 # Update to plain text file..
 # Note: user 'dovecot' should have write permission on this file.
 # ------------------------------------------------------------------
-#echo "$(date +%Y.%m.%d-%H:%M:%S), $USER, $IP, ${1}" >> /tmp/tracking.log
+#echo "$(date +%Y.%m.%d-%H:%M:%S), $USER, $IP, imap" >> /tmp/tracking.log
 
 # ------------------------------------------------------------------
 # Update to MySQL database.
@@ -31,7 +30,7 @@
 #       UPDATE mailbox SET \
 #       lastloginipv4="INET_ATON('$IP')", \
 #       lastlogindate="NOW()", \
-#       lastloginprotocol="${1}" \
+#       lastloginprotocol="imap" \
 #       WHERE username='$USER';
 #EOF
 #fi
@@ -54,7 +53,7 @@ BIND_PW='plain_passwd'
 if [ X"${USER}" != X"dump-capability" ]; then
     ldapmodify -c -x \
         -H ${LDAP_URI} \
-        -D "${BIND_DN}"
+        -D "${BIND_DN}" \
         -w${BIND_PW} <<EOF
 dn: mail=${USER},ou=Users,domainName=$(echo ${USER} | awk -F'@' '{print $2}'),${LDAP_BASEDN}
 changetype: modify
@@ -65,7 +64,7 @@ replace: lastLoginIP
 lastLoginIP: ${IP}
 -
 replace: lastLoginProtocol
-lastLoginProtocol: ${1}
+lastLoginProtocol: imap
 EOF
 
 fi
@@ -73,8 +72,8 @@ fi
 # Execute POP3/IMAP process.
 if [ -f /etc/redhat-release ]; then
     # RHEL/CentOS.
-    exec /usr/libexec/dovecot/${1} $*
+    exec /usr/libexec/dovecot/imap $*
 elif [ -f /etc/debian_version ]; then
     # Debian & Ubuntu:
-    exec /usr/lib/dovecot/${1} $*
+    exec /usr/lib/dovecot/imap $*
 fi
