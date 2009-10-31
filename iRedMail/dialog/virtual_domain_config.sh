@@ -116,8 +116,8 @@ Admin of domain ${FIRST_DOMAIN}:
 
     Note:
         - This account is used only for system administrations, not a mail user.
-        - You can login iRedAdmin or PostfixAdmin with this account.
-        - Account name is full email address.
+        - You can login iRedAdmin or PostfixAdmin with this account, login name
+          is full email address.
 
 First mail user:
     * Account: ${FIRST_USER}@${FIRST_DOMAIN}
@@ -125,6 +125,6 @@ First mail user:
 
     Note:
         - This account is a normal mail user.
-        - Account name is full email address.
+        - You can login webmail with this account, login name is full email address.
 
 EOF
