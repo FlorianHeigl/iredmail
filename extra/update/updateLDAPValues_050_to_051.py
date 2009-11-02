@@ -55,3 +55,5 @@ for user in allUsers:
 
 # Unbind connection.
 conn.unbind()
+
+print >> sys.stderr, 'Updated.'
