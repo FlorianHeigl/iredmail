@@ -15,7 +15,7 @@
 # Update to plain text file..
 # Note: user 'dovecot' should have write permission on this file.
 # ------------------------------------------------------------------
-#echo "$(date +%Y.%m.%d-%H:%M:%S), $USER, $IP, imap" >> /tmp/tracking.log
+#echo "$(date +%Y.%m.%d-%H:%M:%S), $USER, $IP, pop3" >> /tmp/tracking.log 2>&1
 
 # ------------------------------------------------------------------
 # Update to MySQL database.
@@ -26,7 +26,7 @@
 #VMAIL_DB_NAME='vmail'
 #
 #if [ X"${USER}" != X"dump-capability" ]; then
-#   mysql -u${MYSQL_USER} -p${PASSWD} ${VMAIL_DB_NAME} <<EOF
+#   mysql -u${MYSQL_USER} -p${PASSWD} ${VMAIL_DB_NAME} >/dev/null 2>&1 <<EOF
 #       UPDATE mailbox SET \
 #       lastloginipv4="INET_ATON('$IP')", \
 #       lastlogindate="NOW()", \
@@ -54,7 +54,7 @@ if [ X"${USER}" != X"dump-capability" ]; then
     ldapmodify -c -x \
         -H "${LDAP_URI}" \
         -D "${BIND_DN}" \
-        -w "${BIND_PW}" <<EOF
+        -w "${BIND_PW}" >/dev/null 2>&1 <<EOF
 dn: mail=${USER},ou=Users,domainName=$(echo ${USER} | awk -F'@' '{print $2}'),${LDAP_BASEDN}
 changetype: modify
 replace: lastLoginDate
