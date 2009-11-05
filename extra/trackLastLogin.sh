@@ -10,12 +10,13 @@
 
 # $USER -> login username. It should be a valid email address.
 # $IP   -> remote ip address (IPv4).
+# ${1}  -> mail protocol: imap, pop3
 
 # ------------------------------------------------------------------
 # Update to plain text file..
 # Note: user 'dovecot' should have write permission on this file.
 # ------------------------------------------------------------------
-#echo "$(date +%Y.%m.%d-%H:%M:%S), $USER, $IP, pop3" >> /tmp/tracking.log 2>&1
+#echo "$(date +%Y.%m.%d-%H:%M:%S), $USER, $IP, ${1}" >> /tmp/tracking.log 2>&1
 
 # ------------------------------------------------------------------
 # Update to MySQL database.
@@ -30,7 +31,7 @@
 #       UPDATE mailbox SET \
 #       lastloginipv4="INET_ATON('$IP')", \
 #       lastlogindate="NOW()", \
-#       lastloginprotocol="pop3" \
+#       lastloginprotocol="${1}" \
 #       WHERE username='$USER';
 #EOF
 #fi
@@ -64,7 +65,7 @@ replace: lastLoginIP
 lastLoginIP: ${IP}
 -
 replace: lastLoginProtocol
-lastLoginProtocol: pop3
+lastLoginProtocol: ${1}
 EOF
 
 fi
@@ -72,8 +73,8 @@ fi
 # Execute POP3/IMAP process.
 if [ -f /etc/redhat-release ]; then
     # RHEL/CentOS.
-    exec /usr/libexec/dovecot/pop3 $*
+    exec /usr/libexec/dovecot/${1} $*
 elif [ -f /etc/debian_version ]; then
     # Debian & Ubuntu:
-    exec /usr/lib/dovecot/pop3 $*
+    exec /usr/lib/dovecot/${1} $*
 fi
