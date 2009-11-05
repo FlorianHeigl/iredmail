@@ -1,0 +1,24 @@
+diff -Naur 1.0.0/libs/__init__.py 1.0.1/libs/__init__.py
+--- 1.0.0/libs/__init__.py	2009-11-03 16:57:56.000000000 +0800
++++ 1.0.1/libs/__init__.py	2009-11-05 16:02:28.000000000 +0800
+@@ -14,7 +14,7 @@
+ #
+ #---------------------------------------------------------------------
+ 
+-__version__ = '1.0'
++__version__ = '1.0.1'
+ __author__ = 'Zhang Huangbin'
+ __author_mail__ = 'michaelbibby@gmail.com'
+ __url_iredadmin_lastest__ = 'http://www.iredmail.org/iredadmin_ent_lastest'
+diff -Naur 1.0.0/libs/iredutils.py 1.0.1/libs/iredutils.py
+--- 1.0.0/libs/iredutils.py	2009-11-05 16:01:15.000000000 +0800
++++ 1.0.1/libs/iredutils.py	2009-11-05 16:02:05.000000000 +0800
+@@ -44,7 +44,7 @@
+     bytes = float(value)
+     base = 1024
+     if bytes < base:
+-        return "%d Bytes" % (bytes, bytes != 1 and 's' or '')
++        return "%d Bytes" % (bytes)
+     elif bytes < base * base:
+         return "%d KB" % (bytes / base)
+     elif bytes < base * base * base:
