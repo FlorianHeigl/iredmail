@@ -1,3 +1,6 @@
+iRedMail-0.5.2:
+    * Update clamav to 0.95.3. Thanks http://dag.wieers.com.
+
 iRedMail-0.5.1:
     * Remove three more unnecessary dialog pages.
     * Use random password for ldap admin dn: cn=vmailadmin.

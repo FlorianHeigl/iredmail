@@ -76,12 +76,6 @@ eca8f39262a056562f1001f47d564a88  pkgs/php-pear-db-1.7.13-2.el5.rf.noarch.rpm
 e945270ad46463bb05d1d26f6f814c5e  pkgs/perl-Mail-DKIM-0.36-1.ired.noarch.rpm
 1558ace8b3da6ddbb996437426dece97  pkgs/altermime-0.3.10-1.ired.x86_64.rpm
 4d9c5830b172b89e04683daab532d699  pkgs/altermime-0.3.10-1.ired.i386.rpm
-061d6fcd06b1d6a8e422dfec699a90cc  pkgs/clamav-0.95.2-4.el5.rf.i386.rpm
-739011469eda9a544d364c064a58cc97  pkgs/clamav-0.95.2-4.el5.rf.x86_64.rpm
-d45f23a6bc32e3097c2680b951237760  pkgs/clamav-db-0.95.2-4.el5.rf.i386.rpm
-6f00c57334458a085eec6a1384a0ac76  pkgs/clamav-db-0.95.2-4.el5.rf.x86_64.rpm
-1adc33bacb73be1c1e84697a3fe58082  pkgs/clamd-0.95.2-4.el5.rf.i386.rpm
-3d32bbd0e5c91ecd048342b2e51bbec6  pkgs/clamd-0.95.2-4.el5.rf.x86_64.rpm
 c5354087e0e55153880572353e6bffc3  pkgs/awstats-6.9-2.el5.rf.noarch.rpm
 0877b2f825561f32eb9d887849b74cb1  pkgs/python-babel-0.9.4-1.el5.noarch.rpm
 927fd0198ad56322d6949210def70380  pkgs/python-jinja2-2.2.1-1.el5.i386.rpm
@@ -93,3 +87,9 @@ faa844c1182eafc97d47c9241fc5cbad  pkgs/mod_wsgi-2.5-2.ired.i386.rpm
 283ffe8c34f8361f19eace9da8628edb  pkgs/mod_wsgi-2.5-2.ired.x86_64.rpm
 121a163dbb8a94fa367d4b38b2668ad9  pkgs/dovecot-1.1.19-1_96.el5.i386.rpm
 9c4a107acc5285a955023c420071d81e  pkgs/dovecot-1.1.19-1_96.el5.x86_64.rpm
+3c60832326f49c5d688ceb9163f38505  pkgs/clamav-0.95.3-1.el5.rf.i386.rpm
+097764f8e605d07f12332b247390b5f8  pkgs/clamav-0.95.3-1.el5.rf.x86_64.rpm
+418a07a050f155dbd0aceed8006ce152  pkgs/clamav-db-0.95.3-1.el5.rf.i386.rpm
+df9bcb719e67a5c05448cfae48461fa4  pkgs/clamav-db-0.95.3-1.el5.rf.x86_64.rpm
+9a9c794b374a7bd6e4c9f0f51c6ac50f  pkgs/clamd-0.95.3-1.el5.rf.i386.rpm
+8ad7b232e838f6e4b5c6830e1170ab46  pkgs/clamd-0.95.3-1.el5.rf.x86_64.rpm
