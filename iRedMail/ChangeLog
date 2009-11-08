@@ -1,4 +1,5 @@
 iRedMail-0.5.2:
+    * Allow ping from remote hosts in iptables rule.
     * Update clamav to 0.95.3. Thanks http://dag.wieers.com.
 
 iRedMail-0.5.1:

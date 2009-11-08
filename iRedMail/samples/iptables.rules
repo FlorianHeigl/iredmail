@@ -38,6 +38,9 @@
 # Loop device.
 -A INPUT -i lo -j ACCEPT
 
+# Allow PING from remote hosts.
+-A INPUT -p icmp --icmp-type echo-request -j ACCEPT
+
 # http/https
 #-A INPUT -p tcp -m multiport --dport 80,443 -j ACCEPT
 
