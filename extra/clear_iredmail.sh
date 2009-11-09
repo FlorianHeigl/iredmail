@@ -131,7 +131,7 @@ get_all_pkgs()
             ENABLED_SERVICES="${ENABLED_SERVICES} httpd"
 
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-            ALL_PKGS="${ALL_PKGS} apache2 apache2-mpm-prefork apache2.2-common libapache2-mod-php5 libapache2-mod-auth-mysql apache2-utils libaprutil1 php5-common php5-cli php5-imap php5-gd php5-mcrypt php5-mysql php5-ldap"
+            ALL_PKGS="${ALL_PKGS} apache2 apache2-mpm-prefork apache2.2-common libapache2-mod-php5 libapache2-mod-auth-mysql apache2-utils libaprutil1 php5-common php5-cli php5-imap php5-gd php5-mcrypt php5-mysql php5-ldap php-pear"
             ENABLED_SERVICES="${ENABLED_SERVICES} apache2"
         else
             :
@@ -171,7 +171,7 @@ get_all_pkgs()
         ENABLED_SERVICES="${ENABLED_SERVICES} mysqld"
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
         [ X"${DISTRO_CODENAME}" == X"jaunty" ] && ALL_PKGS="${ALL_PKGS} mysql-server-core-5.0"
-        ALL_PKGS="${ALL_PKGS} libdbd-mysql-perl libmysqlclient15off mysql-common mysql-server-5.0 mysql-client mysql-client-5.0"
+        ALL_PKGS="${ALL_PKGS} libdbd-mysql-perl libmysqlclient15off libmysqlclient15-dev mysql-common mysql-server-5.0 mysql-client mysql-client-5.0"
         ENABLED_SERVICES="${ENABLED_SERVICES} mysql"
     else
         :
