@@ -308,7 +308,7 @@ get_all_misc()
     EXTRA_FILES="${EXTRA_FILES} ${HTTPD_CONF_ROOT} ${PHP_INI} /etc/php.d"
 
     # MySQL.
-    EXTRA_FILES="${EXTRA_FILES} ${MYSQL_MY_CNF} /var/lib/mysql /var/log/mysqld.log /var/log/mysql.log"
+    EXTRA_FILES="${EXTRA_FILES} ${MYSQL_MY_CNF} /var/lib/mysql /var/log/mysqld.log /var/log/mysql.log /etc/mysql"
 
     # OpenLDAP.
     EXTRA_FILES="${EXTRA_FILES} ${OPENLDAP_CONF_ROOT} ${OPENLDAP_DATA_DIR} ${OPENLDAP_LOGFILE} ${OPENLDAP_LOGROTATE_FILE}"
