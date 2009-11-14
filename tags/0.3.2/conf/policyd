@@ -1,0 +1,46 @@
+#!/bin/sh
+
+# Author: Zhang Huangbin (michaelbibby <at> gmail.com)
+
+# ------------------------------------------------
+# Policyd.
+# ------------------------------------------------
+export POLICYD_CONF='/etc/policyd.conf'
+export POLICYD_INIT_SCRIPT='/etc/init.d/policyd'
+
+export POLICYD_BINDHOST='127.0.0.1' # Default value in policyd.conf.
+export POLICYD_BINDPORT='10031' # Default value in policyd.conf.
+
+export POLICYD_DB_NAME='policyd'
+export POLICYD_DB_USER='policyd'
+export POLICYD_DB_PASSWD="$(echo $RANDOM\$$RANDOM\@$RANDOM\!$RANDOM\&$RANDOM\*$RANDOM\)$RANDOM)"
+
+export POLICYD_USER_NAME='policyd'
+export POLICYD_GROUP_NAME='policyd'
+export POLICYD_USER_HOME='/home/policyd'
+
+#
+# Another policyd instance for recipient throttle feature only.
+#
+export POLICYD_SENDER_THROTTLE_CONF='/etc/policyd_sender_throttle.conf'
+export POLICYD_SENDER_THROTTLE_PIDFILE='/var/run/policyd_sender_throttle.pid'
+
+export POLICYD_SENDER_THROTTLE_BINDHOST="${POLICYD_BINDHOST}"
+export POLICYD_SENDER_THROTTLE_BINDPORT='10032'
+
+export POLICYD_SENDER_THROTTLE_DB_NAME="${POLICYD_DB_NAME}"
+export POLICYD_SENDER_THROTTLE_DB_USER="${POLICYD_DB_USER}"
+export POLICYD_SENDER_THROTTLE_DB_PASSWD="${POLICYD_DB_PASSWD}"
+
+export POLICYD_SENDER_THROTTLE_USER_NAME="${POLICYD_USER_NAME}"
+export POLICYD_SENDER_THROTTLE_GROUP_NAME="${POLICYD_GROUP_NAME}"
+export POLICYD_SENDER_THROTTLE_USER_HOME="${POLICYD_USER_HOME}"
+
+#
+# Syslog setting.
+#
+export POLICYD_SEPERATE_LOG='NO'    # 'YES' or 'NO'
+# Default syslog facility is 'local1'
+export POLICYD_SYSLOG_FACILITY='LOCAL1'
+export POLICYD_LOGFILE='/var/log/policyd.log'
+export POLICYD_LOGROTATE_FILE='/etc/logrotate.d/policyd'

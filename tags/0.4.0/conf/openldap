@@ -1,0 +1,82 @@
+#!/bin/sh
+
+# Author: Zhang Huangbin (michaelbibby <at> gmail.com)
+
+# Variables for OpenLDAP and related.
+
+export OPENLDAP_ROOTDIR="/etc/openldap"
+export OPENLDAP_SCHEMA_DIR="${OPENLDAP_ROOTDIR}/schema"
+export OPENLDAP_CACERT_DIR="${OPENLDAP_ROOTDIR}/cacerts"
+export OPENLDAP_SLAPD_CONF="${OPENLDAP_ROOTDIR}/slapd.conf"
+export OPENLDAP_LDAP_CONF="${OPENLDAP_ROOTDIR}/ldap.conf"
+export OPENLDAP_LOGFILE='/var/log/openldap.log'
+export OPENLDAP_DATA_DIR='/var/lib/ldap' # Do *NOT* end with '/'.
+export OPENLDAP_SYSCONFIG_CONF="${ETC_SYSCONFIG_DIR}/ldap"
+export OPENLDAP_LOGROTATE_FILE="${LOGROTATE_DIR}/openldap"
+
+# Setting for one instance. You can edit ${OPENLDAP_SLAPD_CONF} manually to hold
+# multi instances.
+export LDAP_DATA_DIR="${OPENLDAP_DATA_DIR}/${LDAP_SUFFIX_MAJOR}.${LDAP_SUFFIX_MINOR}/"
+export LDAP_INIT_LDIF="${CONF_DIR}/ldap_init.ldif"
+#
+# Account info for all services to bind to LDAP service.
+#
+export LDAP_SERVER_HOST='127.0.0.1'
+export LDAP_SERVER_PORT='389'
+export LDAP_USE_TLS='NO'
+export LDAP_BIND='yes'
+export LDAP_BIND_VERSION='3'
+export LDAP_BINDPW="$(${RANDOM_STRING})"
+
+# ---------- LDAP schema related -----------
+# objectClass
+export LDAP_OBJECTCLASS_OU='organizationalUnit'
+export LDAP_OBJECTCLASS_MAILDOMAIN='mailDomain'
+export LDAP_OBJECTCLASS_MAILUSER='mailUser'
+export LDAP_OBJECTCLASS_MAILADMIN='mailAdmin'
+
+# Common attribute.
+export LDAP_ENABLED_SERVICE='enabledService'
+
+# Values of service name.
+export LDAP_SERVICE_MAIL='mail'
+export LDAP_SERVICE_SMTP='smtp'
+export LDAP_SERVICE_POP3='pop3'
+export LDAP_SERVICE_IMAP='imap'
+export LDAP_SERVICE_DELIVER='deliver'
+export LDAP_SERVICE_WEBMAIL='webmail'
+export LDAP_SERVICE_AWSTATS='awstats'
+
+# Domain admin related.
+export LDAP_ATTR_DOMAINADMIN_DN_NAME='domainAdmins'
+
+# Domain related.
+export LDAP_ATTR_DOMAIN_RDN='domainName'
+export LDAP_ATTR_DOMAIN_TRANSPORT='mtaTransport'
+export LDAP_ATTR_DOMAIN_STATUS='domainStatus'
+export LDAP_ATTR_DOMAIN_ADMIN='domainAdmin'
+export LDAP_ATTR_DOMAIN_GLOBALADMIN='domainGlobalAdmin'
+export LDAP_ATTR_DOMAIN_QUOTA='domainMaxQuotaSize'
+export LDAP_ATTR_DOMAIN_USER_NUMBER='domainMaxUserNumber'
+export LDAP_ATTR_DOMAIN_SENDER_BCC_ADDRESS='domainSenderBccAddress'
+export LDAP_ATTR_DOMAIN_RECIPIENT_BCC_ADDRESS='domainRecipientBccAddress'
+# Values of domain related attributes.
+export LDAP_VALUE_DOMAIN_GLOBALADMIN='yes'
+
+# Group related.
+export LDAP_ATTR_GROUP_RDN='ou'
+export LDAP_ATTR_GROUP_USERS='Users'
+export LDAP_ATTR_GROUP_GROUPS='Groups'
+
+# User related.
+export LDAP_ATTR_USER_RDN='mail'
+export LDAP_ATTR_USER_PASSWD='userPassword'
+export LDAP_ATTR_USER_SENDER_BCC_ADDRESS='userSenderBccAddress'
+export LDAP_ATTR_USER_RECIPIENT_BCC_ADDRESS='userRecipientBccAddress'
+export LDAP_ATTR_USER_STATUS='accountStatus'
+export LDAP_ATTR_USER_QUOTA='mailQuota'
+export LDAP_ATTR_USER_ALIAS='mailForwardingAddress'
+export LDAP_ATTR_USER_RESTRICTION_CLASS='restrictionClass'
+export LDAP_ATTR_USER_RESTRICTED_DOMAIN='restrictedDomain'
+# Values of user related attributes.
+export LDAP_STATUS_ACTIVE='active'

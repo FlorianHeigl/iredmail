@@ -1,0 +1,16 @@
+e53dea37f57b777bbe2841ad0caf881b  pkgs/postfix-policyd_1.82-2_i386.deb
+4619ce17206fc493cf8cb5e1eb9476fd  pkgs/postfix-policyd_1.82-2_amd64.deb
+17cab47a3343b2390b440649cdf19a62  pkgs/libmail-dkim-perl_0.36-0.1~bpo50+1_all.deb
+7fc18396dbd1bf39fb1dfd6956c1a253  pkgs/python-jinja2_2.2.1-1~bpo50+1_i386.deb
+2e3cd2b3a29ca57d311e4c1088fd6048  pkgs/python-jinja2_2.2.1-1~bpo50+1_amd64.deb
+f6b8ffd7f04a812ae602a4a17ef1600b  pkgs/python-netifaces_0.5-1_i386.deb
+e3d3ea3e9876e218ab5110ed8bca1cbb  pkgs/python-netifaces_0.5-1_amd64.deb
+ead0ce4e4b8e1d08292c83008aa63047  pkgs/python-webpy_0.32+dak1-1_all.deb
+1bf1b119dd63f66dc05918a2da799e38  pkgs/libapache2-mod-wsgi_2.5-1_i386.deb
+915284b17553d74e80f06645eb24c965  pkgs/libapache2-mod-wsgi_2.5-1_amd64.deb
+efbabacd4e3443161d11c71734d619ec  pkgs/dovecot-common_1.1.16-1~bpo50+1_amd64.deb
+610add9339f50d374d89b7e09f9dd4c4  pkgs/dovecot-imapd_1.1.16-1~bpo50+1_amd64.deb
+4f4ec259975e77071515d4d8de5d2a27  pkgs/dovecot-pop3d_1.1.16-1~bpo50+1_amd64.deb
+cc0df92450ef10a68c6f83645dd8616a  pkgs/dovecot-common_1.1.16-1~bpo50+1_i386.deb
+dc4845c17c94d520da186f9b1fe26066  pkgs/dovecot-imapd_1.1.16-1~bpo50+1_i386.deb
+479afecf20f0a95757f79e18689325f5  pkgs/dovecot-pop3d_1.1.16-1~bpo50+1_i386.deb

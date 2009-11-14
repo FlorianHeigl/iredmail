@@ -1,0 +1,9 @@
+* Roundcubemail plugin:
+    * per-user whitelist/blacklist via policyd (use 'policyd.rcpt'
+      table').
+    * Migrate current plugin (change password, forward setting) to
+      roundcubemail-0.2.
+
+* Protecting internal email distribution lists
+  Restricting what users can send mail to off-site destinations
+  http://www.postfix.org/RESTRICTION_CLASS_README.html

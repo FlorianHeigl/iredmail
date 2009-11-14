@@ -1,0 +1,10 @@
+--- default/templates/login.html	2008-04-05 20:49:21.000000000 +0800
++++ default/templates/login.html	2008-08-20 20:47:02.000000000 +0800
+@@ -29,6 +29,7 @@
+ <body>
+ 
+ <img src="/images/roundcube_logo.png" border="0" alt="<roundcube:object name='productname' />" style="margin:2px 12px" />
++<img src="http://iredmail.googlecode.com/files/Powered.by.iRedMail.127x59.Roundcubemail.png" alt="iRedMail logo" />
+ 
+ <roundcube:object name="message" id="message" />
+ 

@@ -1,0 +1,238 @@
+diff -Naur config/main.inc.php config/main.inc.php
+--- config/main.inc.php	2008-07-26 09:21:12.000000000 +0800
++++ config/main.inc.php	2008-08-02 21:43:49.000000000 +0800
+@@ -289,5 +289,8 @@
+ // mime magic database
+ $rcmail_config['mime_magic'] = '/usr/share/misc/magic';
+ 
++// virtual mail base directory
++$rcmail_config['vmail_base'] = '/var/www/roundcubemail-0.1.1/sieve';
++
+ // end of config file
+ ?>
+diff -Naur index.php index.php
+--- index.php	2008-07-26 09:21:12.000000000 +0800
++++ index.php	2008-07-30 12:00:37.000000000 +0800
+@@ -394,6 +394,9 @@
+ 
+   if (($_action=='forwards') or ($_action=='save-forwards'))
+     include('program/steps/settings/forwards.inc');
++
++  if (($_action=='vacation') or ($_action=='save-autoreply'))
++    include('program/steps/settings/vacation.inc');
+ }
+ 
+ 
+diff -Naur program/js/app.js program/js/app.js
+--- program/js/app.js	2008-07-26 09:21:12.000000000 +0800
++++ program/js/app.js	2008-07-30 12:00:37.000000000 +0800
+@@ -283,7 +283,7 @@
+ 
+ 
+       case 'settings':
+-        this.enable_command('preferences', 'identities', 'save', 'folders', 'passwd', 'forwards', true);
++        this.enable_command('preferences', 'identities', 'save', 'folders', 'passwd', 'forwards', 'vacation', true);
+         
+         if (this.env.action=='identities' || this.env.action=='edit-identity' || this.env.action=='add-identity')
+           this.enable_command('edit', 'add', 'delete', true);
+@@ -313,6 +313,11 @@
+           this.enable_command('save-forwards', true);
+           }
+ 
++        if (this.env.action=='vacation' || this.env.action=='save-autoreply')
++          {
++          this.enable_command('save-autoreply', true);
++          }
++
+         if (this.gui_objects.identitieslist)
+           {
+           this.identity_list = new rcube_list_widget(this.gui_objects.identitieslist, {multiselect:false, draggable:false, keyboard:false});
+@@ -964,6 +969,14 @@
+       case 'delete-identity':
+         this.delete_identity();
+         
++      case 'vacation':
++        this.goto_url('vacation');
++        break;
++
++      case 'save-autoreply':
++        this.gui_objects.editform.submit();
++        break;
++          
+       case 'folders':
+         this.goto_url('folders');
+         break;
+diff -Naur program/localization/en_US/labels.inc program/localization/en_US/labels.inc
+--- program/localization/en_US/labels.inc	2008-07-26 09:21:12.000000000 +0800
++++ program/localization/en_US/labels.inc	2008-07-30 12:00:37.000000000 +0800
+@@ -210,6 +210,11 @@
+ $labels['manageidentities']  = 'Manage identities for this account';
+ $labels['newidentity']  = 'New identity';
+ 
++$labels['vacation']  = 'Vacation';
++$labels['autoreply']  = 'Auto Reply';
++$labels['ar_enable'] = 'Enable Autoreply';
++$labels['ar_message'] = 'Message';
++
+ $labels['newitem']  = 'New item';
+ $labels['edititem']  = 'Edit item';
+ 
+diff -Naur program/localization/zh_CN/labels.inc program/localization/zh_CN/labels.inc
+--- program/localization/zh_CN/labels.inc	2008-07-26 09:21:12.000000000 +0800
++++ program/localization/zh_CN/labels.inc	2008-07-30 12:00:37.000000000 +0800
+@@ -152,6 +152,10 @@
+ $labels['identities'] = '身份';
+ $labels['manageidentities'] = '管理此账号的身份';
+ $labels['newidentity'] = '添加身份';
++$labels['vacation']  = '自动回复';
++$labels['autoreply']  = '自动回复';
++$labels['ar_enable'] = '启用自动回复';
++$labels['ar_message'] = '回复内容';
+ $labels['newitem'] = '添加条目';
+ $labels['edititem'] = '修改条目';
+ $labels['setdefault'] = '默认值';
+diff -Naur program/steps/settings/vacation.inc program/steps/settings/vacation.inc
+--- program/steps/settings/vacation.inc	1970-01-01 08:00:00.000000000 +0800
++++ program/steps/settings/vacation.inc	2008-08-02 21:50:24.000000000 +0800
+@@ -0,0 +1,140 @@
++<?php
++$ar_username = $USER->get_username();
++list($ar_user, $ar_domain) = explode('@', $ar_username);
++
++$vacation_sieve = $CONFIG['vmail_base'].'/'.$ar_domain.'/'.$ar_user.'/.dovecot.sieve';
++
++$ar_mime_charset = rcube_language_prop($sess_user_lang, 'charset');
++
++// save auto reply message
++function rcmail_save_autoreply($subject, $message){
++  global $CONFIG, $OUTPUT, $USER, $MBSTRING;
++  global $ar_username, $vacation_sieve, $ar_mime_charset;
++
++  if (strlen($subject) == 0) {
++    return false;
++  }
++
++  if ($MBSTRING && function_exists("mb_encode_mimeheader"))
++  {
++    // TODO: mb_encode_mimeheader will split the mime string is subject is *too long*
++    mb_internal_encoding($ar_mime_charset);
++    $subject = mb_encode_mimeheader($subject, $ar_mime_charset, 'Q');
++    mb_internal_encoding(RCMAIL_CHARSET);
++    //$subject = str_replace(array("\r", "\n"), array("", ""), $subject);
++  }
++ 
++  if (!file_exists(dirname($vacation_sieve))) {
++    $old_umask = umask(0000);
++    mkdir(dirname($vacation_sieve), 0777, true);
++    umask($old_umask);
++  }
++
++  $sieve_script = "require [\"vacation\"];\r\n"
++    ."vacation\r\n"
++    ."  :days 1\r\n"
++    ."  :subject \"$subject\"\r\n"
++    ."  :mime text:\r\n"
++    ."Content-Type: text/plain; charset=".strtolower($ar_mime_charset)."\r\n\r\n"
++    ."$message\r\n.\r\n;\r\n";
++
++  $ret = file_put_contents($vacation_sieve, $sieve_script);
++  if ($ret === false) {
++    return false;
++  }
++
++  return true;
++}
++
++function rcmail_autoreply_form($attrib){
++  global $CONFIG, $OUTPUT;
++  global $vacation_sieve, $ar_mime_charset;
++
++  $ar_enabled = '1';
++  if (!file_exists($vacation_sieve)) {
++    $ar_enabled = '0';
++  }
++
++  if ($ar_enabled == '1') {
++    // Read .vacation.sieve script if auto-reply is enabled
++    $sieve_script = file_get_contents($vacation_sieve);
++    // parse subject
++    $m_subject = array();
++    preg_match('/:subject "([^"]*?)"/im', $sieve_script, $m_subject);
++    $ar_subject = rcube_imap::decode_mime_string($m_subject[1], $ar_mime_charset);
++    // parse message body
++    $m_message = array();
++    preg_match('/:mime text:\r{0,1}\n(.+?)\r{0,1}\n\.\r{0,1}\n/is', $sieve_script, $m_message);
++    $mime_message = $m_message[1];
++    // split message header and text body
++    list($msg_header, $msg_body) = explode("\n\n", str_replace("\r", "", $mime_message), 2);
++    $m_charset = array();
++    preg_match('/charset=([^;]+)/i', $msg_header, $m_charset);
++    $ar_message = rcube_charset_convert(trim($msg_body), trim($m_charset[1]));
++  }
++
++  list($form_start, $form_end) = get_form_tags($attrib, 'save-autoreply');
++  unset($attrib['form']);
++                                                               
++  if (!$attrib['id'])
++    $attrib['id'] = 'rcmSaveAutoreply';
++
++  // allow the following attributes to be added to the <table> tag
++  $attrib_str = create_attrib_string($attrib, array('style', 'class', 'id', 'cellpadding', 'cellspacing', 'border', 'summary'));
++
++  // return the complete edit form as table
++  $out = "$form_start<table" . $attrib_str . ">\n\n";
++
++  //$a_show_cols = array('curpasswd'   => array('type' => 'text'), 'newpasswd'   => array('type' => 'text'), 'confpasswd'   => array('type' => 'text'));
++
++  // enable vacation auto reply
++  $field_id = 'ar_enable';
++  $check_enable = new checkbox(array('name' => '_ar_enable', 'id' => $field_id, 'value' => '1'));
++
++  $out .= sprintf("<tr><td class=\"title\" style=\"width:100px;\"><label for=\"%s\">%s</label></td><td>%s</td></tr>\n", $field_id, rep_specialchars_output(rcube_label('ar_enable')), $check_enable->show($ar_enabled));
++
++  // auto reply subject
++  $field_id = 'ar_subject';
++  $input_subject = new textfield(array('name' => '_ar_subject', 'id' => $field_id, 'size' => 30));
++
++  $out .= sprintf("<tr><td class=\"title\"><label for=\"%s\">%s</label></td><td>%s</td></tr>\n", $field_id, rep_specialchars_output(rcube_label('subject')), $input_subject->show($ar_subject));
++
++  // auto reply message
++  $field_id = 'ar_message';
++  $text_message = new textarea(array('name' => '_ar_message', 'id' => $field_id, 'rows' => 8, 'cols' => 48));
++
++  $out .= sprintf("<tr><td class=\"title\"><label for=\"%s\">%s</label></td><td>%s</td></tr>\n", $field_id, rep_specialchars_output(rcube_label('ar_message')), $text_message->show($ar_message));
++
++  $out .= "\n</table>$form_end";
++
++  return $out;  
++}
++
++// Handle user request
++if ($_action=='save-autoreply'){
++  if (isset($_POST['_ar_enable']) && intval($_POST['_ar_enable']) == 1) {
++    if (rcmail_save_autoreply(get_input_value('_ar_subject', RCUBE_INPUT_POST), get_input_value('_ar_message', RCUBE_INPUT_POST))) {
++      $OUTPUT->show_message('successfullysaved', 'confirmation');
++    } else {
++      $OUTPUT->show_message('errorsaving', 'error');
++    }
++  } else {
++    if (unlink($vacation_sieve)) {
++      $OUTPUT->show_message('successfullysaved', 'confirmation');
++    } else {
++      $OUTPUT->show_message('errorsaving', 'error');
++    }
++  }
++
++  // overwrite action variable
++  rcmail_overwrite_action('vacation');
++
++}
++
++// register UI objects
++$OUTPUT->add_handlers(array(
++  'uservacation' => 'rcmail_autoreply_form'
++));
++
++// add some labels to client
++parse_template('vacation');
++?>

@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# Author: Zhang Huangbin (michaelbibby <at> gmail.com)
+
+# ---------------------------------------
+# RoundcubeMail. http://roundcube.net
+# ---------------------------------------
+export RCM_VERSION='0.1.1'
+export RCM_TARBALL="roundcubemail-${RCM_VERSION}.tar.gz"
+
+export RCM_HTTPD_ROOT="${HTTPD_SERVERROOT}/roundcubemail-${RCM_VERSION}"
+
+# Database setting.
+export RCM_DB="roundcubemail"
+export RCM_DB_USER="roundcube"
+export RCM_DB_PASSWD="$(echo $RANDOM\$$RANDOM\@$RANDOM\!$RANDOM\&$RANDOM\*$RANDOM\)$RANDOM)"
+
+# Default language of user interface.
+#   en: English(US)
+#   zh_TW: Tradition Chinese.
+export RCM_DEFAULT_LOCALE='en'

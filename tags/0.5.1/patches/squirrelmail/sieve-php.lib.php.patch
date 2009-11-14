@@ -1,0 +1,12 @@
+--- lib/sieve-php.lib.php	2004-12-22 21:59:09.000000000 +0800
++++ lib/sieve-php.lib.php	2008-09-09 20:28:14.000000000 +0800
+@@ -494,7 +494,8 @@
+         return false;
+     $this->script=stripslashes($script);
+     $len=strlen($this->script);
+-    fputs($this->fp, "PUTSCRIPT \"$scriptname\" \{$len+}\r\n");
++    #fputs($this->fp, "PUTSCRIPT \"$scriptname\" \{$len+}\r\n");
++    fputs($this->fp, "PUTSCRIPT \"$scriptname\" {" . $len . "+}\r\n");
+     fputs($this->fp, "$this->script\r\n");
+   
+     return sieve::get_response();

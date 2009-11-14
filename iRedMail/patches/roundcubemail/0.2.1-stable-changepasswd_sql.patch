@@ -1,0 +1,449 @@
+diff -Naur --exclude='*.svn*' roundcube_svn/plugins/changepasswd/changepasswd.php roundcube_pub/plugins/changepasswd/changepasswd.php
+--- roundcube_svn/plugins/changepasswd/changepasswd.php	1970-01-01 01:00:00.000000000 +0100
++++ roundcube_pub/plugins/changepasswd/changepasswd.php	2009-03-10 18:49:10.000000000 +0000
+@@ -0,0 +1,31 @@
++<?php
++
++/*
++ +-----------------------------------------------------------------------+
++ | plugins/changepasswd/chnagepasswd.php                                 |
++ |                                                                       |
++ | This file is part of the RoundCube Webmail client                     |
++ | Copyright (C) 2008, RoundCube Dev. - Switzerland                      |
++ | Licensed under the GNU GPL                                            |
++ |                                                                       |
++ | PURPOSE:                                                              |
++ |   Provide functionality for user's password modification via sql      |
++ |                                                                       |
++ +-----------------------------------------------------------------------+
++ | Author: Philip Weir                                                   |
++ +-----------------------------------------------------------------------+
++
++ $Id: $
++
++*/
++
++class changepasswd extends rcube_plugin
++{
++	function init()
++	{
++		// preperation for Plugin API
++		// not used yet
++	}
++}
++
++?>
+\ No newline at end of file
+diff -Naur --exclude='*.svn*' roundcube_svn/plugins/changepasswd/config.inc.php roundcube_pub/plugins/changepasswd/config.inc.php
+--- roundcube_svn/plugins/changepasswd/config.inc.php	1970-01-01 01:00:00.000000000 +0100
++++ roundcube_pub/plugins/changepasswd/config.inc.php	2009-03-10 18:49:10.000000000 +0000
+@@ -0,0 +1,42 @@
++<?php
++
++/*
++ +-----------------------------------------------------------------------+
++ | Changepasswd configuration file                                       |
++ |                                                                       |
++ | This file is part of the RoundCube Webmail client                     |
++ | Copyright (C) 2005-2008, RoundCube Dev. - Switzerland                 |
++ | Licensed under the GNU GPL                                            |
++ |                                                                       |
++ +-----------------------------------------------------------------------+
++
++*/
++
++$changepasswd_config = array();
++
++// User database settings
++$changepasswd_config['db_dsnw'] = 'mysql://username:password@localhost/database';
++
++// PEAR database DSN for read only operations (if empty write database will be used)
++// useful for database replication
++$changepasswd_config['db_dsnr'] = '';
++
++// use persistent db-connections
++// beware this will not "always" work as expected
++// see: http://www.php.net/manual/en/features.persistent-connections.php
++$changepasswd_config['db_persistent'] = FALSE;
++
++// query to verify current password
++// this query should return 1 result - the data returned is not used, the number of rows is counted to verify success
++// %u will be replaced with the users username (from RC session)
++// %o will be replaced with the users current password
++// %n will be replaced with the users new password
++$changepasswd_config['sql_select'] = "SELECT userid FROM users WHERE  userid='%u' AND password='%o';";
++
++// query to update password
++// %u will be replaced with the users username (from RC session)
++// %o will be replaced with the users current password
++// %n will be replaced with the users new password
++$changepasswd_config['sql_update'] = "UPDATE users SET password = '%n' WHERE userid='%u' AND password='%o';";
++
++?>
+\ No newline at end of file
+diff -Naur --exclude='*.svn*' roundcube_svn/program/js/changepasswd.js roundcube_pub/program/js/changepasswd.js
+--- roundcube_svn/program/js/changepasswd.js	1970-01-01 01:00:00.000000000 +0100
++++ roundcube_pub/program/js/changepasswd.js	2009-03-10 18:49:10.000000000 +0000
+@@ -0,0 +1,43 @@
++/*
++ +-----------------------------------------------------------------------+
++ | RoundCube Webmail Client Script                                       |
++ |                                                                       |
++ | This file is part of the RoundCube Webmail client                     |
++ | Copyright (C) 2008, RoundCube Dev, - Switzerland                      |
++ | Licensed under the GNU GPL                                            |
++ |                                                                       |
++ +-----------------------------------------------------------------------+
++ | Author: Philip Weir                                                   |
++ +-----------------------------------------------------------------------+
++
++ $Id: $
++
++*/
++
++function changepasswd_check_input() {
++	var input_curpasswd = rcube_find_object('_curpasswd');
++	var input_newpasswd = rcube_find_object('_newpasswd');
++	var input_confpasswd = rcube_find_object('_confpasswd');
++	
++	if (input_curpasswd && input_curpasswd.value == '') {
++		alert(rcmail.get_label('nocurpassword'));
++		input_curpasswd.focus();
++	}        
++	else if (input_newpasswd && input_newpasswd.value == '' && input_confpasswd && input_confpasswd.value == '') {
++		alert(rcmail.get_label('nopassword'));
++		input_newpasswd.value = '';
++		input_confpasswd.value = '';
++		input_newpasswd.focus();
++	}
++	else if (input_newpasswd && input_confpasswd && input_newpasswd.value != input_confpasswd.value) {
++		alert(rcmail.get_label('passwordinconsistency'));
++		input_newpasswd.value = '';
++		input_confpasswd.value = '';
++		input_newpasswd.focus();
++	}
++	else {
++		return true;
++	}
++	
++	return false;
++}
+diff -Naur --exclude='*.svn*' roundcube_svn/program/steps/settings/changepasswd.inc roundcube_pub/program/steps/settings/changepasswd.inc
+--- roundcube_svn/program/steps/settings/changepasswd.inc	1970-01-01 01:00:00.000000000 +0100
++++ roundcube_pub/program/steps/settings/changepasswd.inc	2009-03-10 18:49:10.000000000 +0000
+@@ -0,0 +1,72 @@
++<?php
++
++/*
++ +-----------------------------------------------------------------------+
++ | plugins/changepasswd/changepasswd.inc                                 |
++ |                                                                       |
++ | This file is part of the RoundCube Webmail client                     |
++ | Copyright (C) 2008, RoundCube Dev. - Switzerland                      |
++ | Licensed under the GNU GPL                                            |
++ |                                                                       |
++ | PURPOSE:                                                              |
++ |   Provide functionality for user password modification                |
++ |                                                                       |
++ +-----------------------------------------------------------------------+
++ | Author: Philip Weir                                                   |
++ +-----------------------------------------------------------------------+
++
++ $Id: $
++
++*/
++
++$OUTPUT->set_pagetitle(rcube_label('changepasswd'));
++$OUTPUT->add_handler('changepasswd', 'rcmail_changepasswd_form');
++$OUTPUT->include_script('changepasswd.js');
++$OUTPUT->add_label('nocurpassword', 'nopassword', 'passwordinconsistency');
++$OUTPUT->send('changepasswd');
++
++function rcmail_changepasswd_form($attrib) {
++	list($form_start, $form_end) = get_form_tags($attrib, 'save-changepasswd');
++	unset($attrib['form']);
++	
++	// return the complete edit form as table
++	$out = $form_start;
++	$table = new html_table(array('cols' => 2));
++
++	// show old password field
++	if (!isset($no_override['curpasswd']))
++	{
++		$field_id = 'rcmfd_curpwd';
++		$input_curpasswd = new html_passwordfield(array('name' => '_curpasswd', 'id' => $field_id));
++		
++		$table->add('title', html::label($field_id, Q(rcube_label('curpasswd'))));
++		$table->add(null, $input_curpasswd->show());
++	}
++	  
++	// show new password field
++	if (!isset($no_override['newpasswd']))
++	{
++		$field_id = 'rcmfd_newpwd';
++		$input_newpasswd = new html_passwordfield(array('name' => '_newpasswd', 'id' => $field_id,));
++		
++		$table->add('title', html::label($field_id, Q(rcube_label('newpasswd'))));
++		$table->add(null, $input_newpasswd->show());
++	}
++	
++	// show new password confirm field
++	if (!isset($no_override['confpasswd']))
++	{
++		$field_id = 'rcmfd_cnfpwd';
++		$input_confpasswd = new html_passwordfield(array('name' => '_confpasswd', 'id' => $field_id));
++		
++		$table->add('title', html::label($field_id, Q(rcube_label('confpasswd'))));
++		$table->add(null, $input_confpasswd->show());
++	}
++	
++	$out .= $table->show($attrib);
++	$out .= $form_end;
++	
++	return $out;  
++}
++
++?>
+\ No newline at end of file
+diff -Naur --exclude='*.svn*' roundcube_svn/program/steps/settings/save_changepasswd.inc roundcube_pub/program/steps/settings/save_changepasswd.inc
+--- roundcube_svn/program/steps/settings/save_changepasswd.inc	1970-01-01 01:00:00.000000000 +0100
++++ roundcube_pub/program/steps/settings/save_changepasswd.inc	2009-03-10 18:49:10.000000000 +0000
+@@ -0,0 +1,69 @@
++<?php
++
++/*
++ +-----------------------------------------------------------------------+
++ | plugins/changepasswd/save_changepasswd.inc                            |
++ |                                                                       |
++ | This file is part of the RoundCube Webmail client                     |
++ | Copyright (C) 2008, RoundCube Dev. - Switzerland                      |
++ | Licensed under the GNU GPL                                            |
++ |                                                                       |
++ | PURPOSE:                                                              |
++ |   Save user account password                                          |
++ |                                                                       |
++ +-----------------------------------------------------------------------+
++ | Author: Philip Weir                                                   |
++ +-----------------------------------------------------------------------+
++ | Requires: plugins/changepasswd/config.inc.php                         |
++ +-----------------------------------------------------------------------+
++
++ $Id: $
++
++*/
++
++require_once('plugins/changepasswd/config.inc.php');
++
++$old_pw = $_POST['_curpasswd'];
++$new_pw = $_POST['_newpasswd'];
++
++$sql_select = str_replace(array('%u', '%o', '%n'),
++				array($_SESSION['username'], $old_pw, $new_pw),
++				$changepasswd_config['sql_select']);
++
++$sql_update = str_replace(array('%u', '%o', '%n'),
++				array($_SESSION['username'], $old_pw, $new_pw),
++				$changepasswd_config['sql_update']);
++
++$user_db = new rcube_mdb2($changepasswd_config['db_dsnw'], $changepasswd_config['db_dsnr'], $changepasswd_config['db_persistent']);
++$user_db->db_connect('w');
++
++// check DB connections and exit on failure
++if ($err_str = $user_db->is_error()) {
++  raise_error(array(
++    'code' => 603,
++    'type' => 'db',
++    'message' => $err_str), FALSE, TRUE);
++}
++
++$user_db->query($sql_select);
++
++if ($user_db->num_rows() == 1) {
++	$updated = false;
++	$updated = $user_db->query($sql_update);
++
++	if ($updated) {
++		$_SESSION['password'] = $RCMAIL->encrypt_passwd($new_pw);
++		$OUTPUT->show_message('passwordchanged', 'confirmation');
++	}
++	else {
++		$OUTPUT->show_message('passwordfailed', 'error');
++	}
++}
++else {
++  	$OUTPUT->show_message('passwordfailed', 'error');
++}
++
++// go to next step
++rcmail_overwrite_action('changepasswd');
++
++?>
+\ No newline at end of file
+diff -Naur --exclude='*.svn*' roundcube_svn/skins/default/templates/changepasswd.html roundcube_pub/skins/default/templates/changepasswd.html
+--- roundcube_svn/skins/default/templates/changepasswd.html	1970-01-01 01:00:00.000000000 +0100
++++ roundcube_pub/skins/default/templates/changepasswd.html	2009-03-10 18:49:10.000000000 +0000
+@@ -0,0 +1,27 @@
++<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
++<html xmlns="http://www.w3.org/1999/xhtml">
++<head>
++<title><roundcube:object name="pagetitle" /></title>
++<roundcube:include file="/includes/links.html" />
++<link rel="stylesheet" type="text/css" href="/settings.css" />
++<script type="text/javascript" src="/functions.js"></script>
++</head>
++<body onload="rcube_init_settings_tabs()">
++
++<roundcube:include file="/includes/taskbar.html" />
++<roundcube:include file="/includes/header.html" />
++<roundcube:include file="/includes/settingstabs.html" />
++
++<div id="userprefs-box">
++<div id="userprefs-title"><roundcube:label name="changepasswd" /></div>
++
++<div style="padding:15px 0 15px 15px">
++<roundcube:object name="changepasswd" />
++<div style="clear:left"></div>			
++</div>
++</div>
++
++<p id="listbuttons"><roundcube:button command="save-changepasswd" type="input" class="button mainaction" label="save" /></p>
++		
++</body>
++</html>
+--- roundcube_svn/program/js/app.js.orig	2009-04-13 16:03:58.000000000 +0800
++++ roundcube_pub/program/js/app.js	2009-04-13 16:05:48.000000000 +0800
+@@ -289,6 +289,7 @@
+       case 'settings':
+         this.enable_command('preferences', 'identities', 'save', 'folders', true);
+         this.enable_command('sieverules', true);
++        this.enable_command('changepasswd', true);
+         
+         if (this.env.action=='identities' || this.env.action=='edit-identity' || this.env.action=='add-identity') {
+           this.enable_command('add', this.env.identities_level < 2);
+@@ -307,6 +308,9 @@
+         if (this.env.action=='edit-sieverule' || this.env.action=='add-sieverule')
+           this.enable_command('save-sieverule', 'delete-sieverule', true);
+ 
++        if (this.env.action=='changepasswd')
++          this.enable_command('save-changepasswd', true);
++
+         if (this.gui_objects.sieveruleslist)
+           {
+           this.sievefilters_list = new rcube_list_widget(this.gui_objects.sieveruleslist, {multiselect:false, draggable:false, keyboard:false});
+@@ -1053,6 +1057,15 @@
+         this.goto_url('identities');
+         break;
+           
++      case 'changepasswd':
++        this.goto_url('changepasswd');
++        break;
++
++      case 'save-changepasswd':
++        if (changepasswd_check_input())
++          this.gui_objects.editform.submit();
++        break;
++
+       case 'delete-identity':
+         this.delete_identity();
+         
+--- roundcube_svn/skins/default/includes/settingstabs.html.orig	2009-04-13 16:09:32.000000000 +0800
++++ roundcube_pub/skins/default/includes/settingstabs.html	2009-04-13 16:09:43.000000000 +0800
+@@ -2,5 +2,6 @@
+ <span id="settingstabdefault" class="tablink"><roundcube:button command="preferences" type="link" label="preferences" title="editpreferences" /></span>
+ <span id="settingstabfolders" class="tablink"><roundcube:button command="folders" type="link" label="folders" title="managefolders" class="tablink" /></span>
+ <span id="settingstabidentities" class="tablink"><roundcube:button command="identities" type="link" label="identities" title="manageidentities" class="tablink" /></span>
++<span id="settingstabchangepasswd" class="tablink"><roundcube:button command="changepasswd" type="link" label="password" title="changepasswd" class="tablink" /></span>
+ <span id="settingstabsieverules" class="tablink"><roundcube:button command="sieverules" type="link" label="filters" title="managefilters" class="tablink" /></span>
+ </div>
+--- roundcube_svn/program/steps/settings/save_changepasswd.inc.orig	2009-04-13 16:22:24.000000000 +0800
++++ roundcube_pub/program/steps/settings/save_changepasswd.inc	2009-04-13 16:23:17.000000000 +0800
+@@ -23,17 +23,10 @@
+ 
+ require_once('plugins/changepasswd/config.inc.php');
+ 
++$username = $_SESSION['username'];
+ $old_pw = $_POST['_curpasswd'];
+ $new_pw = $_POST['_newpasswd'];
+ 
+-$sql_select = str_replace(array('%u', '%o', '%n'),
+-				array($_SESSION['username'], $old_pw, $new_pw),
+-				$changepasswd_config['sql_select']);
+-
+-$sql_update = str_replace(array('%u', '%o', '%n'),
+-				array($_SESSION['username'], $old_pw, $new_pw),
+-				$changepasswd_config['sql_update']);
+-
+ $user_db = new rcube_mdb2($changepasswd_config['db_dsnw'], $changepasswd_config['db_dsnr'], $changepasswd_config['db_persistent']);
+ $user_db->db_connect('w');
+ 
+@@ -45,19 +38,23 @@
+     'message' => $err_str), FALSE, TRUE);
+ }
+ 
+-$user_db->query($sql_select);
+-
+-if ($user_db->num_rows() == 1) {
+-	$updated = false;
+-	$updated = $user_db->query($sql_update);
+-
+-	if ($updated) {
+-		$_SESSION['password'] = $RCMAIL->encrypt_passwd($new_pw);
+-		$OUTPUT->show_message('passwordchanged', 'confirmation');
+-	}
+-	else {
+-		$OUTPUT->show_message('passwordfailed', 'error');
+-	}
++if ($_SESSION['password'] == $RCMAIL->encrypt_passwd($old_pw)) {
++    $updated = false;
++    //$updated = $user_db->query($sql_update);
++    $tmpEncPass = crypt($new_pw, '');
++    $updated = $user_db->query(
++        "UPDATE " . $changepasswd_config['db_name_table'] . 
++        " SET " . $changepasswd_config['db_passwd_field'] . " = '" . $tmpEncPass . "'" . 
++        " WHERE " . $changepasswd_config['db_user_field'] . " = '" . $username . "'"
++    );
++
++    if ($updated) {
++        $_SESSION['password'] = $RCMAIL->encrypt_passwd($new_pw);
++        $OUTPUT->show_message('passwordchanged', 'confirmation');
++    }
++    else {
++        $OUTPUT->show_message('passwordfailed', 'error');
++    }
+ }
+ else {
+   	$OUTPUT->show_message('passwordfailed', 'error');
+@@ -66,4 +63,4 @@
+ // go to next step
+ rcmail_overwrite_action('changepasswd');
+ 
+-?>
+\ No newline at end of file
++?>
+--- roundcube_svn/plugins/changepasswd/config.inc.php.orig	2009-04-13 15:47:14.000000000 +0800
++++ roundcube_pub/plugins/changepasswd/config.inc.php	2009-04-13 15:47:33.000000000 +0800
+@@ -26,17 +26,13 @@
+ // see: http://www.php.net/manual/en/features.persistent-connections.php
+ $changepasswd_config['db_persistent'] = FALSE;
+ 
+-// query to verify current password
+-// this query should return 1 result - the data returned is not used, the number of rows is counted to verify success
+-// %u will be replaced with the users username (from RC session)
+-// %o will be replaced with the users current password
+-// %n will be replaced with the users new password
+-$changepasswd_config['sql_select'] = "SELECT userid FROM users WHERE  userid='%u' AND password='%o';";
++// Database name and table
++$changepasswd_config['db_name_table'] = 'vmail.mailbox';
+ 
+-// query to update password
+-// %u will be replaced with the users username (from RC session)
+-// %o will be replaced with the users current password
+-// %n will be replaced with the users new password
+-$changepasswd_config['sql_update'] = "UPDATE users SET password = '%n' WHERE userid='%u' AND password='%o';";
++// Username filed
++$changepasswd_config['db_user_field'] = 'username';
++
++// Password filed
++$changepasswd_config['db_passwd_field'] = 'password';
+ 
+ ?>

@@ -1,0 +1,2 @@
+export POSTFIXADMIN_VERSION='2.2.0'
+export POSTFIXADMIN_TARBALL="postfixadmin_${POSTFIXADMIN_VERSION}.tar.gz"

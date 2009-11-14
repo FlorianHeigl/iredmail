@@ -1,0 +1,4 @@
+export SASLAUTHD_CONF='/etc/sysconfig/saslauthd'
+export ETC_SASLAUTHD_CONF='/etc/saslauthd.conf'
+export SASLAUTHD_SOCKETDIR='/var/spool/postfix/var/run/saslauthd/'
+export AUTHDAEMOND_PATH='/var/spool/authdaemon/socket'

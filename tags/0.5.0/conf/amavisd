@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+# Author: Zhang Huangbin (michaelbibby <at> gmail.com)
+
+# Warning: Please source 'conf/postfix' first.
+
+export AMAVISD_SERVER='127.0.0.1'
+export AMAVISD_USER='amavis'
+export AMAVISD_GROUP='amavis'
+export AMAVISD_LOGFILE='/var/log/amavisd.log'
+export AMAVISD_LOGROTATE_FILE="${LOGROTATE_DIR}/amavisd"
+export AMAVISD_DKIM_DIR='/var/lib/dkim'
+export AMAVISD_DKIM_SELECTOR='dkim'
+export AMAVISD_DAEMON_USER='amavis'
+export AMAVISD_DAEMON_GROUP='amavis'
+
+# Altermime.
+export ALTERMIME_BIN='/usr/bin/altermime'
+export DISCLAIMER_DIR="${POSTFIX_ROOTDIR}/disclaimer"
+
+if [ X"${DISTRO}" == X"RHEL" ]; then
+    export AMAVISD_BIN='amavisd'
+    export AMAVISD_CONF='/etc/amavisd.conf'
+    export AMAVISD_DKIM_CONF='/etc/amavisd.conf'
+    export AMAVISD_RC_SCRIPT_NAME='amavisd'
+elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+    export AMAVISD_BIN='amavisd-new'
+    export AMAVISD_CONF_DIR='/etc/amavis/conf.d'
+    export AMAVISD_CONF='/etc/amavis/conf.d/50-user'
+    export AMAVISD_DKIM_CONF='/etc/amavis/conf.d/50-user'
+    export AMAVISD_RC_SCRIPT_NAME='amavis'
+else
+    :
+fi
+
+# Syslog setting, 'YES' or 'NO'
+export AMAVISD_SEPERATE_LOG='NO'

@@ -1,0 +1,10 @@
+--- libraries/auth/cookie.auth.lib.php	2008-07-29 03:42:10.000000000 +0800
++++ /root/cookie.auth.lib.php	2008-08-20 22:48:32.000000000 +0800
+@@ -137,6 +137,7 @@
+            . 'border="0" width="88" height="31" alt="phpMyAdmin" />';
+     }
+     ?></a>
++<a href="http://code.google.com/p/iredmail/" target="_blank" class="logo"><img src="http://iredmail.googlecode.com/files/Powered.by.iRedMail.127x59.phpMyAdmin.png" alt="iRedMail logo" /></a>
+ <h1>
+     <?php
+     echo sprintf($GLOBALS['strWelcome'],

@@ -1,0 +1,356 @@
+diff -Nur index.php index.php
+--- index.php   2008-04-05 20:49:21.000000000 +0800
++++ index.php   2008-04-26 16:04:09.000000000 +0800
+@@ -389,6 +389,11 @@
+       $_action=='create-folder' || $_action=='rename-folder' || $_action=='delete-folder')
+     include('program/steps/settings/manage_folders.inc');
+ 
++  if (($_action=='passwd') or ($_action=='save-passwd'))
++    include('program/steps/settings/passwd.inc');
++
++  if (($_action=='forwards') or ($_action=='save-forwards'))
++    include('program/steps/settings/forwards.inc');
+ }
+ 
+ 
+diff -Nur program/js/app.js program/js/app.js
+--- program/js/app.js   2008-04-05 20:49:21.000000000 +0800
++++ program/js/app.js   2008-04-26 15:58:05.000000000 +0800
+@@ -283,7 +283,7 @@
+ 
+ 
+       case 'settings':
+-        this.enable_command('preferences', 'identities', 'save', 'folders', true);
++        this.enable_command('preferences', 'identities', 'save', 'folders', 'passwd', 'forwards', true);
+         
+         if (this.env.action=='identities' || this.env.action=='edit-identity' || this.env.action=='add-identity')
+           this.enable_command('edit', 'add', 'delete', true);
+@@ -294,6 +294,25 @@
+         if (this.env.action=='folders')
+           this.enable_command('subscribe', 'unsubscribe', 'create-folder', 'rename-folder', 'delete-folder', true);
+ 
++        if (this.env.action=='passwd' || this.env.action=='save-passwd')
++          {
++          var input_curpasswd = rcube_find_object('_curpasswd');
++          var input_newpasswd = rcube_find_object('_newpasswd');
++          var input_confpasswd = rcube_find_object('_confpasswd');
++          if (input_curpasswd && input_curpasswd.value=='')
++              input_curpasswd.focus();
++          else if (input_confpasswd)
++              input_confpasswd.focus();
++
++          this.enable_command('save-passwd', true);
++          }
++
++        if (this.env.action=='forwards' || this.env.action=='save-forwards')
++          {
++          rcube_find_object('_forwards').focus();
++          this.enable_command('save-forwards', true);
++          }
++
+         if (this.gui_objects.identitieslist)
+           {
+           this.identity_list = new rcube_list_widget(this.gui_objects.identitieslist, {multiselect:false, draggable:false, keyboard:false});
+@@ -969,6 +988,41 @@
+         this.delete_folder(props);
+         break;
+ 
++      case 'passwd':
++        this.goto_url('passwd');
++        break;
++
++      case 'save-passwd':
++        var input_curpasswd = rcube_find_object('_curpasswd');
++        var input_newpasswd = rcube_find_object('_newpasswd');
++        var input_confpasswd = rcube_find_object('_confpasswd');
++        if ((input_newpasswd && input_newpasswd.value=='') && (input_confpasswd && input_confpasswd.value=='') || (input_curpasswd && input_curpasswd.value==''))
++            {
++                alert(this.get_label('nopassword'));
++                input_curpasswd.value='';
++                input_newpasswd.value='';
++                input_confpasswd.value='';
++                input_curpasswd.focus();
++            }
++        else if ((input_newpasswd && input_confpasswd) && ( input_newpasswd.value != input_confpasswd.value))
++            {
++                alert(this.get_label('passwordinconsistency'));
++                input_newpasswd.value='';
++                input_confpasswd.value='';
++                input_newpasswd.focus();
++            }
++        else
++                this.gui_objects.editform.submit();
++        break;
++
++      case 'forwards':
++        this.goto_url('forwards');
++        break;
++
++      case 'save-forwards':
++        this.gui_objects.editform.submit();
++        break;
++
+       }
+ 
+     return obj ? false : true;
+diff -Nur program/localization/en_US/labels.inc program/localization/en_US/labels.inc
+--- program/localization/en_US/labels.inc   2008-04-05 20:49:21.000000000 +0800
++++ program/localization/en_US/labels.inc   2008-04-26 15:58:06.000000000 +0800
+@@ -243,4 +243,13 @@
+ $labels['sortasc']  = 'Sort ascending';
+ $labels['sortdesc'] = 'Sort descending';
+ 
++$labels['changepasswd']  = 'Change Password';
++$labels['curpasswd']  = 'Current Password';
++$labels['newpasswd']  = 'New Password';
++$labels['confpasswd']  = 'Confirm New Password';
++
++$labels['forwards']  = 'Forwards';
++$labels['changeforwards']  = 'Change Forwards';
++$labels['forwardaddrs']  = 'Forward Addresses';
++
+ ?>
+diff -Nur program/localization/en_US/messages.inc program/localization/en_US/messages.inc
+--- program/localization/en_US/messages.inc	2008-02-13 02:41:53.000000000 +0800
++++ program/localization/en_US/messages.inc	2008-04-26 20:59:41.000000000 +0800
+@@ -79,4 +79,10 @@
+ $messages['nodeletelastidentity'] = 'You cannot delete this identity, it\'s your last one.';
+ $messages['addsubfolderhint'] = 'This folder will be created as subfolder of the currently selected one';
+ 
+-?>
+\ No newline at end of file
++$messages['nopassword'] = "Please input new password.";
++$messages['passwordinconsistency'] = "Inconsistency of password, please try again.";
++
++$messages['forwards']  = 'Mail Forward';
++$messages['changeforwards']  = 'Mail forward setting';
++$messages['forwardaddrs']  = 'All your mail will be forwarded to the addresses you listed below.\nMulti addresses should be seperated by comma. e.g.\nuserA@example.com, \nuserB@example.com';
++?>
+diff -Nur program/steps/settings/func.inc program/steps/settings/func.inc
+--- program/steps/settings/func.inc 2008-04-05 20:49:21.000000000 +0800
++++ program/steps/settings/func.inc 2008-04-26 15:57:59.000000000 +0800
+@@ -262,7 +262,9 @@
+ $OUTPUT->add_handlers(array(
+   'userprefs' => 'rcmail_user_prefs_form',
+   'identitieslist' => 'rcmail_identities_list',
+-  'itentitieslist' => 'rcmail_identities_list'  // keep this for backward compatibility
++  'itentitieslist' => 'rcmail_identities_list',  // keep this for backward compatibility
++  'userpasswd' => 'rcmail_passwd_form',
++  'userforwards' => 'rcmail_forwards_form'
+ ));
+ 
+ 
+diff -Nur program/steps/settings/passwd.inc program/steps/settings/passwd.inc
+--- program/steps/settings/passwd.inc   1970-01-01 08:00:00.000000000 +0800
++++ program/steps/settings/passwd.inc   2008-04-26 15:57:59.000000000 +0800
+@@ -0,0 +1,104 @@
++<?php
++
++/*
++ -----------------------------------------------------------------------
++ | program/steps/settings/passwd.inc                                   |
++ |                                                                     |
++ | This file is part of the RoundCube Webmail client                   |
++ | Copyright (C) 2007, RoundCube Dev. - Switzerland                    |
++ | Licensed under the GNU GPL                                          |
++ |                                                                     |
++ | PURPOSE:                                                            |
++ |   Change IMAP user password ONLY FOR cPanel 11 installations!       |
++ |                                                                     |
++ | REQUIREMENTS:                                                       |
++ |   PHP with cURL installed, cPanel 11                                |
++ |                                                                     |
++ -----------------------------------------------------------------------
++ | Author: Danny Herran <danny@ingeniarte.com                          |
++ -----------------------------------------------------------------------
++
++ $Id: passwd.inc,v 0.2 2007/06/08 11:16:03 roundcube Exp $
++
++*/
++
++function rcmail_save_passwd($curpasswd, $newpasswd){
++  global $CONFIG, $_SESSION, $OUTPUT;
++  
++  $user = $_SESSION['username'];
++
++  // Check current password
++  if ($_SESSION['password'] != encrypt_passwd($curpasswd))
++    return false;
++  
++  // Update password
++  $tmpEncPass = crypt($newpasswd, "");
++
++  mysql_query("UPDATE vmail.mailbox SET password = '".$tmpEncPass."' WHERE username = '".$user."'")
++    or die(mysql_error());
++      
++  $_SESSION['password'] = encrypt_passwd($newpasswd);
++ 
++  return true;
++}
++
++function rcmail_passwd_form($attrib){
++  global $CONFIG, $OUTPUT;
++                                                           
++  list($form_start, $form_end) = get_form_tags($attrib, 'save-passwd');
++  unset($attrib['form']);
++                                                               
++  if (!$attrib['id'])
++    $attrib['id'] = 'rcmSavepassword';
++
++  // allow the following attributes to be added to the <table> tag
++  $attrib_str = create_attrib_string($attrib, array('style', 'class', 'id', 'cellpadding', 'cellspacing', 'border', 'summary'));
++
++  // return the complete edit form as table
++  $out = "$form_start<table" . $attrib_str . ">\n\n";
++
++  $a_show_cols = array('curpasswd'   => array('type' => 'text'), 'newpasswd'   => array('type' => 'text'), 'confpasswd'   => array('type' => 'text'));
++
++  // show current password field
++  $field_id = 'curpasswd';
++  $input_curpasswd = new passwordfield(array('name' => '_curpasswd', 'id' => $field_id, 'size' => 30));
++
++  $out .= sprintf("<tr><td class=\"title\"><label for=\"%s\">%s</label></td><td>%s</td></tr>\n", $field_id, rep_specialchars_output(rcube_label('curpasswd')), $input_curpasswd->show($CONFIG['curpasswd']));
++
++  // show new password selection
++  $field_id = 'newpasswd';
++  $input_newpasswd = new passwordfield(array('name' => '_newpasswd', 'id' => $field_id, 'size' => 30));
++
++  $out .= sprintf("<tr><td class=\"title\"><label for=\"%s\">%s</label></td><td>%s</td></tr>\n", $field_id, rep_specialchars_output(rcube_label('newpasswd')), $input_newpasswd->show($CONFIG['newpasswd']));
++
++  // show confirm password selection
++  $field_id = 'confpasswd';
++  $input_confpasswd = new passwordfield(array('name' => '_confpasswd', 'id' => $field_id, 'size' => 30));
++
++  $out .= sprintf("<tr><td class=\"title\"><label for=\"%s\">%s</label></td><td>%s</td></tr>\n", $field_id, rep_specialchars_output(rcube_label('confpasswd')), $input_confpasswd->show($CONFIG['confpasswd']));
++
++  $out .= "\n</table>$form_end";
++
++  return $out;  
++}
++
++// Handle user request
++if ($_action=='save-passwd'){
++
++  if (!isset($_POST['_newpasswd']) or !isset($_POST['_curpasswd']))
++    $OUTPUT->show_message('errorsaving', 'error');
++  else if (rcmail_save_passwd(get_input_value('_curpasswd', RCUBE_INPUT_POST), get_input_value('_newpasswd', RCUBE_INPUT_POST)))
++    $OUTPUT->show_message('successfullysaved', 'confirmation');
++  else
++    $OUTPUT->show_message('errorsaving', 'error');
++
++  // overwrite action variable
++  rcmail_overwrite_action('passwd');
++
++}
++
++// add some labels to client
++rcube_add_label('nopassword');
++rcube_add_label('passwordinconsistency');
++parse_template('passwd');
++?>
+\ No newline at end of file
+
+--- program/localization/zh_CN/labels.inc	2008-04-05 20:49:21.000000000 +0800
++++ program/localization/zh_CN/labels.inc	2008-04-26 19:36:32.000000000 +0800
+@@ -177,4 +177,12 @@
+ $labels['sortasc'] = '递增排序';
+ $labels['sortdesc'] = '递减排序';
+ 
++$labels['changepasswd']  = '修改密码';
++$labels['curpasswd']  = '当前密码';
++$labels['newpasswd']  = '新密码';
++$labels['confpasswd']  = '确认新密码';
++
++$labels['forwards']  = '转发';
++$labels['changeforwards']  = '修改邮件转发';
++$labels['forwardaddrs']  = '转发地址';
+ ?>
+--- program/localization/zh_CN/messages.inc	2008-04-05 20:49:21.000000000 +0800
++++ program/localization/zh_CN/messages.inc	2008-04-26 19:55:23.000000000 +0800
+@@ -79,4 +79,7 @@
+ $messages['nodeletelastidentity'] = '无法删除这个身份，这是最后一个。';
+ $messages['addsubfolderhint'] = '文件夹将被作为所选中文件夹的子目录';
+ 
++$messages['forwards']  = '邮件转发';
++$messages['changeforwards']  = '邮件转发设置';
++$messages['forwardaddrs']  = '你的邮件将被转发到指定的邮箱中。\n多个地址需要用英文逗号分隔。例如：userA@example.com, \nuserB@example.com';
+ ?>
+diff -Nur program/steps/settings/forwards.inc program/steps/settings/forwards.inc
+--- program/steps/settings/forwards.inc 1970-01-01 08:00:00.000000000 +0800
++++ program/steps/settings/forwards.inc 2008-04-26 15:57:59.000000000 +0800
+@@ -0,0 +1,75 @@
++<?php
++
++function rcmail_save_forwards($forwards){
++  global $CONFIG, $OUTPUT, $USER;
++
++  $address = $USER->get_username();
++  $data=explode('@', $address);
++  $domain=$data[1];
++
++  $result = mysql_query("SELECT * FROM vmail.alias WHERE address = '".$address."'")
++    or die(mysql_error());
++
++  if (mysql_num_rows($result) == 0) {
++    mysql_query("INSERT INTO vmail.alias (address, goto, domain) VALUES ('".$address."', '".$forwards."', '".$domain."')")
++      or die(mysql_error());
++  } else {
++    mysql_query("UPDATE vmail.alias SET goto = '".$forwards."' WHERE address = '".$address."'")
++      or die(mysql_error());
++  }
++
++  return true;
++}
++
++function rcmail_forwards_form($attrib){
++  global $CONFIG, $OUTPUT, $USER;
++														    
++  list($form_start, $form_end) = get_form_tags($attrib, 'save-forwards');
++  unset($attrib['form']);
++														        
++  if (!$attrib['id'])
++    $attrib['id'] = 'rcmSaveforwards';
++
++  // allow the following attributes to be added to the <table> tag
++  $attrib_str = create_attrib_string($attrib, array('style', 'class', 'id', 'cellpadding', 'cellspacing', 'border', 'summary'));
++
++  // return the complete edit form as table
++  $out = "$form_start<table" . $attrib_str . ">\n\n";
++
++  $a_show_cols = array('forwardaddrs' => array('type' => 'textarea'));
++
++  $field_id = 'forwardaddrs';
++
++  $result = mysql_query("SELECT goto FROM vmail.alias WHERE address = '".$USER->get_username()."'")
++    or die(mysql_error());
++
++  if (mysql_num_rows($result) == 0) {
++    $forwards = "";
++  } else {
++    $row = mysql_fetch_assoc($result);
++    $forwards = $row["goto"];
++  }
++
++  $input_forwards = new textarea(array('name' => '_forwards', 'id' => $field_id, 'rows' => 3, 'cols' => 30, 'value' => $forwards));
++
++  $out .= sprintf("<tr><td class=\"title\"><label for=\"%s\">%s</label></td><td>%s</td></tr>\n", $field_id, rep_specialchars_output(rcube_label('forwardaddrs')), $input_forwards->show($CONFIG['forwardaddrs']));
++
++  $out .= "\n</table>$form_end";
++
++  return $out;
++}
++
++// Handle user request
++if ($_action=='save-forwards'){
++
++  if (rcmail_save_forwards(get_input_value('_forwards', RCUBE_INPUT_POST)))
++    $OUTPUT->show_message('successfullysaved', 'confirmation');
++  else
++    $OUTPUT->show_message('errorsaving', 'error');
++
++  // overwrite action variable
++  rcmail_overwrite_action('forwards');
++}
++
++parse_template('forwards');
++?>

@@ -1,0 +1,5 @@
+* Roundcubemail plugin:
+    * per-user whitelist/blacklist via policyd (use 'policyd.rcpt'
+      table').
+
+* One domain, one uid, one gid.
