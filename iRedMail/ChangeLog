@@ -1,4 +1,6 @@
 iRedMail-0.5.2:
+    * Add 'disclaimer' in mail user object, used to store per-user
+      disclaimer text.
     * Allow ping from remote hosts in iptables rule.
     * Update clamav to 0.95.3. Thanks http://dag.wieers.com.
 
