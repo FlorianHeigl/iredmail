@@ -33,8 +33,12 @@ export AMAVISD_DAEMON_USER='amavis'
 export AMAVISD_DAEMON_GROUP='amavis'
 
 # Altermime.
-export ALTERMIME_BIN='/usr/bin/altermime'
 export DISCLAIMER_DIR="${POSTFIX_ROOTDIR}/disclaimer"
+if [ X"${DISTRO}" == X"FREEBSD" ]; then
+    export ALTERMIME_BIN='/usr/local/bin/altermime'
+else
+    export ALTERMIME_BIN='/usr/bin/altermime'
+fi
 
 if [ X"${DISTRO}" == X"RHEL" ]; then
     export AMAVISD_BIN='amavisd'

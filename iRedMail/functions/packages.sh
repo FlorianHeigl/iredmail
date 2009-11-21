@@ -159,7 +159,7 @@ install_all()
 
     # pysieved.
     # Warning: Do *NOT* add 'pysieved' service in 'ENABLED_SERVICES'.
-    #          We don't have rc/init script under /etc/init.d/ till
+    #          We don't have rc/init script under ${DIR_RC_SCRIPTS} till
     #          package is installed.
     if [ X"${USE_MANAGESIEVE}" == X"YES" ]; then
         # Note for Ubuntu & Debian:

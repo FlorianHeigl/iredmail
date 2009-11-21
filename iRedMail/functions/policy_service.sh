@@ -334,7 +334,7 @@ Policyd:
     * Configuration files:
         - ${POLICYD_CONF}
     * RC script:
-        - /etc/init.d/policyd
+        - ${DIR_RC_SCRIPTS}/policyd
     * Misc:
         - /etc/cron.daily/policyd-cleanup
         - $(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep 'policyd.cron$')

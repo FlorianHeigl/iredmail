@@ -72,6 +72,9 @@ export KERNEL_NAME="$(uname -s)"
 
 # Check distribution.
 if [ X"${KERNEL_NAME}" == X"Linux" ]; then
+    # Directory of RC scripts.
+    export DIR_RC_SCRIPTS='/etc/init.d'
+
     if [ -f /etc/redhat-release ]; then
         # RHEL/CentOS
         export DISTRO='RHEL'
@@ -87,6 +90,11 @@ if [ X"${KERNEL_NAME}" == X"Linux" ]; then
         echo "Your distrobution is not supported yet."
         exit 255
     fi
+elif [ X"${KERNEL_NAME}" == X"FreeBSD" ]; then
+    # Directory of RC scripts.
+    export DIR_RC_SCRIPTS='/usr/local/etc/rc.d'
+
+    export DISTRO='FREEBSD'
 else
     # Not support *BSD and other distrobutions yet.
     echo "Error: Your OS is not supported yet."

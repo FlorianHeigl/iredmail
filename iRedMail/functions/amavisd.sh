@@ -495,7 +495,7 @@ Amavisd-new:
         - ${POSTFIX_FILE_MASTER_CF}
         - ${POSTFIX_FILE_MAIN_CF}
     * RC script:
-        - /etc/init.d/${AMAVISD_RC_SCRIPT_NAME}
+        - ${DIR_RC_SCRIPTS}/${AMAVISD_RC_SCRIPT_NAME}
 
 EOF
 

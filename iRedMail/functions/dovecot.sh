@@ -466,7 +466,7 @@ Dovecot:
     * MySQL:
         - ${DOVECOT_MYSQL_CONF}
     * RC script:
-        - /etc/init.d/dovecot
+        - ${DIR_RC_SCRIPTS}/dovecot
     * Log files:
         - ${DOVECOT_LOGROTATE_FILE}
         - ${DOVECOT_LOG_FILE}

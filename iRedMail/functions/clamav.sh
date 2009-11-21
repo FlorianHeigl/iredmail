@@ -58,11 +58,11 @@ ClamAV:
         - /etc/logrotate.d/clamav
     * RC scripts:
         - RHEL/CentOS:
-            + /etc/init.d/clamd 
-            + /etc/init.d/freshclam
+            + ${DIR_RC_SCRIPTS}/clamd 
+            + ${DIR_RC_SCRIPTS}/freshclam
         - Debian & Ubuntu:
-            + /etc/init.d/clamav-daemon
-            + /etc/init.d/clamav-freshclam
+            + ${DIR_RC_SCRIPTS}/clamav-daemon
+            + ${DIR_RC_SCRIPTS}/clamav-freshclam
     * Log files:
         - ${CLAMD_LOGFILE}
         - ${FRESHCLAM_LOGFILE}

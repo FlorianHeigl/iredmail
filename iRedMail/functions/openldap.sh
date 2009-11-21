@@ -302,10 +302,10 @@ EOF
     if [ X"${DISTRO}" == X"RHEL" ]; then
         service_control syslog restart >/dev/null
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        # Debian 4, Ubuntu 9.04 -> /etc/init.d/sysklogd
-        # Debian 5  -> /etc/init.d/rsyslog
-        [ -x /etc/init.d/sysklogd ] && service_control sysklogd restart >/dev/null
-        [ -x /etc/init.d/rsyslog ] && service_control rsyslog restart >/dev/null
+        # Debian 4, Ubuntu 9.04 -> ${DIR_RC_SCRIPTS}/sysklogd
+        # Debian 5  -> ${DIR_RC_SCRIPTS}/rsyslog
+        [ -x ${DIR_RC_SCRIPTS}/sysklogd ] && service_control sysklogd restart >/dev/null
+        [ -x ${DIR_RC_SCRIPTS}/rsyslog ] && service_control rsyslog restart >/dev/null
     else
         :
     fi
@@ -320,7 +320,7 @@ openldap_data_initialize()
         sed -i "s#\(}\)# ${LDAP_DATA_DIR}/ r,\n\1#" /etc/apparmor.d/usr.sbin.slapd
         sed -i "s#\(}\)# ${LDAP_DATA_DIR}/* rw,\n\1#" /etc/apparmor.d/usr.sbin.slapd
         sed -i "s#\(}\)# ${LDAP_DATA_DIR}/alock kw,\n\1#" /etc/apparmor.d/usr.sbin.slapd
-        [ -x /etc/init.d/apparmor ] && service_control apparmor restart >/dev/null 2>&1
+        [ -x ${DIR_RC_SCRIPTS}/apparmor ] && service_control apparmor restart >/dev/null 2>&1
     else
         :
     fi

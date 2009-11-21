@@ -322,7 +322,7 @@ service_control()
 {
     service="$1"
     action="$2"
-    /etc/init.d/${service} ${action}
+    ${DIR_RC_SCRIPTS}/${service} ${action}
 }
 
 gen_ldap_passwd()

@@ -103,8 +103,8 @@ replace_iptables_rule()
 
             # Copy sample rc script for Debian.
             [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ] && \
-                cp -f ${SAMPLE_DIR}/iptables.init.debian /etc/init.d/iptables && \
-                chmod +x /etc/init.d/iptables
+                cp -f ${SAMPLE_DIR}/iptables.init.debian ${DIR_RC_SCRIPTS}/iptables && \
+                chmod +x ${DIR_RC_SCRIPTS}/iptables
 
             # Mark iptables as enabled service.
             eval ${enable_service} iptables >/dev/null
@@ -115,7 +115,7 @@ replace_iptables_rule()
             case $ANSWER in
                 Y|y )
                     ECHO_INFO "Restarting iptables."
-                    /etc/init.d/iptables restart
+                    ${DIR_RC_SCRIPTS}/iptables restart
                     ;;
                 N|n|* )
                     export "RESTART_IPTABLES='NO'"
@@ -240,7 +240,7 @@ if [ X"${POSTFIX_STARTED}" != X"YES" ]; then
 * Please reboot your system to enable mail services or start them
 * manually without reboot:
 *
-*   # for i in ${ENABLED_SERVICES}; do /etc/init.d/\${i} restart; done
+*   # for i in ${ENABLED_SERVICES}; do ${DIR_RC_SCRIPTS}/\${i} restart; done
 *
 EOF
 fi

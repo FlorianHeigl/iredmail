@@ -42,18 +42,19 @@ fi
 # MySQL config file.
 if [ X"${DISTRO}" == X"RHEL" ]; then
     export MYSQL_MY_CNF='/etc/my.cnf'
-
     # RC script.
-    export MYSQLD_INIT_SCRIPT='/etc/init.d/mysqld'
+    export MYSQLD_INIT_SCRIPT="${DIR_RC_SCRIPTS}/mysqld"
 
 elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
     export MYSQL_MY_CNF='/etc/mysql/my.cnf'
-
     # RC script.
-    export MYSQLD_INIT_SCRIPT='/etc/init.d/mysql'
+    export MYSQLD_INIT_SCRIPT="${DIR_RC_SCRIPTS}/mysql"
 
-else
-    :
+elif [ X"${DISTRO}" == X"FREEBSD" ]; then
+    export MYSQL_MY_CNF="/var/db/mysql/my.cnf"
+    # RC script.
+    export MYSQLD_INIT_SCRIPT="${DIR_RC_SCRIPTS}/mysql-server"
+
 fi
 
 # For virtual user query in Postfix, Dovecot.

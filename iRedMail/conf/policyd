@@ -27,7 +27,7 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     export PKG_POLICYD='policyd'
     export POLICYD_CONF='/etc/policyd.conf'
     export POLICYD_SENDER_THROTTLE_CONF='/etc/policyd_sender_throttle.conf'
-    export POLICYD_INIT_SCRIPT='/etc/init.d/policyd'
+    export POLICYD_INIT_SCRIPT="${DIR_RC_SCRIPTS}/policyd"
 
     # Database.
     export POLICYD_DB_NAME='policyd'
@@ -37,11 +37,21 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     export PKG_POLICYD='postfix-policyd'
     export POLICYD_CONF='/etc/postfix-policyd.conf'
     export POLICYD_SENDER_THROTTLE_CONF='/etc/postfix-policyd_sender_throttle.conf'
-    export POLICYD_INIT_SCRIPT='/etc/init.d/postfix-policyd'
+    export POLICYD_INIT_SCRIPT="${DIR_RC_SCRIPTS}/postfix-policyd"
 
     # Database.
     export POLICYD_DB_NAME='postfixpolicyd'
     export POLICYD_DB_USER='postfix-policyd'
+
+elif [ X"${DISTRO}" == X"FREEBSD" ]; then
+    export PKG_POLICYD='postfix-policyd-sf'
+    export POLICYD_CONF='/usr/local/etc/postfix-policyd-sf.conf'
+    export POLICYD_SENDER_THROTTLE_CONF='/usr/local/etc/policyd_sender_throttle.conf'
+    export POLICYD_INIT_SCRIPT="${DIR_RC_SCRIPTS}/policyd"
+
+    # Database.
+    export POLICYD_DB_NAME='policyd'
+    export POLICYD_DB_USER='policyd'
 
 else
     :
