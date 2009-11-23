@@ -183,7 +183,6 @@ install_all()
         [ X"${DISTRO}" == X"RHEL" ] && \
         ALL_PKGS="${ALL_PKGS} python-jinja2.${ARCH} python-webpy.noarch python-ldap.${ARCH} MySQL-python.${ARCH} mod_wsgi.${ARCH}"
 
-        # TODO sill missing webpy-0.32, Jinja2, netifaces
         [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ] && \
             ALL_PKGS="${ALL_PKGS} libapache2-mod-wsgi python-mysqldb python-ldap python-jinja2 python-netifaces python-webpy"
     else
@@ -227,19 +226,4 @@ install_all()
 
     check_status_before_run install_all_pkgs
     check_status_before_run enable_all_services
-}
-
-gen_pem_key()
-{
-    # Create necessary directories.
-    mkdir -p ${SSL_FILE_DIR}/{certs,private} 2>/dev/null
-
-    openssl req \
-        -x509 -nodes -days 3650 -newkey rsa:1024 \
-        -subj "/C=${TLS_COUNTRY}/ST=${TLS_STATE}/L=${TLS_CITY}/O=${TLS_COMPANY}/OU=${TLS_DEPARTMENT}/CN=${TLS_HOSTNAME}/emailAddress=${TLS_ADMIN}/" \
-        -out ${SSL_CERT_FILE} -keyout ${SSL_KEY_FILE} >/dev/null 2>&1
-
-    # Set correct file permission.
-    chmod 0444 ${SSL_CERT_FILE}
-    chmod 0400 ${SSL_KEY_FILE}
 }

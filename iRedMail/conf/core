@@ -318,6 +318,18 @@ disable_service_debian()
     done
 }
 
+# TODO
+enable_service_freebsd()
+{
+    :
+}
+
+# TODO
+disable_service_freebsd()
+{
+    :
+}
+
 service_control()
 {
     service="$1"
@@ -330,22 +342,11 @@ gen_ldap_passwd()
     slappasswd -h {SSHA} -s "${1}"
 }
 
+# Install/Remove binary packages on RHEL/CentOS.
 install_pkg_rhel()
 {
     ECHO_INFO "Installing package(s): $@"
     ${YUM} -y install $@
-    if [ X"$?" != X"0" ]; then
-        ECHO_ERROR "Installation failed, please check the terminal output."
-        exit 255
-    else
-        :
-    fi
-}
-
-install_pkg_debian()
-{
-    ECHO_INFO "Installing package(s): $@"
-    ${APTGET} install -y --force-yes $@
     if [ X"$?" != X"0" ]; then
         ECHO_ERROR "Installation failed, please check the terminal output."
         exit 255
@@ -361,6 +362,19 @@ remove_pkg_rhel()
     [ X"$?" != X"0" ] && ECHO_ERROR "Package removed failed, please check the terminal output."
 }
 
+# Install/Remove binary packages on Debian/Ubuntu.
+install_pkg_debian()
+{
+    ECHO_INFO "Installing package(s): $@"
+    ${APTGET} install -y --force-yes $@
+    if [ X"$?" != X"0" ]; then
+        ECHO_ERROR "Installation failed, please check the terminal output."
+        exit 255
+    else
+        :
+    fi
+}
+
 remove_pkg_debian()
 {
     ECHO_INFO "Removing package(s): $@"
@@ -368,3 +382,31 @@ remove_pkg_debian()
     [ X"$?" != X"0" ] && ECHO_ERROR "Package removed failed, please check the terminal output."
 }
 
+# Install/Remove binary packages on FreeBSD.
+# TODO
+install_pkg_freebsd()
+{
+    :
+}
+
+# TODO
+remove_pkg_freebsd()
+{
+    :
+}
+
+# Create SSL certs/private files.
+gen_pem_key()
+{
+    # Create necessary directories.
+    mkdir -p ${SSL_FILE_DIR}/{certs,private} 2>/dev/null
+
+    openssl req \
+        -x509 -nodes -days 3650 -newkey rsa:1024 \
+        -subj "/C=${TLS_COUNTRY}/ST=${TLS_STATE}/L=${TLS_CITY}/O=${TLS_COMPANY}/OU=${TLS_DEPARTMENT}/CN=${TLS_HOSTNAME}/emailAddress=${TLS_ADMIN}/" \
+        -out ${SSL_CERT_FILE} -keyout ${SSL_KEY_FILE} >/dev/null 2>&1
+
+    # Set correct file permission.
+    chmod 0444 ${SSL_CERT_FILE}
+    chmod 0400 ${SSL_KEY_FILE}
+}

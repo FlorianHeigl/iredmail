@@ -286,6 +286,57 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     export BIN_ACL='setfacl'
     export PKG_ACL='acl'
 
+elif [ X"${DISTRO}" == X"FREEBSD" ]; then
+    # System user: root.
+    export SYS_ROOT_USER='root'
+    export SYS_ROOT_GROUP='wheel'
+
+    # Package management.
+    if [ X"${PKGADD}" != X"" ]; then
+        export PKGADD="${PKGADD}"
+    else
+        export PKGADD="pkg_add"
+    fi
+
+    # Package management.
+    export install_pkg='install_pkg_freebsd'
+    export remove_pkg='removel_pkg_freebsd'
+    export LIST_ALL_PKGS="pkg_info | awk '{print $1}'"
+    export LIST_FILES_IN_PKG='pkg_info -L'
+
+    # Service control.
+    export enable_service="enable_service_freebsd"
+    export disable_service="disable_service_freebsd"
+
+    # Syslog config: rsyslog.
+    export SYSLOG_CONF='/etc/newsyslog.conf'
+    export SYSLOG_POSTROTATE_CMD=''
+
+    # Crontab related.
+    export CRON_SPOOL_DIR="/var/cron/tabs"
+
+    # Directory /etc/defaults/ on Debian/Ubuntu.
+    export ETC_SYSCONFIG_DIR='/etc/defaults'
+
+    # IPFW rule file.
+    export IPTABLES_CONFIG="${ETC_SYSCONFIG_DIR}/ipfw.rules"
+
+    # Directory used to store SSL/TLS key/cert file.
+    export SSL_FILE_DIR="/etc/ssl"
+
+
+    # command: dialog.
+    export BIN_DIALOG="dialog"
+    export PKG_DIALOG="dialog"
+
+    # command: bzip2.
+    export BIN_BZIP2='bzip2'
+    export PKG_BZIP2='bzip2'
+
+    # command: getfacl & setfacl
+    export BIN_ACL='setfacl'
+    export PKG_ACL='acl'
+
 else
     # Not support yet.
     echo "Your distrobution is not supported yet."
