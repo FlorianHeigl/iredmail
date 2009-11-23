@@ -27,7 +27,6 @@ export AMAVISD_USER='amavis'
 export AMAVISD_GROUP='amavis'
 export AMAVISD_LOGFILE='/var/log/amavisd.log'
 export AMAVISD_LOGROTATE_FILE="${LOGROTATE_DIR}/amavisd"
-export AMAVISD_DKIM_DIR='/var/lib/dkim'
 export AMAVISD_DKIM_SELECTOR='dkim'
 export AMAVISD_DAEMON_USER='amavis'
 export AMAVISD_DAEMON_GROUP='amavis'
@@ -35,8 +34,10 @@ export AMAVISD_DAEMON_GROUP='amavis'
 # Altermime.
 export DISCLAIMER_DIR="${POSTFIX_ROOTDIR}/disclaimer"
 if [ X"${DISTRO}" == X"FREEBSD" ]; then
+    export AMAVISD_DKIM_DIR='/var/amavis/dkim'
     export ALTERMIME_BIN='/usr/local/bin/altermime'
 else
+    export AMAVISD_DKIM_DIR='/var/lib/dkim'
     export ALTERMIME_BIN='/usr/bin/altermime'
 fi
 
@@ -51,6 +52,11 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     export AMAVISD_CONF='/etc/amavis/conf.d/50-user'
     export AMAVISD_DKIM_CONF='/etc/amavis/conf.d/50-user'
     export AMAVISD_RC_SCRIPT_NAME='amavis'
+elif [ X"${DISTRO}" == X"FREEBSD" ]; then
+    export AMAVISD_BIN='amavisd'
+    export AMAVISD_CONF='/usr/local/etc/amavisd.conf'
+    export AMAVISD_DKIM_CONF='/usr/local/etc/amavisd.conf'
+    export AMAVISD_RC_SCRIPT_NAME='amavisd'
 else
     :
 fi

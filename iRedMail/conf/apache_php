@@ -70,6 +70,31 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     # ---- PHP ----
     export PHP_INI='/etc/php5/apache2/php.ini'
 
+elif [ X"${DISTRO}" == X"FREEBSD" ]; then
+    # Apache configuration files.
+    export HTTPD_CONF_ROOT="/usr/local/etc/apache22"
+    export HTTPD_CONF="${HTTPD_CONF_ROOT}/httpd.conf"
+    export HTTPD_CONF_DIR="${HTTPD_CONF_ROOT}/Includes"
+
+    # Copy from example: /usr/local/share/examples/apache22/extra/httpd-ssl.conf
+    export HTTPD_SSL_CONF="${HTTPD_CONF_DIR}/ssl.conf"
+
+    # Web data.
+    export HTTPD_SERVERROOT='/usr/local/www/apache22'
+    export HTTPD_DOCUMENTROOT="${HTTPD_SERVERROOT}/data"
+
+    # Daemon user.
+    export HTTPD_USER='www'
+    export HTTPD_GROUP='www'
+
+    # Log file location.
+    export HTTPD_LOG_ACCESSLOG='/var/log/httpd-access.log'
+    export HTTPD_LOG_ERRORLOG='/var/log/httpd-error.log'
+
+    # ---- PHP ----
+    # Copy from example: /usr/local/etc/php.ini-recommended
+    export PHP_INI='/usr/local/etc/php.ini'
+
 else
     :
 fi

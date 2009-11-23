@@ -402,7 +402,7 @@ get_all_accounts
 
 ECHO_INFO "=================== Stop services ================"
 for i in ${ENABLED_SERVICES}; do
-    /etc/init.d/$i stop
+    [ -x /etc/init.d/$i ] && /etc/init.d/$i stop
 done
 
 ECHO_INFO "=================== Remove binary packages ================"
