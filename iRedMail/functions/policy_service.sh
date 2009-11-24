@@ -49,7 +49,7 @@ policyd_config()
     ECHO_INFO "Initialize MySQL database of policyd."
 
     # Get SQL structure template file.
-    tmp_sql="$(mktemp)"
+    tmp_sql="$(mktemp ${PROG_NAME}.XXXXXX)"
     if [ X"${DISTRO}" == X"RHEL" ]; then
         cat > ${tmp_sql} <<EOF
 # Import SQL structure template.

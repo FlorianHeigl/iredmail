@@ -15,8 +15,13 @@ adduser_vmail()
     [ -d ${STORAGE_BASE_DIR} ] || mkdir -p ${STORAGE_BASE_DIR}
 
     ECHO_INFO "Add user/group: vmail."
+
     # It will create a group with the same name as vmail user name.
-    useradd -m -d ${VMAIL_USER_HOME_DIR} -s /sbin/nologin ${VMAIL_USER_NAME} 2>/dev/null
+    if [ X"${DISTRO}" == X"FREEBSD" ]; then
+        pw useradd -n ${VMAIL_USER_NAME} -s /sbin/nologin -d ${VMAIL_USER_HOME_DIR} -m
+    else
+        useradd -m -d ${VMAIL_USER_HOME_DIR} -s /sbin/nologin ${VMAIL_USER_NAME} 2>/dev/null
+    fi
     rm -f ${VMAIL_USER_HOME_DIR}/.* 2>/dev/null
 
     # Export vmail user uid/gid.

@@ -219,7 +219,7 @@ check_md5()
 
     ECHO_INFO -n "Validate Packages via md5sum ..."
 
-    md5file="$(mktemp)"
+    md5file="$(mktemp ${PROG_NAME}.XXXXXX)"
     echo -e "${MD5LIST}" > ${md5file}
     cat MD5.misc >> ${md5file}
 
