@@ -31,7 +31,7 @@ if [ X"${BACKEND}" == X"OpenLDAP" -o X"${BACKEND}" == X"MySQL" ]; then
 else
     # Set username for awstats access.
     while : ; do
-        ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
+        ${DIALOG} \
         --title "Specify usernamen for access awstats from web browser" \
         --inputbox "\
 Please specify username for access awstats from web browser.
@@ -51,9 +51,9 @@ Example:
 
     # Set password for awstats user.
     while : ; do
-        ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
+        ${DIALOG} \
         --title "Password for awstats user: ${AWSTATS_USERNAME}" \
-        --passwordbox "\
+        ${PASSWORDBOX} "\
 Please specify password for awstats user: ${AWSTATS_USERNAME}
 
 Warning:

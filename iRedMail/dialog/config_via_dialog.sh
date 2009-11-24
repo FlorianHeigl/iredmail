@@ -32,11 +32,20 @@ trap "exit 255" 2
 # Initialize config file.
 echo '' > ${CONFIG_FILE}
 
-DIALOG='dialog --colors --no-collapse --insecure --ok-label Next --no-cancel'
+if [ X"${DISTRO}" == X"FREEBSD" ]; then
+    DIALOG='dialog'
+    PASSWORDBOX='--inputbox'
+else
+    DIALOG="dialog --colors --no-collapse --insecure \
+            --ok-label Next --no-cancel \
+            --backtitle ${PROG_NAME}: Open Source Mail Server Solution for RHEL/CentOS/Debian/Ubuntu."
+    PASSWORDBOX='--passwordbox'
+fi
+
 DIALOG_BACKTITLE="${PROG_NAME}: Open Source Mail Server Solution for RHEL/CentOS/Debian/Ubuntu."
 
 # Welcome message.
-${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
+${DIALOG} \
     --title "Welcome and thanks for use" \
     --yesno "\
 Thanks for your use of ${PROG_NAME}.
@@ -56,7 +65,7 @@ NOTE:
 
 # VMAIL_USER_HOME_DIR
 VMAIL_USER_HOME_DIR="/var/vmail"
-${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
+${DIALOG} \
     --title "Default mail storage path" \
     --inputbox "\
 Please specify a directory for mail storage.
@@ -80,7 +89,7 @@ rm -f /tmp/vmail_user_home_dir
 # --------------------------------------------------
 # --------------------- Backend --------------------
 # --------------------------------------------------
-${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
+${DIALOG} \
     --title "Choose your prefer backend" \
     --radiolist "\
 We provide two backends and the homologous webmail programs:
@@ -127,7 +136,7 @@ fi
 #
 # Set mail alias for root.
 #
-${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
+${DIALOG} \
     --title "Specify mail alias for 'root' user" \
     --inputbox "\
 Please specify an E-Mail address for 'root' user alias.

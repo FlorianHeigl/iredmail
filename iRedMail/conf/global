@@ -102,7 +102,7 @@ else
 fi
 
 # Hostname.
-export HOSTNAME="$(hostname --fqdn)"
+export HOSTNAME="$(hostname -f)"
 
 # ----------------------------------
 # You do *NOT* need to modify them.
@@ -205,6 +205,7 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
 
     # Directory /etc/sysconfig/ on RHEL/CentOS.
     export ETC_SYSCONFIG_DIR='/etc/sysconfig'
+
     # Iptables rule file.
     export IPTABLES_CONFIG="${ETC_SYSCONFIG_DIR}/iptables"
 
@@ -267,6 +268,7 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
 
     # Directory /etc/default/ on Debian/Ubuntu.
     export ETC_SYSCONFIG_DIR='/etc/default'
+
     # Iptables rule file.
     export IPTABLES_CONFIG="${ETC_SYSCONFIG_DIR}/iptables"
 

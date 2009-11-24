@@ -26,7 +26,7 @@
 
 # LDAP suffix.
 while : ; do
-    ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
+    ${DIALOG} \
         --title "LDAP suffix (root dn)" \
         --inputbox "\
 Please specify your LDAP suffix (root dn).
@@ -72,9 +72,9 @@ EOF
 
 # LDAP rootpw.
 while : ; do
-    ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
+    ${DIALOG} \
     --title "Password for LDAP rootdn: ${LDAP_ROOTDN}" \
-    --passwordbox "\
+    ${PASSWORDBOX} "\
 Please specify password for LDAP rootdn:
 
     * ${LDAP_ROOTDN}

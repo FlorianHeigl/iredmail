@@ -22,7 +22,7 @@
 
 # Set default language for webmails.
 
-${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
+${DIALOG} \
     --title "Choose the default language for your webmail(s)" \
     --radiolist "\
 Choose the default language for your webmail(s):

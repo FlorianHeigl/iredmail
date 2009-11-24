@@ -53,7 +53,7 @@ fi
 # --------------------------------------------------
 # ------------- SPF & DKIM -------------------------
 # --------------------------------------------------
-${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
+${DIALOG} \
     --title "SPF & DKIM" \
         --checklist "\
 Do you want to support SPF and DKIM?
@@ -85,7 +85,7 @@ echo ${SPF_DKIM} | grep -i '\<DKIM\>' >/dev/null 2>&1
 # ----------------------------------------
 
 if [ X"${BACKEND}" == X"OpenLDAP" ]; then
-    ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
+    ${DIALOG} \
     --title "Optional Components for ${BACKEND} backend" \
     --checklist "\
 ${PROG_NAME} provides several optional components for LDAP backend, you can
@@ -100,7 +100,7 @@ use them by your own:
     2>/tmp/optional_components
 
 elif [ X"${BACKEND}" == X"MySQL" ]; then
-    ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
+    ${DIALOG} \
     --title "Optional Components for ${BACKEND} backend" \
     --checklist "\
 ${PROG_NAME} provides several optional components for MySQL backend, you can use

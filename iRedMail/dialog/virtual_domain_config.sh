@@ -22,7 +22,7 @@
 
 # First domain name.
 while : ; do
-    ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
+    ${DIALOG} \
     --title "Your first virtual domain name" \
     --inputbox "\
 Please specify your first virtual domain name.
@@ -49,9 +49,9 @@ echo "export SITE_ADMIN_NAME='${SITE_ADMIN_NAME}'" >>${CONFIG_FILE}
 
 # DOMAIN_ADMIN_PASSWD
 while : ; do
-    ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
+    ${DIALOG} \
     --title "Password for the administrator of your domain" \
-    --passwordbox "\
+    ${PASSWORDBOX} "\
 Please specify password for the administrator user:
 
     * ${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}
@@ -84,9 +84,9 @@ echo "export FIRST_USER='${FIRST_USER}'" >>${CONFIG_FILE}
 
 # FIRST_USER_PASSWD
 while : ; do
-    ${DIALOG} --backtitle "${DIALOG_BACKTITLE}" \
+    ${DIALOG} \
     --title "Password for your first user" \
-    --passwordbox "\
+    ${PASSWORDBOX} "\
 Please specify password for your first user:
 
     * ${FIRST_USER}@${FIRST_DOMAIN}
