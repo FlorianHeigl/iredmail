@@ -111,7 +111,7 @@ ALTER TABLE whitelist_dnsname MODIFY COLUMN _description CHAR(60) CHARACTER SET 
 ALTER TABLE whitelist_sender MODIFY COLUMN _description CHAR(60) CHARACTER SET utf8;
 EOF
 
-    #rm -rf ${tmp_sql} ${tmp_dir}
+    rm -rf ${tmp_sql} ${tmp_dir} 2>/dev/null
     unset tmp_sql tmp_dir
 
     # Configure policyd.

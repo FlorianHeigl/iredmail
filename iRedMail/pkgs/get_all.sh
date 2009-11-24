@@ -235,7 +235,7 @@ check_md5()
         echo 'export status_check_md5="DONE"' >> ${STATUS_FILE}
     fi
 
-    rm -f ${md5file}
+    rm -f ${md5file} 2>/dev/null
 }
 
 create_repo_rhel()
