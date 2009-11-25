@@ -70,7 +70,7 @@ TLSCertificateKeyFile ${SSL_KEY_FILE}
 EOF
 
     # Load backend module. Required on Debian/Ubuntu.
-    if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"FREEBSD" ]; then
+    if [ X"${OPENLDAP_VERSION}" == X"2.4" ]; then
         if [ X"${OPENLDAP_DEFAULT_DBTYPE}" == X"bdb" ]; then
             # bdb, Berkeley DB.
             cat >> ${OPENLDAP_SLAPD_CONF} <<EOF
