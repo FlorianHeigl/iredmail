@@ -221,6 +221,10 @@ EOF
 *
 * And it's sent to your mail account ${tip_recipient}.
 *
+EOF
+
+    if [ X"${DISTRO}" != X"FREEBSD" ]; then
+        cat <<EOF
 * If you want to remove and re-install iRedMail, here are steps:
 *   - Run script to remove main components installed by iRedMail:
 *       # wget http://iredmail.googlecode.com/hg/extra/clear_iredmail.sh
@@ -231,6 +235,7 @@ EOF
 *   - Install iRedMail like you did before.
 *
 EOF
+fi
 
 if [ X"${POSTFIX_STARTED}" != X"YES" ]; then
     [ X"${DISTRO}" == X"RHEL" ] && export ENABLED_SERVICES="${ENABLED_SERVICES} pysieved"

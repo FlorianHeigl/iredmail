@@ -70,7 +70,12 @@ check_env
 # Import functions.
 # ------------------------------
 # All packages.
-. ${FUNCTIONS_DIR}/packages.sh
+if [ X"${DISTRO}" == X"FREEBSD" ]; then
+    # Install packages from freebsd ports tree.
+    . ${FUNCTIONS_DIR}/freebsd_ports.sh
+else
+    . ${FUNCTIONS_DIR}/packages.sh
+fi
 
 # User/Group: vmail. We will export vmail uid/gid here.
 . ${FUNCTIONS_DIR}/user_vmail.sh
@@ -137,7 +142,7 @@ check_env
 # ************************************************************************
 
 # Install all packages.
-check_status_before_run install_all || (ECHO_INFO "Package installation error, please check the output log."; exit 255)
+check_status_before_run install_all || (ECHO_INFO "Package installation error, please check the output log." && exit 255)
 
 # Create SSL/TLS cert file.
 check_status_before_run gen_pem_key

@@ -117,6 +117,11 @@ EOF
     # Configure policyd.
     ECHO_INFO "Configure policyd: ${POLICYD_CONF}."
 
+    # FreeBSD: Copy sample config file.
+    if [ X"${DISTRO}" == X"FREEBSD" ]; then
+        cp /usr/local/etc/postfix-policyd-sf.conf ${POLICYD_CONF}
+    fi
+
     # We will use another policyd instance for recipient throttle
     # feature, it's used in 'smtpd_end_of_data_restrictions'.
     cp -f ${POLICYD_CONF} ${POLICYD_SENDER_THROTTLE_CONF}

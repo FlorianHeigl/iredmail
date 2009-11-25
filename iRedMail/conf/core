@@ -339,7 +339,12 @@ service_control()
 
 gen_ldap_passwd()
 {
-    slappasswd -h {SSHA} -s "${1}"
+    if [ X"${DISTRO}" == X"FREEBSD" ]; then
+        SLAPPASSWD='/usr/local/sbin/slappasswd'
+    else
+        SLAPPASSWD='/usr/sbin/slappasswd'
+    fi
+    ${SLAPPASSWD} -h {SSHA} -s "${1}"
 }
 
 # Install/Remove binary packages on RHEL/CentOS.
