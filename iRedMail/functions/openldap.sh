@@ -276,8 +276,9 @@ EOF
     chown ${LDAP_USER}:${LDAP_GROUP} ${OPENLDAP_LOGFILE}
     chmod 0600 ${OPENLDAP_LOGFILE}
 
-    ECHO_INFO "Setting logrotate for openldap log file: ${OPENLDAP_LOGFILE}."
-    cat > ${OPENLDAP_LOGROTATE_FILE} <<EOF
+    if [ X"${KERNEL_NAME}" == X"Linux" ]; then
+        ECHO_INFO "Setting logrotate for openldap log file: ${OPENLDAP_LOGFILE}."
+        cat > ${OPENLDAP_LOGROTATE_FILE} <<EOF
 ${CONF_MSG}
 ${OPENLDAP_LOGFILE} {
     compress
@@ -297,6 +298,7 @@ ${OPENLDAP_LOGFILE} {
     endscript
 }
 EOF
+    fi
 
     ECHO_INFO "Restarting syslog."
     if [ X"${DISTRO}" == X"RHEL" ]; then
@@ -341,7 +343,7 @@ openldap_data_initialize()
     fi
     
     ECHO_INFO -n "Sleep 5 seconds for LDAP daemon initialize:"
-    for i in $(seq 5 -1 1); do
+    for i in 1 2 3 4 5; do
         echo -n " ${i}s" && sleep 1
     done
     echo '.'

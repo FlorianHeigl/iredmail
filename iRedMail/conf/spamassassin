@@ -22,5 +22,10 @@
 
 # For SpamAssassin.
 
-export SA_INIT_PRE='/etc/mail/spamassassin/init.pre'
-export SA_LOCAL_CF='/etc/mail/spamassassin/local.cf'
+if [ X"${DISTRO}" == X"FREEBSD" ]; then
+    export SA_INIT_PRE='/usr/local/etc/mail/spamassassin/init.pre'
+    export SA_LOCAL_CF='/usr/local/etc/mail/spamassassin/local.cf'
+else
+    export SA_INIT_PRE='/etc/mail/spamassassin/init.pre'
+    export SA_LOCAL_CF='/etc/mail/spamassassin/local.cf'
+fi

@@ -34,6 +34,11 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     export DOVECOT_LDAP_CONF='/etc/dovecot/dovecot-ldap.conf'
     export DOVECOT_MYSQL_CONF='/etc/dovecot/dovecot-mysql.conf'
     export DOVECOT_DELIVER='/usr/lib/dovecot/deliver'
+elif [ X"${DISTRO}" == X"FREEBSD" ]; then
+    export DOVECOT_CONF='/usr/localetc/dovecot.conf'
+    export DOVECOT_LDAP_CONF='/usr/local/etc/dovecot-ldap.conf'
+    export DOVECOT_MYSQL_CONF='/usr/local/etc/dovecot-mysql.conf'
+    export DOVECOT_DELIVER='/usr/local/libexec/dovecot/deliver'
 fi
 
 # Dovecot user & group.

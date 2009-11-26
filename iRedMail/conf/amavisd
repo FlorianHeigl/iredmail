@@ -53,6 +53,10 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     export AMAVISD_DKIM_CONF='/etc/amavis/conf.d/50-user'
     export AMAVISD_RC_SCRIPT_NAME='amavis'
 elif [ X"${DISTRO}" == X"FREEBSD" ]; then
+    # Override global setting: user/group.
+    export AMAVISD_DAEMON_USER='vscan'
+    export AMAVISD_DAEMON_GROUP='vscan'
+
     export AMAVISD_BIN='amavisd'
     export AMAVISD_CONF='/usr/local/etc/amavisd.conf'
     export AMAVISD_DKIM_CONF='/usr/local/etc/amavisd.conf'

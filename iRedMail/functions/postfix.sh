@@ -25,9 +25,11 @@ pickup    fifo  n       -       n       60      1       pickup
   -o content_filter=
 EOF
 
-    ECHO_INFO "Copy files: /etc/{hosts,resolv.conf,localtime} -> ${POSTFIX_CHROOT_DIR}/etc/"
+    ECHO_INFO "Copy: /etc/{hosts,resolv.conf,localtime} -> ${POSTFIX_CHROOT_DIR}/etc/"
     mkdir -p ${POSTFIX_CHROOT_DIR}/etc/ 2>/dev/null
-    cp -f /etc/{hosts,resolv.conf,localtime} ${POSTFIX_CHROOT_DIR}/etc/
+    for i in /etc/hosts /etc/resolve.conf /etc/localtime; do
+        [ -f $i ] && cp ${i} ${POSTFIX_CHROOT_DIR}/etc/
+    done
 
     # Normally, myhostname is the same as myorigin.
     postconf -e myhostname="${HOSTNAME}"
@@ -711,7 +713,8 @@ postfix_config_syslog()
     fi
 
     # Make maillog as standalone logrotated job.
-    cat >> ${LOGROTATE_DIR}/maillog <<EOF
+    if [ X"${KERNEL_NAME}" == X"Linux" ]; then
+        cat >> ${LOGROTATE_DIR}/maillog <<EOF
 ${CONF_MSG}
 #
 # Logrotate file for postfix maillog.
@@ -735,6 +738,7 @@ ${MAILLOG} {
     endscript
 }
 EOF
+    fi
 
     cat >> ${TIP_FILE} <<EOF
 Postfix (syslog):

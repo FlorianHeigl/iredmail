@@ -421,8 +421,9 @@ dovecot unix    -       n       n       -       -      pipe
   flags=DRhu user=${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} argv=${DOVECOT_DELIVER} -d \${recipient} -f \${sender}
 EOF
 
-    ECHO_INFO "Setting logrotate for dovecot log file."
-    cat > ${DOVECOT_LOGROTATE_FILE} <<EOF
+    if [ X"${KERNEL_NAME}" == X"Linux" ]; then
+        ECHO_INFO "Setting logrotate for dovecot log file."
+        cat > ${DOVECOT_LOGROTATE_FILE} <<EOF
 ${CONF_MSG}
 ${DOVECOT_LOG_FILE} {
     compress
@@ -456,6 +457,9 @@ ${SIEVE_LOG_FILE} {
     endscript
 }
 EOF
+    else
+        :
+    fi
 
     cat >> ${TIP_FILE} <<EOF
 Dovecot:

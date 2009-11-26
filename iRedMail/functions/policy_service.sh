@@ -39,7 +39,11 @@ policyd_user()
     ECHO_INFO "==================== Policyd ===================="
     ECHO_INFO "Add user and group for policyd: ${POLICYD_USER}:${POLICYD_GROUP}."
     groupadd ${POLICYD_GROUP}
-    useradd -m -d ${POLICYD_USER_HOME} -s /sbin/nologin -g ${POLICYD_GROUP} ${POLICYD_USER}
+    if [ X"${DISTRO}" == X"FREEBSD" ]; then
+        pw useradd -n ${POLICYD_USER} -s /sbin/nologin -d ${POLICYD_USER_HOME} -m
+    else
+        useradd -m -d ${POLICYD_USER_HOME} -s /sbin/nologin -g ${POLICYD_GROUP} ${POLICYD_USER}
+    fi
 
     echo 'export status_policyd_user="DONE"' >> ${STATUS_FILE}
 }
@@ -66,6 +70,17 @@ EOF
 # Reset password.
 USE mysql;
 UPDATE user SET Password=password("${POLICYD_DB_PASSWD}") WHERE User="${POLICYD_DB_USER}";
+FLUSH PRIVILEGES;
+EOF
+
+    elif [ X"${DISTRO}" == X"FREEBSD" ]; then
+        # Template file will create database: policyd.
+        cat > ${tmp_sql} <<EOF
+# Import SQL structure template.
+SOURCE $(eval ${LIST_FILES_IN_PKG} "${PKG_POLICYD}*" | grep '/DATABASE.mysql$');
+
+# Grant privileges.
+GRANT SELECT,INSERT,UPDATE,DELETE ON ${POLICYD_DB_NAME}.* TO ${POLICYD_DB_USER}@localhost IDENTIFIED BY "${POLICYD_DB_PASSWD}";
 FLUSH PRIVILEGES;
 EOF
 
@@ -97,6 +112,11 @@ EOF
 SOURCE ${tmp_dir}/$(basename $i | awk -F'.gz' '{print $1}');
 EOF
         done
+    elif [ X"${DISTRO}" == X"FREEBSD" ]; then
+        cat >> ${tmp_sql} <<EOF
+SOURCE $(eval ${LIST_FILES_IN_PKG} "${PKG_POLICYD}*" | grep 'whitelist.sql');
+SOURCE $(eval ${LIST_FILES_IN_PKG} "${PKG_POLICYD}*" | grep 'blacklist_helo.sql');
+EOF
     else
         :
     fi
@@ -119,7 +139,7 @@ EOF
 
     # FreeBSD: Copy sample config file.
     if [ X"${DISTRO}" == X"FREEBSD" ]; then
-        cp /usr/local/etc/postfix-policyd-sf.conf ${POLICYD_CONF}
+        cp /usr/local/etc/postfix-policyd-sf.conf.sample ${POLICYD_CONF}
     fi
 
     # We will use another policyd instance for recipient throttle
@@ -316,11 +336,19 @@ EOF
 
     # Setup crontab.
     ECHO_INFO "Setting cron job for policyd user: ${POLICYD_USER}."
-    cat > ${CRON_SPOOL_DIR}/${POLICYD_USER} <<EOF
+    if [ X"${DISTRO}" == X"FREEBSD" ]; then
+        cat > ${CRON_SPOOL_DIR}/${POLICYD_USER} <<EOF
+${CONF_MSG}
+1       */2       *       *       *       $(eval ${LIST_FILES_IN_PKG} "${PKG_POLICYD}*" | grep 'cleanup$' ) -c ${POLICYD_CONF}
+1       */2       *       *       *       $(eval ${LIST_FILES_IN_PKG} "${PKG_POLICYD}*" | grep 'cleanup$' ) -c ${POLICYD_SENDER_THROTTLE_CONF}
+EOF
+    else
+        cat > ${CRON_SPOOL_DIR}/${POLICYD_USER} <<EOF
 ${CONF_MSG}
 1       */2       *       *       *       $(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep 'cleanup$' ) -c ${POLICYD_CONF}
 1       */2       *       *       *       $(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep 'cleanup$' ) -c ${POLICYD_SENDER_THROTTLE_CONF}
 EOF
+    fi
 
     # Set cron file permission: root:root, 0600.
     chmod 0600 ${CRON_SPOOL_DIR}/${POLICYD_USER}
