@@ -334,13 +334,7 @@ openldap_data_initialize()
     chmod -R 0700 ${OPENLDAP_DATA_DIR}
 
     ECHO_INFO "Starting OpenLDAP."
-    if [ X"${DISTRO}" == X"RHEL" ]; then
-        service_control ldap restart >/dev/null
-    elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
-        service_control slapd restart >/dev/null
-    else
-        :
-    fi
+    ${LDAP_INIT_SCRIPT} restart
     
     ECHO_INFO -n "Sleep 5 seconds for LDAP daemon initialize:"
     for i in 1 2 3 4 5; do

@@ -51,7 +51,12 @@ elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
     export MYSQLD_INIT_SCRIPT="${DIR_RC_SCRIPTS}/mysql"
 
 elif [ X"${DISTRO}" == X"FREEBSD" ]; then
+    # Override default socket location.
+    export MYSQL_SOCKET='/tmp/mysql.sock'
+
+    # Location of my.cnf.
     export MYSQL_MY_CNF="/var/db/mysql/my.cnf"
+
     # RC script.
     export MYSQLD_INIT_SCRIPT="${DIR_RC_SCRIPTS}/mysql-server"
 

@@ -38,10 +38,10 @@ policyd_user()
 {
     ECHO_INFO "==================== Policyd ===================="
     ECHO_INFO "Add user and group for policyd: ${POLICYD_USER}:${POLICYD_GROUP}."
-    groupadd ${POLICYD_GROUP}
     if [ X"${DISTRO}" == X"FREEBSD" ]; then
         pw useradd -n ${POLICYD_USER} -s /sbin/nologin -d ${POLICYD_USER_HOME} -m
     else
+        groupadd ${POLICYD_GROUP}
         useradd -m -d ${POLICYD_USER_HOME} -s /sbin/nologin -g ${POLICYD_GROUP} ${POLICYD_USER}
     fi
 
@@ -370,7 +370,6 @@ Policyd:
         - ${DIR_RC_SCRIPTS}/policyd
     * Misc:
         - /etc/cron.daily/policyd-cleanup
-        - $(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep 'policyd.cron$')
         - crontab -l -u ${POLICYD_USER}
 EOF
 

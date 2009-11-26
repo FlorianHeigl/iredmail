@@ -29,15 +29,26 @@ dovecot_ssl_config()
 {
     ECHO_INFO "Enable TLS support."
 
-    [ X"${ENABLE_DOVECOT_SSL}" == X"YES" ] && cat >> ${DOVECOT_CONF} <<EOF
+    if [ X"${ENABLE_DOVECOT_SSL}" == X"YES" ]; then
+        # Enable ssl. Different setting in v1.1, v1.2.
+        if [ X"${DOVECOT_VERSION}" == X"1.1" ]; then
+            cat >> ${DOVECOT_CONF} <<EOF
 # SSL support.
-# Refer to official documentation:
-#   * http://wiki.dovecot.org/SSL/DovecotConfiguration
 ssl_disable = no
+EOF
+        elif [ X"${DOVECOT_VERSION}" == X"1.2" ]; then
+            cat >> ${DOVECOT_CONF} <<EOF
+# SSL support.
+ssl = yes
+EOF
+        fi
+
+        cat >> ${DOVECOT_CONF} <<EOF
 verbose_ssl = no
 ssl_key_file = ${SSL_KEY_FILE}
 ssl_cert_file = ${SSL_CERT_FILE}
 EOF
+    fi
 
     echo 'export status_dovecot_ssl_config="DONE"' >> ${STATUS_FILE}
 }
@@ -49,9 +60,19 @@ dovecot_config()
     [ X"${ENABLE_DOVECOT}" == X"YES" ] && \
         backup_file ${DOVECOT_CONF} && \
         chmod 0755 ${DOVECOT_CONF} && \
-        ECHO_INFO "Configure dovecot: ${DOVECOT_CONF}." && \
+        ECHO_INFO "Configure dovecot: ${DOVECOT_CONF}."
+
         cat > ${DOVECOT_CONF} <<EOF
 ${CONF_MSG}
+EOF
+
+        if [ X"${DOVECOT_VERSION}" == X"1.1" ]; then
+            cat >> ${DOVECOT_CONF} <<EOF
+umask = 0077
+EOF
+        fi
+
+        cat >> ${DOVECOT_CONF} <<EOF
 # Provided services.
 protocols = ${DOVECOT_PROTOCOLS}
 
@@ -84,7 +105,6 @@ log_path = ${DOVECOT_LOG_FILE}
 #login_max_connections = 256
 #max_mail_processes = 512
 
-umask = 0077
 disable_plaintext_auth = no
 
 # Performance Tuning. Reference:

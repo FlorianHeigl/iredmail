@@ -30,8 +30,15 @@ apache_php_config()
 
     backup_file ${HTTPD_CONF} ${HTTPD_SSL_CONF}
 
-    # Generate a sample default-ssl site config file.
-    if [ X"${DISTRO}" == X"UBUNTU" -a X"${DISTRO_CODENAME}" == X"hardy" ]; then
+    # FreeBSD: Copy sample file.
+    if [ X"${DISTRO}" == X"FREEBSD" ]; then
+        sample="$( ${LIST_FILES_IN_PKG} 'apache*' | grep '/httpd-ssl.conf$' )"
+        cp ${sample} ${HTTPD_SSL_CONF}
+        unset sample
+    fi
+
+    # Ubuntu (hardy): Generate a sample default-ssl site config file.
+    if [ X"${DISTRO_CODENAME}" == X"hardy" ]; then
         cat > ${HTTPD_SSL_CONF} <<EOF
 NameVirtualHost *:443
 <VirtualHost *:443>
@@ -59,8 +66,8 @@ EOF
     #ECHO_INFO "Disable 'AddDefaultCharset' in ${HTTPD_CONF}."
     #perl -pi -e 's/^(AddDefaultCharset UTF-8)/#${1}/' ${HTTPD_CONF}
 
-    # SSL Cert/Key file.
-    if [ X"${DISTRO}" == X"RHEL" ]; then
+    # Set correct SSL Cert/Key file location.
+    if [ X"${DISTRO}" == X"RHEL" -o X"${DISTRO}" == X"FREEBSD" ]; then
         perl -pi -e 's#^(SSLCertificateFile)(.*)#${1} $ENV{SSL_CERT_FILE}#' ${HTTPD_SSL_CONF}
         perl -pi -e 's#^(SSLCertificateKeyFile)(.*)#${1} $ENV{SSL_KEY_FILE}#' ${HTTPD_SSL_CONF}
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then

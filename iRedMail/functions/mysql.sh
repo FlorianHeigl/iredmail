@@ -30,7 +30,7 @@ mysql_initialize()
     ECHO_INFO "==================== MySQL ===================="
 
     ECHO_INFO "Starting MySQL."
-    ${MYSQLD_INIT_SCRIPT} restart >/dev/null
+    ${MYSQLD_INIT_SCRIPT} restart 2>/dev/null
 
     ECHO_INFO -n "Sleep 5 seconds for MySQL daemon initialize:"
     for i in 1 2 3 4 5; do
@@ -42,7 +42,7 @@ mysql_initialize()
 
     if [ X"${MYSQL_FRESH_INSTALLATION}" == X"YES" ]; then
         ECHO_INFO "Setting password for MySQL admin (${MYSQL_ROOT_USER})."
-        mysqladmin -u root password "${MYSQL_ROOT_PASSWD}"
+        mysqladmin --user=root password "${MYSQL_ROOT_PASSWD}"
 
         cat >> ${MYSQL_INIT_SQL} <<EOF
 /* Delete empty username. */

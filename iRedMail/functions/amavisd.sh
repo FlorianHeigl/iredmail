@@ -504,7 +504,7 @@ EOF
 
 amavisd_config()
 {
-    if [ X"${DISTRO}" == X"RHEL" ]; then
+    if [ X"${DISTRO}" == X"RHEL" -o X"${DISTRO}" == X"FREEBSD" ]; then
         check_status_before_run amavisd_config_rhel
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
         check_status_before_run amavisd_config_debian

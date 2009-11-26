@@ -85,13 +85,13 @@ replace_iptables_rule()
         export sshd_port="${sshd_port}"
     fi
 
-    ECHO_QUESTION "Would you like to use iptables rules shipped within iRedMail now?"
+    ECHO_QUESTION "Would you like to use firewall rules shipped within iRedMail now?"
     ECHO_QUESTION -n "File: ${IPTABLES_CONFIG}, with SSHD port: ${sshd_port}. [Y|n]"
     read ANSWER
     case $ANSWER in
-        N|n ) ECHO_INFO "Skip iptable rules." ;;
+        N|n ) ECHO_INFO "Skip firewall rules." ;;
         Y|y|* ) 
-            ECHO_INFO "Copy iptables sample rules: ${IPTABLES_CONFIG}."
+            ECHO_INFO "Copy firewall sample rules: ${IPTABLES_CONFIG}."
             backup_file ${IPTABLES_CONFIG}
             cp -f ${SAMPLE_DIR}/iptables.rules ${IPTABLES_CONFIG}
 
@@ -110,16 +110,16 @@ replace_iptables_rule()
             eval ${enable_service} iptables >/dev/null
 
             # Prompt to restart iptables.
-            ECHO_QUESTION -n "Restart iptables now (with SSHD port ${sshd_port})? [y|N]"
+            ECHO_QUESTION -n "Restart firewall now (with SSHD port ${sshd_port})? [y|N]"
             read ANSWER
             case $ANSWER in
                 Y|y )
-                    ECHO_INFO "Restarting iptables."
+                    ECHO_INFO "Restarting firewall ..."
                     ${DIR_RC_SCRIPTS}/iptables restart
                     ;;
                 N|n|* )
                     export "RESTART_IPTABLES='NO'"
-                    ECHO_INFO "Skip restart iptable rules."
+                    ECHO_INFO "Skip restart firewall."
                     ;;
             esac
             ;;
