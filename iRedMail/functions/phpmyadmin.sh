@@ -9,32 +9,34 @@ phpmyadmin_install()
 {
     ECHO_INFO "==================== phpMyAdmin ===================="
 
-    cd ${MISC_DIR}
+    if [ X"${DISTRO}" != X"FREEBSD" ]; then
+        cd ${MISC_DIR}
 
-    extract_pkg ${PHPMYADMIN_TARBALL} ${HTTPD_SERVERROOT}
+        extract_pkg ${PHPMYADMIN_TARBALL} ${HTTPD_SERVERROOT}
 
-    ECHO_INFO "Set file permission for phpMyAdmin: ${PHPMYADMIN_HTTPD_ROOT}."
-    chown -R ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${PHPMYADMIN_HTTPD_ROOT}
-    chmod -R 0755 ${PHPMYADMIN_HTTPD_ROOT}
+        ECHO_INFO "Set file permission for phpMyAdmin: ${PHPMYADMIN_HTTPD_ROOT}."
+        chown -R ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${PHPMYADMIN_HTTPD_ROOT}
+        chmod -R 0755 ${PHPMYADMIN_HTTPD_ROOT}
 
-    # Create symbol link, so that we don't need to modify apache
-    # conf.d/phpmyadmin.conf file after upgrade this component.
-    ln -s ${PHPMYADMIN_HTTPD_ROOT} ${HTTPD_SERVERROOT}/phpmyadmin >/dev/null
+        # Create symbol link, so that we don't need to modify apache
+        # conf.d/phpmyadmin.conf file after upgrade this component.
+        ln -s ${PHPMYADMIN_HTTPD_ROOT} ${PHPMYADMIN_HTTPD_ROOT_SYMBOL_LINK} >/dev/null
+    fi
 
     ECHO_INFO "Create directory alias for phpMyAdmin in Apache: ${HTTPD_CONF_DIR}/phpmyadmin.conf."
     cat > ${HTTPD_CONF_DIR}/phpmyadmin.conf <<EOF
 ${CONF_MSG}
 # Note: Please refer to ${HTTPD_SSL_CONF} for SSL/TLS setting.
-#Alias /phpmyadmin "${HTTPD_SERVERROOT}/phpmyadmin/"
-#Alias /mysql "${HTTPD_SERVERROOT}/phpmyadmin/"
-<Directory "${HTTPD_SERVERROOT}/phpmyadmin/">
+#Alias /phpmyadmin "${PHPMYADMIN_HTTPD_ROOT_SYMBOL_LINK}"
+#Alias /mysql "${PHPMYADMIN_HTTPD_ROOT_SYMBOL_LINK}"
+<Directory "${PHPMYADMIN_HTTPD_ROOT_SYMBOL_LINK}/">
     Options -Indexes
 </Directory>
 EOF
 
     # Make phpMyAdmin can be accessed via HTTPS only.
-    sed -i 's#\(</VirtualHost>\)#Alias /phpmyadmin '${HTTPD_SERVERROOT}/phpmyadmin/'\n\1#' ${HTTPD_SSL_CONF}
-    sed -i 's#\(</VirtualHost>\)#Alias /mysql '${HTTPD_SERVERROOT}/phpmyadmin/'\n\1#' ${HTTPD_SSL_CONF}
+    sed -i 's#\(</VirtualHost>\)#Alias /phpmyadmin '${PHPMYADMIN_HTTPD_ROOT_SYMBOL_LINK}/'\n\1#' ${HTTPD_SSL_CONF}
+    sed -i 's#\(</VirtualHost>\)#Alias /mysql '${PHPMYADMIN_HTTPD_ROOT_SYMBOL_LINK}/'\n\1#' ${HTTPD_SSL_CONF}
 
     ECHO_INFO "Config phpMyAdmin: ${PHPMYADMIN_CONFIG_FILE}."
     cd ${PHPMYADMIN_HTTPD_ROOT} && cp config.sample.inc.php ${PHPMYADMIN_CONFIG_FILE}

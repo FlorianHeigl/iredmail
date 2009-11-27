@@ -498,7 +498,7 @@ WITHOUT_ODBC=true
 WITH_OPENSSL=true
 WITHOUT_PCNTL=true
 WITH_PCRE=true
-WITHOUT_PDF=true
+WITH_PDF=true
 WITH_PDO=true
 WITH_PDO_SQLITE=true
 WITHOUT_PGSQL=true
@@ -558,6 +558,11 @@ EOF
         ALL_PKGS="${ALL_PKGS} databases/phpmyadmin"
     fi
 
+    # PostfixAdmin.
+    if [ X"${USE_POSTFIXADMIN}" == X"YES" ]; then
+        ALL_PKGS="${ALL_PKGS} mail/postfixadmin"
+    fi
+
     # iRedAdmin.
     #if [ X"${USE_IREDADMIN}" == X"YES" ]; then
     #    # mod_wsgi.
@@ -567,10 +572,17 @@ EOF
     # Install all packages.
     for i in ${ALL_PKGS}; do
         if [ X"${i}" != X'' ]; then
-            cd /usr/ports/${i} && \
-                make clean && \
-                ECHO_INFO "Installing port: ${i} ..." && \
-                make install clean
+            portname="$( echo ${i} | tr -d '-' | tr -d '/' | tr -d '\.' )"
+            status="\$status_install_port_$portname"
+            if [ X"$(eval echo ${status})" != X"DONE" ]; then
+                cd /usr/ports/${i} && \
+                    make clean && \
+                    ECHO_INFO "Installing port: ${i} ..." && \
+                    make install clean && \
+                    echo "export status_install_port_${portname}='DONE'" >> ${STATUS_FILE}
+            else
+                ECHO_INFO "Skip port installation: ${i}."
+            fi
         fi
     done
 }

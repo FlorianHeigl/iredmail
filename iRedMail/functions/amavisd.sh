@@ -159,7 +159,7 @@ amavisd_config_rhel()
     #echo '$pid_file = "/var/run/clamav/amavisd.pid";' >> ${AMAVISD_CONF}
 
     # Enable disclaimer if available.
-    sed -i '/os_fingerprint_method => undef,/ a\  allow_disclaimers => 1, # enables disclaimer insertion if available' ${AMAVISD_CONF}
+    perl -pi -e 's%(os_fingerprint_method => undef.*)%${1}\n  allow_disclaimers => 1, # enables disclaimer insertion if available%' ${AMAVISD_CONF}
 
     echo 'export status_amavisd_config_rhel="DONE"' >> ${STATUS_FILE}
 }

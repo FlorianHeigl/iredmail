@@ -80,7 +80,7 @@ elif [ X"${DISTRO}" == X"FREEBSD" ]; then
     export HTTPD_SSL_CONF="${HTTPD_CONF_DIR}/ssl.conf"
 
     # Web data.
-    export HTTPD_SERVERROOT='/usr/local/www/apache22'
+    export HTTPD_SERVERROOT='/usr/local/www'
     export HTTPD_DOCUMENTROOT="${HTTPD_SERVERROOT}/data"
 
     # Daemon user.
