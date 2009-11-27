@@ -9,19 +9,24 @@ rcm_install()
 {
     ECHO_INFO "==================== Roundcube Webmail ===================="
 
-    cd ${MISC_DIR}
+    if [ X"${DISTRO}" != X"FREEBSD" ]; then
+        cd ${MISC_DIR}
 
-    # Extract source tarball.
-    extract_pkg ${RCM_TARBALL} ${HTTPD_SERVERROOT}
+        # Extract source tarball.
+        extract_pkg ${RCM_TARBALL} ${HTTPD_SERVERROOT}
 
-    # Create symbol link, so that we don't need to modify apache
-    # conf.d/roundcubemail.conf file after upgrade this component.
-    ln -s ${RCM_HTTPD_ROOT} ${HTTPD_SERVERROOT}/roundcubemail 2>/dev/null
+        # Create symbol link, so that we don't need to modify apache
+        # conf.d/roundcubemail.conf file after upgrade this component.
+        ln -s ${RCM_HTTPD_ROOT} ${RCM_HTTPD_ROOT_SYMBOL_LINK} 2>/dev/null
+    fi
 
     ECHO_INFO "Set correct permission for Roundcubemail: ${RCM_HTTPD_ROOT}."
     chown -R ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${RCM_HTTPD_ROOT}
     chown -R ${HTTPD_USER}:${HTTPD_GROUP} ${RCM_HTTPD_ROOT}/{temp,logs}
-    chmod 0000 ${RCM_HTTPD_ROOT}/{CHANGELOG,INSTALL,LICENSE,README,UPGRADING,installer,SQL}
+
+    # Remove file permission If installed via source tarball.
+    [ X"${DISTRO}" != X"FREEBSD" ] && \
+        chmod 0000 ${RCM_HTTPD_ROOT}/{CHANGELOG,INSTALL,LICENSE,README,UPGRADING,installer,SQL}
 
     ECHO_INFO "Patch: Managesieve service frontend."
     cd ${RCM_HTTPD_ROOT}/ && \

@@ -27,7 +27,9 @@ export PLA_TARBALL="phpldapadmin-${PLA_VERSION}.tar.gz"
 if [ X"${DISTRO}" == X"FREEBSD" ]; then
     export PLA_HTTPD_ROOT="${HTTPD_SERVERROOT}/phpldapadmin/htdocs"
     export PLA_HTTPD_ROOT_SYMBOL_LINK="${PLA_HTTPD_ROOT}"
+    export PLA_CONF_DIR="${HTTPD_SERVERROOT}/phpldapadmin/config"
 else
     export PLA_HTTPD_ROOT="${HTTPD_SERVERROOT}/phpldapadmin-${PLA_VERSION}"
     export PLA_HTTPD_ROOT_SYMBOL_LINK="${HTTPD_SERVERROOT}/phpldapadmin"
+    export PLA_CONF_DIR="${PLA_HTTPD_ROOT_SYMBOL_LINK}/config"
 fi

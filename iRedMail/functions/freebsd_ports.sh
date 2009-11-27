@@ -23,6 +23,7 @@
 install_all()
 {
     ALL_PKGS=''
+    ALL_PORTS=''
     ENABLED_SERVICES=''
     DISABLED_SERVICES=''
 
@@ -33,7 +34,7 @@ install_all()
         ca_root_nss libssh2 curl libusb pth gnupg p5-IO-Socket-SSL \
         p5-Archive-Tar p5-Net-DNS p5-Mail-SpamAssassin p5-Authen-SASL \
         amavisd-new clamav apr python26 apache22 php5 php5-extensions \
-        php5-gd; do
+        php5-gd roundcube postfixadmin; do
         mkdir -p /var/db/ports/${i} 2>/dev/null
     done
 
@@ -85,7 +86,8 @@ WITH_XCHARSET=all
 WITH_OPENSSL=yes
 WITH_COLLATION=utf8_general_ci
 EOF
-    ALL_PKGS="${ALL_PKGS} databases/mysql50-server"
+    ALL_PKGS="${ALL_PKGS} mysql-server mysql-client"
+    ALL_PORTS="${ALL_PORTS} databases/mysql50-server"
 
     ENABLED_SERVICES="${ENABLED_SERVICES} mysql"
 
@@ -131,7 +133,8 @@ WITHOUT_SMBPWD=true
 WITH_DYNAMIC_BACKENDS=true
 EOF
 
-        ALL_PKGS="${ALL_PKGS} net/openldap24-server"
+        ALL_PKGS="${ALL_PKGS} openldap-sasl-server openldap-sasl-client"
+        ALL_PORTS="${ALL_PORTS} net/openldap24-server"
         ENABLED_SERVICES="${ENABLED_SERVICES} slapd"
 
     fi
@@ -153,7 +156,8 @@ WITH_MYSQL=true
 WITHOUT_SQLITE=true
 EOF
 
-    ALL_PKGS="${ALL_PKGS} mail/dovecot mail/dovecot-managesieve mail/dovecot-sieve"
+    ALL_PKGS="${ALL_PKGS} dovecot dovecot-managesieve dovecot-sieve"
+    ALL_PORTS="${ALL_PORTS} mail/dovecot mail/dovecot-managesieve mail/dovecot-sieve"
     ENABLED_SERVICES="${ENABLED_SERVICES} dovecot"
 
     # ca_root_nss. DEPENDENCE.
@@ -232,7 +236,8 @@ WITH_SPF_QUERY=true
 WITH_RELAY_COUNTRY=true
 EOF
 
-    ALL_PKGS="${ALL_PKGS} devel/pth security/gnupg dns/p5-Net-DNS mail/p5-Mail-SpamAssassin"
+    ALL_PKGS="${ALL_PKGS} pth gnupg p5-Net-DNS p5-Mail-SpamAssassin"
+    ALL_PORTS="${ALL_PORTS} devel/pth security/gnupg dns/p5-Net-DNS mail/p5-Mail-SpamAssassin"
     DISABLED_SERVICES="${DISABLED_SERVICES} spamd"
 
     cat > /var/db/ports/p5-Authen-SASL/options <<EOF
@@ -240,7 +245,8 @@ WITH_KERBEROS=true
 EOF
 
     # AlterMIME. REQUIRED.
-    ALL_PKGS="${ALL_PKGS} security/p5-Authen-SASL mail/altermime"
+    ALL_PKGS="${ALL_PKGS} p5-Authen-SASL altermime"
+    ALL_PORTS="${ALL_PORTS} security/p5-Authen-SASL mail/altermime"
 
     # Amavisd-new. REQUIRED.
     cat > /var/db/ports/amavisd-new/options <<EOF
@@ -273,7 +279,8 @@ WITHOUT_PGSQL=true
 WITHOUT_MILTER=true
 EOF
 
-    ALL_PKGS="${ALL_PKGS} mail/p5-MIME-Tools devel/p5-IO-stringy sysutils/p5-Unix-Syslog net/p5-Net-Server security/p5-Digest-SHA converters/p5-Convert-TNEF converters/p5-Convert-UUlib archivers/p5-Archive-Zip security/p5-Authen-SASL security/amavisd-new"
+    ALL_PKGS="${ALL_PKGS} p5-MIME-Tools p5-IO-stringy p5-Unix-Syslog p5-Net-Server p5-Digest-SHA p5-Convert-TNEF p5-Convert-UUlib p5-Archive-Zip p5-Authen-SASL amavisd-new"
+    ALL_PORTS="${ALL_PORTS} mail/p5-MIME-Tools devel/p5-IO-stringy sysutils/p5-Unix-Syslog net/p5-Net-Server security/p5-Digest-SHA converters/p5-Convert-TNEF converters/p5-Convert-UUlib archivers/p5-Archive-Zip security/p5-Authen-SASL security/amavisd-new"
     ENABLED_SERVICES="${ENABLED_SERVICES} amavisd amavis_p0fanalyzer"
 
     # Postfix v2.5. REQUIRED.
@@ -295,12 +302,14 @@ WITHOUT_VDA=true
 WITHOUT_TEST=true
 EOF
 
-    ALL_PKGS="${ALL_PKGS} devel/pcre mail/postfix25"
+    ALL_PKGS="${ALL_PKGS} pcre postfix"
+    ALL_PORTS="${ALL_PORTS} devel/pcre mail/postfix25"
     ENABLED_SERVICES="${ENABLED_SERVICES} postfix"
     DISABLED_SERVICES="${DISABLED_SERVICES} sendmail sendmail_submit sendmail_outbound sendmail_msq_queue"
 
     # Policyd v1.8x. REQUIRED.
-    ALL_PKGS="${ALL_PKGS} mail/postfix-policyd-sf"
+    ALL_PKGS="${ALL_PKGS} postfix-policyd-sf"
+    ALL_PORTS="${ALL_PORTS} mail/postfix-policyd-sf"
     ENABLED_SERVICES="${ENABLED_SERVICES} policyd"
 
     # ClamAV. REQUIRED.
@@ -317,7 +326,8 @@ WITHOUT_STDERR=true
 WITHOUT_EXPERIMENTAL=true
 EOF
 
-    ALL_PKGS="${ALL_PKGS} security/clamav"
+    ALL_PKGS="${ALL_PKGS} clamav"
+    ALL_PORTS="${ALL_PORTS} security/clamav"
     ENABLED_SERVICES="${ENABLED_SERVICES} clamav_clamd clamav_freshclam"
 
     # Apr. DEPENDENCE.
@@ -428,7 +438,8 @@ WITH_SUEXEC=true
 WITH_CGID=true
 EOF
 
-    ALL_PKGS="${ALL_PKGS} www/apache22"
+    ALL_PKGS="${ALL_PKGS} apache"
+    ALL_PORTS="${ALL_PORTS} www/apache22"
     ENABLED_SERVICES="${ENABLED_SERVICES} apache22"
 
     # PHP5. REQUIRED.
@@ -447,7 +458,8 @@ WITH_FASTCGI=true
 WITH_PATHINFO=true
 EOF
 
-    ALL_PKGS="${ALL_PKGS} lang/php5"
+    ALL_PKGS="${ALL_PKGS} php5"
+    ALL_PORTS="${ALL_PORTS} lang/php5"
 
     # PHP extensions. REQUIRED.
     #/usr/ports/print/freetype2 && make clean && make \
@@ -461,116 +473,75 @@ WITHOUT_TRUETYPE=true
 WITHOUT_JIS=true
 EOF
 
-    ALL_PKGS="${ALL_PKGS} graphics/php5-gd"
-
-    cat > /var/db/ports/php5-extensions/options <<EOF
-WITHOUT_BCMATH=true
-WITH_BZ2=true
-WITHOUT_CALENDAR=true
-WITH_CTYPE=true
-WITH_CURL=true
-WITHOUT_DBA=true
-WITHOUT_DBASE=true
-WITH_DOM=true
-WITHOUT_EXIF=true
-WITHOUT_FILEINFO=true
-WITH_FILTER=true
-WITHOUT_FRIBIDI=true
-WITHOUT_FTP=true
-WITH_GD=true
-WITH_GETTEXT=true
-WITHOUT_GMP=true
-WITH_HASH=true
-WITH_ICONV=true
-WITH_IMAP=true
-WITHOUT_INTERBASE=true
-WITH_JSON=true
-WITH_LDAP=true
-WITH_MBSTRING=true
-WITH_MCRYPT=true
-WITH_MHASH=true
-WITHOUT_MING=true
-WITHOUT_MSSQL=true
+    # Roundcube.
+    cat > /var/db/ports/roundcube/options <<EOF
 WITH_MYSQL=true
-WITH_MYSQLI=true
-WITHOUT_NCURSES=true
-WITHOUT_ODBC=true
-WITH_OPENSSL=true
-WITHOUT_PCNTL=true
-WITH_PCRE=true
-WITH_PDF=true
-WITH_PDO=true
-WITH_PDO_SQLITE=true
 WITHOUT_PGSQL=true
-WITH_POSIX=true
-WITHOUT_PSPELL=true
-WITHOUT_READLINE=true
-WITHOUT_RECODE=true
-WITH_SESSION=true
-WITHOUT_SHMOP=true
-WITH_SIMPLEXML=true
-WITH_SNMP=true
-WITHOUT_SOAP=true
-WITHOUT_SOCKETS=true
-WITHOUT_SPL=true
 WITH_SQLITE=true
-WITHOUT_SYBASE_CT=true
-WITHOUT_SYSVMSG=true
-WITHOUT_SYSVSEM=true
-WITHOUT_SYSVSHM=true
-WITHOUT_TIDY=true
-WITHOUT_TOKENIZER=true
-WITHOUT_WDDX=true
-WITH_XML=true
-WITH_XMLREADER=true
-WITH_XMLRPC=true
-WITHOUT_XMLWRITER=true
-WITHOUT_XSL=true
-WITHOUT_YAZ=true
-WITH_ZIP=true
-WITH_ZLIB=true
+WITH_SSL=true
+WITH_LDAP=true
+WITH_PSPELL=true
+WITHOUT_NSC=true
+WITH_AUTOCOMP=true
 EOF
 
-    ALL_PKGS="${ALL_PKGS} lang/php5-extensions"
+    # PostfixAdmin.
+    cat > /var/db/ports/postfixadmin/options <<EOF
+WITH_MYSQL=true
+WITH_MYSQLI=true
+WITHOUT_PGSQL=true
+EOF
+
+    # PHP extensions
+    if [ X"${USE_WEBMAIL}" == X"YES" ]; then
+        ALL_PKGS="${ALL_PKGS} php5-gd php5-imap php5-zip php5-bz2 php5-zlib php5-gettext php5-mbstring php5-mcrypt php5-mhash php5-mysql php5-mysqli php5-openssl php5-pcre php5-session php5-ldap php5-ctype php5-hash php5-iconv php5-pspell php5-dom php5-xml php5-sqlite"
+        ALL_PORTS="${ALL_PORTS} graphics/php5-gd mail/php5-imap archivers/php5-zip archivers/php5-bz2 archivers/php5-zlib devel/php5-gettext converters/php5-mbstring security/php5-mcrypt security/php5-mhash databases/php5-mysql databases/php5-mysqli security/php5-openssl devel/php5-pcre www/php5-session net/php5-ldap textproc/php5-ctype security/php5-hash converters/php5-iconv textproc/php5-pspell textproc/php5-dom textproc/php5-xml databases/php5-sqlite"
+    fi
 
     # Roundcube webmail.
     if [ X"${USE_RCM}" == X"YES" ]; then
-        ALL_PKGS="${ALL_PKGS} mail/roundcube"
+        ALL_PKGS="${ALL_PKGS} roundcube"
+        ALL_PORTS="${ALL_PORTS} mail/roundcube"
     fi
 
     # SquirrelMail.
     if [ X"${USE_SM}" == X"YES" ]; then
-        ALL_PKGS="${ALL_PKGS} mail/squirrelmail"
+        ALL_PKGS="${ALL_PKGS} squirrelmail"
+        ALL_PORTS="${ALL_PORTS} mail/squirrelmail"
     fi
 
     # Awstats.
     if [ X"${USE_AWSTATS}" == X"YES" ]; then
-        ALL_PKGS="${ALL_PKGS} www/awstats"
+        ALL_PKGS="${ALL_PKGS} awstats"
+        ALL_PORTS="${ALL_PORTS} www/awstats"
     fi
 
     # phpLDAPadmin.
     if [ X"${USE_PHPLDAPADMIN}" == X"YES" ]; then
-        ALL_PKGS="${ALL_PKGS} net/phpldapadmin"
+        ALL_PKGS="${ALL_PKGS} phpldapadmin"
+        ALL_PORTS="${ALL_PORTS} net/phpldapadmin"
     fi
 
     # phpMyAdmin.
     if [ X"${USE_PHPMYADMIN}" == X"YES" ]; then
-        ALL_PKGS="${ALL_PKGS} databases/phpmyadmin"
+        ALL_PKGS="${ALL_PKGS} phpMyAdmin"
+        ALL_PORTS="${ALL_PORTS} databases/phpmyadmin"
     fi
 
     # PostfixAdmin.
     if [ X"${USE_POSTFIXADMIN}" == X"YES" ]; then
-        ALL_PKGS="${ALL_PKGS} mail/postfixadmin"
+        ALL_PKGS="${ALL_PORTS} postfixadmin"
+        ALL_PORTS="${ALL_PORTS} mail/postfixadmin"
     fi
 
     # iRedAdmin.
     #if [ X"${USE_IREDADMIN}" == X"YES" ]; then
     #    # mod_wsgi.
-    #    ALL_PKGS="${ALL_PKGS} www/mod_wsgi"
+    #    ALL_PORTS="${ALL_PORTS} www/mod_wsgi"
     #fi
 
     # Install all packages.
-    for i in ${ALL_PKGS}; do
+    for i in ${ALL_PORTS}; do
         if [ X"${i}" != X'' ]; then
             portname="$( echo ${i} | tr -d '-' | tr -d '/' | tr -d '\.' )"
             status="\$status_install_port_$portname"
@@ -581,7 +552,7 @@ EOF
                     make install clean && \
                     echo "export status_install_port_${portname}='DONE'" >> ${STATUS_FILE}
             else
-                ECHO_INFO "Skip port installation: ${i}."
+                ECHO_INFO "Skip port: ${i}."
             fi
         fi
     done

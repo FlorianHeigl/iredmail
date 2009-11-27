@@ -25,7 +25,14 @@
 # ---------------------------------------
 export RCM_VERSION='0.2.1'
 export RCM_TARBALL="roundcubemail-${RCM_VERSION}.tar.gz"
-export RCM_HTTPD_ROOT="${HTTPD_SERVERROOT}/roundcubemail-${RCM_VERSION}"
+
+if [ X"${DISTRO}" == X"FREEBSD" ]; then
+    export RCM_HTTPD_ROOT="${HTTPD_SERVERROOT}/roundcube"
+    export RCM_HTTPD_ROOT_SYMBOL_LINK="${RCM_HTTPD_ROOT}"
+else
+    export RCM_HTTPD_ROOT="${HTTPD_SERVERROOT}/roundcubemail-${RCM_VERSION}"
+    export RCM_HTTPD_ROOT="${HTTPD_SERVERROOT}/roundcubemail"
+fi
 
 # Syslog log file.
 export RCM_LOGFILE='/var/log/roundcube.log'

@@ -42,7 +42,8 @@ elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
 elif [ X"${DISTRO}" == X"FREEBSD" ]; then
     export AWSTATS_HTTPD_ROOT="${HTTPD_SERVERROOT}/awstats"
     export AWSTATS_CONF_SAMPLE="${AWSTATS_HTTPD_ROOT}/cgi-bin/awstats.model.conf"
-    export AWSTATS_CGI_DIR="${AWSTATS_HTTPD_ROOT}/cgi-bin"
+    export AWSTATS_CONF_DIR="${AWSTATS_HTTPD_ROOT}/cgi-bin"
+    export AWSTATS_CGI_DIR="${AWSTATS_CONF_DIR}"
 else
     :
 fi

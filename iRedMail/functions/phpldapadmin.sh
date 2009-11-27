@@ -20,7 +20,7 @@ pla_install()
     fi
 
     ECHO_INFO "Copy example config file."
-    cd ${PLA_HTTPD_ROOT}/config/ && \
+    cd ${PLA_CONF_DIR}/ && \
     cp -f config.php.example config.php
 
     ECHO_INFO "Set file permission."
@@ -44,7 +44,7 @@ EOF
     cat >> ${TIP_FILE} <<EOF
 phpLDAPadmin:
     * Configuration files:
-        - ${PLA_HTTPD_ROOT}/config/config.php
+        - ${PLA_CONF_DIR}/config.php
     * URL:
         - ${PLA_HTTPD_ROOT}
         - https://${HOSTNAME}/phpldapadmin/

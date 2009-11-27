@@ -33,7 +33,7 @@ mysql_initialize()
     ${MYSQLD_INIT_SCRIPT} restart 2>/dev/null
 
     ECHO_INFO -n "Sleep 5 seconds for MySQL daemon initialize:"
-    for i in 1 2 3 4 5; do
+    for i in 5 4 3 2 1; do
         echo -n " ${i}s" && sleep 1
     done
     echo '.'
