@@ -1,4 +1,5 @@
-iRedMail-0.5.2:
+iRedMail-0.6.0:
+    * Add script used to generate new SSL keys: tools/generate_ssl_keys.sh.
     * Add 'disclaimer' in mail user object, used to store per-user
       disclaimer text.
     * Allow ping from remote hosts in iptables rule.
