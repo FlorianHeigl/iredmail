@@ -99,6 +99,7 @@ EOF
     cp -f ${SAMPLE_DIR}/pysieved.init.rhel ${DIR_RC_SCRIPTS}/pysieved
     chmod +x ${DIR_RC_SCRIPTS}/pysieved
     eval ${enable_service} pysieved
+    ENABLED_SERVICES="${ENABLED_SERVICES} pysieved"
 
     # Disable pysieved in xinetd.
     pysieved_xinetd_conf="$(eval ${LIST_FILES_IN_PKG} pysieved | grep 'xinetd' | grep 'pysieved$')"

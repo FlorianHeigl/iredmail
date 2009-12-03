@@ -1,6 +1,5 @@
 d30f9b9ae5584308ad0cf84100f8ff24  misc/postfixadmin-2.2.1.1.tar.gz
 cba2d46f02126d8c8119bb310ddc8f68  misc/phpMyAdmin-2.11.9.5-all-languages.tar.bz2
-d49bfea590cdca3d6b221903217e0c55  misc/roundcubemail-0.2.1.tar.gz
 a9129f81b347e98c2b31552d1adc4b51  misc/phpldapadmin-1.1.0.7.tar.gz
 b7c5ebf0a57fe3511042a740ff1b5710  misc/squirrelmail-1.4.19.tar.bz2
 1e2eb4da90297e451447e08b05853695  misc/change_ldappass-2.2-1.4.0.tar.gz
@@ -15,3 +14,4 @@ b18a8a80333866cecf18e61f41b5ac5c  misc/email_footer-0.5-1.4.2.tar.gz
 0b9d9851d9babcdd57d926ef95630229  misc/all_locales-1.4.13-20071220.tar.gz
 824bed1bc6a4280bbc0c9b614ab8b72f  misc/add_address-1.0.1-1.4.0.tar.gz
 7527b273f42bc38f44738dc3c48aa787  misc/iRedAdmin-0.1.1.tar.bz2
+34e8e18772e7eada8769b6c5c20f7c8e  misc/roundcubemail-0.3.1.tar.gz

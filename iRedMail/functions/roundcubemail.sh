@@ -18,20 +18,12 @@ rcm_install()
         # Create symbol link, so that we don't need to modify apache
         # conf.d/roundcubemail.conf file after upgrade this component.
         ln -s ${RCM_HTTPD_ROOT} ${RCM_HTTPD_ROOT_SYMBOL_LINK} 2>/dev/null
-    fi
 
-    ECHO_INFO "Set correct permission for Roundcubemail: ${RCM_HTTPD_ROOT}."
-    chown -R ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${RCM_HTTPD_ROOT}
-    chown -R ${HTTPD_USER}:${HTTPD_GROUP} ${RCM_HTTPD_ROOT}/{temp,logs}
-
-    # Remove file permission If installed via source tarball.
-    [ X"${DISTRO}" != X"FREEBSD" ] && \
+        ECHO_INFO "Set correct permission for Roundcubemail: ${RCM_HTTPD_ROOT}."
+        chown -R ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${RCM_HTTPD_ROOT}
+        chown -R ${HTTPD_USER}:${HTTPD_GROUP} ${RCM_HTTPD_ROOT}/{temp,logs}
         chmod 0000 ${RCM_HTTPD_ROOT}/{CHANGELOG,INSTALL,LICENSE,README,UPGRADING,installer,SQL}
-
-    ECHO_INFO "Patch: Managesieve service frontend."
-    cd ${RCM_HTTPD_ROOT}/ && \
-    patch -p1 < ${PATCH_DIR}/roundcubemail/0.2.1-stable-managesieve.patch > /dev/null && \
-    patch -p1 < ${PATCH_DIR}/roundcubemail/encode_vacation_subject.patch > /dev/null
+    fi
 
     cd ${RCM_HTTPD_ROOT}/config/
     cp -f db.inc.php.dist db.inc.php
@@ -40,19 +32,57 @@ rcm_install()
     echo 'export status_rcm_install="DONE"' >> ${STATUS_FILE}
 }
 
-rcm_config_sieverules()
+rcm_config_managesieve()
 {
-    ECHO_INFO "Config managesieve interface for roundcube webmail."
+    ECHO_INFO "Enable and config plugin: managesieve."
+    cd ${RCM_HTTPD_ROOT}/config/ && \
+    perl -pi -e 's#(.*rcmail_config.*plugins.*=.*array\()(.*\).*)#${1}"managesieve",${2}#' main.inc.php
 
     export MANAGESIEVE_BINDADDR MANAGESIEVE_PORT
-    cd ${RCM_HTTPD_ROOT}/plugins/sieverules/ && \
-    perl -pi -e 's#(.*managesieve_host.*=).*#${1} "$ENV{'MANAGESIEVE_BINDADDR'}";#' config.inc.php
+    cd ${RCM_HTTPD_ROOT}/plugins/managesieve/ && \
+    cp config.inc.php.dist config.inc.php && \
     perl -pi -e 's#(.*managesieve_port.*=).*#${1} $ENV{'MANAGESIEVE_PORT'};#' config.inc.php
-    perl -pi -e 's#(.*usetls.*=).*#${1} FALSE;#' config.inc.php
-    perl -pi -e 's#(.*include_imap_root.*=).*#${1} TRUE;#' config.inc.php
-    perl -pi -e 's#(.*ruleset_name.*=).*#${1}"roundcube";#' config.inc.php
+    perl -pi -e 's#(.*managesieve_host.*=).*#${1} "$ENV{'MANAGESIEVE_BINDADDR'}";#' config.inc.php
+    perl -pi -e 's#(.*managesieve_usetls.*=).*#${1} false;#' config.inc.php
+    perl -pi -e 's#(.*managesieve_default.*=).*#${1} "$ENV{GLOBAL_SIEVE_FILE}";#' config.inc.php
 
-    echo 'export status_rcm_config_sieverules="DONE"' >> ${STATUS_FILE}
+    echo 'export status_rcm_config_managesieve="DONE"' >> ${STATUS_FILE}
+}
+
+rcm_config_password()
+{
+    ECHO_INFO "Enable and config plugin: password."
+    cd ${RCM_HTTPD_ROOT}/config/ && \
+    perl -pi -e 's#(.*rcmail_config.*plugins.*=.*array\()(.*\).*)#${1}"password",${2}#' main.inc.php
+
+    cd ${RCM_HTTPD_ROOT}/plugins/password/ && \
+    cp config.inc.php.dist config.inc.php
+
+    perl -pi -e 's#(.*password_confirm_current.*=).*#${1} true;#' config.inc.php
+    perl -pi -e 's#(.*password_minimum_length.*=).*#${1} 6;#' config.inc.php
+    perl -pi -e 's#(.*password_require_nonalpha.*=).*#${1} false;#' config.inc.php
+
+    if [ X"${BACKEND}" == X"MySQL" ]; then
+        perl -pi -e 's#(.*password_driver.*=).*#${1} "sql";#' config.inc.php
+    elif [ X"${BACKEND}" == X"OpenLDAP" ]; then
+        perl -pi -e 's#(.*password_driver.*=).*#${1} "ldap";#' config.inc.php
+        perl -pi -e 's#(.*password_ldap_host.*=).*#${1} "$ENV{LDAP_SERVER_HOST}";#' config.inc.php
+        perl -pi -e 's#(.*password_ldap_port.*=).*#${1} "$ENV{LDAP_SERVER_PORT}";#' config.inc.php
+        perl -pi -e 's#(.*password_ldap_starttls.*=).*#${1} false;#' config.inc.php
+        perl -pi -e 's#(.*password_ldap_version.*=).*#${1} "3";#' config.inc.php
+        perl -pi -e 's#(.*password_ldap_basedn...=).*#${1} "$ENV{LDAP_BASEDN}";#' config.inc.php
+        perl -pi -e 's#(.*password_ldap_method.*=).*#${1} "user";#' config.inc.php
+        perl -pi -e 's#(.*password_ldap_adminDN.*=).*#${1} "null";#' config.inc.php
+        perl -pi -e 's#(.*password_ldap_adminPW.*=).*#${1} "null";#' config.inc.php
+        perl -pi -e 's#(.*password_ldap_userDN_mask...=).*#${1} "$ENV{LDAP_ATTR_USER_RDN}=%login,$ENV{LDAP_ATTR_GROUP_RDN}=$ENV{LDAP_ATTR_GROUP_USERS},$ENV{LDAP_ATTR_DOMAIN_RDN}=%domain,$ENV{LDAP_BASEDN}";#' config.inc.php
+        perl -pi -e 's#(.*password_ldap_encodage.*=).*#${1} "ssha";#' config.inc.php
+        perl -pi -e 's#(.*password_ldap_pwattr.*=).*#${1} "userPassword";#' config.inc.php
+        perl -pi -e 's#(.*password_ldap_force_replace.*=).*#${1} false;#' config.inc.php
+    else
+        :
+    fi
+
+    echo 'export status_rcm_config_password="DONE"' >> ${STATUS_FILE}
 }
 
 rcm_config()
@@ -147,37 +177,26 @@ EOF
     cat > ${HTTPD_CONF_DIR}/roundcubemail.conf <<EOF
 ${CONF_MSG}
 # Note: Please refer to ${HTTPD_SSL_CONF} for SSL/TLS setting.
-Alias /mail "${HTTPD_SERVERROOT}/roundcubemail/"
-Alias /webmail "${HTTPD_SERVERROOT}/roundcubemail/"
-Alias /roundcube "${HTTPD_SERVERROOT}/roundcubemail/"
-<Directory "${HTTPD_SERVERROOT}/roundcubemail/">
+Alias /mail "${RCM_HTTPD_ROOT_SYMBOL_LINK}/"
+Alias /webmail "${RCM_HTTPD_ROOT_SYMBOL_LINK}/"
+Alias /roundcube "${RCM_HTTPD_ROOT_SYMBOL_LINK}/"
+<Directory "${RCM_HTTPD_ROOT_SYMBOL_LINK}/">
     Options -Indexes
 </Directory>
 EOF
 
     # Make Roundcube can be accessed via HTTPS.
-    sed -i 's#\(</VirtualHost>\)#Alias /mail '${HTTPD_SERVERROOT}/roundcubemail/'\n\1#' ${HTTPD_SSL_CONF}
-    sed -i 's#\(</VirtualHost>\)#Alias /webmail '${HTTPD_SERVERROOT}/roundcubemail/'\n\1#' ${HTTPD_SSL_CONF}
-    sed -i 's#\(</VirtualHost>\)#Alias /roundcube '${HTTPD_SERVERROOT}/roundcubemail/'\n\1#' ${HTTPD_SSL_CONF}
+    sed -i 's#\(</VirtualHost>\)#Alias /mail '${RCM_HTTPD_ROOT_SYMBOL_LINK}/'\n\1#' ${HTTPD_SSL_CONF}
+    sed -i 's#\(</VirtualHost>\)#Alias /webmail '${RCM_HTTPD_ROOT_SYMBOL_LINK}/'\n\1#' ${HTTPD_SSL_CONF}
+    sed -i 's#\(</VirtualHost>\)#Alias /roundcube '${RCM_HTTPD_ROOT_SYMBOL_LINK}/'\n\1#' ${HTTPD_SSL_CONF}
 
     ECHO_INFO "Patch: Display Username."
     cd ${RCM_HTTPD_ROOT}/ && \
     patch -p0 < ${PATCH_DIR}/roundcubemail/display_username.patch >/dev/null
 
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
-        ECHO_INFO "Patch: Change LDAP password."
-        cd ${RCM_HTTPD_ROOT}/ && \
-        patch -p1 < ${PATCH_DIR}/roundcubemail/0.2.1-stable-changepasswd_ldap.patch >/dev/null
-
         export LDAP_SERVER_HOST LDAP_SERVER_PORT LDAP_BIND_VERSION LDAP_BASEDN LDAP_ATTR_DOMAIN_RDN LDAP_ATTR_USER_RDN
-        cd ${RCM_HTTPD_ROOT}/config/ && \
-        perl -pi -e 's#(.*ldap_passwd_server_addr.*=).*#${1} "$ENV{'LDAP_SERVER_HOST'}";#' main.inc.php
-        perl -pi -e 's#(.*ldap_passwd_server_port.*=).*#${1} "$ENV{'LDAP_SERVER_PORT'}";#' main.inc.php
-        perl -pi -e 's#(.*ldap_passwd_protocol_version.*=).*#${1} "$ENV{'LDAP_BIND_VERSION'}";#' main.inc.php
-        perl -pi -e 's#(.*ldap_passwd_basedn.*=).*#${1} "$ENV{'LDAP_BASEDN'}";#' main.inc.php
-        perl -pi -e 's#(.*ldap_passwd_attr_domain_rdn.*=).*#${1} "$ENV{'LDAP_ATTR_DOMAIN_RDN'}";#' main.inc.php
-        perl -pi -e 's#(.*ldap_passwd_attr_user_rdn.*=).*#${1} "$ENV{'LDAP_ATTR_USER_RDN'}";#' main.inc.php
-
+        cd ${RCM_HTTPD_ROOT}/config/
         ECHO_INFO "Setting global LDAP address book in Roundcube."
 
         # Remove PHP end of file mark first.
@@ -225,20 +244,12 @@ EOF
         # List global address book in autocomplete_addressbooks, contains domain users and groups.
         perl -pi -e 's#(.*autocomplete_addressbooks.*=)(.*)#${1} array("sql", "$ENV{'FIRST_DOMAIN'}");#' main.inc.php
 
-    elif [ X"${BACKEND}" == X"MySQL" ]; then
-        ECHO_INFO "Patch: Change MySQL password."
-        cd ${RCM_HTTPD_ROOT}/ && \
-        patch -p1 < ${PATCH_DIR}/roundcubemail/0.2.1-stable-changepasswd_sql.patch >/dev/null
-
+    #elif [ X"${BACKEND}" == X"MySQL" ]; then
         # Set correct username, password and database name.
-        perl -pi -e 's#(.*db_dsnw.*= )(.*)#${1}"mysqli://$ENV{'RCM_DB_USER'}:$ENV{'RCM_DB_PASSWD'}\@$ENV{'MYSQL_SERVER'}/$ENV{'VMAIL_DB'}";#' plugins/changepasswd/config.inc.php
+    #    perl -pi -e 's#(.*db_dsnw.*= )(.*)#${1}"mysqli://$ENV{'RCM_DB_USER'}:$ENV{'RCM_DB_PASSWD'}\@$ENV{'MYSQL_SERVER'}/$ENV{'VMAIL_DB'}";#' plugins/changepasswd/config.inc.php
     else
         :
     fi
-
-    # Add translations.
-    cd ${RCM_HTTPD_ROOT}/ && \
-    patch -p1 < ${PATCH_DIR}/roundcubemail/translations.patch >/dev/null 2>&1
 
     # Log file related.
     #ECHO_INFO "Setting up syslog configration file for Roundcube."

@@ -35,7 +35,7 @@ install_all()
     if [ X"${USE_EXIST_AMP}" != X"YES" ]; then
         # Apache & PHP.
         if [ X"${DISTRO}" == X"RHEL" ]; then
-            ALL_PKGS="${ALL_PKGS} httpd.${ARCH} mod_ssl.${ARCH} php.${ARCH} php-common.${ARCH} php-imap.${ARCH} php-gd.${ARCH} php-mbstring.${ARCH} libmcrypt.${ARCH} php-mcrypt.${ARCH} php-pear.noarch php-xml.${ARCH} php-pecl-fileinfo.${ARCH} php-mysql.${ARCH} php-ldap.${ARCH}"
+            ALL_PKGS="${ALL_PKGS} httpd.${ARCH} mod_ssl.${ARCH} php.${ARCH} php-common.${ARCH} php-imap.${ARCH} php-gd.${ARCH} php-mbstring.${ARCH} libmcrypt.${ARCH} php-mcrypt.${ARCH} php-pear.noarch php-xml.${ARCH} php-pecl-fileinfo.${ARCH} php-mysql.${ARCH} php-ldap.${ARCH} php-mhash.${ARCH}"
             ENABLED_SERVICES="${ENABLED_SERVICES} httpd"
 
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
@@ -149,7 +149,7 @@ install_all()
 
     # Amavisd-new & ClamAV & Altermime.
     if [ X"${DISTRO}" == X"RHEL" ]; then
-        ALL_PKGS="${ALL_PKGS} amavisd-new.${ARCH} clamd.${ARCH} clamav.${ARCH} clamav-db.${ARCH} spamassassin.${ARCH} altermime.${ARCH} perL-LDAP.noarch"
+        ALL_PKGS="${ALL_PKGS} amavisd-new.${ARCH} clamd.${ARCH} clamav.${ARCH} clamav-db.${ARCH} spamassassin.${ARCH} altermime.${ARCH} perl-LDAP.noarch"
         ENABLED_SERVICES="${ENABLED_SERVICES} ${AMAVISD_RC_SCRIPT_NAME} clamd"
         DISABLED_SERVICES="${DISABLED_SERVICES} spamassassin"
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
@@ -176,7 +176,7 @@ install_all()
     fi
 
     # pysieved.
-    # Warning: Do *NOT* add 'pysieved' service in 'ENABLED_SERVICES'.
+    # Warning: Do *NOT* add 'pysieved' service in 'ENABLED_SERVICES' here.
     #          We don't have rc/init script under ${DIR_RC_SCRIPTS} till
     #          package is installed.
     if [ X"${USE_MANAGESIEVE}" == X"YES" ]; then

@@ -30,7 +30,7 @@ mysql_initialize()
     ECHO_INFO "==================== MySQL ===================="
 
     ECHO_INFO "Starting MySQL."
-    ${MYSQLD_INIT_SCRIPT} restart 2>/dev/null
+    ${MYSQLD_INIT_SCRIPT} restart >/dev/null 2>&1
 
     ECHO_INFO -n "Sleep 5 seconds for MySQL daemon initialize:"
     for i in 5 4 3 2 1; do

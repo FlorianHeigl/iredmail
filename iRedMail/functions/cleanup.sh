@@ -75,7 +75,7 @@ EOF
 replace_iptables_rule()
 {
     # Get SSH listen port, replace default port number in iptable rule file.
-    sshd_port="$(grep '^Port' ${SSHD_CONFIG} | awk '{print $2}' )"
+    export sshd_port="$(grep '^Port' ${SSHD_CONFIG} | awk '{print $2}' )"
     if [ X"${sshd_port}" == X"" -o X"${sshd_port}" == X"22" ]; then
         # No port number defined, use default (22).
         export sshd_port='22'
@@ -125,6 +125,8 @@ replace_iptables_rule()
             ;;
     esac
 
+    [ X"${KERNEL_NAME}" == X"Linux" ] && export ENABLED_SERVICES="${ENABLED_SERVICES} iptables"
+
     echo 'export status_replace_iptables_rule="DONE"' >> ${STATUS_FILE}
 }
 
@@ -154,6 +156,21 @@ replace_mysql_config()
     fi
 
     echo 'export status_replace_mysql_config="DONE"' >> ${STATUS_FILE}
+}
+
+upgrade_php_pear()
+{
+    if [ X"${DISTRO}" == X"RHEL" -a X"${USE_RCM}" == X"YES" ]; then
+        ECHO_INFO "Upgrading php-pear ..."
+        pear upgrade --force pear >/dev/null
+
+        ECHO_INFO "Installing php Net_LDAP2 ..."
+        pear install Net_LDAP2 >/dev/null
+    else
+        :
+    fi
+
+    echo 'export status_upgrade_php_pear="DONE"' >> ${STATUS_FILE}
 }
 
 start_postfix_now()
@@ -200,8 +217,9 @@ EOF
     [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run disable_selinux
     check_status_before_run remove_sendmail
     [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run re_generate_iredmail_repo
-    check_status_before_run replace_iptables_rule
+    [ X"${KERNEL_NAME}" == X"Linux" ] && check_status_before_run replace_iptables_rule
     [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run replace_mysql_config
+    [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run upgrade_php_pear
     check_status_before_run start_postfix_now
 
     # Send tip file to the mail server admin or first mail user.
@@ -238,9 +256,6 @@ EOF
 fi
 
 if [ X"${POSTFIX_STARTED}" != X"YES" ]; then
-    [ X"${DISTRO}" == X"RHEL" ] && export ENABLED_SERVICES="${ENABLED_SERVICES} pysieved"
-    [ X"${KERNEL_NAME}" == X"Linux" ] && export ENABLED_SERVICES="${ENABLED_SERVICES} iptables"
-
     cat <<EOF
 * Please reboot your system to enable mail services or start them
 * manually without reboot:
