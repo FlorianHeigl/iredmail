@@ -35,7 +35,7 @@ require "fileinto";
 # --------------- Global sieve rules --------------
 # -------------------------------------------------
 
-# Spam control.
+# rule:[Move Spam to Junk Folder]
 if header :matches ["X-Spam-Flag"] ["YES"] {
     # If you want to copy this spam mail to other people, uncomment
     # the below line.

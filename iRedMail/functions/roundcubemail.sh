@@ -25,6 +25,10 @@ rcm_install()
         chmod 0000 ${RCM_HTTPD_ROOT}/{CHANGELOG,INSTALL,LICENSE,README,UPGRADING,installer,SQL}
     fi
 
+    # Patches.
+    #cd ${RCM_HTTPD_ROOT}/
+    #patch -p0 < ${PATCH_DIR}/roundcubemail/managesieve_rule_width_on_safari.patch
+
     cd ${RCM_HTTPD_ROOT}/config/
     cp -f db.inc.php.dist db.inc.php
     cp -f main.inc.php.dist main.inc.php
