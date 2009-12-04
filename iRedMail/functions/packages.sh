@@ -187,15 +187,6 @@ install_all()
         :
     fi
 
-    # SquirrelMail.
-    if [ X"${USE_SM}" == X"YES" ]; then
-        [ X"${DISTRO}" == X"RHEL" ] && ALL_PKGS="${ALL_PKGS} php-pear-db.noarch"
-        [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ] && \
-            ALL_PKGS="${ALL_PKGS} php-db"
-    else
-        :
-    fi
-
     # iRedAdmin.
     if [ X"${USE_IREDADMIN}" == X"YES" ]; then
         [ X"${DISTRO}" == X"RHEL" ] && \

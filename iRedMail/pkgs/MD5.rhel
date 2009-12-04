@@ -72,7 +72,6 @@ e3583fdf37d7af599ccb7ad88848b033  pkgs/perl-Archive-Zip-1.26-1.el5.rf.noarch.rpm
 5ed4d2a3fde53ed87f70a4b2274b38b3  pkgs/perl-IO-Multiplex-1.10-1.el5.rf.noarch.rpm
 36e2c4d00fb660fccec3849226071fa9  pkgs/perl-Error-0.17015-1.el5.rf.noarch.rpm
 0b99021c293ce1546924a0e51b1be8b7  pkgs/pysieved-1.0-2.ired.noarch.rpm
-eca8f39262a056562f1001f47d564a88  pkgs/php-pear-db-1.7.13-2.el5.rf.noarch.rpm
 e945270ad46463bb05d1d26f6f814c5e  pkgs/perl-Mail-DKIM-0.36-1.ired.noarch.rpm
 1558ace8b3da6ddbb996437426dece97  pkgs/altermime-0.3.10-1.ired.x86_64.rpm
 4d9c5830b172b89e04683daab532d699  pkgs/altermime-0.3.10-1.ired.i386.rpm

@@ -59,7 +59,6 @@ check_env
 . ${CONF_DIR}/amavisd
 . ${CONF_DIR}/clamav
 . ${CONF_DIR}/spamassassin
-. ${CONF_DIR}/squirrelmail
 . ${CONF_DIR}/roundcube
 . ${CONF_DIR}/postfixadmin
 . ${CONF_DIR}/phpmyadmin
@@ -118,9 +117,6 @@ fi
 
 # SpamAssassin.
 . ${FUNCTIONS_DIR}/spamassassin.sh
-
-# SquirrelMail.
-. ${FUNCTIONS_DIR}/squirrelmail.sh
 
 # Roundcubemail.
 . ${FUNCTIONS_DIR}/roundcubemail.sh

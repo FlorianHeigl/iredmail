@@ -97,9 +97,9 @@ We provide two backends and the homologous webmail programs:
     +----------+---------------+---------------------------+
     | Backend  | Web Mail      | Web-based management tool |
     +----------+---------------+---------------------------+
-    | OpenLDAP | RoundcubeMail | iRedAdmin, phpLDAPadmin   |
-    +----------+     or        +---------------------------+
-    | MySQL    | SquirrelMail  | PostfixAdmin              |
+    | OpenLDAP |               | iRedAdmin, phpLDAPadmin   |
+    +----------+   Roundcube   +---------------------------+
+    | MySQL    |               | PostfixAdmin              |
     +----------+---------------+---------------------------+
 
 TIP:

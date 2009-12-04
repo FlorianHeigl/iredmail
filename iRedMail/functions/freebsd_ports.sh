@@ -504,12 +504,6 @@ EOF
         ALL_PORTS="${ALL_PORTS} mail/roundcube"
     fi
 
-    # SquirrelMail.
-    if [ X"${USE_SM}" == X"YES" ]; then
-        ALL_PKGS="${ALL_PKGS} squirrelmail"
-        ALL_PORTS="${ALL_PORTS} mail/squirrelmail"
-    fi
-
     # Awstats.
     if [ X"${USE_AWSTATS}" == X"YES" ]; then
         ALL_PKGS="${ALL_PKGS} awstats"
