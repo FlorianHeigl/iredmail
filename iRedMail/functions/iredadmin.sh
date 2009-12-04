@@ -136,10 +136,32 @@ Official Web-based Admin Panel (iRedAdmin):
         - https://${HOSTNAME}/iredadmin/
     * Login account:
         - Username: ${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}, password: ${DOMAIN_ADMIN_PASSWD_PLAIN}
-    * MySQL database and account:
-        - Database name: ${IREDADMIN_DB_NAME}
-        - Database user: ${IREDADMIN_DB_USER}
-        - Database password: ${IREDADMIN_DB_PASSWD}
+    * Settings:
+
+        [iredadmin]
+        dbn = mysql
+        host = ${MYSQL_SERVER}
+        port = ${MYSQL_PORT}
+        db = ${IREDADMIN_DB_NAME}
+        user = ${IREDADMIN_DB_USER}
+        passwd = ${IREDADMIN_DB_PASSWD}
+
+        [ldap]
+        uri = ldap://${LDAP_SERVER_HOST}:${LDAP_SERVER_PORT}/
+        protocol_version = ${LDAP_BIND_VERSION}
+        basedn = ${LDAP_BASEDN}
+        domainadmin_dn = ${LDAP_ADMIN_BASEDN}
+        bind_dn = ${LDAP_ADMIN_DN}
+        bind_pw = ${LDAP_ADMIN_PW}
+
+        [policyd]
+        dbn = mysql
+        host = ${MYSQL_SERVER}
+        port = ${MYSQL_PORT}
+        db = ${POLICYD_DB_NAME}
+        user = ${POLICYD_DB_USER}
+        passwd = ${POLICYD_DB_PASSWD}
+
     * See also:
         - ${HTTPD_CONF_DIR}/iredadmin.conf
 
