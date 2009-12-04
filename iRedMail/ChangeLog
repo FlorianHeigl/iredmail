@@ -1,4 +1,5 @@
 iRedMail-0.6.0:
+    * New LDAP attribute: accountSetting.
     * Update roundcube to 0.3.1.
     * Add script used to generate new SSL keys: tools/generate_ssl_keys.sh.
     * Add 'disclaimer' in mail user object, used to store per-user
