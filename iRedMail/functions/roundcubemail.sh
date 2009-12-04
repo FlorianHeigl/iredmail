@@ -128,28 +128,50 @@ EOF
 
     # Disable installer.
     perl -pi -e 's#(.*enable_installer.*= )(.*)#${1}FALSE;#' main.inc.php
-    perl -pi -e 's#(.*check_all_folders.*= )(.*)#${1}TRUE;#' main.inc.php
+
+    # Log file related.
+    perl -pi -e 's#(.*log_driver.*=).*#${1} "syslog";#' main.inc.php
+    perl -pi -e 's#(.*syslog_id.*=).*#${1} "roundcube";#' main.inc.php
+    # syslog_facility should be a constant, not string. (Do *NOT* use quote.)
+    perl -pi -e 's#(.*syslog_facility.*=).*#${1} LOG_MAIL;#' main.inc.php
+    perl -pi -e 's#(.*log_logins.*=).*#${1} TRUE;#' main.inc.php
+
+    # Automatically create a new ROUNDCUBE USER when log-in the first time.
+    perl -pi -e 's#(.*auto_create_user.*= )(.*)#${1}TRUE;#' main.inc.php
+
+    # Set defeault domain.
+    export FIRST_DOMAIN
+    #perl -pi -e 's#(.*imap_auth_type.*= )(.*)#${1}"check";#' main.inc.php
+    perl -pi -e 's#(.*username_domain.*=)(.*)#${1} "$ENV{'FIRST_DOMAIN'}";#' main.inc.php
 
     # SMTP server setting.
     perl -pi -e 's#(.*default_host.*= )(.*)#${1}"$ENV{'IMAP_SERVER'}";#' main.inc.php
     perl -pi -e 's#(.*smtp_server.*= )(.*)#${1}"$ENV{'SMTP_SERVER'}";#' main.inc.php
     perl -pi -e 's#(.*smtp_user.*= )(.*)#${1}"%u";#' main.inc.php
     perl -pi -e 's#(.*smtp_pass.*= )(.*)#${1}"%p";#' main.inc.php
-    perl -pi -e 's#(.*smtp_auth_type.*= )(.*)#${1}"LOGIN";#' main.inc.php
+    #perl -pi -e 's#(.*smtp_auth_type.*= )(.*)#${1}"LOGIN";#' main.inc.php
 
-    # Set defeault domain.
-    export FIRST_DOMAIN
-    perl -pi -e 's#(.*username_domain.*=)(.*)#${1} "$ENV{'FIRST_DOMAIN'}";#' main.inc.php
-    perl -pi -e 's#(.*language.*)(null)(.*)#${1}$ENV{'DEFAULT_LANG'}${3}#' main.inc.php
-    [ X"${DEFAULT_LANG}" == X"zh_CN" -o X"${DEFAULT_LANG}" == X"zh_TW" ] && perl -pi -e 's#(.*timezone.*=).*#${1} 8;#' main.inc.php
-    perl -pi -e 's#(.*enable_spellcheck.*=).*#${1} FALSE;#' main.inc.php
+    # Set default language and charset..
+    perl -pi -e 's#(.*language.*= )(.*)#${1}"$ENV{'DEFAULT_LANG'}";#' main.inc.php
     perl -pi -e 's#(.*default_charset.*=).*#${1} "UTF-8";#' main.inc.php
+    # Set timezone for Chinese users.
+    [ X"${DEFAULT_LANG}" == X"zh_CN" -o X"${DEFAULT_LANG}" == X"zh_TW" ] && perl -pi -e 's#(.*timezone.*=).*#${1} 8;#' main.inc.php
 
     # Set useragent, add project info.
     perl -pi -e 's#(.*useragent.*=).*#${1} "RoundCube WebMail";#' main.inc.php
 
-    # Automatic create default IMAP folders.
-    perl -pi -e 's#(.*create_default_folders.*)(FALSE)(.*)#${1}TRUE${3}#' main.inc.php
+    # Spellcheck.
+    perl -pi -e 's#(.*enable_spellcheck.*=).*#${1} FALSE;#' main.inc.php
+
+    # Check all folders for recent messages.
+    perl -pi -e 's#(.*check_all_folders.*=)(.*)#${1} TRUE;#' main.inc.php
+
+    # Automatic create and protect default IMAP folders.
+    perl -pi -e 's#(.*create_default_folders.*=)(.*)#${1} TRUE;#' main.inc.php
+    perl -pi -e 's#(.*protect_default_folders.*=)(.*)#${1} TRUE;#' main.inc.php
+
+    # Quota zero as unlimited.
+    perl -pi -e 's#(.*quota_zero_as_unlimited.*=)(.*)#${1} TRUE;#' main.inc.php
 
     # Attachment name type: Outlook style.
     perl -pi -e 's#(.*mime_param_folding.*=).*#${1} 1;#' main.inc.php
@@ -159,15 +181,12 @@ EOF
 
     # Enable preview pane by default.
     perl -pi -e 's#(.*preview_pane.*=).*#${1} TRUE;#' main.inc.php
+
     # Quota zero as unlimited, used to fit dovecot setting.
     perl -pi -e 's#(.*quota_zero_as_unlimited.*=).*#${1} TRUE;#' main.inc.php
 
-    # Log file related.
-    perl -pi -e 's#(.*log_driver.*=).*#${1} "syslog";#' main.inc.php
-    perl -pi -e 's#(.*syslog_id.*=).*#${1} "roundcube";#' main.inc.php
-    # syslog_facility should be a constant, not string. (Do *NOT* use quote.)
-    perl -pi -e 's#(.*syslog_facility.*=).*#${1} LOG_MAIL;#' main.inc.php
-    perl -pi -e 's#(.*log_logins.*=).*#${1} TRUE;#' main.inc.php
+    # Sort messages list by message index instead of message date.
+    perl -pi -e 's#(.*index_sort.*=).*#${1} TRUE;#' main.inc.php
 
     # Delete always.
     # This make client users confused why mail not been deleted as 'EXPECT'.
