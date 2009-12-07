@@ -318,10 +318,10 @@ EOF
 openldap_data_initialize()
 {
     if [ X"${DISTRO_CODENAME}" == X"hardy" -a -f /etc/apparmor.d/usr.sbin.slapd ]; then
-        sed -i "s|\(}\)| # Added by ${PROG_NAME}-${PROG_VERSION}. \n\1|" /etc/apparmor.d/usr.sbin.slapd
-        sed -i "s#\(}\)# ${LDAP_DATA_DIR}/ r,\n\1#" /etc/apparmor.d/usr.sbin.slapd
-        sed -i "s#\(}\)# ${LDAP_DATA_DIR}/* rw,\n\1#" /etc/apparmor.d/usr.sbin.slapd
-        sed -i "s#\(}\)# ${LDAP_DATA_DIR}/alock kw,\n\1#" /etc/apparmor.d/usr.sbin.slapd
+        perl -pi -e 's|(})| # Added by $ENV{PROG_NAME}-$ENV{PROG_VERSION}. \n${1}|' /etc/apparmor.d/usr.sbin.slapd
+        perl -pi -e 's#(})# $ENV{LDAP_DATA_DIR}/ r,\n${1}#' /etc/apparmor.d/usr.sbin.slapd
+        perl -pi -e 's#(})# $ENV{LDAP_DATA_DIR}/* rw,\n${1}#' /etc/apparmor.d/usr.sbin.slapd
+        perl -pi -e 's#(})# $ENV{LDAP_DATA_DIR}/alock kw,\n${1}#' /etc/apparmor.d/usr.sbin.slapd
         [ -x ${DIR_RC_SCRIPTS}/apparmor ] && service_control apparmor restart >/dev/null 2>&1
     else
         :

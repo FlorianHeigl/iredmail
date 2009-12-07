@@ -209,13 +209,12 @@ Alias /roundcube "${RCM_HTTPD_ROOT_SYMBOL_LINK}/"
 EOF
 
     # Make Roundcube can be accessed via HTTPS.
-    sed -i 's#\(</VirtualHost>\)#Alias /mail '${RCM_HTTPD_ROOT_SYMBOL_LINK}/'\n\1#' ${HTTPD_SSL_CONF}
-    sed -i 's#\(</VirtualHost>\)#Alias /webmail '${RCM_HTTPD_ROOT_SYMBOL_LINK}/'\n\1#' ${HTTPD_SSL_CONF}
-    sed -i 's#\(</VirtualHost>\)#Alias /roundcube '${RCM_HTTPD_ROOT_SYMBOL_LINK}/'\n\1#' ${HTTPD_SSL_CONF}
+    perl -pi -e 's#(</VirtualHost>)#Alias /mail "${RCM_HTTPD_ROOT_SYMBOL_LINK}/"\n${1}#' ${HTTPD_SSL_CONF}
+    perl -pi -e 's#(</VirtualHost>)#Alias /webmail "${RCM_HTTPD_ROOT_SYMBOL_LINK}/"\n${1}#' ${HTTPD_SSL_CONF}
+    perl -pi -e 's#(</VirtualHost>)#Alias /roundcube "${RCM_HTTPD_ROOT_SYMBOL_LINK}/"\n${1}#' ${HTTPD_SSL_CONF}
 
     ECHO_INFO "Patch: Display Username."
-    cd ${RCM_HTTPD_ROOT}/ && \
-    patch -p0 < ${PATCH_DIR}/roundcubemail/display_username.patch >/dev/null
+    perl -pi -e 's#(.*taskbar">)#${1}\n<span style="padding-right: 3px;"><roundcube:object name="username" /></span>#' ${RCM_HTTPD_ROOT}/skins/default/includes/taskbar.html
 
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
         export LDAP_SERVER_HOST LDAP_SERVER_PORT LDAP_BIND_VERSION LDAP_BASEDN LDAP_ATTR_DOMAIN_RDN LDAP_ATTR_USER_RDN

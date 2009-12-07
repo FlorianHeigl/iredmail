@@ -129,11 +129,11 @@ EOF
 
     # Make Awstats can be accessed via HTTPS.
     if [ X"${DISTRO}" == X"RHEL" ]; then
-        sed -i "s#\(</VirtualHost>\)#Alias /awstats/icon ${AWSTATS_HTTPD_ROOT}/icon/\n\1#" ${HTTPD_SSL_CONF}
-        sed -i "s#\(</VirtualHost>\)#ScriptAlias /awstats ${AWSTATS_HTTPD_ROOT}/\n\1#" ${HTTPD_SSL_CONF}
+        perl -pi -e 's#(</VirtualHost>)#Alias /awstats/icon "${AWSTATS_HTTPD_ROOT}/icon/"\n${1}#' ${HTTPD_SSL_CONF}
+        perl -pi -e 's#(</VirtualHost>)#ScriptAlias /awstats "${AWSTATS_HTTPD_ROOT}/"\n${1}#' ${HTTPD_SSL_CONF}
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        sed -i "s#\(</VirtualHost>\)#Alias /awstats-icon ${AWSTATS_HTTPD_ROOT}/icon/\n\1#" ${HTTPD_SSL_CONF}
-        sed -i "s#\(</VirtualHost>\)#ScriptAlias /awstats ${AWSTATS_CGI_DIR}/\n\1#" ${HTTPD_SSL_CONF}
+        perl -pi -e 's#(</VirtualHost>)#Alias /awstats-icon "${AWSTATS_HTTPD_ROOT}/icon/"\n${1}#' ${HTTPD_SSL_CONF}
+        perl -pi -e 's#(</VirtualHost>)#ScriptAlias /awstats "${AWSTATS_CGI_DIR}/"\n${1}#' ${HTTPD_SSL_CONF}
     else
         :
     fi
