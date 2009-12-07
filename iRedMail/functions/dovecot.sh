@@ -510,5 +510,12 @@ enable_dovecot()
     else
         check_status_before_run enable_procmail
     fi
+
+    # FreeBSD: Start dovecot when system start up.
+    [ X"${DISTRO}" == X"FREEBSD" ] && cat >> /etc/rc.conf <<EOF
+# Start dovecot IMAP/POP3 server.
+dovecot_enable="YES"
+EOF
+
     echo 'export status_enable_dovecot="DONE"' >> ${STATUS_FILE}
 }

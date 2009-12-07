@@ -50,6 +50,13 @@ clamav_config()
         :
     fi
 
+    # FreeBSD: Start clamd & freshclamd when system start up.
+    [ X"${DISTRO}" == X"FREEBSD" ] && cat >> /etc/rc.conf <<EOF
+# Start clamd and freshclamd.
+clamav_clamd_enable="YES"
+clamav_freshclam_enable="YES"
+EOF
+
     cat >> ${TIP_FILE} <<EOF
 ClamAV:
     * Configuration files:

@@ -135,5 +135,11 @@ Virtual Users:
 
 EOF
 
+    # FreeBSD: Start mysql when system start up.
+    [ X"${DISTRO}" == X"FREEBSD" ] && cat >> /etc/rc.conf <<EOF
+# Start mysql server.
+mysql_enable="YES"
+EOF
+
     echo 'export status_mysql_import_vmail_users="DONE"' >> ${STATUS_FILE}
 }

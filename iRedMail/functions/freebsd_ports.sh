@@ -22,10 +22,10 @@
 
 install_all()
 {
-    ALL_PKGS=''
-    ALL_PORTS=''
-    ENABLED_SERVICES=''
-    DISABLED_SERVICES=''
+    ALL_PKGS=''             # Binary package names. e.g. mysql-server, dovecot.
+    ALL_PORTS=''            # Port name under /usr/ports/. e.g. mail/dovecot, databases/mysql50.
+    ENABLED_SERVICES=''     # Scripts under /usr/local/etc/rc.d/
+    DISABLED_SERVICES=''    # Scripts under /usr/local/etc/rc.d/
 
     # Make it don't popup dialog while building ports.
     export BATCH=yes
@@ -89,7 +89,7 @@ EOF
     ALL_PKGS="${ALL_PKGS} mysql-server mysql-client"
     ALL_PORTS="${ALL_PORTS} databases/mysql50-server"
 
-    ENABLED_SERVICES="${ENABLED_SERVICES} mysql"
+    ENABLED_SERVICES="${ENABLED_SERVICES} mysql-server"
 
     # OpenLDAP v2.4. REQUIRED for LDAP backend.
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then

@@ -136,6 +136,13 @@ EOF
     perl -pi -e 's/^(upload_max_filesize.*=)/${1}10M; #/' ${PHP_INI}
     perl -pi -e 's/^(post_max_size.*=)/${1}12M; #/' ${PHP_INI}
 
+    # FreeBSD: Start apache when system start up.
+    [ X"${DISTRO}" == X"FREEBSD" ] && cat >> /etc/rc.conf <<EOF
+# Start apache web server.
+apache22_enable="YES"
+htcacheclean_enable="YES"
+EOF
+
     cat >> ${TIP_FILE} <<EOF
 Apache & PHP:
     * Configuration files:

@@ -396,5 +396,11 @@ policy_service_config()
     check_status_before_run policyd_user
     check_status_before_run policyd_config
 
+    # FreeBSD: Start policyd when system start up.
+    [ X"${DISTRO}" == X"FREEBSD" ] && cat >> /etc/rc.conf <<EOF
+# Start policyd.
+policyd_enable="YES"
+EOF
+
     echo 'export status_policy_service_config="DONE"' >> ${STATUS_FILE}
 }
