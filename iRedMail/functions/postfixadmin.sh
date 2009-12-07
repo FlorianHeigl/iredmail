@@ -40,7 +40,7 @@ ${CONF_MSG}
 EOF
 
     # Make PostfixAdmin can be accessed via HTTPS only.
-    perl -pi -e 's#(</VirtualHost>)#Alias /postfixadmin "${POSTFIXADMIN_HTTPD_ROOT_SYMBOL_LINK}/"\n${1}#' ${HTTPD_SSL_CONF}
+    perl -pi -e 's#(</VirtualHost>)#Alias /postfixadmin "$ENV{POSTFIXADMIN_HTTPD_ROOT_SYMBOL_LINK}/"\n${1}#' ${HTTPD_SSL_CONF}
 
     if [ X"${SITE_ADMIN_NAME}" == X"${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}" ]; then
         # We need update domain list, not insert a new record.

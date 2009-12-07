@@ -281,7 +281,7 @@ EOF
 
     ALL_PKGS="${ALL_PKGS} p5-MIME-Tools p5-IO-stringy p5-Unix-Syslog p5-Net-Server p5-Digest-SHA p5-Convert-TNEF p5-Convert-UUlib p5-Archive-Zip p5-Authen-SASL amavisd-new"
     ALL_PORTS="${ALL_PORTS} mail/p5-MIME-Tools devel/p5-IO-stringy sysutils/p5-Unix-Syslog net/p5-Net-Server security/p5-Digest-SHA converters/p5-Convert-TNEF converters/p5-Convert-UUlib archivers/p5-Archive-Zip security/p5-Authen-SASL security/amavisd-new"
-    ENABLED_SERVICES="${ENABLED_SERVICES} amavisd amavis_p0fanalyzer"
+    ENABLED_SERVICES="${ENABLED_SERVICES} amavisd"
 
     # Postfix v2.5. REQUIRED.
     cat > /var/db/ports/postfix/options <<EOF
@@ -328,7 +328,7 @@ EOF
 
     ALL_PKGS="${ALL_PKGS} clamav"
     ALL_PORTS="${ALL_PORTS} security/clamav"
-    ENABLED_SERVICES="${ENABLED_SERVICES} clamav_clamd clamav_freshclam"
+    ENABLED_SERVICES="${ENABLED_SERVICES} clamav-clamd clamav-freshclam"
 
     # Apr. DEPENDENCE.
     cat > /var/db/ports/apr/options <<EOF

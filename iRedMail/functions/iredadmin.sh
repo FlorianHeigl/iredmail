@@ -50,8 +50,8 @@ iredadmin_config()
 
     ECHO_INFO "Create directory alias for iRedAdmin."
     backup_file ${HTTPD_CONF_DIR}/iredadmin.conf
-    perl -pi -e 's#(</VirtualHost>)#WSGIScriptAlias /iredadmin "${HTTPD_SERVERROOT}/iredadmin/iredadmin.py/"\n${1}#' ${HTTPD_SSL_CONF}
-    perl -pi -e 's#(</VirtualHost>)#Alias /iredadmin/static "${HTTPD_SERVERROOT}/iredadmin/static/"\n${1}#' ${HTTPD_SSL_CONF}
+    perl -pi -e 's#(</VirtualHost>)#WSGIScriptAlias /iredadmin "$ENV{HTTPD_SERVERROOT}/iredadmin/iredadmin.py/"\n${1}#' ${HTTPD_SSL_CONF}
+    perl -pi -e 's#(</VirtualHost>)#Alias /iredadmin/static "$ENV{HTTPD_SERVERROOT}/iredadmin/static/"\n${1}#' ${HTTPD_SSL_CONF}
 
     cat > ${HTTPD_CONF_DIR}/iredadmin.conf <<EOF
 #

@@ -209,9 +209,9 @@ Alias /roundcube "${RCM_HTTPD_ROOT_SYMBOL_LINK}/"
 EOF
 
     # Make Roundcube can be accessed via HTTPS.
-    perl -pi -e 's#(</VirtualHost>)#Alias /mail "${RCM_HTTPD_ROOT_SYMBOL_LINK}/"\n${1}#' ${HTTPD_SSL_CONF}
-    perl -pi -e 's#(</VirtualHost>)#Alias /webmail "${RCM_HTTPD_ROOT_SYMBOL_LINK}/"\n${1}#' ${HTTPD_SSL_CONF}
-    perl -pi -e 's#(</VirtualHost>)#Alias /roundcube "${RCM_HTTPD_ROOT_SYMBOL_LINK}/"\n${1}#' ${HTTPD_SSL_CONF}
+    perl -pi -e 's#(</VirtualHost>)#Alias /mail "$ENV{RCM_HTTPD_ROOT_SYMBOL_LINK}/"\n${1}#' ${HTTPD_SSL_CONF}
+    perl -pi -e 's#(</VirtualHost>)#Alias /webmail "$ENV{RCM_HTTPD_ROOT_SYMBOL_LINK}/"\n${1}#' ${HTTPD_SSL_CONF}
+    perl -pi -e 's#(</VirtualHost>)#Alias /roundcube "$ENV{RCM_HTTPD_ROOT_SYMBOL_LINK}/"\n${1}#' ${HTTPD_SSL_CONF}
 
     ECHO_INFO "Patch: Display Username."
     perl -pi -e 's#(.*taskbar">)#${1}\n<span style="padding-right: 3px;"><roundcube:object name="username" /></span>#' ${RCM_HTTPD_ROOT}/skins/default/includes/taskbar.html
