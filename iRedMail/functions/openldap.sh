@@ -313,6 +313,7 @@ EOF
     fi
 
     # FreeBSD: Start openldap when system start up.
+    # Warning: Make sure we have 'slapd_enable=YES' before start/stop openldap.
     [ X"${DISTRO}" == X"FREEBSD" ] && cat >> /etc/rc.conf <<EOF
 # Start openldap server.
 slapd_enable="YES"

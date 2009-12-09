@@ -30,6 +30,14 @@ mysql_initialize()
     ECHO_INFO "==================== MySQL ===================="
 
     ECHO_INFO "Starting MySQL."
+
+    # FreeBSD: Start mysql when system start up.
+    # Warning: We must have 'mysql_enable=YES' before start/stop mysql daemon.
+    [ X"${DISTRO}" == X"FREEBSD" ] && cat >> /etc/rc.conf <<EOF
+# Start mysql server.
+mysql_enable="YES"
+EOF
+
     ${MYSQLD_INIT_SCRIPT} restart >/dev/null 2>&1
 
     ECHO_INFO -n "Sleep 5 seconds for MySQL daemon initialize:"
@@ -133,12 +141,6 @@ Virtual Users:
     - ${MYSQL_VMAIL_SQL}
     - ${SAMPLE_SQL}
 
-EOF
-
-    # FreeBSD: Start mysql when system start up.
-    [ X"${DISTRO}" == X"FREEBSD" ] && cat >> /etc/rc.conf <<EOF
-# Start mysql server.
-mysql_enable="YES"
 EOF
 
     echo 'export status_mysql_import_vmail_users="DONE"' >> ${STATUS_FILE}

@@ -30,13 +30,6 @@ apache_php_config()
 
     backup_file ${HTTPD_CONF} ${HTTPD_SSL_CONF}
 
-    # FreeBSD: Copy sample file.
-    if [ X"${DISTRO}" == X"FREEBSD" ]; then
-        sample="$( ${LIST_FILES_IN_PKG} 'apache*' | grep '/httpd-ssl.conf$' )"
-        cp ${sample} ${HTTPD_SSL_CONF}
-        unset sample
-    fi
-
     # Ubuntu (hardy): Generate a sample default-ssl site config file.
     if [ X"${DISTRO_CODENAME}" == X"hardy" ]; then
         cat > ${HTTPD_SSL_CONF} <<EOF
@@ -136,11 +129,21 @@ EOF
     perl -pi -e 's/^(upload_max_filesize.*=)/${1}10M; #/' ${PHP_INI}
     perl -pi -e 's/^(post_max_size.*=)/${1}12M; #/' ${PHP_INI}
 
-    # FreeBSD: Start apache when system start up.
+    # FreeBSD
     if [ X"${DISTRO}" == X"FREEBSD" ]; then
         # With Apache2.2 it now wants to load an Accept Filter.
         echo 'accf_http_load="YES"' >> /boot/loader.conf
 
+        # TODO Change 'Deny from all' to 'Allow from all'.
+
+        # Add index.php in DirectoryIndex.
+        perl -pi -e 's#(.*DirectoryIndex.*)(index.html)#${1} index.php ${2}#' ${HTTPD_CONF}
+
+        # Add php file type.
+        echo 'AddType application/x-httpd-php .php' >> ${HTTPD_CONF}
+        echo 'AddType application/x-httpd-php-source .phps' >> ${HTTPD_CONF}
+
+        # Start apache when system start up.
         cat >> /etc/rc.conf <<EOF
 # Start apache web server.
 apache22_enable="YES"

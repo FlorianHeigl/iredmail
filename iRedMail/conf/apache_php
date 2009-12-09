@@ -77,7 +77,7 @@ elif [ X"${DISTRO}" == X"FREEBSD" ]; then
     export HTTPD_CONF_DIR="${HTTPD_CONF_ROOT}/Includes"
 
     # Copy from example: /usr/local/share/examples/apache22/extra/httpd-ssl.conf
-    export HTTPD_SSL_CONF="${HTTPD_CONF_DIR}/ssl.conf"
+    export HTTPD_SSL_CONF="${HTTPD_CONF_ROOT}/extra/httpd-ssl.conf"
 
     # Web data.
     export HTTPD_SERVERROOT='/usr/local/www'
