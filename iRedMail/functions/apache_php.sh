@@ -137,11 +137,16 @@ EOF
     perl -pi -e 's/^(post_max_size.*=)/${1}12M; #/' ${PHP_INI}
 
     # FreeBSD: Start apache when system start up.
-    [ X"${DISTRO}" == X"FREEBSD" ] && cat >> /etc/rc.conf <<EOF
+    if [ X"${DISTRO}" == X"FREEBSD" ]; then
+        # With Apache2.2 it now wants to load an Accept Filter.
+        echo 'accf_http_load="YES"' >> /boot/loader.conf
+
+        cat >> /etc/rc.conf <<EOF
 # Start apache web server.
 apache22_enable="YES"
 htcacheclean_enable="YES"
 EOF
+    fi
 
     cat >> ${TIP_FILE} <<EOF
 Apache & PHP:

@@ -34,7 +34,7 @@ install_all()
         ca_root_nss libssh2 curl libusb pth gnupg p5-IO-Socket-SSL \
         p5-Archive-Tar p5-Net-DNS p5-Mail-SpamAssassin p5-Authen-SASL \
         amavisd-new clamav apr python26 apache22 php5 php5-extensions \
-        php5-gd roundcube postfixadmin; do
+        php5-gd roundcube postfixadmin postfix; do
         mkdir -p /var/db/ports/${i} 2>/dev/null
     done
 
@@ -166,7 +166,7 @@ WITHOUT_ETCSYMLINK=true
 EOF
 
     # libssh2. DEPENDENCE.
-    cat > cat /var/db/ports/libssh2/options <<EOF
+    cat > /var/db/ports/libssh2/options <<EOF
 WITHOUT_GCRYPT=true
 EOF
 
