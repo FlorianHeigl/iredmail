@@ -262,7 +262,12 @@ EOF
     chown ${LDAP_USER}:${LDAP_GROUP} ${OPENLDAP_LDAP_CONF}
 
     ECHO_INFO "Setting up syslog configration file for OpenLDAP."
-    echo -e "local4.*\t\t\t\t\t\t-${OPENLDAP_LOGFILE}" >> ${SYSLOG_CONF}
+    if [ X"${DISTRO}" == X"FREEBSD" ]; then
+        echo -e '!slapd' >> ${SYSLOG_CONF}
+        echo -e '*.*\t\t\t\t\t\t/var/log/openldap.log' >> ${SYSLOG_CONF}
+    else
+        echo -e "local4.*\t\t\t\t\t\t-${OPENLDAP_LOGFILE}" >> ${SYSLOG_CONF}
+    fi
 
     ECHO_INFO "Create empty log file for OpenLDAP: ${OPENLDAP_LOGFILE}."
     touch ${OPENLDAP_LOGFILE}

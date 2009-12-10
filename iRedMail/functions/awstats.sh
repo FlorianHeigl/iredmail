@@ -134,6 +134,9 @@ EOF
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
         perl -pi -e 's#(</VirtualHost>)#Alias /awstats-icon "$ENV{AWSTATS_HTTPD_ROOT}/icon/"\n${1}#' ${HTTPD_SSL_CONF}
         perl -pi -e 's#(</VirtualHost>)#ScriptAlias /awstats "$ENV{AWSTATS_CGI_DIR}/"\n${1}#' ${HTTPD_SSL_CONF}
+    elif [ X"${DISTRO}" == X"FREEBSD" ]; then
+        perl -pi -e 's#(</VirtualHost>)#Alias /awstatsicons "$ENV{AWSTATS_HTTPD_ROOT}/icons/"\n${1}#' ${HTTPD_SSL_CONF}
+        perl -pi -e 's#(</VirtualHost>)#ScriptAlias /awstats "$ENV{AWSTATS_CGI_DIR}/"\n${1}#' ${HTTPD_SSL_CONF}
     else
         :
     fi
