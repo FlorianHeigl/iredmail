@@ -26,8 +26,11 @@ rcm_install()
     fi
 
     # Patches.
-    #cd ${RCM_HTTPD_ROOT}/
-    #patch -p0 < ${PATCH_DIR}/roundcubemail/managesieve_rule_width_on_safari.patch
+    if [ X"${DISTRO}" != X"FREEBSD" ]; then
+        # Patch for roundcube-0.3.1 only.
+        cd ${RCM_HTTPD_ROOT}/
+        patch -p0 < ${PATCH_DIR}/roundcubemail/managesieve_rule_width_on_safari.patch >/dev/null 2>&1
+    fi
 
     cd ${RCM_HTTPD_ROOT}/config/
     cp -f db.inc.php.dist db.inc.php
