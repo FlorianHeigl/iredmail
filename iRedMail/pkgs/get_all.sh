@@ -322,5 +322,4 @@ fi
 fetch_misc && \
 check_md5 && \
 check_pkg ${BIN_DIALOG} ${PKG_DIALOG} && \
-check_pkg ${BIN_ACL} ${PKG_ACL} && \
 echo_end_msg

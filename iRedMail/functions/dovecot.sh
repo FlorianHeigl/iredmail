@@ -280,8 +280,8 @@ EOF
 protocol lda { 
     postmaster_address = root
     auth_socket_path = ${DOVECOT_SOCKET_MASTER}
-    #mail_plugins = cmusieve quota expire
-    mail_plugins = cmusieve quota
+    #mail_plugins = ${DOVECOT_LDA_SIEVE_PLUGIN_NAME} quota expire
+    mail_plugins = ${DOVECOT_LDA_SIEVE_PLUGIN_NAME} quota
     sieve_global_path = ${GLOBAL_SIEVE_FILE}
     log_path = ${SIEVE_LOG_FILE}
 }

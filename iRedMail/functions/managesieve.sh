@@ -158,6 +158,60 @@ protocol managesieve {
     managesieve_implementation_string = dovecot
 }
 EOF
+        elif [ X"${DISTRO}" == X"FREEBSD" ]; then
+            # It use dovecot 1.2.x.
+            perl -pi -e 's#^(protocols =.*)#${1} managesieve#' ${DOVECOT_CONF}
+            cat >> ${DOVECOT_CONF} <<EOF
+# ManageSieve service.
+protocol managesieve {
+    # IP or host address where to listen in for connections.
+    listen = ${MANAGESIEVE_BINDADDR}:${MANAGESIEVE_PORT}
+
+    # Login executable location.
+    #login_executable = /usr/local/libexec/dovecot/managesieve-login
+
+    # ManageSieve executable location. See IMAP's mail_executable above for
+    # examples how this could be changed.
+    #mail_executable = /usr/local/libexec/dovecot/managesieve
+
+    # Maximum ManageSieve command line length in bytes. This setting is
+    # directly borrowed from IMAP. But, since long command lines are very
+    # unlikely with ManageSieve, changing this will not be very useful.
+    #managesieve_max_line_length = 65536
+
+    # ManageSieve logout format string:
+    #  %i - total number of bytes read from client
+    #  %o - total number of bytes sent to client
+    #managesieve_logout_format = bytes=%i/%o
+
+    # If, for some inobvious reason, the sieve_storage remains unset, the
+    # ManageSieve daemon uses the specification of the mail_location to find out
+    # where to store the sieve files (see explaination in README.managesieve).
+    # The example below, when uncommented, overrides any global mail_location
+    # specification and stores all the scripts in '~/mail/sieve' if sieve_storage
+    # is unset. However, you should always use the sieve_storage setting.
+    # mail_location = mbox:~/mail
+
+    # To fool ManageSieve clients that are focused on timesieved you can
+    # specify the IMPLEMENTATION capability that the dovecot reports to clients
+    # (default: "dovecot").
+    #managesieve_implementation_string = Cyrus timsieved v2.2.13
+}
+
+# Plugin: sieve.
+plugin {
+    # Sieve plugin (http://wiki.dovecot.org/LDA/Sieve) and ManageSieve service
+    #
+    # Location of the active script. When ManageSieve is used this is actually
+    # a symlink pointing to the active script in the sieve storage directory.
+    sieve = ${SIEVE_DIR}/%Ld/%Ln/${SIEVE_RULE_FILENAME}
+
+    # The path to the directory where the personal Sieve scripts are stored. For
+    # ManageSieve this is where the uploaded scripts are stored.
+    sieve_dir = ${SIEVE_DIR}/%Ld/%Ln/
+}
+EOF
+
         else
             :
         fi

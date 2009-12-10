@@ -71,7 +71,7 @@ check_env
 # All packages.
 if [ X"${DISTRO}" == X"FREEBSD" ]; then
     # Install packages from freebsd ports tree.
-    . ${FUNCTIONS_DIR}/freebsd_ports.sh
+    . ${FUNCTIONS_DIR}/packages_freebsd.sh
 else
     . ${FUNCTIONS_DIR}/packages.sh
 fi

@@ -189,7 +189,19 @@ Postfix (basic):
 EOF
 
     # FreeBSD: Start postfix when system start up.
-    [ X"${DISTRO}" == X"FREEBSD" ] && cat >> /etc/rc.conf <<EOF
+    if [ X"${DISTRO}" == X"FREEBSD" ]; then
+        backup_file /etc/mail/mailer.conf
+        cat > /etc/mail/mailer.conf <<EOF
+#
+# Execute the Postfix sendmail program, named /usr/local/sbin/sendmail
+#
+sendmail    /usr/local/sbin/sendmail
+send-mail   /usr/local/sbin/sendmail
+mailq       /usr/local/sbin/sendmail
+newaliases  /usr/local/sbin/sendmail
+EOF
+
+        cat >> /etc/rc.conf <<EOF
 # Start postfix.
 postfix_enable="YES"
 # Disable sendmail.
@@ -202,6 +214,7 @@ daily_status_mail_rejects_enable="NO"
 daily_status_include_submit_mailq="NO"
 daily_submit_queuerun="NO"
 EOF
+    fi
 
     echo 'export status_postfix_config_basic="DONE"' >> ${STATUS_FILE}
 }

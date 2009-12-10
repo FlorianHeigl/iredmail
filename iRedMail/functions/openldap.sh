@@ -30,13 +30,6 @@ openldap_config()
 
     backup_file ${OPENLDAP_SLAPD_CONF} ${OPENLDAP_LDAP_CONF}
 
-    ECHO_INFO "Set file permission on TLS cert key file: ${SSL_KEY_FILE}."
-    if [ X"${ACL_AVAILABLE}" != X"NO" ]; then
-        setfacl -m u:${LDAP_USER}:r-- ${SSL_KEY_FILE}
-    else
-        chmod +r ${SSL_KEY_FILE}
-    fi
-
     # Add ${LDAP_USER} to 'ssl-cert' group, so that slapd service can read the SSL key.
     [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ] && usermod -G ssl-cert ${LDAP_USER}
 

@@ -21,7 +21,9 @@ pla_install()
 
     ECHO_INFO "Copy example config file."
     cd ${PLA_CONF_DIR}/ && \
-    cp -f config.php.example config.php
+    cp -f config.php.example config.php && \
+    chown ${HTTPD_USER}:${HTTPD_GROUP} config.php && \
+    chmod 0700 config.php
 
     ECHO_INFO "Set file permission."
     chown -R ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${PLA_HTTPD_ROOT}

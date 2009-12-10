@@ -27,6 +27,11 @@ sa_config()
         :
     fi
 
+    if [ X"${DISTRO}" == X"FREEBSD" ]; then
+        ECHO_INFO "Compile SpamAssassin ruleset into native code."
+        sa-compile >/dev/null 2>&1
+    fi
+
     cat >> ${TIP_FILE} <<EOF
 SpamAssassin:
     * Configuration files:

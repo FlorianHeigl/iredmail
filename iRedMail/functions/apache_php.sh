@@ -134,7 +134,9 @@ EOF
         # With Apache2.2 it now wants to load an Accept Filter.
         echo 'accf_http_load="YES"' >> /boot/loader.conf
 
-        # TODO Change 'Deny from all' to 'Allow from all'.
+        # Change 'Deny from all' to 'Allow from all'.
+        sed -i '.iredmailtmp' '/Each directory to/,/Note that from/s#Deny\ from\ all#Allow\ from\ all#' ${HTTPD_CONF}
+        rm -f ${HTTPD_CONF}.iredmailtmp >/dev/null 2>&1
 
         # Add index.php in DirectoryIndex.
         perl -pi -e 's#(.*DirectoryIndex.*)(index.html)#${1} index.php ${2}#' ${HTTPD_CONF}
@@ -142,6 +144,9 @@ EOF
         # Add php file type.
         echo 'AddType application/x-httpd-php .php' >> ${HTTPD_CONF}
         echo 'AddType application/x-httpd-php-source .phps' >> ${HTTPD_CONF}
+
+        # Enable httpd-ssl.conf.
+        perl -pi -e 's/^#(Include.*etc.*apache.*extra.*httpd-ssl.conf.*)/${1}/' ${HTTPD_CONF}
 
         # Start apache when system start up.
         cat >> /etc/rc.conf <<EOF

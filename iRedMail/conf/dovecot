@@ -44,6 +44,13 @@ elif [ X"${DISTRO}" == X"FREEBSD" ]; then
     export DOVECOT_DELIVER='/usr/local/libexec/dovecot/deliver'
 fi
 
+# Name of LDA sieve plugin.
+if [ X"${DOVECOT_VERSION}" == X"1.1" ]; then
+    export DOVECOT_LDA_SIEVE_PLUGIN_NAME="cmusieve"
+elif [ X"${DOVECOT_VERSION}" == X"1.2" ]; then
+    export DOVECOT_LDA_SIEVE_PLUGIN_NAME="sieve"
+fi
+
 # Dovecot user & group.
 export DOVECOT_USER='dovecot'
 export DOVECOT_GROUP='dovecot'

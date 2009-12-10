@@ -34,11 +34,7 @@ amavisd_dkim()
 
     ECHO_INFO "Generate DKIM pem files: ${pem_file}." 
     ${AMAVISD_BIN} genrsa ${pem_file} >/dev/null 2>&1
-    if [ X"${ACL_AVAILABLE}" != X"NO" ]; then
-        setfacl -m u:${AMAVISD_USER}:r-- ${pem_file}
-    else
-        chmod +r ${pem_file}
-    fi
+    chmod +r ${pem_file}
 
     cat >> ${AMAVISD_DKIM_CONF} <<EOF
 # The default set of header fields to be signed can be controlled
