@@ -310,8 +310,9 @@ EOF
     [ X"${DISTRO}" == X"FREEBSD" ] && cat >> /etc/rc.conf <<EOF
 # Start openldap server.
 slapd_enable="YES"
-slapd_flags='-h "ldapi://%2fvar%2frun%2fopenldap%2fldapi/ ldap://0.0.0.0/"'
-slapd_sockets="/var/run/openldap/ldapi"
+slapd_flags='-h ldap://0.0.0.0/'
+#slapd_flags='-h "ldapi://%2fvar%2frun%2fopenldap%2fldapi/ ldap://0.0.0.0/"'
+#slapd_sockets="/var/run/openldap/ldapi"
 EOF
 
     echo 'export status_openldap_config="DONE"' >> ${STATUS_FILE}

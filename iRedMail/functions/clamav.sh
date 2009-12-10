@@ -46,8 +46,9 @@ clamav_config()
         chmod +x /etc/rc.d/init.d/freshclam
         eval ${enable_service} freshclam
         export ENABLED_SERVICES="${ENABLED_SERVICES} freshclam"
-    else
-        :
+    elif [ X"${DISTRO}" == X"FREEBSD" ]; then
+        ECHO_INFO "Add clamav user to amavid group."
+        pw usermod ${CLAMAV_USER} -G ${AMAVISD_GROUP}
     fi
 
     # FreeBSD: Start clamd & freshclamd when system start up.

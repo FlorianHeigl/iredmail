@@ -189,6 +189,16 @@ start_postfix_now()
                 :
             fi
 
+            # FreeBSD
+            if [ X"${DISTRO}" == X"FREEBSD" ]; then
+                # Update clamav before start clamav-clamd service.
+                ECHO_INFO "Update ClamAV database..."
+                freshclam
+
+                # Load kernel module 'accf_http' before start.
+                kldload accf_http
+            fi
+
             # Start/Restart necessary services.
             for i in ${ENABLED_SERVICES}
             do
@@ -222,9 +232,10 @@ EOF
     [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run upgrade_php_pear
     check_status_before_run start_postfix_now
 
-    # Send tip file to the mail server admin or first mail user.
+    # Send tip file to the mail server admin and/or first mail user.
     tip_recipient="${FIRST_USER}@${FIRST_DOMAIN}"
-    [ ! -z ${MAIL_ALIAS_ROOT} ] && tip_recipient="${tip_recipient},${MAIL_ALIAS_ROOT}"
+    [ ! -z ${MAIL_ALIAS_ROOT} -a X"${MAIL_ALIAS_ROOT}" != X"${tip_recipient}" ] && \
+        tip_recipient="${tip_recipient},${MAIL_ALIAS_ROOT}"
 
     mail -s "iRedMail tips for mail server administrator." ${tip_recipient} < ${TIP_FILE} >/dev/null 2>&1
     mail -s "Useful links for iRedMail." ${tip_recipient} < ${DOC_FILE} >/dev/null 2>&1
