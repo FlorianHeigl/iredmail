@@ -23,7 +23,7 @@
 
 iredadmin_config()
 {
-    ECHO_INFO "======== iRedAdmin: Official Web-based Admin Panel  ========"
+    ECHO_INFO "==================== iRedAdmin: Official Web-based Admin Panel ===================="
 
     if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
         ECHO_INFO "Enable apache module: wsgi."

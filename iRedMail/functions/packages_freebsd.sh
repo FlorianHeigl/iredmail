@@ -33,8 +33,8 @@ install_all()
     for i in m4 cyrus-sasl2 perl openslp mysql-server openldap24 dovecot \
         ca_root_nss libssh2 curl libusb pth gnupg p5-IO-Socket-SSL \
         p5-Archive-Tar p5-Net-DNS p5-Mail-SpamAssassin p5-Authen-SASL \
-        amavisd-new clamav apr python26 apache22 php5 php5-extensions \
-        php5-gd roundcube postfixadmin postfix; do
+        amavisd-new clamav apr python25 apache22 php5 php5-extensions \
+        php5-gd roundcube postfixadmin postfix MySQLdb; do
         mkdir -p /var/db/ports/${i} 2>/dev/null
     done
 
@@ -343,11 +343,9 @@ WITHOUT_PGSQL=true
 EOF
 
     # Python v2.6. REQUIRED.
-    cat > /var/db/ports/python26/options <<EOF
+    cat > /var/db/ports/python25/options <<EOF
 WITH_THREADS=true
 WITH_HUGE_STACK_SIZE=true
-WITHOUT_SEM=true
-WITHOUT_PTH=true
 WITH_UCS4=true
 WITH_PYMALLOC=true
 WITH_IPV6=true
@@ -492,6 +490,11 @@ WITH_MYSQLI=true
 WITHOUT_PGSQL=true
 EOF
 
+    # Python-MySQLdb
+    cat > /var/db/ports/MySQLdb/options <<EOF
+WITH_MYSQLCLIENT_R=true
+EOF
+
     # PHP extensions
     if [ X"${USE_WEBMAIL}" == X"YES" ]; then
         ALL_PKGS="${ALL_PKGS} php5-gd php5-imap php5-zip php5-bz2 php5-zlib php5-gettext php5-mbstring php5-mcrypt php5-mhash php5-mysql php5-mysqli php5-openssl php5-pcre php5-session php5-ldap php5-ctype php5-hash php5-iconv php5-pspell php5-dom php5-xml php5-sqlite"
@@ -529,10 +532,10 @@ EOF
     fi
 
     # iRedAdmin.
-    #if [ X"${USE_IREDADMIN}" == X"YES" ]; then
-    #    # mod_wsgi.
-    #    ALL_PORTS="${ALL_PORTS} www/mod_wsgi"
-    #fi
+    if [ X"${USE_IREDADMIN}" == X"YES" ]; then
+        # mod_wsgi.
+        ALL_PORTS="${ALL_PORTS} www/mod_wsgi www/webpy devel/py-Jinja2 databases/py-MySQLdb net/py-ldap2 net/py-netifaces"
+    fi
 
     # Install all packages.
     for i in ${ALL_PORTS}; do
