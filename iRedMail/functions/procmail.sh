@@ -26,8 +26,9 @@ EOF
     chown ${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} ${PROCMAIL_LOGFILE}
     chmod 0700 ${PROCMAIL_LOGFILE}
 
-    ECHO_INFO "Setup logrotate for procmail log file: ${PROCMAIL_LOGFILE}."
-    cat >> ${PROCMAIL_LOGROTATE_FILE} <<EOF
+    if [ X"${KERNEL_NAME}" == X"Linux" ]; then
+        ECHO_INFO "Setup logrotate for procmail log file: ${PROCMAIL_LOGFILE}."
+        cat >> ${PROCMAIL_LOGROTATE_FILE} <<EOF
 ${PROCMAIL_LOGFILE} {
     compress
     weekly
@@ -46,6 +47,7 @@ ${PROCMAIL_LOGFILE} {
     endscript
 }
 EOF
+    fi
 
     echo 'export status_procmail_config="DONE"' >> ${STATUS_FILE}
 }
