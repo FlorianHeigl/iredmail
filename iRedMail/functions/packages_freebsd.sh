@@ -30,6 +30,22 @@ install_all()
     # Make it don't popup dialog while building ports.
     export BATCH=yes
 
+    cat >> /etc/make.conf <<EOF
+# Without X-Window/GUI.
+WITHOUT_X11=yes
+# Use MySQL-5.0.x as default.
+WANT_MYSQL_VER=50
+# Use python-2.6 as default.
+PYTHON_DEFAULT_VERSION=python2.6
+# Use apache-2.2.
+APACHE_PORT=www/apache22
+# Use OpenLDAP 2.4.
+WANT_OPENLDAP_VER=24
+WITH_SASL=yes
+WANT_BDB_VER=46
+LDAP_R_COMPILE=1
+EOF
+
     for i in m4 cyrus-sasl2 perl openslp mysql-server openldap24 dovecot \
         ca_root_nss libssh2 curl libusb pth gnupg p5-IO-Socket-SSL \
         p5-Archive-Tar p5-Net-DNS p5-Mail-SpamAssassin p5-Authen-SASL \
