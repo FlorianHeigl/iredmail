@@ -345,9 +345,9 @@ EOF
     # Python v2.6. REQUIRED.
     cat > /var/db/ports/python26/options <<EOF
 WITH_THREADS=true
-WITHOUT_HUGE_STACK_SIZE=true
+WITH_HUGE_STACK_SIZE=true
 WITHOUT_SEM=true
-WITH_PTH=true
+WITHOUT_PTH=true
 WITH_UCS4=true
 WITH_PYMALLOC=true
 WITH_IPV6=true
