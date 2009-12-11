@@ -161,7 +161,7 @@ export RANDOM_STRING='eval </dev/urandom tr -dc A-Za-z0-9| (head -c $1 > /dev/nu
 arch="$(uname -m)"
 case $arch in
     i[3456]86) export ARCH='i386' ;;
-    x86_64) export ARCH='x86_64' ;;
+    x86_64|amd64) export ARCH='x86_64' ;;
     *)
         echo "Your architecture is not supported yet: ${arch}."
         echo "Both i386 and x86_64 are supported by ${PROG_NAME}."
