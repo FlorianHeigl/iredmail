@@ -437,6 +437,7 @@ EOF
     fi
 
     cat >> ${POSTFIX_FILE_MASTER_CF} <<EOF
+# Use dovecot deliver program as LDA.
 dovecot unix    -       n       n       -       -      pipe
   flags=DRhu user=${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} argv=${DOVECOT_DELIVER} -d \${recipient} -f \${sender}
 EOF
@@ -508,7 +509,7 @@ enable_dovecot()
     if [ X"${ENABLE_DOVECOT}" == X"YES" ]; then
         check_status_before_run dovecot_config
     else
-        check_status_before_run enable_procmail
+        check_status_before_run procmail_config
     fi
 
     # FreeBSD: Start dovecot when system start up.

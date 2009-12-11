@@ -197,6 +197,9 @@ start_postfix_now()
 
                 # Load kernel module 'accf_http' before start.
                 kldload accf_http
+
+                # Stop sendmail.
+                killall sendmail
             fi
 
             # Start/Restart necessary services.

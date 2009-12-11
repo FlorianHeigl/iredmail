@@ -20,7 +20,13 @@
 # along with iRedMail.  If not, see <http://www.gnu.org/licenses/>.
 #---------------------------------------------------------------------
 
-export PROCMAIL_BIN='/usr/bin/procmail'
-export PROCMAILRC='/etc/procmailrc'
 export PROCMAIL_LOGFILE='/var/log/procmail.log'
 export PROCMAIL_LOGROTATE_FILE="${LOGROTATE_DIR}/procmail"
+
+if [ X"${DISTRO}" == X"FREEBSD" ]; then
+    export PROCMAIL_BIN='/usr/local/bin/procmail'
+    export PROCMAILRC='/usr/local/etc/procmailrc'
+else
+    export PROCMAIL_BIN='/usr/bin/procmail'
+    export PROCMAILRC='/etc/procmailrc'
+fi

@@ -28,11 +28,9 @@ amavisd_dkim()
 {
     pem_file="${AMAVISD_DKIM_DIR}/${FIRST_DOMAIN}.pem"
 
-    ECHO_INFO "Create directory to store DKIM pem files: ${AMAVISD_DKIM_DIR}." 
+    ECHO_INFO "Generate DKIM pem files: ${pem_file}." 
     mkdir -p ${AMAVISD_DKIM_DIR} 2>/dev/null && \
     chown ${AMAVISD_USER}:${AMAVISD_GROUP} ${AMAVISD_DKIM_DIR}
-
-    ECHO_INFO "Generate DKIM pem files: ${pem_file}." 
     ${AMAVISD_BIN} genrsa ${pem_file} >/dev/null 2>&1
     chmod +r ${pem_file}
 

@@ -2,23 +2,24 @@
 
 # Author: Zhang Huangbin <michaelbibby (at) gmail.com>
 
-enable_procmail()
+procmail_config()
 {
     ECHO_INFO "==================== Procmail ===================="
 
-    ECHO_INFO "Setup procmail as Mail Deliver Agent(MDA)."
-
     ECHO_INFO "Copy ${SAMPLE_DIR}/procmailrc as ${PROCMAILRC}."
+    backup_file ${PROCMAILRC}
     cp -f ${SAMPLE_DIR}/procmailrc ${PROCMAILRC}
 
-    ECHO_INFO "Setup Postfix transport in ${POSTFIX_FILE_MASTER_CF}."
+    ECHO_INFO "Add procmail as postfix transport in ${POSTFIX_FILE_MASTER_CF}."
     cat >> ${POSTFIX_FILE_MASTER_CF} <<EOF
-dovecot unix    -       n       n       -       -      pipe
+procmail unix    -       n       n       -       -      pipe
   flags=DRhu user=${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} argv=${PROCMAIL_BIN} -r -t SENDER=\${sender} RECIPIENT=\${recipient} DOMAIN=\${nexthop} -m USER=\${user} EXTENSION=\${extension} ${PROCMAILRC}
 EOF
 
-    ECHO_INFO "Setup transport in Postfix."
-    postconf -e mailbox_command="${PROCMAIL_BIN} -f- -a \${EXTENSION}"
+    if [ X"${TRANSPORT}" == X"procmail" ]; then
+        ECHO_INFO "Setup transport in Postfix."
+        postconf -e mailbox_command="${PROCMAIL_BIN} -f- -a \${EXTENSION}"
+    fi
 
     ECHO_INFO "Setup procmail log file: ${PROCMAIL_LOGFILE}."
     touch ${PROCMAIL_LOGFILE}
@@ -46,5 +47,5 @@ ${PROCMAIL_LOGFILE} {
 }
 EOF
 
-    echo 'export status_enable_procmail="DONE"' >> ${STATUS_FILE}
+    echo 'export status_procmail_config="DONE"' >> ${STATUS_FILE}
 }

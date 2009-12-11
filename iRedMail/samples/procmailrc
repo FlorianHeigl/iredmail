@@ -24,6 +24,9 @@
 #   * http://iRedMail.googlecode.com/
 #
 
+# You can find more tips here:
+# http://pm-doc.sourceforge.net/pm-tips.html
+
 # Global variables.
 SHELL='/bin/sh'
 PATH='/bin:/usr/bin:/usr/local/bin:/usr/X11R6/bin'
