@@ -178,6 +178,11 @@ check_status_before_run policy_service_config
 check_status_before_run enable_dovecot
 
 # ------------------------------------------------
+# Procmail.
+# ------------------------------------------------
+check_status_before_run procmail_config
+
+# ------------------------------------------------
 # Managesieve. 
 # ------------------------------------------------
 check_status_before_run managesieve_config

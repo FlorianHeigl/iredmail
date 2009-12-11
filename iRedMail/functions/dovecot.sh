@@ -508,8 +508,6 @@ enable_dovecot()
 {
     if [ X"${ENABLE_DOVECOT}" == X"YES" ]; then
         check_status_before_run dovecot_config
-    else
-        check_status_before_run procmail_config
     fi
 
     # FreeBSD: Start dovecot when system start up.
