@@ -32,7 +32,11 @@ CONF_DIR="${ROOTDIR}/../conf"
 check_user root
 check_hostname
 
-FETCH_CMD="wget -cq --referer ${PROG_NAME}-${PROG_VERSION}-${DISTRO}-X${DISTRO_CODENAME}-${ARCH}"
+if [ X"${DISTRO}" == X"FREEBSD" ]; then
+    FETCH_CMD='ftp -i'
+else
+    FETCH_CMD="wget -cq --referer ${PROG_NAME}-${PROG_VERSION}-${DISTRO}-X${DISTRO_CODENAME}-${ARCH}"
+fi
 
 #
 # Mirror site.
@@ -106,7 +110,7 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     export BIN_CREATEREPO="dpkg-scanpackages"
     export PKG_CREATEREPO="dpkg-dev"
 else
-    :
+    export MIRROR='http://www.iredmail.org/yum'
 fi
 
 # Binary packages.
@@ -115,7 +119,7 @@ export pkg_counter=1
 
 # Misc file (source tarball) list.
 if [ X"${DISTRO}" == X"FREEBSD" ]; then
-    PKGMISC='MD5.freebsd.misc'
+    PKGMISC='SHASUM.freebsd.misc'
 else
     PKGMISC='MD5.misc'
 fi
@@ -223,13 +227,18 @@ check_md5()
 
     ECHO_INFO -n "Validate Packages via md5sum ..."
 
-    md5file="$(mktemp ${PROG_NAME}.XXXXXX)"
-    echo -e "${MD5LIST}" > ${md5file}
-    cat MD5.misc >> ${md5file}
+    if [ X"${DISTRO}" == X"FREEBSD" ]; then
+        shasum -c ${PKGMISC} >/dev/null
+        RETVAL="$?"
+    else
+        md5file="$(mktemp ${PROG_NAME}.XXXXXX)"
+        echo -e "${MD5LIST}" > ${md5file}
+        cat MD5.misc >> ${md5file}
+        md5sum -c ${md5file} |grep 'FAILED'
+        RETVAL="$?"
+    fi
 
-    md5sum -c ${md5file} |grep 'FAILED'
-
-    if [ X"$?" == X"0" ]; then
+    if [ X"${RETVAL}" != X"0" ]; then
         ECHO_ERROR "MD5 check failed. Check your rpm packages. Script exit ...\n"
         exit 255
     else
