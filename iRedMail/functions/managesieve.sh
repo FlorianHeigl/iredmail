@@ -63,7 +63,7 @@ hostdirs = True
 
 [Dovecot]
 # How do we identify ourself to Dovecot? Default is 'pysieved'.
-service = managesieve
+service = sieve
 
 # Path to Dovecot's auth socket (do not set unless you're using
 # Dovecot auth)
@@ -202,6 +202,27 @@ protocol managesieve {
 plugin {
     # Sieve plugin (http://wiki.dovecot.org/LDA/Sieve) and ManageSieve service
     #
+    # If the user has no personal active script (i.e. if the file 
+    # indicated in sieve= does not exist), use this one:
+    #sieve_global_path = ${GLOBAL_SIEVE_FILE}
+
+    # The include extension fetches the :global scripts from this 
+    # directory.
+    #sieve_global_dir = 
+
+    # Path to a script file or a directory containing script files
+    # that need to be executed before the user's script. If the path
+    # points to a directory, all the Sieve scripts contained therein
+    # (with the proper .sieve extension) are executed. The order of
+    # execution is determined by the file names, using a normal 8bit
+    # per-character comparison.
+    #sieve_before =
+
+    # Identical to sieve_before, only the specified scripts are
+    # executed after the user's script (only when keep is still in
+    # effect!).
+    #sieve_after =
+
     # Location of the active script. When ManageSieve is used this is actually
     # a symlink pointing to the active script in the sieve storage directory.
     sieve = ${SIEVE_DIR}/%Ld/%Ln/${SIEVE_RULE_FILENAME}
