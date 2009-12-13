@@ -20,7 +20,7 @@
 # along with iRedMail.  If not, see <http://www.gnu.org/licenses/>.
 #---------------------------------------------------------------------
 
-export PHPMYADMIN_VERSION='2.11.9.5-all-languages'
+export PHPMYADMIN_VERSION='2.11.9.6-all-languages'
 export PHPMYADMIN_TARBALL="phpMyAdmin-${PHPMYADMIN_VERSION}.tar.bz2"
 
 if [ X"${DISTRO}" == X"FREEBSD" ]; then
