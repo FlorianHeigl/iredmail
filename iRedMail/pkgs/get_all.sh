@@ -225,29 +225,26 @@ check_md5()
 {
     cd ${ROOTDIR}
 
-    ECHO_INFO -n "Validate Packages ..."
+    if [ X"${DISTRO}" != X"FREEBSD" ]; then
+        ECHO_INFO -n "Validate Packages ..."
 
-    if [ X"${DISTRO}" == X"FREEBSD" ]; then
-        shasum -c ${PKGMISC} |grep 'FAILED'
-        RETVAL="$?"
-    else
         md5file="$(mktemp ${PROG_NAME}.XXXXXX)"
         echo -e "${MD5LIST}" > ${md5file}
         cat MD5.misc >> ${md5file}
         md5sum -c ${md5file} |grep 'FAILED'
         RETVAL="$?"
         rm -f ${md5file} 2>/dev/null
-    fi
 
-    if [ X"${RETVAL}" == X"0" ]; then
-        echo -e "\t[ FAILED ]"
-        ECHO_ERROR "MD5 check failed. Check your rpm packages. Script exit ...\n"
-        exit 255
-    else
-        echo -e "\t[ OK ]"
-        echo 'export status_fetch_pkgs="DONE"' >> ${STATUS_FILE}
-        echo 'export status_fetch_misc="DONE"' >> ${STATUS_FILE}
-        echo 'export status_check_md5="DONE"' >> ${STATUS_FILE}
+        if [ X"${RETVAL}" == X"0" ]; then
+            echo -e "\t[ FAILED ]"
+            ECHO_ERROR "MD5 check failed. Check your rpm packages. Script exit ...\n"
+            exit 255
+        else
+            echo -e "\t[ OK ]"
+            echo 'export status_fetch_pkgs="DONE"' >> ${STATUS_FILE}
+            echo 'export status_fetch_misc="DONE"' >> ${STATUS_FILE}
+            echo 'export status_check_md5="DONE"' >> ${STATUS_FILE}
+        fi
     fi
 }
 

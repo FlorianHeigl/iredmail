@@ -27,7 +27,7 @@ EOF
 
     ECHO_INFO "Copy: /etc/{hosts,resolv.conf,localtime} -> ${POSTFIX_CHROOT_DIR}/etc/"
     mkdir -p ${POSTFIX_CHROOT_DIR}/etc/ 2>/dev/null
-    for i in /etc/hosts /etc/resolve.conf /etc/localtime; do
+    for i in /etc/hosts /etc/resolv.conf /etc/localtime; do
         [ -f $i ] && cp ${i} ${POSTFIX_CHROOT_DIR}/etc/
     done
 
