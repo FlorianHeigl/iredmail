@@ -130,7 +130,7 @@ INSERT INTO mailbox (username,password,name,storagebasedirectory,maildir,quota,d
 INSERT INTO alias (address,goto,domain,created) VALUES ("${FIRST_USER}@${FIRST_DOMAIN}", "${FIRST_USER}@${FIRST_DOMAIN}", "${FIRST_DOMAIN}", NOW());
 EOF
 
-    ECHO_INFO -n "Import postfix virtual hosts/users: ${MYSQL_VMAIL_SQL}."
+    ECHO_INFO "Import postfix virtual hosts/users: ${MYSQL_VMAIL_SQL}."
     mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
 SOURCE ${MYSQL_VMAIL_SQL};
 FLUSH PRIVILEGES;

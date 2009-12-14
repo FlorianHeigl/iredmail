@@ -321,8 +321,8 @@ fi
 
 prepare_dirs
 
-# Ubuntu 9.04 doesn't need to download extra binary packages.
-if [ X"${DISTRO}" != X"UBUNTU" ]; then
+# Ubuntu 9.04, FreeBSD doesn't need to download extra binary packages.
+if [ X"${DISTRO}" != X"UBUNTU" -a X"${DISTRO}" != X"FREEBSD" ]; then
     check_pkg ${BIN_WHICH} ${PKG_WHICH} && \
     check_pkg ${BIN_WGET} ${PKG_WGET} && \
     check_pkg ${BIN_CREATEREPO} ${PKG_CREATEREPO} && \

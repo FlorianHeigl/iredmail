@@ -71,6 +71,10 @@ rcm_config_password()
 
     if [ X"${BACKEND}" == X"MySQL" ]; then
         perl -pi -e 's#(.*password_driver.*=).*#${1} "sql";#' config.inc.php
+        perl -pi -e 's#(.*password_db_dsn.*= )(.*)#${1}"mysqli://$ENV{'RCM_DB_USER'}:$ENV{'RCM_DB_PASSWD'}\@$ENV{'MYSQL_SERVER'}/$ENV{'VMAIL_DB'}";#' config.inc.php
+        perl -pi -e 's#(.*password_query.*=).*#${1} "UPDATE vmail.mailbox SET password=%c WHERE username=%u";#' config.inc.php
+        perl -pi -e 's#(.*password_hash_algorithm.*=).*#${1} "md5crypt";#' config.inc.php
+        perl -pi -e 's#(.*password_hash_base64.*=).*#${1} false;#' config.inc.php
     elif [ X"${BACKEND}" == X"OpenLDAP" ]; then
         perl -pi -e 's#(.*password_driver.*=).*#${1} "ldap";#' config.inc.php
         perl -pi -e 's#(.*password_ldap_host.*=).*#${1} "$ENV{LDAP_SERVER_HOST}";#' config.inc.php
