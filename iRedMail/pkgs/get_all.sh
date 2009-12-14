@@ -225,7 +225,7 @@ check_md5()
 {
     cd ${ROOTDIR}
 
-    ECHO_INFO -n "Validate Packages via md5sum ..."
+    ECHO_INFO "Validate Packages via md5sum ..."
 
     if [ X"${DISTRO}" == X"FREEBSD" ]; then
         shasum -c ${PKGMISC} >/dev/null
@@ -236,6 +236,7 @@ check_md5()
         cat MD5.misc >> ${md5file}
         md5sum -c ${md5file} |grep 'FAILED'
         RETVAL="$?"
+        rm -f ${md5file} 2>/dev/null
     fi
 
     if [ X"${RETVAL}" != X"0" ]; then
