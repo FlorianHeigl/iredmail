@@ -161,7 +161,7 @@ replace_mysql_config()
 upgrade_php_pear()
 {
     if [ X"${BACKEND}" == X"OpenLDAP" -a X"${USE_RCM}" == X"YES" ]; then
-        if [ X"${DISTRO}" == X"RHEL" ]; then
+        if [ X"${DISTRO}" == X"RHEL" -o X"${DISTRO}" == X"DEBIAN" ]; then
             ECHO_INFO "Upgrading php-pear ..."
             pear upgrade --force pear >/dev/null
 
