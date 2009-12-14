@@ -167,6 +167,7 @@ upgrade_php_pear()
 
             ECHO_INFO "Installing php Net_LDAP2 ..."
             pear install Net_LDAP2 >/dev/null
+
         elif [ X"${DISTRO}" == X"DEBIAN" ]; then
             ECHO_INFO "Installing php Net_LDAP2 ..."
             pear install Net_LDAP2 >/dev/null
@@ -235,7 +236,7 @@ EOF
     [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run re_generate_iredmail_repo
     [ X"${KERNEL_NAME}" == X"Linux" ] && check_status_before_run replace_iptables_rule
     [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run replace_mysql_config
-    [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run upgrade_php_pear
+    check_status_before_run upgrade_php_pear
     check_status_before_run start_postfix_now
 
     # Send tip file to the mail server admin and/or first mail user.
