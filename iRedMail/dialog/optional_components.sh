@@ -102,8 +102,8 @@ elif [ X"${BACKEND}" == X"MySQL" ]; then
     ${DIALOG} \
     --title "Optional Components for ${BACKEND} backend" \
     --checklist "\
-${PROG_NAME} provides several optional components for MySQL backend, you can use
-them by your own:
+${PROG_NAME} provides several optional components for MySQL backend, you
+can use them by your own:
 " 20 76 6 \
     "Roundcubemail" "WebMail program (PHP, XHTML, CSS2, AJAX)." "on" \
     "phpMyAdmin" "Web-based MySQL database management." "on" \
