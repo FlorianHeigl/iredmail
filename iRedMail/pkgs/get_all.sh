@@ -225,10 +225,10 @@ check_md5()
 {
     cd ${ROOTDIR}
 
-    ECHO_INFO "Validate Packages via md5sum ..."
+    ECHO_INFO -n "Validate Packages ..."
 
     if [ X"${DISTRO}" == X"FREEBSD" ]; then
-        shasum -c ${PKGMISC} >/dev/null
+        shasum -c ${PKGMISC} |grep 'FAILED'
         RETVAL="$?"
     else
         md5file="$(mktemp ${PROG_NAME}.XXXXXX)"
@@ -239,7 +239,8 @@ check_md5()
         rm -f ${md5file} 2>/dev/null
     fi
 
-    if [ X"${RETVAL}" != X"0" ]; then
+    if [ X"${RETVAL}" == X"0" ]; then
+        echo -e "\t[ FAILED ]"
         ECHO_ERROR "MD5 check failed. Check your rpm packages. Script exit ...\n"
         exit 255
     else
@@ -248,8 +249,6 @@ check_md5()
         echo 'export status_fetch_misc="DONE"' >> ${STATUS_FILE}
         echo 'export status_check_md5="DONE"' >> ${STATUS_FILE}
     fi
-
-    rm -f ${md5file} 2>/dev/null
 }
 
 create_repo_rhel()
