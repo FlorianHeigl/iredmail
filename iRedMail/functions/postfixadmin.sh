@@ -17,19 +17,17 @@ postfixadmin_install()
         # Create symbol link, so that we don't need to modify apache
         # conf.d/postfixadmin.conf file after upgrade this component.
         ln -s ${POSTFIXADMIN_HTTPD_ROOT} ${POSTFIXADMIN_HTTPD_ROOT_SYMBOL_LINK}
-    fi
 
-    if [ X"${DISTRO}" != X"FREEBSD" ]; then
         cd ${POSTFIXADMIN_HTTPD_ROOT}/ && \
         patch -p0 < ${PATCH_DIR}/postfixadmin/create_mailbox.patch >/dev/null && \
         patch -p0 < ${PATCH_DIR}/postfixadmin/login-security-issue.patch >/dev/null
-    fi
 
-    ECHO_INFO "Set file permission for PostfixAdmin."
-    chown -R ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${POSTFIXADMIN_HTTPD_ROOT}
-    chmod -R 755 ${POSTFIXADMIN_HTTPD_ROOT}
-    mv ${POSTFIXADMIN_HTTPD_ROOT}/setup.php ${POSTFIXADMIN_HTTPD_ROOT}/setup.php.${DATE}
-    chmod 0000 ${POSTFIXADMIN_HTTPD_ROOT}/setup.php.${DATE}
+        ECHO_INFO "Set file permission for PostfixAdmin."
+        chown -R ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${POSTFIXADMIN_HTTPD_ROOT}
+        chmod -R 755 ${POSTFIXADMIN_HTTPD_ROOT}
+        mv ${POSTFIXADMIN_HTTPD_ROOT}/setup.php ${POSTFIXADMIN_HTTPD_ROOT}/setup.php.${DATE}
+        chmod 0000 ${POSTFIXADMIN_HTTPD_ROOT}/setup.php.${DATE}
+    fi
 
     ECHO_INFO "Create directory alias for PostfixAdmin in Apache."
     cat > ${HTTPD_CONF_DIR}/postfixadmin.conf <<EOF
