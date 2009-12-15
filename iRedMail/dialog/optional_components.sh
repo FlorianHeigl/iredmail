@@ -92,10 +92,10 @@ ${PROG_NAME} provides several optional components for LDAP backend, you can
 use them by your own:
 " 20 76 6 \
     "iRedAdmin" "Official web-based iRedMail Admin Panel" "on" \
-    "Roundcubemail" "WebMail program (PHP, XHTML, CSS2, AJAX)." "on" \
-    "phpLDAPadmin" "Web-based LDAP browser to manage your LDAP server." "on" \
-    "phpMyAdmin" "Web-based MySQL database management." "on" \
-    "Awstats" "Advanced web and mail log analyzer." "on" \
+    "Roundcubemail" "WebMail program (PHP, XHTML, CSS2, AJAX)" "on" \
+    "phpLDAPadmin" "Web-based LDAP browser to manage your LDAP server" "on" \
+    "phpMyAdmin" "Web-based MySQL database management" "on" \
+    "Awstats" "Advanced web and mail log analyzer" "on" \
     2>/tmp/optional_components
 
 elif [ X"${BACKEND}" == X"MySQL" ]; then
@@ -105,10 +105,10 @@ elif [ X"${BACKEND}" == X"MySQL" ]; then
 ${PROG_NAME} provides several optional components for MySQL backend, you
 can use them by your own:
 " 20 76 6 \
-    "Roundcubemail" "WebMail program (PHP, XHTML, CSS2, AJAX)." "on" \
-    "phpMyAdmin" "Web-based MySQL database management." "on" \
-    "PostfixAdmin" "Web-based program to manage domains and users stored in MySQL." "on" \
-    "Awstats" "Advanced web and mail log analyzer." "on" \
+    "Roundcubemail" "WebMail program (PHP, XHTML, CSS2, AJAX)" "on" \
+    "phpMyAdmin" "Web-based MySQL database management" "on" \
+    "PostfixAdmin" "Web-based program to manage domains and users" "on" \
+    "Awstats" "Advanced web and mail log analyzer" "on" \
     2>/tmp/optional_components
 else
     # No hook for other backend yet.

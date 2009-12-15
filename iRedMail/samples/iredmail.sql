@@ -118,6 +118,7 @@ CREATE TABLE mailbox (
     modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
+    `local_part` VARCHAR(255) NOT NULL,
     PRIMARY KEY (username)
 ) ENGINE=MyISAM;
 
@@ -188,7 +189,23 @@ CREATE TABLE log (
 ) ENGINE=MyISAM;
 
 #
-# WARNING: We do not use postfixadmin style vacation mechanism.
+# Warning:
+# We do not use postfixadmin style alias domain.
+#
+CREATE TABLE IF NOT EXISTS `alias_domain` (
+    `alias_domain` varchar(255) NOT NULL,
+    `target_domain` varchar(255) NOT NULL,
+    `created` datetime NOT NULL default '0000-00-00 00:00:00',
+    `modified` datetime NOT NULL default '0000-00-00 00:00:00',
+    `active` tinyint(1) NOT NULL default '1',
+    PRIMARY KEY  (`alias_domain`),
+    KEY `active` (`active`),
+    KEY `target_domain` (`target_domain`)
+) ENGINE=MyISAM;
+
+#
+# WARNING:
+# We do not use postfixadmin style vacation mechanism.
 #
 
 #
