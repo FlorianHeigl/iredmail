@@ -19,7 +19,7 @@ postfixadmin_install()
         ln -s ${POSTFIXADMIN_HTTPD_ROOT} ${POSTFIXADMIN_HTTPD_ROOT_SYMBOL_LINK}
     fi
 
-    if [ X"${DISTRO}" == X"FREEBSD" ]; then
+    if [ X"${DISTRO}" != X"FREEBSD" ]; then
         cd ${POSTFIXADMIN_HTTPD_ROOT}/ && \
         patch -p0 < ${PATCH_DIR}/postfixadmin/create_mailbox.patch >/dev/null && \
         patch -p0 < ${PATCH_DIR}/postfixadmin/login-security-issue.patch >/dev/null
