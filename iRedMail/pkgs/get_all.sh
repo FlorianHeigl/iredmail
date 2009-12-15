@@ -118,7 +118,11 @@ export pkg_total=$(echo ${PKGLIST} | wc -w | awk '{print $1}')
 export pkg_counter=1
 
 # Misc file (source tarball) list.
-PKGMISC='MD5.misc'
+if [ X"${DISTRO}" == X"FREEBSD" ]; then
+    PKGMISC='SHASUM.freebsd.misc'
+else
+    PKGMISC='MD5.misc'
+fi
 MISCLIST="$(cat ${ROOTDIR}/${PKGMISC} | awk -F'misc/' '{print $2}')"
 
 
