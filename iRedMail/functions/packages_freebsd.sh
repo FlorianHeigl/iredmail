@@ -553,7 +553,28 @@ EOF
         ALL_PORTS="${ALL_PORTS} www/mod_wsgi www/webpy devel/py-Jinja2 databases/py-MySQLdb net/py-ldap2 net/py-netifaces"
     fi
 
+    # Fetch all source tarballs.
+    ECHO_INFO "==== Fetch all source tarballs of required components (make fetch-recursive) ===="
+    for i in ${ALL_PORTS}; do
+        if [ X"${i}" != X'' ]; then
+            portname="$( echo ${i} | tr -d '-' | tr -d '/' | tr -d '\.' )"
+            status="\$status_fetch_port_$portname"
+            if [ X"$(eval echo ${status})" != X"DONE" ]; then
+                cd /usr/ports/${i} && make fetch-recursive
+                if [ X"$?" == X"0" ]; then
+                    echo "export status_fetch_port_${portname}='DONE'" >> ${STATUS_FILE}
+                else
+                    ECHO_ERROR "Tarballs were not downloaded correctly, please fix it before we go further."
+                    exit 255
+                fi
+            else
+                ECHO_INFO "Skip fetching tarballs of port: ${i}."
+            fi
+        fi
+    done
+
     # Install all packages.
+    ECHO_INFO "==== Install packages ===="
     for i in ${ALL_PORTS}; do
         if [ X"${i}" != X'' ]; then
             portname="$( echo ${i} | tr -d '-' | tr -d '/' | tr -d '\.' )"
