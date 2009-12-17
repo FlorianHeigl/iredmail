@@ -515,7 +515,7 @@ EOF
     # PHP extensions
     if [ X"${USE_WEBMAIL}" == X"YES" ]; then
         ALL_PKGS="${ALL_PKGS} php5-gd php5-imap php5-zip php5-bz2 php5-zlib php5-gettext php5-mbstring php5-mcrypt php5-mhash php5-mysql php5-mysqli php5-openssl php5-pcre php5-session php5-ldap php5-ctype php5-hash php5-iconv php5-pspell php5-dom php5-xml php5-sqlite"
-        ALL_PORTS="${ALL_PORTS} graphics/php5-gd mail/php5-imap archivers/php5-zip archivers/php5-bz2 archivers/php5-zlib devel/php5-gettext converters/php5-mbstring security/php5-mcrypt security/php5-mhash databases/php5-mysqli databases/php5-mysql security/php5-openssl devel/php5-pcre www/php5-session net/php5-ldap textproc/php5-ctype security/php5-hash converters/php5-iconv textproc/php5-pspell textproc/php5-dom textproc/php5-xml databases/php5-sqlite"
+        ALL_PORTS="${ALL_PORTS} databases/php5-mysqli mail/php5-imap graphics/php5-gd archivers/php5-zip archivers/php5-bz2 archivers/php5-zlib devel/php5-gettext converters/php5-mbstring security/php5-mcrypt security/php5-mhash databases/php5-mysql security/php5-openssl devel/php5-pcre www/php5-session net/php5-ldap textproc/php5-ctype security/php5-hash converters/php5-iconv textproc/php5-pspell textproc/php5-dom textproc/php5-xml databases/php5-sqlite"
     fi
 
     # Roundcube webmail.
