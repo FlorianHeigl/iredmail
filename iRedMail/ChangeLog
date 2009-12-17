@@ -1,4 +1,5 @@
 iRedMail-0.6.0:
+    * Add domain alias support in MySQL backend.
     * Update phpMyAdmin to 2.11.9.6.
     * New LDAP attribute: accountSetting.
     * Update roundcube to 0.3.1.

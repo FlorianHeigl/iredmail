@@ -72,6 +72,17 @@ CREATE TABLE domain (
     PRIMARY KEY (domain)
 ) ENGINE=MyISAM;
 
+CREATE TABLE IF NOT EXISTS `alias_domain` (
+    `alias_domain` varchar(255) NOT NULL,
+    `target_domain` varchar(255) NOT NULL,
+    `created` datetime NOT NULL default '0000-00-00 00:00:00',
+    `modified` datetime NOT NULL default '0000-00-00 00:00:00',
+    `active` tinyint(1) NOT NULL default '1',
+    PRIMARY KEY  (`alias_domain`),
+    KEY `active` (`active`),
+    KEY `target_domain` (`target_domain`)
+) ENGINE=MyISAM;
+
 #
 # Table structure for table domain_admins
 #
@@ -186,21 +197,6 @@ CREATE TABLE log (
     action VARCHAR(255) NOT NULL DEFAULT '',
     data VARCHAR(255) NOT NULL DEFAULT '',
     KEY TIMESTAMP (TIMESTAMP)
-) ENGINE=MyISAM;
-
-#
-# Warning:
-# We do not use postfixadmin style alias domain.
-#
-CREATE TABLE IF NOT EXISTS `alias_domain` (
-    `alias_domain` varchar(255) NOT NULL,
-    `target_domain` varchar(255) NOT NULL,
-    `created` datetime NOT NULL default '0000-00-00 00:00:00',
-    `modified` datetime NOT NULL default '0000-00-00 00:00:00',
-    `active` tinyint(1) NOT NULL default '1',
-    PRIMARY KEY  (`alias_domain`),
-    KEY `active` (`active`),
-    KEY `target_domain` (`target_domain`)
 ) ENGINE=MyISAM;
 
 #

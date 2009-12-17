@@ -172,8 +172,9 @@ WITH_MYSQL=true
 WITHOUT_SQLITE=true
 EOF
 
-    ALL_PKGS="${ALL_PKGS} dovecot dovecot-managesieve dovecot-sieve"
-    ALL_PORTS="${ALL_PORTS} mail/dovecot mail/dovecot-managesieve mail/dovecot-sieve"
+    # Note: dovecot-sieve will install dovecot first.
+    ALL_PKGS="${ALL_PKGS} dovecot-sieve dovecot-managesieve"
+    ALL_PORTS="${ALL_PORTS} mail/dovecot-sieve mail/dovecot-managesieve"
     ENABLED_SERVICES="${ENABLED_SERVICES} dovecot"
 
     # ca_root_nss. DEPENDENCE.
@@ -583,8 +584,13 @@ EOF
                 cd /usr/ports/${i} && \
                     make clean && \
                     ECHO_INFO "Installing port: ${i} ..." && \
-                    make install clean && \
-                    echo "export status_install_port_${portname}='DONE'" >> ${STATUS_FILE}
+                    make install clean
+                    if [ X"$?" == X"0" ]; then
+                        echo "export status_install_port_${portname}='DONE'" >> ${STATUS_FILE}
+                    else
+                        ECHO_ERROR "Port was not success installed, please fix it before we go further and then re-execute this script."
+                        exit 255
+                    fi
             else
                 ECHO_INFO "Skip port: ${i}."
             fi

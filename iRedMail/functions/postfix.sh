@@ -482,7 +482,7 @@ postfix_config_mysql()
     postconf -e virtual_mailbox_domains="proxy:mysql:${mysql_virtual_mailbox_domains_cf}"
     postconf -e virtual_mailbox_maps="proxy:mysql:${mysql_virtual_mailbox_maps_cf}"
     postconf -e virtual_mailbox_limit_maps="proxy:mysql:${mysql_virtual_mailbox_limit_maps_cf}"
-    postconf -e virtual_alias_maps="proxy:mysql:${mysql_virtual_alias_maps_cf}"
+    postconf -e virtual_alias_maps="proxy:mysql:${mysql_virtual_alias_maps_cf}, proxy:mysql:${mysql_domain_alias_maps_cf}"
     postconf -e sender_bcc_maps="proxy:mysql:${mysql_sender_bcc_maps_domain_cf}, proxy:mysql:${mysql_sender_bcc_maps_user_cf}"
     postconf -e recipient_bcc_maps="proxy:mysql:${mysql_recipient_bcc_maps_domain_cf}, proxy:mysql:${mysql_recipient_bcc_maps_user_cf}"
     postconf -e relay_domains="\$mydestination, proxy:mysql:${mysql_relay_domains_cf}"
@@ -554,6 +554,15 @@ hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
 query       = SELECT goto FROM alias WHERE address='%s' AND active='1' AND expired >= NOW()
+EOF
+
+    cat > ${mysql_domain_alias_maps_cf} <<EOF
+user        = ${MYSQL_BIND_USER}
+password    = ${MYSQL_BIND_PW}
+hosts       = ${mysql_server}
+port        = ${MYSQL_PORT}
+dbname      = ${VMAIL_DB}
+query       = SELECT goto FROM alias,alias_domain WHERE alias_domain.alias_domain = '%d' and alias.address = CONCAT('%u', '@', alias_domain.target_domain) AND alias.active = 1 AND alias_domain.active='1'
 EOF
 
     cat > ${mysql_sender_login_maps_cf} <<EOF
