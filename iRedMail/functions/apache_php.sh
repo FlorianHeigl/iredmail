@@ -138,6 +138,12 @@ EOF
         sed -i '.iredmailtmp' '/Each directory to/,/Note that from/s#Deny\ from\ all#Allow\ from\ all#' ${HTTPD_CONF}
         rm -f ${HTTPD_CONF}.iredmailtmp >/dev/null 2>&1
 
+        # Set ServerName.
+        perl -pi -e 's/^#(ServerName).*/${1} $ENV{HOSTNAME}/' ${HTTPD_CONF}
+
+        # Disable unique_id_module.
+        perl -pi -e 's/^(LoadModule.*unique_id_module.*)/#${1}/' ${HTTPD_CONF}
+
         # Add index.php in DirectoryIndex.
         perl -pi -e 's#(.*DirectoryIndex.*)(index.html)#${1} index.php ${2}#' ${HTTPD_CONF}
 

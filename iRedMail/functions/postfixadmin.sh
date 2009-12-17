@@ -92,6 +92,9 @@ EOF
 \$CONF['transport_options'] = array ('dovecot', 'virtual', 'local', 'relay');
 \$CONF['transport_default'] = "dovecot";
 
+# Enable alias domain.
+\$CONF['alias_domain'] = 'YES';
+
 \$CONF['backup'] = "NO";
 \$CONF['fetchmail'] = "NO";
 \$CONF['sendmail'] = "NO";
