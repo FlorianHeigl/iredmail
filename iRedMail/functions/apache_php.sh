@@ -154,11 +154,14 @@ EOF
         # Enable httpd-ssl.conf.
         perl -pi -e 's/^#(Include.*etc.*apache.*extra.*httpd-ssl.conf.*)/${1}/' ${HTTPD_CONF}
 
+        # Create empty directory for htcacheclean.
+        mkdir -p /usr/local/www/proxy/ 2>/dev/null
+
         # Start apache when system start up.
         cat >> /etc/rc.conf <<EOF
 # Start apache web server.
 apache22_enable="YES"
-htcacheclean_enable="YES"
+htcacheclean_enable="NO"
 EOF
     fi
 

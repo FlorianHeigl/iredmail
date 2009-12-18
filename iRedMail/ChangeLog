@@ -1,4 +1,5 @@
 iRedMail-0.6.0:
+    * Update dovecot to 1.1.20 on RHEL/CentOS.
     * Update postfixadmin to 2.3.
     * Add domain alias support in MySQL backend.
     * Update phpMyAdmin to 2.11.9.6.

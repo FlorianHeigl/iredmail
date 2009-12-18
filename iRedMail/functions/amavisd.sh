@@ -512,8 +512,8 @@ amavisd_config()
 amavisd_enable="YES"
 amavisd_pidfile="/var/amavis/amavisd.pid"
 amavis_milter_enable="NO"
-amavis_p0fanalyzer_enable="YES"
-amavis_p0fanalyzer_p0f_filter="tcp dst port 25"
+amavis_p0fanalyzer_enable="NO"
+#amavis_p0fanalyzer_p0f_filter="tcp dst port 25"
 EOF
 
     check_status_before_run amavisd_config_generic

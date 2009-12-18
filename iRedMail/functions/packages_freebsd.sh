@@ -297,7 +297,7 @@ WITHOUT_MILTER=true
 EOF
 
     ALL_PKGS="${ALL_PKGS} p5-MIME-Tools p5-IO-stringy p5-Unix-Syslog p5-Net-Server p5-Digest-SHA p5-Convert-TNEF p5-Convert-UUlib p5-Archive-Zip p5-Authen-SASL amavisd-new"
-    ALL_PORTS="${ALL_PORTS} mail/p5-MIME-Tools devel/p5-IO-stringy sysutils/p5-Unix-Syslog net/p5-Net-Server security/p5-Digest-SHA converters/p5-Convert-TNEF converters/p5-Convert-UUlib archivers/p5-Archive-Zip security/p5-Authen-SASL security/amavisd-new"
+    ALL_PORTS="${ALL_PORTS} devel/p5-IO-stringy security/p5-Digest-SHA mail/p5-MIME-Tools net/p5-Net-Server sysutils/p5-Unix-Syslog converters/p5-Convert-TNEF converters/p5-Convert-UUlib archivers/p5-Archive-Zip security/p5-Authen-SASL security/amavisd-new"
     ENABLED_SERVICES="${ENABLED_SERVICES} amavisd"
 
     # Postfix v2.5. REQUIRED.
