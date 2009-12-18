@@ -76,6 +76,8 @@ EOF
     cat > ${POSTFIXADMIN_CONF_LOCAL} <<EOF
 <?php
 \$CONF['configured'] = true;
+\$CONF['postfix_admin_url'] = "/postfixadmin";
+
 \$CONF['default_language'] = "${POSTFIXADMIN_DEFAULT_LANGUAGE}";
 \$CONF['database_type'] = 'mysqli';
 \$CONF['database_host'] = "${MYSQL_SERVER}";
