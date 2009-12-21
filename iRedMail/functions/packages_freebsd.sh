@@ -311,7 +311,6 @@ WITHOUT_SASLKMIT=true
 WITH_TLS=true
 WITH_BDB=true
 WITH_MYSQL=true
-WITH_MYSQLI=true
 WITHOUT_PGSQL=true
 WITH_OPENLDAP=true
 WITH_CDB=true
@@ -483,6 +482,74 @@ EOF
     #    WITH_LCD_FILTERING=yes \
     #    install
 
+    cat > /var/db/ports/php5-extensions/options <<EOF
+WITH_BCMATH=true
+WITH_BZ2=true
+WITHOUT_CALENDAR=true
+WITH_CTYPE=true
+WITH_CURL=true
+WITHOUT_DBA=true
+WITHOUT_DBASE=true
+WITH_DOM=true
+WITHOUT_EXIF=true
+WITH_FILEINFO=true
+WITH_FILTER=true
+WITHOUT_FRIBIDI=true
+WITH_FTP=true
+WITH_GD=true
+WITH_GETTEXT=true
+WITHOUT_GMP=true
+WITH_HASH=true
+WITH_ICONV=true
+WITH_IMAP=true
+WITHOUT_INTERBASE=true
+WITH_JSON=true
+WITH_LDAP=true
+WITH_MBSTRING=true
+WITH_MCRYPT=true
+WITH_MHASH=true
+WITH_MING=true
+WITHOUT_MSSQL=true
+WITH_MYSQL=true
+WITH_MYSQLI=true
+WITHOUT_NCURSES=true
+WITHOUT_ODBC=true
+WITH_OPENSSL=true
+WITHOUT_PCNTL=true
+WITH_PCRE=true
+WITHOUT_PDF=true
+WITH_PDO=true
+WITH_PDO_SQLITE=true
+WITHOUT_PGSQL=true
+WITH_POSIX=true
+WITH_PSPELL=true
+WITHOUT_READLINE=true
+WITH_RECODE=true
+WITH_SESSION=true
+WITHOUT_SHMOP=true
+WITH_SIMPLEXML=true
+WITHOUT_SNMP=true
+WITHOUT_SOAP=true
+WITH_SOCKETS=true
+WITH_SPL=true
+WITH_SQLITE=true
+WITHOUT_SYBASE_CT=true
+WITHOUT_SYSVMSG=true
+WITHOUT_SYSVSEM=true
+WITHOUT_SYSVSHM=true
+WITHOUT_TIDY=true
+WITH_TOKENIZER=true
+WITHOUT_WDDX=true
+WITH_XML=true
+WITH_XMLREADER=true
+WITH_XMLRPC=true
+WITH_XMLWRITER=true
+WITH_XSL=true
+WITHOUT_YAZ=true
+WITH_ZIP=true
+WITH_ZLIB=true
+EOF
+
     cat > /var/db/ports/php5-gd/options <<EOF
 WITH_T1LIB=true
 WITHOUT_TRUETYPE=true
@@ -515,8 +582,8 @@ EOF
 
     # PHP extensions
     if [ X"${USE_WEBMAIL}" == X"YES" ]; then
-        ALL_PKGS="${ALL_PKGS} php5-gd php5-imap php5-zip php5-bz2 php5-zlib php5-gettext php5-mbstring php5-mcrypt php5-mhash php5-mysql php5-mysqli php5-openssl php5-pcre php5-session php5-ldap php5-ctype php5-hash php5-iconv php5-pspell php5-dom php5-xml php5-sqlite"
-        ALL_PORTS="${ALL_PORTS} databases/php5-mysqli mail/php5-imap graphics/php5-gd archivers/php5-zip archivers/php5-bz2 archivers/php5-zlib devel/php5-gettext converters/php5-mbstring security/php5-mcrypt security/php5-mhash databases/php5-mysql security/php5-openssl devel/php5-pcre www/php5-session net/php5-ldap textproc/php5-ctype security/php5-hash converters/php5-iconv textproc/php5-pspell textproc/php5-dom textproc/php5-xml databases/php5-sqlite"
+        ALL_PKGS="${ALL_PKGS} php5-gd php5-imap php5-zip php5-bz2 php5-zlib php5-gettext php5-mbstring php5-mcrypt php5-mhash php5-mysql php5-mysqli php5-openssl php5-pcre php5-session php5-ldap php5-ctype php5-hash php5-iconv php5-pspell php5-dom php5-xml php5-sqlite php5-pear"
+        ALL_PORTS="${ALL_PORTS} mail/php5-imap graphics/php5-gd archivers/php5-zip archivers/php5-bz2 archivers/php5-zlib devel/php5-gettext converters/php5-mbstring security/php5-mcrypt security/php5-mhash databases/php5-mysql security/php5-openssl devel/php5-pcre www/php5-session net/php5-ldap textproc/php5-ctype security/php5-hash converters/php5-iconv textproc/php5-pspell textproc/php5-dom textproc/php5-xml databases/php5-sqlite databases/php5-mysqli devel/pear"
     fi
 
     # Roundcube webmail.
