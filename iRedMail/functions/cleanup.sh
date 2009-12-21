@@ -164,14 +164,10 @@ upgrade_php_pear()
         if [ X"${DISTRO}" == X"RHEL" ]; then
             ECHO_INFO "Upgrading php-pear ..."
             pear upgrade --force pear >/dev/null
-
-            ECHO_INFO "Installing php Net_LDAP2 ..."
-            pear install Net_LDAP2 >/dev/null
-
-        elif [ X"${DISTRO}" == X"DEBIAN" ]; then
-            ECHO_INFO "Installing php Net_LDAP2 ..."
-            pear install Net_LDAP2 >/dev/null
         fi
+
+        ECHO_INFO "Installing php Net_LDAP2 ..."
+        pear install Net_LDAP2 >/dev/null
     fi
 
     echo 'export status_upgrade_php_pear="DONE"' >> ${STATUS_FILE}
