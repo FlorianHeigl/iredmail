@@ -122,16 +122,34 @@ echo ${OPTIONAL_COMPONENTS} | grep -i 'iredadmin' >/dev/null 2>&1
 [ X"$?" == X"0" ] && export USE_IREDADMIN='YES' && export USE_IREDADMIN='YES' && echo "export USE_IREDADMIN='YES'" >> ${CONFIG_FILE}
 
 echo ${OPTIONAL_COMPONENTS} | grep -i 'roundcubemail' >/dev/null 2>&1
-[ X"$?" == X"0" ] && export USE_WEBMAIL='YES' && export USE_RCM='YES' && echo "export USE_RCM='YES'" >> ${CONFIG_FILE}
+if [ X"$?" == X"0" ]; then
+    export USE_WEBMAIL='YES'
+    export USE_RCM='YES'
+    echo "export USE_WEBMAIL='YES'" >> ${CONFIG_FILE}
+    echo "export USE_RCM='YES'" >> ${CONFIG_FILE}
+    echo "export REQUIRE_PHP='YES'" >> ${CONFIG_FILE}
+fi
 
 echo ${OPTIONAL_COMPONENTS} | grep -i 'phpldapadmin' >/dev/null 2>&1
-[ X"$?" == X"0" ] && USE_PHPLDAPADMIN='YES' && echo "export USE_PHPLDAPADMIN='YES'" >>${CONFIG_FILE}
+if [ X"$?" == X"0" ]; then
+    export USE_PHPLDAPADMIN='YES'
+    echo "export USE_PHPLDAPADMIN='YES'" >>${CONFIG_FILE}
+    echo "export REQUIRE_PHP='YES'" >> ${CONFIG_FILE}
+fi
 
 echo ${OPTIONAL_COMPONENTS} | grep -i 'phpmyadmin' >/dev/null 2>&1
-[ X"$?" == X"0" ] && USE_PHPMYADMIN='YES' && echo "export USE_PHPMYADMIN='YES'" >>${CONFIG_FILE}
+if [ X"$?" == X"0" ]; then
+    export USE_PHPMYADMIN='YES'
+    echo "export USE_PHPMYADMIN='YES'" >>${CONFIG_FILE}
+    echo "export REQUIRE_PHP='YES'" >> ${CONFIG_FILE}
+fi
 
 echo ${OPTIONAL_COMPONENTS} | grep -i 'postfixadmin' >/dev/null 2>&1
-[ X"$?" == X"0" ] && USE_POSTFIXADMIN='YES' && echo "export USE_POSTFIXADMIN='YES'" >>${CONFIG_FILE}
+if [ X"$?" == X"0" ]; then
+    export USE_POSTFIXADMIN='YES'
+    echo "export USE_POSTFIXADMIN='YES'" >>${CONFIG_FILE}
+    echo "export REQUIRE_PHP='YES'" >> ${CONFIG_FILE}
+fi
 
 echo ${OPTIONAL_COMPONENTS} | grep -i 'awstats' >/dev/null 2>&1
 [ X"$?" == X"0" ] && USE_AWSTATS='YES' && echo "export USE_AWSTATS='YES'" >>${CONFIG_FILE}
