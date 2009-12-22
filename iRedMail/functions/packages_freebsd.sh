@@ -49,7 +49,7 @@ EOF
     for i in m4 cyrus-sasl2 perl openslp mysql-server openldap24 dovecot \
         ca_root_nss libssh2 curl libusb pth gnupg p5-IO-Socket-SSL \
         p5-Archive-Tar p5-Net-DNS p5-Mail-SpamAssassin p5-Authen-SASL \
-        amavisd-new clamav apr python25 apache22 php5 php5-extensions \
+        amavisd-new clamav apr python26 apache22 php5 php5-extensions \
         php5-gd roundcube postfixadmin postfix MySQLdb; do
         mkdir -p /var/db/ports/${i} 2>/dev/null
     done
@@ -360,7 +360,7 @@ WITHOUT_PGSQL=true
 EOF
 
     # Python v2.6. REQUIRED.
-    cat > /var/db/ports/python25/options <<EOF
+    cat > /var/db/ports/python26/options <<EOF
 WITH_THREADS=true
 WITH_HUGE_STACK_SIZE=true
 WITH_UCS4=true
