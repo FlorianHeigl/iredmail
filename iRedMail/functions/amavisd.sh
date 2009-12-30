@@ -100,6 +100,10 @@ EOF
 amavisd_config_rhel()
 {
     ECHO_INFO "==================== Amavisd-new ===================="
+
+    # Don't check amavisd-milter status.
+    perl -pi -e 's/(.*)(status.*prog2.*)/${1}#${2}/' ${DIR_RC_SCRIPTS}/${AMAVISD_RC_SCRIPT_NAME}
+
     backup_file ${AMAVISD_CONF} ${AMAVISD_DKIM_CONF}
 
     ECHO_INFO "Configure amavisd-new: ${AMAVISD_CONF}."
