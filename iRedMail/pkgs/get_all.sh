@@ -228,7 +228,7 @@ check_md5()
     if [ X"${DISTRO}" != X"FREEBSD" ]; then
         ECHO_INFO -n "Validate Packages ..."
 
-        md5file="$(mktemp ${PROG_NAME}.XXXXXX)"
+        md5file="/tmp/check_md5_tmp.${RANDOM}$RANDOM}"
         echo -e "${MD5LIST}" > ${md5file}
         cat MD5.misc >> ${md5file}
         md5sum -c ${md5file} |grep 'FAILED'

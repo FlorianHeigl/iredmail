@@ -77,4 +77,4 @@ export GLOBAL_SIEVE_FILE="${SIEVE_DIR}/${SIEVE_RULE_FILENAME}"
 export DOVECOT_EXPIRE_DICT_BDB='/var/lib/dovecot/expire/expire.db'
 
 # Dovecot quota warning.
-export DOVECOT_QUOTA_WARNING_BIN='/usr/bin/dovecot-quota-warning.sh'
+export DOVECOT_QUOTA_WARNING_BIN='/usr/local/bin/dovecot-quota-warning.sh'
