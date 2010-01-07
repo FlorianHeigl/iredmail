@@ -1,4 +1,9 @@
 iRedMail-0.6.0:
+    * Disallow to use multiple identities AGAIN.
+    * Move dovecot-quota-warning.sh to /usr/local/bin/. Thanks chunlinyao@bbs.
+    * Don't use 'mktemp' to generate random temp file. Thanks chunlinyao@bbs.
+
+iRedMail-0.6.0-beta1:
     * Update dovecot to 1.1.20 on RHEL/CentOS.
     * Update postfixadmin to 2.3.
     * Add domain alias support in MySQL backend.
