@@ -54,7 +54,7 @@ EOF
     postconf -e mynetworks_style="subnet"
     postconf -e smtpd_data_restrictions='reject_unauth_pipelining'
     postconf -e smtpd_reject_unlisted_recipient='yes'   # Default
-    postconf -e smtpd_sender_restrictions="permit_mynetworks, reject_sender_login_mismatch, permit_sasl_authenticated"
+    postconf -e smtpd_sender_restrictions="permit_mynetworks, reject_unauthenticated_sender_login_mismatch, permit_sasl_authenticated"
     postconf -e delay_warning_time='0h'
     postconf -e policy_time_limit='3600'
     postconf -e maximal_queue_lifetime='1d'

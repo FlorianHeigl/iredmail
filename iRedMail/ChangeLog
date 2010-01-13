@@ -1,5 +1,4 @@
 iRedMail-0.6.0:
-    * Disallow to use multiple identities AGAIN.
     * Move dovecot-quota-warning.sh to /usr/local/bin/. Thanks chunlinyao@bbs.
     * Don't use 'mktemp' to generate random temp file. Thanks chunlinyao@bbs.
 
