@@ -203,6 +203,9 @@ EOF
     # This make client users confused why mail not been deleted as 'EXPECT'.
     perl -pi -e 's#(.*delete_always.*=).*#${1} TRUE;#' main.inc.php
 
+    # Show images
+    perl -pi -e 's#(.*show_images.*=).*#${1} 1;#' main.inc.php
+
     ECHO_INFO "Create directory alias for Roundcubemail."
     cat > ${HTTPD_CONF_DIR}/roundcubemail.conf <<EOF
 ${CONF_MSG}
