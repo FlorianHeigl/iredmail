@@ -1,4 +1,6 @@
 iRedMail-0.6.0:
+    * Integrate ejabberd as optional component.
+    * Use yum repository to install all rpm packages on RHEL/CentOS.
     * Move dovecot-quota-warning.sh to /usr/local/bin/. Thanks chunlinyao@bbs.
     * Don't use 'mktemp' to generate random temp file. Thanks chunlinyao@bbs.
 

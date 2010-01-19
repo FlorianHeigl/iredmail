@@ -57,21 +57,6 @@ remove_sendmail()
     echo 'export status_remove_sendmail="DONE"' >> ${STATUS_FILE}
 }
 
-re_generate_iredmail_repo()
-{
-    # Re-generate yum repo file.
-    cat > ${LOCAL_REPO_FILE} <<EOF
-[${LOCAL_REPO_NAME}]
-name=${LOCAL_REPO_NAME}
-baseurl=${YUM_UPDATE_REPO}
-enabled=1
-gpgcheck=0
-priority=1
-EOF
-
-    echo 'export status_re_generate_iredmail_repo="DONE"' >> ${STATUS_FILE}
-}
-
 replace_iptables_rule()
 {
     # Get SSH listen port, replace default port number in iptable rule file.
@@ -228,7 +213,6 @@ EOF
 
     [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run disable_selinux
     check_status_before_run remove_sendmail
-    [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run re_generate_iredmail_repo
     [ X"${KERNEL_NAME}" == X"Linux" ] && check_status_before_run replace_iptables_rule
     [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run replace_mysql_config
     check_status_before_run upgrade_php_pear

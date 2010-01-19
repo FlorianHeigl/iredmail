@@ -92,3 +92,6 @@ df9bcb719e67a5c05448cfae48461fa4  pkgs/clamav-db-0.95.3-1.el5.rf.x86_64.rpm
 8ad7b232e838f6e4b5c6830e1170ab46  pkgs/clamd-0.95.3-1.el5.rf.x86_64.rpm
 3044207975f990fd6ba06edaed26c80d  pkgs/dovecot-1.1.20-1_98.el5.i386.rpm
 3f71d5d762e80c82999175bad3296cb9  pkgs/dovecot-1.1.20-1_98.el5.x86_64.rpm
+d6114a489809a53c50fd72ce65ba7b95  pkgs/erlang-R12B-5.6.el5.1.i386.rpm
+74c12d6984a60f46418b081c70720ef1  pkgs/erlang-R12B-5.6.el5.1.x86_64.rpm
+da623b8ca4fe7e6839dd6d4da20ce782  pkgs/ejabberd-2.0.5-9.ired.x86_64.rpm

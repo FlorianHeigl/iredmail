@@ -216,7 +216,7 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     export YUM_REPOS_DIR='/etc/yum.repos.d'
     export LOCAL_REPO_NAME="${PROG_NAME}"
     export LOCAL_REPO_FILE="${YUM_REPOS_DIR}/${LOCAL_REPO_NAME}.repo"
-    export YUM_UPDATE_REPO='http://www.iredmail.org/yum/rpms/5/'
+    export YUM_UPDATE_REPO='http://iredmail.org/yum/rpms/5/'
 
     # command: dialog.
     export BIN_DIALOG="dialog"
