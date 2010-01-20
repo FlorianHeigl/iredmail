@@ -45,6 +45,8 @@ include     ${OPENLDAP_SCHEMA_DIR}/corba.schema
 include     ${OPENLDAP_SCHEMA_DIR}/cosine.schema
 include     ${OPENLDAP_SCHEMA_DIR}/inetorgperson.schema
 include     ${OPENLDAP_SCHEMA_DIR}/nis.schema
+# Integrate Amavisd-new.
+#include     ${OPENLDAP_SCHEMA_DIR}/${AMAVISD_LDAP_SCHEMA_NAME}
 # Schema provided by ${PROG_NAME}.
 include     ${OPENLDAP_SCHEMA_DIR}/${PROG_NAME_LOWERCASE}.schema
 

@@ -92,7 +92,7 @@ install_all()
             ENABLED_SERVICES="${ENABLED_SERVICES} ldap"
 
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-            ALL_PKGS="${ALL_PKGS} postfix-ldap slapd ldap-utils"
+            ALL_PKGS="${ALL_PKGS} postfix-ldap slapd ldap-utils libnet-ldap-perl"
             ENABLED_SERVICES="${ENABLED_SERVICES} slapd"
         else
             :
@@ -205,10 +205,11 @@ install_all()
 
         [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ] && \
             ALL_PKGS="${ALL_PKGS} ejabberd"
+
+        ENABLED_SERVICES="${ENABLED_SERVICES} ejabberd"
     else
         :
     fi
-
 
     # Misc.
     if [ X"${DISTRO}" == X"RHEL" ]; then

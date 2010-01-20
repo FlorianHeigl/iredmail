@@ -230,6 +230,11 @@ chomp(\$mydomain = "${HOSTNAME}");
   terminate_dsn_on_notify_success => 0,  # don't remove NOTIFY=SUCCESS option
 };
 
+# SpamAssassin debugging. Default if off(0).
+# Note: '\$log_level' variable above is required for SA debug.
+\$log_level = 0;              # verbosity 0..5, -d
+\$sa_debug = 0;
+
 EOF
 
     # Add postfix alias for user: amavis.
@@ -295,11 +300,6 @@ amavisd_config_generic()
 #    bypass_banned_checks_maps => [1],  # don't banned-check this mail
 #    bypass_header_checks_maps => [1],  # don't header-check this mail
 #};
-
-# SpamAssassin debugging. Default if off(0).
-# Note: '\$log_level' variable above is required for SA debug.
-\$log_level = 0;              # verbosity 0..5, -d
-\$sa_debug = 0;
 
 # Modify email subject, add '\$sa_spam_subject_tag'.
 #   0:  disable
@@ -410,6 +410,35 @@ EOF
     [ -d ${DISCLAIMER_DIR} ] || mkdir -p ${DISCLAIMER_DIR} 2>/dev/null
     # Create a empty disclaimer.
     echo -e '\n----' > ${DISCLAIMER_DIR}/default.txt
+
+    # Integrate LDAP.
+    if [ X"${BACKEND}" == X"OpenLDAP" ]; then
+        # Copy ldap schema.
+        [ X"${DISTRO}" == X"FREEBSD" ] && \
+            cp -f /usr/local/share/doc/amavisd-new/LDAP.schema ${OPENLDAP_SCHEMA_DIR}/${AMAVISD_LDAP_SCHEMA_NAME}
+
+        # Enable schema.
+        perl -pi -e 's/^#(include.*amavis.*schema)/${1}/' ${OPENLDAP_SLAPD_CONF}
+
+        cat >> ${AMAVISD_CONF} <<EOF
+# Integrate Amavisd-new with OpenLDAP.
+\$enable_ldap    = 1;    # 1 -> enable, 0 -> disable.
+\$default_ldap   = {
+    hostname        => "${LDAP_SERVER_HOST}",
+    port            => ${LDAP_SERVER_PORT},
+    version         => ${LDAP_BIND_VERSION},
+    tls             => 0,
+    timeout         => 120,
+    base            => "${LDAP_BASEDN}",
+    scope           => "sub",
+    query_filter    => "(&(objectClass=mailUser)(objectClass=amavisAccount)(accountStatus=active)(|(mail=%m)(shadowAddress=%m)))",
+    bind_dn         => "${LDAP_BINDDN}",
+    bind_password   => "${LDAP_BINDPW}",
+};
+EOF
+    else
+        :
+    fi
 
     cat >> ${AMAVISD_CONF} <<EOF
 

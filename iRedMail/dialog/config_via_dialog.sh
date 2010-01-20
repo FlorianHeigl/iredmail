@@ -42,8 +42,6 @@ else
     PASSWORDBOX='--passwordbox'
 fi
 
-echo "${DIALOG}"
-
 # Welcome message.
 ${DIALOG} \
     --title "Welcome and thanks for use" \
