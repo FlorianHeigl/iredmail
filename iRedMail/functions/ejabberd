@@ -21,7 +21,31 @@
 #---------------------------------------------------------------------
 
 # -------------------------------------------------------
-# ---------------------- Postfix ------------------------
+# ---------------------- ejabberd -----------------------
 # -------------------------------------------------------
 
+ejabberd_config()
+{
+    ECHO_INFO "==================== ejabberd ===================="
 
+    # Add first domain as virtual host.
+    perl -pi -e 's#^{hosts,.*##g' ${EJABBERD_CONF}
+    cat >> ${EJABBERD_CONF} <<EOF
+${CONF_MSG}
+# Virtual domains.
+{hosts, ["${FIRST_DOMAIN}"}.
+
+# Authenticate against LDAP.
+{auth_method, ldap}.
+{ldap_servers, ["${LDAP_SERVER_HOST}"]}.
+%%% {ldap_encrypt, tls}.
+{ldap_port, ${LDAP_SERVER_PORT}}.
+{ldap_rootdn, "${LDAP_BINDDN}"}.
+{ldap_password, "${LDAP_BINDPW}"}.
+{ldap_base, "${LDAP_BASEDN}"}.
+{ldap_uids, [{"mail", "%u@%d"}]}.
+{ldap_filter," (&(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_ACCOUNT_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=jabber))"}.
+EOF
+
+    echo 'export status_ejabberd_config="DONE"' >> ${STATUS_FILE}
+}

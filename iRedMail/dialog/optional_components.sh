@@ -107,7 +107,6 @@ ${PROG_NAME} provides several optional components for MySQL backend, you
 can use them by your own:
 " 20 76 6 \
     "Roundcubemail" "WebMail program (PHP, XHTML, CSS2, AJAX)" "on" \
-    "ejabberd" "High Performance XMPP Instant Messaging Server" "on" \
     "phpMyAdmin" "Web-based MySQL database management" "on" \
     "PostfixAdmin" "Web-based program to manage domains and users" "on" \
     "Awstats" "Advanced web and mail log analyzer" "on" \

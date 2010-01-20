@@ -36,4 +36,8 @@ optional_components()
     # iRedAdmin.
     [ X"${USE_IREDADMIN}" == X"YES" ] && \
         check_status_before_run iredadmin_config
+
+    # ejabberd.
+    [ X"${USE_EJABBERD}" == X"YES" ] && \
+        check_status_before_run ejabberd_config
 }
