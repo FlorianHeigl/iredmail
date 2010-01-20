@@ -158,7 +158,7 @@ def ldif_mailuser(domain, username, passwd, cn, quota, groups=''):
     homeDirectory = STORAGE_BASE_DIRECTORY + '/' + mailMessageStore
 
     ldif = [
-        ('objectCLass',         ['inetOrgPerson', 'mailUser', 'shadowAccount']),
+        ('objectClass',         ['inetOrgPerson', 'mailUser', 'shadowAccount', 'amavisAccount',]),
         ('mail',                [mail]),
         ('userPassword',        [passwd]),
         ('mailQuota',           [quota]),

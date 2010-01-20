@@ -206,6 +206,7 @@ FTPHomeDir: ${FTP_STORAGE_BASE_DIRECTORY}/${maildir}/ftp/
 dn: mail=${MAIL},${OU_USER_DN},${DOMAIN_DN},${BASE_DN}
 objectClass: inetOrgPerson
 objectClass: shadowAccount
+objectClass: amavisAccount
 objectClass: mailUser
 objectClass: top
 storageBaseDirectory: ${STORAGE_BASE_DIRECTORY}

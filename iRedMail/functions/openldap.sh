@@ -36,6 +36,11 @@ openldap_config()
     # Copy ${PROG_NAME}.schema.
     cp -f ${SAMPLE_DIR}/iredmail.schema ${OPENLDAP_SCHEMA_DIR}
 
+    # Copy amavisd schema.
+    [ X"${DISTRO}" == X"FREEBSD" ] && \
+        cp -f /usr/local/share/doc/amavisd-new/LDAP.schema ${OPENLDAP_SCHEMA_DIR}/${AMAVISD_LDAP_SCHEMA_NAME}
+
+
     ECHO_INFO "Generate new server configuration file: ${OPENLDAP_SLAPD_CONF}."
     cat > ${OPENLDAP_SLAPD_CONF} <<EOF
 ${CONF_MSG}
@@ -46,7 +51,7 @@ include     ${OPENLDAP_SCHEMA_DIR}/cosine.schema
 include     ${OPENLDAP_SCHEMA_DIR}/inetorgperson.schema
 include     ${OPENLDAP_SCHEMA_DIR}/nis.schema
 # Integrate Amavisd-new.
-#include     ${OPENLDAP_SCHEMA_DIR}/${AMAVISD_LDAP_SCHEMA_NAME}
+include     ${OPENLDAP_SCHEMA_DIR}/${AMAVISD_LDAP_SCHEMA_NAME}
 # Schema provided by ${PROG_NAME}.
 include     ${OPENLDAP_SCHEMA_DIR}/${PROG_NAME_LOWERCASE}.schema
 
@@ -432,6 +437,7 @@ ${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_AWSTATS}
 dn: ${LDAP_ATTR_USER_RDN}=${FIRST_USER}@${FIRST_DOMAIN},${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=${FIRST_DOMAIN},${LDAP_BASEDN}
 objectClass: inetOrgPerson
 objectClass: shadowAccount
+objectClass: amavisAccount
 objectClass: ${LDAP_OBJECTCLASS_MAILUSER}
 objectClass: top
 cn: ${FIRST_USER}

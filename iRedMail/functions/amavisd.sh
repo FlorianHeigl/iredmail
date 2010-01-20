@@ -413,13 +413,6 @@ EOF
 
     # Integrate LDAP.
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
-        # Copy ldap schema.
-        [ X"${DISTRO}" == X"FREEBSD" ] && \
-            cp -f /usr/local/share/doc/amavisd-new/LDAP.schema ${OPENLDAP_SCHEMA_DIR}/${AMAVISD_LDAP_SCHEMA_NAME}
-
-        # Enable schema.
-        perl -pi -e 's/^#(include.*amavis.*schema)/${1}/' ${OPENLDAP_SLAPD_CONF}
-
         cat >> ${AMAVISD_CONF} <<EOF
 # Integrate Amavisd-new with OpenLDAP.
 \$enable_ldap    = 1;    # 1 -> enable, 0 -> disable.
