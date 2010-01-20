@@ -40,11 +40,12 @@ ${CONF_MSG}
 {ldap_servers, ["${LDAP_SERVER_HOST}"]}.
 %%% {ldap_encrypt, tls}.
 {ldap_port, ${LDAP_SERVER_PORT}}.
+{ldap_base, "${LDAP_SUFFIX}"}.
 {ldap_rootdn, "${LDAP_BINDDN}"}.
 {ldap_password, "${LDAP_BINDPW}"}.
-{ldap_base, "${LDAP_BASEDN}"}.
+%%% Enable both normal mail user and mail admin.
+{ldap_filter," (&(|(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(objectClass=${LDAP_OBJECTCLASS_MAILADMIN}))(${LDAP_ATTR_ACCOUNT_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_JABBER}))"}.
 {ldap_uids, [{"mail", "%u@%d"}]}.
-{ldap_filter," (&(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_ACCOUNT_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=jabber))"}.
 EOF
 
     echo 'export status_ejabberd_config="DONE"' >> ${STATUS_FILE}
