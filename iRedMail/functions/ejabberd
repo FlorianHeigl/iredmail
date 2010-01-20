@@ -28,13 +28,16 @@ ejabberd_config()
 {
     ECHO_INFO "==================== ejabberd ===================="
 
-    # Add first domain as virtual host.
+    ECHO_INFO "Add first domain (${FIRST_DOMAIN}) as virtual host."
     perl -pi -e 's#^{hosts,.*##g' ${EJABBERD_CONF}
     cat >> ${EJABBERD_CONF} <<EOF
 ${CONF_MSG}
 # Virtual domains.
 {hosts, ["${FIRST_DOMAIN}"}.
+EOF
 
+    ECHO_INFO "Make ejabberd authenticate user against OpenLDAP."
+    cat >> ${EJABBERD_CONF} <<EOF
 # Authenticate against LDAP.
 {auth_method, ldap}.
 {ldap_servers, ["${LDAP_SERVER_HOST}"]}.
@@ -47,6 +50,11 @@ ${CONF_MSG}
 {ldap_filter," (&(|(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(objectClass=${LDAP_OBJECTCLASS_MAILADMIN}))(${LDAP_ATTR_ACCOUNT_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_JABBER}))"}.
 {ldap_uids, [{"mail", "%u@%d"}]}.
 EOF
+
+    ECHO_INFO "Enable starttls/ssl support."
+    perl -pi -e 's' ${EJABBERD_CONF}
+    perl -pi -e 's#(.*)(%%)(.*certfile.*path.*t.*etc.*ejabberd.pem.*starttls.*)#${1}{certfile, "/etc/ejabberd/ejabberd.pem"}, starttls,#' ${EJABBERD_CONF}
+    perl -pi -e 's#(.*)(%%)(.*certfile.*path.*t.*etc.*ejabberd.pem.* tls.*)#${1}{certfile, "/etc/ejabberd/ejabberd.pem"}, tls,#' ${EJABBERD_CONF}
 
     echo 'export status_ejabberd_config="DONE"' >> ${STATUS_FILE}
 }

@@ -173,7 +173,7 @@ def ldif_mailuser(domain, username, passwd, cn, quota, groups=''):
         ('enabledService',      ['mail', 'smtp', 'pop3', 'pop3secured', 'imap', 'imapsecured',
                                 'deliver', 'forward', 'senderbcc', 'recipientbcc', 'managesieve',
                                 'managesievesecured', 'shadowaddress',
-                                'displayedInGlobalAddressBook',]),
+                                'displayedInGlobalAddressBook', 'jabber',]),
         ('memberOfGroup',       groups),
         ]
 
