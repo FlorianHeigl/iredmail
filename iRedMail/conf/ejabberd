@@ -22,4 +22,4 @@
 
 # Variables for ejabberd and related.
 
-EJABBERD_CONF='/etc/ejabberd/ejabberd.conf'
+EJABBERD_CONF='/etc/ejabberd/ejabberd.cfg'
