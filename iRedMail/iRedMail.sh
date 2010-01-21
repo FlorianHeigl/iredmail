@@ -64,6 +64,7 @@ check_env
 . ${CONF_DIR}/phpmyadmin
 . ${CONF_DIR}/awstats
 . ${CONF_DIR}/iredadmin
+. ${CONF_DIR}/ejabberd
 
 # ------------------------------
 # Import functions.
@@ -126,6 +127,9 @@ fi
 
 # iRedAdmin.
 . ${FUNCTIONS_DIR}/iredadmin.sh
+
+# Ejabberd.
+. ${FUNCTIONS_DIR}/ejabberd.sh
 
 # Optional components.
 . ${FUNCTIONS_DIR}/optional_components.sh
