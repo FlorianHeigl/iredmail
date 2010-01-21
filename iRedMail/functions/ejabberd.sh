@@ -52,7 +52,6 @@ EOF
 EOF
 
     ECHO_INFO "Enable starttls/ssl support."
-    perl -pi -e 's' ${EJABBERD_CONF}
     perl -pi -e 's#(.*)(%%)(.*certfile.*path.*t.*etc.*ejabberd.pem.*starttls.*)#${1}{certfile, "/etc/ejabberd/ejabberd.pem"}, starttls,#' ${EJABBERD_CONF}
     perl -pi -e 's#(.*)(%%)(.*certfile.*path.*t.*etc.*ejabberd.pem.* tls.*)#${1}{certfile, "/etc/ejabberd/ejabberd.pem"}, tls,#' ${EJABBERD_CONF}
 
