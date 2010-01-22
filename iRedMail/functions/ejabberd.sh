@@ -32,13 +32,13 @@ ejabberd_config()
     perl -pi -e 's#^{hosts,.*##g' ${EJABBERD_CONF}
     cat >> ${EJABBERD_CONF} <<EOF
 ${CONF_MSG}
-# Virtual domains.
-{hosts, ["${FIRST_DOMAIN}"}.
+%%% Virtual domains.
+{hosts, ["${FIRST_DOMAIN}"]}.
 EOF
 
     ECHO_INFO "Make ejabberd authenticate user against OpenLDAP."
     cat >> ${EJABBERD_CONF} <<EOF
-# Authenticate against LDAP.
+%%% Authenticate against LDAP.
 {auth_method, ldap}.
 {ldap_servers, ["${LDAP_SERVER_HOST}"]}.
 %%% {ldap_encrypt, tls}.
@@ -47,7 +47,7 @@ EOF
 {ldap_rootdn, "${LDAP_BINDDN}"}.
 {ldap_password, "${LDAP_BINDPW}"}.
 %%% Enable both normal mail user and mail admin.
-{ldap_filter," (&(|(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(objectClass=${LDAP_OBJECTCLASS_MAILADMIN}))(${LDAP_ATTR_ACCOUNT_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_JABBER}))"}.
+{ldap_filter, "(&(|(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(objectClass=${LDAP_OBJECTCLASS_MAILADMIN}))(${LDAP_ATTR_ACCOUNT_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_JABBER}))"}.
 {ldap_uids, [{"mail", "%u@%d"}]}.
 EOF
 
