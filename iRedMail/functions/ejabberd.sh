@@ -29,7 +29,7 @@ ejabberd_config()
     ECHO_INFO "==================== ejabberd ===================="
 
     ECHO_INFO "Add first domain (${FIRST_DOMAIN}) as virtual host."
-    perl -pi -e 's#^{hosts,.*##g' ${EJABBERD_CONF}
+    perl -pi -e 's#^({hosts,.*)#%%%${1}#g' ${EJABBERD_CONF}
     cat >> ${EJABBERD_CONF} <<EOF
 ${CONF_MSG}
 %%% Virtual domains.
