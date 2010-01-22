@@ -28,10 +28,11 @@ ejabberd_config()
 {
     ECHO_INFO "==================== ejabberd ===================="
 
+    backup_file ${EJABBERD_CONF}
+
     ECHO_INFO "Add first domain (${FIRST_DOMAIN}) as virtual host."
     perl -pi -e 's#^({hosts,.*)#%%%${1}#g' ${EJABBERD_CONF}
     cat >> ${EJABBERD_CONF} <<EOF
-${CONF_MSG}
 %%% Virtual domains.
 {hosts, ["${FIRST_DOMAIN}"]}.
 EOF
@@ -43,11 +44,11 @@ EOF
 {ldap_servers, ["${LDAP_SERVER_HOST}"]}.
 %%% {ldap_encrypt, tls}.
 {ldap_port, ${LDAP_SERVER_PORT}}.
-{ldap_base, "${LDAP_SUFFIX}"}.
+{ldap_base, "${LDAP_BASEDN}"}.
 {ldap_rootdn, "${LDAP_BINDDN}"}.
 {ldap_password, "${LDAP_BINDPW}"}.
 %%% Enable both normal mail user and mail admin.
-{ldap_filter, "(&(|(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(objectClass=${LDAP_OBJECTCLASS_MAILADMIN}))(${LDAP_ATTR_ACCOUNT_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_JABBER}))"}.
+{ldap_filter, "(&(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_ACCOUNT_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_JABBER}))"}.
 {ldap_uids, [{"mail", "%u@%d"}]}.
 EOF
 
