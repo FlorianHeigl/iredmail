@@ -256,6 +256,9 @@ EOF
 amavisd_config_generic()
 {
     cat >> ${AMAVISD_CONF} <<EOF
+# Set hostname.
+\$myhostname = "${HOSTNAME}";
+
 # Set listen IP/PORT.
 \$notify_method  = 'smtp:[${SMTP_SERVER}]:10025';
 \$forward_method = 'smtp:[${SMTP_SERVER}]:10025';
