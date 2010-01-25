@@ -38,6 +38,9 @@ ejabberd_config()
 EOF
 
     ECHO_INFO "Make ejabberd authenticate user against OpenLDAP."
+    # Disable other auth mothods.
+    perl -pi -e 's#^({auth_method,.*)#%%%${1}#' ${EJABBERD_CONF}
+
     cat >> ${EJABBERD_CONF} <<EOF
 %%% Authenticate against LDAP.
 {auth_method, ldap}.
@@ -53,8 +56,15 @@ EOF
 EOF
 
     ECHO_INFO "Enable starttls/ssl support."
-    perl -pi -e 's#(.*)(%%)(.*certfile.*path.*t.*etc.*ejabberd.pem.*starttls.*)#${1}{certfile, "/etc/ejabberd/ejabberd.pem"}, starttls,#' ${EJABBERD_CONF}
-    perl -pi -e 's#(.*)(%%)(.*certfile.*path.*t.*etc.*ejabberd.pem.* tls.*)#${1}{certfile, "/etc/ejabberd/ejabberd.pem"}, tls,#' ${EJABBERD_CONF}
+    perl -pi -e 's#(.*)(%%)(.*certfile.*path.*t.*etc.*ejabberd.pem.*starttls.*)#${1}{certfile, "$ENV{EJABBERD_PEM}"}, starttls,#' ${EJABBERD_CONF}
+
+    # Enable tls, port 5223.
+    sed -i '/5223/,/5269/ s#\(.*\)\(%%\)\(.*{5223,.*ejabberd_c2s,.*\)#\1\3#' ${EJABBERD_CONF}
+    sed -i '/5223/,/5269/ s#\(.*\)\(%%\)\(.*{access,.*c2s},\)#\1\3#' ${EJABBERD_CONF}
+    sed -i '/5223/,/5269/ s#\(.*\)\(%%\)\(.*{shaper,.*c2s_shaper},\)#\1\3#' ${EJABBERD_CONF}
+    sed -i '/5223/,/5269/ s#\(.*\)\(%%\)\(.*\)\({certfile,.*},\)\(.*tls,\)#\1\3{certfile, "'${EJABBERD_PEM}'"},\5#' ${EJABBERD_CONF}
+    sed -i '/5223/,/5269/ s#\(.*\)\(%%\)\(.*{max_stanza_size.*\)#\1\3#' ${EJABBERD_CONF}
+    sed -i '/5223/,/5269/ s#\(.*\)\(%%\)\(.*]},\)#\1\3#' ${EJABBERD_CONF}
 
     echo 'export status_ejabberd_config="DONE"' >> ${STATUS_FILE}
 }

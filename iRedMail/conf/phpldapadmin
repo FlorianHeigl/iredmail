@@ -21,8 +21,8 @@
 #---------------------------------------------------------------------
 
 # For phpLDAPadmin.
-export PLA_VERSION='1.1.0.7'
-export PLA_TARBALL="phpldapadmin-${PLA_VERSION}.tar.gz"
+export PLA_VERSION='1.2.0.4'
+export PLA_TARBALL="phpldapadmin-${PLA_VERSION}.tgz"
 
 if [ X"${DISTRO}" == X"FREEBSD" ]; then
     export PLA_HTTPD_ROOT="${HTTPD_SERVERROOT}/phpldapadmin/htdocs"

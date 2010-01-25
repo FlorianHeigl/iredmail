@@ -22,4 +22,5 @@
 
 # Variables for ejabberd and related.
 
-EJABBERD_CONF='/etc/ejabberd/ejabberd.cfg'
+export EJABBERD_CONF='/etc/ejabberd/ejabberd.cfg'
+export EJABBERD_PEM='/etc/ejabberd/ejabberd.pem'

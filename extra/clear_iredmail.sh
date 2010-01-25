@@ -35,7 +35,7 @@ export DEBIAN_FRONTEND='noninteractive'
 . ${CONF_DIR}/amavisd
 . ${CONF_DIR}/clamav
 . ${CONF_DIR}/spamassassin
-. ${CONF_DIR}/squirrelmail
+[ -f ${CONF_DIR}/squirrelmail ] && . ${CONF/squirrelmail
 . ${CONF_DIR}/roundcube
 . ${CONF_DIR}/postfixadmin
 . ${CONF_DIR}/phpmyadmin

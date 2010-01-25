@@ -169,6 +169,9 @@ extract_pkg()
     if echo $1 | grep '.tar.gz$' >/dev/null 2>&1 ; then
         ECHO_INFO "Extracting: $1 -> ${DST}"
         tar zxf $1 -C $DST
+    elif echo $1 | grep '.tgz$' >/dev/null 2>&1 ; then
+        ECHO_INFO "Extracting: $1 -> ${DST}"
+        tar zxf $1 -C $DST
     elif echo $1 | grep '.tar.bz2$' >/dev/null 2>&1 ; then
         # Install bzip2 first.
         check_pkg ${BIN_BZIP2} ${PKG_BZIP2}
