@@ -22,5 +22,12 @@
 
 # Variables for ejabberd and related.
 
-export EJABBERD_CONF='/etc/ejabberd/ejabberd.cfg'
-export EJABBERD_PEM='/etc/ejabberd/ejabberd.pem'
+if [ X"${DISTRO}" == X"FREEBSD" ]; then
+    export EJABBERD_CONF='/usr/local/etc/ejabberd/ejabberd.cfg'
+    export EJABBERDCTL_CONF='/usr/local/etc/ejabberd/ejabberdctl.cfg'
+    export EJABBERD_PEM='/usr/local/etc/ejabberd/ejabberd.pem'
+else
+    export EJABBERD_CONF='/etc/ejabberd/ejabberd.cfg'
+    export EJABBERDCTL_CONF='/etc/ejabberd/ejabberdctl.cfg'
+    export EJABBERD_PEM='/etc/ejabberd/ejabberd.pem'
+fi
