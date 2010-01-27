@@ -93,7 +93,6 @@ use them by your own:
 " 20 76 6 \
     "iRedAdmin" "Official web-based iRedMail Admin Panel" "on" \
     "Roundcubemail" "WebMail program (PHP, XHTML, CSS2, AJAX)" "on" \
-    "ejabberd" "High Performance XMPP Instant Messaging Server" "on" \
     "phpLDAPadmin" "Web-based LDAP browser to manage your LDAP server" "on" \
     "phpMyAdmin" "Web-based MySQL database management" "on" \
     "Awstats" "Advanced web and mail log analyzer" "on" \
@@ -129,12 +128,6 @@ if [ X"$?" == X"0" ]; then
     echo "export USE_WEBMAIL='YES'" >> ${CONFIG_FILE}
     echo "export USE_RCM='YES'" >> ${CONFIG_FILE}
     echo "export REQUIRE_PHP='YES'" >> ${CONFIG_FILE}
-fi
-
-echo ${OPTIONAL_COMPONENTS} | grep -i 'ejabberd' >/dev/null 2>&1
-if [ X"$?" == X"0" ]; then
-    export USE_EJABBERD='YES'
-    echo "export USE_EJABBERD='YES'" >>${CONFIG_FILE}
 fi
 
 echo ${OPTIONAL_COMPONENTS} | grep -i 'phpldapadmin' >/dev/null 2>&1
