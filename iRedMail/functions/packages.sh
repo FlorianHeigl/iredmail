@@ -198,19 +198,6 @@ install_all()
         :
     fi
 
-    # ejabberd.
-    if [ X"${USE_EJABBERD}" == X"YES" ]; then
-        [ X"${DISTRO}" == X"RHEL" ] && \
-        ALL_PKGS="${ALL_PKGS} ejabberd.${ARCH}"
-
-        [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ] && \
-            ALL_PKGS="${ALL_PKGS} ejabberd"
-
-        ENABLED_SERVICES="${ENABLED_SERVICES} ejabberd"
-    else
-        :
-    fi
-
     # Misc.
     if [ X"${DISTRO}" == X"RHEL" ]; then
         ALL_PKGS="${ALL_PKGS} bzip2.${ARCH} acl.${ARCH} mailx.${ARCH} patch.${ARCH} vixie-cron.${ARCH} tmpwatch.${ARCH} crontabs.noarch dos2unix.${ARCH}"

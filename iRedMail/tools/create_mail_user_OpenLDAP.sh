@@ -234,7 +234,6 @@ enabledService: senderbcc
 enabledService: recipientbcc
 enabledService: shadowaddress
 enabledService: displayedInGlobalAddressBook
-enabledService: jabber
 ${LDIF_PUREFTPD_USER}
 EOF
 }
