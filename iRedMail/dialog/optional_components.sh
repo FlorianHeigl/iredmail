@@ -58,15 +58,18 @@ if [ X"${BACKEND}" == X"OpenLDAP" ]; then
     ${DIALOG} \
     --title "Optional Components for ${BACKEND} backend" \
     --checklist "\
-${PROG_NAME} provides several optional components for LDAP backend, you can
-use them by your own:
+Note:
+    * DKIM is recommended.
+    * DNS record (TXT type) are required for both SPF and DKIM.
+    * Please refer to file for more detail after installation:
+      ${TIP_FILE}
 " 20 76 7 \
     "SPF Validation" "Sender Policy Framework" "on" \
     "DKIM signing/verification" "DomainKeys Identified Mail" "on" \
     "iRedAdmin" "Official web-based iRedMail Admin Panel" "on" \
     "Roundcubemail" "WebMail program (PHP, AJAX)" "on" \
     "phpLDAPadmin" "Web-based OpenLDAP management tool" "on" \
-    "phpMyAdmin" "Web-based MySQL database management" "on" \
+    "phpMyAdmin" "Web-based MySQL management tool" "on" \
     "Awstats" "Advanced web and mail log analyzer" "on" \
     2>/tmp/optional_components
 
@@ -74,14 +77,17 @@ elif [ X"${BACKEND}" == X"MySQL" ]; then
     ${DIALOG} \
     --title "Optional Components for ${BACKEND} backend" \
     --checklist "\
-${PROG_NAME} provides several optional components for MySQL backend, you
-can use them by your own:
+Note:
+    * DKIM is recommended.
+    * DNS record (TXT type) are required for both SPF and DKIM.
+    * Please refer to file for more detail after installation:
+      ${TIP_FILE}
 " 20 76 6 \
     "SPF Validation" "Sender Policy Framework" "on" \
     "DKIM signing/verification" "DomainKeys Identified Mail" "on" \
     "Roundcubemail" "WebMail program (PHP, AJAX)" "on" \
-    "phpMyAdmin" "Web-based MySQL database management" "on" \
-    "PostfixAdmin" "Web-based program to manage domains and users" "on" \
+    "phpMyAdmin" "Web-based MySQL management tool" "on" \
+    "PostfixAdmin" "Web-based mail account management tool" "on" \
     "Awstats" "Advanced web and mail log analyzer" "on" \
     2>/tmp/optional_components
 else
