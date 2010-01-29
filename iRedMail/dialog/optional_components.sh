@@ -50,36 +50,6 @@ else
     export ENABLE_DOVECOT_SSL="NO" && echo 'export ENABLE_DOVECOT_SSL="NO"' >> ${CONFIG_FILE}
 fi
 
-# --------------------------------------------------
-# ------------- SPF & DKIM -------------------------
-# --------------------------------------------------
-${DIALOG} \
-    --title "SPF & DKIM" \
-        --checklist "\
-Do you want to support SPF and DKIM?
-
-Note:
-    * DKIM is recommended.
-    * DNS record (txt type) are required for both.
-
-Please refer to the following file for more details after
-installation completed:
-
-    * ${TIP_FILE}
-" 20 76 4 \
-    "SPF Validation" "Sender Policy Framework" "on" \
-    "DKIM signing and verification" "DomainKeys Identified Mail" "on" \
-    2>/tmp/spf_dkim
-
-SPF_DKIM="$(cat /tmp/spf_dkim)"
-rm -f /tmp/spf_dkim
-
-echo ${SPF_DKIM} | grep -i '\<SPF\>' >/dev/null 2>&1
-[ X"$?" == X"0" ] && ENABLE_SPF='YES' && echo "export ENABLE_SPF='YES'" >>${CONFIG_FILE}
-
-echo ${SPF_DKIM} | grep -i '\<DKIM\>' >/dev/null 2>&1
-[ X"$?" == X"0" ] && ENABLE_DKIM='YES' && echo "export ENABLE_DKIM='YES'" >>${CONFIG_FILE}
-
 # ----------------------------------------
 # Optional components for special backend.
 # ----------------------------------------
@@ -90,10 +60,12 @@ if [ X"${BACKEND}" == X"OpenLDAP" ]; then
     --checklist "\
 ${PROG_NAME} provides several optional components for LDAP backend, you can
 use them by your own:
-" 20 76 6 \
+" 20 76 7 \
+    "SPF Validation" "Sender Policy Framework" "on" \
+    "DKIM signing/verification" "DomainKeys Identified Mail" "on" \
     "iRedAdmin" "Official web-based iRedMail Admin Panel" "on" \
-    "Roundcubemail" "WebMail program (PHP, XHTML, CSS2, AJAX)" "on" \
-    "phpLDAPadmin" "Web-based LDAP browser to manage your LDAP server" "on" \
+    "Roundcubemail" "WebMail program (PHP, AJAX)" "on" \
+    "phpLDAPadmin" "Web-based OpenLDAP management tool" "on" \
     "phpMyAdmin" "Web-based MySQL database management" "on" \
     "Awstats" "Advanced web and mail log analyzer" "on" \
     2>/tmp/optional_components
@@ -105,7 +77,9 @@ elif [ X"${BACKEND}" == X"MySQL" ]; then
 ${PROG_NAME} provides several optional components for MySQL backend, you
 can use them by your own:
 " 20 76 6 \
-    "Roundcubemail" "WebMail program (PHP, XHTML, CSS2, AJAX)" "on" \
+    "SPF Validation" "Sender Policy Framework" "on" \
+    "DKIM signing/verification" "DomainKeys Identified Mail" "on" \
+    "Roundcubemail" "WebMail program (PHP, AJAX)" "on" \
     "phpMyAdmin" "Web-based MySQL database management" "on" \
     "PostfixAdmin" "Web-based program to manage domains and users" "on" \
     "Awstats" "Advanced web and mail log analyzer" "on" \
@@ -117,6 +91,12 @@ fi
 
 OPTIONAL_COMPONENTS="$(cat /tmp/optional_components)"
 rm -f /tmp/optional_components
+
+echo ${OPTIONAL_COMPONENTS} | grep -i '\<SPF\>' >/dev/null 2>&1
+[ X"$?" == X"0" ] && export ENABLE_SPF='YES' && echo "export ENABLE_SPF='YES'" >>${CONFIG_FILE}
+
+echo ${OPTIONAL_COMPONENTS} | grep -i '\<DKIM\>' >/dev/null 2>&1
+[ X"$?" == X"0" ] && export ENABLE_DKIM='YES' && echo "export ENABLE_DKIM='YES'" >>${CONFIG_FILE}
 
 echo ${OPTIONAL_COMPONENTS} | grep -i 'iredadmin' >/dev/null 2>&1
 [ X"$?" == X"0" ] && export USE_IREDADMIN='YES' && export USE_IREDADMIN='YES' && echo "export USE_IREDADMIN='YES'" >> ${CONFIG_FILE}
