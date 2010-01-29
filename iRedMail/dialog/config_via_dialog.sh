@@ -131,26 +131,6 @@ fi
 #
 . ${DIALOG_DIR}/optional_components.sh
 
-#
-# Set mail alias for root.
-#
-${DIALOG} \
-    --title "Specify mail alias for 'root' user" \
-    --inputbox "\
-Please specify an E-Mail address for 'root' user alias.
-
-Mail deliver failure notice and other system notify mails will be
-send to this alias address instead of system account 'root'.
-
-EXAMPLE:
-
-    * ${FIRST_USER}@${FIRST_DOMAIN}
-" 20 76 "${FIRST_USER}@${FIRST_DOMAIN}" 2>/tmp/mail_alias_root
-
-MAIL_ALIAS_ROOT=$(cat /tmp/mail_alias_root)
-echo "export MAIL_ALIAS_ROOT='${MAIL_ALIAS_ROOT}'" >> ${CONFIG_FILE}
-rm -f /tmp/mail_alias_root
-
 # Append EOF tag in config file.
 echo "#EOF" >> ${CONFIG_FILE}
 
