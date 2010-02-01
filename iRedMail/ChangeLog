@@ -1,4 +1,4 @@
-iRedMail-0.6.0:
+iRedMail-0.6.0-beta2:
     * Upgrade phpLDAPadmin to 1.2.0.5.
     * Use yum repository to install all rpm packages on RHEL/CentOS.
     * Move dovecot-quota-warning.sh to /usr/local/bin/. Thanks chunlinyao@bbs.
