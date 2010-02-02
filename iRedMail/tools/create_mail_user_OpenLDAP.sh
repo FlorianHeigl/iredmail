@@ -227,6 +227,8 @@ enabledService: imap
 enabledService: imapsecured
 enabledService: managesieve
 enabledService: managesievesecured
+enabledService: sieve
+enabledService: sievesecured
 enabledService: smtp
 enabledService: deliver
 enabledService: forward
