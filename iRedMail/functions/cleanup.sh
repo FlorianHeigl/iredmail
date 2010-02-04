@@ -66,7 +66,7 @@ replace_iptables_rule()
         export sshd_port='22'
     else
         # Replace port number in iptable rule file.
-        perl -pi -e 's#(.*multiport.*,)22(.*)#${1}$ENV{'sshd_port'}${2}#' ${SAMPLE_DIR}/iptables.rules
+        perl -pi -e 's#(.*multiport.*,)22 (.*)#${1}$ENV{sshd_port} ${2}#' ${SAMPLE_DIR}/iptables.rules
     fi
 
     ECHO_QUESTION "Would you like to use firewall rules shipped within iRedMail now?"

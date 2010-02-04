@@ -68,6 +68,7 @@ EOF
     postconf -e biff="no"   # Do not notify local user.
     postconf -e relay_domains='$mydestination'
     postconf -e inet_interfaces="all"
+    postconf -e inet_protocols="ipv4"
     postconf -e mynetworks="127.0.0.0/8"
     postconf -e mynetworks_style="subnet"
     postconf -e smtpd_data_restrictions='reject_unauth_pipelining'
