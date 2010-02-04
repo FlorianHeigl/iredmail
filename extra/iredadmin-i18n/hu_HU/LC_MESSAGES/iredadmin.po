@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: iRedAdmin 1.1.0\n"
 "Report-Msgid-Bugs-To: michaelbibby@gmail.com\n"
 "POT-Creation-Date: 2009-11-04 09:10+0100\n"
-"PO-Revision-Date: 2010-02-04 22:48+0800\n"
+"PO-Revision-Date: 2010-02-05 00:01+0800\n"
 "Last-Translator: Sinkovicz Zoltan <zolikusz@gmail.com>\n"
 "Language-Team: Hungarian <HU@li.org>\n"
 "Plural-Forms: nplurals=1; plural=0\n"
@@ -729,11 +729,11 @@ msgid "Enable this account"
 msgstr "Felhasználó engedélyezése"
 
 #: ../templates/default/ldap/macros.html:225
-msgid "Check this box to relay all mails of this account to other mail server"
+msgid "Check this box to relay all mails of this account"
 msgstr ""
 
 #: ../templates/default/ldap/macros.html:225
-msgid "Check this box to relay all mails of this domain to other mail server"
+msgid "Check this box to relay all mails of this domain"
 msgstr ""
 
 #: ../templates/default/ldap/macros.html:233
@@ -1304,7 +1304,7 @@ msgstr ""
 
 #: ../templates/default/ldap/user_import.html:76
 msgid ""
-"Account names must be seperated by space, comma or a new line. Multy-byte"
+"Account names must be seperated by space, comma or a new line. Multi-byte"
 " characters are not allowed."
 msgstr ""
 
@@ -1464,50 +1464,6 @@ msgstr "Felhasználó engedélyezése"
 #: ../templates/default/panel/macros.html:82
 msgid "Active account"
 msgstr "Felhasználó engedélyezése"
-
-#: ../templates/default/panel/macros.html:89
-msgid "Apache HTTP Server"
-msgstr ""
-
-#: ../templates/default/panel/macros.html:91
-msgid "Postfix Mail Transport Agent"
-msgstr ""
-
-#: ../templates/default/panel/macros.html:93
-msgid "Dovecot POP3/IMAP Server"
-msgstr ""
-
-#: ../templates/default/panel/macros.html:95
-msgid "OpenLDAP Directory Server"
-msgstr ""
-
-#: ../templates/default/panel/macros.html:97
-msgid "MySQL Database Server"
-msgstr ""
-
-#: ../templates/default/panel/macros.html:99
-msgid "Policyd Anti-Spam Daemon"
-msgstr ""
-
-#: ../templates/default/panel/macros.html:101
-msgid "Amavisd Anti-Spam Interface"
-msgstr ""
-
-#: ../templates/default/panel/macros.html:103
-msgid "ClamAV Anti-Virus Daemon"
-msgstr ""
-
-#: ../templates/default/panel/macros.html:105
-msgid "Pysieved Managesieve Server"
-msgstr ""
-
-#: ../templates/default/panel/macros.html:107
-msgid "Syslog Loggig Daemon"
-msgstr ""
-
-#: ../templates/default/panel/macros.html:109
-msgid "Cron Daemon"
-msgstr ""
 
 #: ../templates/default/policyd/wblist.html:17
 #: ../templates/default/policyd/wblist.html:26
