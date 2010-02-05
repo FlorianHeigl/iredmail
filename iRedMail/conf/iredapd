@@ -21,7 +21,7 @@
 #---------------------------------------------------------------------
 
 export IREDAPD_VERSION='1.2'
-export IREDAPD_TARBALL="iRedAPD-${IREDADMIN_VERSION}.tar.bz2"
+export IREDAPD_TARBALL="iRedAPD-${IREDAPD_VERSION}.tar.bz2"
 export IREDAPD_ROOT_DIR='/opt'
 
 export IREDAPD_LISTEN_ADDR='127.0.0.1'
