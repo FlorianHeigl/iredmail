@@ -191,6 +191,7 @@ install_all()
     if [ X"${USE_IREDAPD}" == X"YES" ]; then
         [ X"${DISTRO}" == X"RHEL" ] && ALL_PKGS="${ALL_PKGS} python-ldap.${ARCH}"
         [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ] && ALL_PKGS="${ALL_PKGS} python-ldap"
+        ENABLED_SERVICES="${ENABLED_SERVICES} iredapd"
     else
         :
     fi

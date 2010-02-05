@@ -620,6 +620,7 @@ EOF
     if [ X"${USE_IREDAPD}" == X"YES" ]; then
         # python-ldap.
         ALL_PORTS="${ALL_PORTS} net/py-ldap2"
+        ENABLED_SERVICES="${ENABLED_SERVICES} iredapd"
     fi
 
     # iRedAdmin.
