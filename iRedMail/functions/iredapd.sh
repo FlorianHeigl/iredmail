@@ -27,6 +27,7 @@ iredapd_config()
     ECHO_INFO "==================== iRedAPD: Postfix Policy Daemon ===================="
 
     # Extract source tarball.
+    cd ${MISC_DIR}
     extract_pkg ${IREDAPD_TARBALL} ${IREDAPD_ROOT_DIR}
 
     ECHO_INFO "Configure iRedAPD."
