@@ -28,6 +28,7 @@ iredapd_config()
 
     # Extract source tarball.
     cd ${MISC_DIR}
+    [ -d ${IREDAPD_ROOT_DIR} ] || mkdir -p ${IREDAPD_ROOT_DIR}
     extract_pkg ${IREDAPD_TARBALL} ${IREDAPD_ROOT_DIR}
 
     ECHO_INFO "Configure iRedAPD."
