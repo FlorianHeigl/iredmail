@@ -711,10 +711,11 @@ postfix_config_sasl()
     #
     # **** End HELO related ****
 
-    #
-    # Policyd, perl-Mail-SPF and non-SPF.
-    #
-    postconf -e smtpd_recipient_restrictions="reject_unknown_sender_domain, reject_unknown_recipient_domain, reject_non_fqdn_sender, reject_non_fqdn_recipient, reject_unlisted_recipient, permit_mynetworks, reject_unauth_destination, permit_sasl_authenticated, reject_non_fqdn_helo_hostname, reject_invalid_helo_hostname, check_policy_service inet:127.0.0.1:10031"
+    if [ X"${USE_IREDAPD}" == X"YES" ]; then
+        postconf -e smtpd_recipient_restrictions="reject_unknown_sender_domain, reject_unknown_recipient_domain, reject_non_fqdn_sender, reject_non_fqdn_recipient, reject_unlisted_recipient, permit_mynetworks, check_policy_service inet:${IREDAPD_LISTEN_ADDR}:${IREDAPD_LISTEN_PORT}, reject_unauth_destination, permit_sasl_authenticated, reject_non_fqdn_helo_hostname, reject_invalid_helo_hostname, check_policy_service inet:127.0.0.1:10031"
+    else
+        postconf -e smtpd_recipient_restrictions="reject_unknown_sender_domain, reject_unknown_recipient_domain, reject_non_fqdn_sender, reject_non_fqdn_recipient, reject_unlisted_recipient, permit_mynetworks, reject_unauth_destination, permit_sasl_authenticated, reject_non_fqdn_helo_hostname, reject_invalid_helo_hostname, check_policy_service inet:127.0.0.1:10031"
+    fi
 
     echo 'export status_postfix_config_sasl="DONE"' >> ${STATUS_FILE}
 }

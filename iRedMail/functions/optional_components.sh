@@ -37,4 +37,8 @@ optional_components()
     [ X"${USE_IREDADMIN}" == X"YES" ] && \
         check_status_before_run iredadmin_config
 
+    # iRedAPD.
+    [ X"${USE_IREDAPD}" == X"YES" ] && \
+        check_status_before_run iredapd_config
+
 }

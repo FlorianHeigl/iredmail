@@ -616,10 +616,17 @@ EOF
         ALL_PORTS="${ALL_PORTS} mail/postfixadmin"
     fi
 
+    # iRedAPD.
+    if [ X"${USE_IREDAPD}" == X"YES" ]; then
+        # python-ldap.
+        ALL_PORTS="${ALL_PORTS} net/py-ldap2"
+    fi
+
     # iRedAdmin.
     if [ X"${USE_IREDADMIN}" == X"YES" ]; then
         # mod_wsgi.
         ALL_PORTS="${ALL_PORTS} www/mod_wsgi www/webpy devel/py-Jinja2 databases/py-MySQLdb net/py-ldap2 net/py-netifaces"
+        [ X"${USE_IREDAPD}" != X"YES" ] && ALL_PORTS="${ALL_PORTS} net/py-ldap2"
     fi
 
     # Fetch all source tarballs.

@@ -52,6 +52,7 @@ check_env
 . ${CONF_DIR}/mysql
 . ${CONF_DIR}/postfix
 . ${CONF_DIR}/policyd
+. ${CONF_DIR}/iredapd
 . ${CONF_DIR}/pypolicyd-spf
 . ${CONF_DIR}/dovecot
 . ${CONF_DIR}/managesieve
@@ -99,6 +100,9 @@ fi
 
 # Policy service: Policyd & pypolicyd-spf.
 . ${FUNCTIONS_DIR}/policy_service.sh
+
+# iRedAPD.
+. ${FUNCTIONS_DIR}/iredapd.sh
 
 # Dovecot.
 . ${FUNCTIONS_DIR}/dovecot.sh

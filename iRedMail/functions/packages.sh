@@ -187,13 +187,25 @@ install_all()
         :
     fi
 
+    # iRedAPD.
+    if [ X"${USE_IREDAPD}" == X"YES" ]; then
+        [ X"${DISTRO}" == X"RHEL" ] && ALL_PKGS="${ALL_PKGS} python-ldap.${ARCH}"
+        [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ] && ALL_PKGS="${ALL_PKGS} python-ldap"
+    else
+        :
+    fi
+
     # iRedAdmin.
     if [ X"${USE_IREDADMIN}" == X"YES" ]; then
-        [ X"${DISTRO}" == X"RHEL" ] && \
-        ALL_PKGS="${ALL_PKGS} python-jinja2.${ARCH} python-webpy.noarch python-ldap.${ARCH} MySQL-python.${ARCH} mod_wsgi.${ARCH}"
+        if [ X"${DISTRO}" == X"RHEL" ]; then
+            ALL_PKGS="${ALL_PKGS} python-jinja2.${ARCH} python-webpy.noarch python-ldap.${ARCH} MySQL-python.${ARCH} mod_wsgi.${ARCH}"
+            [ X"${USE_IREDAPD}" != "YES" ] && ALL_PKGS="${ALL_PKGS} python-ldap.${ARCH}"
+        fi
 
-        [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ] && \
+        if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
             ALL_PKGS="${ALL_PKGS} libapache2-mod-wsgi python-mysqldb python-ldap python-jinja2 python-netifaces python-webpy"
+            [ X"${USE_IREDAPD}" != "YES" ] && ALL_PKGS="${ALL_PKGS} python-ldap"
+        fi
     else
         :
     fi
