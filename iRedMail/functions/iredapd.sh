@@ -42,7 +42,7 @@ iredapd_config()
 
     # Copy sample config file.
     cd ${IREDAPD_ROOT_DIR}/iredapd/etc/
-    cp iredapd.ini.sample iredapd.init
+    cp iredapd.ini.sample iredapd.ini
 
     # Config iredapd.
     perl -pi -e 's#(listen_addr.*=).*#${1} $ENV{IREDAPD_LISTEN_ADDR}#' iredapd.ini
