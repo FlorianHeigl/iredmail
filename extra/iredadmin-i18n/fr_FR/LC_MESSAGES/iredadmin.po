@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: iRedAdmin 1.1.0\n"
-"Report-Msgid-Bugs-To: michaelbibby@gmail.com\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2009-10-04 00:45+0800\n"
-"PO-Revision-Date: 2010-02-05 00:01+0800\n"
+"PO-Revision-Date: 2010-02-07 00:54+0800\n"
 "Last-Translator: Mael LE SAOUT <mael.lesaout@gmail.com>\n"
 "Language-Team: fr_FR <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
@@ -1118,7 +1118,7 @@ msgid "Selected domains were deleted."
 msgstr "Les domaines sélectionnés ont été supprimés."
 
 #: ../templates/default/ldap/msgHandlers.html:74
-msgid "Selected domains were diabled."
+msgid "Selected domains were disabled."
 msgstr "Les domaines sélectionnés ont été désactivés."
 
 #: ../templates/default/ldap/msgHandlers.html:76

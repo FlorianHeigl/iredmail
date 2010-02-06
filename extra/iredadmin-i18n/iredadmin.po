@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: michaelbibby@gmail.com\n"
-"POT-Creation-Date: 2010-02-05 00:01+0800\n"
+"POT-Creation-Date: 2010-02-07 00:54+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1099,7 +1099,7 @@ msgid "Selected domains were deleted."
 msgstr ""
 
 #: ../templates/default/ldap/msgHandlers.html:74
-msgid "Selected domains were diabled."
+msgid "Selected domains were disabled."
 msgstr ""
 
 #: ../templates/default/ldap/msgHandlers.html:76
