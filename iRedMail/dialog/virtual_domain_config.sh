@@ -94,6 +94,7 @@ Please specify password for your first user:
 Note:
 
     * You can login webmail with this account.
+    * 'STARTTLS' is available for connection security.
 
 Warning:
 
@@ -126,8 +127,10 @@ Admin of domain ${FIRST_DOMAIN}:
           is full email address.
 
 First mail user:
-    * Account: ${FIRST_USER}@${FIRST_DOMAIN}
+    * Username: ${FIRST_USER}@${FIRST_DOMAIN}
     * Password: ${FIRST_USER_PASSWD}
+    * SMTP/IMAP auth type: login
+    * Connection security: STARTTLS
 
     Note:
         - This account is a normal mail user.
