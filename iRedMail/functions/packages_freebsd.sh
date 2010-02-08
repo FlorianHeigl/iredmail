@@ -590,6 +590,9 @@ EOF
     if [ X"${USE_RCM}" == X"YES" ]; then
         ALL_PKGS="${ALL_PKGS} roundcube"
         ALL_PORTS="${ALL_PORTS} mail/roundcube"
+
+        # pear-Net_LDAP2 is required for changing password.
+        [ X"${BACKEND}" == X"OpenLDAP" ] && ALL_PORTS="${ALL_PORTS} net/pear-Net_LDAP2"
     fi
 
     # Awstats.
