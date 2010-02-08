@@ -516,8 +516,8 @@ enable_dovecot()
     # FreeBSD.
     if [ X"${DISTRO}" == X"FREEBSD" ]; then
         # It seems there's a bug in Dovecot port, it will try to invoke '/usr/lib/sendmail'
-        # to send vacation response which should be '/usr/local/sbin/sendmail'.
-        [ ! -e /usr/lib/sendmail ] && ln -s /usr/local/sbin/sendmail /usr/lib/sendmail 2>/dev/null
+        # to send vacation response which should be '/usr/sbin/mailwrapper'.
+        [ ! -e /usr/lib/sendmail ] && ln -s /usr/sbin/mailwrapper /usr/lib/sendmail 2>/dev/null
 
         # Start dovecot when system start up.
         cat >> /etc/rc.conf <<EOF

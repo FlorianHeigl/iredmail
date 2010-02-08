@@ -36,7 +36,11 @@ iredapd_config()
     ln -s ${IREDAPD_ROOT_DIR}/iRedAPD-${IREDAPD_VERSION} ${IREDAPD_ROOT_DIR}/iredapd 2>/dev/null
 
     # Copy init rc script.
-    cp ${IREDAPD_ROOT_DIR}/iredapd/rc_scripts/iredapd ${DIR_RC_SCRIPTS}/iredapd
+    if [ X"${DISTRO}" == X"FreeBSD" ]; then
+        cp ${SAMPLE_DIR}/iredapd.freebsd ${DIR_RC_SCRIPTS}/iredapd
+    else
+        cp ${IREDAPD_ROOT_DIR}/iredapd/rc_scripts/iredapd ${DIR_RC_SCRIPTS}/iredapd
+    fi
     chmod +x ${DIR_RC_SCRIPTS}/iredapd
 
     chmod +x ${IREDAPD_ROOT_DIR}/iredapd/src/iredapd.py
@@ -58,6 +62,15 @@ iredapd_config()
 
     # Enable plugins.
     perl -pi -e 's#(plugins).*#${1} = maillist_access_policy#' iredapd.ini
+
+    # FreeBSD.
+    if [ X"${DISTRO}" == X"FREEBSD" ]; then
+        # Start iredapd when system start up.
+        cat >> /etc/rc.conf <<EOF
+# Start iredapd.
+iredapd_enable="YES"
+EOF
+    fi
 
     cat >> ${TIP_FILE} <<EOF
 iRedAPD - Postfix Policy Daemon:
