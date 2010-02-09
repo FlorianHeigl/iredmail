@@ -1,3 +1,8 @@
+iRedMail-0.6.0-beta3:
+    * Fix incorrect symbol link of /usr/lib/sendmail.
+    * Fix iRedAPD rc script on FreeBSD.
+    * Fix rc.conf setting for policyd on FreeBSD.
+
 iRedMail-0.6.0-beta2:
     * Integrate iRedAPD-1.2 to provide mail list access management for LDAP
       backend.

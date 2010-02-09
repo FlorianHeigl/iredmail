@@ -399,7 +399,7 @@ policy_service_config()
     # FreeBSD: Start policyd when system start up.
     [ X"${DISTRO}" == X"FREEBSD" ] && cat >> /etc/rc.conf <<EOF
 # Start policyd.
-policyd_enable="YES"
+postfix_policyd_sf_enable="YES"
 EOF
 
     echo 'export status_policy_service_config="DONE"' >> ${STATUS_FILE}
