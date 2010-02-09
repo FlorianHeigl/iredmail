@@ -35,11 +35,11 @@ start() {
         else
             rm -f ${pidfile} >/dev/null 2>&1
             echo "Starting ${name} ..."
-            python ${BINPATH} ${CONFIG}
+            /usr/local/bin/python ${BINPATH} ${CONFIG}
         fi
     else
         echo "Starting ${name} ..."
-        python ${BINPATH} ${CONFIG}
+        /usr/local/bin/python ${BINPATH} ${CONFIG}
     fi
     unset s
 }
