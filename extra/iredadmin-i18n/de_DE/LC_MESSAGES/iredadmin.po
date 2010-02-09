@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: iRedAdmin 1.1.0\n"
 "Report-Msgid-Bugs-To: michaelbibby@gmail.com\n"
 "POT-Creation-Date: 2010-02-05 00:01+0800\n"
-"PO-Revision-Date: 2010-02-07 00:54+0800\n"
+"PO-Revision-Date: 2010-02-09 11:20+0800\n"
 "Last-Translator: Bronko <caparcona@web.de>\n"
 "Language-Team: de_DE <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
@@ -238,7 +238,6 @@ msgstr "Mail Alias Profil ‰ndern"
 
 #: ../templates/default/ldap/alias_profile.html:40
 #: ../templates/default/ldap/maillist_profile.html:54
-#: ../templates/default/ldap/maillist_profile.html:114
 msgid "Members"
 msgstr "Mitglieder"
 
@@ -536,7 +535,6 @@ msgid "List all mail aliases."
 msgstr "Alle Mail Aliasse zeigen."
 
 #: ../templates/default/ldap/domains.html:102
-#: ../templates/default/panel/log.html:136
 #: ../templates/default/policyd/wblist.html:139
 msgid "Are you sure want to delete selected domain(s) and accounts under it?"
 msgstr "Sind Sie sicher alle ausgew‰hlten Dom‰nen und derer Konten zu lˆschen?"
@@ -964,7 +962,6 @@ msgstr "Neue Alias Mitglieder hinzuf¸gen"
 
 #: ../templates/default/ldap/macros.html:595
 #: ../templates/default/ldap/macros.html:603
-#: ../templates/default/ldap/maillist_profile.html:103
 msgid "Public"
 msgstr "÷ffentlich"
 
@@ -973,7 +970,6 @@ msgid "Member"
 msgstr "Mitglied"
 
 #: ../templates/default/ldap/macros.html:601
-#: ../templates/default/ldap/maillist_profile.html:119
 msgid "Announcement"
 msgstr "Bekanntgabe"
 
@@ -1001,8 +997,12 @@ msgid "Access Policy Level"
 msgstr "Zugriffsrichtlinien Level"
 
 #: ../templates/default/ldap/maillist_profile.html:103
-msgid "Email is unrestricted."
+msgid "Unrestricted"
 msgstr "E-Mail ist uneingeschr‰nkt."
+
+#: ../templates/default/ldap/maillist_profile.html:103
+msgid "Everyone can send mail to this address."
+msgstr ""
 
 #: ../templates/default/ldap/maillist_profile.html:109
 msgid "Domain Wide"
@@ -1010,18 +1010,28 @@ msgstr "Dom‰nenweit"
 
 #: ../templates/default/ldap/maillist_profile.html:109
 #, python-format
-msgid "Restricted to all users under domain <strong>%s</strong>."
+msgid "Only users under domain <strong>%s</strong> can send mail to this address."
 msgstr "Beschr‰nkt auf alle Mitglieder der Dom‰ne <strong>%s</strong>."
 
 #: ../templates/default/ldap/maillist_profile.html:114
+msgid "Members Only"
+msgstr "Mitglieder"
+
+#: ../templates/default/ldap/maillist_profile.html:114
 #, python-format
-msgid "Restricted to <a href=\"%s\">members</a> of this mail list."
+msgid ""
+"Only <a href=\"%s\">members</a> of this mail list can send mail to this "
+"address."
 msgstr "Beschr‰nkt auf <a href=\"%s\">Mitglieder</a> dieser Mail Liste."
 
 #: ../templates/default/ldap/maillist_profile.html:119
+msgid "Moderators Only"
+msgstr "Moderatoren"
+
+#: ../templates/default/ldap/maillist_profile.html:119
 #, python-format
-msgid "Restricted to <a href=\"%s\">moderators</a> only."
-msgstr "Nur f¸r <a href=\"%s\">Moderatoren</a>."
+msgid "Only <a href=\"%s\">moderators</a> can send mail to this address."
+msgstr ""
 
 #: ../templates/default/ldap/maillist_profile.html:128
 msgid "Add internal members"
@@ -1113,7 +1123,6 @@ msgid "Selected domains were deleted."
 msgstr "Markierte Dom‰nen wurden gelˆscht."
 
 #: ../templates/default/ldap/msgHandlers.html:74
-
 msgid "Selected domains were disabled."
 msgstr "Markierte Dom‰nen wurden deaktiviert."
 
@@ -1441,6 +1450,10 @@ msgstr "IP Adresse"
 #: ../templates/default/panel/log.html:107
 msgid "Message"
 msgstr "Nachricht"
+
+#: ../templates/default/panel/log.html:136
+msgid "Are you sure want to delete selected item(s)?"
+msgstr "Sind Sie sicher die gew‰hlten Konten zu lˆschen?"
 
 #: ../templates/default/panel/macros.html:4
 #: ../templates/default/policyd/macros.html:4

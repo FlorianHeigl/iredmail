@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: iRedAdmin 1.1.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2009-10-22 17:33+0800\n"
-"PO-Revision-Date: 2010-02-07 00:54+0800\n"
+"PO-Revision-Date: 2010-02-09 11:20+0800\n"
 "Last-Translator: Zhang Huangbin <michaelbibby@gmail.com>\n"
 "Language-Team: zh_CN <LL@li.org>\n"
 "Plural-Forms: nplurals=1; plural=0\n"
@@ -238,7 +238,6 @@ msgstr "编辑别名属性"
 
 #: ../templates/default/ldap/alias_profile.html:40
 #: ../templates/default/ldap/maillist_profile.html:54
-#: ../templates/default/ldap/maillist_profile.html:114
 msgid "Members"
 msgstr "成员"
 
@@ -530,7 +529,6 @@ msgid "List all mail aliases."
 msgstr "列出所有邮件别名。"
 
 #: ../templates/default/ldap/domains.html:102
-#: ../templates/default/panel/log.html:136
 #: ../templates/default/policyd/wblist.html:139
 msgid "Are you sure want to delete selected domain(s) and accounts under it?"
 msgstr "您确定要删除选中的域和域内的帐号吗？"
@@ -952,7 +950,6 @@ msgstr "为别名添加新成员"
 
 #: ../templates/default/ldap/macros.html:595
 #: ../templates/default/ldap/macros.html:603
-#: ../templates/default/ldap/maillist_profile.html:103
 msgid "Public"
 msgstr "公开"
 
@@ -961,7 +958,6 @@ msgid "Member"
 msgstr "成员"
 
 #: ../templates/default/ldap/macros.html:601
-#: ../templates/default/ldap/maillist_profile.html:119
 msgid "Announcement"
 msgstr "公告专用"
 
@@ -989,8 +985,12 @@ msgid "Access Policy Level"
 msgstr "访问策略"
 
 #: ../templates/default/ldap/maillist_profile.html:103
-msgid "Email is unrestricted."
+msgid "Unrestricted"
 msgstr "邮件服务"
+
+#: ../templates/default/ldap/maillist_profile.html:103
+msgid "Everyone can send mail to this address."
+msgstr "所有人都可以发送邮件到这个地址。"
 
 #: ../templates/default/ldap/maillist_profile.html:109
 msgid "Domain Wide"
@@ -998,18 +998,28 @@ msgstr "域名"
 
 #: ../templates/default/ldap/maillist_profile.html:109
 #, python-format
-msgid "Restricted to all users under domain <strong>%s</strong>."
-msgstr "当前数量是：<strong>%s</strong>。"
+msgid "Only users under domain <strong>%s</strong> can send mail to this address."
+msgstr "只有域<strong>%s</strong> 内部的用户才可以发送邮件到这个地址。"
+
+#: ../templates/default/ldap/maillist_profile.html:114
+msgid "Members Only"
+msgstr "成员"
 
 #: ../templates/default/ldap/maillist_profile.html:114
 #, python-format
-msgid "Restricted to <a href=\"%s\">members</a> of this mail list."
-msgstr "仅限邮件列表的 <a href=\"%s\">成员</a>。"
+msgid ""
+"Only <a href=\"%s\">members</a> of this mail list can send mail to this "
+"address."
+msgstr "只有邮件列表的 <a href=\"%s\">成员</a> 才可以发送邮件到这个地址。"
+
+#: ../templates/default/ldap/maillist_profile.html:119
+msgid "Moderators Only"
+msgstr "管理员"
 
 #: ../templates/default/ldap/maillist_profile.html:119
 #, python-format
-msgid "Restricted to <a href=\"%s\">moderators</a> only."
-msgstr "仅限邮件列表的 <a href=\"%s\">管理员</a>。"
+msgid "Only <a href=\"%s\">moderators</a> can send mail to this address."
+msgstr "只有邮件列表 <a href=\"%s\">管理员</a> 才可以发送邮件到这个地址。"
 
 #: ../templates/default/ldap/maillist_profile.html:128
 msgid "Add internal members"
@@ -1418,6 +1428,10 @@ msgstr "将收下的邮件密送到以下地址"
 #: ../templates/default/panel/log.html:107
 msgid "Message"
 msgstr "信息"
+
+#: ../templates/default/panel/log.html:136
+msgid "Are you sure want to delete selected item(s)?"
+msgstr "您确定要删除选中的条目吗？"
 
 #: ../templates/default/panel/macros.html:4
 #: ../templates/default/policyd/macros.html:4

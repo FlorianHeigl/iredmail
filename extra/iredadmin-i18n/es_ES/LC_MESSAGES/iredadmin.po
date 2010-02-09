@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: iRedAdmin 1.1.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2009-11-28 17:33+0500\n"
-"PO-Revision-Date: 2010-02-07 00:54+0800\n"
+"PO-Revision-Date: 2010-02-09 11:20+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: es_ES <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
@@ -238,7 +238,6 @@ msgstr "Editar perfil del dominio"
 
 #: ../templates/default/ldap/alias_profile.html:40
 #: ../templates/default/ldap/maillist_profile.html:54
-#: ../templates/default/ldap/maillist_profile.html:114
 msgid "Members"
 msgstr "Recuerdame"
 
@@ -528,7 +527,6 @@ msgid "List all mail aliases."
 msgstr "Listar todo los usuarios de correo"
 
 #: ../templates/default/ldap/domains.html:102
-#: ../templates/default/panel/log.html:136
 #: ../templates/default/policyd/wblist.html:139
 msgid "Are you sure want to delete selected domain(s) and accounts under it?"
 msgstr ""
@@ -954,7 +952,6 @@ msgstr ""
 
 #: ../templates/default/ldap/macros.html:595
 #: ../templates/default/ldap/macros.html:603
-#: ../templates/default/ldap/maillist_profile.html:103
 msgid "Public"
 msgstr ""
 
@@ -963,7 +960,6 @@ msgid "Member"
 msgstr "Recuerdame"
 
 #: ../templates/default/ldap/macros.html:601
-#: ../templates/default/ldap/maillist_profile.html:119
 msgid "Announcement"
 msgstr ""
 
@@ -991,7 +987,11 @@ msgid "Access Policy Level"
 msgstr ""
 
 #: ../templates/default/ldap/maillist_profile.html:103
-msgid "Email is unrestricted."
+msgid "Unrestricted"
+msgstr ""
+
+#: ../templates/default/ldap/maillist_profile.html:103
+msgid "Everyone can send mail to this address."
 msgstr ""
 
 #: ../templates/default/ldap/maillist_profile.html:109
@@ -1000,17 +1000,27 @@ msgstr "Nombre de Dominio"
 
 #: ../templates/default/ldap/maillist_profile.html:109
 #, python-format
-msgid "Restricted to all users under domain <strong>%s</strong>."
+msgid "Only users under domain <strong>%s</strong> can send mail to this address."
 msgstr ""
 
 #: ../templates/default/ldap/maillist_profile.html:114
+msgid "Members Only"
+msgstr "Recuerdame"
+
+#: ../templates/default/ldap/maillist_profile.html:114
 #, python-format
-msgid "Restricted to <a href=\"%s\">members</a> of this mail list."
+msgid ""
+"Only <a href=\"%s\">members</a> of this mail list can send mail to this "
+"address."
+msgstr ""
+
+#: ../templates/default/ldap/maillist_profile.html:119
+msgid "Moderators Only"
 msgstr ""
 
 #: ../templates/default/ldap/maillist_profile.html:119
 #, python-format
-msgid "Restricted to <a href=\"%s\">moderators</a> only."
+msgid "Only <a href=\"%s\">moderators</a> can send mail to this address."
 msgstr ""
 
 #: ../templates/default/ldap/maillist_profile.html:128
@@ -1420,6 +1430,10 @@ msgstr "Dirección de Correo"
 #: ../templates/default/panel/log.html:107
 msgid "Message"
 msgstr ""
+
+#: ../templates/default/panel/log.html:136
+msgid "Are you sure want to delete selected item(s)?"
+msgstr "¿Esta seguro de borrar las cueantas selecionada(s)?"
 
 #: ../templates/default/panel/macros.html:4
 #: ../templates/default/policyd/macros.html:4
