@@ -29,7 +29,14 @@ install_all()
     # Enable syslog.
     [ X"${DISTRO}" == X"RHEL" ] && ENABLED_SERVICES="syslog ${ENABLED_SERVICES} "
     [ X"${DISTRO}" == X"DEBIAN" ] && ENABLED_SERVICES="rsyslog ${ENABLED_SERVICES}"
-    [ X"${DISTRO}" == X"UBUNTU" ] && ENABLED_SERVICES="sysklogd ${ENABLED_SERVICES}"
+
+    if [ X"${DISTRO}" == X"UBUNTU" ]; then
+        if [ X"${DISTRO_CODENAME}" == X"Karmic" ]; then
+            ENABLED_SERVICES="rsyslog ${ENABLED_SERVICES}"
+        else
+            ENABLED_SERVICES="sysklogd ${ENABLED_SERVICES}"
+        fi
+    fi
 
     # Apache and PHP.
     if [ X"${USE_EXIST_AMP}" != X"YES" ]; then
