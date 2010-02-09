@@ -1,5 +1,5 @@
 iRedMail-0.6.0-beta3:
-    * Fix incorrect symbol link of /usr/lib/sendmail.
+    * Fix incorrect symbol link of /usr/lib/sendmail on FreeBSD.
     * Fix iRedAPD rc script on FreeBSD.
     * Fix rc.conf setting for policyd on FreeBSD.
 
