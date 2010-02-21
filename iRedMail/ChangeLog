@@ -1,5 +1,5 @@
 iRedMail-0.6.0-RC1:
-    * Update iRedAPD to 1.2.2.
+    * Update iRedAPD to 1.2.3.
 
 iRedMail-0.6.0-beta3:
     * Fix incorrect symbol link of /usr/lib/sendmail on FreeBSD.
