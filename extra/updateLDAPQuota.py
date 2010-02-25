@@ -18,7 +18,7 @@ bind_pw = 'passwd'
 new_quota = 2048   # quota size in MB
 
 # Convert quota to KB.
-quota = int(new_quota) * 1024 * 1024
+quota = str(int(new_quota) * 1024 * 1024)
 
 # Initialize LDAP connection.
 conn = ldap.initialize(uri=uri, trace_level=0,)
@@ -31,7 +31,7 @@ allUsers = conn.search_s(
         basedn,
         ldap.SCOPE_SUBTREE,
         "(objectClass=mailUser)",
-        ['mailQuota', ],
+        ['mail', 'mailQuota', ],
         )
 
 # Debug.
@@ -43,15 +43,17 @@ count = 1
 for user in allUsers:
     dn = user[0]
     mail = user[1]['mail'][0]
+    cur_quota = user[1].get('mailQuota', ['unlimited'])[0]
 
-    # Update it if there are something missed..
-    if len(values) != 0:
-        print >> sys.stderr, """Updating user (%d): %s""" % (count, mail)
+    print >> sys.stderr, """Updating user (%d): %s, %s""" % (count, mail, cur_quota)
 
-        mod_attrs = [ (ldap.MOD_REPLACE, 'mailQuota', quota) ]
+    mod_attrs = [ (ldap.MOD_REPLACE, 'mailQuota', quota) ]
+    try:
         conn.modify_s(dn, mod_attrs)
+    except Exception, e:
+        print >> sys.stderr, str(e)
 
-        count += 1
+    count += 1
 
 # Unbind connection.
 conn.unbind()
