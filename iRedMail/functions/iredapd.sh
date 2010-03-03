@@ -36,7 +36,7 @@ iredapd_config()
     ln -s ${IREDAPD_ROOT_DIR}/iRedAPD-${IREDAPD_VERSION} ${IREDAPD_ROOT_DIR}/iredapd 2>/dev/null
 
     # Copy init rc script.
-    if [ X"${DISTRO}" == X"FreeBSD" ]; then
+    if [ X"${DISTRO}" == X"FREEBSD" ]; then
         cp ${SAMPLE_DIR}/iredapd.freebsd ${DIR_RC_SCRIPTS}/iredapd
     else
         cp ${IREDAPD_ROOT_DIR}/iredapd/rc_scripts/iredapd ${DIR_RC_SCRIPTS}/iredapd
