@@ -106,7 +106,7 @@ fi
 export OPENLDAP_DEFAULT_DBTYPE='bdb'    # bdb, hdb(used for OpenLDAP-2.4.x)
 
 # LDAP data directory.
-if [ X"${KERNEL_NAME}" == X"FreeBSD" ]; then
+if [ X"${DISTRO}" == X"FREEBSD" ]; then
     export OPENLDAP_DATA_DIR='/var/db/openldap-data'    # Do *NOT* end with '/'.
 else
     export OPENLDAP_DATA_DIR='/var/lib/ldap'    # Do *NOT* end with '/'.
