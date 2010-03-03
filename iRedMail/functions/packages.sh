@@ -244,6 +244,13 @@ install_all()
     # Enable/Disable services.
     enable_all_services()
     {
+        # Add service with chkconfig.
+        if [ X"${DISTRO}" == X"RHEL" ]; then
+            for s in ${ENABLED_SERVICES}; do
+                chkconfig --add ${s}
+            done
+        fi
+
         # Enable services.
         eval ${enable_service} ${ENABLED_SERVICES} >/dev/null
 

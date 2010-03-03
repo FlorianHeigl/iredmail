@@ -41,8 +41,7 @@ iredapd_config()
     else
         cp ${IREDAPD_ROOT_DIR}/iredapd/rc_scripts/iredapd ${DIR_RC_SCRIPTS}/iredapd
     fi
-    chmod +x ${DIR_RC_SCRIPTS}/iredapd
-
+    chmod 0555 ${DIR_RC_SCRIPTS}/iredapd
     chmod +x ${IREDAPD_ROOT_DIR}/iredapd/src/iredapd.py
 
     # Copy sample config file.

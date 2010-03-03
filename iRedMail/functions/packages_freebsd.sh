@@ -671,7 +671,7 @@ EOF
                         exit 255
                     fi
             else
-                ECHO_INFO "Skip port: ${i}."
+                ECHO_INFO "Skip installing port: ${i}."
             fi
         fi
     done
