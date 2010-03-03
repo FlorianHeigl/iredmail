@@ -252,12 +252,21 @@ EOF
 EOF
 fi
 
-if [ X"${POSTFIX_STARTED}" != X"YES" ]; then
+if [ X"${POSTFIX_STARTED}" != X"YES" -a X"${DISTRO}" != X"FREEBSD" ]; then
     cat <<EOF
-* Please reboot your system to enable mail services or start them
+* Please reboot your system to enable mail related services or start them
 * manually without reboot:
 *
 *   # for i in ${ENABLED_SERVICES}; do ${DIR_RC_SCRIPTS}/\${i} restart; done
+*
+EOF
+fi
+
+if [ X"${DISTRO}" != X"FREEBSD" ]; then
+    # Have to reboot freebsd to enable postfix, because sendmail is binding
+    # to port '25'.
+    cat <<EOF
+* Please reboot your system to enable mail related services.
 *
 EOF
 fi
