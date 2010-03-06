@@ -44,6 +44,9 @@ iredapd_config()
     chmod 0555 ${DIR_RC_SCRIPTS}/iredapd
     chmod +x ${IREDAPD_ROOT_DIR}/iredapd/src/iredapd.py
 
+    ECHO_INFO "Make iredapd start after system startup."
+    eval ${enable_service} iredapd >/dev/null
+
     # Copy sample config file.
     cd ${IREDAPD_ROOT_DIR}/iredapd/etc/
     cp iredapd.ini.sample iredapd.ini

@@ -198,7 +198,9 @@ install_all()
     if [ X"${USE_IREDAPD}" == X"YES" ]; then
         [ X"${DISTRO}" == X"RHEL" ] && ALL_PKGS="${ALL_PKGS} python-ldap.${ARCH}"
         [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ] && ALL_PKGS="${ALL_PKGS} python-ldap"
-        ENABLED_SERVICES="${ENABLED_SERVICES} iredapd"
+        # Don't append 'iredapd' to ${ENABLED_SERVICES} since we don't have
+        # RC script ready.
+        #ENABLED_SERVICES="${ENABLED_SERVICES} iredapd"
     else
         :
     fi
@@ -244,13 +246,6 @@ install_all()
     # Enable/Disable services.
     enable_all_services()
     {
-        # Add service with chkconfig.
-        if [ X"${DISTRO}" == X"RHEL" ]; then
-            for s in ${ENABLED_SERVICES}; do
-                chkconfig --add ${s}
-            done
-        fi
-
         # Enable services.
         eval ${enable_service} ${ENABLED_SERVICES} >/dev/null
 
