@@ -275,7 +275,6 @@ WITH_SPAMASSASSIN=true
 WITH_P0F=true
 WITH_ALTERMIME=true
 WITH_FILE=true
-WITH_RAR=true
 WITH_UNRAR=true
 WITH_ARJ=true
 WITH_UNARJ=true
@@ -295,6 +294,14 @@ WITHOUT_SQLITE=true
 WITHOUT_PGSQL=true
 WITHOUT_MILTER=true
 EOF
+
+    # Disable RAR support on amd64 since it requires 32-bit libraries
+    # installed under /usr/lib32.
+    if [ X"${ARCH}" == X"${i386}" ]; then
+        cat >> /var/db/ports/amavisd-new/options <<EOF
+WITH_RAR=true
+EOF
+    fi
 
     ALL_PKGS="${ALL_PKGS} amavisd-new"
     ALL_PORTS="${ALL_PORTS} security/amavisd-new"
