@@ -644,7 +644,7 @@ EOF
                 if [ X"$?" == X"0" ]; then
                     echo "export status_fetch_port_${portname}='DONE'" >> ${STATUS_FILE}
                 else
-                    ECHO_ERROR "Tarballs were not downloaded correctly, please fix it before we go further."
+                    ECHO_ERROR "Tarballs were not downloaded correctly, please fix it manually before we go further."
                     exit 255
                 fi
             else
@@ -667,7 +667,7 @@ EOF
                     if [ X"$?" == X"0" ]; then
                         echo "export status_install_port_${portname}='DONE'" >> ${STATUS_FILE}
                     else
-                        ECHO_ERROR "Port was not success installed, please fix it before we go further and then re-execute this script."
+                        ECHO_ERROR "Port was not success installed, please fix it manually before we go further and then re-execute this script."
                         exit 255
                     fi
             else
