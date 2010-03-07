@@ -301,6 +301,10 @@ EOF
         cat >> /var/db/ports/amavisd-new/options <<EOF
 WITH_RAR=true
 EOF
+    else
+        cat >> /var/db/ports/amavisd-new/options <<EOF
+WITHOUT_RAR=true
+EOF
     fi
 
     ALL_PKGS="${ALL_PKGS} amavisd-new"
@@ -651,7 +655,7 @@ EOF
                 if [ X"$?" == X"0" ]; then
                     echo "export status_fetch_port_${portname}='DONE'" >> ${STATUS_FILE}
                 else
-                    ECHO_ERROR "Tarballs were not downloaded correctly, please fix it manually before we go further."
+                    ECHO_ERROR "Tarballs were not downloaded correctly, please fix it manually and then re-execute iRedMail.sh."
                     exit 255
                 fi
             else
@@ -674,7 +678,7 @@ EOF
                     if [ X"$?" == X"0" ]; then
                         echo "export status_install_port_${portname}='DONE'" >> ${STATUS_FILE}
                     else
-                        ECHO_ERROR "Port was not success installed, please fix it manually before we go further and then re-execute this script."
+                        ECHO_ERROR "Port was not success installed, please fix it manually and then re-execute this script."
                         exit 255
                     fi
             else
