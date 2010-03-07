@@ -23,15 +23,15 @@
 # -------------------------------------------
 # Misc.
 # -------------------------------------------
-disable_selinux()
+cleanup_disable_selinux()
 {
     ECHO_INFO "Disable SELinux."
     [ -f /etc/selinux/config ] && perl -pi -e 's#^(SELINUX=)(.*)#${1}disabled#' /etc/selinux/config
 
-    echo 'export status_disable_selinux="DONE"' >> ${STATUS_FILE}
+    echo 'export status_cleanup_disable_selinux="DONE"' >> ${STATUS_FILE}
 }
 
-remove_sendmail()
+cleanup_remove_sendmail()
 {
     # Remove sendmail.
     eval ${LIST_ALL_PKGS} | grep sendmail >/dev/null 2>&1
@@ -54,10 +54,10 @@ remove_sendmail()
         :
     fi
 
-    echo 'export status_remove_sendmail="DONE"' >> ${STATUS_FILE}
+    echo 'export status_cleanup_remove_sendmail="DONE"' >> ${STATUS_FILE}
 }
 
-replace_iptables_rule()
+cleanup_replace_iptables_rule()
 {
     # Get SSH listen port, replace default port number in iptable rule file.
     export sshd_port="$(grep '^Port' ${SSHD_CONFIG} | awk '{print $2}' )"
@@ -111,10 +111,10 @@ replace_iptables_rule()
 
     [ X"${KERNEL_NAME}" == X"Linux" ] && export ENABLED_SERVICES="${ENABLED_SERVICES} iptables"
 
-    echo 'export status_replace_iptables_rule="DONE"' >> ${STATUS_FILE}
+    echo 'export status_cleanup_replace_iptables_rule="DONE"' >> ${STATUS_FILE}
 }
 
-replace_mysql_config()
+cleanup_replace_mysql_config()
 {
     if [ X"${BACKEND}" == X"MySQL" -o X"${BACKEND}" == X"OpenLDAP" ]; then
         # Both MySQL and OpenLDAP will need MySQL database server, so prompt
@@ -139,10 +139,10 @@ replace_mysql_config()
         :
     fi
 
-    echo 'export status_replace_mysql_config="DONE"' >> ${STATUS_FILE}
+    echo 'export status_cleanup_replace_mysql_config="DONE"' >> ${STATUS_FILE}
 }
 
-upgrade_php_pear()
+cleanup_upgrade_php_pear()
 {
     if [ X"${BACKEND}" == X"OpenLDAP" -a X"${USE_RCM}" == X"YES" ]; then
         if [ X"${DISTRO}" == X"RHEL" ]; then
@@ -154,10 +154,10 @@ upgrade_php_pear()
         pear install Net_LDAP2 >/dev/null
     fi
 
-    echo 'export status_upgrade_php_pear="DONE"' >> ${STATUS_FILE}
+    echo 'export status_cleanup_upgrade_php_pear="DONE"' >> ${STATUS_FILE}
 }
 
-start_postfix_now()
+cleanup_start_postfix_now()
 {
     # Start postfix without reboot your system.
     ECHO_QUESTION -n "Would you like to start postfix now? [y|N]"
@@ -198,7 +198,19 @@ start_postfix_now()
             ;;
     esac
 
-    echo 'export status_start_postfix_now="DONE"' >> ${STATUS_FILE}
+    echo 'export status_cleanup_start_postfix_now="DONE"' >> ${STATUS_FILE}
+}
+
+cleanup_sa_preconfig()
+{
+    # Required on FreeBSD to start Amavisd-new.
+    ECHO_INFO "Fetching SpamAssassin rules..."
+    /usr/local/bin/sa-update >/dev/null
+
+    ECHO_INFO "Compiling SpamAssassin ruleset into native code, this can take a while, please be patient..."
+    /usr/local/bin/sa-compile >/dev/null
+
+    echo 'export status_cleanup_sa_preconfig="DONE"' >> ${STATUS_FILE}
 }
 
 cleanup()
@@ -211,12 +223,13 @@ cleanup()
 
 EOF
 
-    [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run disable_selinux
-    check_status_before_run remove_sendmail
-    [ X"${KERNEL_NAME}" == X"Linux" ] && check_status_before_run replace_iptables_rule
-    [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run replace_mysql_config
-    check_status_before_run upgrade_php_pear
-    check_status_before_run start_postfix_now
+    [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run cleanup_disable_selinux
+    check_status_before_run cleanup_remove_sendmail
+    [ X"${KERNEL_NAME}" == X"Linux" ] && check_status_before_run cleanup_replace_iptables_rule
+    [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run cleanup_replace_mysql_config
+    check_status_before_run cleanup_upgrade_php_pear
+    check_status_before_run cleanup_start_postfix_now
+    [ X"${DISTRO}" == X"FREEBSD" ] && check_status_before_run cleanup_sa_preconfig
 
     # Send tip file to the mail server admin and/or first mail user.
     tip_recipient="${FIRST_USER}@${FIRST_DOMAIN}"
