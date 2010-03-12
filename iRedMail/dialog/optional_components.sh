@@ -60,8 +60,8 @@ if [ X"${BACKEND}" == X"OpenLDAP" ]; then
     --checklist "\
 Note:
     * DKIM is recommended.
-    * DNS record (TXT type) are required for both SPF and DKIM.
-    * Please refer to file for more detail after installation:
+    * DNS records (TXT type) are required for both SPF and DKIM.
+    * Refer to file for more detail after installation:
       ${TIP_FILE}
 " 20 76 7 \
     "SPF Validation" "Sender Policy Framework" "on" \

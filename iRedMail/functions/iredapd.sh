@@ -46,6 +46,7 @@ iredapd_config()
 
     ECHO_INFO "Make iredapd start after system startup."
     eval ${enable_service} iredapd >/dev/null
+    export ENABLED_SERVICES="${ENABLED_SERVICES} iredapd"
 
     # Copy sample config file.
     cd ${IREDAPD_ROOT_DIR}/iredapd/etc/
