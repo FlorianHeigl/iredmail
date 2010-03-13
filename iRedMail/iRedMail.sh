@@ -36,6 +36,11 @@ export PATCH_DIR="${ROOTDIR}/patches"
 . ${CONF_DIR}/functions
 . ${CONF_DIR}/core
 
+# Check downloaded packages, pkg repository.
+if [ X"${status_get_all}" != X"DONE" ]; then
+    cd ${ROOTDIR}/pkgs/ && bash get_all.sh && cd ${ROOTDIR}
+fi
+
 # ------------------------------
 # Check target platform and environment.
 # ------------------------------
@@ -140,11 +145,6 @@ fi
 # ************************************************************************
 # *************************** Script Main ********************************
 # ************************************************************************
-
-# Check downloaded packages, pkg repository.
-if [ X"${status_get_all}" != X"DONE" ]; then
-    cd ${ROOTDIR}/pkgs/ && bash get_all.sh && cd ${ROOTDIR}
-fi
 
 # Install all packages.
 check_status_before_run install_all || (ECHO_INFO "Package installation error, please check the output log." && exit 255)
