@@ -307,4 +307,5 @@ fi
 fetch_misc && \
 check_md5 && \
 check_pkg ${BIN_DIALOG} ${PKG_DIALOG} && \
-echo_end_msg
+echo_end_msg && \
+echo 'export status_get_all="DONE"' >> ${STATUS_FILE}
