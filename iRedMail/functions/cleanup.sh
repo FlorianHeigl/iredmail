@@ -270,6 +270,16 @@ if [ X"${POSTFIX_STARTED}" != X"YES" -a X"${DISTRO}" != X"FREEBSD" ]; then
 * Please reboot your system to enable mail related services or start them
 * manually without reboot:
 *
+EOF
+
+    # Prompt to disable selinux.
+    if [ ! -z ${SETENFORCE} ]; then
+        cat <<EOF
+*   # ${SETENFORCE} 0
+EOF
+    fi
+
+    cat <<EOF
 *   # for i in ${ENABLED_SERVICES}; do ${DIR_RC_SCRIPTS}/\${i} restart; done
 *
 EOF
