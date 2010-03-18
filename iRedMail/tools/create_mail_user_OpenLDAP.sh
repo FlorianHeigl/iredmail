@@ -130,15 +130,16 @@ DATE="$(date +%Y.%m.%d.%H.%M.%S)"
 
 add_new_domain()
 {
-    ldapsearch -x -D "${BINDDN}" -w "${BINDPW}" -b "${BASE_DN}" | grep "domainName: ${DOMAIN_NAME}" >/dev/null
+    domain="$(echo ${1} | tr '[A-Z]' '[a-z]')"
+    ldapsearch -x -D "${BINDDN}" -w "${BINDPW}" -b "${BASE_DN}" | grep "domainName: ${domain}" >/dev/null
 
     if [ X"$?" != X"0" ]; then
-        echo "Add new domain: ${DOMAIN_NAME}."
+        echo "Add new domain: ${domain}."
 
         ldapadd -x -D "${BINDDN}" -w "${BINDPW}" <<EOF
 dn: ${DOMAIN_DN},${BASE_DN}
 objectClass: mailDomain
-domainName: ${DOMAIN_NAME}
+domainName: ${domain}
 mtaTransport: ${TRANSPORT}
 accountStatus: active
 enabledService: mail
