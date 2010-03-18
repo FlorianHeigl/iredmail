@@ -339,14 +339,14 @@ EOF
     if [ X"${DISTRO}" == X"FREEBSD" ]; then
         cat > ${CRON_SPOOL_DIR}/${POLICYD_USER} <<EOF
 ${CONF_MSG}
-1       */2       *       *       *       $(eval ${LIST_FILES_IN_PKG} "${PKG_POLICYD}*" | grep 'cleanup$' ) -c ${POLICYD_CONF}
-1       */2       *       *       *       $(eval ${LIST_FILES_IN_PKG} "${PKG_POLICYD}*" | grep 'cleanup$' ) -c ${POLICYD_SENDER_THROTTLE_CONF}
+1    */2    *    *    *    ${POLICYD_CLEANUP_BIN} -c ${POLICYD_CONF}
+1    */2    *    *    *    ${POLICYD_CLEANUP_BIN} -c ${POLICYD_SENDER_THROTTLE_CONF}
 EOF
     else
         cat > ${CRON_SPOOL_DIR}/${POLICYD_USER} <<EOF
 ${CONF_MSG}
-1       */2       *       *       *       $(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep 'cleanup$' ) -c ${POLICYD_CONF}
-1       */2       *       *       *       $(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep 'cleanup$' ) -c ${POLICYD_SENDER_THROTTLE_CONF}
+1    */2    *    *    *    ${POLICYD_CLEANUP_BIN} -c ${POLICYD_CONF}
+1    */2    *    *    *    ${POLICYD_CLEANUP_BIN} -c ${POLICYD_SENDER_THROTTLE_CONF}
 EOF
     fi
 

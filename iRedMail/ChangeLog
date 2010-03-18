@@ -1,4 +1,5 @@
 iRedMail-0.6.0-RC1:
+    * Fix amavisd startup issue on FreeBSD: run sa-update first.
     * Patch to fix roundcube security issue: CVE-2010-0464, Disable DNS
       prefetching.
     * New LDAP attribute: userManager. Used to replace 'manager' attribute.
