@@ -32,6 +32,10 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     export DOVECOT_DELIVER='/usr/libexec/dovecot/deliver'
 elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     export DOVECOT_VERSION='1.1'
+
+    # Ubuntu 10.04 uses dovecot-1.2.x.
+    [ X"${DISTRO_CODENAME}" == X"lucid" ] && export DOVECOT_VERSION='1.2'
+
     export DOVECOT_CONF='/etc/dovecot/dovecot.conf'
     export DOVECOT_LDAP_CONF='/etc/dovecot/dovecot-ldap.conf'
     export DOVECOT_MYSQL_CONF='/etc/dovecot/dovecot-mysql.conf'

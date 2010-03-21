@@ -31,7 +31,7 @@ install_all()
     [ X"${DISTRO}" == X"DEBIAN" ] && ENABLED_SERVICES="rsyslog ${ENABLED_SERVICES}"
 
     if [ X"${DISTRO}" == X"UBUNTU" ]; then
-        if [ X"${DISTRO_CODENAME}" == X"Karmic" ]; then
+        if [ X"${DISTRO_CODENAME}" == X"karmic" ]; then
             ENABLED_SERVICES="rsyslog ${ENABLED_SERVICES}"
         else
             ENABLED_SERVICES="sysklogd ${ENABLED_SERVICES}"

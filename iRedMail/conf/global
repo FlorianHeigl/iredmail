@@ -87,9 +87,8 @@ if [ X"${KERNEL_NAME}" == X"Linux" ]; then
         #   - 8.10: Intrepid
         #   - 9.04: Jaunty
         #   - 9.10: Karmic
+        #   - 10.04: Lucid
         export DISTRO_CODENAME="$( grep 'DISTRIB_CODENAME' /etc/lsb-release | awk -F'=' '{print $2}' )"
-
-        [ X"${DISTRO_CODENAME}" == X"karmic" ] && export DISTRO_CODENAME="Karmic"
     elif [ -f /etc/debian_version ]; then
         # Debian
         export DISTRO='DEBIAN'
@@ -260,7 +259,7 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
 
     # Syslog config: rsyslog.
     if [ X"${DISTRO}" == X"UBUNTU" ]; then
-        if [ X"${DISTRO_CODENAME}" == X"Karmic" ]; then
+        if [ X"${DISTRO_CODENAME}" == X"karmic" ]; then
             # Ubuntu 9.10
             export SYSLOG_CONF='/etc/rsyslog.conf'
             export SYSLOG_POSTROTATE_CMD='invoke-rc.d rsyslog reload > /dev/null'
