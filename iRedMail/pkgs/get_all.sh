@@ -29,6 +29,9 @@ CONF_DIR="${ROOTDIR}/../conf"
 . ${CONF_DIR}/core
 . ${CONF_DIR}/iredadmin
 
+# Re-define @STATUS_FILE, so that iRedMail.sh can read it.
+export STATUS_FILE="${ROOTDIR}/../.${PROG_NAME}.installation.status"
+
 check_user root
 check_hostname
 

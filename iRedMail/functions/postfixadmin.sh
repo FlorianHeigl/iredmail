@@ -18,9 +18,9 @@ postfixadmin_install()
         # conf.d/postfixadmin.conf file after upgrade this component.
         ln -s ${POSTFIXADMIN_HTTPD_ROOT} ${POSTFIXADMIN_HTTPD_ROOT_SYMBOL_LINK}
 
+        # Patch used to disable welcome mail while creating mailbox.
         cd ${POSTFIXADMIN_HTTPD_ROOT}/ && \
         patch -p0 < ${PATCH_DIR}/postfixadmin/create_mailbox.patch >/dev/null && \
-        patch -p0 < ${PATCH_DIR}/postfixadmin/login-security-issue.patch >/dev/null
 
         ECHO_INFO "Set file permission for PostfixAdmin."
         chown -R ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${POSTFIXADMIN_HTTPD_ROOT}
