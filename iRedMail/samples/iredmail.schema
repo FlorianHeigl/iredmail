@@ -310,7 +310,8 @@ objectclass ( 1.3.6.1.4.1.32349.1.2.4.4 NAME 'mailAlias'
     DESC 'Mail Alias' SUP top STRUCTURAL
     MUST ( mail )
     MAY ( enabledService $ accountStatus $ description $ cn $
-        mailForwardingAddress $ expiredDate $ accountSetting ))
+        mailForwardingAddress $ shadowAddress $ expiredDate $
+        accountSetting ))
 objectclass ( 1.3.6.1.4.1.32349.1.2.4.5 NAME 'mailList'
     DESC 'Mail Domain Admin' SUP top STRUCTURAL
     MUST ( mail )

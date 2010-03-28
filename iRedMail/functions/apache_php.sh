@@ -103,6 +103,7 @@ Disallow: /mysql
 Disallow: /phpmyadmin
 Disallow: /awstats
 Disallow: /postfixadmin
+Disallow: /iredadmin
 EOF
 
     # --------------------------
