@@ -264,6 +264,7 @@ amavisd_config_generic()
 \$forward_method = 'smtp:[${SMTP_SERVER}]:10025';
 
 # Set default action.
+# Available actions: D_PASS, D_BOUNCE, D_REJECT, D_DISCARD.
 \$final_virus_destiny      = D_DISCARD;
 \$final_banned_destiny     = D_PASS;
 \$final_spam_destiny       = D_PASS;
