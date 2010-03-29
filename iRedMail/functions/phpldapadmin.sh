@@ -25,6 +25,9 @@ pla_install()
     chown ${HTTPD_USER}:${HTTPD_GROUP} config.php && \
     chmod 0700 config.php
 
+    # Config phpLDAPadmin.
+    perl -pi -e 's#(// )(.*hide_template_warning.*=).*#${2} true;#' config.php
+
     ECHO_INFO "Set file permission."
     chown -R ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${PLA_HTTPD_ROOT}
     chmod -R 0755 ${PLA_HTTPD_ROOT}
