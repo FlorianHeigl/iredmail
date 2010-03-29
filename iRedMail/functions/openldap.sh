@@ -253,6 +253,7 @@ index ${LDAP_ATTR_GROUP_ACCESSPOLICY},${LDAP_ATTR_GROUP_HASMEMBER},${LDAP_ATTR_G
 # ---- User related ----
 index homeDirectory,mailMessageStore,${LDAP_ATTR_USER_FORWARD},${LDAP_ATTR_USER_SHADOW_ADDRESS}   eq,pres
 index ${LDAP_ATTR_USER_BACKUP_MAIL_ADDRESS},${LDAP_ATTR_USER_MEMBER_OF_GROUP}   eq,pres
+index ${LDAP_ATTR_USER_RECIPIENT_BCC_ADDRESS},${LDAP_ATTR_USER_SENDER_BCC_ADDRESS}  eq,pres
 EOF
 
     # Make slapd use slapd.conf insteald of slapd.d (cn=config backend).

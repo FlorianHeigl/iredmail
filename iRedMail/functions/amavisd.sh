@@ -35,6 +35,9 @@ amavisd_dkim()
     chmod +r ${pem_file}
 
     cat >> ${AMAVISD_DKIM_CONF} <<EOF
+# Hope to fix 'nested MAIL command' issue on high load server.
+\$smtp_connection_cache_enable = 0;
+
 # The default set of header fields to be signed can be controlled
 # by setting %signed_header_fields elements to true (to sign) or
 # to false (not to sign). Keys must be in lowercase, e.g.:
