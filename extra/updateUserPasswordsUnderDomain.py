@@ -53,7 +53,7 @@ for user in allUsers:
     mail = user[1]['mail'][0]
 
     try:
-        #conn.modify_s(self.dn, [(ldap.MOD_ADD, 'userPassword', '')])
+        #conn.modify_s(dn, [(ldap.MOD_ADD, 'userPassword', '')])
         conn.passwd_s(dn, None, newpw)
         print >> sys.stderr, """Updated user (%d): %s""" % (count, mail)
     except ldap.TYPE_OR_VALUE_EXISTS:

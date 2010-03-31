@@ -499,7 +499,6 @@ postfix_config_mysql()
     postconf -e transport_maps="proxy:mysql:${mysql_transport_maps_user_cf}, proxy:mysql:${mysql_transport_maps_domain_cf}"
     postconf -e virtual_mailbox_domains="proxy:mysql:${mysql_virtual_mailbox_domains_cf}"
     postconf -e virtual_mailbox_maps="proxy:mysql:${mysql_virtual_mailbox_maps_cf}"
-    postconf -e virtual_mailbox_limit_maps="proxy:mysql:${mysql_virtual_mailbox_limit_maps_cf}"
     postconf -e virtual_alias_maps="proxy:mysql:${mysql_virtual_alias_maps_cf}, proxy:mysql:${mysql_domain_alias_maps_cf}"
     postconf -e sender_bcc_maps="proxy:mysql:${mysql_sender_bcc_maps_domain_cf}, proxy:mysql:${mysql_sender_bcc_maps_user_cf}"
     postconf -e recipient_bcc_maps="proxy:mysql:${mysql_recipient_bcc_maps_domain_cf}, proxy:mysql:${mysql_recipient_bcc_maps_user_cf}"
@@ -554,15 +553,6 @@ hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
 query       = SELECT maildir FROM mailbox WHERE username='%s' AND active='1' AND enabledeliver='1' AND expired >= NOW()
-EOF
-
-    cat > ${mysql_virtual_mailbox_limit_maps_cf} <<EOF
-user        = ${MYSQL_BIND_USER}
-password    = ${MYSQL_BIND_PW}
-hosts       = ${mysql_server}
-port        = ${MYSQL_PORT}
-dbname      = ${VMAIL_DB}
-query       = SELECT quota FROM mailbox WHERE username='%s' AND active='1'
 EOF
 
     cat > ${mysql_virtual_alias_maps_cf} <<EOF
@@ -637,7 +627,6 @@ EOF
         ${mysql_transport_maps_domain_cf} \
         ${mysql_transport_maps_user_cf} \
         ${mysql_virtual_mailbox_maps_cf} \
-        ${mysql_virtual_mailbox_limit_maps_cf} \
         ${mysql_virtual_alias_maps_cf} \
         ${mysql_sender_login_maps_cf} \
         ${mysql_sender_bcc_maps_domain_cf} \
