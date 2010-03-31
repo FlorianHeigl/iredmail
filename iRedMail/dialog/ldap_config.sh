@@ -60,6 +60,7 @@ export LDAP_ADMIN_BASEDN="o=${LDAP_ATTR_DOMAINADMIN_DN_NAME},${LDAP_SUFFIX}"
 rm -f /tmp/ldap_suffix
 
 cat >> ${CONFIG_FILE} <<EOF
+export dn2dnsname="${dn2dnsname}"
 export LDAP_SUFFIX="${LDAP_SUFFIX}"
 export LDAP_SUFFIX_MAJOR="${LDAP_SUFFIX_MAJOR}"
 export LDAP_BINDDN="cn=${VMAIL_USER_NAME},${LDAP_SUFFIX}"
