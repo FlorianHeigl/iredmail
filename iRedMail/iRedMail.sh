@@ -37,6 +37,7 @@ export PATCH_DIR="${ROOTDIR}/patches"
 . ${CONF_DIR}/core
 
 # Check downloaded packages, pkg repository.
+[ -f ${STATUS_FILE} ] && . ${STATUS_FILE}
 if [ X"${status_get_all}" != X"DONE" ]; then
     cd ${ROOTDIR}/pkgs/ && bash get_all.sh && cd ${ROOTDIR}
 fi
