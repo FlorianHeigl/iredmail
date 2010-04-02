@@ -78,6 +78,7 @@ export ldap_recipient_bcc_maps_user_cf="${POSTFIX_ROOTDIR}/ldap_recipient_bcc_ma
 export ldap_sender_bcc_maps_domain_cf="${POSTFIX_ROOTDIR}/ldap_sender_bcc_maps_domain.cf"
 export ldap_sender_bcc_maps_user_cf="${POSTFIX_ROOTDIR}/ldap_sender_bcc_maps_user.cf"
 export ldap_relay_domains_cf="${POSTFIX_ROOTDIR}/ldap_relay_domains.cf"
+export ldap_catch_all_maps_cf="${POSTFIX_ROOTDIR}/ldap_catch_all_maps.cf"
 
 # MySQL lookup.
 export mysql_virtual_mailbox_domains_cf="${POSTFIX_ROOTDIR}/mysql_virtual_mailbox_domains.cf"
