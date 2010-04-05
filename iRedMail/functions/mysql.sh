@@ -113,7 +113,7 @@ USE ${VMAIL_DB};
 SOURCE ${SAMPLE_SQL};
 
 /* Add your first domain. */
-INSERT INTO domain (domain,transport) VALUES ("${FIRST_DOMAIN}", "${TRANSPORT}");
+INSERT INTO domain (domain,transport,created) VALUES ("${FIRST_DOMAIN}", "${TRANSPORT}", NOW());
 
 /* Add your first domain admin. */
 INSERT INTO admin (username,password,created) VALUES ("${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}","${DOMAIN_ADMIN_PASSWD}", NOW());
