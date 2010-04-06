@@ -759,7 +759,7 @@ postfix_config_syslog()
 {
     #
     # maillog file is listed in ${LOGROTATE_DIR}/syslog file by
-    # default, logrotated weekly, it's not suited for a large network.
+    # default, logrotated weekly, it's not suited for a busy server.
     #
 
     ECHO_INFO "Setting up logrotate for maillog as a daily work."
