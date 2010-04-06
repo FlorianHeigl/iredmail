@@ -127,53 +127,19 @@ EOF
 
     # Set message_size_limit.
     postconf -e mailbox_size_limit="${MESSAGE_SIZE_LIMIT}"
-    postconf -e message_size_limit="${MESSAGE_SIZE_LIMIT}"
-    postconf -e virtual_mailbox_limit_override="yes"
-    # Set maildir overquota. 
-    postconf -e virtual_overquota_bounce="yes"
-    postconf -e virtual_mailbox_limit_message="${MAILDIR_LIMIT_MESSAGE}"
 
+    # Virtual support.
     postconf -e virtual_minimum_uid="${VMAIL_USER_UID}"
     postconf -e virtual_uid_maps="static:${VMAIL_USER_UID}"
     postconf -e virtual_gid_maps="static:${VMAIL_USER_GID}"
     postconf -e virtual_mailbox_base="${STORAGE_BASE_DIR}"
 
-    postconf -e check_sender_access="hash:${POSTFIX_ROOTDIR}/sender_access"
-    cat > ${POSTFIX_ROOTDIR}/sender_access <<EOF
-${CONF_MSG}
-# This file has to be compiled with "postmap".
-
-# Examples:
-# Using domain name.
-#example.com    554 Spam not tolerated here
-#example.com    REJECT
-
-#example.com    DUNNO
-
-# Using IP address.
-# 10.0.0.0/8
-#10             554 Go away!
-
-# 172.16/16
-#172.16         554 Bugger off!
-
-#1.2.3.4        REJECT
-
-# 192.168.4/24 is bad, but 192.168.4.128 is okay
-#192.168.4.128       OK
-#192.168.4           554 Take a hike!
-
-# Write your own rules below.
-
-EOF
-    postmap hash:${POSTFIX_ROOTDIR}/sender_access
-
     # Simple backscatter block method.
-    postconf -e header_checks="pcre:${POSTFIX_FILE_HEADER_CHECKS}"
+    #postconf -e header_checks="pcre:${POSTFIX_FILE_HEADER_CHECKS}"
     cat >> ${POSTFIX_FILE_HEADER_CHECKS} <<EOF
 # *******************************************************************
 # Below rules is wrote in pcre syntax, shipped within ${PROG_NAME} project:
-#   http://${PROG_NAME}.googlecode.com
+#   http://www.iredmail.org/
 # Reference:
 #   http://www.postfix.org/BACKSCATTER_README.html#real
 # *******************************************************************
