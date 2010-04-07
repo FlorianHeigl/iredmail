@@ -1,9 +1,13 @@
+iRedMail-0.6.0:
+    * Improve ldap scheme file to use 'sub' index.
+
 iRedMail-0.6.0-RC1:
     * Add catch-all account support in LDAP backend.
     * Fix amavisd startup issue on FreeBSD: run sa-update first.
     * Patch to fix roundcube security issue: CVE-2010-0464, Disable DNS
       prefetching.
     * New LDAP attribute: userManager. Used to replace 'manager' attribute.
+    * Hide template warning in phpLDAPadmin.
     * Update iRedAPD to 1.2.3.
 
 iRedMail-0.6.0-beta3:

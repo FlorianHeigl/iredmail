@@ -235,25 +235,25 @@ mode        0700
 # Default index.
 #
 index objectClass                                   eq,pres
+index uidNumber,gidNumber,uid,memberUid,loginShell  eq,pres
+index homeDirectory,mailMessageStore                eq,pres
 index ou,cn,mail,surname,givenname,telephoneNumber  eq,pres,sub
-index uidNumber,gidNumber,loginShell                eq,pres
-index uid,memberUid                                 eq,pres,sub
 index nisMapName,nisMapEntry                        eq,pres,sub
 
 #
 # Index for mail attrs.
 #
 # ---- Domain related ----
-index ${LDAP_ATTR_DOMAIN_RDN},${LDAP_ATTR_MTA_TRANSPORT},${LDAP_ATTR_ACCOUNT_STATUS},${LDAP_ENABLED_SERVICE}  eq,pres
-index ${LDAP_ATTR_DOMAIN_ALIAS_NAME},${LDAP_ATTR_DOMAIN_MAX_USER_NUMBER} eq,pres
-index ${LDAP_ATTR_DOMAIN_ADMIN},${LDAP_ATTR_DOMAIN_GLOBALADMIN},${LDAP_ATTR_DOMAIN_BACKUPMX}    eq,pres
-index ${LDAP_ATTR_DOMAIN_SENDER_BCC_ADDRESS},${LDAP_ATTR_DOMAIN_RECIPIENT_BCC_ADDRESS}  eq,pres
+index ${LDAP_ATTR_DOMAIN_RDN},${LDAP_ATTR_MTA_TRANSPORT},${LDAP_ATTR_ACCOUNT_STATUS},${LDAP_ENABLED_SERVICE}  eq,pres,sub
+index ${LDAP_ATTR_DOMAIN_ALIAS_NAME},${LDAP_ATTR_DOMAIN_MAX_USER_NUMBER} eq,pres,sub
+index ${LDAP_ATTR_DOMAIN_ADMIN},${LDAP_ATTR_DOMAIN_GLOBALADMIN},${LDAP_ATTR_DOMAIN_BACKUPMX}    eq,pres,sub
+index ${LDAP_ATTR_DOMAIN_SENDER_BCC_ADDRESS},${LDAP_ATTR_DOMAIN_RECIPIENT_BCC_ADDRESS}  eq,pres,sub
 # ---- Group related ----
-index ${LDAP_ATTR_GROUP_ACCESSPOLICY},${LDAP_ATTR_GROUP_HASMEMBER},${LDAP_ATTR_GROUP_ALLOWED_USER}   eq,pres
+index ${LDAP_ATTR_GROUP_ACCESSPOLICY},${LDAP_ATTR_GROUP_HASMEMBER},${LDAP_ATTR_GROUP_ALLOWED_USER}   eq,pres,sub
 # ---- User related ----
-index homeDirectory,mailMessageStore,${LDAP_ATTR_USER_FORWARD},${LDAP_ATTR_USER_SHADOW_ADDRESS}   eq,pres
-index ${LDAP_ATTR_USER_BACKUP_MAIL_ADDRESS},${LDAP_ATTR_USER_MEMBER_OF_GROUP}   eq,pres
-index ${LDAP_ATTR_USER_RECIPIENT_BCC_ADDRESS},${LDAP_ATTR_USER_SENDER_BCC_ADDRESS}  eq,pres
+index ${LDAP_ATTR_USER_FORWARD},${LDAP_ATTR_USER_SHADOW_ADDRESS}   eq,pres,sub
+index ${LDAP_ATTR_USER_BACKUP_MAIL_ADDRESS},${LDAP_ATTR_USER_MEMBER_OF_GROUP}   eq,pres,sub
+index ${LDAP_ATTR_USER_RECIPIENT_BCC_ADDRESS},${LDAP_ATTR_USER_SENDER_BCC_ADDRESS}  eq,pres,sub
 EOF
 
     # Make slapd use slapd.conf insteald of slapd.d (cn=config backend).
