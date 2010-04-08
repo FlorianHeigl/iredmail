@@ -23,7 +23,7 @@
 # in dovecot.conf on your server.
 #
 # Shipped within iRedMail project:
-#   * http://code.google.com/p/iredmail/
+#   * http://www.iredmail.org/
 #
 
 # For more information, please refer to official documentation:
