@@ -225,7 +225,7 @@ install_all()
         ALL_PKGS="${ALL_PKGS} bzip2.${ARCH} acl.${ARCH} mailx.${ARCH} patch.${ARCH} vixie-cron.${ARCH} tmpwatch.${ARCH} crontabs.noarch dos2unix.${ARCH}"
         ENABLED_SERVICES="${ENABLED_SERVICES} crond"
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        ALL_PKGS="${ALL_PKGS} bzip2 mailx acl patch cron tofrodos"
+        ALL_PKGS="${ALL_PKGS} bzip2 mailutils acl patch cron tofrodos"
         ENABLED_SERVICES="${ENABLED_SERVICES} cron"
     else
         :

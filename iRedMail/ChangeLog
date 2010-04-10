@@ -1,5 +1,6 @@
 iRedMail-0.6.0:
-    * Remove inline comment in freshclam setting. Thanks wildweasel@forum.
+    * Fix: freshclam can't start after update to 0.96. Fixed by removing inline
+      comment in freshclam setting. Thanks wildweasel@forum.
     * Fix incorrect path of policyd-cleanup on Debian & Ubuntu. Thanks
       tkuntario@forum.
     * Improve ldap scheme file to use 'sub' index.
