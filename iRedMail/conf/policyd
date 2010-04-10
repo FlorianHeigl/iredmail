@@ -47,7 +47,7 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     export POLICYD_DB_USER='postfix-policyd'
 
     # Path of policyd-clean
-    export POLICYD_CLEANUP_BIN='/usr/sbin/postfix-policyd-cleanup'
+    export POLICYD_CLEANUP_BIN='/usr/lib/postfix-policyd/cleanup'
 
 elif [ X"${DISTRO}" == X"FREEBSD" ]; then
     export PKG_POLICYD='postfix-policyd-sf'
