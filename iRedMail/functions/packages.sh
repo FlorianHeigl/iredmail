@@ -91,6 +91,7 @@ install_all()
             ALL_PKGS="${ALL_PKGS} mysql-server-5.1 mysql-client-5.1"
         else
             ALL_PKGS="${ALL_PKGS} mysql-server-5.0 mysql-client-5.0"
+        fi
         ENABLED_SERVICES="${ENABLED_SERVICES} mysql"
     else
         :

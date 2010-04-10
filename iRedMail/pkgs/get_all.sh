@@ -208,7 +208,7 @@ check_md5()
 
         md5file="/tmp/check_md5_tmp.${RANDOM}$RANDOM}"
         echo -e "${MD5LIST}" > ${md5file}
-        cat MD5.misc >> ${md5file}
+        cat ${PKGMISC} >> ${md5file}
         md5sum -c ${md5file} |grep 'FAILED'
         RETVAL="$?"
         rm -f ${md5file} 2>/dev/null
