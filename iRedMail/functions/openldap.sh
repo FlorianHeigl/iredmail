@@ -245,7 +245,8 @@ index nisMapName,nisMapEntry                        eq,pres,sub
 #
 # ---- Domain related ----
 index ${LDAP_ATTR_DOMAIN_RDN},${LDAP_ATTR_MTA_TRANSPORT},${LDAP_ATTR_ACCOUNT_STATUS},${LDAP_ENABLED_SERVICE}  eq,pres,sub
-index ${LDAP_ATTR_DOMAIN_ALIAS_NAME},${LDAP_ATTR_DOMAIN_MAX_USER_NUMBER} eq,pres,sub
+index ${LDAP_ATTR_DOMAIN_ALIAS_NAME}    eq,pres,sub
+index ${LDAP_ATTR_DOMAIN_MAX_USER_NUMBER} eq,pres
 index ${LDAP_ATTR_DOMAIN_ADMIN},${LDAP_ATTR_DOMAIN_GLOBALADMIN},${LDAP_ATTR_DOMAIN_BACKUPMX}    eq,pres,sub
 index ${LDAP_ATTR_DOMAIN_SENDER_BCC_ADDRESS},${LDAP_ATTR_DOMAIN_RECIPIENT_BCC_ADDRESS}  eq,pres,sub
 # ---- Group related ----
