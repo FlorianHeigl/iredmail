@@ -49,9 +49,9 @@ ${DIALOG} \
 Thanks for your use of ${PROG_NAME}.
 Bug report, feedback, suggestion are always welcome.
 
-Contact author via mail: michaelbibby@gmail.com
-Community: http://www.iredmail.org/forum/
-FAQ: http://www.iredmail.org/faq.html
+* Contact author via mail: zhb@iredmail.org
+* Community: http://www.iredmail.org/forum/
+* Admin FAQ: http://www.iredmail.org/faq.html
 
 NOTE:
 

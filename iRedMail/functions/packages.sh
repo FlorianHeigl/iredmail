@@ -129,6 +129,26 @@ install_all()
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
         ALL_PKGS="${ALL_PKGS} postfix-policyd"
         ENABLED_SERVICES="${ENABLED_SERVICES} postfix-policyd"
+
+        # Don't invoke dbconfig-common on Ubuntu.
+        if [ X"${DISTRO}" == X"UBUNTU" ]; then
+            cat > /etc/dbconfig-common/postfix-policyd.conf <<EOF
+dbc_install='false'
+dbc_upgrade='false'
+dbc_remove=''
+dbc_dbtype=''
+dbc_dbuser=''
+dbc_dbpass=''
+dbc_dbserver=''
+dbc_dbport=''
+dbc_dbname=''
+dbc_dbadmin='root'
+dbc_basepath=''
+dbc_ssl=''
+dbc_authmethod_admin=''
+dbc_authmethod_user=''
+EOF
+        fi
     else
         :
     fi
