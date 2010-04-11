@@ -137,18 +137,20 @@ install_all()
         ENABLED_SERVICES="${ENABLED_SERVICES} postfix-policyd"
 
         # Don't invoke dbconfig-common on Ubuntu.
-        if [ X"${DISTRO}" == X"UBUNTU" ]; then
+        if [ X"${DISTRO_CODENAME}" == X"lucid" ]; then
+            dpkg-divert --rename /etc/dbconfig-common/postfix-policyd.conf
+            mkdir -p /etc/dbconfig-common/ 2>/dev/null
             cat > /etc/dbconfig-common/postfix-policyd.conf <<EOF
 dbc_install='false'
 dbc_upgrade='false'
-dbc_remove=''
+dbc_remove='false'
 dbc_dbtype=''
 dbc_dbuser=''
 dbc_dbpass=''
 dbc_dbserver=''
 dbc_dbport=''
 dbc_dbname=''
-dbc_dbadmin='root'
+dbc_dbadmin=''
 dbc_basepath=''
 dbc_ssl=''
 dbc_authmethod_admin=''
@@ -251,7 +253,7 @@ EOF
         ALL_PKGS="${ALL_PKGS} bzip2.${ARCH} acl.${ARCH} mailx.${ARCH} patch.${ARCH} vixie-cron.${ARCH} tmpwatch.${ARCH} crontabs.noarch dos2unix.${ARCH}"
         ENABLED_SERVICES="${ENABLED_SERVICES} crond"
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        ALL_PKGS="${ALL_PKGS} bzip2 mailutils acl patch cron tofrodos"
+        ALL_PKGS="${ALL_PKGS} bzip2 acl patch cron tofrodos"
         ENABLED_SERVICES="${ENABLED_SERVICES} cron"
     else
         :
