@@ -86,8 +86,8 @@ install_all()
         ALL_PKGS="${ALL_PKGS} mysql-server.${ARCH} mysql.${ARCH}"
         ENABLED_SERVICES="${ENABLED_SERVICES} mysqld"
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        if [ X"${DISTRO_CODENAME}" == X"lucid" -o X"${DISTRO_CODENAME}" == X"karmic" ]; then
-            # Use mysql 5.1 on Ubuntu 9.10, 10.04.
+        if [ X"${DISTRO_CODENAME}" == X"lucid" ]; then
+            # Use mysql 5.1 on Ubuntu 10.04.
             ALL_PKGS="${ALL_PKGS} mysql-server-5.1 mysql-client-5.1"
         else
             ALL_PKGS="${ALL_PKGS} mysql-server-5.0 mysql-client-5.0"
