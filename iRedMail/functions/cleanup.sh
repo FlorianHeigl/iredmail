@@ -236,8 +236,24 @@ EOF
     [ ! -z "${MAIL_ALIAS_ROOT}" -a X"${MAIL_ALIAS_ROOT}" != X"${tip_recipient}" ] && \
         tip_recipient="${tip_recipient},${MAIL_ALIAS_ROOT}"
 
-    mail -s "iRedMail tips for mail server administrator." ${tip_recipient} < ${TIP_FILE} >/dev/null 2>&1
-    mail -s "Useful links for iRedMail." ${tip_recipient} < ${DOC_FILE} >/dev/null 2>&1
+    cat > /tmp/.tips.eml <<EOF
+From: root@${HOSTNAME}
+To: ${tip_recipient}
+Subject: iRedMail tips for mail server administrator
+
+EOF
+
+    cat ${TIP_FILE} >> /tmp/.tips.eml
+    sendmail -t ${tip_recipient} < /tmp/.tips.eml && rm -f /tmp/.tips.eml 2>/dev/null
+
+    cat > /tmp/.links.eml <<EOF
+From: root@${HOSTNAME}
+To: ${tip_recipient}
+Subject: Useful resources for iRedMail administrator
+
+EOF
+    cat ${DOC_FILE} >> /tmp/.tips.eml
+    sendmail -t ${tip_recipient} < /tmp/.links.eml && rm -f /tmp/.links.eml 2>/dev/null
 
     cat <<EOF
 
