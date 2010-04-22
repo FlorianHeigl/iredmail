@@ -252,7 +252,7 @@ To: ${tip_recipient}
 Subject: Useful resources for iRedMail administrator
 
 EOF
-    cat ${DOC_FILE} >> /tmp/.tips.eml
+    cat ${DOC_FILE} >> /tmp/.links.eml
     sendmail -t ${tip_recipient} < /tmp/.links.eml && rm -f /tmp/.links.eml 2>/dev/null
 
     cat <<EOF
