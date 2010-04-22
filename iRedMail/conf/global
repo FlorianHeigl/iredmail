@@ -34,6 +34,9 @@ export MAILBOX_FORMAT='Maildir'
 # Maildir style: hashed, normal.
 export MAILDIR_STYLE='hashed'
 
+# Current storage node.
+export STORAGE_NODE='vmail1'
+
 # Use exist Apache, MySQL, PHP: YES, NO.
 # Note: You may need to change apache/php related config file path.
 # Such as:

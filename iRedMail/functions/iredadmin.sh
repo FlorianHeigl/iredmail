@@ -109,6 +109,7 @@ EOF
 
     perl -pi -e 's#(mtaTransport =).*#${1} $ENV{TRANSPORT}#' settings.ini
     perl -pi -e 's#(storage_base_directory =).*#${1} $ENV{STORAGE_BASE_DIR}#' settings.ini
+    perl -pi -e 's#(storage_node=).*#${1} $ENV{STORAGE_NODE}#' settings.ini
 
     # MySQL database related settings: [iredadmin] section.
     perl -pi -e 's#(lang =).*#${1} $ENV{DEFAULT_LANG}#' settings.ini

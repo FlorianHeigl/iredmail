@@ -12,7 +12,7 @@ adduser_vmail()
     homedir="$(dirname $(echo ${VMAIL_USER_HOME_DIR} | sed 's#/$##'))"
     [ -L ${homedir} ] && rm -f ${homedir}
     [ -d ${homedir} ] || mkdir -p ${homedir}
-    [ -d ${STORAGE_BASE_DIR} ] || mkdir -p ${STORAGE_BASE_DIR}
+    [ -d ${STORAGE_BASE_DIR}/${STORAGE_NODE} ] || mkdir -p ${STORAGE_BASE_DIR}/${STORAGE_NODE}
 
     ECHO_INFO "Add user/group: vmail."
 
@@ -45,7 +45,7 @@ adduser_vmail()
 Mail Storage:
     - Path:
         + ${VMAIL_USER_HOME_DIR}
-        + ${STORAGE_BASE_DIR}
+        + ${STORAGE_BASE_DIR}/${STORAGE_NODE}
 
 EOF
 

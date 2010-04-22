@@ -98,6 +98,7 @@ mysql_import_vmail_users()
     # Generate SQL.
     # Modify default SQL template, set storagebasedirectory.
     perl -pi -e 's#(.*storagebasedirectory.*DEFAULT).*#${1} "$ENV{STORAGE_BASE_DIR}",#' ${SAMPLE_SQL}
+    perl -pi -e 's#(.*storagenode.*DEFAULT).*#${1} "$ENV{STORAGE_NODE}",#' ${SAMPLE_SQL}
 
     # Mailbox format is 'Maildir/' by default.
     cat >> ${MYSQL_VMAIL_SQL} <<EOF
@@ -126,7 +127,7 @@ INSERT INTO alias (address,goto,domain,created) VALUES ("${DOMAIN_ADMIN_NAME}@${
 */
 
 /* Add your first normal user. */
-INSERT INTO mailbox (username,password,name,storagebasedirectory,maildir,quota,domain,created) VALUES ("${FIRST_USER}@${FIRST_DOMAIN}","${FIRST_USER_PASSWD}","${FIRST_USER}","${STORAGE_BASE_DIR}","$( hash_domain ${FIRST_DOMAIN})/$( hash_maildir ${FIRST_USER} )",100, "${FIRST_DOMAIN}", NOW());
+INSERT INTO mailbox (username,password,name,maildir,quota,domain,created) VALUES ("${FIRST_USER}@${FIRST_DOMAIN}","${FIRST_USER_PASSWD}","${FIRST_USER}","$( hash_domain ${FIRST_DOMAIN})/$( hash_maildir ${FIRST_USER} )",100, "${FIRST_DOMAIN}", NOW());
 INSERT INTO alias (address,goto,domain,created) VALUES ("${FIRST_USER}@${FIRST_DOMAIN}", "${FIRST_USER}@${FIRST_DOMAIN}", "${FIRST_DOMAIN}", NOW());
 EOF
 

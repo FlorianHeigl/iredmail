@@ -534,7 +534,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT maildir FROM mailbox WHERE username='%s' AND active='1' AND enabledeliver='1' AND expired >= NOW()
+query       = SELECT CONCAT(storagenode, '/', maildir) FROM mailbox WHERE username='%s' AND active='1' AND enabledeliver='1' AND expired >= NOW()
 EOF
 
     cat > ${mysql_virtual_alias_maps_cf} <<EOF
