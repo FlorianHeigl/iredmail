@@ -28,6 +28,14 @@ awstats_config_basic()
     ECHO_INFO "Generate apache config file for awstats: ${AWSTATS_HTTPD_CONF}."
     backup_file ${AWSTATS_HTTPD_CONF}
 
+    # Move awstats.pl to ${AWSTATS_CGI_DIR} on Debian/Ubuntu, so that it won't
+    # conflict with other cgi programs, e.g. mailman.
+    if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+        mkdir -p ${AWSTATS_CGI_DIR}/awstats 2>/dev/null
+        mv ${AWSTATS_CGI_DIR}/awstats.pl ${AWSTATS_CGI_DIR}/awstats/ 2>/dev/null
+        export AWSTATS_CGI_DIR="${AWSTATS_CGI_DIR}/awstats"
+    fi
+
     cat > ${AWSTATS_HTTPD_CONF} <<EOF
 ${CONF_MSG}
 # Note: Please refer to ${HTTPD_SSL_CONF} for SSL/TLS setting.
