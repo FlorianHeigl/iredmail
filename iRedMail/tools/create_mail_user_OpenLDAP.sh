@@ -173,7 +173,7 @@ EOF
 add_new_user()
 {
     USERNAME="$(echo $1 | tr [A-Z] [a-z])"
-    MAIL="$2"
+    MAIL="$( echo $2 | tr [A-Z] [a-z])"
 
     # Create template LDIF file for this new user and add it.
     # If you do *NOT* want to keep rootpw in script, use '-W' instead of 
