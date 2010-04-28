@@ -43,9 +43,9 @@ pickup    fifo  n       -       n       60      1       pickup
   -o content_filter=
 EOF
 
-    ECHO_INFO "Copy: /etc/{hosts,resolv.conf,localtime} -> ${POSTFIX_CHROOT_DIR}/etc/"
+    ECHO_INFO "Copy: /etc/{hosts,resolv.conf,localtime,services} -> ${POSTFIX_CHROOT_DIR}/etc/"
     mkdir -p ${POSTFIX_CHROOT_DIR}/etc/ 2>/dev/null
-    for i in /etc/hosts /etc/resolv.conf /etc/localtime; do
+    for i in /etc/hosts /etc/resolv.conf /etc/localtime /etc/services; do
         [ -f $i ] && cp ${i} ${POSTFIX_CHROOT_DIR}/etc/
     done
 

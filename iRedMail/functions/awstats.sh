@@ -74,7 +74,7 @@ EOF
         [ X"${LDAP_USE_TLS}" == X"YES" ] && perl -pi -e 's#(AuthLDAPUrl.*)(ldap://)(.*)#${1}ldaps://${3}#' ${AWSTATS_HTTPD_CONF}
     elif [ X"${BACKEND}" == X"MySQL" ]; then
         # Use mod_auth_mysql.
-        if [ X"${DISTRO}" == X"RHEL" ]; then
+        if [ X"${DISTRO}" == X"RHEL" -o X"${DISTRO}" == X"FREEBSD" ]; then
             cat >> ${AWSTATS_HTTPD_CONF} <<EOF
     AuthType Basic
 
@@ -93,7 +93,6 @@ EOF
     AuthMYSQL on
     AuthBasicAuthoritative Off
     AuthUserFile /dev/null
-
 
     # Database related.
     AuthMySQL_Password_Table admin
@@ -123,9 +122,8 @@ EOF
     AuthUserFile ${AWSTATS_HTPASSWD_FILE}
 EOF
 
-    # Set username, password for web access.
-    htpasswd -bcm ${AWSTATS_HTPASSWD_FILE} "${AWSTATS_USERNAME}" "${AWSTATS_PASSWD}" >/dev/null 2>&1
-
+        # Set username, password for web access.
+        htpasswd -bcm ${AWSTATS_HTPASSWD_FILE} "${AWSTATS_USERNAME}" "${AWSTATS_PASSWD}" >/dev/null 2>&1
     fi
 
     # Close <Directory> container.
