@@ -127,10 +127,12 @@ managesieve_config()
         if [ X"${DISTRO}" == X"RHEL" ]; then
             # Use pysieved.
             check_status_before_run pysieved_config
-        elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-            # Dovecot is patched and ships managesieve protocal.
-            perl -pi -e 's#^(protocols =.*)#${1} managesieve#' ${DOVECOT_CONF}
-            cat >> ${DOVECOT_CONF} <<EOF
+        else:
+            # Debian, Ubuntu, FreeBSD.
+            if [ X"${DOVECOT_VERSION}" == X"1.1" ]; then
+                # Dovecot is patched on Debian/Ubuntu, ships managesieve protocal.
+                perl -pi -e 's#^(protocols =.*)#${1} managesieve#' ${DOVECOT_CONF}
+                cat >> ${DOVECOT_CONF} <<EOF
 protocol managesieve {
     # IP or host address where to listen in for connections.
     listen = ${MANAGESIEVE_BINDADDR}:${MANAGESIEVE_PORT}
@@ -158,10 +160,9 @@ protocol managesieve {
     managesieve_implementation_string = dovecot
 }
 EOF
-        elif [ X"${DISTRO}" == X"FREEBSD" ]; then
-            # It use dovecot 1.2.x.
-            perl -pi -e 's#^(protocols =.*)#${1} managesieve#' ${DOVECOT_CONF}
-            cat >> ${DOVECOT_CONF} <<EOF
+            elif [ X"${DOVECOT_VERSION}" == X"1.2" ]; then
+                perl -pi -e 's#^(protocols =.*)#${1} managesieve#' ${DOVECOT_CONF}
+                cat >> ${DOVECOT_CONF} <<EOF
 # ManageSieve service.
 protocol managesieve {
     # IP or host address where to listen in for connections.
@@ -233,6 +234,9 @@ plugin {
 }
 EOF
 
+            else
+                :
+            fi
         else
             :
         fi
