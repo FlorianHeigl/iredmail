@@ -51,7 +51,6 @@
 #   sina.com    mail2-209.sinamail.sina.com.cn
 #   gmail.com   xx-out-NNNN.google.com
 #
-/^sina\.com$/       REJECT Go away, bad guy (sina.com).
 /^126\.com$/        REJECT Go away, bad guy (126.com).
 /^163\.com$/        REJECT Go away, bad guy (163.com).
 /^163\.net$/        REJECT Go away, bad guy (163.net).

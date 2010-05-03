@@ -168,6 +168,13 @@ objectClass: organizationalUnit
 objectClass: top
 ou: Aliases
 EOF
+
+    ldapadd -x -D "${BINDDN}" -w "${BINDPW}" <<EOF
+dn: ou=Externals,${DOMAIN_DN},${BASE_DN}
+objectClass: organizationalUnit
+objectClass: top
+ou: Externals
+EOF
 }
 
 add_new_user()
