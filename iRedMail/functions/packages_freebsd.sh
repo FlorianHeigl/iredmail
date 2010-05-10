@@ -50,7 +50,7 @@ EOF
         ca_root_nss libssh2 curl libusb pth gnupg p5-IO-Socket-SSL \
         p5-Archive-Tar p5-Net-DNS p5-Mail-SpamAssassin p5-Authen-SASL \
         amavisd-new clamav apr python26 apache22 php5 php5-extensions \
-        php5-gd roundcube postfixadmin postfix MySQLdb; do
+        php5-gd roundcube postfixadmin postfix MySQLdb p7zip; do
         mkdir -p /var/db/ports/${i} 2>/dev/null
     done
 
@@ -264,6 +264,10 @@ EOF
     # AlterMIME. REQUIRED.
     ALL_PKGS="${ALL_PKGS} p5-Authen-SASL altermime"
     ALL_PORTS="${ALL_PORTS} security/p5-Authen-SASL mail/altermime"
+
+    cat > /var/db/ports/p7zip/options <<EOF
+WITH_MINIMAL=true
+EOF
 
     # Amavisd-new. REQUIRED.
     cat > /var/db/ports/amavisd-new/options <<EOF
@@ -609,7 +613,7 @@ EOF
     # Awstats.
     if [ X"${USE_AWSTATS}" == X"YES" ]; then
         ALL_PKGS="${ALL_PKGS} awstats"
-        ALL_PORTS="${ALL_PORTS} www/awstats"
+        ALL_PORTS="${ALL_PORTS} www/mod_auth_mysql_another www/awstats"
     fi
 
     # phpLDAPadmin.
