@@ -78,7 +78,7 @@ EOF
             cat >> ${AWSTATS_HTTPD_CONF} <<EOF
     AuthType Basic
 
-    AuthMYSQLEnable on
+    AuthMYSQLEnable On
     AuthMySQLUser ${MYSQL_BIND_USER}
     AuthMySQLPassword ${MYSQL_BIND_PW}
     AuthMySQLDB ${VMAIL_DB}
@@ -86,6 +86,14 @@ EOF
     AuthMySQLNameField username
     AuthMySQLPasswordField password
 EOF
+
+            # FreeBSD special.
+            if [ X"${DISTRO}" == X"FREEBSD" ]; then
+                # Enable mod_auth_mysql module in httpd.conf.
+                perl -pi -e 's/^#(LoadModule.*mod_auth_mysql.*)/${1}/' ${HTTPD_CONF}
+                echo "AuthBasicAuthoritative Off" >> ${AWSTATS_HTTPD_CONF}
+            fi
+
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
             cat >> ${AWSTATS_HTTPD_CONF} <<EOF
     AuthType Basic

@@ -112,7 +112,7 @@ EOF
     backup_file ${PHP_INI}
 
     # FreeBSD: Copy a sample file.
-    [ X"${DISTRO}" == X"FREEBSD" ] && cp -f /usr/local/etc/php.ini-recommended ${PHP_INI}
+    [ X"${DISTRO}" == X"FREEBSD" ] && cp -f /usr/local/etc/php.ini-production ${PHP_INI}
 
     #ECHO_INFO "Setting error_reporting to 'E_ERROR': ${PHP_INI}."
     #perl -pi -e 's#^(error_reporting.*=)#${1} E_ERROR;#' ${PHP_INI}

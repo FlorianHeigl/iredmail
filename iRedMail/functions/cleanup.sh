@@ -204,10 +204,10 @@ cleanup_start_postfix_now()
 cleanup_sa_preconfig()
 {
     # Required on FreeBSD to start Amavisd-new.
-    ECHO_INFO "Fetching SpamAssassin rules..."
+    ECHO_INFO "Fetching SpamAssassin rules (sa-update) ..."
     /usr/local/bin/sa-update >/dev/null
 
-    ECHO_INFO "Compiling SpamAssassin ruleset into native code, this can take a while, please be patient..."
+    ECHO_INFO "Compiling SpamAssassin ruleset into native code (sa-compile), be patient..."
     /usr/local/bin/sa-compile >/dev/null
 
     echo 'export status_cleanup_sa_preconfig="DONE"' >> ${STATUS_FILE}

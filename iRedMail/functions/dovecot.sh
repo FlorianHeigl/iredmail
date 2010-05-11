@@ -185,6 +185,11 @@ FOE
     chown root ${DOVECOT_QUOTA_WARNING_BIN}
     chmod 0755 ${DOVECOT_QUOTA_WARNING_BIN}
 
+    # Use '/usr/local/bin/bash' as shabang line, otherwise quota waning will be failed.
+    if [ X"${DISTRO}" == X"FREEBSD" ]; then
+        perl -pi -e 's#(.*)/usr/bin/env bash.*#${1}/usr/local/bin/bash#' ${DOVECOT_QUOTA_WARNING_BIN}
+    fi
+
     # Enable SSL support.
     [ X"${ENABLE_DOVECOT_SSL}" == X"YES" ] && dovecot_ssl_config
 

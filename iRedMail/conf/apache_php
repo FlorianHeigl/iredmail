@@ -92,7 +92,7 @@ elif [ X"${DISTRO}" == X"FREEBSD" ]; then
     export HTTPD_LOG_ERRORLOG='/var/log/httpd-error.log'
 
     # ---- PHP ----
-    # Copy from example: /usr/local/etc/php.ini-recommended
+    # Copy from example: /usr/local/etc/php.ini-production
     export PHP_INI='/usr/local/etc/php.ini'
 
 else
