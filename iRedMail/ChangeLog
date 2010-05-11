@@ -1,4 +1,10 @@
 iRedMail-0.6.0:
+    * Don't allow to login with shadow address. It may cause login failed due
+      to duplicate ldap query result (normal user, another normal user with
+      shadow address).
+    * Fix shabang line of dovecot quota warning script. Thanks Alex Stanciu.
+    * Fix mod_auth_mysql_another issue with awstats. Thanks dbetts22@forum.
+    * Fix incorrect php.ini sample file on FreeBSD after upgrading to php-5.3.
     * New LDAP attributes: mailWhitelistRecipient, mailBlacklistRecipient.
       Used for per-user recipient restrictions.
     * Fix: freshclam can't start after update to 0.96. Fixed by removing inline
