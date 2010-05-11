@@ -360,14 +360,14 @@ EOF
 driver = mysql
 default_pass_scheme = CRYPT
 connect = host=${MYSQL_SERVER} dbname=${VMAIL_DB} user=${MYSQL_BIND_USER} password=${MYSQL_BIND_PW}
-password_query = SELECT password FROM mailbox WHERE username='%u' AND active='1' AND expired >= NOW()
+password_query = SELECT password FROM mailbox WHERE username='%u' AND active='1'
 EOF
         # Maildir format.
         [ X"${MAILBOX_FORMAT}" == X"Maildir" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
 user_query = SELECT CONCAT(storagebasedirectory, '/', storagenode, '/', maildir) AS home, \
 CONCAT('*:bytes=', quota*1048576) AS quota_rule \
 FROM mailbox WHERE username='%u' \
-AND active='1' AND enable%Ls%Lc='1' AND expired >= NOW()
+AND active='1' AND enable%Ls%Lc='1'
 EOF
         [ X"${MAILBOX_FORMAT}" == X"mbox" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
 user_query = SELECT CONCAT('mbox:', storagebasedirectory, '/', storagenode, '/', maildir, '/Maildir/') AS home, \
@@ -375,8 +375,7 @@ CONCAT('*:bytes=', quota*1048576) AS quota_rule, \
 maildir FROM mailbox \
 WHERE username='%u' \
 AND active='1' \
-AND enable%Ls='1' \
-AND expired >= NOW()
+AND enable%Ls='1'
 EOF
     fi
 

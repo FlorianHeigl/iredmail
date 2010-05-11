@@ -612,8 +612,12 @@ EOF
 
     # Awstats.
     if [ X"${USE_AWSTATS}" == X"YES" ]; then
+        if [ X"${BACKEND}" == X"MySQL" ]; then
+            ALL_PORTS="${ALL_PORTS} www/mod_auth_mysql_another"
+        fi
+
         ALL_PKGS="${ALL_PKGS} awstats"
-        ALL_PORTS="${ALL_PORTS} www/mod_auth_mysql_another www/awstats"
+        ALL_PORTS="${ALL_PORTS} www/awstats"
     fi
 
     # phpLDAPadmin.

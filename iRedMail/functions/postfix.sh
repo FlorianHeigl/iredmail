@@ -507,7 +507,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT transport FROM mailbox WHERE username='%s' AND active='1' AND enabledeliver='1' AND expired >= NOW()
+query       = SELECT transport FROM mailbox WHERE username='%s' AND active='1' AND enabledeliver='1'
 EOF
 
     cat > ${mysql_virtual_mailbox_domains_cf} <<EOF
@@ -516,7 +516,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT domain FROM domain WHERE domain='%s' AND backupmx='0' AND active='1' AND expired >= NOW()
+query       = SELECT domain FROM domain WHERE domain='%s' AND backupmx='0' AND active='1'
 EOF
 
     cat > ${mysql_relay_domains_cf} <<EOF
@@ -525,7 +525,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT domain FROM domain WHERE domain='%s' AND backupmx='1' AND active='1' AND expired >= NOW()
+query       = SELECT domain FROM domain WHERE domain='%s' AND backupmx='1' AND active='1'
 EOF
 
     cat > ${mysql_virtual_mailbox_maps_cf} <<EOF
@@ -534,7 +534,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT CONCAT(storagenode, '/', maildir) FROM mailbox WHERE username='%s' AND active='1' AND enabledeliver='1' AND expired >= NOW()
+query       = SELECT CONCAT(storagenode, '/', maildir) FROM mailbox WHERE username='%s' AND active='1' AND enabledeliver='1'
 EOF
 
     cat > ${mysql_virtual_alias_maps_cf} <<EOF
@@ -543,7 +543,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT goto FROM alias WHERE address='%s' AND active='1' AND expired >= NOW()
+query       = SELECT goto FROM alias WHERE address='%s' AND active='1'
 EOF
 
     cat > ${mysql_domain_alias_maps_cf} <<EOF
@@ -561,7 +561,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT username FROM mailbox WHERE username='%s' AND active='1' AND enablesmtp='1' AND expired >= NOW()
+query       = SELECT username FROM mailbox WHERE username='%s' AND active='1' AND enablesmtp='1'
 EOF
 
     cat > ${mysql_sender_bcc_maps_domain_cf} <<EOF
@@ -570,7 +570,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT bcc_address FROM sender_bcc_domain WHERE domain='%d' AND active='1' AND expired >= NOW()
+query       = SELECT bcc_address FROM sender_bcc_domain WHERE domain='%d' AND active='1'
 EOF
 
     cat > ${mysql_sender_bcc_maps_user_cf} <<EOF
@@ -579,7 +579,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT bcc_address FROM sender_bcc_user WHERE username='%s' AND active='1' AND expired >= NOW()
+query       = SELECT bcc_address FROM sender_bcc_user WHERE username='%s' AND active='1'
 EOF
 
     cat > ${mysql_recipient_bcc_maps_domain_cf} <<EOF
@@ -588,7 +588,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT bcc_address FROM recipient_bcc_domain WHERE domain='%d' AND active='1' AND expired >= NOW()
+query       = SELECT bcc_address FROM recipient_bcc_domain WHERE domain='%d' AND active='1'
 EOF
 
     cat > ${mysql_recipient_bcc_maps_user_cf} <<EOF
@@ -597,7 +597,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT bcc_address FROM recipient_bcc_user WHERE username='%s' AND active='1' AND expired >= NOW()
+query       = SELECT bcc_address FROM recipient_bcc_user WHERE username='%s' AND active='1'
 EOF
 
     ECHO_INFO "Set file permission: Owner/Group -> postfix/postfix, Mode -> 0640."
