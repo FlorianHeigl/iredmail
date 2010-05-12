@@ -111,8 +111,14 @@ EOF
     # --------------------------
     backup_file ${PHP_INI}
 
-    # FreeBSD: Copy a sample file.
-    [ X"${DISTRO}" == X"FREEBSD" ] && cp -f /usr/local/etc/php.ini-production ${PHP_INI}
+    # FreeBSD.
+    if [ X"${DISTRO}" == X"FREEBSD" ]; then
+        # Copy sample file.
+        cp -f /usr/local/etc/php.ini-production ${PHP_INI}
+
+        # Set date.timezone. required by PHP-5.3.
+        perl -pi -e 's#^;(time.zone).*#${1} = UTC#' ${PHP_INI}
+    fi
 
     #ECHO_INFO "Setting error_reporting to 'E_ERROR': ${PHP_INI}."
     #perl -pi -e 's#^(error_reporting.*=)#${1} E_ERROR;#' ${PHP_INI}
