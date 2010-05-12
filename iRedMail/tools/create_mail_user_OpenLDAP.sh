@@ -244,6 +244,7 @@ enabledService: senderbcc
 enabledService: recipientbcc
 enabledService: shadowaddress
 enabledService: displayedInGlobalAddressBook
+enabledService: internal
 ${LDIF_PUREFTPD_USER}
 EOF
 }

@@ -1,4 +1,6 @@
 iRedMail-0.6.0:
+    * Add 'enableinternal=1' in vmail.mailbox and 'enabledService: internal'
+      in OpenLDAP.
     * Don't allow to login with shadow address. It may cause login failed due
       to duplicate ldap query result (normal user, another normal user with
       shadow address).
