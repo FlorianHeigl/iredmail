@@ -73,8 +73,8 @@ UPDATE user SET Password=password("${POLICYD_DB_PASSWD}") WHERE User="${POLICYD_
 FLUSH PRIVILEGES;
 EOF
 
-        # Debian 5, Ubuntu 9.04: Import missing table: postfixpolicyd.blacklist_dnsname.
-        if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO_CODENAME}" == X"jaunty" ]; then
+        # Debian 5, Ubuntu 8.04, 9.04: Import missing table: postfixpolicyd.blacklist_dnsname.
+        if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO_CODENAME}" == X"hardy" -o X"${DISTRO_CODENAME}" == X"jaunty" ]; then
             cat >> ${tmp_sql} <<EOF
 USE ${POLICYD_DB_NAME};
 SOURCE /usr/share/dbconfig-common/data/postfix-policyd/upgrade/mysql/1.73-1;
