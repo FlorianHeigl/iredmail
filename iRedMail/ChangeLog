@@ -1,4 +1,5 @@
 iRedMail-0.6.0:
+    * Update iRedAPD to 1.3.0.
     * Add missing table on Debian 5 and Ubuntu 9.04:
       postfixpolicyd.blacklist_dnsname.
     * Upgrade phpMyAdmin to 2.11.10.
