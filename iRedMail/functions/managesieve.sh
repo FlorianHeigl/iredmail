@@ -127,7 +127,7 @@ managesieve_config()
         if [ X"${DISTRO}" == X"RHEL" ]; then
             # Use pysieved.
             check_status_before_run pysieved_config
-        else:
+        else
             # Debian, Ubuntu, FreeBSD.
             if [ X"${DOVECOT_VERSION}" == X"1.1" ]; then
                 # Dovecot is patched on Debian/Ubuntu, ships managesieve protocal.
@@ -234,13 +234,7 @@ plugin {
 }
 EOF
 
-            else
-                :
             fi
-        else
-            :
         fi
-    else
-        :
     fi
 }
