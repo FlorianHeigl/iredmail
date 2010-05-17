@@ -193,7 +193,7 @@ EOF
     perl -pi -e 's#(.*mime_param_folding.*=).*#${1} 1;#' main.inc.php
 
     # Disable multiple identities.
-    perl -pi -e 's#(.*identities_level.*=).*#${1} 0;#' main.inc.php
+    perl -pi -e 's#(.*identities_level.*=).*#${1} 3;#' main.inc.php
 
     # Enable preview pane by default.
     perl -pi -e 's#(.*preview_pane.*=).*#${1} TRUE;#' main.inc.php
