@@ -148,7 +148,7 @@ cleanup_upgrade_php_pear()
 {
     if [ X"${BACKEND}" == X"OpenLDAP" -a X"${USE_RCM}" == X"YES" ]; then
         if [ X"${DISTRO}" == X"RHEL" ]; then
-            ECHO_INFO "Upgrading php-pear ..."
+            ECHO_INFO "Upgrading php-pear (pear upgrade pear)..."
             pear upgrade --force pear >/dev/null
         fi
 
