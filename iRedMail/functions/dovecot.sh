@@ -446,7 +446,7 @@ EOF
     cat >> ${POSTFIX_FILE_MASTER_CF} <<EOF
 # Use dovecot deliver program as LDA.
 dovecot unix    -       n       n       -       -      pipe
-  flags=DRhu user=${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} argv=${DOVECOT_DELIVER} -d \${recipient} -f \${sender}
+    flags=DRhu user=${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} argv=${DOVECOT_DELIVER} -f \${sender} -d \${user}@\${domain}
 EOF
 
     if [ X"${KERNEL_NAME}" == X"Linux" ]; then
