@@ -78,6 +78,7 @@ EOF
     postconf -e policy_time_limit='3600'
     postconf -e maximal_queue_lifetime='1d'
     postconf -e bounce_queue_lifetime='1d'
+    postconf -e recipient_delimiter='+'
     postconf -e proxy_read_maps='$canonical_maps $lmtp_generic_maps $local_recipient_maps $mydestination $mynetworks $recipient_bcc_maps $recipient_canonical_maps $relay_domains $relay_recipient_maps $relocated_maps $sender_bcc_maps $sender_canonical_maps $smtp_generic_maps $smtpd_sender_login_maps $transport_maps $virtual_alias_domains $virtual_alias_maps $virtual_mailbox_domains $virtual_mailbox_maps'
 
     #
