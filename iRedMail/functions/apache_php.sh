@@ -117,7 +117,7 @@ EOF
         cp -f /usr/local/etc/php.ini-production ${PHP_INI}
 
         # Set date.timezone. required by PHP-5.3.
-        perl -pi -e 's#^;(time.zone).*#${1} = UTC#' ${PHP_INI}
+        perl -pi -e 's#^;(date.timezone).*#${1} = UTC#' ${PHP_INI}
     fi
 
     #ECHO_INFO "Setting error_reporting to 'E_ERROR': ${PHP_INI}."
