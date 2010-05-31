@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-# Author:   Zhang Huangbin <michaelbibby (at) gmail.com>
-# Purpose:  Add objectClass=amavisAccount for all mail user which
-#           required in iRedMail-0.6.0.
+# Author:   Zhang Huangbin <zhb@iredmail.org>
+# Purpose:  Add three new services name in 'enabledService' attribute.
+#           Required in iRedMail-0.6.0.
+# Date:     2010-05-31
 
 import sys
 import ldap
@@ -16,21 +17,23 @@ bind_dn = 'cn=vmailadmin,dc=iredmail,dc=org'
 bind_pw = 'passwd'
 
 # Initialize LDAP connection.
+print >> sys.stderr, "* Connecting to LDAP server: %s" % uri
 conn = ldap.initialize(uri=uri, trace_level=0,)
-
-# Bind.
 conn.bind_s(bind_dn, bind_pw)
 
 # Get all mail users.
+print >> sys.stderr, "* Get all mail accounts..."
 allUsers = conn.search_s(
         basedn,
         ldap.SCOPE_SUBTREE,
         "(objectClass=mailUser)",
-        ['mail',],
+        ['dn', 'mail', 'enabledService', 'objectClass',],
         )
 
-# Debug.
-#print >> sys.stderr, allUsers
+print >> sys.stderr, "* %d user(s) need to be update." % len(allUsers)
+
+# Values of 'enabledService' which need to be added.
+services = ['sieve', 'sievesecured', 'internal',]
 
 # Counter.
 count = 1
@@ -38,18 +41,30 @@ count = 1
 for user in allUsers:
     dn = user[0]
     mail = user[1]['mail'][0]
+    enabledService = user[1]['enabledService']
+    objectClasses = user[1]['objectClass']
 
-    try:
-        conn.modify_s(self.dn, [(ldap.MOD_ADD, 'objectClass', 'amavisAccount')])
-        print >> sys.stderr, """Updated user (%d): %s""" % (count, mail)
-    except ldap.TYPE_OR_VALUE_EXISTS:
-        pass
-    except Exception, e:
-        print >> sys.stderr, """Error while updating user (%s): %s""" % (mail, str(e))
+    # Get missing values.
+    values = [s for s in services if s not in enabledService]
 
-    count += 1
+    mod_attrs = []
+
+    # Add missing values of 'enabledService'.
+    if len(values) > 0:
+        mod_attrs += [(ldap.MOD_ADD, 'enabledService', values)]
+
+    # Add missing values of 'objectClass'.
+    if 'amavisAccount' not in objectClasses:
+        mod_attrs += [(ldap.MOD_ADD, 'objectClass', 'amavisAccount')])
+
+    # Update.
+    if len(mod_attrs) > 0:
+        print >> sys.stderr, "* Updating user (%d): %s" % (count, mail)
+        conn.modify_s(dn, mod_attrs)
+        count += 1
 
 # Unbind connection.
+print >> sys.stderr, "* Unbind LDAP server."
 conn.unbind()
 
-print >> sys.stderr, 'Updated.'
+print >> sys.stderr, "* Update completed."

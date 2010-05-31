@@ -24,7 +24,7 @@
 #
 # Table structure for table admin
 #
-CREATE TABLE admin (
+CREATE TABLE IF NOT EXISTS admin (
     username VARCHAR(255) NOT NULL DEFAULT '',
     password VARCHAR(255) NOT NULL DEFAULT '',
     language VARCHAR(255) NOT NULL DEFAULT 'en_US',
@@ -38,7 +38,7 @@ CREATE TABLE admin (
 #
 # Table structure for table alias
 #
-CREATE TABLE alias (
+CREATE TABLE IF NOT EXISTS alias (
     address VARCHAR(255) NOT NULL DEFAULT '',
     goto TEXT NOT NULL,
     moderators TEXT NOT NULL DEFAULT '',
@@ -54,7 +54,7 @@ CREATE TABLE alias (
 #
 # Table structure for table domain
 #
-CREATE TABLE domain (
+CREATE TABLE IF NOT EXISTS domain (
     domain VARCHAR(255) NOT NULL DEFAULT '',
     description TEXT NOT NULL DEFAULT '',
     disclaimer TEXT NOT NULL DEFAULT '',
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS `alias_domain` (
 #
 # Table structure for table domain_admins
 #
-CREATE TABLE domain_admins (
+CREATE TABLE IF NOT EXISTS domain_admins (
     username VARCHAR(255) NOT NULL DEFAULT '',
     domain VARCHAR(255) NOT NULL DEFAULT '',
     created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -101,7 +101,7 @@ CREATE TABLE domain_admins (
 #
 # Table structure for table mailbox
 #
-CREATE TABLE mailbox (
+CREATE TABLE IF NOT EXISTS mailbox (
     username VARCHAR(255) NOT NULL DEFAULT '',
     password VARCHAR(255) NOT NULL DEFAULT '',
     name VARCHAR(255) NOT NULL DEFAULT '',
@@ -140,7 +140,7 @@ CREATE TABLE mailbox (
 #
 # Table structure for table sender_bcc_domain
 #
-CREATE TABLE sender_bcc_domain (
+CREATE TABLE IF NOT EXISTS sender_bcc_domain (
     domain VARCHAR(255) NOT NULL DEFAULT '',
     bcc_address VARCHAR(255) NOT NULL DEFAULT '',
     created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -153,7 +153,7 @@ CREATE TABLE sender_bcc_domain (
 #
 # Table structure for table sender_bcc_user
 #
-CREATE TABLE sender_bcc_user (
+CREATE TABLE IF NOT EXISTS sender_bcc_user (
     username VARCHAR(255) NOT NULL DEFAULT '',
     bcc_address VARCHAR(255) NOT NULL DEFAULT '',
     domain VARCHAR(255) NOT NULL DEFAULT '',
@@ -167,7 +167,7 @@ CREATE TABLE sender_bcc_user (
 #
 # Table structure for table recipient_bcc_domain
 #
-CREATE TABLE recipient_bcc_domain (
+CREATE TABLE IF NOT EXISTS recipient_bcc_domain (
     domain VARCHAR(255) NOT NULL DEFAULT '',
     bcc_address VARCHAR(255) NOT NULL DEFAULT '',
     created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -180,7 +180,7 @@ CREATE TABLE recipient_bcc_domain (
 #
 # Table structure for table recipient_bcc_user
 #
-CREATE TABLE recipient_bcc_user (
+CREATE TABLE IF NOT EXISTS recipient_bcc_user (
     username VARCHAR(255) NOT NULL DEFAULT '',
     bcc_address VARCHAR(255) NOT NULL DEFAULT '',
     domain VARCHAR(255) NOT NULL DEFAULT '',
@@ -194,7 +194,7 @@ CREATE TABLE recipient_bcc_user (
 #
 # Table structure for table log
 #
-CREATE TABLE log (
+CREATE TABLE IF NOT EXISTS log (
     TIMESTAMP DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     username VARCHAR(255) NOT NULL DEFAULT '',
     domain VARCHAR(255) NOT NULL DEFAULT '',
@@ -211,27 +211,27 @@ CREATE TABLE log (
 #
 # Vacation stuff.
 #
-CREATE TABLE vacation ( 
-    email VARCHAR(255) NOT NULL DEFAULT '', 
-    subject VARCHAR(255) NOT NULL DEFAULT '', 
-    body TEXT NOT NULL, 
-    cache TEXT NOT NULL, 
-    domain VARCHAR(255) NOT NULL DEFAULT '', 
-    created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00', 
-    modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00', 
-    active TINYINT(4) NOT NULL DEFAULT '1', 
-    PRIMARY KEY (email), 
-    KEY email (email) 
+CREATE TABLE IF NOT EXISTS vacation (
+    email VARCHAR(255) NOT NULL DEFAULT '',
+    subject VARCHAR(255) NOT NULL DEFAULT '',
+    body TEXT NOT NULL,
+    cache TEXT NOT NULL,
+    domain VARCHAR(255) NOT NULL DEFAULT '',
+    created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+    modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+    active TINYINT(4) NOT NULL DEFAULT '1',
+    PRIMARY KEY (email),
+    KEY email (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
  
 #
-# vacation_notification table 
+# vacation_notification table
 #
  
-CREATE TABLE vacation_notification ( 
-    on_vacation VARCHAR(255) NOT NULL, 
-    notified VARCHAR(255) NOT NULL, 
-    notified_at TIMESTAMP NOT NULL DEFAULT now(), 
-    CONSTRAINT vacation_notification_pkey PRIMARY KEY(on_vacation, notified), 
-    FOREIGN KEY (on_vacation) REFERENCES vacation(email) ON DELETE CASCADE 
+CREATE TABLE IF NOT EXISTS vacation_notification (
+    on_vacation VARCHAR(255) NOT NULL,
+    notified VARCHAR(255) NOT NULL,
+    notified_at TIMESTAMP NOT NULL DEFAULT now(),
+    CONSTRAINT vacation_notification_pkey PRIMARY KEY(on_vacation, notified),
+    FOREIGN KEY (on_vacation) REFERENCES vacation(email) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
