@@ -30,7 +30,8 @@ allUsers = conn.search_s(
         ['dn', 'mail', 'enabledService', 'objectClass',],
         )
 
-print >> sys.stderr, "* %d user(s) need to be update." % len(allUsers)
+total = len(allUsers)
+print >> sys.stderr, "* Total %d user(s)." % (total)
 
 # Values of 'enabledService' which need to be added.
 services = ['sieve', 'sievesecured', 'internal',]
@@ -55,13 +56,16 @@ for user in allUsers:
 
     # Add missing values of 'objectClass'.
     if 'amavisAccount' not in objectClasses:
-        mod_attrs += [(ldap.MOD_ADD, 'objectClass', 'amavisAccount')])
+        mod_attrs += [(ldap.MOD_ADD, 'objectClass', 'amavisAccount')]
 
     # Update.
     if len(mod_attrs) > 0:
-        print >> sys.stderr, "* Updating user (%d): %s" % (count, mail)
+        print >> sys.stderr, "* Updating user (%d/%d): %s" % (count, total, mail)
         conn.modify_s(dn, mod_attrs)
-        count += 1
+    else:
+        print >> sys.stderr, "* Updating user (%d/%d): %s. [SKIP. No update required.]" % (count, total, mail)
+
+    count += 1
 
 # Unbind connection.
 print >> sys.stderr, "* Unbind LDAP server."
