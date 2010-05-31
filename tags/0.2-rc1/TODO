@@ -1,8 +1,0 @@
-* Add 'SMTP_SERVER'.
-* Roundcubemail plugin:
-    * per-user whitelist/blacklist. Roundcubemail will provide an 
-      official plugin to support sieve filter language.
-
-* Protecting internal email distribution lists
-  Restricting what users can send mail to off-site destinations
-  http://www.postfix.org/RESTRICTION_CLASS_README.html
