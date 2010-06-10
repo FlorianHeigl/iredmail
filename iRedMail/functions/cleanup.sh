@@ -246,7 +246,7 @@ Subject: iRedMail tips for mail server administrator
 EOF
 
     cat ${TIP_FILE} >> /tmp/.tips.eml
-    sendmail -t ${tip_recipient} < /tmp/.tips.eml && rm -f /tmp/.tips.eml 2>/dev/null
+    sendmail -t ${tip_recipient} < /tmp/.tips.eml 2>/dev/null && rm -f /tmp/.tips.eml 2>/dev/null
 
     cat > /tmp/.links.eml <<EOF
 From: root@${HOSTNAME}
@@ -255,7 +255,7 @@ Subject: Useful resources for iRedMail administrator
 
 EOF
     cat ${DOC_FILE} >> /tmp/.links.eml
-    sendmail -t ${tip_recipient} < /tmp/.links.eml && rm -f /tmp/.links.eml 2>/dev/null
+    sendmail -t ${tip_recipient} < /tmp/.links.eml 2>/dev/null && rm -f /tmp/.links.eml 2>/dev/null
 
     cat <<EOF
 
