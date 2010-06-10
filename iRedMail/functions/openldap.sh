@@ -26,7 +26,7 @@
 
 openldap_config()
 {
-    ECHO_INFO "==================== OpenLDAP ===================="
+    ECHO_INFO "Configure OpenLDAP server."
 
     backup_file ${OPENLDAP_SLAPD_CONF} ${OPENLDAP_LDAP_CONF}
 
@@ -41,7 +41,7 @@ openldap_config()
         cp -f /usr/local/share/doc/amavisd-new/LDAP.schema ${OPENLDAP_SCHEMA_DIR}/${AMAVISD_LDAP_SCHEMA_NAME}
 
 
-    ECHO_INFO "Generate new server configuration file: ${OPENLDAP_SLAPD_CONF}."
+    ECHO_DEBUG "Generate new server configuration file: ${OPENLDAP_SLAPD_CONF}."
     cat > ${OPENLDAP_SLAPD_CONF} <<EOF
 ${CONF_MSG}
 # Schemas.
@@ -262,7 +262,7 @@ EOF
         perl -pi -e 's#^(SLAPD_CONF=).*#${1}"$ENV{OPENLDAP_SLAPD_CONF}"#' ${ETC_SYSCONFIG_DIR}/slapd && \
         perl -pi -e 's#^(SLAPD_PIDFILE=).*#${1}"$ENV{OPENLDAP_PID_FILE}"#' ${ETC_SYSCONFIG_DIR}/slapd
 
-    ECHO_INFO "Generate new client configuration file: ${OPENLDAP_LDAP_CONF}"
+    ECHO_DEBUG "Generate new client configuration file: ${OPENLDAP_LDAP_CONF}"
     cat > ${OPENLDAP_LDAP_CONF} <<EOF
 BASE    ${LDAP_SUFFIX}
 URI     ldap://${LDAP_SERVER_HOST}:${LDAP_SERVER_PORT}
@@ -270,7 +270,7 @@ TLS_CACERT ${SSL_CERT_FILE}
 EOF
     chown ${LDAP_USER}:${LDAP_GROUP} ${OPENLDAP_LDAP_CONF}
 
-    ECHO_INFO "Setting up syslog configration file for OpenLDAP."
+    ECHO_DEBUG "Setting up syslog configration file for OpenLDAP."
     if [ X"${DISTRO}" == X"FREEBSD" ]; then
         echo -e '!slapd' >> ${SYSLOG_CONF}
         echo -e '*.*\t\t\t\t\t\t/var/log/openldap.log' >> ${SYSLOG_CONF}
@@ -278,13 +278,13 @@ EOF
         echo -e "local4.*\t\t\t\t\t\t-${OPENLDAP_LOGFILE}" >> ${SYSLOG_CONF}
     fi
 
-    ECHO_INFO "Create empty log file for OpenLDAP: ${OPENLDAP_LOGFILE}."
+    ECHO_DEBUG "Create empty log file for OpenLDAP: ${OPENLDAP_LOGFILE}."
     touch ${OPENLDAP_LOGFILE}
     chown ${LDAP_USER}:${LDAP_GROUP} ${OPENLDAP_LOGFILE}
     chmod 0600 ${OPENLDAP_LOGFILE}
 
     if [ X"${KERNEL_NAME}" == X"Linux" ]; then
-        ECHO_INFO "Setting logrotate for openldap log file: ${OPENLDAP_LOGFILE}."
+        ECHO_DEBUG "Setting logrotate for openldap log file: ${OPENLDAP_LOGFILE}."
         cat > ${OPENLDAP_LOGROTATE_FILE} <<EOF
 ${CONF_MSG}
 ${OPENLDAP_LOGFILE} {
@@ -307,7 +307,7 @@ ${OPENLDAP_LOGFILE} {
 EOF
     fi
 
-    ECHO_INFO "Restarting syslog."
+    ECHO_DEBUG "Restarting syslog."
     if [ X"${DISTRO}" == X"RHEL" ]; then
         service_control syslog restart >/dev/null
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
@@ -343,22 +343,22 @@ openldap_data_initialize()
         :
     fi
 
-    ECHO_INFO "Create instance directory for openldap tree: ${LDAP_DATA_DIR}."
+    ECHO_DEBUG "Create instance directory for openldap tree: ${LDAP_DATA_DIR}."
     mkdir -p ${LDAP_DATA_DIR}
     cp -f ${OPENLDAP_DB_CONFIG_SAMPLE} ${LDAP_DATA_DIR}/DB_CONFIG
     chown -R ${LDAP_USER}:${LDAP_GROUP} ${OPENLDAP_DATA_DIR}
     chmod -R 0700 ${OPENLDAP_DATA_DIR}
 
-    ECHO_INFO "Starting OpenLDAP."
+    ECHO_DEBUG "Starting OpenLDAP."
     ${LDAP_INIT_SCRIPT} restart
     
-    ECHO_INFO -n "Sleep 5 seconds for LDAP daemon initialize:"
+    ECHO_DEBUG -n "Sleep 5 seconds for LDAP daemon initialize:"
     for i in 5 4 3 2 1; do
         echo -n " ${i}s" && sleep 1
     done
     echo '.'
 
-    ECHO_INFO "Initialize LDAP tree."
+    ECHO_DEBUG "Initialize LDAP tree."
     # home_mailbox format is 'maildir/' by default.
     cat > ${LDAP_INIT_LDIF} <<EOF
 dn: ${LDAP_SUFFIX}

@@ -7,7 +7,7 @@
 # -------------------------------------------------------
 pla_install()
 {
-    ECHO_INFO "==================== phpLDAPadmin ===================="
+    ECHO_INFO "Configure phpLDAPadmin (web-based LDAP management tool)."
 
     if [ X"${DISTRO}" != X"FREEBSD" ]; then
         cd ${MISC_DIR}
@@ -19,7 +19,7 @@ pla_install()
         ln -s ${PLA_HTTPD_ROOT} ${PLA_HTTPD_ROOT_SYMBOL_LINK} 2>/dev/null
     fi
 
-    ECHO_INFO "Copy example config file."
+    ECHO_DEBUG "Copy example config file."
     cd ${PLA_CONF_DIR}/ && \
     cp -f config.php.example config.php && \
     chown ${HTTPD_USER}:${HTTPD_GROUP} config.php && \
@@ -28,11 +28,11 @@ pla_install()
     # Config phpLDAPadmin.
     perl -pi -e 's#(// )(.*hide_template_warning.*=).*#${2} true;#' config.php
 
-    ECHO_INFO "Set file permission."
+    ECHO_DEBUG "Set file permission."
     chown -R ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${PLA_HTTPD_ROOT}
     chmod -R 0755 ${PLA_HTTPD_ROOT}
 
-    ECHO_INFO "Create directory alias for phpLDAPadmin."
+    ECHO_DEBUG "Create directory alias for phpLDAPadmin."
     cat > ${HTTPD_CONF_DIR}/phpldapadmin.conf <<EOF
 ${CONF_MSG}
 # Note: Please refer to ${HTTPD_SSL_CONF} for SSL/TLS setting.

@@ -22,10 +22,10 @@
 
 awstats_config_basic()
 {
-    ECHO_INFO "==================== Awstats ===================="
+    ECHO_INFO "Configure Awstats (logfile analyzer for mail and web server)."
     [ -f ${AWSTATS_CONF_SAMPLE} ] && dos2unix ${AWSTATS_CONF_SAMPLE} >/dev/null 2>&1
 
-    ECHO_INFO "Generate apache config file for awstats: ${AWSTATS_HTTPD_CONF}."
+    ECHO_DEBUG "Generate apache config file for awstats: ${AWSTATS_HTTPD_CONF}."
     backup_file ${AWSTATS_HTTPD_CONF}
 
     # Move awstats.pl to ${AWSTATS_CGI_DIR} on Debian/Ubuntu, so that it won't
@@ -56,7 +56,7 @@ EOF
     AuthName "Authorization Required"
 EOF
 
-    ECHO_INFO "Setup user auth for awstats: ${AWSTATS_HTTPD_CONF}."
+    ECHO_DEBUG "Setup user auth for awstats: ${AWSTATS_HTTPD_CONF}."
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
         # Use LDAP auth.
         cat >> ${AWSTATS_HTTPD_CONF} <<EOF
@@ -179,7 +179,7 @@ EOF
 
 awstats_config_weblog()
 {
-    ECHO_INFO "Config awstats to analyze apache web access log: ${AWSTATS_CONF_WEB}."
+    ECHO_DEBUG "Config awstats to analyze apache web access log: ${AWSTATS_CONF_WEB}."
     cd ${AWSTATS_CONF_DIR} && \
     cp -f ${AWSTATS_CONF_SAMPLE} ${AWSTATS_CONF_WEB}
 
@@ -197,7 +197,7 @@ awstats_config_weblog()
 
 awstats_config_maillog()
 {
-    ECHO_INFO "Config awstats to analyze postfix mail log: ${AWSTATS_CONF_MAIL}."
+    ECHO_DEBUG "Config awstats to analyze postfix mail log: ${AWSTATS_CONF_MAIL}."
 
     cd ${AWSTATS_CONF_DIR} && \
     cp -f ${AWSTATS_CONF_SAMPLE} ${AWSTATS_CONF_MAIL}
@@ -254,7 +254,7 @@ awstats_config_maillog()
 
 awstats_config_crontab()
 {
-    ECHO_INFO "Setting cronjob for awstats."
+    ECHO_DEBUG "Setting cronjob for awstats."
     if [ X"${DISTRO}" == X"FREEBSD" ]; then
         cat >> ${CRON_SPOOL_DIR}/root <<EOF
 1   */1   *   *   *   perl $(eval ${LIST_FILES_IN_PKG} '/var/db/pkg/awstats-*' | grep '/awstats.pl$') -config=${HOSTNAME} -update >/dev/null

@@ -7,14 +7,14 @@
 # -------------------------------------------------------
 adduser_vmail()
 {
-    ECHO_INFO "==================== User/Group: vmail ===================="
+    ECHO_INFO "Configure User/Group: vmail."
 
     homedir="$(dirname $(echo ${VMAIL_USER_HOME_DIR} | sed 's#/$##'))"
     [ -L ${homedir} ] && rm -f ${homedir}
     [ -d ${homedir} ] || mkdir -p ${homedir}
     [ -d ${STORAGE_BASE_DIR}/${STORAGE_NODE} ] || mkdir -p ${STORAGE_BASE_DIR}/${STORAGE_NODE}
 
-    ECHO_INFO "Add user/group: vmail."
+    ECHO_DEBUG "Add user/group: vmail."
 
     # It will create a group with the same name as vmail user name.
     if [ X"${DISTRO}" == X"FREEBSD" ]; then
@@ -36,7 +36,7 @@ adduser_vmail()
         :
     fi
 
-    ECHO_INFO "Create directory to store user sieve rule files: ${SIEVE_DIR}."
+    ECHO_DEBUG "Create directory to store user sieve rule files: ${SIEVE_DIR}."
     mkdir -p ${SIEVE_DIR} && \
     chown -R ${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} ${SIEVE_DIR} && \
     chmod -R 0700 ${SIEVE_DIR}

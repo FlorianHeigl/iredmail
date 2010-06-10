@@ -73,3 +73,25 @@ ECHO_ERROR()
         fi
     fi
 }
+
+ECHO_DEBUG()
+{
+    if [ X"${DEBUG}" == X"YES" ]; then
+        if [ X"$1" == X"-n" ]; then
+            shift 1
+            if [ X"${TERM}" == X"xterm" -o X"${TERM}" == X"linux" -o X"${TERM}" == X"pcconsole" ]; then
+                echo -ne "\033[42m${DEBUG_FLAG}\033[0m $@"
+            else
+                echo -ne "${DEBUG_FLAG} $@"
+            fi
+        else
+            if [ X"${TERM}" == X"xterm" -o X"${TERM}" == X"linux" -o X"${TERM}" == X"pcconsole" ]; then
+                echo -e "\033[42m${DEBUG_FLAG}\033[0m $@"
+            else
+                echo -e "${DEBUG_FLAG} $@"
+            fi
+        fi
+    else
+        :
+    fi
+}

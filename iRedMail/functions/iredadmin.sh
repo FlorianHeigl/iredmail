@@ -23,10 +23,10 @@
 
 iredadmin_config()
 {
-    ECHO_INFO "==================== iRedAdmin: Official Web-based Admin Panel ===================="
+    ECHO_INFO "Configure iRedAdmin (official web-based admin panel)."
 
     if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        ECHO_INFO "Enable apache module: wsgi."
+        ECHO_DEBUG "Enable apache module: wsgi."
         a2enmod wsgi >/dev/null 2>&1
     fi
 
@@ -39,7 +39,7 @@ iredadmin_config()
     # conf.d/iredadmin.conf file after upgrade this component.
     ln -s ${IREDADMIN_HTTPD_ROOT} ${HTTPD_SERVERROOT}/iredadmin 2>/dev/null
 
-    ECHO_INFO "Set correct permission for iRedAdmin: ${IREDADMIN_HTTPD_ROOT}."
+    ECHO_DEBUG "Set correct permission for iRedAdmin: ${IREDADMIN_HTTPD_ROOT}."
     chown -R ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${IREDADMIN_HTTPD_ROOT}
     chmod -R 0755 ${IREDADMIN_HTTPD_ROOT}
 
@@ -48,7 +48,7 @@ iredadmin_config()
     cp settings.ini.sample settings.ini
     chmod 0555 settings.ini
 
-    ECHO_INFO "Create directory alias for iRedAdmin."
+    ECHO_DEBUG "Create directory alias for iRedAdmin."
     backup_file ${HTTPD_CONF_DIR}/iredadmin.conf
     perl -pi -e 's#(</VirtualHost>)#WSGIScriptAlias /iredadmin "$ENV{HTTPD_SERVERROOT}/iredadmin/iredadmin.py/"\n${1}#' ${HTTPD_SSL_CONF}
     perl -pi -e 's#(</VirtualHost>)#Alias /iredadmin/static "$ENV{HTTPD_SERVERROOT}/iredadmin/static/"\n${1}#' ${HTTPD_SSL_CONF}
@@ -82,7 +82,7 @@ SetEnvIfNoCase Request_URI .(?:pdf|mov|avi|mp3|mp4|rm)$ no-gzip dont-vary
 </Location>
 EOF
 
-    ECHO_INFO "Import iredadmin database template."
+    ECHO_DEBUG "Import iredadmin database template."
     mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
 # Create databases.
 CREATE DATABASE ${IREDADMIN_DB_NAME} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -95,7 +95,7 @@ GRANT SELECT,INSERT,UPDATE,DELETE ON ${IREDADMIN_DB_NAME}.* TO ${IREDADMIN_DB_US
 FLUSH PRIVILEGES;
 EOF
 
-    ECHO_INFO "Configure iRedAdmin."
+    ECHO_DEBUG "Configure iRedAdmin."
 
     # General settings: [general] section.
     [ ! -z ${MAIL_ALIAS_ROOT} ] && \

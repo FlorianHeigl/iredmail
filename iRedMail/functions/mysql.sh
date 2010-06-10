@@ -27,9 +27,9 @@
 # -------------------------------------------------------
 mysql_initialize()
 {
-    ECHO_INFO "==================== MySQL ===================="
+    ECHO_DEBUG "Configure MySQL database server." 
 
-    ECHO_INFO "Starting MySQL."
+    ECHO_DEBUG "Starting MySQL."
 
     # FreeBSD: Start mysql when system start up.
     # Warning: We must have 'mysql_enable=YES' before start/stop mysql daemon.
@@ -40,7 +40,7 @@ EOF
 
     ${MYSQLD_INIT_SCRIPT} restart >/dev/null 2>&1
 
-    ECHO_INFO -n "Sleep 5 seconds for MySQL daemon initialize:"
+    ECHO_DEBUG -n "Sleep 5 seconds for MySQL daemon initialize:"
     for i in 5 4 3 2 1; do
         echo -n " ${i}s" && sleep 1
     done
@@ -49,7 +49,7 @@ EOF
     echo '' > ${MYSQL_INIT_SQL}
 
     if [ X"${MYSQL_FRESH_INSTALLATION}" == X"YES" ]; then
-        ECHO_INFO "Setting password for MySQL admin (${MYSQL_ROOT_USER})."
+        ECHO_DEBUG "Setting password for MySQL admin (${MYSQL_ROOT_USER})."
         mysqladmin --user=root password "${MYSQL_ROOT_PASSWD}"
 
         cat >> ${MYSQL_INIT_SQL} <<EOF
@@ -63,7 +63,7 @@ EOF
         :
     fi
 
-    ECHO_INFO "Initialize MySQL database."
+    ECHO_DEBUG "Initialize MySQL database."
     mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
 SOURCE ${MYSQL_INIT_SQL};
 FLUSH PRIVILEGES;
@@ -91,7 +91,7 @@ EOF
 # It's used only when backend is MySQL.
 mysql_import_vmail_users()
 {
-    ECHO_INFO "Generating SQL template for postfix virtual hosts: ${MYSQL_VMAIL_SQL}."
+    ECHO_DEBUG "Generating SQL template for postfix virtual hosts: ${MYSQL_VMAIL_SQL}."
     export DOMAIN_ADMIN_PASSWD="$(openssl passwd -1 ${DOMAIN_ADMIN_PASSWD})"
     export FIRST_USER_PASSWD="$(openssl passwd -1 ${FIRST_USER_PASSWD})"
 
@@ -131,7 +131,7 @@ INSERT INTO mailbox (username,password,name,maildir,quota,domain,created) VALUES
 INSERT INTO alias (address,goto,domain,created) VALUES ("${FIRST_USER}@${FIRST_DOMAIN}", "${FIRST_USER}@${FIRST_DOMAIN}", "${FIRST_DOMAIN}", NOW());
 EOF
 
-    ECHO_INFO "Import postfix virtual hosts/users: ${MYSQL_VMAIL_SQL}."
+    ECHO_DEBUG "Import postfix virtual hosts/users: ${MYSQL_VMAIL_SQL}."
     mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
 SOURCE ${MYSQL_VMAIL_SQL};
 FLUSH PRIVILEGES;

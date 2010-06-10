@@ -28,7 +28,7 @@ amavisd_dkim()
 {
     pem_file="${AMAVISD_DKIM_DIR}/${FIRST_DOMAIN}.pem"
 
-    ECHO_INFO "Generate DKIM pem files: ${pem_file}." 
+    ECHO_DEBUG "Generate DKIM pem files: ${pem_file}." 
     mkdir -p ${AMAVISD_DKIM_DIR} 2>/dev/null && \
     chown ${AMAVISD_USER}:${AMAVISD_GROUP} ${AMAVISD_DKIM_DIR}
     ${AMAVISD_BIN} genrsa ${pem_file} >/dev/null 2>&1
@@ -102,14 +102,14 @@ EOF
 
 amavisd_config_rhel()
 {
-    ECHO_INFO "==================== Amavisd-new ===================="
+    ECHO_INFO "Configure Amavisd-new."
 
     # Don't check amavisd-milter status.
     perl -pi -e 's/(.*)(status.*prog2.*)/${1}#${2}/' ${DIR_RC_SCRIPTS}/${AMAVISD_RC_SCRIPT_NAME}
 
     backup_file ${AMAVISD_CONF} ${AMAVISD_DKIM_CONF}
 
-    ECHO_INFO "Configure amavisd-new: ${AMAVISD_CONF}."
+    ECHO_DEBUG "Configure amavisd-new: ${AMAVISD_CONF}."
 
     #perl -pi -e 's/^(\$max_servers)/$1\ =\ 15\;\t#/' ${AMAVISD_CONF}
     # ---- Set amavisd daemon user. ----
@@ -167,10 +167,10 @@ amavisd_config_rhel()
 
 amavisd_config_debian()
 {
-    ECHO_INFO "==================== Amavisd-new ===================="
+    ECHO_INFO "Configure Amavisd-new."
     backup_file ${AMAVISD_CONF} ${AMAVISD_DKIM_CONF}
 
-    ECHO_INFO "Configure amavisd-new: ${AMAVISD_CONF}."
+    ECHO_DEBUG "Configure amavisd-new: ${AMAVISD_CONF}."
 
     perl -pi -e 's#^(chmop.*\$mydomain.*=).*#${1} "$ENV{'HOSTNAME'}";#' ${AMAVISD_CONF_DIR}/05-domain_id
 
@@ -479,11 +479,11 @@ EOF
 
     # ---- Make amavisd log to standalone file: ${AMAVISD_LOGROTATE_FILE} ----
     if [ X"${AMAVISD_SEPERATE_LOG}" == X"YES" ]; then
-        ECHO_INFO "Make Amavisd log to file: ${AMAVISD_LOGFILE}."
+        ECHO_DEBUG "Make Amavisd log to file: ${AMAVISD_LOGFILE}."
         perl -pi -e 's#(.*syslog_facility.*)(mail)(.*)#${1}local0${3}#' ${AMAVISD_CONF}
         echo -e "local0.*\t\t\t\t\t\t-${AMAVISD_LOGFILE}" >> ${SYSLOG_CONF}
 
-        ECHO_INFO "Setting logrotate for amavisd log file: ${AMAVISD_LOGFILE}."
+        ECHO_DEBUG "Setting logrotate for amavisd log file: ${AMAVISD_LOGFILE}."
         cat > ${AMAVISD_LOGROTATE_FILE} <<EOF
 ${CONF_MSG}
 ${AMAVISD_LOGFILE} {
@@ -509,7 +509,7 @@ EOF
     fi
 
     # Add crontab job to delete virus mail.
-    ECHO_INFO "Setting cron job for vmail user to delete virus mail per month."
+    ECHO_DEBUG "Setting cron job for vmail user to delete virus mail per month."
     cat > ${CRON_SPOOL_DIR}/${AMAVISD_USER} <<EOF
 ${CONF_MSG}
 # Delete virus mails which created 30 days ago.

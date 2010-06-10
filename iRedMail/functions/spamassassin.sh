@@ -7,17 +7,17 @@
 # ---------------------------------------------------------
 sa_config()
 {
-    ECHO_INFO "==================== SpamAssassin ===================="
+    ECHO_INFO "Configure SpamAssassin (content-based spam filter)."
 
     backup_file ${SA_LOCAL_CF}
 
-    ECHO_INFO "Generate new configuration file: ${SA_LOCAL_CF}."
+    ECHO_DEBUG "Generate new configuration file: ${SA_LOCAL_CF}."
     cp -f ${SAMPLE_DIR}/sa.local.cf ${SA_LOCAL_CF}
 
-    #ECHO_INFO "Disable plugin: URIDNSBL."
+    #ECHO_DEBUG "Disable plugin: URIDNSBL."
     #perl -pi -e 's/(^loadplugin.*Mail.*SpamAssassin.*Plugin.*URIDNSBL.*)/#${1}/' ${SA_INIT_PRE}
 
-    ECHO_INFO "Enable crontabs for SpamAssassin update."
+    ECHO_DEBUG "Enable crontabs for SpamAssassin update."
     if [ X"${DISTRO}" == X"RHEL" ]; then
         chmod 0644 /etc/cron.d/sa-update
         perl -pi -e 's/#(10.*)/${1}/' /etc/cron.d/sa-update
@@ -28,7 +28,7 @@ sa_config()
     fi
 
     if [ X"${DISTRO}" == X"FREEBSD" ]; then
-        ECHO_INFO "Compile SpamAssassin ruleset into native code."
+        ECHO_DEBUG "Compile SpamAssassin ruleset into native code."
         sa-compile >/dev/null 2>&1
     fi
 

@@ -24,14 +24,14 @@
 
 iredapd_config()
 {
-    ECHO_INFO "==================== iRedAPD: Postfix Policy Daemon ===================="
+    ECHO_INFO "Configure iRedAPD (postfix policy daemon)."
 
     # Extract source tarball.
     cd ${MISC_DIR}
     [ -d ${IREDAPD_ROOT_DIR} ] || mkdir -p ${IREDAPD_ROOT_DIR}
     extract_pkg ${IREDAPD_TARBALL} ${IREDAPD_ROOT_DIR}
 
-    ECHO_INFO "Configure iRedAPD."
+    ECHO_DEBUG "Configure iRedAPD."
     # Create symbol link.
     ln -s ${IREDAPD_ROOT_DIR}/iRedAPD-${IREDAPD_VERSION} ${IREDAPD_ROOT_DIR}/iredapd 2>/dev/null
 
@@ -44,7 +44,7 @@ iredapd_config()
     chmod 0555 ${DIR_RC_SCRIPTS}/iredapd
     chmod +x ${IREDAPD_ROOT_DIR}/iredapd/src/iredapd.py
 
-    ECHO_INFO "Make iredapd start after system startup."
+    ECHO_DEBUG "Make iredapd start after system startup."
     eval ${enable_service} iredapd >/dev/null
     export ENABLED_SERVICES="${ENABLED_SERVICES} iredapd"
 

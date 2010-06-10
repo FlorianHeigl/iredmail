@@ -23,11 +23,11 @@
 # Configure pysieved.
 pysieved_config()
 {
-    ECHO_INFO "==================== Pysieved ===================="
+    ECHO_INFO "Configure Pysieved (managesieve server)."
 
     backup_file ${PYSIEVED_INI}
 
-    ECHO_INFO "Setting up managesieve server: pysieved."
+    ECHO_DEBUG "Setting up managesieve server: pysieved."
 
     cat > ${PYSIEVED_INI} <<EOF
 ${CONF_MSG}

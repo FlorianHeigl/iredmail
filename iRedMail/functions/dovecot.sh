@@ -27,7 +27,7 @@
 # For dovecot SSL support.
 dovecot_ssl_config()
 {
-    ECHO_INFO "Enable TLS support."
+    ECHO_DEBUG "Enable TLS support."
 
     if [ X"${ENABLE_DOVECOT_SSL}" == X"YES" ]; then
         # Enable ssl. Different setting in v1.1, v1.2.
@@ -60,7 +60,7 @@ dovecot_config()
     [ X"${ENABLE_DOVECOT}" == X"YES" ] && \
         backup_file ${DOVECOT_CONF} && \
         chmod 0755 ${DOVECOT_CONF} && \
-        ECHO_INFO "Configure dovecot: ${DOVECOT_CONF}."
+        ECHO_DEBUG "Configure dovecot: ${DOVECOT_CONF}."
 
         cat > ${DOVECOT_CONF} <<EOF
 ${CONF_MSG}
@@ -402,12 +402,12 @@ EOF
 }
 EOF
 
-    ECHO_INFO "Copy sample sieve global filter rule file: ${GLOBAL_SIEVE_FILE}.sample."
+    ECHO_DEBUG "Copy sample sieve global filter rule file: ${GLOBAL_SIEVE_FILE}.sample."
     cp -f ${SAMPLE_DIR}/dovecot.sieve ${GLOBAL_SIEVE_FILE}.sample
     chown ${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} ${GLOBAL_SIEVE_FILE}.sample
     chmod 0500 ${GLOBAL_SIEVE_FILE}.sample
 
-    ECHO_INFO "Create dovecot log file: ${DOVECOT_LOG_FILE}, ${SIEVE_LOG_FILE}."
+    ECHO_DEBUG "Create dovecot log file: ${DOVECOT_LOG_FILE}, ${SIEVE_LOG_FILE}."
     touch ${DOVECOT_LOG_FILE} ${SIEVE_LOG_FILE}
     chown ${VMAIL_USER_NAME}:${VMAIL_GROUP_NAME} ${DOVECOT_LOG_FILE} ${SIEVE_LOG_FILE}
     chmod 0600 ${DOVECOT_LOG_FILE}
@@ -415,7 +415,7 @@ EOF
     # Sieve log file must be world-writable.
     chmod 0666 ${SIEVE_LOG_FILE}
 
-    ECHO_INFO "Enable dovecot SASL support in postfix: ${POSTFIX_FILE_MAIN_CF}."
+    ECHO_DEBUG "Enable dovecot SASL support in postfix: ${POSTFIX_FILE_MAIN_CF}."
     postconf -e mailbox_command="${DOVECOT_DELIVER}"
     postconf -e virtual_transport="${TRANSPORT}"
     postconf -e dovecot_destination_recipient_limit='1'
@@ -425,14 +425,14 @@ EOF
     # should be '/var/spool/postfix/dovecot-auth'.
     postconf -e smtpd_sasl_path='dovecot-auth'
 
-    ECHO_INFO "Create directory for Dovecot plugin: Expire."
+    ECHO_DEBUG "Create directory for Dovecot plugin: Expire."
     dovecot_expire_dict_dir="$(dirname ${DOVECOT_EXPIRE_DICT_BDB})"
     mkdir -p ${dovecot_expire_dict_dir} && \
     chown -R ${DOVECOT_USER}:${DOVECOT_GROUP} ${dovecot_expire_dict_dir} && \
     chmod -R 0750 ${dovecot_expire_dict_dir}
 
     if [ X"${DISTRO}" == X"RHEL" ]; then
-        ECHO_INFO "Setting cronjob for Dovecot plugin: Expire."
+        ECHO_DEBUG "Setting cronjob for Dovecot plugin: Expire."
         cat >> ${CRON_SPOOL_DIR}/root <<EOF
 ${CONF_MSG}
 #1   5   *   *   *   ${DOVECOT_BIN} --exec-mail ext $(eval ${LIST_FILES_IN_PKG} dovecot | grep 'expire-tool$')
@@ -450,7 +450,7 @@ dovecot unix    -       n       n       -       -      pipe
 EOF
 
     if [ X"${KERNEL_NAME}" == X"Linux" ]; then
-        ECHO_INFO "Setting logrotate for dovecot log file."
+        ECHO_DEBUG "Setting logrotate for dovecot log file."
         cat > ${DOVECOT_LOGROTATE_FILE} <<EOF
 ${CONF_MSG}
 ${DOVECOT_LOG_FILE} {

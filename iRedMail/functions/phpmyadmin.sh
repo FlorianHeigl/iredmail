@@ -7,14 +7,14 @@
 # -------------------------------------------------
 phpmyadmin_install()
 {
-    ECHO_INFO "==================== phpMyAdmin ===================="
+    ECHO_INFO "Configure phpMyAdmin (web-based MySQL management tool)." 
 
     if [ X"${DISTRO}" != X"FREEBSD" ]; then
         cd ${MISC_DIR}
 
         extract_pkg ${PHPMYADMIN_TARBALL} ${HTTPD_SERVERROOT}
 
-        ECHO_INFO "Set file permission for phpMyAdmin: ${PHPMYADMIN_HTTPD_ROOT}."
+        ECHO_DEBUG "Set file permission for phpMyAdmin: ${PHPMYADMIN_HTTPD_ROOT}."
         chown -R ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${PHPMYADMIN_HTTPD_ROOT}
         chmod -R 0755 ${PHPMYADMIN_HTTPD_ROOT}
 
@@ -23,7 +23,7 @@ phpmyadmin_install()
         ln -s ${PHPMYADMIN_HTTPD_ROOT} ${PHPMYADMIN_HTTPD_ROOT_SYMBOL_LINK} >/dev/null
     fi
 
-    ECHO_INFO "Create directory alias for phpMyAdmin in Apache: ${HTTPD_CONF_DIR}/phpmyadmin.conf."
+    ECHO_DEBUG "Create directory alias for phpMyAdmin in Apache: ${HTTPD_CONF_DIR}/phpmyadmin.conf."
     cat > ${HTTPD_CONF_DIR}/phpmyadmin.conf <<EOF
 ${CONF_MSG}
 # Note: Please refer to ${HTTPD_SSL_CONF} for SSL/TLS setting.
@@ -38,7 +38,7 @@ EOF
     perl -pi -e 's#(</VirtualHost>)#Alias /phpmyadmin "$ENV{PHPMYADMIN_HTTPD_ROOT_SYMBOL_LINK}/"\n${1}#' ${HTTPD_SSL_CONF}
     perl -pi -e 's#(</VirtualHost>)#Alias /mysql "$ENV{PHPMYADMIN_HTTPD_ROOT_SYMBOL_LINK}/"\n${1}#' ${HTTPD_SSL_CONF}
 
-    ECHO_INFO "Config phpMyAdmin: ${PHPMYADMIN_CONFIG_FILE}."
+    ECHO_DEBUG "Config phpMyAdmin: ${PHPMYADMIN_CONFIG_FILE}."
     cd ${PHPMYADMIN_HTTPD_ROOT} && cp config.sample.inc.php ${PHPMYADMIN_CONFIG_FILE}
 
     export COOKIE_STRING="$(${RANDOM_STRING})"

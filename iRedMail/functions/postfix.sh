@@ -26,14 +26,14 @@
 
 postfix_config_basic()
 {
-    ECHO_INFO "==================== Postfix ===================="
+    ECHO_INFO "Configure Postfix."
 
     backup_file ${POSTFIX_FILE_MAIN_CF} ${POSTFIX_FILE_MASTER_CF}
 
-    ECHO_INFO "Enable chroot."
+    ECHO_DEBUG "Enable chroot."
     perl -pi -e 's/^(smtp.*inet)(.*)(n)(.*)(n)(.*smtpd)$/${1}${2}${3}${4}-${6}/' ${POSTFIX_FILE_MASTER_CF}
 
-    ECHO_INFO "Bypass checks for internally generated mail: ${POSTFIX_FILE_MASTER_CF}."
+    ECHO_DEBUG "Bypass checks for internally generated mail: ${POSTFIX_FILE_MASTER_CF}."
     # comment out postfix default setting.
     perl -pi -e 's/^(pickup.*)/#${1}/' ${POSTFIX_FILE_MASTER_CF}
     # Add new option to 'pickup' daemon.
@@ -43,7 +43,7 @@ pickup    fifo  n       -       n       60      1       pickup
   -o content_filter=
 EOF
 
-    ECHO_INFO "Copy: /etc/{hosts,resolv.conf,localtime,services} -> ${POSTFIX_CHROOT_DIR}/etc/"
+    ECHO_DEBUG "Copy: /etc/{hosts,resolv.conf,localtime,services} -> ${POSTFIX_CHROOT_DIR}/etc/"
     mkdir -p ${POSTFIX_CHROOT_DIR}/etc/ 2>/dev/null
     for i in /etc/hosts /etc/resolv.conf /etc/localtime /etc/services; do
         [ -f $i ] && cp ${i} ${POSTFIX_CHROOT_DIR}/etc/
@@ -206,7 +206,7 @@ EOF
 
 postfix_config_ldap()
 {
-    ECHO_INFO "Configure Postfix for LDAP lookup."
+    ECHO_DEBUG "Configure Postfix for LDAP lookup."
 
     # LDAP search filters.
     ldap_search_base_domain="${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}"
@@ -443,7 +443,7 @@ result_attribute= ${LDAP_ATTR_USER_SENDER_BCC_ADDRESS}
 debuglevel      = 0
 EOF
 
-    ECHO_INFO "Set file permission: Owner/Group -> root/root, Mode -> 0640."
+    ECHO_DEBUG "Set file permission: Owner/Group -> root/root, Mode -> 0640."
 
     cat >> ${TIP_FILE} <<EOF
 Postfix (LDAP):
@@ -474,7 +474,7 @@ EOF
 
 postfix_config_mysql()
 {
-    ECHO_INFO "Configure Postfix for MySQL lookup."
+    ECHO_DEBUG "Configure Postfix for MySQL lookup."
 
     # Postfix doesn't work while mysql server is 'localhost', should be
     # changed to '127.0.0.1'.
@@ -601,7 +601,7 @@ dbname      = ${VMAIL_DB}
 query       = SELECT bcc_address FROM recipient_bcc_user WHERE username='%s' AND active='1'
 EOF
 
-    ECHO_INFO "Set file permission: Owner/Group -> postfix/postfix, Mode -> 0640."
+    ECHO_DEBUG "Set file permission: Owner/Group -> postfix/postfix, Mode -> 0640."
     cat >> ${TIP_FILE} <<EOF
 Postfix (MySQL):
     * Configuration files:
@@ -644,7 +644,7 @@ postfix_config_virtual_host()
 
 postfix_config_sasl()
 {
-    ECHO_INFO "Configure SMTP SASL authentication."
+    ECHO_DEBUG "Configure SMTP SASL authentication."
 
     # For SASL auth
     postconf -e smtpd_sasl_auth_enable="yes"
@@ -694,7 +694,7 @@ postfix_config_sasl()
 
 postfix_config_tls()
 {
-    ECHO_INFO "Enable TLS/SSL support in Postfix."
+    ECHO_DEBUG "Enable TLS/SSL support in Postfix."
 
     postconf -e smtpd_tls_security_level='may'
     postconf -e smtpd_enforce_tls='no'
@@ -729,7 +729,7 @@ postfix_config_syslog()
     # default, logrotated weekly, it's not suited for a busy server.
     #
 
-    ECHO_INFO "Setting up logrotate for maillog as a daily work."
+    ECHO_DEBUG "Setting up logrotate for maillog as a daily work."
     # Remove maillog from ${LOGROTATE_DIR}/(r)syslog.
     if [ X"${DISTRO}" == X"RHEL" ]; then
         perl -pi -e 's#/var/log/maillog ##' ${LOGROTATE_DIR}/syslog

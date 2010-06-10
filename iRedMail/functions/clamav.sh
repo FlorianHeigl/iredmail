@@ -26,10 +26,10 @@
 
 clamav_config()
 {
-    ECHO_INFO "==================== ClamAV ===================="
+    ECHO_INFO "Configure ClamAV (anti-virus toolkit)."
 
     export CLAMD_LOCAL_SOCKET CLAMD_LISTEN_ADDR
-    ECHO_INFO "Configure ClamAV: ${CLAMD_CONF}."
+    ECHO_DEBUG "Configure ClamAV: ${CLAMD_CONF}."
     perl -pi -e 's/^(TCPSocket.*)/#${1}/' ${CLAMD_CONF}
     perl -pi -e 's#^(TCPAddr).*#${1} $ENV{'CLAMD_LISTEN_ADDR'}#' ${CLAMD_CONF}
     perl -pi -e 's#^(LogFile).*#${1} $ENV{'CLAMD_LOGFILE'}#' ${CLAMD_CONF}
@@ -39,19 +39,19 @@ clamav_config()
     # - for clamav = 0.9.6
     perl -pi -e 's-^#(LocalSocket).*-${1} $ENV{'CLAMD_LOCAL_SOCKET'}-' ${CLAMD_CONF}
 
-    ECHO_INFO "Configure freshclam: ${FRESHCLAM_CONF}."
+    ECHO_DEBUG "Configure freshclam: ${FRESHCLAM_CONF}."
     perl -pi -e 's#^(DatabaseMirror).*#${1} $ENV{'FRESHCLAM_DATABASE_MIRROR'}#' ${CLAMD_CONF}
     perl -pi -e 's-^#(PidFile)(.*)-${1} $ENV{FRESHCLAM_PID_FILE}-' ${FRESHCLAM_CONF}
     perl -pi -e 's#^(UpdateLogFile).*#${1} $ENV{'FRESHCLAM_LOGFILE'}#' ${CLAMD_CONF}
 
     if [ X"${DISTRO}" == X"RHEL" ]; then
-        ECHO_INFO "Copy freshclam init startup script and enable it."
+        ECHO_DEBUG "Copy freshclam init startup script and enable it."
         cp -f ${FRESHCLAM_INIT_FILE_SAMPLE} /etc/rc.d/init.d/freshclam
         chmod +x /etc/rc.d/init.d/freshclam
         eval ${enable_service} freshclam
         export ENABLED_SERVICES="${ENABLED_SERVICES} freshclam"
     elif [ X"${DISTRO}" == X"FREEBSD" ]; then
-        ECHO_INFO "Add clamav user to amavid group."
+        ECHO_DEBUG "Add clamav user to amavid group."
         pw usermod ${CLAMAV_USER} -G ${AMAVISD_GROUP}
     fi
 

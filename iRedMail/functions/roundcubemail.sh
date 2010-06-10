@@ -7,7 +7,7 @@
 # -----------------------
 rcm_install()
 {
-    ECHO_INFO "==================== Roundcube Webmail ===================="
+    ECHO_INFO "Configure Roundcube webmail."
 
     if [ X"${DISTRO}" != X"FREEBSD" ]; then
         cd ${MISC_DIR}
@@ -19,7 +19,7 @@ rcm_install()
         # conf.d/roundcubemail.conf file after upgrade this component.
         ln -s ${RCM_HTTPD_ROOT} ${RCM_HTTPD_ROOT_SYMBOL_LINK} 2>/dev/null
 
-        ECHO_INFO "Set correct permission for Roundcubemail: ${RCM_HTTPD_ROOT}."
+        ECHO_DEBUG "Set correct permission for Roundcubemail: ${RCM_HTTPD_ROOT}."
         chown -R ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${RCM_HTTPD_ROOT}
         chown -R ${HTTPD_USER}:${HTTPD_GROUP} ${RCM_HTTPD_ROOT}/{temp,logs}
         chmod 0000 ${RCM_HTTPD_ROOT}/{CHANGELOG,INSTALL,LICENSE,README,UPGRADING,installer,SQL}
@@ -46,7 +46,7 @@ rcm_install()
 
 rcm_config_managesieve()
 {
-    ECHO_INFO "Enable and config plugin: managesieve."
+    ECHO_DEBUG "Enable and config plugin: managesieve."
     cd ${RCM_HTTPD_ROOT}/config/ && \
     perl -pi -e 's#(.*rcmail_config.*plugins.*=.*array\()(.*\).*)#${1}"managesieve",${2}#' main.inc.php
 
@@ -63,7 +63,7 @@ rcm_config_managesieve()
 
 rcm_config_password()
 {
-    ECHO_INFO "Enable and config plugin: password."
+    ECHO_DEBUG "Enable and config plugin: password."
     cd ${RCM_HTTPD_ROOT}/config/ && \
     perl -pi -e 's#(.*rcmail_config.*plugins.*=.*array\()(.*\).*)#${1}"password",${2}#' main.inc.php
 
@@ -103,7 +103,7 @@ rcm_config_password()
 
 rcm_config()
 {
-    ECHO_INFO "Import MySQL database and privileges for Roundcubemail."
+    ECHO_DEBUG "Import MySQL database and privileges for Roundcubemail."
 
     mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
 /* Create database and grant privileges. */
@@ -134,7 +134,7 @@ EOF
         :
     fi
 
-    ECHO_INFO "Configure database for Roundcubemail: ${RCM_HTTPD_ROOT}/config/*."
+    ECHO_DEBUG "Configure database for Roundcubemail: ${RCM_HTTPD_ROOT}/config/*."
 
     cd ${RCM_HTTPD_ROOT}/config/
 
@@ -211,7 +211,7 @@ EOF
     # Show images
     perl -pi -e 's#(.*show_images.*=).*#${1} 1;#' main.inc.php
 
-    ECHO_INFO "Create directory alias for Roundcubemail."
+    ECHO_DEBUG "Create directory alias for Roundcubemail."
     cat > ${HTTPD_CONF_DIR}/roundcubemail.conf <<EOF
 ${CONF_MSG}
 # Note: Please refer to ${HTTPD_SSL_CONF} for SSL/TLS setting.
@@ -228,13 +228,13 @@ EOF
     perl -pi -e 's#(</VirtualHost>)#Alias /webmail "$ENV{RCM_HTTPD_ROOT_SYMBOL_LINK}/"\n${1}#' ${HTTPD_SSL_CONF}
     perl -pi -e 's#(</VirtualHost>)#Alias /roundcube "$ENV{RCM_HTTPD_ROOT_SYMBOL_LINK}/"\n${1}#' ${HTTPD_SSL_CONF}
 
-    ECHO_INFO "Patch: Display Username."
+    ECHO_DEBUG "Patch: Display Username."
     perl -pi -e 's#(.*id="taskbar">)#${1}\n<span style="padding-right: 3px;"><roundcube:object name="username" /></span>#' ${RCM_HTTPD_ROOT}/skins/default/includes/taskbar.html
 
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
         export LDAP_SERVER_HOST LDAP_SERVER_PORT LDAP_BIND_VERSION LDAP_BASEDN LDAP_ATTR_DOMAIN_RDN LDAP_ATTR_USER_RDN
         cd ${RCM_HTTPD_ROOT}/config/
-        ECHO_INFO "Setting global LDAP address book in Roundcube."
+        ECHO_DEBUG "Setting global LDAP address book in Roundcube."
 
         # Remove PHP end of file mark first.
         cd ${RCM_HTTPD_ROOT}/config/ && perl -pi -e 's#\?\>##' main.inc.php
@@ -289,7 +289,7 @@ EOF
     fi
 
     # Log file related.
-    #ECHO_INFO "Setting up syslog configration file for Roundcube."
+    #ECHO_DEBUG "Setting up syslog configration file for Roundcube."
     #echo -e "user.*\t\t\t\t\t\t-${RCM_LOGFILE}" >> ${SYSLOG_CONF}
 
     #touch ${RCM_LOGFILE}

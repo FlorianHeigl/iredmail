@@ -26,7 +26,7 @@
 
 apache_php_config()
 {
-    ECHO_INFO "==================== Apache & PHP ===================="
+    ECHO_INFO "Configure Apache web server and PHP."
 
     backup_file ${HTTPD_CONF} ${HTTPD_SSL_CONF}
 
@@ -52,11 +52,11 @@ EOF
     # --------------------------
     # Apache Setting.
     # --------------------------
-    ECHO_INFO "Hide apache version number in ${HTTPD_CONF}."
+    ECHO_DEBUG "Hide apache version number in ${HTTPD_CONF}."
     perl -pi -e 's#^(ServerTokens).*#${1} ProductOnly#' ${HTTPD_CONF}
     perl -pi -e 's#^(ServerSignature).*#${1} EMail#' ${HTTPD_CONF}
 
-    #ECHO_INFO "Disable 'AddDefaultCharset' in ${HTTPD_CONF}."
+    #ECHO_DEBUG "Disable 'AddDefaultCharset' in ${HTTPD_CONF}."
     #perl -pi -e 's/^(AddDefaultCharset UTF-8)/#${1}/' ${HTTPD_CONF}
 
     # Set correct SSL Cert/Key file location.
@@ -84,7 +84,7 @@ EOF
     fi
 
     if [ X"${HTTPD_PORT}" != X"80" ]; then
-        ECHO_INFO "Change Apache listen port to: ${HTTPD_PORT}."
+        ECHO_DEBUG "Change Apache listen port to: ${HTTPD_PORT}."
         perl -pi -e 's#^(Listen )(80)$#${1}$ENV{HTTPD_PORT}#' ${HTTPD_CONF}
     else
         :
@@ -120,19 +120,19 @@ EOF
         perl -pi -e 's#^;(date.timezone).*#${1} = UTC#' ${PHP_INI}
     fi
 
-    #ECHO_INFO "Setting error_reporting to 'E_ERROR': ${PHP_INI}."
+    #ECHO_DEBUG "Setting error_reporting to 'E_ERROR': ${PHP_INI}."
     #perl -pi -e 's#^(error_reporting.*=)#${1} E_ERROR;#' ${PHP_INI}
 
-    ECHO_INFO "Disable several functions: ${PHP_INI}."
+    ECHO_DEBUG "Disable several functions: ${PHP_INI}."
     perl -pi -e 's#^(disable_functions.*=)(.*)#${1}show_source,system,shell_exec,passthru,exec,phpinfo,proc_open ; ${2}#' ${PHP_INI}
 
-    ECHO_INFO "Hide PHP Version in Apache from remote users requests: ${PHP_INI}."
+    ECHO_DEBUG "Hide PHP Version in Apache from remote users requests: ${PHP_INI}."
     perl -pi -e 's#^(expose_php.*=)#${1} Off;#' ${PHP_INI}
 
-    ECHO_INFO "Increase 'memory_limit' to 128M: ${PHP_INI}."
+    ECHO_DEBUG "Increase 'memory_limit' to 128M: ${PHP_INI}."
     perl -pi -e 's#^(memory_limit = )#${1} 128M;#' ${PHP_INI}
 
-    ECHO_INFO "Increase 'upload_max_filesize', 'post_max_size' to 10/12M: ${PHP_INI}."
+    ECHO_DEBUG "Increase 'upload_max_filesize', 'post_max_size' to 10/12M: ${PHP_INI}."
     perl -pi -e 's/^(upload_max_filesize.*=)/${1}10M; #/' ${PHP_INI}
     perl -pi -e 's/^(post_max_size.*=)/${1}12M; #/' ${PHP_INI}
 

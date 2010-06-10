@@ -8,11 +8,11 @@
 # ---------------------------------------------
 pypolicyd_spf_config()
 {
-    ECHO_INFO "Install pypolicyd-spf for SPF."
+    ECHO_DEBUG "Install pypolicyd-spf for SPF."
     cd ${MISC_DIR}
     extract_pkg ${PYPOLICYD_SPF_TARBALL} && \
     cd pypolicyd-spf-${PYPOLICYD_SPF_VERSION} && \
-    ECHO_INFO "Install pypolicyd-spf-${PYPOLICYD_SPF_VERSION}." && \
+    ECHO_DEBUG "Install pypolicyd-spf-${PYPOLICYD_SPF_VERSION}." && \
     python setup.py build >/dev/null && python setup.py install >/dev/null
     
     postconf -e spf-policyd_time_limit='3600'
@@ -36,8 +36,8 @@ EOF
 # ---------------------------------------------
 policyd_user()
 {
-    ECHO_INFO "==================== Policyd ===================="
-    ECHO_INFO "Add user and group for policyd: ${POLICYD_USER}:${POLICYD_GROUP}."
+    ECHO_INFO "Configure Policyd (postfix policy daemon)."
+    ECHO_DEBUG "Add user and group for policyd: ${POLICYD_USER}:${POLICYD_GROUP}."
     if [ X"${DISTRO}" == X"FREEBSD" ]; then
         pw useradd -n ${POLICYD_USER} -s /sbin/nologin -d ${POLICYD_USER_HOME} -m
     else
@@ -50,7 +50,7 @@ policyd_user()
 
 policyd_config()
 {
-    ECHO_INFO "Initialize MySQL database of policyd."
+    ECHO_DEBUG "Initialize MySQL database of policyd."
 
     # Get SQL structure template file.
     tmp_sql="/tmp/policyd_config_tmp.${RANDOM}${RANDOM}"
@@ -144,7 +144,7 @@ EOF
     unset tmp_sql tmp_dir
 
     # Configure policyd.
-    ECHO_INFO "Configure policyd: ${POLICYD_CONF}."
+    ECHO_DEBUG "Configure policyd: ${POLICYD_CONF}."
 
     # FreeBSD: Copy sample config file.
     if [ X"${DISTRO}" == X"FREEBSD" ]; then
@@ -344,7 +344,7 @@ EOF
     fi
 
     # Setup crontab.
-    ECHO_INFO "Setting cron job for policyd user: ${POLICYD_USER}."
+    ECHO_DEBUG "Setting cron job for policyd user: ${POLICYD_USER}."
     if [ X"${DISTRO}" == X"FREEBSD" ]; then
         cat > ${CRON_SPOOL_DIR}/${POLICYD_USER} <<EOF
 ${CONF_MSG}

@@ -7,7 +7,7 @@
 # -----------------------------
 postfixadmin_install()
 {
-    ECHO_INFO "==================== PostfixAdmin ===================="
+    ECHO_INFO "Configure PostfixAdmin (web-based mail account management tool)." 
 
     if [ X"${DISTRO}" != X"FREEBSD" ]; then
         cd ${MISC_DIR}
@@ -22,14 +22,14 @@ postfixadmin_install()
         cd ${POSTFIXADMIN_HTTPD_ROOT}/ && \
         patch -p0 < ${PATCH_DIR}/postfixadmin/create_mailbox.patch >/dev/null && \
 
-        ECHO_INFO "Set file permission for PostfixAdmin."
+        ECHO_DEBUG "Set file permission for PostfixAdmin."
         chown -R ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${POSTFIXADMIN_HTTPD_ROOT}
         chmod -R 755 ${POSTFIXADMIN_HTTPD_ROOT}
         mv ${POSTFIXADMIN_HTTPD_ROOT}/setup.php ${POSTFIXADMIN_HTTPD_ROOT}/setup.php.${DATE}
         chmod 0000 ${POSTFIXADMIN_HTTPD_ROOT}/setup.php.${DATE}
     fi
 
-    ECHO_INFO "Create directory alias for PostfixAdmin in Apache."
+    ECHO_DEBUG "Create directory alias for PostfixAdmin in Apache."
     cat > ${HTTPD_CONF_DIR}/postfixadmin.conf <<EOF
 ${CONF_MSG}
 # Note: Please refer to ${HTTPD_SSL_CONF} for SSL/TLS setting.
@@ -53,7 +53,7 @@ UPDATE domain_admins SET domain='ALL' WHERE username="${SITE_ADMIN_NAME}";
 FLUSH PRIVILEGES;
 EOF
     else
-        ECHO_INFO "Add site admin in SQL database."
+        ECHO_DEBUG "Add site admin in SQL database."
         SITE_ADMIN_PASSWD="$(openssl passwd -1 ${SITE_ADMIN_PASSWD})"
         mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
 USE ${VMAIL_DB};
