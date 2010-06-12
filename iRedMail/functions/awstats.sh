@@ -260,6 +260,11 @@ awstats_config_crontab()
 1   */1   *   *   *   perl $(eval ${LIST_FILES_IN_PKG} '/var/db/pkg/awstats-*' | grep '/awstats.pl$') -config=${HOSTNAME} -update >/dev/null
 1   */1   *   *   *   perl $(eval ${LIST_FILES_IN_PKG} '/var/db/pkg/awstats-*' | grep '/awstats.pl$') -config=mail -update >/dev/null
 EOF
+    elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+        cat >> ${CRON_SPOOL_DIR}/root <<EOF
+1   */1   *   *   *   perl ${AWSTATS_CGI_DIR}/awstats/awstats.pl -config=${HOSTNAME} -update >/dev/null
+1   */1   *   *   *   perl ${AWSTATS_CGI_DIR}/awstats/awstats.pl -config=mail -update >/dev/null
+EOF
     else
         cat >> ${CRON_SPOOL_DIR}/root <<EOF
 1   */1   *   *   *   perl $(eval ${LIST_FILES_IN_PKG} awstats | grep '/awstats.pl$') -config=${HOSTNAME} -update >/dev/null

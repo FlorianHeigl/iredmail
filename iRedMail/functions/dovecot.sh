@@ -55,7 +55,7 @@ EOF
 
 dovecot_config()
 {
-    ECHO_INFO "==================== Dovecot ===================="
+    ECHO_INFO "Configure Dovecot (pop3/imap server)."
 
     [ X"${ENABLE_DOVECOT}" == X"YES" ] && \
         backup_file ${DOVECOT_CONF} && \
