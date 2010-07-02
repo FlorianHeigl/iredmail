@@ -35,10 +35,10 @@ sa_config()
     cat >> ${TIP_FILE} <<EOF
 SpamAssassin:
     * Configuration files:
-        - /etc/mail/spamassassin/
+        - ${SA_CONF_DIR}
 
-    - Rules:
-        * /usr/share/spamassassin/
+    * Rules:
+        - ${SA_RULES_DIR}
 
 EOF
 
