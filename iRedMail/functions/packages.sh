@@ -141,16 +141,16 @@ install_all()
             dpkg-divert --rename /etc/dbconfig-common/postfix-policyd.conf
             mkdir -p /etc/dbconfig-common/ 2>/dev/null
             cat > /etc/dbconfig-common/postfix-policyd.conf <<EOF
-dbc_install='false'
+dbc_install='true'
 dbc_upgrade='false'
-dbc_remove='false'
-dbc_dbtype=''
-dbc_dbuser=''
-dbc_dbpass=''
+dbc_remove=''
+dbc_dbtype='mysql'
+dbc_dbuser='postfix-policyd'
+dbc_dbpass="${POLICYD_DB_PASSWD}"
 dbc_dbserver=''
 dbc_dbport=''
-dbc_dbname=''
-dbc_dbadmin=''
+dbc_dbname='postfixpolicyd'
+dbc_dbadmin='root'
 dbc_basepath=''
 dbc_ssl=''
 dbc_authmethod_admin=''
