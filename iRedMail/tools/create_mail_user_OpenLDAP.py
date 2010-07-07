@@ -97,10 +97,6 @@ Note:
     - Leading and trailing Space will be ignored.
 '''
 
-def removeSpaceAndDot(s):
-    """Remove leading and trailing dot and all whitespace."""
-    return re.sub('\.|\s', '', s)
-
 def convEmailToUserDN(email):
     """Convert email address to ldap dn of normail mail user."""
     if email.count('@') != 1: return ''
@@ -118,7 +114,9 @@ def ldif_mailuser(domain, username, passwd, cn, quota, groups=''):
     if quota == '':
         quota = '0'
 
-    username = removeSpaceAndDot(username)
+    # Remove SPACE in username.
+    username = str(username).strip().replace(' ', '')
+
     if cn == '': cn = username
     mail = username.lower() + '@' + domain
     dn = convEmailToUserDN(mail)
