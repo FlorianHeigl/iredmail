@@ -354,7 +354,7 @@ openldap_data_initialize()
     
     ECHO_DEBUG -n "Sleep 5 seconds for LDAP daemon initialize:"
     for i in 5 4 3 2 1; do
-        echo -n " ${i}s" && sleep 1
+        ECHO_DEBUG -n " ${i}s" && sleep 1
     done
     echo '.'
 
