@@ -153,7 +153,7 @@ cleanup_upgrade_php_pear()
         fi
 
         ECHO_INFO "Installing php Net_LDAP2 ..."
-        pear install Net_LDAP2 >/dev/null
+        pear install ${SRC_PEAR_NET_LDAP2} >/dev/null
     fi
 
     echo 'export status_cleanup_upgrade_php_pear="DONE"' >> ${STATUS_FILE}

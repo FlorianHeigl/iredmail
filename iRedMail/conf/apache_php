@@ -98,3 +98,7 @@ elif [ X"${DISTRO}" == X"FREEBSD" ]; then
 else
     :
 fi
+
+# PHP pear package: Net_LDAP2.
+# Required by roundcube plugin: password (ldap backend only).
+export SRC_PEAR_NET_LDAP2="${MISC_DIR}/Net_LDAP2-2.0.9.tgz"
