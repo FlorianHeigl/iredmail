@@ -50,9 +50,11 @@ fi
 
 # Name of LDA sieve plugin.
 if [ X"${DOVECOT_VERSION}" == X"1.1" ]; then
-    export DOVECOT_LDA_SIEVE_PLUGIN_NAME="cmusieve"
+    export DOVECOT_LDA_PLUGIN_SIEVE="cmusieve"
+    export DOVECOT_LDA_PLUGIN_AUTOCREATE=''
 elif [ X"${DOVECOT_VERSION}" == X"1.2" ]; then
-    export DOVECOT_LDA_SIEVE_PLUGIN_NAME="sieve"
+    export DOVECOT_LDA_PLUGIN_SIEVE="sieve"
+    export DOVECOT_LDA_PLUGIN_AUTOCREATE='autocreate'
 fi
 
 # Dovecot user & group.

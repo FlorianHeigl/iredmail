@@ -196,7 +196,7 @@ protocol managesieve {
     # To fool ManageSieve clients that are focused on timesieved you can
     # specify the IMPLEMENTATION capability that the dovecot reports to clients
     # (default: "dovecot").
-    #managesieve_implementation_string = Cyrus timsieved v2.2.13
+    #managesieve_implementation_string = dovecot
 }
 
 # Plugin: sieve.
