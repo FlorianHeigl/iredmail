@@ -77,7 +77,7 @@ rcm_config_password()
 
     if [ X"${BACKEND}" == X"MySQL" ]; then
         perl -pi -e 's#(.*password_driver.*=).*#${1} "sql";#' config.inc.php
-        perl -pi -e 's#(.*password_db_dsn.*= )(.*)#${1}"mysqli://$ENV{'RCM_DB_USER'}:$ENV{'RCM_DB_PASSWD'}\@$ENV{'MYSQL_SERVER'}/$ENV{'VMAIL_DB'}";#' config.inc.php
+        perl -pi -e 's#(.*password_db_dsn.*= )(.*)#${1}"$ENV{'PHP_CONN_TYPE'}://$ENV{'RCM_DB_USER'}:$ENV{'RCM_DB_PASSWD'}\@$ENV{'MYSQL_SERVER'}/$ENV{'VMAIL_DB'}";#' config.inc.php
         perl -pi -e 's#(.*password_query.*=).*#${1} "UPDATE $ENV{'VMAIL_DB'}.mailbox SET password=%c WHERE username=%u LIMIT 1";#' config.inc.php
         perl -pi -e 's#(.*password_hash_algorithm.*=).*#${1} "md5crypt";#' config.inc.php
         perl -pi -e 's#(.*password_hash_base64.*=).*#${1} false;#' config.inc.php
@@ -141,7 +141,7 @@ EOF
 
     export RCM_DB_USER RCM_DB_PASSWD RCMD_DB MYSQL_SERVER 
 
-    perl -pi -e 's#(.*db_dsnw.*= )(.*)#${1}"mysqli://$ENV{'RCM_DB_USER'}:$ENV{'RCM_DB_PASSWD'}\@$ENV{'MYSQL_SERVER'}/$ENV{'RCM_DB'}";#' db.inc.php
+    perl -pi -e 's#(.*db_dsnw.*= )(.*)#${1}"$ENV{'PHP_CONN_TYPE'}://$ENV{'RCM_DB_USER'}:$ENV{'RCM_DB_PASSWD'}\@$ENV{'MYSQL_SERVER'}/$ENV{'RCM_DB'}";#' db.inc.php
 
     # Disable installer.
     perl -pi -e 's#(.*enable_installer.*= )(.*)#${1}FALSE;#' main.inc.php
@@ -284,7 +284,7 @@ EOF
 
     #elif [ X"${BACKEND}" == X"MySQL" ]; then
         # Set correct username, password and database name.
-    #    perl -pi -e 's#(.*db_dsnw.*= )(.*)#${1}"mysqli://$ENV{'RCM_DB_USER'}:$ENV{'RCM_DB_PASSWD'}\@$ENV{'MYSQL_SERVER'}/$ENV{'VMAIL_DB'}";#' plugins/changepasswd/config.inc.php
+    #    perl -pi -e 's#(.*db_dsnw.*= )(.*)#${1}"$ENV{'PHP_CONN_TYPE'}://$ENV{'RCM_DB_USER'}:$ENV{'RCM_DB_PASSWD'}\@$ENV{'MYSQL_SERVER'}/$ENV{'VMAIL_DB'}";#' plugins/changepasswd/config.inc.php
     else
         :
     fi

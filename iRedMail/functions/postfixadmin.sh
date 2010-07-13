@@ -79,7 +79,7 @@ EOF
 \$CONF['postfix_admin_url'] = "/postfixadmin";
 
 \$CONF['default_language'] = "${POSTFIXADMIN_DEFAULT_LANGUAGE}";
-\$CONF['database_type'] = 'mysqli';
+\$CONF['database_type'] = "${PHP_CONN_TYPE}";
 \$CONF['database_host'] = "${MYSQL_SERVER}";
 \$CONF['database_user'] = "${MYSQL_ADMIN_USER}";
 \$CONF['database_password'] = "${MYSQL_ADMIN_PW}";

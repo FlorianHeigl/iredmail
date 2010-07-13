@@ -222,20 +222,6 @@ EOF
         :
     fi
 
-    # Install phpLDAPadmin on Ubuntu 10.04 (lucid).
-    if [ X"${USE_PHPLDAPADMIN}" == X"YES" ]; then
-        if [ X"${DISTRO_CODENAME}" == X"lucid" ]; then
-            ALL_PKGS="${ALL_PKGS} phpldapadmin"
-        fi
-    fi
-
-    # Install phpMyAdmin-3.x on Ubuntu 10.04 (lucid).
-    if [ X"${USE_PHPMYADMIN}" == X"YES" ]; then
-        if [ X"${DISTRO_CODENAME}" == X"lucid" ]; then
-            ALL_PKGS="${ALL_PKGS} phpmyadmin"
-        fi
-    fi
-
     # iRedAPD.
     if [ X"${USE_IREDAPD}" == X"YES" ]; then
         [ X"${DISTRO}" == X"RHEL" ] && ALL_PKGS="${ALL_PKGS} python-ldap.${ARCH}"
@@ -275,6 +261,29 @@ EOF
 
     # Disable Ubuntu firewall rules, we have own iptables init script and rule file.
     [ X"${DISTRO}" == X"UBUNTU" ] && export DISABLED_SERVICES="${DISABLED_SERVICES} ufw"
+
+    #
+    # ---- Ubuntu 10.04 special. ----
+    #
+    if [ X"${DISTRO_CODENAME}" == X"lucid" ]; then
+        # Install required packages for roundcube.
+        #if [ X"${USE_RCM}" == X"YES" ]; then
+        #    ALL_PKGS="${ALL_PKGS} php-auth php-mail-mime php-mail-mimedecode php-mdb2-driver-mysql php-net-smtp php-net-socket tinymce"
+        #fi
+
+        # Install phpLDAPadmin.
+        if [ X"${USE_PHPLDAPADMIN}" == X"YES" ]; then
+            ALL_PKGS="${ALL_PKGS} phpldapadmin"
+        fi
+
+        # Install phpMyAdmin-3.x.
+        if [ X"${USE_PHPMYADMIN}" == X"YES" ]; then
+            ALL_PKGS="${ALL_PKGS} phpmyadmin"
+        fi
+    fi
+    #
+    # ---- End Ubuntu 10.04 special. ----
+    #
 
     export ALL_PKGS ENABLED_SERVICES
 
