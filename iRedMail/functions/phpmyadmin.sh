@@ -9,7 +9,7 @@ phpmyadmin_install()
 {
     ECHO_INFO "Configure phpMyAdmin (web-based MySQL management tool)." 
 
-    if [ X"${DISTRO}" != X"FREEBSD" ]; then
+    if [ X"${DISTRO}" != X"FREEBSD" -o X"${DISTRO_CODENAME}" != X"lucid" ]; then
         cd ${MISC_DIR}
 
         extract_pkg ${PHPMYADMIN_TARBALL} ${HTTPD_SERVERROOT}
