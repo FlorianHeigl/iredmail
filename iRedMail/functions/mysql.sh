@@ -44,7 +44,7 @@ EOF
     for i in 5 4 3 2 1; do
         ECHO_DEBUG -n " ${i}s" && sleep 1
     done
-    echo '.'
+    ECHO_DEBUG '.'
 
     echo '' > ${MYSQL_INIT_SQL}
 

@@ -9,6 +9,7 @@ rcm_install()
 {
     ECHO_INFO "Configure Roundcube webmail."
 
+    # FreeBSD: install via ports tree.
     if [ X"${DISTRO}" != X"FREEBSD" ]; then
         cd ${MISC_DIR}
 
@@ -23,10 +24,10 @@ rcm_install()
         chown -R ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${RCM_HTTPD_ROOT}
         chown -R ${HTTPD_USER}:${HTTPD_GROUP} ${RCM_HTTPD_ROOT}/{temp,logs}
         chmod 0000 ${RCM_HTTPD_ROOT}/{CHANGELOG,INSTALL,LICENSE,README,UPGRADING,installer,SQL}
-    fi
 
-    # Patches.
-    if [ X"${DISTRO}" != X"FREEBSD" ]; then
+        #
+        # Patches.
+        #
         # Patch for roundcube-0.3.1 only.
         cd ${RCM_HTTPD_ROOT}/
 

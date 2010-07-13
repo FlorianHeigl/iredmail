@@ -164,6 +164,10 @@ EOF
         # Create empty directory for htcacheclean.
         mkdir -p /usr/local/www/proxy/ 2>/dev/null
 
+        # Ubuntu 10.04.
+        # Comments starting with '#' are deprecated.
+        [ -d /etc/php5/conf.d/ ] && perl -pi -e 's/^#(.*)/;${1}' /etc/php5/cli/conf.d/*.ini
+
         # Start apache when system start up.
         cat >> /etc/rc.conf <<EOF
 # Start apache web server.

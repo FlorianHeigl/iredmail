@@ -356,7 +356,7 @@ openldap_data_initialize()
     for i in 5 4 3 2 1; do
         ECHO_DEBUG -n " ${i}s" && sleep 1
     done
-    echo '.'
+    ECHO_DEBUG '.'
 
     ECHO_DEBUG "Initialize LDAP tree."
     # home_mailbox format is 'maildir/' by default.

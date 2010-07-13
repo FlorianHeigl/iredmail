@@ -222,6 +222,20 @@ EOF
         :
     fi
 
+    # Install phpLDAPadmin on Ubuntu 10.04 (lucid).
+    if [ X"${USE_PHPLDAPADMIN}" == X"YES" ]; then
+        if [ X"${DISTRO_CODENAME}" == X"lucid" ]; then
+            ALL_PKGS="${ALL_PKGS} phpldapadmin"
+        fi
+    fi
+
+    # Install phpMyAdmin-3.x on Ubuntu 10.04 (lucid).
+    if [ X"${USE_PHPMYADMIN}" == X"YES" ]; then
+        if [ X"${DISTRO_CODENAME}" == X"lucid" ]; then
+            ALL_PKGS="${ALL_PKGS} phpmyadmin"
+        fi
+    fi
+
     # iRedAPD.
     if [ X"${USE_IREDAPD}" == X"YES" ]; then
         [ X"${DISTRO}" == X"RHEL" ] && ALL_PKGS="${ALL_PKGS} python-ldap.${ARCH}"
