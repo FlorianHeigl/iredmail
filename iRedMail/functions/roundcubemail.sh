@@ -272,7 +272,7 @@ EOF
     'firstname_field' => 'givenName',  // this field represents the contact's first name
     'sort'          => 'cn',    // The field to sort the listing by.
     'scope'         => 'sub',   // search mode: sub|base|list
-    'filter'        => "(&(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DELIVER})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DISPLAYED_IN_ADDRBOOK})(|(&(objectClass=${LDAP_OBJECTCLASS_MAILGROUP})(${LDAP_ATTR_GROUP_HASMEMBER}=${LDAP_VALUE_GROUP_HASMEMBER}))(objectClass=${LDAP_OBJECTCLASS_MAILALIAS})(objectClass=${LDAP_OBJECTCLASS_MAILUSER})))", // Search mail users, lists, aliases.
+    'filter'        => "(&(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DELIVER})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DISPLAYED_IN_ADDRBOOK})(|(objectClass=${LDAP_OBJECTCLASS_MAILGROUP})(objectClass=${LDAP_OBJECTCLASS_MAILALIAS})(objectClass=${LDAP_OBJECTCLASS_MAILUSER})))", // Search mail users, lists, aliases.
     'fuzzy_search'  => true);   // server allows wildcard search
 
 // end of config file

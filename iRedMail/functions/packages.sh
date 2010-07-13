@@ -267,9 +267,11 @@ EOF
     #
     if [ X"${DISTRO_CODENAME}" == X"lucid" ]; then
         # Install required packages for roundcube.
-        #if [ X"${USE_RCM}" == X"YES" ]; then
-        #    ALL_PKGS="${ALL_PKGS} php-auth php-mail-mime php-mail-mimedecode php-mdb2-driver-mysql php-net-smtp php-net-socket tinymce"
-        #fi
+        if [ X"${USE_RCM}" == X"YES" ]; then
+            if [ X"${BACKEND}" == X"OpenLDAP" ]; then
+                ALL_PKGS="${ALL_PKGS} php-net-ldap2"
+            fi
+        fi
 
         # Install phpLDAPadmin.
         if [ X"${USE_PHPLDAPADMIN}" == X"YES" ]; then

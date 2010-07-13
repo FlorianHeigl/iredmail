@@ -105,7 +105,7 @@ export SRC_PEAR_NET_LDAP2="${MISC_DIR}/Net_LDAP2-2.0.9.tgz"
 
 # PHP connection type.
 if [ X"${DISTRO_CODENAME}" == X"lucid" ]; then
-    export PHP_CONN_TYPE='mysqli'
-else
     export PHP_CONN_TYPE='mysql'
+else
+    export PHP_CONN_TYPE='mysqli'
 fi
