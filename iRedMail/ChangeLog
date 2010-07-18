@@ -1,4 +1,5 @@
 iRedMail-0.6.1:
+    * Improve Ubuntu 10.04 support.
     * Update iRedAPD to 1.3.2.
 
 iRedMail-0.6.0:
