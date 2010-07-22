@@ -26,6 +26,12 @@ iredapd_config()
 {
     ECHO_INFO "Configure iRedAPD (postfix policy daemon)."
 
+    # Create a low privilege user as daemon user.
+    if [ X"${KERNEL_NAME}" == X"FreeBSD" ]; then
+        pw useradd -s /sbin/nologin -d /home/iredapd -c "iRedAPD daemon user" -n ${IREDAPD_DAEMON_USER}
+    else
+        useradd -s /sbin/nologin -M -d /home/iredapd -c "iRedAPD daemon user" ${IREDAPD_DAEMON_USER}
+    fi
     # Extract source tarball.
     cd ${MISC_DIR}
     [ -d ${IREDAPD_ROOT_DIR} ] || mkdir -p ${IREDAPD_ROOT_DIR}
@@ -56,6 +62,7 @@ iredapd_config()
     perl -pi -e 's#(listen_addr.*=).*#${1} $ENV{IREDAPD_LISTEN_ADDR}#' iredapd.ini
     perl -pi -e 's#(listen_port.*=).*#${1} $ENV{IREDAPD_LISTEN_PORT}#' iredapd.ini
 
+    perl -pi -e 's#(run_as_user.*=).*#${1} $ENV{IREDAPD_DAEMON_USER}#' iredapd.ini
     perl -pi -e 's#(run_as_daemon.*=).*#${1} yes#' iredapd.ini
 
     perl -pi -e 's#(uri).*#${1} = ldap://$ENV{LDAP_SERVER_HOST}:$ENV{LDAP_SERVER_PORT}#' iredapd.ini

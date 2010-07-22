@@ -1,6 +1,6 @@
 iRedMail-0.6.1:
     * Improve Ubuntu 10.04 support.
-    * Update iRedAPD to 1.3.2.
+    * Update iRedAPD to 1.3.3.
 
 iRedMail-0.6.0:
     * Disallow to use multiple identities in postfix and roundcube.

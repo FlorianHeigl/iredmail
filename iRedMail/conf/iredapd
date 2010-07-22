@@ -20,7 +20,9 @@
 # along with iRedMail.  If not, see <http://www.gnu.org/licenses/>.
 #---------------------------------------------------------------------
 
-export IREDAPD_VERSION='1.3.2'
+export IREDAPD_VERSION='1.3.3'
+export IREDAPD_DAEMON_USER='iredapd'
+
 export IREDAPD_TARBALL="iRedAPD-${IREDAPD_VERSION}.tar.bz2"
 export IREDAPD_ROOT_DIR='/opt'
 
