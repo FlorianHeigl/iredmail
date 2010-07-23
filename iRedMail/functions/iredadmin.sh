@@ -25,6 +25,13 @@ iredadmin_config()
 {
     ECHO_INFO "Configure iRedAdmin (official web-based admin panel)."
 
+    # Create a low privilege user as httpd daemon user.
+    if [ X"${KERNEL_NAME}" == X"FreeBSD" ]; then
+        pw useradd -s /sbin/nologin -d /home/iredadmin -n ${IREDADMIN_HTTPD_USER}
+    else
+        useradd -s /sbin/nologin -M -d /home/iredadmin ${IREDADMIN_HTTPD_GROUP}
+    fi
+
     if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
         ECHO_DEBUG "Enable apache module: wsgi."
         a2enmod wsgi >/dev/null 2>&1
@@ -40,13 +47,13 @@ iredadmin_config()
     ln -s ${IREDADMIN_HTTPD_ROOT} ${HTTPD_SERVERROOT}/iredadmin 2>/dev/null
 
     ECHO_DEBUG "Set correct permission for iRedAdmin: ${IREDADMIN_HTTPD_ROOT}."
-    chown -R ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${IREDADMIN_HTTPD_ROOT}
+    chown -R ${IREDADMIN_HTTPD_USER}:${IREDADMIN_HTTPD_GROUP} ${IREDADMIN_HTTPD_ROOT}
     chmod -R 0755 ${IREDADMIN_HTTPD_ROOT}
 
     # Copy sample configure file.
     cd ${IREDADMIN_HTTPD_ROOT}/ && \
     cp settings.ini.sample settings.ini
-    chmod 0555 settings.ini
+    chmod 0600 settings.ini
 
     ECHO_DEBUG "Create directory alias for iRedAdmin."
     backup_file ${HTTPD_CONF_DIR}/iredadmin.conf
@@ -59,6 +66,10 @@ iredadmin_config()
 #
 #WSGIScriptAlias /iredadmin ${HTTPD_SERVERROOT}/iredadmin/iredadmin.py/
 #Alias /iredadmin/static ${HTTPD_SERVERROOT}/iredadmin/static/
+
+WSGISocketPrefix /var/run/wsgi
+WSGIDaemonProcess iredadmin user=${IREDADMIN_HTTPD_USER} threads=15
+WSGIProcessGroup ${IREDADMIN_HTTPD_GROUP}
 
 AddType text/html .py
 

@@ -32,6 +32,7 @@ iredapd_config()
     else
         useradd -s /sbin/nologin -M -d /home/iredapd -c "iRedAPD daemon user" ${IREDAPD_DAEMON_USER}
     fi
+
     # Extract source tarball.
     cd ${MISC_DIR}
     [ -d ${IREDAPD_ROOT_DIR} ] || mkdir -p ${IREDAPD_ROOT_DIR}
