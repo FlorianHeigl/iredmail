@@ -59,7 +59,7 @@ dovecot_config()
 
     [ X"${ENABLE_DOVECOT}" == X"YES" ] && \
         backup_file ${DOVECOT_CONF} && \
-        chmod 0500 ${DOVECOT_CONF} && \
+        chmod 0664 ${DOVECOT_CONF} && \
         ECHO_DEBUG "Configure dovecot: ${DOVECOT_CONF}."
 
         cat > ${DOVECOT_CONF} <<EOF
