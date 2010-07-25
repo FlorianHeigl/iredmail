@@ -45,31 +45,6 @@ export DEBIAN_FRONTEND='noninteractive'
 # Source user configurations of iRedMail.
 . ../config
 
-confirm_to_remove_pkg()
-{
-    # Usage: confirm_to_remove_pkg [FILE|DIR]
-    DEST="${1}"
-
-    if [ ! -z ${DEST} ]; then
-        if [ -e ${DEST} -o -L ${DEST} ]; then
-            ECHO_QUESTION -n "Remove ${DEST}? [Y|n]"
-            read ANSWER
-            case $ANSWER in
-                N|n ) : ;;
-                Y|y|* )
-                    ECHO_INFO -n "Removing ${DEST} ..."
-                    rm -rf ${DEST}
-                    echo -e "\t[ DONE ]\n--"
-                    ;;
-            esac
-        else
-            :
-        fi
-    else
-        :
-    fi
-}
-
 confirm_to_remove_account()
 {
     # Usage: confirm_to_remove_account user USERNAME
@@ -420,7 +395,7 @@ done
 
 ECHO_INFO "=================== Remove configuration files ================"
 for i in ${EXTRA_FILES}; do
-    confirm_to_remove_pkg ${i}
+    [ -e ${i} -o -L ${i} ] && rm -rfi ${i}
 done
 
 if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
