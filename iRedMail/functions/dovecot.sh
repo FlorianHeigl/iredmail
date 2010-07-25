@@ -59,7 +59,7 @@ dovecot_config()
 
     [ X"${ENABLE_DOVECOT}" == X"YES" ] && \
         backup_file ${DOVECOT_CONF} && \
-        chmod 0755 ${DOVECOT_CONF} && \
+        chmod 0500 ${DOVECOT_CONF} && \
         ECHO_DEBUG "Configure dovecot: ${DOVECOT_CONF}."
 
         cat > ${DOVECOT_CONF} <<EOF
@@ -342,6 +342,10 @@ pass_filter     = (&(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_ACCOU
 pass_attrs      = ${LDAP_ATTR_USER_PASSWD}=password
 default_pass_scheme = CRYPT
 EOF
+
+        # Set file permission.
+        chmod 0500 ${DOVECOT_LDAP_CONF}
+
         # Maildir format.
         [ X"${MAILBOX_FORMAT}" == X"Maildir" ] && cat >> ${DOVECOT_LDAP_CONF} <<EOF
 user_attrs      = ${LDAP_ATTR_USER_STORAGE_BASE_DIRECTORY}=home,mailMessageStore=mail=maildir:~/%\$/Maildir/,${LDAP_ATTR_USER_QUOTA}=quota_rule=*:bytes=%\$
@@ -382,6 +386,9 @@ WHERE username='%u' \
 AND active='1' \
 AND enable%Ls='1'
 EOF
+
+        # Set file permission.
+        chmod 0550 ${DOVECOT_MYSQL_CONF}
     fi
 
     cat >> ${DOVECOT_CONF} <<EOF

@@ -59,6 +59,10 @@ iredapd_config()
     cd ${IREDAPD_ROOT_DIR}/iredapd/etc/
     cp iredapd.ini.sample iredapd.ini
 
+    # Set file permission.
+    chown -R ${IREDAPD_DAEMON_USER}:${IREDAPD_DAEMON_USER} ${IREDAPD_ROOT_DIR}/iRedAPD-${IREDAPD_VERSION}
+    chmod -R 0600 ${IREDAPD_ROOT_DIR}/iRedAPD-${IREDAPD_VERSION}
+
     # Config iredapd.
     perl -pi -e 's#(listen_addr.*=).*#${1} $ENV{IREDAPD_LISTEN_ADDR}#' iredapd.ini
     perl -pi -e 's#(listen_port.*=).*#${1} $ENV{IREDAPD_LISTEN_PORT}#' iredapd.ini
@@ -72,7 +76,7 @@ iredapd_config()
     perl -pi -e 's#(basedn).*#${1} = $ENV{LDAP_BASEDN}#' iredapd.ini
 
     # Enable plugins.
-    perl -pi -e 's#(plugins).*#${1} = maillist_access_policy#' iredapd.ini
+    perl -pi -e 's#(plugins).*#${1} = ldap_maillist_access_policy#' iredapd.ini
 
     # FreeBSD.
     if [ X"${DISTRO}" == X"FREEBSD" ]; then

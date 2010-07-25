@@ -113,6 +113,9 @@ EOF
     Auth_MySQL_Authoritative On
 EOF
 
+    # Set file permission.
+    chmod 0600 ${AWSTATS_HTTPD_CONF}
+
     cat >> ${HTTPD_CONF} <<EOF
 # MySQL auth (libapache2-mod-auth-apache2).
 # Global config of MySQL server, username, password.
