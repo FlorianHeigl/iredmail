@@ -460,7 +460,7 @@ EOF
         ${ldap_sender_bcc_maps_domain_cf} \
         ${ldap_sender_bcc_maps_user_cf}
     do
-        chown ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${i}
+        chown ${SYS_ROOT_USER}:${POSTFIX_DAEMON_GROUP} ${i}
         chmod 0640 ${i}
         cat >> ${TIP_FILE} <<EOF
         - ${i}
@@ -616,7 +616,7 @@ EOF
         ${mysql_recipient_bcc_maps_domain_cf} \
         ${mysql_recipient_bcc_maps_user_cf}
     do
-        chown ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${i}
+        chown ${SYS_ROOT_USER}:${POSTFIX_DAEMON_GROUP} ${i}
         chmod 0640 ${i}
 
         cat >> ${TIP_FILE} <<EOF

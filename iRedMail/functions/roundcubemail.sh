@@ -41,6 +41,8 @@ rcm_install()
     cd ${RCM_HTTPD_ROOT}/config/
     cp -f db.inc.php.dist db.inc.php
     cp -f main.inc.php.dist main.inc.php
+    chown ${HTTPD_USER}:${HTTPD_GROUP} db.inc.php main.inc.php
+    chmod 0640 db.inc.php main.inc.php
 
     echo 'export status_rcm_install="DONE"' >> ${STATUS_FILE}
 }

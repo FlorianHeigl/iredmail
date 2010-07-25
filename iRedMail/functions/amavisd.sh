@@ -108,6 +108,7 @@ amavisd_config_rhel()
     perl -pi -e 's/(.*)(status.*prog2.*)/${1}#${2}/' ${DIR_RC_SCRIPTS}/${AMAVISD_RC_SCRIPT_NAME}
 
     backup_file ${AMAVISD_CONF} ${AMAVISD_DKIM_CONF}
+    chmod 0640 ${AMAVISD_CONF} ${AMAVISD_DKIM_CONF}
 
     ECHO_DEBUG "Configure amavisd-new: ${AMAVISD_CONF}."
 
