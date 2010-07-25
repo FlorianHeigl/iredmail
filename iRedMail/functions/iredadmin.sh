@@ -43,7 +43,7 @@ iredadmin_config()
     extract_pkg ${IREDADMIN_TARBALL} ${HTTPD_SERVERROOT}
 
     # Create symbol link, so that we don't need to modify apache
-    # conf.d/iredadmin.conf file after upgrade this component.
+    # conf.d/iredadmin.conf file after upgrading this component.
     ln -s ${IREDADMIN_HTTPD_ROOT} ${HTTPD_SERVERROOT}/iredadmin 2>/dev/null
 
     ECHO_DEBUG "Set correct permission for iRedAdmin: ${IREDADMIN_HTTPD_ROOT}."
@@ -52,7 +52,8 @@ iredadmin_config()
 
     # Copy sample configure file.
     cd ${IREDADMIN_HTTPD_ROOT}/ && \
-    cp settings.ini.sample settings.ini
+    cp settings.ini.sample settings.ini && \
+    chown -R ${IREDADMIN_HTTPD_USER}:${IREDADMIN_HTTPD_GROUP} settings.ini && \
     chmod 0600 settings.ini
 
     ECHO_DEBUG "Create directory alias for iRedAdmin."
