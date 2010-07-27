@@ -72,7 +72,7 @@ EOF
 
     # Enable ssl, ldap, mysql module on Debian/Ubuntu.
     if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        a2ensite $(basename ${HTTPD_SSL_CONF}) >/dev/null
+        a2ensite default-ssl >/dev/null
         a2enmod ssl >/dev/null
         [ X"${BACKEND}" == X"OpenLDAP" ] && a2enmod authnz_ldap > /dev/null
         [ X"${BACKEND}" == X"MySQL" ] && a2enmod auth_mysql > /dev/null
@@ -166,7 +166,7 @@ EOF
 
         # Ubuntu 10.04.
         # Comments starting with '#' are deprecated.
-        [ -d /etc/php5/cli/conf.d/ ] && perl -pi -e 's|^#(.*)|;${1}|' /etc/php5/cli/conf.d/*.ini
+        [ -d /etc/php5/cli/conf.d/ ] && perl -pi -e 's/(\s*)#/\1;/' /etc/php5/cli/conf.d/*.ini
 
         # Start apache when system start up.
         cat >> /etc/rc.conf <<EOF

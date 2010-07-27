@@ -9,7 +9,7 @@ pla_install()
 {
     ECHO_INFO "Configure phpLDAPadmin (web-based LDAP management tool)."
 
-    if [ X"${DISTRO}" != X"FREEBSD" -o X"${DISTRO_CODENAME}" != X"lucid" ]; then
+    if [ X"${PHPLDAPADMIN_USE_SOURCE}" == X"YES" ]; then
         cd ${MISC_DIR}
 
         extract_pkg ${PLA_TARBALL} ${HTTPD_SERVERROOT}

@@ -24,10 +24,19 @@
 export PLA_VERSION='1.2.0.5'
 export PLA_TARBALL="phpldapadmin-${PLA_VERSION}.tgz"
 
+# Install phpLDAPadmin with source tarball.
+export PHPLDAPADMIN_USE_SOURCE='YES'
+
 if [ X"${DISTRO}" == X"FREEBSD" ]; then
     export PLA_HTTPD_ROOT="${HTTPD_SERVERROOT}/phpldapadmin/htdocs"
     export PLA_HTTPD_ROOT_SYMBOL_LINK="${PLA_HTTPD_ROOT}"
     export PLA_CONF_DIR="${HTTPD_SERVERROOT}/phpldapadmin/config"
+    export PHPLDAPADMIN_USE_SOURCE='NO'
+elif [ X"${DISTRO}" == X"UBUNTU" -a X"${DISTRO_CODENAME}" == X"lucid" ]; then
+    export PHPLDAPADMIN_USE_SOURCE='NO'
+    export PLA_HTTPD_ROOT="/usr/share/phpldapadmin"
+    export PLA_HTTPD_ROOT_SYMBOL_LINK="${PLA_HTTPD_ROOT}"
+    export PLA_CONF_DIR="/usr/share/phpldapadmin/config"
 else
     export PLA_HTTPD_ROOT="${HTTPD_SERVERROOT}/phpldapadmin-${PLA_VERSION}"
     export PLA_HTTPD_ROOT_SYMBOL_LINK="${HTTPD_SERVERROOT}/phpldapadmin"
