@@ -27,11 +27,10 @@ BASEDN = 'o=domains,dc=iredmail,dc=org'
 
 # LDAP bind dn & password.
 #BINDDN = 'cn=Manager,dc=iredmail,dc=org'
-BINDDN = 'cn=vmailadmin,dc=iredmail,dc=org'
-BINDPW = 'passwd'
+#BINDPW = 'passwd'
 
 # Storage base directory.
-STORAGE_BASE_DIRECTORY = '/var/vmail/vmail01'
+STORAGE_BASE_DIRECTORY = '/var/vmail/vmail1'
 
 # Hashed maildir: True, False.
 # Example:
