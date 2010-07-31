@@ -353,6 +353,26 @@ remove_pkg_rhel()
     [ X"$?" != X"0" ] && ECHO_ERROR "Package removed failed, please check the terminal output."
 }
 
+# Install/Remove binary packages on OpenSuSE.
+install_pkg_suse()
+{
+    ECHO_INFO "Installing package(s): $@"
+    zypper install -y $@
+    if [ X"$?" != X"0" ]; then
+        ECHO_ERROR "Installation failed, please check the terminal output."
+        exit 255
+    else
+        :
+    fi
+}
+
+remove_pkg_suse()
+{
+    ECHO_INFO "Removing package(s): $@"
+    zypper remove -y $@
+    [ X"$?" != X"0" ] && ECHO_ERROR "Package removed failed, please check the terminal output."
+}
+
 # Install/Remove binary packages on Debian/Ubuntu.
 install_pkg_debian()
 {

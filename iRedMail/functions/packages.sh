@@ -27,7 +27,7 @@ install_all()
     DISABLED_SERVICES=''
 
     # Enable syslog.
-    [ X"${DISTRO}" == X"RHEL" ] && ENABLED_SERVICES="syslog ${ENABLED_SERVICES} "
+    [ X"${DISTRO}" == X"RHEL" ] && ENABLED_SERVICES="sysklogd syslog ${ENABLED_SERVICES} "
     [ X"${DISTRO}" == X"DEBIAN" ] && ENABLED_SERVICES="rsyslog ${ENABLED_SERVICES}"
 
     if [ X"${DISTRO}" == X"UBUNTU" ]; then
