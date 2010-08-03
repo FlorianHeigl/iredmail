@@ -543,7 +543,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT goto FROM alias WHERE address='%s' AND active='1'
+query       = SELECT goto FROM alias WHERE (address='%s' OR address='@%d') AND active='1'
 EOF
 
     cat > ${mysql_domain_alias_maps_cf} <<EOF
@@ -747,7 +747,7 @@ ${CONF_MSG}
 # Logrotate file for postfix maillog.
 #
  
-${MAILLOG} {
+${MAILLOG} ${MAILLOG_INFO} ${MAILLOG_ERROR} {
     compress
     daily
     rotate 30

@@ -1,4 +1,7 @@
 iRedMail-0.6.1:
+    * Add missing mail log files (mail.info, mail.err) in logrotate. Thanks
+      to BigMichi1@forum.
+    * Catch-all account support in MySQL backend.
     * Run iRedAdmin as a low privilege user (iredadmin).
     * Improve Ubuntu 10.04 support.
     * Update iRedAPD to 1.3.3. Run iRedAPD as a low privilege user (iredapd).
