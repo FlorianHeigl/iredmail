@@ -30,7 +30,7 @@ iredapd_config()
     if [ X"${KERNEL_NAME}" == X"FreeBSD" ]; then
         pw useradd -s /sbin/nologin -d /home/iredapd -c "iRedAPD daemon user" -n ${IREDAPD_DAEMON_USER}
     else
-        useradd -s /sbin/nologin -M -d /home/iredapd -c "iRedAPD daemon user" ${IREDAPD_DAEMON_USER}
+        useradd -s /sbin/nologin -d /home/iredapd -c "iRedAPD daemon user" ${IREDAPD_DAEMON_USER}
     fi
 
     # Extract source tarball.
