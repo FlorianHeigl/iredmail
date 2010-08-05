@@ -155,6 +155,9 @@ dbc_ssl=''
 dbc_authmethod_admin=''
 dbc_authmethod_user=''
 EOF
+    else
+        :
+    fi
 
     # Dovecot.
     if [ X"${ENABLE_DOVECOT}" == X"YES" ]; then
