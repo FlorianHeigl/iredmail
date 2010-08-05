@@ -48,7 +48,7 @@ iredapd_config()
     else
         cp ${IREDAPD_ROOT_DIR}/iredapd/rc_scripts/iredapd ${DIR_RC_SCRIPTS}/iredapd
     fi
-    chmod 0555 ${DIR_RC_SCRIPTS}/iredapd
+    chmod 0755 ${DIR_RC_SCRIPTS}/iredapd
     chmod +x ${IREDAPD_ROOT_DIR}/iredapd/src/iredapd.py
 
     ECHO_DEBUG "Make iredapd start after system startup."
@@ -61,7 +61,7 @@ iredapd_config()
 
     # Set file permission.
     chown -R ${IREDAPD_DAEMON_USER}:${IREDAPD_DAEMON_USER} ${IREDAPD_ROOT_DIR}/iRedAPD-${IREDAPD_VERSION}
-    chmod -R 0600 ${IREDAPD_ROOT_DIR}/iRedAPD-${IREDAPD_VERSION}
+    chmod -R 0700 ${IREDAPD_ROOT_DIR}/iRedAPD-${IREDAPD_VERSION}
 
     # Config iredapd.
     perl -pi -e 's#(listen_addr.*=).*#${1} $ENV{IREDAPD_LISTEN_ADDR}#' iredapd.ini
@@ -76,7 +76,7 @@ iredapd_config()
     perl -pi -e 's#(basedn).*#${1} = $ENV{LDAP_BASEDN}#' iredapd.ini
 
     # Enable plugins.
-    perl -pi -e 's#(plugins).*#${1} = ldap_maillist_access_policy#' iredapd.ini
+    perl -pi -e 's#^(plugins).*#${1} = ldap_maillist_access_policy#' iredapd.ini
 
     # FreeBSD.
     if [ X"${DISTRO}" == X"FREEBSD" ]; then

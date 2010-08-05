@@ -137,10 +137,9 @@ install_all()
         ENABLED_SERVICES="${ENABLED_SERVICES} postfix-policyd"
 
         # Don't invoke dbconfig-common on Ubuntu.
-        if [ X"${DISTRO_CODENAME}" == X"lucid" ]; then
-            dpkg-divert --rename /etc/dbconfig-common/postfix-policyd.conf
-            mkdir -p /etc/dbconfig-common/ 2>/dev/null
-            cat > /etc/dbconfig-common/postfix-policyd.conf <<EOF
+        dpkg-divert --rename /etc/dbconfig-common/postfix-policyd.conf
+        mkdir -p /etc/dbconfig-common/ 2>/dev/null
+        cat > /etc/dbconfig-common/postfix-policyd.conf <<EOF
 dbc_install='true'
 dbc_upgrade='false'
 dbc_remove=''
@@ -156,10 +155,6 @@ dbc_ssl=''
 dbc_authmethod_admin=''
 dbc_authmethod_user=''
 EOF
-        fi
-    else
-        :
-    fi
 
     # Dovecot.
     if [ X"${ENABLE_DOVECOT}" == X"YES" ]; then
