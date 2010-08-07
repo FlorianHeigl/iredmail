@@ -85,12 +85,19 @@ install_all()
     if [ X"${DISTRO}" == X"RHEL" ]; then
         ALL_PKGS="${ALL_PKGS} mysql-server.${ARCH} mysql.${ARCH}"
         ENABLED_SERVICES="${ENABLED_SERVICES} mysqld"
-    elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        if [ X"${DISTRO_CODENAME}" == X"lucid" ]; then
-            # Use mysql 5.1 on Ubuntu 10.04.
-            ALL_PKGS="${ALL_PKGS} mysql-server-5.1 mysql-client-5.1"
-        else
+    elif [ X"${DISTRO}" == X"DEBIAN" ]; then
+        ALL_PKGS="${ALL_PKGS} mysql-server-5.0 mysql-client-5.0"
+        ENABLED_SERVICES="${ENABLED_SERVICES} mysql"
+    elif [ X"${DISTRO}" == X"UBUNTU" ]; then
+        # Use mysql 5.0.x on Ubuntu 9.10 and earlier versions, 5.1.x on 10.04
+        # and later versions.
+        if [ X"${DISTRO_CODENAME}" == X"hardy" -o \
+            X"${DISTRO_CODENAME}" == X"intrepid" -o \
+            X"${DISTRO_CODENAME}" == X"jaunty" -o \
+            X"${DISTRO_CODENAME}" == X"karmic" ]; then
             ALL_PKGS="${ALL_PKGS} mysql-server-5.0 mysql-client-5.0"
+        else
+            ALL_PKGS="${ALL_PKGS} mysql-server-5.1 mysql-client-5.1"
         fi
         ENABLED_SERVICES="${ENABLED_SERVICES} mysql"
     else
