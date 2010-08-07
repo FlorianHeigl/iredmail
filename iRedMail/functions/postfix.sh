@@ -747,7 +747,7 @@ ${CONF_MSG}
 # Logrotate file for postfix maillog.
 #
  
-${MAILLOG} ${MAILLOG_INFO} ${MAILLOG_ERROR} {
+${MAILLOG} ${MAILLOG_INFO} ${MAILLOG_ERROR} ${MAILLOG_WARN} {
     compress
     daily
     rotate 30

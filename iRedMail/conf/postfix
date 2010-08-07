@@ -35,11 +35,13 @@ if [ X"${DISTRO}" == X"RHEL" -o X"${DISTRO}" == X"FREEBSD" ]; then
     export MAILLOG='/var/log/maillog'
     export MAILLOG_INFO=''
     export MAILLOG_ERROR=''
+    export MAILLOG_WARN=''
 elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     # Debian, Ubuntu
     export MAILLOG='/var/log/mail.log'
     export MAILLOG_INFO='/var/log/mail.info'
     export MAILLOG_ERROR='/var/log/mail.err'
+    export MAILLOG_WARN='/var/log/mail.warn'
 else
     :
 fi
