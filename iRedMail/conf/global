@@ -170,7 +170,13 @@ if [ X"${KERNEL_NAME}" == X"Linux" ]; then
         #   - 9.04: jaunty
         #   - 9.10: karmic
         #   - 10.04: lucid
+        #   - 10.10: maverick
         export DISTRO_CODENAME="$( grep 'DISTRIB_CODENAME' /etc/lsb-release | awk -F'=' '{print $2}' )"
+        # Mark 10.10 (maverick) as 10.04 (lucid).
+        if [ X"${DISTRO_CODENAME}" == X"maverick" ]; then
+            export DISTRO_CODENAME='lucid'
+        fi
+
     elif [ -f /etc/debian_version ]; then
         # Debian
         export DISTRO='DEBIAN'
