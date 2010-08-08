@@ -95,10 +95,11 @@ EOF
     fi
 
     cat >> ${OPENLDAP_SLAPD_CONF} <<EOF
-#
 # Disallow bind as anonymous.
-#
 disallow    bind_anon
+
+# Uncomment below line to allow binding as anonymouse.
+#allow bind_anon_cred
 
 #
 # Specify LDAP protocol version.
