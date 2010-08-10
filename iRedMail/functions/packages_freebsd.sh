@@ -336,7 +336,7 @@ WITHOUT_TEST=true
 EOF
 
     ALL_PKGS="${ALL_PKGS} pcre postfix"
-    ALL_PORTS="${ALL_PORTS} devel/pcre mail/postfix25"
+    ALL_PORTS="${ALL_PORTS} devel/pcre mail/postfix26"
     ENABLED_SERVICES="${ENABLED_SERVICES} postfix"
     DISABLED_SERVICES="${DISABLED_SERVICES} sendmail sendmail_submit sendmail_outbound sendmail_msq_queue"
 
