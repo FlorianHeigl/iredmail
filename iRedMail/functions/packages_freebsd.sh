@@ -111,15 +111,16 @@ EOF
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
         cat > /var/db/ports/openldap24/options <<EOF
 WITH_SASL=true
-WITHOUT_DYNACL=true
-WITHOUT_ACI=true
+WITH_FETCH=true
+WITH_DYNACL=true
+WITH_ACI=true
 WITH_DNSSRV=true
 WITH_PASSWD=true
 WITH_PERL=true
 WITH_RELAY=true
 WITH_SHELL=true
 WITH_SOCK=true
-WITH_ODBC=true
+WITHOUT_ODBC=true
 WITH_RLOOKUPS=true
 WITH_SLP=true
 WITH_SLAPI=true
@@ -145,7 +146,7 @@ WITH_SYNCPROV=true
 WITH_TRANSLUCENT=true
 WITH_UNIQUE=true
 WITH_VALSORT=true
-WITHOUT_SMBPWD=true
+WITH_SMBPWD=true
 WITH_DYNAMIC_BACKENDS=true
 EOF
 
