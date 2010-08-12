@@ -220,7 +220,7 @@ postfix_config_ldap()
     postconf -e sender_bcc_maps="proxy:ldap:${ldap_sender_bcc_maps_domain_cf}, proxy:ldap:${ldap_sender_bcc_maps_user_cf}"
     postconf -e recipient_bcc_maps="proxy:ldap:${ldap_recipient_bcc_maps_domain_cf}, proxy:ldap:${ldap_recipient_bcc_maps_user_cf}"
     postconf -e relay_domains="\$mydestination, proxy:ldap:${ldap_relay_domains_cf}"
-    postconf -e relay_recipient_maps="proxy:ldap:${ldap_virtual_mailbox_maps_cf}"
+    #postconf -e relay_recipient_maps="proxy:ldap:${ldap_virtual_mailbox_maps_cf}"
 
     postconf -e smtpd_sender_login_maps="proxy:ldap:${ldap_sender_login_maps_cf}"
     postconf -e smtpd_reject_unlisted_sender='yes'
