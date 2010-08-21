@@ -485,7 +485,7 @@ postfix_config_mysql()
     postconf -e sender_bcc_maps="proxy:mysql:${mysql_sender_bcc_maps_domain_cf}, proxy:mysql:${mysql_sender_bcc_maps_user_cf}"
     postconf -e recipient_bcc_maps="proxy:mysql:${mysql_recipient_bcc_maps_domain_cf}, proxy:mysql:${mysql_recipient_bcc_maps_user_cf}"
     postconf -e relay_domains="\$mydestination, proxy:mysql:${mysql_relay_domains_cf}"
-    postconf -e relay_recipient_maps="proxy:mysql:${mysql_virtual_mailbox_maps_cf}"
+    #postconf -e relay_recipient_maps="proxy:mysql:${mysql_virtual_mailbox_maps_cf}"
 
     postconf -e smtpd_sender_login_maps="proxy:mysql:${mysql_sender_login_maps_cf}"
     postconf -e smtpd_reject_unlisted_sender='yes'
@@ -543,7 +543,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT goto FROM alias WHERE (address='%s' OR address='@%d') AND active='1'
+query       = SELECT goto FROM alias,domain WHERE (alias.address='%s' OR alias.address='@%d') AND alias.active='1' AND domain.backupmx='0'
 EOF
 
     cat > ${mysql_domain_alias_maps_cf} <<EOF
@@ -552,7 +552,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT goto FROM alias,alias_domain WHERE alias_domain.alias_domain = '%d' and alias.address = CONCAT('%u', '@', alias_domain.target_domain) AND alias.active = 1 AND alias_domain.active='1'
+query       = SELECT goto FROM alias,alias_domain,domain WHERE alias_domain.alias_domain = '%d' and alias.address = CONCAT('%u', '@', alias_domain.target_domain) AND alias.active = 1 AND alias_domain.active='1' AND domain.backupmx='0'
 EOF
 
     cat > ${mysql_sender_login_maps_cf} <<EOF

@@ -1,3 +1,6 @@
+iRedMail-0.7.0:
+    * Improve backup mx support with MySQL backend. Thanks tiangangnet@bbs.
+
 iRedMail-0.6.1:
     * Add missing mail log files (mail.info, mail.err, mail.warn) in logrotate.
       Thanks to BigMichi1@forum.
