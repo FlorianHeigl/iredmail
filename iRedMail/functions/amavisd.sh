@@ -534,6 +534,11 @@ Amavisd-new:
         - ${POSTFIX_FILE_MAIN_CF}
     * RC script:
         - ${DIR_RC_SCRIPTS}/${AMAVISD_RC_SCRIPT_NAME}
+    * MySQL Database:
+        - Database name: ${AMAVISD_DB_NAME}
+        - Database user: ${AMAVISD_DB_USER}
+        - Database password: ${AMAVISD_DB_PASSWD}
+        - SQL template: ${AMAVISD_DB_SQL_TMPL}
 
 EOF
 
