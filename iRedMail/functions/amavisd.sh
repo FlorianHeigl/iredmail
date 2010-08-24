@@ -444,11 +444,17 @@ EOF
     # Integrate SQL. Used to store incoming & outgoing related mail information.
     cat >> ${AMAVISD_CONF} <<EOF
 @lookup_sql_dsn = (
-        ['DBI:mysql:database=${AMAVISD_DB_NAME};host=${MYSQL_SERVER};port=${MYSQL_PORT}', '${AMAVISD_DB_USER}', '${AMAVISD_DB_PASSWD}'],
-        );
+    ['DBI:mysql:database=${AMAVISD_DB_NAME};host=${MYSQL_SERVER};port=${MYSQL_PORT}', '${AMAVISD_DB_USER}', '${AMAVISD_DB_PASSWD}'],
+);
 @storage_sql_dsn = @lookup_sql_dsn;
-@sql_allow_8bit_address = 1;
+\$sql_allow_8bit_address = 1;
 EOF
+
+    # Use 'utf8' character set.
+    grep -i 'set names' ${AMAVISD_BIN} >/dev/null 2>&1
+    if [ X"$?" != X"0" ]; then
+        perl -pi -e 's#(.*)(section_time.*sql-connect.*)#${1}\$dbh->do("SET NAMES utf8"); ${2}#' ${AMAVISD_BIN}
+    fi
 
     cat >> ${AMAVISD_CONF} <<EOF
 

@@ -45,14 +45,14 @@ else
 fi
 
 if [ X"${DISTRO}" == X"RHEL" ]; then
-    export AMAVISD_BIN='amavisd'
+    export AMAVISD_BIN='/usr/sbin/amavisd'
     export AMAVISD_CONF='/etc/amavisd.conf'
     export AMAVISD_DKIM_CONF='/etc/amavisd.conf'
     export AMAVISD_RC_SCRIPT_NAME='amavisd'
     export AMAVISD_LDAP_SCHEMA_NAME='amavisd-new.schema'
     export AMAVISD_VIRUSMAILS_DIR='/var/virusmails'
 elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-    export AMAVISD_BIN='amavisd-new'
+    export AMAVISD_BIN='/usr/sbin/amavisd-new'
     export AMAVISD_CONF_DIR='/etc/amavis/conf.d'
     export AMAVISD_CONF='/etc/amavis/conf.d/50-user'
     export AMAVISD_DKIM_CONF='/etc/amavis/conf.d/50-user'
@@ -64,7 +64,7 @@ elif [ X"${DISTRO}" == X"FREEBSD" ]; then
     export AMAVISD_SYS_USER='vscan'
     export AMAVISD_SYS_GROUP='vscan'
 
-    export AMAVISD_BIN='amavisd'
+    export AMAVISD_BIN='/usr/local/sbin/amavisd'
     export AMAVISD_CONF='/usr/local/etc/amavisd.conf'
     export AMAVISD_DKIM_CONF='/usr/local/etc/amavisd.conf'
     export AMAVISD_RC_SCRIPT_NAME='amavisd'
