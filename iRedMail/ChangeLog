@@ -1,4 +1,5 @@
 iRedMail-0.7.0:
+    * Integrate MySQL in Amavisd.
     * Improve backup mx support with MySQL backend. Thanks tiangangnet@bbs.
 
 iRedMail-0.6.1:

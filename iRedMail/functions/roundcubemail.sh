@@ -111,8 +111,7 @@ rcm_config()
     mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
 /* Create database and grant privileges. */
 CREATE DATABASE ${RCM_DB} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-GRANT SELECT,INSERT,UPDATE,DELETE ON ${RCM_DB}.* TO ${RCM_DB_USER}@localhost IDENTIFIED BY '${RCM_DB_PASSWD}';
-
+GRANT SELECT,INSERT,UPDATE,DELETE ON ${RCM_DB}.* TO "${RCM_DB_USER}"@localhost IDENTIFIED BY '${RCM_DB_PASSWD}';
 
 /* Import Roundcubemail SQL template. */
 USE ${RCM_DB};
@@ -128,8 +127,8 @@ EOF
   Grant privileges for Roundcubemail, so that user can change
   their own password and setting mail forwarding.
 */
-GRANT UPDATE,SELECT ON ${VMAIL_DB}.mailbox TO ${RCM_DB_USER}@localhost;
-GRANT INSERT,UPDATE,SELECT ON ${VMAIL_DB}.alias TO ${RCM_DB_USER}@localhost;
+GRANT UPDATE,SELECT ON ${VMAIL_DB}.mailbox TO "${RCM_DB_USER}"@localhost;
+GRANT INSERT,UPDATE,SELECT ON ${VMAIL_DB}.alias TO "${RCM_DB_USER}"@localhost;
 
 FLUSH PRIVILEGES;
 EOF

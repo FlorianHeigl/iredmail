@@ -30,7 +30,7 @@ amavisd_dkim()
 
     ECHO_DEBUG "Generate DKIM pem files: ${pem_file}." 
     mkdir -p ${AMAVISD_DKIM_DIR} 2>/dev/null && \
-    chown ${AMAVISD_USER}:${AMAVISD_GROUP} ${AMAVISD_DKIM_DIR}
+    chown ${AMAVISD_SYS_USER}:${AMAVISD_GROUP} ${AMAVISD_DKIM_DIR}
     ${AMAVISD_BIN} genrsa ${pem_file} >/dev/null 2>&1
     chmod +r ${pem_file}
 
@@ -243,7 +243,7 @@ EOF
 
     # Add postfix alias for user: amavis.
     if [ ! -z ${MAIL_ALIAS_ROOT} ]; then
-        echo "${AMAVISD_USER}: root" >> ${POSTFIX_FILE_ALIASES}
+        echo "${AMAVISD_SYS_USER}: root" >> ${POSTFIX_FILE_ALIASES}
         postalias hash:${POSTFIX_FILE_ALIASES} 2>/dev/null
     else
         :
@@ -257,7 +257,7 @@ EOF
     echo 'export status_amavisd_config_debian="DONE"' >> ${STATUS_FILE}
 }
 
-amavisd_config_generic()
+amavisd_config_general()
 {
     cat >> ${AMAVISD_CONF} <<EOF
 # Set hostname.
@@ -441,6 +441,15 @@ EOF
         :
     fi
 
+    # Integrate SQL. Used to store incoming & outgoing related mail information.
+    cat >> ${AMAVISD_CONF} <<EOF
+@lookup_sql_dsn = (
+        ['DBI:mysql:database=${AMAVISD_DB_NAME};host=${MYSQL_SERVER};port=${MYSQL_PORT}', '${AMAVISD_DB_USER}', '${AMAVISD_DB_PASSWD}'],
+        );
+@storage_sql_dsn = @lookup_sql_dsn;
+@sql_allow_8bit_address = 1;
+EOF
+
     cat >> ${AMAVISD_CONF} <<EOF
 
 1;  # insure a defined return
@@ -511,7 +520,7 @@ EOF
 
     # Add crontab job to delete virus mail.
     ECHO_DEBUG "Setting cron job for vmail user to delete virus mail per month."
-    cat > ${CRON_SPOOL_DIR}/${AMAVISD_USER} <<EOF
+    cat > ${CRON_SPOOL_DIR}/${AMAVISD_SYS_USER} <<EOF
 ${CONF_MSG}
 # Delete virus mails which created 30 days ago.
 #1   5   *   *   *   find ${AMAVISD_VIRUSMAILS_DIR}/ -ctime +30 | xargs rm -rf {}
@@ -528,7 +537,26 @@ Amavisd-new:
 
 EOF
 
-    echo 'export status_amavisd_config_generic="DONE"' >> ${STATUS_FILE}
+    echo 'export status_amavisd_config_general="DONE"' >> ${STATUS_FILE}
+}
+
+amavisd_import_sql()
+{
+    ECHO_DEBUG "Import Amavisd database and privileges."
+
+    mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
+/* Create database and grant privileges. */
+CREATE DATABASE ${AMAVISD_DB_NAME} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+GRANT SELECT,INSERT,UPDATE,DELETE ON ${AMAVISD_DB_NAME}.* TO "${AMAVISD_DB_USER}"@localhost IDENTIFIED BY '${AMAVISD_DB_PASSWD}';
+
+/* Import Amavisd SQL template. */
+USE ${AMAVISD_DB_NAME};
+SOURCE ${AMAVISD_DB_SQL_TMPL};
+
+FLUSH PRIVILEGES;
+EOF
+
+    echo 'export status_amavisd_import_sql="DONE"' >> ${STATUS_FILE}
 }
 
 amavisd_config()
@@ -551,5 +579,6 @@ amavis_p0fanalyzer_enable="NO"
 #amavis_p0fanalyzer_p0f_filter="tcp dst port 25"
 EOF
 
-    check_status_before_run amavisd_config_generic
+    check_status_before_run amavisd_config_general
+    check_status_before_run amavisd_import_sql
 }
