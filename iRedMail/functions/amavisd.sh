@@ -127,8 +127,7 @@ amavisd_config_rhel()
     #perl -pi -e 's/(.*)(sa_kill_level_deflt)(.*)/${1}${2} = 10; #${3}/' ${AMAVISD_CONF}
 
     # Make Amavisd listen on multiple TCP ports.
-    #perl -pi -e 's/(.*inet_socket_port.*=.*10024;.*)/#${1}/' ${AMAVISD_CONF}
-    #perl -pi -e 's/^#(.*inet_socket_port.*=.*10024.*10026.*)/${1}/' ${AMAVISD_CONF}
+    #perl -pi -e 's/(\$inet_socket_port.*=.*10024.*)/\$inet_socket_port = [10024, 9998];/' ${AMAVISD_CONF}
 
     # Set admin address.
     perl -pi -e 's#(virus_admin.*= ")(virusalert)(.*)#${1}root${3}#' ${AMAVISD_CONF}
@@ -308,6 +307,21 @@ amavisd_config_general()
 #    bypass_banned_checks_maps => [1],  # don't banned-check this mail
 #    bypass_header_checks_maps => [1],  # don't header-check this mail
 #};
+
+# Port used to release quarantined mails.
+\$interface_policy{'9998'} = 'AM.PDP-INET';
+\$policy_bank{'AM.PDP-INET'} = {
+    protocol => 'AM.PDP',       # select Amavis policy delegation protocol
+    inet_acl => [qw( 127.0.0.1 [::1] )],    # restrict access to these IP addresses
+    #auth_required_release => 0,    # don't require secret_id for amavisd-release
+};
+
+# Quarantine SPAM mails.
+#\$spam_quarantine_to = 'spam-quarantine';
+
+# Quarantine method.
+# Store in MySQL. Use 'local:spam-%i-%m' for local file system.
+#\$spam_quarantine_method = 'sql:';
 
 # Modify email subject, add '\$sa_spam_subject_tag'.
 #   0:  disable
