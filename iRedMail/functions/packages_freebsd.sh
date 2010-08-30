@@ -43,7 +43,6 @@ APACHE_PORT=www/apache22
 WANT_OPENLDAP_VER=24
 WITH_SASL=yes
 WANT_BDB_VER=46
-LDAP_R_COMPILE=1
 EOF
 
     for i in m4 cyrus-sasl2 perl openslp mysql-server openldap24 dovecot \
@@ -118,7 +117,7 @@ WITH_DNSSRV=true
 WITH_PASSWD=true
 WITH_PERL=true
 WITH_RELAY=true
-WITH_SHELL=true
+WITHOUT_SHELL=true
 WITH_SOCK=true
 WITHOUT_ODBC=true
 WITH_RLOOKUPS=true
