@@ -305,7 +305,9 @@ WebMail(Roundcubemail):
         - ${HTTPD_SERVERROOT}/roundcubemail-${RCM_VERSION}/config/
     * URL:
         - http://${HOSTNAME}/mail/
+        - https://${HOSTNAME}/mail/
         - http://${HOSTNAME}/webmail/
+        - https://${HOSTNAME}/webmail/
     * Login account:
         - Username: ${FIRST_USER}@${FIRST_DOMAIN}, password: ${FIRST_USER_PASSWD_PLAIN}
     * See also:
