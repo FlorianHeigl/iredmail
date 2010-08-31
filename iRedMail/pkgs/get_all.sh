@@ -36,8 +36,13 @@ check_user root
 check_hostname
 
 if [ X"${DISTRO}" == X"FREEBSD" ]; then
-    FETCH_CMD='ftp -i'
+    # -i: Turns off interactive prompting during multiple file transfers.
+    # -V: Disable verbose and progress
+    FETCH_CMD='ftp -iV'
 else
+    # -c: Continue getting a partially-downloaded file.
+    # -q: Turn off Wget's output.
+    # --referer: Include 'Referer: url' header in HTTP request.
     FETCH_CMD="wget -cq --referer ${PROG_NAME}-${PROG_VERSION}-${DISTRO}-X${DISTRO_CODENAME}-${ARCH}"
 fi
 

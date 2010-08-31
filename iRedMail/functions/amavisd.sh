@@ -30,7 +30,7 @@ amavisd_dkim()
 
     ECHO_DEBUG "Generate DKIM pem files: ${pem_file}." 
     mkdir -p ${AMAVISD_DKIM_DIR} 2>/dev/null && \
-    chown ${AMAVISD_SYS_USER}:${AMAVISD_GROUP} ${AMAVISD_DKIM_DIR}
+    chown ${AMAVISD_SYS_USER}:${AMAVISD_SYS_GROUP} ${AMAVISD_DKIM_DIR}
     ${AMAVISD_BIN} genrsa ${pem_file} >/dev/null 2>&1
     chmod +r ${pem_file}
 
@@ -251,7 +251,7 @@ EOF
     # Make sure that clamav is configured to init supplementary
     # groups when it drops priviledges, and that you add the
     # clamav user to the amavis group.
-    adduser --quiet ${CLAMAV_USER} ${AMAVISD_GROUP} >/dev/null
+    adduser --quiet ${CLAMAV_USER} ${AMAVISD_SYS_GROUP} >/dev/null
 
     echo 'export status_amavisd_config_debian="DONE"' >> ${STATUS_FILE}
 }
