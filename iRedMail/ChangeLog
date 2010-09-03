@@ -1,4 +1,5 @@
 iRedMail-0.7.0:
+    * Disable RECIPIENTRHTOTTLE in policyd (instance with port 10031).
     * Integrate MySQL in Amavisd (@lookup_sql_dsn, @storage_sql_dsn).
     * Improve backup mx support with MySQL backend. Thanks tiangangnet@bbs.
 

@@ -14,7 +14,7 @@ pypolicyd_spf_config()
     cd pypolicyd-spf-${PYPOLICYD_SPF_VERSION} && \
     ECHO_DEBUG "Install pypolicyd-spf-${PYPOLICYD_SPF_VERSION}." && \
     python setup.py build >/dev/null && python setup.py install >/dev/null
-    
+
     postconf -e spf-policyd_time_limit='3600'
 
     cat >> ${POSTFIX_FILE_MASTER_CF} <<EOF
@@ -155,21 +155,21 @@ EOF
 
     # We will use another policyd instance for recipient throttle
     # feature, it's used in 'smtpd_end_of_data_restrictions'.
-    cp -f ${POLICYD_CONF} ${POLICYD_SENDER_THROTTLE_CONF}
+    cp -f ${POLICYD_CONF} ${POLICYD_THROTTLE_CONF}
 
     # Patch init script on RHEL/CentOS.
     [ X"${DISTRO}" == X"RHEL" ] && patch -p0 < ${PATCH_DIR}/policyd/policyd_init.patch >/dev/null
 
     # Set correct permission.
-    chown ${POLICYD_USER}:${POLICYD_GROUP} ${POLICYD_CONF} ${POLICYD_SENDER_THROTTLE_CONF}
-    chmod 0700 ${POLICYD_CONF} ${POLICYD_SENDER_THROTTLE_CONF}
+    chown ${POLICYD_USER}:${POLICYD_GROUP} ${POLICYD_CONF} ${POLICYD_THROTTLE_CONF}
+    chmod 0700 ${POLICYD_CONF} ${POLICYD_THROTTLE_CONF}
 
     # Setup postfix for recipient throttle.
     cat >> ${POSTFIX_FILE_MAIN_CF} <<EOF
 #
 # Uncomment the following line to enable policyd sender throttle.
 #
-#smtpd_end_of_data_restrictions = check_policy_service inet:${POLICYD_SENDER_THROTTLE_BINDHOST}:${POLICYD_SENDER_THROTTLE_BINDPORT}
+#smtpd_end_of_data_restrictions = check_policy_service inet:${POLICYD_THROTTLE_BINDHOST}:${POLICYD_THROTTLE_BINDPORT}
 EOF
 
     # -------------------------------------------------------------
@@ -222,28 +222,28 @@ EOF
     perl -pi -e 's#^(HELO_CHECK=)(.*)#${1}1#' ${POLICYD_CONF}
 
     # ---- SPAMTRAP ----
-    perl -pi -e 's#^(SPAMTRAPPING=)(.*)#${1}1#' ${POLICYD_CONF} 
-    #perl -pi -e 's#^(SPAMTRAP_REJECTION=)(.*)#${1}"Spamtrap, go away."#' ${POLICYD_CONF} 
+    perl -pi -e 's#^(SPAMTRAPPING=)(.*)#${1}1#' ${POLICYD_CONF}
+    #perl -pi -e 's#^(SPAMTRAP_REJECTION=)(.*)#${1}"Spamtrap, go away."#' ${POLICYD_CONF}
 
     # ---- GREYLISTING ----
-    perl -pi -e 's#^(GREYLISTING=)(.*)#${1}1#' ${POLICYD_CONF} 
-    perl -pi -e 's#^(TRAINING_MODE=)(.*)#${1}0#' ${POLICYD_CONF} 
-    perl -pi -e 's#^(TRIPLET_TIME=)(.*)#${1}5m#' ${POLICYD_CONF} 
-    perl -pi -e 's#^(TRIPLET_AUTH_TIMEOUT=)(.*)#${1}7d#' ${POLICYD_CONF} 
-    perl -pi -e 's#^(TRIPLET_UNAUTH_TIMEOUT=)(.*)#${1}2d#' ${POLICYD_CONF} 
-    #perl -pi -e 's#^(OPTINOUT=)(.*)#${1}1#' ${POLICYD_CONF} 
+    perl -pi -e 's#^(GREYLISTING=)(.*)#${1}1#' ${POLICYD_CONF}
+    perl -pi -e 's#^(TRAINING_MODE=)(.*)#${1}0#' ${POLICYD_CONF}
+    perl -pi -e 's#^(TRIPLET_TIME=)(.*)#${1}5m#' ${POLICYD_CONF}
+    perl -pi -e 's#^(TRIPLET_AUTH_TIMEOUT=)(.*)#${1}7d#' ${POLICYD_CONF}
+    perl -pi -e 's#^(TRIPLET_UNAUTH_TIMEOUT=)(.*)#${1}2d#' ${POLICYD_CONF}
+    #perl -pi -e 's#^(OPTINOUT=)(.*)#${1}1#' ${POLICYD_CONF}
 
     # ---- SENDER THROTTLE ----
-    # Disable recipient throttle here, it should be used in postfix 
+    # Disable recipient throttle here, it should be used in postfix
     # 'smtpd_end_of_data_restrictions'.
-    perl -pi -e 's#^(SENDERTHROTTLE=)(.*)#${1}0#' ${POLICYD_CONF} 
+    perl -pi -e 's#^(SENDERTHROTTLE=)(.*)#${1}0#' ${POLICYD_CONF}
 
     # ---- RECIPIENT THROTTLE ----
-    perl -pi -e 's#^(RECIPIENTTHROTTLE=)(.*)#${1}1#' ${POLICYD_CONF} 
+    perl -pi -e 's#^(RECIPIENTTHROTTLE=)(.*)#${1}0#' ${POLICYD_CONF}
 
     # ---- RCPT ACL ----
     if [ X"${DISTRO}" == X"RHEL" ]; then
-        perl -pi -e 's#^(RCPT_ACL=)(.*)#${1}1#' ${POLICYD_CONF} 
+        perl -pi -e 's#^(RCPT_ACL=)(.*)#${1}1#' ${POLICYD_CONF}
     else
         :
     fi
@@ -252,64 +252,64 @@ EOF
     # Policyd config for recipient throttle only.
     # -------------------------------------------------------------
     # ---- DATABASE CONFIG ----
-    perl -pi -e 's#^(MYSQLHOST=)(.*)#${1}"$ENV{mysql_server}"#' ${POLICYD_SENDER_THROTTLE_CONF}
-    perl -pi -e 's#^(MYSQLDBASE=)(.*)#${1}"$ENV{POLICYD_SENDER_THROTTLE_DB_NAME}"#' ${POLICYD_SENDER_THROTTLE_CONF}
-    perl -pi -e 's#^(MYSQLUSER=)(.*)#${1}"$ENV{POLICYD_SENDER_THROTTLE_DB_USER}"#' ${POLICYD_SENDER_THROTTLE_CONF}
-    perl -pi -e 's#^(MYSQLPASS=)(.*)#${1}"$ENV{POLICYD_SENDER_THROTTLE_DB_PASSWD}"#' ${POLICYD_SENDER_THROTTLE_CONF}
-    perl -pi -e 's#^(FAILSAFE=)(.*)#${1}1#' ${POLICYD_SENDER_THROTTLE_CONF}
+    perl -pi -e 's#^(MYSQLHOST=)(.*)#${1}"$ENV{mysql_server}"#' ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(MYSQLDBASE=)(.*)#${1}"$ENV{POLICYD_THROTTLE_DB_NAME}"#' ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(MYSQLUSER=)(.*)#${1}"$ENV{POLICYD_THROTTLE_DB_USER}"#' ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(MYSQLPASS=)(.*)#${1}"$ENV{POLICYD_THROTTLE_DB_PASSWD}"#' ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(FAILSAFE=)(.*)#${1}1#' ${POLICYD_THROTTLE_CONF}
 
     # ---- DAEMON CONFIG ----
-    perl -pi -e 's#^(DEBUG=)(.*)#${1}0#' ${POLICYD_SENDER_THROTTLE_CONF}
-    perl -pi -e 's#^(DAEMON=)(.*)#${1}1#' ${POLICYD_SENDER_THROTTLE_CONF}
-    perl -pi -e 's#^(BINDHOST=)(.*)#${1}"$ENV{POLICYD_SENDER_THROTTLE_BINDHOST}"#' ${POLICYD_SENDER_THROTTLE_CONF}
-    perl -pi -e 's#^(BINDPORT=)(.*)#${1}"$ENV{POLICYD_SENDER_THROTTLE_BINDPORT}"#' ${POLICYD_SENDER_THROTTLE_CONF}
-    perl -pi -e 's#^(PIDFILE=)(.*)#${1}"$ENV{POLICYD_SENDER_THROTTLE_PIDFILE}"#' ${POLICYD_SENDER_THROTTLE_CONF}
+    perl -pi -e 's#^(DEBUG=)(.*)#${1}0#' ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(DAEMON=)(.*)#${1}1#' ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(BINDHOST=)(.*)#${1}"$ENV{POLICYD_THROTTLE_BINDHOST}"#' ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(BINDPORT=)(.*)#${1}"$ENV{POLICYD_THROTTLE_BINDPORT}"#' ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(PIDFILE=)(.*)#${1}"$ENV{POLICYD_THROTTLE_PIDFILE}"#' ${POLICYD_THROTTLE_CONF}
 
     # ---- CHROOT ----
-    export policyd_sender_throttle_user_id="$(id -u ${POLICYD_SENDER_THROTTLE_USER_NAME})"
-    export policyd_sender_throttle_group_id="$(id -g ${POLICYD_SENDER_THROTTLE_USER_NAME})"
-    perl -pi -e 's#^(CHROOT=)(.*)#${1}$ENV{POLICYD_SENDER_THROTTLE_USER_HOME}#' ${POLICYD_SENDER_THROTTLE_CONF}
-    perl -pi -e 's#^(UID=)(.*)#${1}$ENV{policyd_sender_throttle_user_id}#' ${POLICYD_SENDER_THROTTLE_CONF}
-    perl -pi -e 's#^(GID=)(.*)#${1}$ENV{policyd_sender_throttle_group_id}#' ${POLICYD_SENDER_THROTTLE_CONF}
+    export policyd_throttle_user_id="$(id -u ${POLICYD_THROTTLE_USER_NAME})"
+    export policyd_throttle_group_id="$(id -g ${POLICYD_THROTTLE_USER_NAME})"
+    perl -pi -e 's#^(CHROOT=)(.*)#${1}$ENV{POLICYD_THROTTLE_USER_HOME}#' ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(UID=)(.*)#${1}$ENV{policyd_throttle_user_id}#' ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(GID=)(.*)#${1}$ENV{policyd_throttle_group_id}#' ${POLICYD_THROTTLE_CONF}
 
     # ---- RECIPIENT THROTTLE ----
-    perl -pi -e 's#^(RECIPIENTTHROTTLE=)(.*)#${1}0#' ${POLICYD_SENDER_THROTTLE_CONF} 
+    perl -pi -e 's#^(RECIPIENTTHROTTLE=)(.*)#${1}1#' ${POLICYD_THROTTLE_CONF}
 
     # ------------------ DISABLE ALL OTHER FEATURES -----------------
     # ---- WHITELISTING ----
-    perl -pi -e 's#^(WHITELISTING=)(.*)#${1}0#' ${POLICYD_SENDER_THROTTLE_CONF}
+    perl -pi -e 's#^(WHITELISTING=)(.*)#${1}0#' ${POLICYD_THROTTLE_CONF}
 
     # ---- BLACKLISTING ----
-    perl -pi -e 's#^(BLACKLISTING=)(.*)#${1}0#' ${POLICYD_SENDER_THROTTLE_CONF}
+    perl -pi -e 's#^(BLACKLISTING=)(.*)#${1}0#' ${POLICYD_THROTTLE_CONF}
 
     # ---- BLACKLISTING HELO ----
-    perl -pi -e 's#^(BLACKLIST_HELO=)(.*)#${1}0#' ${POLICYD_SENDER_THROTTLE_CONF}
+    perl -pi -e 's#^(BLACKLIST_HELO=)(.*)#${1}0#' ${POLICYD_THROTTLE_CONF}
 
     # ---- BLACKLIST SENDER ----
-    perl -pi -e 's#^(BLACKLISTSENDER=)(.*)#${1}0#' ${POLICYD_SENDER_THROTTLE_CONF}
+    perl -pi -e 's#^(BLACKLISTSENDER=)(.*)#${1}0#' ${POLICYD_THROTTLE_CONF}
 
     # ---- HELO_CHECK ----
-    perl -pi -e 's#^(HELO_CHECK=)(.*)#${1}0#' ${POLICYD_SENDER_THROTTLE_CONF}
+    perl -pi -e 's#^(HELO_CHECK=)(.*)#${1}0#' ${POLICYD_THROTTLE_CONF}
 
     # ---- SPAMTRAP ----
-    perl -pi -e 's#^(SPAMTRAPPING=)(.*)#${1}0#' ${POLICYD_SENDER_THROTTLE_CONF} 
+    perl -pi -e 's#^(SPAMTRAPPING=)(.*)#${1}0#' ${POLICYD_THROTTLE_CONF}
 
     # ---- GREYLISTING ----
-    perl -pi -e 's#^(GREYLISTING=)(.*)#${1}0#' ${POLICYD_SENDER_THROTTLE_CONF} 
+    perl -pi -e 's#^(GREYLISTING=)(.*)#${1}0#' ${POLICYD_THROTTLE_CONF}
 
     # ---- SENDER THROTTLE ----
     # We need only this feature in this policyd instance.
-    perl -pi -e 's#^(SENDERTHROTTLE=)(.*)#${1}1#' ${POLICYD_SENDER_THROTTLE_CONF} 
-    perl -pi -e 's#^(SENDER_THROTTLE_SASL=)(.*)#${1}1#' ${POLICYD_SENDER_THROTTLE_CONF} 
-    perl -pi -e 's#^(SENDER_THROTTLE_HOST=)(.*)#${1}0#' ${POLICYD_SENDER_THROTTLE_CONF} 
-    perl -pi -e 's#^(QUOTA_EXCEEDED_TEMP_REJECT=)(.*)#${1}0#' ${POLICYD_SENDER_THROTTLE_CONF}
-    perl -pi -e 's#^(SENDER_QUOTA_REJECTION=)(.*)#${1}"Limit has been reached."#' ${POLICYD_SENDER_THROTTLE_CONF}
-    perl -pi -e 's#^(SENDERMSGSIZE=)(.*)#${1}$ENV{'MESSAGE_SIZE_LIMIT'}#' ${POLICYD_SENDER_THROTTLE_CONF} 
-    perl -pi -e 's#^(SENDERMSGLIMIT=)(.*)#${1}60#' ${POLICYD_SENDER_THROTTLE_CONF} 
+    perl -pi -e 's#^(SENDERTHROTTLE=)(.*)#${1}1#' ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(SENDER_THROTTLE_SASL=)(.*)#${1}1#' ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(SENDER_THROTTLE_HOST=)(.*)#${1}0#' ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(QUOTA_EXCEEDED_TEMP_REJECT=)(.*)#${1}0#' ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(SENDER_QUOTA_REJECTION=)(.*)#${1}"Limit has been reached."#' ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(SENDERMSGSIZE=)(.*)#${1}$ENV{'MESSAGE_SIZE_LIMIT'}#' ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(SENDERMSGLIMIT=)(.*)#${1}60#' ${POLICYD_THROTTLE_CONF}
 
     # ---- RCPT ACL ----
     if [ X"${DISTRO}" == X"RHEL" ]; then
-        perl -pi -e 's#^(RCPT_ACL=)(.*)#${1}0#' ${POLICYD_SENDER_THROTTLE_CONF} 
+        perl -pi -e 's#^(RCPT_ACL=)(.*)#${1}0#' ${POLICYD_THROTTLE_CONF}
     else
         :
     fi
@@ -318,8 +318,7 @@ EOF
     # Syslog Setting
     # -----------------
     if [ X"${POLICYD_SEPERATE_LOG}" == X"YES" ]; then
-        perl -pi -e 's#^(SYSLOG_FACILITY=)(.*)#${1}$ENV{POLICYD_SYSLOG_FACILITY}#' ${POLICYD_CONF} 
-        perl -pi -e 's#^(SYSLOG_FACILITY=)(.*)#${1}$ENV{POLICYD_SYSLOG_FACILITY}#' ${POLICYD_SENDER_THROTTLE_CONF} 
+        perl -pi -e 's#^(SYSLOG_FACILITY=)(.*)#${1}$ENV{POLICYD_SYSLOG_FACILITY}#' ${POLICYD_CONF} ${POLICYD_THROTTLE_CONF}
         echo -e "local1.*\t\t\t\t\t\t-${POLICYD_LOGFILE}" >> ${SYSLOG_CONF}
         cat > ${POLICYD_LOGROTATE_FILE} <<EOF
 ${CONF_MSG}
@@ -334,7 +333,7 @@ ${AMAVISD_LOGFILE} {
     compresscmd $(which bzip2)
     uncompresscmd $(which bunzip2)
     compressoptions -9
-    compressext .bz2 
+    compressext .bz2
 
     postrotate
         ${SYSLOG_POSTROTATE_CMD}
@@ -351,13 +350,13 @@ EOF
         cat > ${CRON_SPOOL_DIR}/${POLICYD_USER} <<EOF
 ${CONF_MSG}
 1    */2    *    *    *    ${POLICYD_CLEANUP_BIN} -c ${POLICYD_CONF}
-1    */2    *    *    *    ${POLICYD_CLEANUP_BIN} -c ${POLICYD_SENDER_THROTTLE_CONF}
+1    */2    *    *    *    ${POLICYD_CLEANUP_BIN} -c ${POLICYD_THROTTLE_CONF}
 EOF
     else
         cat > ${CRON_SPOOL_DIR}/${POLICYD_USER} <<EOF
 ${CONF_MSG}
 1    */2    *    *    *    ${POLICYD_CLEANUP_BIN} -c ${POLICYD_CONF}
-1    */2    *    *    *    ${POLICYD_CLEANUP_BIN} -c ${POLICYD_SENDER_THROTTLE_CONF}
+1    */2    *    *    *    ${POLICYD_CLEANUP_BIN} -c ${POLICYD_THROTTLE_CONF}
 EOF
     fi
 
