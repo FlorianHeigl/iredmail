@@ -239,7 +239,7 @@ EOF
     perl -pi -e 's#^(SENDERTHROTTLE=)(.*)#${1}0#' ${POLICYD_CONF}
 
     # ---- RECIPIENT THROTTLE ----
-    perl -pi -e 's#^(RECIPIENTTHROTTLE=)(.*)#${1}0#' ${POLICYD_CONF}
+    perl -pi -e 's#^(RECIPIENTTHROTTLE=)(.*)#${1}1#' ${POLICYD_CONF}
 
     # ---- RCPT ACL ----
     if [ X"${DISTRO}" == X"RHEL" ]; then
@@ -273,7 +273,7 @@ EOF
     perl -pi -e 's#^(GID=)(.*)#${1}$ENV{policyd_throttle_group_id}#' ${POLICYD_THROTTLE_CONF}
 
     # ---- RECIPIENT THROTTLE ----
-    perl -pi -e 's#^(RECIPIENTTHROTTLE=)(.*)#${1}1#' ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(RECIPIENTTHROTTLE=)(.*)#${1}0#' ${POLICYD_THROTTLE_CONF}
 
     # ------------------ DISABLE ALL OTHER FEATURES -----------------
     # ---- WHITELISTING ----
