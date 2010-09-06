@@ -183,8 +183,7 @@ check_status_before_run backend_install
 check_status_before_run postfix_config_basic && \
 check_status_before_run postfix_config_virtual_host && \
 check_status_before_run postfix_config_sasl && \
-check_status_before_run postfix_config_tls && \
-check_status_before_run postfix_config_syslog
+check_status_before_run postfix_config_tls
 
 # ------------------------------------------------
 # Policy service for Postfix: Policyd.
