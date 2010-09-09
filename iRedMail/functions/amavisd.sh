@@ -459,12 +459,18 @@ EOF
 
     # Integrate SQL. Used to store incoming & outgoing related mail information.
     cat >> ${AMAVISD_CONF} <<EOF
-@lookup_sql_dsn = (
+\$sql_allow_8bit_address = 1;
+@storage_sql_dsn = (
     ['DBI:mysql:database=${AMAVISD_DB_NAME};host=${MYSQL_SERVER};port=${MYSQL_PORT}', '${AMAVISD_DB_USER}', '${AMAVISD_DB_PASSWD}'],
 );
-@storage_sql_dsn = @lookup_sql_dsn;
-\$sql_allow_8bit_address = 1;
 EOF
+
+    # Lookup agains MySQL, for MySQL backend only.
+    if [ X"${BACKEND}" == X"MySQL" ]; then
+        cat >> ${AMAVISD_CONF} <<EOF
+@lookup_sql_dsn = @storage_sql_dsn;
+EOF
+    fi
 
     # Use 'utf8' character set.
     grep -i 'set names' ${AMAVISD_BIN} >/dev/null 2>&1
