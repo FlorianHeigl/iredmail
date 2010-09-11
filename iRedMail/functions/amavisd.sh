@@ -466,11 +466,11 @@ EOF
 EOF
 
     # Lookup agains MySQL, for MySQL backend only.
-    if [ X"${BACKEND}" == X"MySQL" ]; then
-        cat >> ${AMAVISD_CONF} <<EOF
-@lookup_sql_dsn = @storage_sql_dsn;
-EOF
-    fi
+#    if [ X"${BACKEND}" == X"MySQL" ]; then
+#        cat >> ${AMAVISD_CONF} <<EOF
+#@lookup_sql_dsn = @storage_sql_dsn;
+#EOF
+#    fi
 
     # Use 'utf8' character set.
     grep -i 'set names' ${AMAVISD_BIN} >/dev/null 2>&1
