@@ -212,7 +212,7 @@ plugin {
     #   - messages: Quota limit in number of messages, 0 means unlimited. This probably isn't very useful.
     #   - backend: Quota backend-specific limit configuration.
     #   - ignore: Don't include the specified mailbox in quota at all (v1.1.rc5+). 
-    quota_rule = *:storage=100M
+    quota_rule = *:storage=0
     #quota_rule2 = *:messages=0
     #quota_rule3 = Trash:storage=1G
     #quota_rule4 = Junk:ignore
@@ -268,7 +268,7 @@ plugin {
     quota = dirsize
 
     # Quota rules.
-    quota_rule = *:storage=10M
+    quota_rule = *:storage=0
     #quota_rule2 = Trash:storage=100M
     #quota_rule3 = Junk:ignore
 }
