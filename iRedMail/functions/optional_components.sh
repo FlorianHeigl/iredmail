@@ -10,9 +10,11 @@ optional_components()
     # Roundcubemail.
     [ X"${USE_RCM}" == X"YES" ] && \
         check_status_before_run rcm_install && \
-        check_status_before_run rcm_config_managesieve && \
-        check_status_before_run rcm_config_password && \
-        check_status_before_run rcm_config
+        check_status_before_run rcm_config_httpd && \
+        check_status_before_run rcm_import_sql && \
+        check_status_before_run rcm_config && \
+        check_status_before_run rcm_plugin_managesieve && \
+        check_status_before_run rcm_plugin_password
 
     # phpLDAPadmin.
     [ X"${USE_PHPLDAPADMIN}" == X"YES" ] && \

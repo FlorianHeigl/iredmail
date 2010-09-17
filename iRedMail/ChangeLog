@@ -1,5 +1,6 @@
 iRedMail-0.7.0:
-    * Integrate MySQL in Amavisd (@lookup_sql_dsn, @storage_sql_dsn).
+    * Upgrade Roundcube to 0.4.
+    * Integrate MySQL in Amavisd: @storage_sql_dsn.
     * Improve backup mx support with MySQL backend. Thanks tiangangnet@bbs.
 
 iRedMail-0.6.1:

@@ -214,6 +214,7 @@ check_status_before_run clamav_config
 # Amavisd-new. (plus unrar, unarj, SpamAssassin)
 # ------------------------------------------------
 check_status_before_run amavisd_config
+
 # SpamAssassin.
 check_status_before_run sa_config
 

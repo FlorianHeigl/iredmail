@@ -233,13 +233,12 @@ EOF
     perl -pi -e 's#^(TRIPLET_UNAUTH_TIMEOUT=)(.*)#${1}2d#' ${POLICYD_CONF}
     #perl -pi -e 's#^(OPTINOUT=)(.*)#${1}1#' ${POLICYD_CONF}
 
-    # ---- SENDER THROTTLE ----
-    # Disable recipient throttle here, it should be used in postfix
+    # Disable sender/recipient throttle here, it should be used in postfix
     # 'smtpd_end_of_data_restrictions'.
+    # ---- SENDER THROTTLE ----
     perl -pi -e 's#^(SENDERTHROTTLE=)(.*)#${1}0#' ${POLICYD_CONF}
-
     # ---- RECIPIENT THROTTLE ----
-    perl -pi -e 's#^(RECIPIENTTHROTTLE=)(.*)#${1}1#' ${POLICYD_CONF}
+    perl -pi -e 's#^(RECIPIENTTHROTTLE=)(.*)#${1}0#' ${POLICYD_CONF}
 
     # ---- RCPT ACL ----
     if [ X"${DISTRO}" == X"RHEL" ]; then
@@ -300,10 +299,10 @@ EOF
     # ---- SENDER THROTTLE ----
     # We need only this feature in this policyd instance.
     perl -pi -e 's#^(SENDERTHROTTLE=)(.*)#${1}1#' ${POLICYD_THROTTLE_CONF}
-    perl -pi -e 's#^(SENDER_THROTTLE_SASL=)(.*)#${1}1#' ${POLICYD_THROTTLE_CONF}
-    perl -pi -e 's#^(SENDER_THROTTLE_HOST=)(.*)#${1}0#' ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(SENDER_THROTTLE_SASL=)(.*)#${1}0#' ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(SENDER_THROTTLE_HOST=)(.*)#${1}1#' ${POLICYD_THROTTLE_CONF}
     perl -pi -e 's#^(QUOTA_EXCEEDED_TEMP_REJECT=)(.*)#${1}0#' ${POLICYD_THROTTLE_CONF}
-    perl -pi -e 's#^(SENDER_QUOTA_REJECTION=)(.*)#${1}"Limit has been reached."#' ${POLICYD_THROTTLE_CONF}
+    #perl -pi -e 's#^(SENDER_QUOTA_REJECTION=)(.*)#${1}"Limit has been reached."#' ${POLICYD_THROTTLE_CONF}
     perl -pi -e 's#^(SENDERMSGSIZE=)(.*)#${1}$ENV{'MESSAGE_SIZE_LIMIT'}#' ${POLICYD_THROTTLE_CONF}
     perl -pi -e 's#^(SENDERMSGLIMIT=)(.*)#${1}60#' ${POLICYD_THROTTLE_CONF}
 
