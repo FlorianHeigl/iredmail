@@ -1,4 +1,6 @@
 iRedMail-0.7.0:
+    * Upgrade PostfixAdmin to 2.3.2.
+    * Upgrade phpMyAdmin to 2.11.11.
     * Upgrade Roundcube to 0.4.
     * Integrate MySQL in Amavisd: @storage_sql_dsn.
     * Improve backup mx support with MySQL backend. Thanks tiangangnet@bbs.

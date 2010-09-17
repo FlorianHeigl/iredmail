@@ -266,14 +266,8 @@ EOF
 
     if [ X"${DISTRO}" != X"FREEBSD" ]; then
         cat <<EOF
-* If you want to remove and re-install iRedMail, here are steps:
-*   - Run script to remove main components installed by iRedMail:
-*       # wget http://iredmail.googlecode.com/hg/extra/clear_iredmail.sh
-*       # mv clear_iredmail.sh tools/ && cd tools/
-*       # bash clear_iredmail.sh
-*   - Remove iRedMail installation process status:
-*       # rm -f ${STATUS_FILE}
-*   - Install iRedMail like you did before.
+* If you want to remove/uninstall iRedMail quickly, please follow this tutorial:
+* http://www.iredmail.org/forum/topic333-faq-how-to-uninstall-iredmail.html
 *
 EOF
 fi
