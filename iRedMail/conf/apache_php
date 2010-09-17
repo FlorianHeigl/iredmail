@@ -99,10 +99,6 @@ else
     :
 fi
 
-# PHP pear package: Net_LDAP2.
-# Required by roundcube plugin: password (ldap backend only).
-export SRC_PEAR_NET_LDAP2="${MISC_DIR}/Net_LDAP2-2.0.9.tgz"
-
 # PHP connection type.
 if [ X"${DISTRO_CODENAME}" == X"lucid" ]; then
     export PHP_CONN_TYPE='mysql'

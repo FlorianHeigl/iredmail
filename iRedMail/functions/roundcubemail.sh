@@ -348,8 +348,10 @@ rcm_plugin_password()
         perl -pi -e 's#(.*password_query.*=).*#${1} "UPDATE $ENV{'VMAIL_DB'}.mailbox SET password=%c WHERE username=%u LIMIT 1";#' config.inc.php
         perl -pi -e 's#(.*password_hash_algorithm.*=).*#${1} "md5crypt";#' config.inc.php
         perl -pi -e 's#(.*password_hash_base64.*=).*#${1} false;#' config.inc.php
+
     elif [ X"${BACKEND}" == X"OpenLDAP" ]; then
-        perl -pi -e 's#(.*password_driver.*=).*#${1} "ldap";#' config.inc.php
+        # LDAP backend. Driver: ldap_simple.
+        perl -pi -e 's#(.*password_driver.*=).*#${1} "ldap_simple";#' config.inc.php
         perl -pi -e 's#(.*password_ldap_host.*=).*#${1} "$ENV{LDAP_SERVER_HOST}";#' config.inc.php
         perl -pi -e 's#(.*password_ldap_port.*=).*#${1} "$ENV{LDAP_SERVER_PORT}";#' config.inc.php
         perl -pi -e 's#(.*password_ldap_starttls.*=).*#${1} false;#' config.inc.php

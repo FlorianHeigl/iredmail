@@ -144,16 +144,6 @@ cleanup_replace_mysql_config()
     echo 'export status_cleanup_replace_mysql_config="DONE"' >> ${STATUS_FILE}
 }
 
-cleanup_upgrade_php_pear()
-{
-    if [ X"${BACKEND}" == X"OpenLDAP" -a X"${USE_RCM}" == X"YES" ]; then
-        ECHO_INFO "Installing php Net_LDAP2 ..."
-        pear install ${SRC_PEAR_NET_LDAP2} >/dev/null
-    fi
-
-    echo 'export status_cleanup_upgrade_php_pear="DONE"' >> ${STATUS_FILE}
-}
-
 cleanup_start_postfix_now()
 {
     # Start postfix without reboot your system.
@@ -224,7 +214,6 @@ EOF
     check_status_before_run cleanup_remove_sendmail
     [ X"${KERNEL_NAME}" == X"Linux" ] && check_status_before_run cleanup_replace_iptables_rule
     [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run cleanup_replace_mysql_config
-    check_status_before_run cleanup_upgrade_php_pear
     check_status_before_run cleanup_start_postfix_now
     [ X"${DISTRO}" == X"FREEBSD" ] && check_status_before_run cleanup_sa_preconfig
 

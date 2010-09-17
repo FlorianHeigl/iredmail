@@ -43,11 +43,11 @@ install_all()
     if [ X"${USE_EXIST_AMP}" != X"YES" ]; then
         # Apache & PHP.
         if [ X"${DISTRO}" == X"RHEL" ]; then
-            ALL_PKGS="${ALL_PKGS} httpd.${ARCH} mod_ssl.${ARCH} php.${ARCH} php-common.${ARCH} php-imap.${ARCH} php-gd.${ARCH} php-mbstring.${ARCH} libmcrypt.${ARCH} php-mcrypt.${ARCH} php-pear.noarch php-xml.${ARCH} php-pecl-fileinfo.${ARCH} php-mysql.${ARCH} php-ldap.${ARCH} php-mhash.${ARCH}"
+            ALL_PKGS="${ALL_PKGS} httpd.${ARCH} mod_ssl.${ARCH} php.${ARCH} php-common.${ARCH} php-imap.${ARCH} php-gd.${ARCH} php-mbstring.${ARCH} libmcrypt.${ARCH} php-mcrypt.${ARCH} php-xml.${ARCH} php-pecl-fileinfo.${ARCH} php-mysql.${ARCH} php-ldap.${ARCH} php-mhash.${ARCH}"
             ENABLED_SERVICES="${ENABLED_SERVICES} httpd"
 
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-            ALL_PKGS="${ALL_PKGS} apache2 apache2-mpm-prefork apache2.2-common libapache2-mod-php5 libapache2-mod-auth-mysql php5-cli php5-imap php5-gd php5-mcrypt php5-mysql php5-ldap php5-mhash php-pear"
+            ALL_PKGS="${ALL_PKGS} apache2 apache2-mpm-prefork apache2.2-common libapache2-mod-php5 libapache2-mod-auth-mysql php5-cli php5-imap php5-gd php5-mcrypt php5-mysql php5-ldap php5-mhash"
             ENABLED_SERVICES="${ENABLED_SERVICES} apache2"
         else
             :
@@ -273,13 +273,6 @@ EOF
     # ---- Ubuntu 10.04 special. ----
     #
     if [ X"${DISTRO_CODENAME}" == X"lucid" ]; then
-        # Install required packages for roundcube.
-        if [ X"${USE_RCM}" == X"YES" ]; then
-            if [ X"${BACKEND}" == X"OpenLDAP" ]; then
-                ALL_PKGS="${ALL_PKGS} php-net-ldap2"
-            fi
-        fi
-
         # Install phpLDAPadmin.
         if [ X"${USE_PHPLDAPADMIN}" == X"YES" ]; then
             ALL_PKGS="${ALL_PKGS} phpldapadmin"
