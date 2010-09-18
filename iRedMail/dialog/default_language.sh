@@ -30,7 +30,7 @@ Choose the default language for your webmail(s):
 TIP:
     * Use 'Space' key to select item.
 
-" 20 76 5 \
+" 20 76 8 \
   'en_US' 'English (US)' 'on' \
   'zh_CN' 'Chinese (Simplified)' 'off' \
   'zh_TW' 'Chinese (Traditional)' 'off' \

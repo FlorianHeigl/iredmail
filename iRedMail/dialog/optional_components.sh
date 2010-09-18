@@ -63,7 +63,7 @@ Note:
     * DNS records (TXT type) are required for both SPF and DKIM.
     * Refer to file for more detail after installation:
       ${TIP_FILE}
-" 20 76 7 \
+" 20 76 8 \
     "SPF Validation" "Sender Policy Framework" "on" \
     "DKIM signing/verification" "DomainKeys Identified Mail" "on" \
     "iRedAdmin" "Official web-based iRedMail Admin Panel" "on" \
@@ -82,7 +82,7 @@ Note:
     * DNS record (TXT type) are required for both SPF and DKIM.
     * Please refer to file for more detail after installation:
       ${TIP_FILE}
-" 20 76 6 \
+" 20 76 8 \
     "SPF Validation" "Sender Policy Framework" "on" \
     "DKIM signing/verification" "DomainKeys Identified Mail" "on" \
     "Roundcubemail" "WebMail program (PHP, AJAX)" "on" \

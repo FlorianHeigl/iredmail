@@ -22,10 +22,10 @@
 
 # Note: config file will be sourced in 'conf/functions', check_env().
 
-. ./conf/global
-. ./conf/functions
-. ./conf/core
-. ./conf/openldap
+. ${CONF_DIR}/global
+. ${CONF_DIR}/functions
+. ${CONF_DIR}/core
+. ${CONF_DIR}/openldap
 
 trap "exit 255" 2
 
