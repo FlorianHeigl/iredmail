@@ -201,6 +201,9 @@ daily_submit_queuerun="NO"
 EOF
     fi
 
+    # Create directory, used to store lookup files.
+    [ -d ${POSTFIX_LOOKUP_DIR} ] || mkdir -p ${POSTFIX_LOOKUP_DIR}
+
     echo 'export status_postfix_config_basic="DONE"' >> ${STATUS_FILE}
 }
 

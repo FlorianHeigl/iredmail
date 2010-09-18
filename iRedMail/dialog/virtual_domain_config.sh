@@ -138,6 +138,8 @@ First mail user:
 
 Alias for root user:
     * Alias address: ${MAIL_ALIAS_ROOT}
-    * Config file: ${POSTFIX_FILE_ALIASES}
+    * You can change it in file 'aliases' under postfix root directory. It should be:
+        + /etc/postfix/aliases (Linux)
+        + /usr/local/etc/postfix/aliases (FreeBSD)
 
 EOF

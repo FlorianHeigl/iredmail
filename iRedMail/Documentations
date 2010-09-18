@@ -1,15 +1,34 @@
-* Homepage: http://www.iredmail.org/
-* Features: http://www.iredmail.org/features.html
-* iRedAdmin: web-based admin panel: http://www.iredmail.org/admin_panel.html
-    - Features and comparation: http://www.iredmail.org/admin_panel.html
+* Homepage:
+  http://www.iredmail.org/
+
+* Features:
+  http://www.iredmail.org/features.html
+
+* iRedAdmin: web-based admin panel:
+
+    - Features and comparation:
+      http://www.iredmail.org/admin_panel.html
+
     - Install iRedAdmin on RHEL/CentOS:
       http://www.iredmail.org/admin_installation_rhel.html
+
     - Install iRedAdmin on Debian/Ubuntu:
       http://www.iredmail.org/admin_installation_debian.html
-* Community: http://www.iredmail.org/community.html
-* Documents: http://www.iredmail.org/doc.html
-    - FAQ: http://www.iredmail.org/faq.html
-* Integration: http://www.iredmail.org/doc.html#integration
+
+    - Install iRedAdmin on FreeBSD:
+      http://www.iredmail.org/admin_installation_freebsd.html
+
+* Community:
+  http://www.iredmail.org/community.html
+
+* Documents:
+  http://www.iredmail.org/doc.html
+
+    - FAQ:
+      http://www.iredmail.org/faq.html
+
+* Integration:
+  http://www.iredmail.org/doc.html#integration
 
 * Misc:
     - Slide: Introduce iRedMail in 2009 Software Freedom Day (Shenzhen,
