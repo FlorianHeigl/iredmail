@@ -43,7 +43,7 @@ install_all()
     if [ X"${USE_EXIST_AMP}" != X"YES" ]; then
         # Apache & PHP.
         if [ X"${DISTRO}" == X"RHEL" ]; then
-            ALL_PKGS="${ALL_PKGS} httpd.${ARCH} mod_ssl.${ARCH} php.${ARCH} php-common.${ARCH} php-imap.${ARCH} php-gd.${ARCH} php-mbstring.${ARCH} libmcrypt.${ARCH} php-mcrypt.${ARCH} php-xml.${ARCH} php-pecl-fileinfo.${ARCH} php-mysql.${ARCH} php-ldap.${ARCH} php-mhash.${ARCH}"
+            ALL_PKGS="${ALL_PKGS} httpd.${ARCH} mod_ssl.${ARCH} php.${ARCH} php-common.${ARCH} php-imap.${ARCH} php-gd.${ARCH} php-mbstring.${ARCH} libmcrypt.${ARCH} php-mcrypt.${ARCH} php-xml.${ARCH} php-mysql.${ARCH} php-ldap.${ARCH} php-mhash.${ARCH}"
             ENABLED_SERVICES="${ENABLED_SERVICES} httpd"
 
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
