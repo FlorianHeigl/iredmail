@@ -180,11 +180,11 @@ EOF
     # Policyd doesn't work while mysql server is 'localhost', should be
     # changed to '127.0.0.1'.
 
-    perl -pi -e 's#^(MYSQLHOST=)(.*)#${1}"$ENV{mysql_server}"#' ${POLICYD_CONF}
-    perl -pi -e 's#^(MYSQLDBASE=)(.*)#${1}"$ENV{POLICYD_DB_NAME}"#' ${POLICYD_CONF}
-    perl -pi -e 's#^(MYSQLUSER=)(.*)#${1}"$ENV{POLICYD_DB_USER}"#' ${POLICYD_CONF}
-    perl -pi -e 's#^(MYSQLPASS=)(.*)#${1}"$ENV{POLICYD_DB_PASSWD}"#' ${POLICYD_CONF}
-    perl -pi -e 's#^(FAILSAFE=)(.*)#${1}1#' ${POLICYD_CONF}
+    perl -pi -e 's#^(MYSQLHOST=)(.*)#${1}"$ENV{mysql_server}"#' ${POLICYD_CONF} ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(MYSQLDBASE=)(.*)#${1}"$ENV{POLICYD_DB_NAME}"#' ${POLICYD_CONF} ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(MYSQLUSER=)(.*)#${1}"$ENV{POLICYD_DB_USER}"#' ${POLICYD_CONF} ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(MYSQLPASS=)(.*)#${1}"$ENV{POLICYD_DB_PASSWD}"#' ${POLICYD_CONF} ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(FAILSAFE=)(.*)#${1}1#' ${POLICYD_CONF} ${POLICYD_THROTTLE_CONF}
 
     # ---- DAEMON CONFIG ----
     perl -pi -e 's#^(DEBUG=)(.*)#${1}0#' ${POLICYD_CONF}
@@ -250,12 +250,6 @@ EOF
     # -------------------------------------------------------------
     # Policyd config for recipient throttle only.
     # -------------------------------------------------------------
-    # ---- DATABASE CONFIG ----
-    perl -pi -e 's#^(MYSQLHOST=)(.*)#${1}"$ENV{mysql_server}"#' ${POLICYD_THROTTLE_CONF}
-    perl -pi -e 's#^(MYSQLDBASE=)(.*)#${1}"$ENV{POLICYD_THROTTLE_DB_NAME}"#' ${POLICYD_THROTTLE_CONF}
-    perl -pi -e 's#^(MYSQLUSER=)(.*)#${1}"$ENV{POLICYD_THROTTLE_DB_USER}"#' ${POLICYD_THROTTLE_CONF}
-    perl -pi -e 's#^(MYSQLPASS=)(.*)#${1}"$ENV{POLICYD_THROTTLE_DB_PASSWD}"#' ${POLICYD_THROTTLE_CONF}
-    perl -pi -e 's#^(FAILSAFE=)(.*)#${1}1#' ${POLICYD_THROTTLE_CONF}
 
     # ---- DAEMON CONFIG ----
     perl -pi -e 's#^(DEBUG=)(.*)#${1}0#' ${POLICYD_THROTTLE_CONF}
@@ -299,8 +293,8 @@ EOF
     # ---- SENDER THROTTLE ----
     # We need only this feature in this policyd instance.
     perl -pi -e 's#^(SENDERTHROTTLE=)(.*)#${1}1#' ${POLICYD_THROTTLE_CONF}
-    perl -pi -e 's#^(SENDER_THROTTLE_SASL=)(.*)#${1}0#' ${POLICYD_THROTTLE_CONF}
-    perl -pi -e 's#^(SENDER_THROTTLE_HOST=)(.*)#${1}1#' ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(SENDER_THROTTLE_SASL=)(.*)#${1}1#' ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(SENDER_THROTTLE_HOST=)(.*)#${1}0#' ${POLICYD_THROTTLE_CONF}
     perl -pi -e 's#^(QUOTA_EXCEEDED_TEMP_REJECT=)(.*)#${1}0#' ${POLICYD_THROTTLE_CONF}
     #perl -pi -e 's#^(SENDER_QUOTA_REJECTION=)(.*)#${1}"Limit has been reached."#' ${POLICYD_THROTTLE_CONF}
     perl -pi -e 's#^(SENDERMSGSIZE=)(.*)#${1}$ENV{'MESSAGE_SIZE_LIMIT'}#' ${POLICYD_THROTTLE_CONF}
