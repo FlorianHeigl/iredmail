@@ -1,4 +1,5 @@
 iRedMail-0.7.0:
+    * Add script used to backup MySQL databases: tools/backup_mysql.sh.
     * Upgrade packages:
         + PostfixAdmin -> 2.3.2
         + phpMyAdmin -> 3.3.7
