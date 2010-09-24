@@ -17,6 +17,7 @@
 #       + bzip2 or gzip     # If bzip2 is not available, change 'CMD_COMPRESS'
 #                           # to use 'gzip'.
 #
+
 ###########################
 # USAGE
 ###########################
@@ -50,21 +51,27 @@
 #       # update-rc.d cron defaults
 #       # /etc/init.d/cron status
 #
+
 ###########################
-# DESCRIPTION
+# DIRECTORY STRUCTURE
 ###########################
 #
 #   $BACKUP_ROOTDIR             # Default is /backup
 #       |- mysql/               # Used to store all backed up databases.
-#           |- YYYY.MM.DD/      # YEAR.MONTH.DAY
-#               |- DB.YYYY.MONTH.DAY.sql  # Backup copy, plain SQL file.
-#                                         # Note: it will be removed immediately
-#                                         # if you have DELETE_PLAIN_SQL_FILE='YES'.
-#               |- DB.YYYY.MONTH.DAY.sql.bz2    # Backup copy, compressed SQL file.
+#           |- YEAR.MONTH/
+#               |- YEAR.MONTH.DAY/
+#                   |- DB.YEAR.MONTH.DAY.MIN.HOUR.SECOND.sql
+#                               # Backup copy, plain SQL file.
+#                               # Note: it will be removed immediately after
+#                               # it was compressed with success and 
+#                               # DELETE_PLAIN_SQL_FILE='YES'
+#
+#                   |- DB.YEAR.MONTH.DAY.HOUR.MINUTE.SECOND.sql.bz2
+#                               # Backup copy, compressed SQL file.
 #
 #       |- logs/
-#           |- YYYY.MM/         # YEAR.MONTH
-#               |- mysql-YYYY.MM.DD.log     # Log file.
+#           |- YEAR.MONTH/
+#               |- mysql-YEAR.MONTH.DAY.MIN.HOUR.SECOND.log     # Log file
 #
 
 #########################################################
@@ -106,7 +113,7 @@ DAY="$(${CMD_DATE} +%Y.%m.%d)"
 DATE="$(${CMD_DATE} +%Y.%m.%d.%H.%M.%S)"
 
 # Define, check, create directories.
-BACKUP_DIR="${BACKUP_ROOTDIR}/mysql/${DAY}"
+BACKUP_DIR="${BACKUP_ROOTDIR}/mysql/${MONTH}/${DAY}"
 
 # Check and create directories.
 [ -d ${BACKUP_DIR} ] || mkdir -p ${BACKUP_DIR} 2>/dev/null
@@ -154,7 +161,7 @@ if [ X"${COMPRESS}" == X"YES" ]; then
             echo -e "\tDone" >>${LOGFILE}
 
             # Delete plain SQL file after compressed.
-            if [ X"${DELETE_PLAIN_SQL_FILE}" == X"YES" ]; then
+            if [ X"${DELETE_PLAIN_SQL_FILE}" == X"YES" -a -f ${sql_file} ]; then
                 echo -n "* Removing plain SQL file: ${sql_file}..." >>${LOGFILE}
                 rm -f ${BACKUP_DIR}/*sql >>${LOGFILE} 2>&1
                 [ X"$?" == X"0" ] && echo -e "\tDone" >>${LOGFILE}
