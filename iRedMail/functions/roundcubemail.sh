@@ -24,18 +24,6 @@ rcm_install()
         chown -R ${SYS_ROOT_USER}:${SYS_ROOT_GROUP} ${RCM_HTTPD_ROOT}
         chown -R ${HTTPD_USER}:${HTTPD_GROUP} ${RCM_HTTPD_ROOT}/{temp,logs}
         chmod 0000 ${RCM_HTTPD_ROOT}/{CHANGELOG,INSTALL,LICENSE,README,UPGRADING,installer,SQL}
-
-        #
-        # Patches.
-        #
-        # Patch for roundcube-0.3.1 only.
-        cd ${RCM_HTTPD_ROOT}/
-
-        # Patch to fix width of managesieve rule setting panel.
-        patch -p0 < ${PATCH_DIR}/roundcubemail/managesieve_rule_width_on_safari.patch >/dev/null 2>&1
-
-        # Patch to fix CVE-2010-0464: Disable DNS prefetching.
-        patch -p0 < ${PATCH_DIR}/roundcubemail/roundcube-CVE-2010-0464.patch >/dev/null 2>&1
     fi
 
     cd ${RCM_HTTPD_ROOT}/config/
