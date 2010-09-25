@@ -265,8 +265,8 @@ awstats_config_crontab()
 EOF
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
         cat >> ${CRON_SPOOL_DIR}/root <<EOF
-1   */1   *   *   *   perl ${AWSTATS_CGI_DIR}/awstats/awstats.pl -config=${HOSTNAME} -update >/dev/null
-1   */1   *   *   *   perl ${AWSTATS_CGI_DIR}/awstats/awstats.pl -config=mail -update >/dev/null
+1   */1   *   *   *   perl ${AWSTATS_CGI_DIR}/awstats.pl -config=${HOSTNAME} -update >/dev/null
+1   */1   *   *   *   perl ${AWSTATS_CGI_DIR}/awstats.pl -config=mail -update >/dev/null
 EOF
     else
         cat >> ${CRON_SPOOL_DIR}/root <<EOF

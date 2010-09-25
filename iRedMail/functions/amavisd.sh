@@ -313,7 +313,7 @@ amavisd_config_general()
 \$policy_bank{'AM.PDP-INET'} = {
     protocol => 'AM.PDP',       # select Amavis policy delegation protocol
     inet_acl => [qw( 127.0.0.1 [::1] )],    # restrict access to these IP addresses
-    #auth_required_release => 0,    # 0 - don't require secret_id for amavisd-release
+    auth_required_release => 1,    # 0 - don't require secret_id for amavisd-release
     #log_level => 4,
     #always_bcc_by_ccat => {CC_CLEAN, 'admin@example.com'},
 };

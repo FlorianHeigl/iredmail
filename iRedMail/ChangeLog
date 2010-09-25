@@ -1,4 +1,5 @@
 iRedMail-0.7.0:
+    * Fix incorrect file location of awstats.pl on Debian/Ubuntu.
     * Add script used to backup OpenLDAP data: tools/backup_openldap.sh.
     * Add script used to backup MySQL databases: tools/backup_mysql.sh.
     * Upgrade packages:
