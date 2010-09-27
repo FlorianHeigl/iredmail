@@ -127,7 +127,7 @@ amavisd_config_rhel()
     #perl -pi -e 's/(.*)(sa_kill_level_deflt)(.*)/${1}${2} = 10; #${3}/' ${AMAVISD_CONF}
 
     # Make Amavisd listen on multiple TCP ports.
-    #perl -pi -e 's/(\$inet_socket_port.*=.*10024.*)/\$inet_socket_port = [10024, 9998];/' ${AMAVISD_CONF}
+    perl -pi -e 's/(\$inet_socket_port.*=.*10024.*)/\$inet_socket_port = [10024, 9998];/' ${AMAVISD_CONF}
 
     # Set admin address.
     perl -pi -e 's#(virus_admin.*= ")(virusalert)(.*)#${1}root${3}#' ${AMAVISD_CONF}
@@ -183,6 +183,9 @@ chomp(\$mydomain = "${HOSTNAME}");
 @local_domains_maps = ['${HOSTNAME}', '${FIRST_DOMAIN}'];
 @mynetworks = qw( 127.0.0.0/8 [::1] [FE80::]/10 [FEC0::]/10
                   10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 );
+
+# listen on multiple TCP ports. 9998 is used for releasing quarantined mails.
+\$inet_socket_port = [10024, 9998,];
 
 # Enable virus check.
 @bypass_virus_checks_maps = (
