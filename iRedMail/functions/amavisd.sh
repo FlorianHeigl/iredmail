@@ -311,7 +311,9 @@ amavisd_config_general()
 #    bypass_header_checks_maps => [1],  # don't header-check this mail
 #};
 
+#
 # Port used to release quarantined mails.
+#
 \$interface_policy{'9998'} = 'AM.PDP-INET';
 \$policy_bank{'AM.PDP-INET'} = {
     protocol => 'AM.PDP',       # select Amavis policy delegation protocol
@@ -321,12 +323,25 @@ amavisd_config_general()
     #always_bcc_by_ccat => {CC_CLEAN, 'admin@example.com'},
 };
 
+#########################
 # Quarantine SPAM mails.
+#
 #\$spam_quarantine_to = 'spam-quarantine';
 
-# Quarantine method.
-# Store in MySQL. Use 'local:spam-%i-%m' for local file system.
+# Quarantine method. How to store mail body.
+#   - 'local:spam-%i-%m', store mail on local file system.
+#   - 'sql:', store mail body in MySQL. 
 #\$spam_quarantine_method = 'sql:';
+
+#########################
+# Quarantine VIRUS mails.
+#
+# Quarantine VIRUS into local file system. Default is 'virus-quarantine'.
+#\$virus_quarantine_to     = 'virus-quarantine';
+
+# Quarantine method. How to store VIRUS mail body. Default is 'local:virus-%m'.
+# VIRUS is quarantined into local file system by default.
+#\$virus_quarantine_method = 'sql:';
 
 # Modify email subject, add '\$sa_spam_subject_tag'.
 #   0:  disable
