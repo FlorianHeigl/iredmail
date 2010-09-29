@@ -1,4 +1,6 @@
 iRedMail-0.7.0:
+    * Improve postfix ldap lookup to make mail list for alias domain work.
+      Thanks for Andrea Di Dato's feedback and testing.
     * Fix incorrect file location of awstats.pl on Debian/Ubuntu.
     * Add script used to backup OpenLDAP data: tools/backup_openldap.sh.
     * Add script used to backup MySQL databases: tools/backup_mysql.sh.
