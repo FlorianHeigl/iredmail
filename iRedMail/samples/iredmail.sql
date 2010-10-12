@@ -102,13 +102,15 @@ CREATE TABLE IF NOT EXISTS domain_admins (
 # Table structure for table mailbox
 #
 CREATE TABLE IF NOT EXISTS mailbox (
-    username VARCHAR(255) NOT NULL DEFAULT '',
+    username VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL DEFAULT '',
     name VARCHAR(255) NOT NULL DEFAULT '',
     storagebasedirectory VARCHAR(255) NOT NULL DEFAULT '',
     storagenode VARCHAR(255) NOT NULL DEFAULT '',
     maildir VARCHAR(255) NOT NULL DEFAULT '',
-    quota BIGINT(20) NOT NULL DEFAULT '0',
+    quota BIGINT(20) NOT NULL DEFAULT 0, -- Total mail quota size
+    bytes BIGINT(20) NOT NULL DEFAULT 0, -- Number of used quota size
+    messages BIGINT(20) NOT NULL DEFAULT 0, -- Number of current messages
     domain VARCHAR(255) NOT NULL DEFAULT '',
     transport VARCHAR(255) NOT NULL DEFAULT 'dovecot',
     department VARCHAR(255) NOT NULL DEFAULT '',
@@ -133,7 +135,7 @@ CREATE TABLE IF NOT EXISTS mailbox (
     modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
-    local_part VARCHAR(255) NOT NULL DEFAULT '',
+    local_part VARCHAR(255) NOT NULL DEFAULT '', -- Required by PostfixAdmin
     PRIMARY KEY (username)
 ) ENGINE=MyISAM;
 
@@ -205,7 +207,8 @@ CREATE TABLE IF NOT EXISTS log (
 
 #
 # WARNING:
-# We do not use postfixadmin style vacation mechanism.
+# We do not use postfixadmin style vacation mechanism, so below two tables
+# are deprecated.
 #
 
 #

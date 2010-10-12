@@ -107,6 +107,15 @@ GRANT SELECT,INSERT,UPDATE,DELETE ON ${IREDADMIN_DB_NAME}.* TO "${IREDADMIN_DB_U
 FLUSH PRIVILEGES;
 EOF
 
+    # Import table used to store real-time used quota.
+    if [ X"${BACKEND}" == X"OpenLDAP" ]; then
+        mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
+USE ${IREDADMIN_DB_NAME};
+SOURCE ${SAMPLE_DIR}/used_quota.sql;
+FLUSH PRIVILEGES;
+EOF
+    fi
+
     ECHO_DEBUG "Configure iRedAdmin."
 
     # General settings: [general] section.

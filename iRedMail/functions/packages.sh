@@ -171,6 +171,8 @@ EOF
     # Dovecot.
     if [ X"${ENABLE_DOVECOT}" == X"YES" ]; then
         if [ X"${DISTRO}" == X"RHEL" ]; then
+            # dovecot-managesieve from atrpms.net is something wrong. Use pysieved instead.
+            # http://lists.atrpms.net/pipermail/atrpms-users/2010-May/011695.html
             ALL_PKGS="${ALL_PKGS} dovecot.${ARCH} dovecot-sieve.${ARCH}"
 
             # We will use Dovecot SASL auth mechanism, so 'saslauthd'

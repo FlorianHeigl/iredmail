@@ -1,4 +1,5 @@
 iRedMail-0.7.0:
+    * Store realtime quota usage in MySQL with Dovecot.
     * Use repository 'backports.debian.org' on Debian 5.
     * Bypass shadow address in postfix sender login checking.
     * Improve postfix ldap lookup to make mail list of alias domain work.
@@ -7,6 +8,7 @@ iRedMail-0.7.0:
     * Add script used to backup OpenLDAP data: tools/backup_openldap.sh.
     * Add script used to backup MySQL databases: tools/backup_mysql.sh.
     * Upgrade packages:
+        + Dovecot -> 1.2.x. On RHEL/CentOS & Debian 5 (with backports).
         + PostfixAdmin -> 2.3.2
         + phpMyAdmin -> 3.3.7
         + Roundcube webmail -> 0.4.2

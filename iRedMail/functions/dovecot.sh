@@ -136,7 +136,7 @@ auth_default_realm = ${FIRST_DOMAIN}
 
 # ---- NFS storage ----
 # Set to 'no' For NFSv2. Default is 'yes'.
-#dotlock_use_excl = yes 
+#dotlock_use_excl = yes
 
 #mail_nfs_storage = yes # v1.1+ only
 
@@ -204,10 +204,10 @@ mail_location = maildir:/%Lh/Maildir/:INDEX=/%Lh/Maildir/
 
 plugin {
     # Quota, stored in file 'maildirsize' under user mailbox.
-    quota = maildir
+    #quota = maildir
 
     # Dict quota. Used to store realtime quota in SQL.
-    #quota = dict:user::proxy::quotadict
+    quota = dict:user::proxy::quotadict
 
     # Quota rules. Reference: http://wiki.dovecot.org/Quota/1.1
     # The following limit names are supported:
@@ -215,7 +215,7 @@ plugin {
     #   - bytes: Quota limit in bytes, 0 means unlimited.
     #   - messages: Quota limit in number of messages, 0 means unlimited. This probably isn't very useful.
     #   - backend: Quota backend-specific limit configuration.
-    #   - ignore: Don't include the specified mailbox in quota at all (v1.1.rc5+). 
+    #   - ignore: Don't include the specified mailbox in quota at all (v1.1.rc5+).
     quota_rule = *:storage=0
     #quota_rule2 = *:messages=0
     #quota_rule3 = Trash:storage=1G
@@ -227,7 +227,7 @@ dict {
     expire = db:${DOVECOT_EXPIRE_DICT_BDB}
 
     # Dict quota. Used to store realtime quota in SQL.
-    #quotadict = ${DOVECOT_REALTIME_QUOTA_SQLTYPE}:${DOVECOT_REALTIME_QUOTA_CONF}
+    quotadict = ${DOVECOT_REALTIME_QUOTA_SQLTYPE}:${DOVECOT_REALTIME_QUOTA_CONF}
 }
 
 plugin {
@@ -292,7 +292,7 @@ EOF
 
     cat >> ${DOVECOT_CONF} <<EOF
 # LDA: Local Deliver Agent
-protocol lda { 
+protocol lda {
     postmaster_address = root
     auth_socket_path = ${DOVECOT_SOCKET_MASTER}
     #mail_plugins = ${DOVECOT_LDA_PLUGIN_SIEVE} quota ${DOVECOT_LDA_PLUGIN_AUTOCREATE} expire
@@ -303,8 +303,8 @@ protocol lda {
 
 # IMAP configuration
 protocol imap {
-    #mail_plugins = quota imap_quota zlib expire
-    mail_plugins = quota imap_quota zlib
+    #mail_plugins = quota imap_quota expire
+    mail_plugins = quota imap_quota
 
     # number of connections per-user per-IP
     #mail_max_userip_connections = 10
@@ -312,8 +312,8 @@ protocol imap {
 
 # POP3 configuration
 protocol pop3 {
-    #mail_plugins = quota zlib expire
-    mail_plugins = quota zlib
+    #mail_plugins = quota expire
+    mail_plugins = quota
     pop3_uidl_format = %08Xu%08Xv
     pop3_client_workarounds = outlook-no-nuls oe-ns-eoh
 }
@@ -400,7 +400,7 @@ EOF
 
     cat >> ${DOVECOT_CONF} <<EOF
     socket listen {
-        master { 
+        master {
             path = ${DOVECOT_SOCKET_MASTER}
             mode = 0666
             user = ${VMAIL_USER_NAME}
@@ -415,6 +415,59 @@ EOF
     }
 }
 EOF
+
+        # ---- Create ${DOVECOT_REALTIME_QUOTA_CONF} ----
+        if [ X"${DOVECOT_VERSION}" == X"1.2" ]; then
+            backup_file ${DOVECOT_REALTIME_QUOTA_CONF}
+
+            if [ X"${BACKEND}" == X"OpenLDAP" ]; then
+                realtime_quota_db_name="${IREDADMIN_DB_NAME}"
+                realtime_quota_db_table="used_quota"
+                realtime_quota_db_user="${IREDADMIN_DB_USER}"
+                realtime_quota_db_passwd="${IREDADMIN_DB_PASSWD}"
+            else
+                realtime_quota_db_name="${VMAIL_DB}"
+                realtime_quota_db_table="mailbox"
+                realtime_quota_db_user="${MYSQL_ADMIN_USER}"
+                realtime_quota_db_passwd="${MYSQL_ADMIN_PW}"
+            fi
+
+            cat > ${DOVECOT_REALTIME_QUOTA_CONF} <<EOF
+${CONF_MSG}
+connect = host=${MYSQL_SERVER} dbname=${realtime_quota_db_name} user=${realtime_quota_db_user} password=${realtime_quota_db_passwd}
+map {
+    pattern = priv/quota/storage
+    table = ${realtime_quota_db_table}
+    username_field = username
+    value_field = bytes
+}
+map {
+    pattern = priv/quota/messages
+    table = ${realtime_quota_db_table}
+    username_field = username
+    value_field = messages
+}
+EOF
+
+            # Create MySQL database ${IREDADMIN_DB_USER} and table 'used_quota'
+            # which used to store realtime quota.
+            if [ X"${BACKEND}" == X"OpenLDAP" -a X"${USE_IREDADMIN}" != X"YES" ]; then
+                # If iRedAdmin is not used, create database and import table here.
+                mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
+# Create databases.
+CREATE DATABASE ${IREDADMIN_DB_NAME} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# Import SQL template.
+USE ${IREDADMIN_DB_NAME};
+SOURCE ${SAMPLE_DIR}/used_quota.sql;
+GRANT SELECT,INSERT,UPDATE,DELETE ON ${IREDADMIN_DB_NAME}.* TO "${IREDADMIN_DB_USER}"@localhost IDENTIFIED BY "${IREDADMIN_DB_PASSWD}";
+
+FLUSH PRIVILEGES;
+EOF
+
+            fi
+        fi
+        # ----
 
     ECHO_DEBUG "Copy sample sieve global filter rule file: ${GLOBAL_SIEVE_FILE}.sample."
     cp -f ${SAMPLE_DIR}/dovecot.sieve ${GLOBAL_SIEVE_FILE}.sample
@@ -478,7 +531,7 @@ ${DOVECOT_LOG_FILE} {
     compresscmd $(which bzip2)
     uncompresscmd $(which bunzip2)
     compressoptions -9
-    compressext .bz2 
+    compressext .bz2
 
     postrotate
         ${SYSLOG_POSTROTATE_CMD}
