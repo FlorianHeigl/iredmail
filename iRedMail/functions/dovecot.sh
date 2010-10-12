@@ -203,7 +203,11 @@ FOE
 mail_location = maildir:/%Lh/Maildir/:INDEX=/%Lh/Maildir/
 
 plugin {
+    # Quota, stored in file 'maildirsize' under user mailbox.
     quota = maildir
+
+    # Dict quota. Used to store realtime quota in SQL.
+    #quota = dict:user::proxy::quotadict
 
     # Quota rules. Reference: http://wiki.dovecot.org/Quota/1.1
     # The following limit names are supported:
@@ -221,6 +225,9 @@ plugin {
 dict {
     # NOTE: dict process currently runs as root, so this file will be owned as root.
     expire = db:${DOVECOT_EXPIRE_DICT_BDB}
+
+    # Dict quota. Used to store realtime quota in SQL.
+    #quotadict = ${DOVECOT_REALTIME_QUOTA_SQLTYPE}:${DOVECOT_REALTIME_QUOTA_CONF}
 }
 
 plugin {

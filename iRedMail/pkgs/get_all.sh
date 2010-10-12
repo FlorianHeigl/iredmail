@@ -89,16 +89,6 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
         export pkg_arch="${ARCH}"
     fi
 
-    if [ X"${DISTRO}" == X"DEBIAN" ]; then
-        export PKGFILE="MD5.debian"             # File contains MD5.
-        export PKGLIST="$( cat ${ROOTDIR}/${PKGFILE} | grep -E "(_${pkg_arch}|_all)" | awk -F'pkgs/' '{print $2}' )"
-        export MD5LIST="$( cat ${ROOTDIR}/${PKGFILE} | grep -E "(_${pkg_arch}|_all)" )"
-
-    fi
-
-    export fetch_pkgs="fetch_pkgs_debian"   # Function used to fetch binary packages.
-    export create_repo="create_repo_debian" # Function used to create apt repository.
-
     # Special package.
     # command: which.
     export BIN_WHICH='which'
@@ -252,28 +242,6 @@ EOF
     echo 'export status_create_yum_repo="DONE"' >> ${STATUS_FILE}
 }
 
-create_repo_debian()
-{
-    # Use dpkg-scanpackages to create a local apt repository.
-    ECHO_INFO -n "Generating local apt repository ..."
-
-    # Warning: Use relative path of binary packages.
-    cd ${ROOTDIR} && \
-    ( ${BIN_CREATEREPO} $(basename ${PKG_DIR}) /dev/null > ${PKG_DIR}/Packages ) 2>/dev/null
-
-    echo -e "\t[ OK ]"
-
-    ECHO_INFO -n "Append local repository to /etc/apt/sources.list ..."
-    grep 'iRedMail_Local$' /etc/apt/sources.list >/dev/null
-    [ X"$?" != X"0" ] && echo -e "deb file://${ROOTDIR} $(basename ${PKG_DIR})/   # iRedMail_Local" >> /etc/apt/sources.list
-
-    echo -e "\t[ OK ]"
-
-    ECHO_INFO -n "Update apt repository data (apt-get update) ..."
-    apt-get update
-
-}
-
 echo_end_msg()
 {
     cat <<EOF
@@ -295,17 +263,6 @@ else
 fi
 
 prepare_dirs
-
-# Ubuntu 9.04, FreeBSD doesn't need to download extra binary packages.
-if [ X"${DISTRO}" == X"DEBIAN" ]; then
-    check_pkg ${BIN_WHICH} ${PKG_WHICH} && \
-    check_pkg ${BIN_WGET} ${PKG_WGET} && \
-    check_pkg ${BIN_CREATEREPO} ${PKG_CREATEREPO} && \
-    eval ${fetch_pkgs} && \
-    create_repo_debian
-else
-    :
-fi
 
 # Create yum repository.
 if [ X"${DISTRO}" == X"RHEL" ]; then

@@ -1,4 +1,5 @@
 iRedMail-0.7.0:
+    * Use repository 'backports.debian.org' on Debian 5.
     * Bypass shadow address in postfix sender login checking.
     * Improve postfix ldap lookup to make mail list of alias domain work.
       Thanks for Andrea Di Dato's feedback and testing.
