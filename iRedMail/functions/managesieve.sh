@@ -124,15 +124,10 @@ EOF
 managesieve_config()
 {
     if [ X"${USE_MANAGESIEVE}" == X"YES" ]; then
-        if [ X"${DISTRO}" == X"RHEL" ]; then
-            # Use pysieved.
-            check_status_before_run pysieved_config
-        else
-            # Debian, Ubuntu, FreeBSD.
-            if [ X"${DOVECOT_VERSION}" == X"1.1" ]; then
-                # Dovecot is patched on Debian/Ubuntu, ships managesieve protocal.
-                perl -pi -e 's#^(protocols =.*)#${1} managesieve#' ${DOVECOT_CONF}
-                cat >> ${DOVECOT_CONF} <<EOF
+        if [ X"${DOVECOT_VERSION}" == X"1.1" ]; then
+            # Dovecot is patched on Debian/Ubuntu, ships managesieve protocal.
+            perl -pi -e 's#^(protocols =.*)#${1} managesieve#' ${DOVECOT_CONF}
+            cat >> ${DOVECOT_CONF} <<EOF
 protocol managesieve {
     # IP or host address where to listen in for connections.
     listen = ${MANAGESIEVE_BINDADDR}:${MANAGESIEVE_PORT}
@@ -160,10 +155,10 @@ protocol managesieve {
     managesieve_implementation_string = dovecot
 }
 EOF
-            elif [ X"${DOVECOT_VERSION}" == X"1.2" ]; then
-                perl -pi -e 's#^(protocols =.*)#${1} managesieve#' ${DOVECOT_CONF}
-                cat >> ${DOVECOT_CONF} <<EOF
-# ManageSieve service.
+        elif [ X"${DOVECOT_VERSION}" == X"1.2" ]; then
+            perl -pi -e 's#^(protocols =.*)#${1} managesieve#' ${DOVECOT_CONF}
+            cat >> ${DOVECOT_CONF} <<EOF
+# ManageSieve service. http://wiki.dovecot.org/ManageSieve
 protocol managesieve {
     # IP or host address where to listen in for connections.
     listen = ${MANAGESIEVE_BINDADDR}:${MANAGESIEVE_PORT}
@@ -199,10 +194,8 @@ protocol managesieve {
     #managesieve_implementation_string = dovecot
 }
 
-# Plugin: sieve.
+# sieve plugin. http://wiki.dovecot.org/LDA/Sieve
 plugin {
-    # Sieve plugin (http://wiki.dovecot.org/LDA/Sieve) and ManageSieve service
-    #
     # If the user has no personal active script (i.e. if the file 
     # indicated in sieve= does not exist), use this one:
     #sieve_global_path = ${GLOBAL_SIEVE_FILE}
@@ -217,12 +210,12 @@ plugin {
     # (with the proper .sieve extension) are executed. The order of
     # execution is determined by the file names, using a normal 8bit
     # per-character comparison.
-    #sieve_before =
+    #sieve_before = ${GLOBAL_SIEVE_FILE}
 
     # Identical to sieve_before, only the specified scripts are
     # executed after the user's script (only when keep is still in
     # effect!).
-    #sieve_after =
+    #sieve_after = ${GLOBAL_SIEVE_FILE}
 
     # Location of the active script. When ManageSieve is used this is actually
     # a symlink pointing to the active script in the sieve storage directory.
@@ -234,7 +227,6 @@ plugin {
 }
 EOF
 
-            fi
         fi
     fi
 }

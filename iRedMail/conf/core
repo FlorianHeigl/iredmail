@@ -359,7 +359,7 @@ remove_pkg_rhel()
 install_pkg_suse()
 {
     ECHO_INFO "Installing package(s): $@"
-    zypper install -y $@
+    zypper --non-interactive install -y $@
     if [ X"$?" != X"0" ]; then
         ECHO_ERROR "Installation failed, please check the terminal output."
         exit 255
@@ -371,7 +371,7 @@ install_pkg_suse()
 remove_pkg_suse()
 {
     ECHO_INFO "Removing package(s): $@"
-    zypper remove -y $@
+    zypper --non-interactive remove -y $@
     [ X"$?" != X"0" ] && ECHO_ERROR "Package removed failed, please check the terminal output."
 }
 

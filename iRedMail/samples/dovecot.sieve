@@ -18,12 +18,10 @@
 
 #
 # Sample dovecot sieve global rules. It should be localted at:
-#   /var/mail/.dovecot.sieve
+#   /var/vmail/sieve/dovecot.sieve
+#
 # Refer to 'sieve_global_path' parameter for the file localtion
 # in dovecot.conf on your server.
-#
-# Shipped within iRedMail project:
-#   * http://www.iredmail.org/
 #
 
 # For more information, please refer to official documentation:
@@ -37,9 +35,10 @@ require "fileinto";
 
 # rule:[Move Spam to Junk Folder]
 if header :matches ["X-Spam-Flag"] ["YES"] {
+    #
     # If you want to copy this spam mail to other people, uncomment
-    # the below line.
-    # Note: one person, one command.
+    # below line and set correct email address. One email one line.
+    #
     #redirect "user1@domain.ltd";
     #redirect "user2@domain.ltd";
 
