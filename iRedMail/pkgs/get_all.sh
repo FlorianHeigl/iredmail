@@ -99,6 +99,8 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     # command: dpkg-scanpackages.
     export BIN_CREATEREPO="dpkg-scanpackages"
     export PKG_CREATEREPO="dpkg-dev"
+elif [ X"${DISTRO}" == X"FREEBSD" ]; then
+    export MIRROR='http://iredmail.org/yum/freebsd'
 else
     export MIRROR='http://iredmail.org/yum'
 fi
