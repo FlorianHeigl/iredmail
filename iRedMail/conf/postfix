@@ -108,7 +108,7 @@ export mysql_relay_domains_cf="${POSTFIX_LOOKUP_DIR_MYSQL}/relay_domains.cf"
 
 if [ X"${BACKEND}" == X"OpenLDAP" ]; then
     export POSTFIX_LOOKUP_DIR="${POSTFIX_LOOKUP_DIR_LDAP}"
-elif [ X"${BACKEND}" == X"${MySQL}" ]; then
+elif [ X"${BACKEND}" == X"MySQL" ]; then
     export POSTFIX_LOOKUP_DIR="${POSTFIX_LOOKUP_DIR_MYSQL}"
 else
     export POSTFIX_LOOKUP_DIR="${POSTFIX_ROOTDIR}/lookups"

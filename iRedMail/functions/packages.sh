@@ -171,9 +171,7 @@ EOF
     # Dovecot.
     if [ X"${ENABLE_DOVECOT}" == X"YES" ]; then
         if [ X"${DISTRO}" == X"RHEL" ]; then
-            # dovecot-managesieve from atrpms.net is something wrong. Use pysieved instead.
-            # http://lists.atrpms.net/pipermail/atrpms-users/2010-May/011695.html
-            ALL_PKGS="${ALL_PKGS} dovecot.${ARCH} dovecot-sieve.${ARCH}"
+            ALL_PKGS="${ALL_PKGS} dovecot.${ARCH} dovecot-sieve.${ARCH} dovecot-managesieve.${ARCH}"
 
             # We will use Dovecot SASL auth mechanism, so 'saslauthd'
             # is not necessary, should be disabled.
@@ -223,13 +221,13 @@ EOF
     # Warning: Do *NOT* add 'pysieved' service in 'ENABLED_SERVICES' here.
     #          We don't have rc/init script under ${DIR_RC_SCRIPTS} till
     #          package is installed.
-    if [ X"${USE_MANAGESIEVE}" == X"YES" ]; then
-        # Note for Ubuntu & Debian:
-        # Dovecot shipped in Debian/Ubuntu has managesieve plugin patched.
-        [ X"${DISTRO}" == X"RHEL" ] && ALL_PKGS="${ALL_PKGS} pysieved.noarch"
-    else
-        :
-    fi
+    #if [ X"${USE_MANAGESIEVE}" == X"YES" ]; then
+    #    # Note for Ubuntu & Debian:
+    #    # Dovecot shipped in Debian/Ubuntu has managesieve plugin patched.
+    #    [ X"${DISTRO}" == X"RHEL" ] && ALL_PKGS="${ALL_PKGS} pysieved.noarch"
+    #else
+    #    :
+    #fi
 
     # iRedAPD.
     if [ X"${USE_IREDAPD}" == X"YES" ]; then
