@@ -35,6 +35,11 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     export AWSTATS_CONF_SAMPLE="${AWSTATS_CONF_DIR}/awstats.localhost.localdomain.conf"
     export AWSTATS_HTTPD_ROOT="${HTTPD_SERVERROOT}/awstats"
     export AWSTATS_CGI_DIR="${AWSTATS_HTTPD_ROOT}"
+elif [ X"${DISTRO}" == X"SUSE" ]; then
+    # TODO no awstats in opensuse official repository.
+    export AWSTATS_CONF_SAMPLE="${AWSTATS_CONF_DIR}/awstats.localhost.localdomain.conf"
+    export AWSTATS_HTTPD_ROOT="${HTTPD_SERVERROOT}/awstats"
+    export AWSTATS_CGI_DIR="${AWSTATS_HTTPD_ROOT}"
 elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
     export AWSTATS_CONF_SAMPLE="${AWSTATS_CONF_DIR}/awstats.conf"
     export AWSTATS_HTTPD_ROOT="/usr/share/awstats"

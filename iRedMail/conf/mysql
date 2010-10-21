@@ -45,6 +45,12 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     # RC script.
     export MYSQLD_INIT_SCRIPT="${DIR_RC_SCRIPTS}/mysqld"
 
+elif [ X"${DISTRO}" == X"SUSE" ]; then
+    export MYSQL_MY_CNF='/etc/my.cnf'
+    export MYSQL_SOCKET='/var/run/mysql/mysql.sock'
+    # RC script.
+    export MYSQLD_INIT_SCRIPT="${DIR_RC_SCRIPTS}/mysql"
+
 elif [ X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"DEBIAN" ]; then
     export MYSQL_MY_CNF='/etc/mysql/my.cnf'
     # RC script.

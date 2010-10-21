@@ -252,6 +252,43 @@ EOF
     echo 'export status_create_yum_repo="DONE"' >> ${STATUS_FILE}
 }
 
+create_repo_suse()
+{
+    cat > /etc/zypp/repos.d/iredmail.repo <<EOF
+[apache2-mod_wsgi]
+name=Policyd-v1
+baseurl=http://download.opensuse.org/repositories/Apache:/Modules/Apache_openSUSE_11.3/
+enabled=1
+autorefresh=1
+path=/
+type=rpm-md
+keeppackages=0
+gpgcheck=0
+ 
+[Policyd-v1]
+name=Policyd-v1
+baseurl=http://download.opensuse.org/repositories/server:/mail/openSUSE_11.3/
+enabled=1
+autorefresh=1
+path=/
+type=rpm-md
+keeppackages=0
+gpgcheck=0
+
+[Altermime]
+name=Altermime
+baseurl=http://download.opensuse.org/repositories/openSUSE:/Factory:/Contrib/openSUSE_11.3/
+enabled=1
+autorefresh=1
+path=/
+type=rpm-md
+keeppackages=0
+gpgcheck=0
+
+EOF
+
+}
+
 echo_end_msg()
 {
     cat <<EOF
@@ -279,6 +316,8 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     check_pkg ${BIN_WHICH} ${PKG_WHICH} && \
     check_pkg ${BIN_WGET} ${PKG_WGET} && \
     create_repo_rhel
+elif [ X"${DISTRO}" == X"SUSE" ]; then
+    create_repo_suse
 fi
 
 fetch_misc && \

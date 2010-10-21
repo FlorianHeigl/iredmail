@@ -162,10 +162,7 @@ install_all()
             [ X"${USE_AWSTATS}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} mod_auth_mysql.${ARCH}"
 
         elif [ X"${DISTRO}" == X"SUSE" ]; then
-            # TODO miss apache-mod-auth-mysql
-            # Reference: http://en.opensuse.org/Additional_package_repositories#Apache_modules
-            # For Awstats, postfix-mysql.
-            [ X"${USE_AWSTATS}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} postfix-mysql"
+            [ X"${USE_AWSTATS}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} postfix-mysql apache2-mod_auth_mysql"
 
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
             ALL_PKGS="${ALL_PKGS} postfix-mysql"
@@ -184,10 +181,8 @@ install_all()
         ALL_PKGS="${ALL_PKGS} policyd.${ARCH}"
         ENABLED_SERVICES="${ENABLED_SERVICES} policyd"
     elif [ X"${DISTRO}" == X"SUSE" ]; then
-        # TODO miss policyd
-        #ALL_PKGS="${ALL_PKGS} policyd.${ARCH}"
-        #ENABLED_SERVICES="${ENABLED_SERVICES} policyd"
-        :
+        ALL_PKGS="${ALL_PKGS} policyd"
+        ENABLED_SERVICES="${ENABLED_SERVICES} policyd"
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
         ALL_PKGS="${ALL_PKGS} postfix-policyd"
         ENABLED_SERVICES="${ENABLED_SERVICES} postfix-policyd"
@@ -252,8 +247,7 @@ EOF
         DISABLED_SERVICES="${DISABLED_SERVICES} spamassassin"
 
     elif [ X"${DISTRO}" == X"SUSE" ]; then
-        # TODO miss altermime, per-IO-Compress
-        ALL_PKGS="${ALL_PKGS} amavisd-new clamav clamav-db spamassassin perl-ldap"
+        ALL_PKGS="${ALL_PKGS} amavisd-new clamav clamav-db spamassassin altermime perl-ldap"
         ENABLED_SERVICES="${ENABLED_SERVICES} ${AMAVISD_RC_SCRIPT_NAME} clamd"
         DISABLED_SERVICES="${DISABLED_SERVICES} clamav-milter spamd spampd"
 
@@ -320,9 +314,9 @@ EOF
             [ X"${USE_IREDAPD}" != "YES" ] && ALL_PKGS="${ALL_PKGS} python-ldap.${ARCH}"
 
         elif [ X"${DISTRO}" == X"SUSE" ]; then
-            # TODO miss apache-mod_wsgi, python-webpy
+            # TODO miss python-webpy
             # reference: http://en.opensuse.org/Additional_package_repositories#Apache_modules
-            ALL_PKGS="${ALL_PKGS} python-jinja2 python-ldap python-mysql"
+            ALL_PKGS="${ALL_PKGS} apache2-mod_wsgi python-jinja2 python-ldap python-mysql"
             [ X"${USE_IREDAPD}" != "YES" ] && ALL_PKGS="${ALL_PKGS} python-ldap"
 
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
