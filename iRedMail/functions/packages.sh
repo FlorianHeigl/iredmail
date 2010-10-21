@@ -26,11 +26,17 @@ install_all()
     ENABLED_SERVICES=''
     DISABLED_SERVICES=''
 
-    # Enable syslog.
-    [ X"${DISTRO}" == X"RHEL" ] && ENABLED_SERVICES="syslog ${ENABLED_SERVICES} "
-    [ X"${DISTRO}" == X"DEBIAN" ] && ENABLED_SERVICES="rsyslog ${ENABLED_SERVICES}"
-
-    if [ X"${DISTRO}" == X"UBUNTU" ]; then
+    ###########################
+    # Enable syslog or rsyslog.
+    #
+    if [ X"${DISTRO}" == X"RHEL" -o X"${DISTRO}" == X"SUSE" ]; then
+        # RHEL/CENTOS, SUSE
+        ENABLED_SERVICES="syslog ${ENABLED_SERVICES}"
+    elif [ X"${DISTRO}" == X"DEBIAN" ]; then
+        # Debian.
+        ENABLED_SERVICES="rsyslog ${ENABLED_SERVICES}"
+    elif [ X"${DISTRO}" == X"UBUNTU" ]; then
+        # Ubuntu.
         if [ X"${DISTRO_CODENAME}" == X"karmic" -o X"${DISTRO_CODENAME}" == X"lucid" ]; then
             # Ubuntu 9.10, 10.04.
             ENABLED_SERVICES="rsyslog ${ENABLED_SERVICES}"
@@ -38,13 +44,19 @@ install_all()
             ENABLED_SERVICES="sysklogd ${ENABLED_SERVICES}"
         fi
     fi
+    #### End syslog ####
 
+    #################
     # Apache and PHP.
+    #
     if [ X"${USE_EXIST_AMP}" != X"YES" ]; then
-        # Apache & PHP.
         if [ X"${DISTRO}" == X"RHEL" ]; then
             ALL_PKGS="${ALL_PKGS} httpd.${ARCH} mod_ssl.${ARCH} php.${ARCH} php-common.${ARCH} php-imap.${ARCH} php-gd.${ARCH} php-mbstring.${ARCH} libmcrypt.${ARCH} php-mcrypt.${ARCH} php-xml.${ARCH} php-mysql.${ARCH} php-ldap.${ARCH} php-mhash.${ARCH}"
             ENABLED_SERVICES="${ENABLED_SERVICES} httpd"
+
+        elif [ X"${DISTRO}" == X"SUSE" ]; then
+            ALL_PKGS="${ALL_PKGS} apache2-prefork apache2-mod_php5 php5-iconv php5-ldap php5-mysql php5-mcrypt php5-mbstring php5-hash"
+            ENABLED_SERVICES="${ENABLED_SERVICES} apache2"
 
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
             ALL_PKGS="${ALL_PKGS} apache2 apache2-mpm-prefork apache2.2-common libapache2-mod-php5 libapache2-mod-auth-mysql php5-cli php5-imap php5-gd php5-mcrypt php5-mysql php5-ldap php5-mhash"
@@ -55,10 +67,16 @@ install_all()
     else
         :
     fi
+    #### End Apache & PHP ####
 
+    ###############
     # Postfix.
+    #
     if [ X"${DISTRO}" == X"RHEL" ]; then
         ALL_PKGS="${ALL_PKGS} postfix.${ARCH}"
+    elif [ X"${DISTRO}" == X"SUSE" ]; then
+        # On OpenSuSE, postfix already has ldap_table support.
+        ALL_PKGS="${ALL_PKGS} postfix"
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
         ALL_PKGS="${ALL_PKGS} postfix postfix-pcre"
     else
@@ -66,11 +84,17 @@ install_all()
     fi
 
     ENABLED_SERVICES="${ENABLED_SERVICES} postfix"
+    #### End Postfix ####
 
+    #############
     # Awstats.
+    #
     if [ X"${USE_AWSTATS}" == X"YES" ]; then
         if [ X"${DISTRO}" == X"RHEL" ]; then
             ALL_PKGS="${ALL_PKGS} awstats.noarch"
+        elif [ X"${DISTRO}" == X"SUSE" ]; then
+            # No awstats in official repo.
+            :
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
             ALL_PKGS="${ALL_PKGS} awstats"
         else
@@ -79,12 +103,19 @@ install_all()
     else
         :
     fi
+    #### End Awstats ####
 
-    # Note: mysql server is required, used to store extra data,
+    ################
+    # MySQL server.
+    #
+    # Note: mysql server is always required, used to store extra data,
     #       such as policyd, roundcube webmail data.
     if [ X"${DISTRO}" == X"RHEL" ]; then
         ALL_PKGS="${ALL_PKGS} mysql-server.${ARCH} mysql.${ARCH}"
         ENABLED_SERVICES="${ENABLED_SERVICES} mysqld"
+    elif [ X"${DISTRO}" == X"SUSE" ]; then
+        ALL_PKGS="${ALL_PKGS} mysql-community-server mysql-community-server-client"
+        ENABLED_SERVICES="${ENABLED_SERVICES} mysql"
     elif [ X"${DISTRO}" == X"DEBIAN" ]; then
         ALL_PKGS="${ALL_PKGS} mysql-server-5.0 mysql-client-5.0"
         ENABLED_SERVICES="${ENABLED_SERVICES} mysql"
@@ -103,12 +134,19 @@ install_all()
     else
         :
     fi
+    #### End MySQL server ####
     
-    # Backend: OpenLDAP or MySQL.
+    #################################################
+    # Backend: OpenLDAP or MySQL, and extra packages.
+    #
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
         # OpenLDAP server & client.
         if [ X"${DISTRO}" == X"RHEL" ]; then
             ALL_PKGS="${ALL_PKGS} openldap.${ARCH} openldap-clients.${ARCH} openldap-servers.${ARCH}"
+            ENABLED_SERVICES="${ENABLED_SERVICES} ldap"
+
+        elif [ X"${DISTRO}" == X"SUSE" ]; then
+            ALL_PKGS="${ALL_PKGS} openldap2 openldap2-client"
             ENABLED_SERVICES="${ENABLED_SERVICES} ldap"
 
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
@@ -122,6 +160,12 @@ install_all()
         if [ X"${DISTRO}" == X"RHEL" ]; then
             # For Awstats.
             [ X"${USE_AWSTATS}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} mod_auth_mysql.${ARCH}"
+
+        elif [ X"${DISTRO}" == X"SUSE" ]; then
+            # TODO miss apache-mod-auth-mysql
+            # Reference: http://en.opensuse.org/Additional_package_repositories#Apache_modules
+            # For Awstats, postfix-mysql.
+            [ X"${USE_AWSTATS}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} postfix-mysql"
 
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
             ALL_PKGS="${ALL_PKGS} postfix-mysql"
@@ -139,6 +183,11 @@ install_all()
     if [ X"${DISTRO}" == X"RHEL" ]; then
         ALL_PKGS="${ALL_PKGS} policyd.${ARCH}"
         ENABLED_SERVICES="${ENABLED_SERVICES} policyd"
+    elif [ X"${DISTRO}" == X"SUSE" ]; then
+        # TODO miss policyd
+        #ALL_PKGS="${ALL_PKGS} policyd.${ARCH}"
+        #ENABLED_SERVICES="${ENABLED_SERVICES} policyd"
+        :
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
         ALL_PKGS="${ALL_PKGS} postfix-policyd"
         ENABLED_SERVICES="${ENABLED_SERVICES} postfix-policyd"
@@ -177,6 +226,9 @@ EOF
             # is not necessary, should be disabled.
             DISABLED_SERVICES="${DISABLED_SERVICES} saslauthd"
 
+        elif [ X"${DISTRO}" == X"SUSE" ]; then
+            ALL_PKGS="${ALL_PKGS} dovecot12"
+
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
             ALL_PKGS="${ALL_PKGS} dovecot-imapd dovecot-pop3d"
         else
@@ -185,8 +237,12 @@ EOF
 
         ENABLED_SERVICES="${ENABLED_SERVICES} dovecot"
     else
-        ALL_PKGS="procmail.${ARCH}"
-        [ X"${DISTRO}" == X"RHEL" ] && ENABLED_SERVICES="${ENABLED_SERVICES} saslauthd"
+        if [ X"${DISTRO}" == X"RHEL" ]; then
+            ALL_PKGS="procmail.${ARCH}"
+            ENABLED_SERVICES="${ENABLED_SERVICES} saslauthd"
+        elif [ X"${DISTRO}" == X"SUSE" ]; then
+            ALL_PKGS="procmail"
+        fi
     fi
 
     # Amavisd-new & ClamAV & Altermime.
@@ -194,6 +250,13 @@ EOF
         ALL_PKGS="${ALL_PKGS} amavisd-new.${ARCH} clamd.${ARCH} clamav.${ARCH} clamav-db.${ARCH} spamassassin.${ARCH} altermime.${ARCH} perl-LDAP.noarch perl-IO-Compress.noarch"
         ENABLED_SERVICES="${ENABLED_SERVICES} ${AMAVISD_RC_SCRIPT_NAME} clamd"
         DISABLED_SERVICES="${DISABLED_SERVICES} spamassassin"
+
+    elif [ X"${DISTRO}" == X"SUSE" ]; then
+        # TODO miss altermime, per-IO-Compress
+        ALL_PKGS="${ALL_PKGS} amavisd-new clamav clamav-db spamassassin perl-ldap"
+        ENABLED_SERVICES="${ENABLED_SERVICES} ${AMAVISD_RC_SCRIPT_NAME} clamd"
+        DISABLED_SERVICES="${DISABLED_SERVICES} clamav-milter spamd spampd"
+
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
         ALL_PKGS="${ALL_PKGS} amavisd-new libcrypt-openssl-rsa-perl libmail-dkim-perl clamav-freshclam clamav-daemon spamassassin altermime"
         ENABLED_SERVICES="${ENABLED_SERVICES} ${AMAVISD_RC_SCRIPT_NAME} clamav-daemon clamav-freshclam"
@@ -207,6 +270,10 @@ EOF
         if [ X"${DISTRO}" == X"RHEL" ]; then
             # SPF implemention via perl-Mail-SPF.
             ALL_PKGS="${ALL_PKGS} perl-Mail-SPF.noarch perl-Mail-SPF-Query.noarch"
+
+        elif [ X"${DISTRO}" == X"SUSE" ]; then
+            # SPF implemention via perl-Mail-SPF.
+            ALL_PKGS="${ALL_PKGS} perl-Mail-SPF"
 
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
             ALL_PKGS="${ALL_PKGS} libmail-spf-perl"
@@ -229,44 +296,62 @@ EOF
     #    :
     #fi
 
+    ############
     # iRedAPD.
+    #
     if [ X"${USE_IREDAPD}" == X"YES" ]; then
         [ X"${DISTRO}" == X"RHEL" ] && ALL_PKGS="${ALL_PKGS} python-ldap.${ARCH}"
+        [ X"${DISTRO}" == X"SuSE" ] && ALL_PKGS="${ALL_PKGS} python-ldap"
         [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ] && ALL_PKGS="${ALL_PKGS} python-ldap"
         # Don't append 'iredapd' to ${ENABLED_SERVICES} since we don't have
-        # RC script ready.
+        # RC script ready in early stage.
         #ENABLED_SERVICES="${ENABLED_SERVICES} iredapd"
     else
         :
     fi
+    #### End iRedAPD ####
 
+    #############
     # iRedAdmin.
+    #
     if [ X"${USE_IREDADMIN}" == X"YES" ]; then
         if [ X"${DISTRO}" == X"RHEL" ]; then
             ALL_PKGS="${ALL_PKGS} python-jinja2.${ARCH} python-webpy.noarch python-ldap.${ARCH} MySQL-python.${ARCH} mod_wsgi.${ARCH}"
             [ X"${USE_IREDAPD}" != "YES" ] && ALL_PKGS="${ALL_PKGS} python-ldap.${ARCH}"
-        fi
 
-        if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+        elif [ X"${DISTRO}" == X"SUSE" ]; then
+            # TODO miss apache-mod_wsgi, python-webpy
+            # reference: http://en.opensuse.org/Additional_package_repositories#Apache_modules
+            ALL_PKGS="${ALL_PKGS} python-jinja2 python-ldap python-mysql"
+            [ X"${USE_IREDAPD}" != "YES" ] && ALL_PKGS="${ALL_PKGS} python-ldap"
+
+        elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
             ALL_PKGS="${ALL_PKGS} libapache2-mod-wsgi python-mysqldb python-ldap python-jinja2 python-netifaces python-webpy"
             [ X"${USE_IREDAPD}" != "YES" ] && ALL_PKGS="${ALL_PKGS} python-ldap"
         fi
     else
         :
     fi
+    #### End iRedAdmin ####
 
-    # Misc.
+    ############################
+    # Misc packages & services.
+    #
     if [ X"${DISTRO}" == X"RHEL" ]; then
         ALL_PKGS="${ALL_PKGS} bzip2.${ARCH} acl.${ARCH} patch.${ARCH} vixie-cron.${ARCH} tmpwatch.${ARCH} crontabs.noarch dos2unix.${ARCH}"
         ENABLED_SERVICES="${ENABLED_SERVICES} crond"
+    elif [ X"${DISTRO}" == X"SUSE" ]; then
+        ALL_PKGS="${ALL_PKGS} bzip2 acl patch cron tmpwatch dos2unix"
+        ENABLED_SERVICES="${ENABLED_SERVICES} cron"
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
         ALL_PKGS="${ALL_PKGS} bzip2 acl patch cron tofrodos"
         ENABLED_SERVICES="${ENABLED_SERVICES} cron"
     else
         :
     fi
+    #### End Misc packages & services ####
 
-    # Disable Ubuntu firewall rules, we have own iptables init script and rule file.
+    # Disable Ubuntu firewall rules, we have iptables init script and rule file.
     [ X"${DISTRO}" == X"UBUNTU" ] && export DISABLED_SERVICES="${DISABLED_SERVICES} ufw"
 
     #
