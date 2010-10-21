@@ -57,7 +57,7 @@ policyd_config()
 
     # Get SQL structure template file.
     tmp_sql="/tmp/policyd_config_tmp.${RANDOM}${RANDOM}"
-    if [ X"${DISTRO}" == X"RHEL" ]; then
+    if [ X"${DISTRO}" == X"RHEL" -o X"${DISTRO}" == X"SUSE" ]; then
         cat > ${tmp_sql} <<EOF
 # Import SQL structure template.
 SOURCE $(eval ${LIST_FILES_IN_PKG} ${PKG_POLICYD} | grep '/DATABASE.mysql$');

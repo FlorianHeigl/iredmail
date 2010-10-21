@@ -183,8 +183,9 @@ EOF
 awstats_config_weblog()
 {
     ECHO_DEBUG "Config awstats to analyze apache web access log: ${AWSTATS_CONF_WEB}."
-    cd ${AWSTATS_CONF_DIR} && \
-    cp -f ${AWSTATS_CONF_SAMPLE} ${AWSTATS_CONF_WEB}
+    if [ X"${DISTRO}" != X"SUSE" ]; then
+        cd ${AWSTATS_CONF_DIR} && cp -f ${AWSTATS_CONF_SAMPLE} ${AWSTATS_CONF_WEB}
+    fi
 
     perl -pi -e 's#^(SiteDomain=)(.*)#${1}"$ENV{'HOSTNAME'}"#' ${AWSTATS_CONF_WEB}
     perl -pi -e 's#^(LogFile=)(.*)#${1}"$ENV{'HTTPD_LOG_ACCESSLOG'}"#' ${AWSTATS_CONF_WEB}

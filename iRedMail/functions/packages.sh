@@ -247,7 +247,7 @@ EOF
         DISABLED_SERVICES="${DISABLED_SERVICES} spamassassin"
 
     elif [ X"${DISTRO}" == X"SUSE" ]; then
-        ALL_PKGS="${ALL_PKGS} amavisd-new clamav clamav-db spamassassin altermime perl-ldap"
+        ALL_PKGS="${ALL_PKGS} amavisd-new clamav clamav-db spamassassin altermime perl-ldap perl-DBD-mysql"
         ENABLED_SERVICES="${ENABLED_SERVICES} ${AMAVISD_RC_SCRIPT_NAME} clamd"
         DISABLED_SERVICES="${DISABLED_SERVICES} clamav-milter spamd spampd"
 

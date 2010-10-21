@@ -85,11 +85,11 @@ EOF
         [ X"${BACKEND}" == X"MySQL" ] && a2enmod auth_mysql > /dev/null
 
     elif [ X"${DISTRO}" == X"SUSE" ]; then
-        a2enmod wsgi &>/dev/null
-        a2enmod deflate &>/dev/null
+        a2enmod wsgi
+        a2enmod deflate
 
         # Enable SSL.
-        a2enmod ssl &>/dev/null
+        a2enmod ssl
         perl -pi -e 's/#(Listen 443)/${1}/' ${HTTPD_CONF_ROOT}/listen.conf
 
         [ X"${BACKEND}" == X"OpenLDAP" ] && a2enmod authnz_ldap &>/dev/null
