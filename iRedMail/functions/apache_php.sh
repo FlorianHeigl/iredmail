@@ -63,6 +63,10 @@ EOF
     if [ X"${DISTRO}" == X"RHEL" -o X"${DISTRO}" == X"FREEBSD" ]; then
         perl -pi -e 's#^(SSLCertificateFile)(.*)#${1} $ENV{SSL_CERT_FILE}#' ${HTTPD_SSL_CONF}
         perl -pi -e 's#^(SSLCertificateKeyFile)(.*)#${1} $ENV{SSL_KEY_FILE}#' ${HTTPD_SSL_CONF}
+    elif [ X"${DISTRO}" == X"SUSE" ]; then
+        cp -f ${HTTPD_SSL_CONF_SAMPLE} ${HTTPD_SSL_CONF}
+        perl -pi -e 's#^([ \t]+SSLCertificateFile)(.*)#${1} $ENV{SSL_CERT_FILE}#' ${HTTPD_SSL_CONF}
+        perl -pi -e 's#^([ \t]+SSLCertificateKeyFile)(.*)#${1} $ENV{SSL_KEY_FILE}#' ${HTTPD_SSL_CONF}
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
         perl -pi -e 's#^([ \t]+SSLCertificateFile)(.*)#${1} $ENV{SSL_CERT_FILE}#' ${HTTPD_SSL_CONF}
         perl -pi -e 's#^([ \t]+SSLCertificateKeyFile)(.*)#${1} $ENV{SSL_KEY_FILE}#' ${HTTPD_SSL_CONF}
@@ -73,12 +77,23 @@ EOF
     # Enable ssl, ldap, mysql module on Debian/Ubuntu.
     if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
         a2ensite default-ssl >/dev/null
+
         a2enmod ssl >/dev/null
+        a2enmod deflate >/dev/null 2>&1
+
         [ X"${BACKEND}" == X"OpenLDAP" ] && a2enmod authnz_ldap > /dev/null
         [ X"${BACKEND}" == X"MySQL" ] && a2enmod auth_mysql > /dev/null
 
-        # Enable mod_deflate to compress web content.
-        a2enmod deflate >/dev/null 2>&1
+    elif [ X"${DISTRO}" == X"SUSE" ]; then
+        a2enmod wsgi &>/dev/null
+        a2enmod deflate &>/dev/null
+
+        # Enable SSL.
+        a2enmod ssl &>/dev/null
+        perl -pi -e 's/#(Listen 443)/${1}/' ${HTTPD_CONF_ROOT}/listen.conf
+
+        [ X"${BACKEND}" == X"OpenLDAP" ] && a2enmod authnz_ldap &>/dev/null
+        [ X"${BACKEND}" == X"MySQL" ] && a2enmod auth_mysql &>/dev/null
     else
         :
     fi

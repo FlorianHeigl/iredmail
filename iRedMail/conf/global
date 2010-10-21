@@ -249,6 +249,49 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     export PKG_DIALOG="dialog.${ARCH}"
     export PKG_BZIP2="bzip2.${ARCH}"
 
+elif [ X"${DISTRO}" == X"SUSE" ]; then
+    # OpenSuSE.
+    # System user: root. Note: not all OSes have group 'root'.
+    export SYS_ROOT_USER='root'
+    export SYS_ROOT_GROUP='root'
+
+    # Package management.
+    export install_pkg='install_pkg_suse'
+    export remove_pkg="remove_pkg_suse"
+    export LIST_ALL_PKGS='rpm -qa'
+    export LIST_FILES_IN_PKG='rpm -ql'
+
+    # Service control.
+    export enable_service='enable_service_rh'
+    export disable_service='disable_service_rh'
+
+    # Syslog config file: syslog.
+    export SYSLOG_CONF='/etc/rsyslog.conf'
+    #export SYSLOG_POSTROTATE_CMD='/bin/kill -HUP $(cat /var/run/syslogd.pid 2> /dev/null) 2> /dev/null || true'
+    export SYSLOG_POSTROTATE_CMD=''
+
+    # Crontab related.
+    export CRON_SPOOL_DIR="/var/spool/cron"
+
+    # Directory /etc/sysconfig/ on RHEL/CentOS.
+    export ETC_SYSCONFIG_DIR='/etc/sysconfig'
+
+    # Iptables rule file.
+    export IPTABLES_CONFIG="${ETC_SYSCONFIG_DIR}/iptables"
+
+    # Directory used to store SSL/TLS key/cert file.
+    export SSL_FILE_DIR="/etc/ssl"
+
+    # Yum repository related.
+    export YUM_REPOS_DIR='/etc/zypp/repos.d'
+    export LOCAL_REPO_NAME="${PROG_NAME}"
+    export LOCAL_REPO_FILE="${YUM_REPOS_DIR}/${LOCAL_REPO_NAME}.repo"
+    export YUM_UPDATE_REPO='http://iredmail.org/yum/rpms/5/'
+
+    # Override default value.
+    export PKG_DIALOG="dialog"
+    export PKG_BZIP2="bzip2"
+
 elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     # Ubuntu & Debian.
     export DEBIAN_FRONTEND='noninteractive'
@@ -302,13 +345,6 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
 
     # Directory used to store SSL/TLS key/cert file.
     export SSL_FILE_DIR="/etc/ssl"
-
-elif [ X"${DISTRO}" == X"SUSE" ]; then
-    # Package management.
-    export install_pkg='install_pkg_suse'
-    export remove_pkg='removel_pkg_suse'
-    export LIST_ALL_PKGS='rpm -qa'
-    export LIST_FILES_IN_PKG='rpm -ql'
 
 elif [ X"${DISTRO}" == X"FREEBSD" ]; then
     # System user: root.

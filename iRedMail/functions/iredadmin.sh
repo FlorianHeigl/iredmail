@@ -27,9 +27,12 @@ iredadmin_config()
 
     # Create a low privilege user as httpd daemon user.
     if [ X"${KERNEL_NAME}" == X"FreeBSD" ]; then
-        pw useradd -s /sbin/nologin -d /home/iredadmin -m -n ${IREDADMIN_HTTPD_USER}
+        pw useradd -m -d ${IREDADMIN_HOME_DIR} -s /sbin/nologin -n ${IREDADMIN_HTTPD_USER}
+    elif [ X"${DISTRO}" == X"SUSE" ]; then
+        groupadd ${IREDADMIN_HTTPD_GROUP}
+        useradd -m -d ${IREDADMIN_HOME_DIR} -s /sbin/nologin -g ${IREDADMIN_HTTPD_GROUP} ${IREDADMIN_HTTPD_USER} 2>/dev/null
     else
-        useradd -s /sbin/nologin -m -d /home/iredadmin ${IREDADMIN_HTTPD_GROUP}
+        useradd -m -d ${IREDADMIN_HOME_DIR} -s /sbin/nologin ${IREDADMIN_HTTPD_GROUP}
     fi
 
     if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then

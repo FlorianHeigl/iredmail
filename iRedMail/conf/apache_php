@@ -51,9 +51,11 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
 elif [ X"${DISTRO}" == X"SUSE" ]; then
     # Apache configuration files.
     export HTTPD_CONF_ROOT="/etc/apache2"
-    export HTTPD_CONF="${HTTPD_CONF_ROOT}/httpd.conf"
+    export HTTPD_CONF="${HTTPD_CONF_ROOT}/default-server.conf"
     export HTTPD_CONF_DIR="${HTTPD_CONF_ROOT}/conf.d"
-    export HTTPD_SSL_CONF="${HTTPD_CONF_ROOT}/ssl-global.conf"
+    export HTTPD_SSL_CONF_SAMPLE="${HTTPD_CONF_ROOT}/vhosts.d/vhost-ssl.template"
+    # Copy ${HTTPD_SSL_CONF_SAMPLE} as ${HTTPD_SSL_CONF}.
+    export HTTPD_SSL_CONF="${HTTPD_CONF_ROOT}/vhosts.d/vhost-ssl.conf"
 
     # Web data.
     export HTTPD_SERVERROOT='/srv/www'

@@ -31,15 +31,16 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     export FRESHCLAM_CONF='/etc/freshclam.conf'
     export FRESHCLAM_INIT_FILE_SAMPLE="${SAMPLE_DIR}/freshclam.init"
 
+elif [ X"${DISTRO}" == X"SUSE" ]; then
+    export CLAMD_CONF='/etc/clamd.conf'
+    export FRESHCLAM_CONF='/etc/freshclam.conf'
+
 elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     export CLAMD_CONF='/etc/clamav/clamd.conf'
-
-    # Freshclam.
     export FRESHCLAM_CONF='/etc/clamav/freshclam.conf'
+
 elif [ X"${DISTRO}" == X"FREEBSD" ]; then
     export CLAMD_CONF='/usr/local/etc/clamd.conf'
-
-    # Freshclam.
     export FRESHCLAM_CONF='/usr/local/etc/freshclam.conf'
 else
     :
