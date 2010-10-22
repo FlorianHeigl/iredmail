@@ -195,7 +195,7 @@ awstats_config_weblog()
 
     # On RHEL/CentOS/Debian, ${AWSTATS_CONF_SAMPLE} is default config file. Overrided here.
     backup_file ${AWSTATS_CONF_SAMPLE}
-    cp -f ${AWSTATS_CONF_WEB} ${AWSTATS_CONF_SAMPLE}
+    [ X"${DISTRO}" != X"SUSE" ] && cp -f ${AWSTATS_CONF_WEB} ${AWSTATS_CONF_SAMPLE}
 
     echo 'export status_awstats_config_weblog="DONE"' >> ${STATUS_FILE}
 }

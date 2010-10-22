@@ -56,11 +56,23 @@ EOF
     perl -pi -e 's#^(ServerTokens).*#${1} ProductOnly#' ${HTTPD_CONF}
     perl -pi -e 's#^(ServerSignature).*#${1} EMail#' ${HTTPD_CONF}
 
-    # OpenSuSE: Define them in /etc/sysconfig/apache2
-    [ X"${DISTRO}" == X"SUSE" ] && \
-        perl -pi -e 's#^(APACHE_SERVERTOKENS=).*#${1}"ProductOnly"#' ${ETC_SYSCONFIG_DIR}/apache2 && \
+    # OpenSuSE:
+    #   - Define some settings in /etc/sysconfig/apache2
+    #   - Allow 'FollowSymLinks' in <Directory />.
+    if [ X"${DISTRO}" == X"SUSE" ]; then
+        perl -pi -e 's#^(APACHE_SERVERTOKENS=).*#${1}"ProductOnly"#' ${ETC_SYSCONFIG_DIR}/apache2
         perl -pi -e 's#^(APACHE_SERVERSIGNATURE=).*#${1}"email"#' ${ETC_SYSCONFIG_DIR}/apache2
 
+        # LogLevel
+        perl -pi -e 's#^(APACHE_LOGLEVEL=).*#${1}"info"#' ${ETC_SYSCONFIG_DIR}/apache2
+
+        perl -pi -e 's#(.*Options).*#${1} FollowSymLinks#' ${HTTPD_CONF_ROOT}/httpd.conf
+        sed -i -e '/AllowOverride/,/AccessFileName/s#Deny from all#Allow from all#' ${HTTPD_CONF_ROOT}/httpd.conf
+    fi
+
+    ############
+    # SSL
+    #
     # Set correct SSL Cert/Key file location.
     if [ X"${DISTRO}" == X"RHEL" -o X"${DISTRO}" == X"FREEBSD" ]; then
         perl -pi -e 's#^(SSLCertificateFile)(.*)#${1} $ENV{SSL_CERT_FILE}#' ${HTTPD_SSL_CONF}
@@ -76,6 +88,9 @@ EOF
         :
     fi
 
+    #####################
+    # LoadModule
+    #
     # Enable ssl, ldap, mysql module on Debian/Ubuntu.
     if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
         a2ensite default-ssl >/dev/null
@@ -139,7 +154,8 @@ EOF
         perl -pi -e 's#^;(date.timezone).*#${1} = UTC#' ${PHP_INI}
     fi
 
-    [ X"${DISTRO}" == X"SUSE" ] && perl -pi -e 's#^;(date.timezone).*#${1} = UTC#' ${PHP_INI}
+    [ X"${DISTRO}" == X"SUSE" ] && \
+        perl -pi -e 's#^;(date.timezone).*#${1} = UTC#' ${PHP_INI}
 
     #ECHO_DEBUG "Setting error_reporting to 'E_ERROR': ${PHP_INI}."
     #perl -pi -e 's#^(error_reporting.*=)#${1} E_ERROR;#' ${PHP_INI}

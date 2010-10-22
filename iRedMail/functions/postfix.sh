@@ -43,14 +43,32 @@ pickup    fifo  n       -       n       60      1       pickup
   -o content_filter=
 EOF
 
+    if [ X"${DISTRO}" == X"SUSE" ]; then
+        # Remove duplicate relay_domains on SuSE.
+        perl -pi -e 's/^(relay_domains.*)/#${1}/' ${POSTFIX_FILE_MAIN_CF}
+
+        # Uncomment tlsmgr to avoid postfix warning message:
+        # 'warning: connect to private/tlsmgr: No such file or directory'
+        perl -pi -e 's/^#(tlsmgr.*)/${1}/' ${POSTFIX_FILE_MASTER_CF}
+
+        # Set postfix:myhostname in /etc/sysconfig/postfix.
+        perl -pi -e 's#^(POSTFIX_MYHOSTNAME=).*#${1}"$ENV{'HOSTNAME'}"#' ${ETC_SYSCONFIG_DIR}/postfix
+        # postfix:inet_protocols
+        perl -pi -e 's#^(POSTFIX_INET_PROTO=).*#${1}"ipv4"#' ${ETC_SYSCONFIG_DIR}/postfix
+        #postfix:message_size_limit
+        perl -pi -e 's#^(POSTFIX_ADD_MESSAGE_SIZE_LIMIT=).*#${1}"$ENV{'MESSAGE_SIZE_LIMIT'}"#' ${ETC_SYSCONFIG_DIR}/postfix
+
+        # Append two lines in /etc/services to avoid below error:
+        # '0.0.0.0:smtps: Servname not supported for ai_socktype'
+        echo 'smtps            465/udp    # smtp over ssl' >> /etc/services
+        echo 'smtps            465/tcp    # smtp over ssl' >> /etc/services
+    fi
+
     ECHO_DEBUG "Copy: /etc/{hosts,resolv.conf,localtime,services} -> ${POSTFIX_CHROOT_DIR}/etc/"
     mkdir -p ${POSTFIX_CHROOT_DIR}/etc/ 2>/dev/null
     for i in /etc/hosts /etc/resolv.conf /etc/localtime /etc/services; do
         [ -f $i ] && cp ${i} ${POSTFIX_CHROOT_DIR}/etc/
     done
-
-    # Remove duplicate relay_domains on SuSE.
-    [ X"${DISTRO}" == X"SUSE" ] && perl -pi -e 's/^(relay_domains.*)/#${1}/' ${POSTFIX_FILE_MAIN_CF}
 
     # Normally, myhostname is the same as myorigin.
     postconf -e myhostname="${HOSTNAME}"
@@ -66,8 +84,6 @@ EOF
     fi
 
     postconf -e inet_protocols="ipv4"
-    [ X"${DISTRO}" == X"SUSE" ] && perl -pi -e 's#^(POSTFIX_INET_PROTO=).*#${1}"ipv4"#' ${ETC_SYSCONFIG_DIR}/postfix
-
     postconf -e mydestination="\$myhostname, localhost, localhost.localdomain, localhost.\$myhostname"
     postconf -e mail_name="${PROG_NAME}"
     postconf -e mail_version="${PROG_VERSION}"
@@ -131,8 +147,7 @@ EOF
     newaliases >/dev/null 2>&1
 
     # Set message_size_limit.
-    postconf -e mailbox_size_limit="${MESSAGE_SIZE_LIMIT}"
-
+    postconf -e message_size_limit="${MESSAGE_SIZE_LIMIT}"
     # Virtual support.
     postconf -e virtual_minimum_uid="${VMAIL_USER_UID}"
     postconf -e virtual_uid_maps="static:${VMAIL_USER_UID}"
@@ -709,16 +724,17 @@ postfix_config_tls()
     postconf -e smtpd_tls_loglevel='0'
     postconf -e smtpd_tls_key_file="${SSL_KEY_FILE}"
     postconf -e smtpd_tls_cert_file="${SSL_CERT_FILE}"
-    [ X"${DISTRO}" == X"SUSE" ] && \
-        perl -pi -e 's#^(POSTFIX_SMTP_TLS_SERVER=).*#${1}"yes"#' ${ETC_SYSCONFIG_DIR}/postfix && \
-        perl -pi -e 's#^(POSTFIX_SSL_PATH=).*#${1}""#' ${ETC_SYSCONFIG_DIR}/postfix && \
-        perl -pi -e 's#^(POSTFIX_TLS_CAFILE=).*#${1}""#' ${ETC_SYSCONFIG_DIR}/postfix && \
-        perl -pi -e 's#^(POSTFIX_TLS_CERTFILE=).*#${1}"$ENV{'SSL_CERT_FILE'}"#' ${ETC_SYSCONFIG_DIR}/postfix && \
-        perl -pi -e 's#^(POSTFIX_TLS_KEYFILE=).*#${1}"$ENV{'SSL_KEY_FILE'}"#' ${ETC_SYSCONFIG_DIR}/postfix
-
     #postconf -e #smtpd_tls_CAfile = 
     postconf -e tls_random_source='dev:/dev/urandom'
     postconf -e tls_daemon_random_source='dev:/dev/urandom'
+
+    if [ X"${DISTRO}" == X"SUSE" ]; then
+        perl -pi -e 's#^(POSTFIX_SMTP_TLS_SERVER=).*#${1}"yes"#' ${ETC_SYSCONFIG_DIR}/postfix
+        perl -pi -e 's#^(POSTFIX_SSL_PATH=).*#${1}""#' ${ETC_SYSCONFIG_DIR}/postfix
+        perl -pi -e 's#^(POSTFIX_TLS_CAFILE=).*#${1}""#' ${ETC_SYSCONFIG_DIR}/postfix
+        perl -pi -e 's#^(POSTFIX_TLS_CERTFILE=).*#${1}"$ENV{'SSL_CERT_FILE'}"#' ${ETC_SYSCONFIG_DIR}/postfix
+        perl -pi -e 's#^(POSTFIX_TLS_KEYFILE=).*#${1}"$ENV{'SSL_KEY_FILE'}"#' ${ETC_SYSCONFIG_DIR}/postfix
+    fi
 
     cat >> ${POSTFIX_FILE_MASTER_CF} <<EOF
 submission inet n       -       n       -       -       smtpd

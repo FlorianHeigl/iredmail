@@ -490,9 +490,9 @@ EOF
     postconf -e dovecot_destination_recipient_limit='1'
 
     postconf -e smtpd_sasl_type='dovecot'
-    # if postfix does *NOT* runs under in chroot env, smtpd_sasl_path
-    # should be '/var/spool/postfix/dovecot-auth'.
-    postconf -e smtpd_sasl_path='dovecot-auth'
+    # It's '/var/spool/postfix/dovecot-auth'.
+    # Prepend './' to make postfix recognize it as socket path.
+    postconf -e smtpd_sasl_path='./dovecot-auth'
 
     ECHO_DEBUG "Create directory for Dovecot plugin: Expire."
     dovecot_expire_dict_dir="$(dirname ${DOVECOT_EXPIRE_DICT_BDB})"

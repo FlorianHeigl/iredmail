@@ -29,12 +29,9 @@ install_all()
     ###########################
     # Enable syslog or rsyslog.
     #
-    if [ X"${DISTRO}" == X"RHEL" ]; then
-        # RHEL/CENTOS
+    if [ X"${DISTRO}" == X"RHEL" -o X"${DISTRO}" == X"SUSE" ]; then
+        # RHEL/CENTOS, SuSE
         ENABLED_SERVICES="syslog ${ENABLED_SERVICES}"
-    elif [ X"${DISTRO}" == X"SUSE" ]; then
-        # RHEL/CENTOS
-        ENABLED_SERVICES="cron syslog ${ENABLED_SERVICES}"
     elif [ X"${DISTRO}" == X"DEBIAN" ]; then
         # Debian.
         ENABLED_SERVICES="rsyslog ${ENABLED_SERVICES}"
@@ -250,7 +247,7 @@ EOF
 
     elif [ X"${DISTRO}" == X"SUSE" ]; then
         ALL_PKGS="${ALL_PKGS} amavisd-new clamav clamav-db spamassassin altermime perl-ldap perl-DBD-mysql"
-        ENABLED_SERVICES="${ENABLED_SERVICES} ${AMAVISD_RC_SCRIPT_NAME} clamd"
+        ENABLED_SERVICES="${ENABLED_SERVICES} ${AMAVISD_RC_SCRIPT_NAME} clamd freshclam"
         DISABLED_SERVICES="${DISABLED_SERVICES} clamav-milter spamd spampd"
 
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
