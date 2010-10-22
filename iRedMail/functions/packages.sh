@@ -29,9 +29,12 @@ install_all()
     ###########################
     # Enable syslog or rsyslog.
     #
-    if [ X"${DISTRO}" == X"RHEL" -o X"${DISTRO}" == X"SUSE" ]; then
-        # RHEL/CENTOS, SUSE
+    if [ X"${DISTRO}" == X"RHEL" ]; then
+        # RHEL/CENTOS
         ENABLED_SERVICES="syslog ${ENABLED_SERVICES}"
+    elif [ X"${DISTRO}" == X"SUSE" ]; then
+        # RHEL/CENTOS
+        ENABLED_SERVICES="cron syslog ${ENABLED_SERVICES}"
     elif [ X"${DISTRO}" == X"DEBIAN" ]; then
         # Debian.
         ENABLED_SERVICES="rsyslog ${ENABLED_SERVICES}"

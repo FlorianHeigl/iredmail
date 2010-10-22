@@ -65,12 +65,14 @@ EOF
         postconf -e mydomain="${HOSTNAME}"
     fi
 
+    postconf -e inet_protocols="ipv4"
+    [ X"${DISTRO}" == X"SUSE" ] && perl -pi -e 's#^(POSTFIX_INET_PROTO=).*#${1}"ipv4"#' ${ETC_SYSCONFIG_DIR}/postfix
+
     postconf -e mydestination="\$myhostname, localhost, localhost.localdomain, localhost.\$myhostname"
     postconf -e mail_name="${PROG_NAME}"
     postconf -e mail_version="${PROG_VERSION}"
     postconf -e biff="no"   # Do not notify local user.
     postconf -e inet_interfaces="all"
-    postconf -e inet_protocols="ipv4"
     postconf -e mynetworks="127.0.0.0/8"
     postconf -e mynetworks_style="subnet"
     postconf -e smtpd_data_restrictions='reject_unauth_pipelining'
@@ -653,8 +655,10 @@ postfix_config_sasl()
     # For SASL auth
     postconf -e smtpd_sasl_auth_enable="yes"
     postconf -e smtpd_sasl_local_domain=''
-    postconf -e smtpd_sasl_security_options="noanonymous"
     postconf -e broken_sasl_auth_clients="yes"
+    postconf -e smtpd_sasl_security_options="noanonymous"
+    [ X"${DISTRO}" == X"SUSE" ] && \
+        perl -pi -e 's#^(POSTFIX_SMTP_AUTH_OPTIONS=).*#${1}"noanonymous"#' ${ETC_SYSCONFIG_DIR}/postfix
 
     # Report the SASL authenticated user name in Received message header.
     # Used to reject backscatter.
@@ -705,6 +709,13 @@ postfix_config_tls()
     postconf -e smtpd_tls_loglevel='0'
     postconf -e smtpd_tls_key_file="${SSL_KEY_FILE}"
     postconf -e smtpd_tls_cert_file="${SSL_CERT_FILE}"
+    [ X"${DISTRO}" == X"SUSE" ] && \
+        perl -pi -e 's#^(POSTFIX_SMTP_TLS_SERVER=).*#${1}"yes"#' ${ETC_SYSCONFIG_DIR}/postfix && \
+        perl -pi -e 's#^(POSTFIX_SSL_PATH=).*#${1}""#' ${ETC_SYSCONFIG_DIR}/postfix && \
+        perl -pi -e 's#^(POSTFIX_TLS_CAFILE=).*#${1}""#' ${ETC_SYSCONFIG_DIR}/postfix && \
+        perl -pi -e 's#^(POSTFIX_TLS_CERTFILE=).*#${1}"$ENV{'SSL_CERT_FILE'}"#' ${ETC_SYSCONFIG_DIR}/postfix && \
+        perl -pi -e 's#^(POSTFIX_TLS_KEYFILE=).*#${1}"$ENV{'SSL_KEY_FILE'}"#' ${ETC_SYSCONFIG_DIR}/postfix
+
     #postconf -e #smtpd_tls_CAfile = 
     postconf -e tls_random_source='dev:/dev/urandom'
     postconf -e tls_daemon_random_source='dev:/dev/urandom'

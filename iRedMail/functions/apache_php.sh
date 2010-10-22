@@ -56,8 +56,10 @@ EOF
     perl -pi -e 's#^(ServerTokens).*#${1} ProductOnly#' ${HTTPD_CONF}
     perl -pi -e 's#^(ServerSignature).*#${1} EMail#' ${HTTPD_CONF}
 
-    #ECHO_DEBUG "Disable 'AddDefaultCharset' in ${HTTPD_CONF}."
-    #perl -pi -e 's/^(AddDefaultCharset UTF-8)/#${1}/' ${HTTPD_CONF}
+    # OpenSuSE: Define them in /etc/sysconfig/apache2
+    [ X"${DISTRO}" == X"SUSE" ] && \
+        perl -pi -e 's#^(APACHE_SERVERTOKENS=).*#${1}"ProductOnly"#' ${ETC_SYSCONFIG_DIR}/apache2
+        perl -pi -e 's#^(APACHE_SERVERSIGNATURE=).*#${1}"email"#' ${ETC_SYSCONFIG_DIR}/apache2
 
     # Set correct SSL Cert/Key file location.
     if [ X"${DISTRO}" == X"RHEL" -o X"${DISTRO}" == X"FREEBSD" ]; then
@@ -92,7 +94,9 @@ EOF
         a2enmod ssl &>/dev/null
         perl -pi -e 's/#(Listen 443)/${1}/' ${HTTPD_CONF_ROOT}/listen.conf
 
-        [ X"${BACKEND}" == X"OpenLDAP" ] && a2enmod authnz_ldap &>/dev/null
+        [ X"${BACKEND}" == X"OpenLDAP" ] && \
+            a2enmod authnz_ldap &>/dev/null
+            a2enmod ldap &>/dev/null
         [ X"${BACKEND}" == X"MySQL" ] && a2enmod auth_mysql &>/dev/null
     else
         :
@@ -135,6 +139,8 @@ EOF
         perl -pi -e 's#^;(date.timezone).*#${1} = UTC#' ${PHP_INI}
     fi
 
+    [ X"${DISTRO}" == X"SUSE" ] && perl -pi -e 's#^;(date.timezone).*#${1} = UTC#' ${PHP_INI}
+
     #ECHO_DEBUG "Setting error_reporting to 'E_ERROR': ${PHP_INI}."
     #perl -pi -e 's#^(error_reporting.*=)#${1} E_ERROR;#' ${PHP_INI}
 
@@ -168,6 +174,7 @@ EOF
 
         # Add index.php in DirectoryIndex.
         perl -pi -e 's#(.*DirectoryIndex.*)(index.html)#${1} index.php ${2}#' ${HTTPD_CONF}
+        [ X"${DISTRO}" == X"SUSE" ] && perl -pi -e 's#^(DirectoryIndex)(.*)#${1} index.php ${2}#' ${HTTPD_CONF}
 
         # Add php file type.
         echo 'AddType application/x-httpd-php .php' >> ${HTTPD_CONF}
