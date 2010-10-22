@@ -390,9 +390,13 @@ else
     exit 255
 fi
 
+# Use a seperated directory to store iRedMail certs/keys.
+export SSL_CERT_DIR="${SSL_FILE_DIR}/iredmail/certs"
+export SSL_KEY_DIR="${SSL_FILE_DIR}/iredmail/private"
+
 # SSL key.
-export SSL_CERT_FILE="${SSL_FILE_DIR}/certs/iRedMail_CA.pem"
-export SSL_KEY_FILE="${SSL_FILE_DIR}/private/iRedMail.key"
+export SSL_CERT_FILE="${SSL_CERT_DIR}/iRedMail_CA.pem"
+export SSL_KEY_FILE="${SSL_KEY_DIR}/iRedMail.key"
 export TLS_COUNTRY='CN'
 export TLS_STATE='GuangDong'
 export TLS_CITY='ShenZhen'

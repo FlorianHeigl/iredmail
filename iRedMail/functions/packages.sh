@@ -93,8 +93,7 @@ install_all()
         if [ X"${DISTRO}" == X"RHEL" ]; then
             ALL_PKGS="${ALL_PKGS} awstats.noarch"
         elif [ X"${DISTRO}" == X"SUSE" ]; then
-            # No awstats in official repo.
-            :
+            ALL_PKGS="${ALL_PKGS} awstats"
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
             ALL_PKGS="${ALL_PKGS} awstats"
         else

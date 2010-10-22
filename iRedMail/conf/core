@@ -50,7 +50,7 @@ check_user()
 {
     # Check special user privilege to execute this script.
     if [ X"$(id -u)" != X"$(id -u ${1})" ]; then
-        ECHO_INFO "Please run this script as user: ${1}."
+        ECHO_ERROR "Please run this script as user: ${1}."
         exit 255
     else
         if [ X"$(id -u)" == X"0" ]; then
@@ -76,7 +76,7 @@ check_pkg()
     cmd="$1"
     pkg="$2"
 
-    ECHO_INFO "Checking necessary command/package: ${cmd}/${pkg} ..."
+    ECHO_DEBUG "Checking necessary command/package: ${cmd}/${pkg} ..."
     for i in $(echo $PATH|sed 's/:/ /g'); do
         [ -x $i/${cmd} ] && export HAS_CMD='YES'
     done
@@ -84,7 +84,7 @@ check_pkg()
     if [ X"${HAS_CMD}" != X'YES' ]; then
         eval ${install_pkg} ${pkg}
         if [ X"$?" != X"0" ]; then
-            ECHO_INFO "Please install package ${pkg} first." && exit 255
+            ECHO_ERROR "Please install package ${pkg} first." && exit 255
         else
             :
         fi
@@ -399,24 +399,11 @@ remove_pkg_debian()
     [ X"$?" != X"0" ] && ECHO_ERROR "Package removed failed, please check the terminal output."
 }
 
-# Install/Remove binary packages on FreeBSD.
-# TODO
-install_pkg_freebsd()
-{
-    :
-}
-
-# TODO
-remove_pkg_freebsd()
-{
-    :
-}
-
 # Create SSL certs/private files.
 gen_pem_key()
 {
     # Create necessary directories.
-    mkdir -p ${SSL_FILE_DIR}/{certs,private} 2>/dev/null
+    mkdir -p ${SSL_KEY_DIR} ${SSL_CERT_DIR} 2>/dev/null
 
     openssl req \
         -x509 -nodes -days 3650 -newkey rsa:1024 \

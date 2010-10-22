@@ -203,11 +203,11 @@ awstats_config_maillog()
 {
     ECHO_DEBUG "Config awstats to analyze postfix mail log: ${AWSTATS_CONF_MAIL}."
 
-    cd ${AWSTATS_CONF_DIR} && \
-    cp -f ${AWSTATS_CONF_SAMPLE} ${AWSTATS_CONF_MAIL}
+    cd ${AWSTATS_CONF_DIR}
 
+    [ X"${DISTRO}" != X"SUSE" ] && cp -f ${AWSTATS_CONF_SAMPLE} ${AWSTATS_CONF_MAIL}
     # Create a default config file.
-    cp -f ${AWSTATS_CONF_MAIL} ${AWSTATS_CONF_DIR}/awstats.conf
+    [ X"${DISTRO}" != X"SUSE" ] && cp -f ${AWSTATS_CONF_MAIL} ${AWSTATS_CONF_DIR}/awstats.conf
 
     if [ X"${DISTRO}" == X"FREEBSD" ]; then
         export maillogconvert_pl="$( eval ${LIST_FILES_IN_PKG} "/var/db/pkg/awstats-*" | grep 'maillogconvert.pl')"

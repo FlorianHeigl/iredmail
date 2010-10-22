@@ -42,7 +42,7 @@ EOF
 
     ECHO_DEBUG -n "Sleep 5 seconds for MySQL daemon initialize:"
     for i in 5 4 3 2 1; do
-        ECHO_DEBUG -n " ${i}s" && sleep 1
+        ECHO_DEBUG -n " ${i}" && sleep 1
     done
     ECHO_DEBUG '.'
 

@@ -30,16 +30,24 @@ openldap_config()
 
     backup_file ${OPENLDAP_SLAPD_CONF} ${OPENLDAP_LDAP_CONF}
 
-    # Add ${LDAP_USER} to 'ssl-cert' group, so that slapd service can read the SSL key.
+    ###########
+    # Fix file permission issues, so that slapd can read SSL key.
+    #
+    # Add ${LDAP_USER} to 'ssl-cert' group.
     [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ] && usermod -G ssl-cert ${LDAP_USER}
+    # Fix strict permission.
+    #[ X"${DISTRO}" == X"SUSE" ] && chmod 0755 ${SSL_KEY_DIR}
 
+    ###################
+    # LDAP schema file
+    #
     # Copy ${PROG_NAME}.schema.
     cp -f ${SAMPLE_DIR}/iredmail.schema ${OPENLDAP_SCHEMA_DIR}
 
     # Copy amavisd schema.
     [ X"${DISTRO}" == X"FREEBSD" ] && \
         cp -f /usr/local/share/doc/amavisd-new/LDAP.schema ${OPENLDAP_SCHEMA_DIR}/${AMAVISD_LDAP_SCHEMA_NAME}
-
+    ####
 
     ECHO_DEBUG "Generate new server configuration file: ${OPENLDAP_SLAPD_CONF}."
     cat > ${OPENLDAP_SLAPD_CONF} <<EOF
@@ -70,7 +78,7 @@ TLSCertificateKeyFile ${SSL_KEY_FILE}
 EOF
 
     # Load backend module. Required on Debian/Ubuntu.
-    if [ X"${OPENLDAP_VERSION}" == X"2.4" ]; then
+    if [ X"${OPENLDAP_VERSION}" == X"2.4" -a X"${DISTRO}" != X"SUSE" ]; then
         if [ X"${OPENLDAP_DEFAULT_DBTYPE}" == X"bdb" ]; then
             # bdb, Berkeley DB.
             cat >> ${OPENLDAP_SLAPD_CONF} <<EOF
@@ -101,10 +109,9 @@ disallow    bind_anon
 # Uncomment below line to allow binding as anonymouse.
 #allow bind_anon_cred
 
-#
 # Specify LDAP protocol version.
-#require     LDAPv3
-allow       bind_v2
+require     LDAPv3
+#allow       bind_v2
 
 # Log level.
 #   -1:     enable all debugging
@@ -181,7 +188,7 @@ access to dn.regex="${LDAP_ATTR_DOMAIN_RDN}=([^,]+),${LDAP_BASEDN}\$"
     by users                        none
 
 #
-# Enable vmail/vmailadmin. 
+# Grant correct privileges to vmail/vmailadmin.
 #
 access to dn.subtree="${LDAP_BASEDN}"
     by anonymous                    auth
@@ -205,6 +212,7 @@ access to dn.regex="cn=[^,]+,${LDAP_SUFFIX}"
     by anonymous                    auth
     by self                         write
     by users                        none
+
 #
 # Set default permission.
 #
@@ -355,7 +363,7 @@ openldap_data_initialize()
     
     ECHO_DEBUG -n "Sleep 5 seconds for LDAP daemon initialize:"
     for i in 5 4 3 2 1; do
-        ECHO_DEBUG -n " ${i}s" && sleep 1
+        ECHO_DEBUG -n " ${i}" && sleep 1
     done
     ECHO_DEBUG '.'
 

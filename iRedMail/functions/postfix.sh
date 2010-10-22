@@ -49,6 +49,9 @@ EOF
         [ -f $i ] && cp ${i} ${POSTFIX_CHROOT_DIR}/etc/
     done
 
+    # Remove duplicate relay_domains on SuSE.
+    [ X"${DISTRO}" == X"SUSE" ] && perl -pi -e 's/^(relay_domains.*)/#${1}/' ${POSTFIX_FILE_MAIN_CF}
+
     # Normally, myhostname is the same as myorigin.
     postconf -e myhostname="${HOSTNAME}"
     postconf -e myorigin="${HOSTNAME}"

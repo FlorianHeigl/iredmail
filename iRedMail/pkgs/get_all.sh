@@ -139,7 +139,7 @@ EOF
 
 prepare_dirs()
 {
-    ECHO_INFO "Creating necessary directories ..."
+    ECHO_DEBUG "Creating necessary directories ..."
     for i in ${PKG_DIR} ${MISC_DIR}
     do
         [ -d "${i}" ] || mkdir -p "${i}"
