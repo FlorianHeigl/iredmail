@@ -184,7 +184,8 @@ awstats_config_weblog()
 {
     ECHO_DEBUG "Config awstats to analyze apache web access log: ${AWSTATS_CONF_WEB}."
     if [ X"${DISTRO}" != X"SUSE" ]; then
-        cd ${AWSTATS_CONF_DIR} && cp -f ${AWSTATS_CONF_SAMPLE} ${AWSTATS_CONF_WEB}
+        cd ${AWSTATS_CONF_DIR}
+        cp -f ${AWSTATS_CONF_SAMPLE} ${AWSTATS_CONF_WEB}
     fi
 
     perl -pi -e 's#^(SiteDomain=)(.*)#${1}"$ENV{'HOSTNAME'}"#' ${AWSTATS_CONF_WEB}
@@ -205,9 +206,10 @@ awstats_config_maillog()
 
     cd ${AWSTATS_CONF_DIR}
 
-    [ X"${DISTRO}" != X"SUSE" ] && cp -f ${AWSTATS_CONF_SAMPLE} ${AWSTATS_CONF_MAIL}
     # Create a default config file.
-    [ X"${DISTRO}" != X"SUSE" ] && cp -f ${AWSTATS_CONF_MAIL} ${AWSTATS_CONF_DIR}/awstats.conf
+    [ X"${DISTRO}" != X"SUSE" ] && \
+        cp -f ${AWSTATS_CONF_SAMPLE} ${AWSTATS_CONF_MAIL} && \
+        cp -f ${AWSTATS_CONF_MAIL} ${AWSTATS_CONF_DIR}/awstats.conf
 
     if [ X"${DISTRO}" == X"FREEBSD" ]; then
         export maillogconvert_pl="$( eval ${LIST_FILES_IN_PKG} "/var/db/pkg/awstats-*" | grep 'maillogconvert.pl')"

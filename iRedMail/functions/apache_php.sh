@@ -58,7 +58,7 @@ EOF
 
     # OpenSuSE: Define them in /etc/sysconfig/apache2
     [ X"${DISTRO}" == X"SUSE" ] && \
-        perl -pi -e 's#^(APACHE_SERVERTOKENS=).*#${1}"ProductOnly"#' ${ETC_SYSCONFIG_DIR}/apache2
+        perl -pi -e 's#^(APACHE_SERVERTOKENS=).*#${1}"ProductOnly"#' ${ETC_SYSCONFIG_DIR}/apache2 && \
         perl -pi -e 's#^(APACHE_SERVERSIGNATURE=).*#${1}"email"#' ${ETC_SYSCONFIG_DIR}/apache2
 
     # Set correct SSL Cert/Key file location.
