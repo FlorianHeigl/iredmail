@@ -1,4 +1,5 @@
 iRedMail-0.7.0:
+    * Replaced ldap attribute: gn (givenName), fax (facsimileTelephoneNumber).
     * Store realtime quota usage in MySQL with Dovecot.
     * Use repository 'backports.debian.org' on Debian 5.
     * Bypass shadow address in postfix sender login checking.

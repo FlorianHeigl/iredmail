@@ -329,15 +329,15 @@ objectclass ( 1.3.6.1.4.1.32349.1.2.4.1 NAME 'mailDomain'
         domainMaxAliasNumber $ domainCurrentAliasNumber $
         domainMaxListNumber $ domainCurrentListNumber $
         domainDefaultUserQuota $ domainAliasName $ disclaimer $
-        description $ streetAddress $ telephoneNumber $
-        fax $ expiredDate $ accountSetting $
+        description $ street $ telephoneNumber $
+        facsimileTelephoneNumber $ expiredDate $ accountSetting $
         domainWhitelistIP $ domainWhitelistSender $
         domainBlacklistIP $ domainBlacklistSender ))
 objectclass ( 1.3.6.1.4.1.32349.1.2.4.2 NAME 'mailAdmin'
     DESC 'Mail Domain Admin' SUP top STRUCTURAL
     MUST ( mail )
     MAY ( domainGlobalAdmin $ description $ enabledService $
-        userPassword $ accountStatus $ cn $ sn $ gn $
+        userPassword $ accountStatus $ cn $ sn $ givenName $
         preferredLanguage $ givenName $ expiredDate $
         mailHost $ lastLoginDate $ accountSetting ))
 objectclass ( 1.3.6.1.4.1.32349.1.2.4.3 NAME 'mailUser'
