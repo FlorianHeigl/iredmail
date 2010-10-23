@@ -257,7 +257,7 @@ create_repo_suse()
     cat > /etc/zypp/repos.d/iredmail.repo <<EOF
 [iRedMail-Apache2-Modules]
 name=iRedMail-Apache2-Modules
-baseurl=http://download.opensuse.org/repositories/Apache:/Modules/Apache_openSUSE_11.3/
+baseurl=http://download.opensuse.org/repositories/Apache:/Modules/Apache_openSUSE_${DISTRO_VERSION}/
 enabled=1
 autorefresh=1
 path=/
@@ -267,7 +267,7 @@ gpgcheck=0
  
 [iRedMail-Policyd-v1]
 name=iRedMail-Policyd-v1
-baseurl=http://download.opensuse.org/repositories/server:/mail/openSUSE_11.3/
+baseurl=http://download.opensuse.org/repositories/server:/mail/openSUSE_${DISTRO_VERSION}/
 enabled=1
 autorefresh=1
 path=/
@@ -277,7 +277,7 @@ gpgcheck=0
 
 [iRedMail-Altermime]
 name=iRedMail-Altermime
-baseurl=http://download.opensuse.org/repositories/openSUSE:/Factory:/Contrib/openSUSE_11.3/
+baseurl=http://download.opensuse.org/repositories/openSUSE:/Factory:/Contrib/openSUSE_${DISTRO_VERSION}/
 enabled=1
 autorefresh=1
 path=/
@@ -287,7 +287,7 @@ gpgcheck=0
 
 [iRedMail-Awstats]
 name=iRedMail-Awstats
-baseurl=http://download.opensuse.org/repositories/network:/utilities/openSUSE_11.3/
+baseurl=http://download.opensuse.org/repositories/network:/utilities/openSUSE_${DISTRO_VERSION}/
 enabled=1
 autorefresh=1
 path=/

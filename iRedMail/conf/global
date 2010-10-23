@@ -160,6 +160,7 @@ if [ X"${KERNEL_NAME}" == X"Linux" ]; then
     elif [ -f /etc/SuSE-release ]; then
         # SLES/OpenSuSE
         export DISTRO='SUSE'
+        export DISTRO_VERSION="$( grep 'VERSION' /etc/SuSE-release | awk -F'=' '{print $2}' )"
     elif [ -f /etc/lsb-release ]; then
         # Ubuntu
         export DISTRO='UBUNTU'
@@ -271,9 +272,9 @@ elif [ X"${DISTRO}" == X"SUSE" ]; then
     export SYSLOG_POSTROTATE_CMD=''
 
     # Crontab related.
-    export CRON_SPOOL_DIR="/var/spool/cron"
+    export CRON_SPOOL_DIR="/var/spool/cron/tabs"
 
-    # Directory /etc/sysconfig/ on RHEL/CentOS.
+    # Directory /etc/sysconfig/ on RHEL/CentOS/SuSE.
     export ETC_SYSCONFIG_DIR='/etc/sysconfig'
 
     # Iptables rule file.
