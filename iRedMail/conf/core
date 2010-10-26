@@ -324,7 +324,12 @@ service_control()
 {
     service="$1"
     action="$2"
-    ${DIR_RC_SCRIPTS}/${service} ${action}
+    tmp_rc_script="${DIR_RC_SCRIPTS}/${service}"
+    if [ -x ${tmp_rc_script} ]; then
+        ${tmp_rc_script} ${action}
+    else
+        ECHO_ERROR "File not exist or not executable: ${tmp_rc_script}."
+    fi
 }
 
 gen_ldap_passwd()

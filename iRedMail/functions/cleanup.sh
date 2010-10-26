@@ -163,7 +163,7 @@ cleanup_start_postfix_now()
             # FreeBSD
             if [ X"${DISTRO}" == X"FREEBSD" ]; then
                 # Update clamav before start clamav-clamd service.
-                ECHO_INFO "Update ClamAV database..."
+                ECHO_INFO "Updating ClamAV database..."
                 freshclam
 
                 # Load kernel module 'accf_http' before start.
