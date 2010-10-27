@@ -41,6 +41,8 @@ openldap_config()
 
         # Start ldaps.
         perl -pi -e 's#^(OPENLDAP_START_LDAPS=).*#${1}"yes"#' ${OPENLDAP_SYSCONFIG_CONF}
+
+        # Set config backend.
         perl -pi -e 's#^(OPENLDAP_CONFIG_BACKEND=).*#${1}"files"#' ${OPENLDAP_SYSCONFIG_CONF}
     fi
 

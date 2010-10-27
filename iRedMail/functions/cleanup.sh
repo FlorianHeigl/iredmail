@@ -82,16 +82,29 @@ cleanup_replace_iptables_rule()
             cp -f ${SAMPLE_DIR}/iptables.rules ${IPTABLES_CONFIG}
 
             # Replace HTTP port.
-            if [ X"${HTTPD_PORT}" != X"80" ]; then
+            if [ X"${DISTRO}" != X"SUSE" -a X"${HTTPD_PORT}" != X"80" ]; then
                 perl -pi -e 's#(.*)80(,.*)#${1}$ENV{HTTPD_PORT}${2}#' ${IPTABLES_CONFIG}
             else
                 :
             fi
 
-            # Copy sample rc script for Debian.
-            [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ] && \
-                cp -f ${SAMPLE_DIR}/iptables.init.debian ${DIR_RC_SCRIPTS}/iptables && \
+            if [ X"${DISTRO}" == X"SUSE" ]; then
+                # Below services are not accessable from external network:
+                #   - ldaps (636)
+                perl -pi -e 's/^(FW_SERVICES_EXT_TCP=)(.*)/${1}"$ENV{'HTTPD_PORT'} 443 25 465 110 995 143 993 587 465 $ENV{'sshd_port'}"\n#${2}/' ${IPTABLES_CONFIG}
+
+                eval ${enable_service} SuSEfirewall2_setup
+
+            elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+                # Copy sample rc script for Debian.
+                cp -f ${SAMPLE_DIR}/iptables.init.debian ${DIR_RC_SCRIPTS}/iptables
                 chmod +x ${DIR_RC_SCRIPTS}/iptables
+
+                eval ${enable_service} iptables >/dev/null
+
+            else
+                eval ${enable_service} iptables >/dev/null
+            fi
 
             # Prompt to restart iptables.
             ECHO_QUESTION -n "Restart firewall now (with SSHD port ${sshd_port})? [y|N]"
@@ -102,13 +115,9 @@ cleanup_replace_iptables_rule()
 
                     # OpenSuSE will use /etc/init.d/{SuSEfirewall2_init, SuSEfirewall2_setup} instead.
                     if [ X"${DISTRO}" == X"SUSE" ]; then
-                        # Below services are not accessable from external network:
-                        #   - ldaps (636)
-                        perl -pi -e 's#^(FW_SERVICES_EXT_TCP=).*#${1}"80 443 25 465 110 995 143 993 587 465 22"#' /etc/sysconfig/SuSEfirewall2
-                        eval ${enable_service} SuSEfirewall2_setup
+                        ${DIR_RC_SCRIPTS}/SuSEfirewall2_setup restart
                     else
                         ${DIR_RC_SCRIPTS}/iptables restart
-                        eval ${enable_service} iptables >/dev/null
                     fi
                     ;;
                 N|n|* )

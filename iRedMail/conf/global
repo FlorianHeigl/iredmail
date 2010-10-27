@@ -278,7 +278,7 @@ elif [ X"${DISTRO}" == X"SUSE" ]; then
     export ETC_SYSCONFIG_DIR='/etc/sysconfig'
 
     # Iptables rule file.
-    export IPTABLES_CONFIG="${ETC_SYSCONFIG_DIR}/iptables"
+    export IPTABLES_CONFIG="${ETC_SYSCONFIG_DIR}/SuSEfirewall2"
 
     # Directory used to store SSL/TLS key/cert file.
     export SSL_FILE_DIR="/etc/ssl"
