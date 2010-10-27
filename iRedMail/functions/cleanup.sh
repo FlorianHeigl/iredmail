@@ -77,15 +77,14 @@ cleanup_replace_iptables_rule()
     case $ANSWER in
         N|n ) ECHO_INFO "Skip firewall rules." ;;
         Y|y|* ) 
-            ECHO_INFO "Copy firewall sample rules: ${IPTABLES_CONFIG}."
-            backup_file ${IPTABLES_CONFIG}
-            cp -f ${SAMPLE_DIR}/iptables.rules ${IPTABLES_CONFIG}
+            if [ X"${DISTRO}" != X"SUSE" ]; then
+                ECHO_INFO "Copy firewall sample rules: ${IPTABLES_CONFIG}."
+                backup_file ${IPTABLES_CONFIG}
+                cp -f ${SAMPLE_DIR}/iptables.rules ${IPTABLES_CONFIG}
 
-            # Replace HTTP port.
-            if [ X"${DISTRO}" != X"SUSE" -a X"${HTTPD_PORT}" != X"80" ]; then
-                perl -pi -e 's#(.*)80(,.*)#${1}$ENV{HTTPD_PORT}${2}#' ${IPTABLES_CONFIG}
-            else
-                :
+                # Replace HTTP port.
+                [ X"${HTTPD_PORT}" != X"80" ]&& \
+                    perl -pi -e 's#(.*)80(,.*)#${1}$ENV{HTTPD_PORT}${2}#' ${IPTABLES_CONFIG}
             fi
 
             if [ X"${DISTRO}" == X"SUSE" ]; then

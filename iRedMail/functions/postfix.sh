@@ -62,6 +62,12 @@ EOF
         # '0.0.0.0:smtps: Servname not supported for ai_socktype'
         echo 'smtps            465/udp    # smtp over ssl' >> /etc/services
         echo 'smtps            465/tcp    # smtp over ssl' >> /etc/services
+
+        # Unset below settings since we don't use them.
+        postconf -e canonical_maps=''
+        postconf -e virtual_alias_domains=''
+        postconf -e relocated_maps=''
+        postconf -e sender_canonical_maps=''
     fi
 
     ECHO_DEBUG "Copy: /etc/{hosts,resolv.conf,localtime,services} -> ${POSTFIX_CHROOT_DIR}/etc/"
