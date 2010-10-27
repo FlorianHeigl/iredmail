@@ -77,6 +77,8 @@ elif [ X"${DISTRO}" == X"SUSE" ]; then
     export OPENLDAP_PID_FILE='/var/run/slapd/slapd.pid'
     export OPENLDAP_ARGS_FILE='/var/run/slapd/slapd.args'
 
+    export OPENLDAP_SYSCONFIG_CONF="${ETC_SYSCONFIG_DIR}/openldap"
+
     # RC script.
     export LDAP_INIT_SCRIPT="${DIR_RC_SCRIPTS}/ldap"
 

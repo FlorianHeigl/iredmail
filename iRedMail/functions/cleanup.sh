@@ -81,6 +81,7 @@ cleanup_replace_iptables_rule()
             backup_file ${IPTABLES_CONFIG}
             cp -f ${SAMPLE_DIR}/iptables.rules ${IPTABLES_CONFIG}
 
+            # Replace HTTP port.
             if [ X"${HTTPD_PORT}" != X"80" ]; then
                 perl -pi -e 's#(.*)80(,.*)#${1}$ENV{HTTPD_PORT}${2}#' ${IPTABLES_CONFIG}
             else
@@ -92,16 +93,23 @@ cleanup_replace_iptables_rule()
                 cp -f ${SAMPLE_DIR}/iptables.init.debian ${DIR_RC_SCRIPTS}/iptables && \
                 chmod +x ${DIR_RC_SCRIPTS}/iptables
 
-            # Mark iptables as enabled service.
-            eval ${enable_service} iptables >/dev/null
-
             # Prompt to restart iptables.
             ECHO_QUESTION -n "Restart firewall now (with SSHD port ${sshd_port})? [y|N]"
             read ANSWER
             case $ANSWER in
                 Y|y )
                     ECHO_INFO "Restarting firewall ..."
-                    ${DIR_RC_SCRIPTS}/iptables restart
+
+                    # OpenSuSE will use /etc/init.d/{SuSEfirewall2_init, SuSEfirewall2_setup} instead.
+                    if [ X"${DISTRO}" == X"SUSE" ]; then
+                        # Below services are not accessable from external network:
+                        #   - ldaps (636)
+                        perl -pi -e 's#^(FW_SERVICES_EXT_TCP=).*#${1}"80 443 25 465 110 995 143 993 587 465 22"#' /etc/sysconfig/SuSEfirewall2
+                        eval ${enable_service} SuSEfirewall2_setup
+                    else
+                        ${DIR_RC_SCRIPTS}/iptables restart
+                        eval ${enable_service} iptables >/dev/null
+                    fi
                     ;;
                 N|n|* )
                     export "RESTART_IPTABLES='NO'"
@@ -111,7 +119,13 @@ cleanup_replace_iptables_rule()
             ;;
     esac
 
-    [ X"${KERNEL_NAME}" == X"Linux" ] && export ENABLED_SERVICES="${ENABLED_SERVICES} iptables"
+    if [ X"${KERNEL_NAME}" == X"Linux" ]; then
+        if [ X"${DISTRO}" == X"${SUSE}" ]; then
+            ENABLED_SERVICES="${ENABLED_SERVICES} SuSEfirewall2_init SuSEfirewall2_setup"
+        else
+            ENABLED_SERVICES="${ENABLED_SERVICES} iptables"
+        fi
+    fi
 
     echo 'export status_cleanup_replace_iptables_rule="DONE"' >> ${STATUS_FILE}
 }

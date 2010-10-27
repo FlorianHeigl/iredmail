@@ -115,7 +115,7 @@ if [ X"${DISTRO}" == X"FREEBSD" ]; then
 elif [ X"${DISTRO}" == X"UBUNTU" -a X"${DISTRO_CODENAME}" == X"lucid" ]; then
     PKGMISC='MD5.ubuntu.lucid'
 elif [ X"${DISTRO}" == X"SUSE" ]; then
-    PKGMISC='MD5.opensuse'
+    PKGMISC='MD5.misc MD5.opensuse'
 else
     PKGMISC='MD5.misc'
 fi

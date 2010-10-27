@@ -61,6 +61,13 @@ EOF
     UseCanonicalName Off
     ServerSignature Off
 
+    <Directory />
+        Options FollowSymLinks
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+    </Directory>
+
     <Directory "/srv/www/htdocs">
         Options Indexes FollowSymLinks
         AllowOverride None
@@ -94,6 +101,13 @@ NameVirtualHost *:443
     SSLEngine On
     SSLCertificateFile ${SSL_CERT_FILE}
     SSLCertificateKeyFile ${SSL_KEY_FILE}
+
+    <Directory />
+        Options FollowSymLinks
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+    </Directory>
 
     <Directory "/srv/www/htdocs">
         Options Indexes FollowSymLinks
@@ -178,7 +192,7 @@ EOF
 
         # Enable SSL.
         a2enmod ssl &>/dev/null
-        #perl -pi -e 's/#(Listen 443)/${1}/' ${HTTPD_CONF_ROOT}/listen.conf
+        perl -pi -e 's/#(Listen 443)/${1}/' ${HTTPD_CONF_ROOT}/listen.conf
 
         [ X"${BACKEND}" == X"OpenLDAP" ] && \
             a2enmod authnz_ldap &>/dev/null && \

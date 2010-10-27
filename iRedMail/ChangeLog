@@ -1,4 +1,6 @@
 iRedMail-0.7.0:
+    * Supports OpenSuSE 11.3. Tested with 11.3, but it should work well with
+      11.2, 11.1 too.
     * Replaced ldap attribute: gn (givenName), fax (facsimileTelephoneNumber).
     * Store realtime quota usage in MySQL with Dovecot.
     * Use repository 'backports.debian.org' on Debian 5.
