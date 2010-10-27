@@ -30,7 +30,7 @@ awstats_config_basic()
 
     # Move awstats.pl to ${AWSTATS_CGI_DIR} on Debian/Ubuntu, so that it won't
     # conflict with other cgi programs, e.g. mailman.
-    if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+    if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"SUSE" ]; then
         mkdir -p ${AWSTATS_CGI_DIR}/awstats 2>/dev/null
         mv ${AWSTATS_CGI_DIR}/awstats.pl ${AWSTATS_CGI_DIR}/awstats/ 2>/dev/null
         export AWSTATS_CGI_DIR="${AWSTATS_CGI_DIR}/awstats"
@@ -39,13 +39,11 @@ awstats_config_basic()
     cat > ${AWSTATS_HTTPD_CONF} <<EOF
 ${CONF_MSG}
 # Note: Please refer to ${HTTPD_SSL_CONF} for SSL/TLS setting.
-#Alias /awstats/icon ${AWSTATS_HTTPD_ROOT}/icon/
-#ScriptAlias /awstats ${AWSTATS_HTTPD_ROOT}/
-#Alias /css ${AWSTATS_HTTPD_ROOT}/css/
-#Alias /js ${AWSTATS_HTTPD_ROOT}/js/
-EOF
+#Alias /awstats/icon "${AWSTATS_ICON_DIR}/"
+#ScriptAlias /awstats "${AWSTATS_HTTPD_ROOT}/"
+#Alias /css "${AWSTATS_CSS_DIR}/"
+#Alias /js "${AWSTATS_JS_DIR}/js/"
 
-        cat >> ${AWSTATS_HTTPD_CONF} <<EOF
 <Directory ${AWSTATS_CGI_DIR}/>
     DirectoryIndex awstats.pl
     Options ExecCGI
@@ -71,14 +69,18 @@ EOF
     AuthLDAPBindPassword "${LDAP_BINDPW}"
 EOF
 
-        [ X"${LDAP_USE_TLS}" == X"YES" ] && perl -pi -e 's#(AuthLDAPUrl.*)(ldap://)(.*)#${1}ldaps://${3}#' ${AWSTATS_HTTPD_CONF}
+        [ X"${LDAP_USE_TLS}" == X"YES" ] && \
+            perl -pi -e 's#(AuthLDAPUrl.*)(ldap://)(.*)#${1}ldaps://${3}#' ${AWSTATS_HTTPD_CONF}
+
     elif [ X"${BACKEND}" == X"MySQL" ]; then
         # Use mod_auth_mysql.
-        if [ X"${DISTRO}" == X"RHEL" -o X"${DISTRO}" == X"FREEBSD" ]; then
+        if [ X"${DISTRO}" == X"RHEL" -o X"${DISTRO}" == X"SUSE" -o X"${DISTRO}" == X"FREEBSD" ]; then
             cat >> ${AWSTATS_HTTPD_CONF} <<EOF
     AuthType Basic
 
     AuthMYSQLEnable On
+    AuthMySQLHost ${MYSQL_SERVER}
+    AuthMySQLPort ${MYSQL_PORT}
     AuthMySQLUser ${MYSQL_BIND_USER}
     AuthMySQLPassword ${MYSQL_BIND_PW}
     AuthMySQLDB ${VMAIL_DB}
@@ -91,6 +93,10 @@ EOF
             if [ X"${DISTRO}" == X"FREEBSD" ]; then
                 # Enable mod_auth_mysql module in httpd.conf.
                 perl -pi -e 's/^#(LoadModule.*mod_auth_mysql.*)/${1}/' ${HTTPD_CONF}
+            fi
+
+            # OpenSuSE & FreeBSD special.
+            if [ X"${DISTRO}" == X"SUSE" -o X"${DISTRO}" == X"FREEBSD" ]; then
                 echo "AuthBasicAuthoritative Off" >> ${AWSTATS_HTTPD_CONF}
             fi
 
@@ -113,10 +119,10 @@ EOF
     Auth_MySQL_Authoritative On
 EOF
 
-    # Set file permission.
-    chmod 0600 ${AWSTATS_HTTPD_CONF}
+            # Set file permission.
+            chmod 0600 ${AWSTATS_HTTPD_CONF}
 
-    cat >> ${HTTPD_CONF} <<EOF
+            cat >> ${HTTPD_CONF} <<EOF
 # MySQL auth (libapache2-mod-auth-apache2).
 # Global config of MySQL server, username, password.
 Auth_MySQL_Info ${MYSQL_SERVER} ${MYSQL_BIND_USER} ${MYSQL_BIND_PW}
@@ -145,18 +151,8 @@ EOF
 EOF
 
     # Make Awstats can be accessed via HTTPS.
-    if [ X"${DISTRO}" == X"RHEL" ]; then
-        perl -pi -e 's#(</VirtualHost>)#Alias /awstats/icon "$ENV{AWSTATS_HTTPD_ROOT}/icon/"\n${1}#' ${HTTPD_SSL_CONF}
-        perl -pi -e 's#(</VirtualHost>)#ScriptAlias /awstats "$ENV{AWSTATS_HTTPD_ROOT}/"\n${1}#' ${HTTPD_SSL_CONF}
-    elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        perl -pi -e 's#(</VirtualHost>)#Alias /awstats-icon "$ENV{AWSTATS_HTTPD_ROOT}/icon/"\n${1}#' ${HTTPD_SSL_CONF}
-        perl -pi -e 's#(</VirtualHost>)#ScriptAlias /awstats "$ENV{AWSTATS_CGI_DIR}/"\n${1}#' ${HTTPD_SSL_CONF}
-    elif [ X"${DISTRO}" == X"FREEBSD" ]; then
-        perl -pi -e 's#(</VirtualHost>)#Alias /awstatsicons "$ENV{AWSTATS_HTTPD_ROOT}/icons/"\n${1}#' ${HTTPD_SSL_CONF}
-        perl -pi -e 's#(</VirtualHost>)#ScriptAlias /awstats "$ENV{AWSTATS_CGI_DIR}/"\n${1}#' ${HTTPD_SSL_CONF}
-    else
-        :
-    fi
+    perl -pi -e 's#(</VirtualHost>)#Alias /awstats/icon "$ENV{'AWSTATS_HTTPD_ROOT'}/icon/"\n${1}#' ${HTTPD_SSL_CONF}
+    perl -pi -e 's#(</VirtualHost>)#ScriptAlias /awstats "$ENV{'AWSTATS_CGI_DIR'}/"\n${1}#' ${HTTPD_SSL_CONF}
 
     cat >> ${TIP_FILE} <<EOF
 Awstats:
@@ -170,11 +166,11 @@ Awstats:
         - Username: ${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}, password: ${DOMAIN_ADMIN_PASSWD_PLAIN}
     * URL:
         - https://${HOSTNAME}/awstats/awstats.pl
-        - https://${HOSTNAME}/awstats/awstats.pl?config=${HOSTNAME}
-        - https://${HOSTNAME}/awstats/awstats.pl?config=mail
+        - https://${HOSTNAME}/awstats/awstats.pl?config=web
+        - https://${HOSTNAME}/awstats/awstats.pl?config=smtp
     * Crontab job:
         shell> crontab -l root
-    
+
 EOF
 
     echo 'export status_awstats_config_basic="DONE"' >> ${STATUS_FILE}
@@ -261,22 +257,10 @@ awstats_config_maillog()
 awstats_config_crontab()
 {
     ECHO_DEBUG "Setting cronjob for awstats."
-    if [ X"${DISTRO}" == X"FREEBSD" ]; then
-        cat >> ${CRON_SPOOL_DIR}/root <<EOF
-1   */1   *   *   *   perl $(eval ${LIST_FILES_IN_PKG} '/var/db/pkg/awstats-*' | grep '/awstats.pl$') -config=${HOSTNAME} -update >/dev/null
-1   */1   *   *   *   perl $(eval ${LIST_FILES_IN_PKG} '/var/db/pkg/awstats-*' | grep '/awstats.pl$') -config=mail -update >/dev/null
+    cat >> ${CRON_SPOOL_DIR}/root <<EOF
+1   */1   *   *   *   perl ${AWSTATS_CGI_DIR}/awstats.pl -config=web -update >/dev/null
+1   */1   *   *   *   perl ${AWSTATS_CGI_DIR}/awstats.pl -config=smtp -update >/dev/null
 EOF
-    elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        cat >> ${CRON_SPOOL_DIR}/root <<EOF
-1   */1   *   *   *   perl ${AWSTATS_CGI_DIR}/awstats.pl -config=${HOSTNAME} -update >/dev/null
-1   */1   *   *   *   perl ${AWSTATS_CGI_DIR}/awstats.pl -config=mail -update >/dev/null
-EOF
-    else
-        cat >> ${CRON_SPOOL_DIR}/root <<EOF
-1   */1   *   *   *   perl $(eval ${LIST_FILES_IN_PKG} awstats | grep '/awstats.pl$') -config=${HOSTNAME} -update >/dev/null
-1   */1   *   *   *   perl $(eval ${LIST_FILES_IN_PKG} awstats | grep '/awstats.pl$') -config=mail -update >/dev/null
-EOF
-    fi
 
     echo 'export status_awstats_config_crontab="DONE"' >> ${STATUS_FILE}
 }

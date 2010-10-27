@@ -75,7 +75,7 @@ EOF
         Allow from all
     </Directory>
 
-    ScriptAlias /cgi-bin/ "${HTTPD_CGIBIN_DIR}"
+    ScriptAlias /cgi-bin "${HTTPD_CGIBIN_DIR}"
     <Directory "${HTTPD_CGIBIN_DIR}">
         AllowOverride None
         Options +ExecCGI -Includes
@@ -116,7 +116,7 @@ NameVirtualHost *:443
         Allow from all
     </Directory>
 
-    ScriptAlias /cgi-bin/ "${HTTPD_CGIBIN_DIR}"
+    ScriptAlias /cgi-bin "${HTTPD_CGIBIN_DIR}"
     <Directory "${HTTPD_CGIBIN_DIR}">
         AllowOverride None
         Options +ExecCGI -Includes

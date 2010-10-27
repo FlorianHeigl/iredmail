@@ -71,6 +71,10 @@ EOF
 
     cat >> ${TIP_FILE} <<EOF
 MySQL:
+    * Bind account (read-only):
+        - Name: ${MYSQL_BIND_USER}, Password: ${MYSQL_BIND_PW}
+    * Vmail admin account (read-write):
+        - Name: ${MYSQL_ADMIN_USER}, Password: ${MYSQL_ADMIN_PW}
     * Data directory:
         - /var/lib/mysql
     * RC script:
