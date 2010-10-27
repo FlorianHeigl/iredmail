@@ -118,7 +118,7 @@ check_env()
 
             case  $ANSWER in
                 Y|y )
-                    ECHO_INFO "Use configuration file: ${CONFIG_FILE} for mail server setting."
+                    ECHO_INFO "Use config file: ${CONFIG_FILE} for mail server setting."
                     . ${CONFIG_FILE}
 
                     # Check installation status.

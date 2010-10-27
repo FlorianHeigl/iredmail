@@ -35,7 +35,7 @@ iredadmin_config()
         useradd -m -d ${IREDADMIN_HOME_DIR} -s /sbin/nologin ${IREDADMIN_HTTPD_GROUP}
     fi
 
-    if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+    if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"SUSE" ]; then
         ECHO_DEBUG "Enable apache module: wsgi."
         a2enmod wsgi >/dev/null 2>&1
     fi
@@ -173,7 +173,6 @@ Official Web-based Admin Panel (iRedAdmin):
 
         [ldap]
         uri = ldap://${LDAP_SERVER_HOST}:${LDAP_SERVER_PORT}/
-        protocol_version = ${LDAP_BIND_VERSION}
         basedn = ${LDAP_BASEDN}
         domainadmin_dn = ${LDAP_ADMIN_BASEDN}
         bind_dn = ${LDAP_ADMIN_DN}
@@ -186,6 +185,18 @@ Official Web-based Admin Panel (iRedAdmin):
         db = ${POLICYD_DB_NAME}
         user = ${POLICYD_DB_USER}
         passwd = ${POLICYD_DB_PASSWD}
+
+        [amavisd]
+        server = ${AMAVISD_SERVER}
+        quarantine = True
+        quarantine_port = ${AMAVISD_QUARANTINE_PORT}
+        logging_into_sql = True
+        dbn = mysql
+        host = ${MYSQL_SERVER}
+        port = ${MYSQL_PORT}
+        db = ${AMAVISD_DB_NAME}
+        user = ${AMAVISD_DB_USER}
+        passwd = ${AMAVISD_DB_PASSWD}
 
     * See also:
         - ${HTTPD_CONF_DIR}/iredadmin.conf

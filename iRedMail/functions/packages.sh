@@ -313,9 +313,8 @@ EOF
             [ X"${USE_IREDAPD}" != "YES" ] && ALL_PKGS="${ALL_PKGS} python-ldap.${ARCH}"
 
         elif [ X"${DISTRO}" == X"SUSE" ]; then
-            # TODO miss python-webpy
-            # reference: http://en.opensuse.org/Additional_package_repositories#Apache_modules
-            ALL_PKGS="${ALL_PKGS} apache2-mod_wsgi python-jinja2 python-ldap python-mysql"
+            # Note: Will install python-webpy via 'easy_install' (provided by python-setuptools).
+            ALL_PKGS="${ALL_PKGS} apache2-mod_wsgi python-jinja2 python-ldap python-mysql python-setuptools"
             [ X"${USE_IREDAPD}" != "YES" ] && ALL_PKGS="${ALL_PKGS} python-ldap"
 
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
@@ -371,6 +370,10 @@ EOF
     install_all_pkgs()
     {
         eval ${install_pkg} ${ALL_PKGS}
+        if [ X"${DISTRO}" == X"SUSE" -a X"${USE_IREDADMIN}" == X"YES" ]; then
+            ECHO_DEBUG "Install web.py (${MISC_DIR}/web.py-*.tar.bz)."
+            easy_install ${MISC_DIR}/web.py-*.tar.gz >/dev/null
+        fi
         echo 'export status_install_all_pkgs="DONE"' >> ${STATUS_FILE}
     }
 

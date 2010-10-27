@@ -25,14 +25,15 @@
 export AMAVISD_SERVER='127.0.0.1'
 export AMAVISD_SYS_USER='amavis'
 export AMAVISD_SYS_GROUP='amavis'
+export AMAVISD_QUARANTINE_PORT='9998'
 export AMAVISD_LOGFILE='/var/log/amavisd.log'
 export AMAVISD_LOGROTATE_FILE="${LOGROTATE_DIR}/amavisd"
 export AMAVISD_DKIM_SELECTOR='dkim'
 export AMAVISD_DKIM_DIR='/var/lib/dkim'
 
 # Database used to store incoming & outgoing email related information.
-export AMAVISD_DB_USER='amavisd'
 export AMAVISD_DB_NAME='amavisd'
+export AMAVISD_DB_USER='amavisd'
 export AMAVISD_DB_PASSWD="$(${RANDOM_STRING})"
 export AMAVISD_DB_SQL_TMPL="${SAMPLE_DIR}/amavisd.mysql"
 

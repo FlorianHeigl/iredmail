@@ -41,14 +41,6 @@ export POLICYD_THROTTLE_PIDFILE='/var/run/policyd_throttle.pid'
 export POLICYD_THROTTLE_BINDHOST="${POLICYD_BINDHOST}"
 export POLICYD_THROTTLE_BINDPORT='10032'
 
-export POLICYD_THROTTLE_DB_NAME="${POLICYD_DB_NAME}"
-export POLICYD_THROTTLE_DB_USER="${POLICYD_DB_USER}"
-export POLICYD_THROTTLE_DB_PASSWD="${POLICYD_DB_PASSWD}"
-
-export POLICYD_THROTTLE_USER_NAME="${POLICYD_USER}"
-export POLICYD_THROTTLE_GROUP_NAME="${POLICYD_GROUP}"
-export POLICYD_THROTTLE_USER_HOME="${POLICYD_USER_HOME}"
-
 #
 # Syslog setting.
 #
@@ -85,6 +77,9 @@ elif [ X"${DISTRO}" == X"SUSE" ]; then
 
     # Path of policyd-clean
     export POLICYD_CLEANUP_BIN='/usr/lib/policyd/cleanup'
+
+    # Override default setting.
+    export POLICYD_USER_HOME='/var/lib/empty'
 
 elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     export PKG_POLICYD='postfix-policyd'

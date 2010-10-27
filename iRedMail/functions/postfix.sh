@@ -52,11 +52,11 @@ EOF
         perl -pi -e 's/^#(tlsmgr.*)/${1}/' ${POSTFIX_FILE_MASTER_CF}
 
         # Set postfix:myhostname in /etc/sysconfig/postfix.
-        perl -pi -e 's#^(POSTFIX_MYHOSTNAME=).*#${1}"$ENV{'HOSTNAME'}"#' ${ETC_SYSCONFIG_DIR}/postfix
+        perl -pi -e 's#^(POSTFIX_MYHOSTNAME=).*#${1}"$ENV{'HOSTNAME'}"#' ${POSTFIX_SYSCONFIG_CONF}
         # postfix:inet_protocols
-        perl -pi -e 's#^(POSTFIX_INET_PROTO=).*#${1}"ipv4"#' ${ETC_SYSCONFIG_DIR}/postfix
+        perl -pi -e 's#^(POSTFIX_INET_PROTO=).*#${1}"ipv4"#' ${POSTFIX_SYSCONFIG_CONF}
         #postfix:message_size_limit
-        perl -pi -e 's#^(POSTFIX_ADD_MESSAGE_SIZE_LIMIT=).*#${1}"$ENV{'MESSAGE_SIZE_LIMIT'}"#' ${ETC_SYSCONFIG_DIR}/postfix
+        perl -pi -e 's#^(POSTFIX_ADD_MESSAGE_SIZE_LIMIT=).*#${1}"$ENV{'MESSAGE_SIZE_LIMIT'}"#' ${POSTFIX_SYSCONFIG_CONF}
 
         # Append two lines in /etc/services to avoid below error:
         # '0.0.0.0:smtps: Servname not supported for ai_socktype'
@@ -673,7 +673,7 @@ postfix_config_sasl()
     postconf -e broken_sasl_auth_clients="yes"
     postconf -e smtpd_sasl_security_options="noanonymous"
     [ X"${DISTRO}" == X"SUSE" ] && \
-        perl -pi -e 's#^(POSTFIX_SMTP_AUTH_OPTIONS=).*#${1}"noanonymous"#' ${ETC_SYSCONFIG_DIR}/postfix
+        perl -pi -e 's#^(POSTFIX_SMTP_AUTH_OPTIONS=).*#${1}"noanonymous"#' ${POSTFIX_SYSCONFIG_CONF}
 
     # Report the SASL authenticated user name in Received message header.
     # Used to reject backscatter.
@@ -729,11 +729,11 @@ postfix_config_tls()
     postconf -e tls_daemon_random_source='dev:/dev/urandom'
 
     if [ X"${DISTRO}" == X"SUSE" ]; then
-        perl -pi -e 's#^(POSTFIX_SMTP_TLS_SERVER=).*#${1}"yes"#' ${ETC_SYSCONFIG_DIR}/postfix
-        perl -pi -e 's#^(POSTFIX_SSL_PATH=).*#${1}""#' ${ETC_SYSCONFIG_DIR}/postfix
-        perl -pi -e 's#^(POSTFIX_TLS_CAFILE=).*#${1}""#' ${ETC_SYSCONFIG_DIR}/postfix
-        perl -pi -e 's#^(POSTFIX_TLS_CERTFILE=).*#${1}"$ENV{'SSL_CERT_FILE'}"#' ${ETC_SYSCONFIG_DIR}/postfix
-        perl -pi -e 's#^(POSTFIX_TLS_KEYFILE=).*#${1}"$ENV{'SSL_KEY_FILE'}"#' ${ETC_SYSCONFIG_DIR}/postfix
+        perl -pi -e 's#^(POSTFIX_SMTP_TLS_SERVER=).*#${1}"yes"#' ${POSTFIX_SYSCONFIG_CONF}
+        perl -pi -e 's#^(POSTFIX_SSL_PATH=).*#${1}""#' ${POSTFIX_SYSCONFIG_CONF}
+        perl -pi -e 's#^(POSTFIX_TLS_CAFILE=).*#${1}""#' ${POSTFIX_SYSCONFIG_CONF}
+        perl -pi -e 's#^(POSTFIX_TLS_CERTFILE=).*#${1}"$ENV{'SSL_CERT_FILE'}"#' ${POSTFIX_SYSCONFIG_CONF}
+        perl -pi -e 's#^(POSTFIX_TLS_KEYFILE=).*#${1}"$ENV{'SSL_KEY_FILE'}"#' ${POSTFIX_SYSCONFIG_CONF}
     fi
 
     cat >> ${POSTFIX_FILE_MASTER_CF} <<EOF

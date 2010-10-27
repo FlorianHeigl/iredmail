@@ -262,11 +262,9 @@ EOF
     perl -pi -e 's#^(PIDFILE=)(.*)#${1}"$ENV{POLICYD_THROTTLE_PIDFILE}"#' ${POLICYD_THROTTLE_CONF}
 
     # ---- CHROOT ----
-    export policyd_throttle_user_id="$(id -u ${POLICYD_THROTTLE_USER_NAME})"
-    export policyd_throttle_group_id="$(id -g ${POLICYD_THROTTLE_USER_NAME})"
-    perl -pi -e 's#^(CHROOT=)(.*)#${1}$ENV{POLICYD_THROTTLE_USER_HOME}#' ${POLICYD_THROTTLE_CONF}
-    perl -pi -e 's#^(UID=)(.*)#${1}$ENV{policyd_throttle_user_id}#' ${POLICYD_THROTTLE_CONF}
-    perl -pi -e 's#^(GID=)(.*)#${1}$ENV{policyd_throttle_group_id}#' ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(CHROOT=)(.*)#${1}$ENV{POLICYD_USER_HOME}#' ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(UID=)(.*)#${1}$ENV{policyd_user_id}#' ${POLICYD_THROTTLE_CONF}
+    perl -pi -e 's#^(GID=)(.*)#${1}$ENV{policyd_group_id}#' ${POLICYD_THROTTLE_CONF}
 
     # ---- RECIPIENT THROTTLE ----
     perl -pi -e 's#^(RECIPIENTTHROTTLE=)(.*)#${1}0#' ${POLICYD_THROTTLE_CONF}

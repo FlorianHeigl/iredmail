@@ -41,6 +41,7 @@ elif [ X"${DISTRO}" == X"SUSE" ]; then
     export MAILLOG_INFO='/var/log/mail.info'
     export MAILLOG_ERROR='/var/log/mail.err'
     export MAILLOG_WARN='/var/log/mail.warn'
+    export POSTFIX_SYSCONFIG_CONF="${ETC_SYSCONFIG_DIR}/postfix"
 elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     # Debian, Ubuntu
     export MAILLOG='/var/log/mail.log'

@@ -51,11 +51,13 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
 elif [ X"${DISTRO}" == X"SUSE" ]; then
     # Apache configuration files.
     export HTTPD_CONF_ROOT="/etc/apache2"
-    export HTTPD_CONF="${HTTPD_CONF_ROOT}/default-server.conf"
+    export HTTPD_CONF="${HTTPD_CONF_ROOT}/vhosts.d/vhost.conf"
     export HTTPD_CONF_DIR="${HTTPD_CONF_ROOT}/conf.d"
     export HTTPD_SSL_CONF_SAMPLE="${HTTPD_CONF_ROOT}/vhosts.d/vhost-ssl.template"
     # Copy ${HTTPD_SSL_CONF_SAMPLE} as ${HTTPD_SSL_CONF}.
     export HTTPD_SSL_CONF="${HTTPD_CONF_ROOT}/vhosts.d/vhost-ssl.conf"
+    # /etc/sysconfig/apache2
+    export HTTPD_SYSCONFIG_CONF="${ETC_SYSCONFIG_DIR}/apache2"
 
     # Web data.
     export HTTPD_SERVERROOT='/srv/www'
@@ -122,6 +124,8 @@ elif [ X"${DISTRO}" == X"FREEBSD" ]; then
 else
     :
 fi
+
+export HTTPD_CGIBIN_DIR="${HTTPD_SERVERROOT}/cgi-bin"
 
 # PHP connection type.
 if [ X"${DISTRO_CODENAME}" == X"lucid" ]; then

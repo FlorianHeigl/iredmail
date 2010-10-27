@@ -28,7 +28,7 @@ echo ${tmprootdir} | grep '^/' >/dev/null 2>&1
 if [ X"$?" == X"0" ]; then
     export ROOTDIR="${tmprootdir}"
 else
-    export ROOTDIR="$(pwd)/$(dirname $0)"
+    export ROOTDIR="$(pwd)"
 fi
 
 cd ${ROOTDIR}

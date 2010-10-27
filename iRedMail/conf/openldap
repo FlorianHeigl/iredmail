@@ -95,6 +95,8 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     export OPENLDAP_PID_FILE='/var/run/slapd/slapd.pid'
     export OPENLDAP_ARGS_FILE='/var/run/slapd/slapd.args'
 
+    export OPENLDAP_SYSCONFIG_CONF="${ETC_SYSCONFIG_DIR}/slapd"
+
     # Module related.
     export OPENLDAP_MODULE_PATH='/usr/lib/ldap'
 
