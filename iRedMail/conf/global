@@ -284,7 +284,7 @@ elif [ X"${DISTRO}" == X"SUSE" ]; then
     export SSL_FILE_DIR="/etc/ssl"
 
     # Yum repository related.
-    export YUM_REPOS_DIR='/etc/zypp/repos.d'
+    export ZYPPER_REPOS_DIR='/etc/zypp/repos.d'
     export LOCAL_REPO_NAME="${PROG_NAME}"
     export LOCAL_REPO_FILE="${YUM_REPOS_DIR}/${LOCAL_REPO_NAME}.repo"
     export YUM_UPDATE_REPO='http://iredmail.org/yum/rpms/5/'

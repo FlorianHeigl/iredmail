@@ -256,7 +256,7 @@ EOF
 
 create_repo_suse()
 {
-    cat > /etc/zypp/repos.d/iredmail.repo <<EOF
+    cat > ${ZYPPER_REPOS_DIR}/${PROG_NAME}.repo <<EOF
 [iRedMail-Apache2-Modules]
 name=iRedMail-Apache2-Modules
 baseurl=http://download.opensuse.org/repositories/Apache:/Modules/Apache_openSUSE_${DISTRO_VERSION}/
