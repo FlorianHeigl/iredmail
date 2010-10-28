@@ -1,8 +1,6 @@
-iRedMail-0.7.0:
+iRedMail-0.7.0-beta2:
 
-    Upgrade from 0.6.1 to 0.7.0:
-    http://www.iredmail.org/wiki/index.php?title=Upgrade/iRedMail/0.6.1-0.7.0
-
+iRedMail-0.7.0-beta1:
     * Works on OpenSuSE 11.3. Tested on 11.3, but it should work well on
       11.2, 11.1 too.
     * Improvements:

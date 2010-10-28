@@ -38,7 +38,7 @@ if [ X"${DISTRO}" == X"FREEBSD" ]; then
 else
     DIALOG="dialog --colors --no-collapse --insecure \
             --ok-label Next --no-cancel \
-            --backtitle ${PROG_NAME}:_Open_Source_Mail_Server_Solution_for_RHEL/CentOS/Debian/Ubuntu."
+            --backtitle ${PROG_NAME}:_Open_Source_Mail_Server_Solution"
     PASSWORDBOX='--passwordbox'
 fi
 

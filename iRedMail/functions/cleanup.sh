@@ -275,13 +275,13 @@ EOF
 *
 EOF
 
-    if [ X"${DISTRO}" != X"FREEBSD" ]; then
-        cat <<EOF
-* If you want to remove/uninstall iRedMail quickly, please follow this tutorial:
-* http://www.iredmail.org/forum/topic333-faq-how-to-uninstall-iredmail.html
-*
-EOF
-fi
+#    if [ X"${DISTRO}" != X"FREEBSD" ]; then
+#        cat <<EOF
+#* If you want to remove/uninstall iRedMail quickly, please follow this tutorial:
+#* http://www.iredmail.org/forum/topic333-faq-how-to-uninstall-iredmail.html
+#*
+#EOF
+#fi
 
 if [ X"${POSTFIX_STARTED}" != X"YES" -a X"${DISTRO}" != X"FREEBSD" ]; then
     cat <<EOF
@@ -303,19 +303,88 @@ EOF
 EOF
 fi
 
-if [ X"${DISTRO}" == X"FREEBSD" ]; then
-    # Reboot freebsd to enable mail related services, because sendmail is
-    # binding to port '25'.
-    cat <<EOF
+    if [ X"${DISTRO}" == X"FREEBSD" ]; then
+        # Reboot freebsd to enable mail related services, because sendmail is
+        # binding to port '25'.
+        cat <<EOF
 * Please reboot your system to enable mail related services.
 *
 EOF
 fi
 
+
+    cat <<EOF
+********************************************************************
+* URLs of your web applications:
+*
+EOF
+
+    # Print URL of web applications.
+    # Webmail.
+    if [ X"${USE_WEBMAIL}" == X"YES" ]; then
+        cat <<EOF
+* - Webmail: http://${HOSTNAME}/mail/ or httpS://${HOSTNAME}/mail/
+*   + Account: ${FIRST_USER}@${FIRST_DOMAIN}, Password: ${FIRST_USER_PASSWD_PLAIN}
+*
+EOF
+    fi
+
+    # iRedAdmin.
+    if [ X"${USE_IREDADMIN}" == X"YES" ]; then
+        cat <<EOF
+* - iRedAdmin: httpS://${HOSTNAME}/iredadmin/
+*   + Account: ${SITE_ADMIN_NAME}, Password: ${SITE_ADMIN_PASSWD}
+*
+EOF
+    fi
+
+    # PostfixAdmin.
+    if [ X"${USE_POSTFIXADMIN}" == X"YES" ]; then
+        cat <<EOF
+* - PostfixAdmin: httpS://${HOSTNAME}/postfixadmin/
+*   + Account: ${SITE_ADMIN_NAME}, Password: ${SITE_ADMIN_PASSWD}
+*
+EOF
+    fi
+
+    # phpMyAdmin.
+    if [ X"${USE_PHPMYADMIN}" == X"YES" ]; then
+        cat <<EOF
+* - phpMyAdmin: httpS://${HOSTNAME}/phpmyadmin/
+*   + Accounts:
+*       - Name: ${MYSQL_ADMIN_USER}, Password: ${MYSQL_ADMIN_PW}
+*       - Name: ${MYSQL_ROOT_USER}, Password: ${MYSQL_ROOT_PASSWD}
+*
+EOF
+    fi
+
+    # phpLDAPadmin.
+    if [ X"${USE_PHPLDAPADMIN}" == X"YES" ]; then
+        cat <<EOF
+* - phpLDAPadmin: httpS://${HOSTNAME}/phpldapadmin/
+*   + Account:
+*       - Name: ${LDAP_BINDDN}, Password: ${LDAP_BINDPW}
+*       - Name: ${LDAP_ROOTDN}, Password: ${LDAP_ROOTPW}
+*
+EOF
+    fi
+
+    # Awstats.
+    if [ X"${USE_AWSTATS}" == X"YES" ]; then
+        cat <<EOF
+* - Awstats:
+*   + URLs:
+*       - httpS://${HOSTNAME}/awstats/awstats.pl?config=web
+*       - httpS://${HOSTNAME}/awstats/awstats.pl?config=smtp
+*   + Account: ${SITE_ADMIN_NAME}, Password: ${SITE_ADMIN_PASSWD}
+*
+EOF
+    fi
+
     cat <<EOF
 ********************************************************************
 
 EOF
+
     echo 'export status_cleanup="DONE"' >> ${STATUS_FILE}
 }
-
