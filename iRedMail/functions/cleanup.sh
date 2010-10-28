@@ -363,8 +363,8 @@ EOF
         cat <<EOF
 * - phpLDAPadmin: httpS://${HOSTNAME}/phpldapadmin/
 *   + Account:
-*       - Name: ${LDAP_BINDDN}, Password: ${LDAP_BINDPW}
-*       - Name: ${LDAP_ROOTDN}, Password: ${LDAP_ROOTPW}
+*       - Name (manage mail accounts only): ${LDAP_ADMIN_DN}, Password: ${LDAP_ADMIN_PW}
+*       - Name (site-wide manager): ${LDAP_ROOTDN}, Password: ${LDAP_ROOTPW}
 *
 EOF
     fi
