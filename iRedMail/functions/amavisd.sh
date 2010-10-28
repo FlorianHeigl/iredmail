@@ -162,6 +162,7 @@ amavisd_config_rhel()
     # Enable disclaimer if available.
     perl -pi -e 's%(os_fingerprint_method => undef.*)%${1}\n  allow_disclaimers => 1, # enables disclaimer insertion if available%' ${AMAVISD_CONF}
 
+    echo '$sa_debug = 0;' >> ${AMAVISD_CONF}
     echo 'export status_amavisd_config_rhel="DONE"' >> ${STATUS_FILE}
 }
 
@@ -430,7 +431,7 @@ EOF
 \$altermime = '${ALTERMIME_BIN}';
 
 # Disclaimer in plain text formart.
-@altermime_args_disclaimer = qw(--disclaimer=${DISCLAIMER_DIR}/_OPTION_.txt);
+@altermime_args_disclaimer = qw(--disclaimer=${DISCLAIMER_DIR}/_OPTION_.txt --disclaimer-html=${DISCLAIMER_DIR}/_OPTION_.txt --force-for-bad-html);
 
 @disclaimer_options_bysender_maps = ({
     # Per-domain disclaimer setting: ${DISCLAIMER_DIR}/host1.iredmail.org.txt
@@ -612,7 +613,7 @@ EOF
 
 amavisd_config()
 {
-    if [ X"${DISTRO}" == X"RHEL" -o X"${DISTRO}" == X"FREEBSD" ]; then
+    if [ X"${DISTRO}" == X"RHEL" -o X"${DISTRO}" == X"FREEBSD" -o X"${DISTRO}" == X"SUSE" ]; then
         check_status_before_run amavisd_config_rhel
     elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
         check_status_before_run amavisd_config_debian

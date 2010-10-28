@@ -43,7 +43,7 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
 
 elif [ X"${DISTRO}" == X"SUSE" ]; then
     export AWSTATS_CONF_SAMPLE="${AWSTATS_CONF_DIR}/awstats.web.conf"
-    export AWSTATS_HTTPD_ROOT="${HTTPD_SERVERROOT}/awstats"
+    export AWSTATS_HTTPD_ROOT="${HTTPD_SERVERROOT}/cgi-bin"
     export AWSTATS_ICON_DIR="/usr/share/awstats/icon"
     export AWSTATS_CSS_DIR="/usr/share/awstats/css"
     export AWSTATS_JS_DIR="/usr/share/awstats/js"

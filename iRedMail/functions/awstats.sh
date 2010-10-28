@@ -31,7 +31,7 @@ awstats_config_basic()
     # Move awstats.pl to ${AWSTATS_CGI_DIR} on Debian/Ubuntu, so that it won't
     # conflict with other cgi programs, e.g. mailman.
     if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" -o X"${DISTRO}" == X"SUSE" ]; then
-        mkdir -p ${AWSTATS_CGI_DIR}/awstats 2>/dev/null
+        mkdir -p ${AWSTATS_CGI_DIR}/awstats/ 2>/dev/null
         mv ${AWSTATS_CGI_DIR}/awstats.pl ${AWSTATS_CGI_DIR}/awstats/ 2>/dev/null
         export AWSTATS_CGI_DIR="${AWSTATS_CGI_DIR}/awstats"
     fi
@@ -40,9 +40,9 @@ awstats_config_basic()
 ${CONF_MSG}
 # Note: Please refer to ${HTTPD_SSL_CONF} for SSL/TLS setting.
 #Alias /awstats/icon "${AWSTATS_ICON_DIR}/"
-#ScriptAlias /awstats "${AWSTATS_HTTPD_ROOT}/"
+#ScriptAlias /awstats "${AWSTATS_CGI_DIR}/"
 #Alias /css "${AWSTATS_CSS_DIR}/"
-#Alias /js "${AWSTATS_JS_DIR}/js/"
+#Alias /js "${AWSTATS_JS_DIR}/"
 
 <Directory ${AWSTATS_CGI_DIR}/>
     DirectoryIndex awstats.pl
@@ -151,7 +151,7 @@ EOF
 EOF
 
     # Make Awstats can be accessed via HTTPS.
-    perl -pi -e 's#(</VirtualHost>)#Alias /awstats/icon "$ENV{'AWSTATS_HTTPD_ROOT'}/icon/"\n${1}#' ${HTTPD_SSL_CONF}
+    perl -pi -e 's#(</VirtualHost>)#Alias /awstats/icon "$ENV{'AWSTATS_ICON_DIR'}/"\n${1}#' ${HTTPD_SSL_CONF}
     perl -pi -e 's#(</VirtualHost>)#ScriptAlias /awstats "$ENV{'AWSTATS_CGI_DIR'}/"\n${1}#' ${HTTPD_SSL_CONF}
 
     cat >> ${TIP_FILE} <<EOF
@@ -257,6 +257,7 @@ awstats_config_maillog()
 awstats_config_crontab()
 {
     ECHO_DEBUG "Setting cronjob for awstats."
+
     cat >> ${CRON_SPOOL_DIR}/root <<EOF
 1   */1   *   *   *   perl ${AWSTATS_CGI_DIR}/awstats.pl -config=web -update >/dev/null
 1   */1   *   *   *   perl ${AWSTATS_CGI_DIR}/awstats.pl -config=smtp -update >/dev/null
