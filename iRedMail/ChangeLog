@@ -1,22 +1,31 @@
 iRedMail-0.7.0:
-    * Supports OpenSuSE 11.3. Tested with 11.3, but it should work well with
+
+    Upgrade from 0.6.1 to 0.7.0:
+    http://www.iredmail.org/wiki/index.php?title=Upgrade/iRedMail/0.6.1-0.7.0
+
+    * Works on OpenSuSE 11.3. Tested on 11.3, but it should work well on
       11.2, 11.1 too.
-    * Replaced ldap attribute: gn (givenName), fax (facsimileTelephoneNumber).
-    * Store realtime quota usage in MySQL with Dovecot.
-    * Use repository 'backports.debian.org' on Debian 5.
-    * Bypass shadow address in postfix sender login checking.
-    * Improve postfix ldap lookup to make mail list of alias domain work.
-      Thanks for Andrea Di Dato's feedback and testing.
-    * Fix incorrect file location of awstats.pl on Debian/Ubuntu.
-    * Add script used to backup OpenLDAP data: tools/backup_openldap.sh.
-    * Add script used to backup MySQL databases: tools/backup_mysql.sh.
+    * Improvements:
+        + Store realtime quota usage in MySQL with Dovecot-1.2. Reference:
+          http://www.iredmail.org/wiki/index.php?title=IRedMail/FAQ/Store.Realtime.Quota.In.MySQL
+        + Use repository 'backports.debian.org' on Debian 5.
+        + Bypass shadow address in postfix sender login checking.
+        + Improve postfix ldap lookup to make mail list of alias domain work.
+          Thanks for Andrea Di Dato's feedback and testing.
+        + Integrate MySQL in Amavisd: @storage_sql_dsn.
+        + Improve backup mx support with MySQL backend. Thanks tiangangnet@bbs.
+        + Replaced ldap attribute:
+            - gn (old) -> givenName
+            - fax (old) -> facsimileTelephoneNumber
+    * New backup scripts: tools/backup_openldap.sh, tools/backup_mysql.sh.
+      Reference: http://www.iredmail.org/wiki/index.php?title=IRedMail/FAQ/Backup
     * Upgrade packages:
         + Dovecot -> 1.2.x. On RHEL/CentOS & Debian 5 (with backports).
         + PostfixAdmin -> 2.3.2
         + phpMyAdmin -> 3.3.7
         + Roundcube webmail -> 0.4.2
-    * Integrate MySQL in Amavisd: @storage_sql_dsn.
-    * Improve backup mx support with MySQL backend. Thanks tiangangnet@bbs.
+    * Fixed:
+        + Fix incorrect file location of awstats.pl on Debian/Ubuntu.
 
 iRedMail-0.6.1:
     * Add missing mail log files (mail.info, mail.err, mail.warn) in logrotate.
