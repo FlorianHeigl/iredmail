@@ -280,6 +280,7 @@ enable_service_rh()
 {
     services="$@"
     for i in $services; do
+        ECHO_DEBUG "Enable service: $i."
         /sbin/chkconfig --level 345 $i on
     done
 }
@@ -288,6 +289,7 @@ disable_service_rh()
 {
     services="$@"
     for i in $services; do
+        ECHO_DEBUG "Disable service: $i."
         /sbin/chkconfig --level 345 $i off
     done
 }
@@ -296,6 +298,7 @@ enable_service_debian()
 {
     services="$@"
     for i in $services; do
+        ECHO_DEBUG "Enable service: $i."
         update-rc.d $i defaults
     done
 }
@@ -304,6 +307,7 @@ disable_service_debian()
 {
     services="$@"
     for i in $services; do
+        ECHO_DEBUG "Disable service: $i."
         update-rc.d -f $i remove
     done
 }

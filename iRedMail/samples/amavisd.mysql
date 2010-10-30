@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
   priority   integer      NOT NULL DEFAULT '7',  -- sort field, 0 is low prior.
   policy_id  integer unsigned NOT NULL DEFAULT '1',  -- JOINs with policy.id
   email      varbinary(255) NOT NULL UNIQUE,
-  fullname   varchar(255) DEFAULT NULL,    -- not used by amavisd-new
+  fullname   varchar(255) DEFAULT NULL    -- not used by amavisd-new
   -- local   char(1)      -- Y/N  (optional field, see note further down)
 );
 
