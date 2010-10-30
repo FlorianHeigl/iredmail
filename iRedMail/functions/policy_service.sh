@@ -205,7 +205,7 @@ EOF
     # ---- WHITELISTING ----
     perl -pi -e 's#^(WHITELISTING=)(.*)#${1}1#' ${POLICYD_CONF}
     perl -pi -e 's#^(WHITELISTNULL=)(.*)#${1}0#' ${POLICYD_CONF}
-    perl -pi -e 's#^(WHITELISTSENDER=)(.*)#${1}0#' ${POLICYD_CONF}
+    perl -pi -e 's#^(WHITELISTSENDER=)(.*)#${1}1#' ${POLICYD_CONF}
     perl -pi -e 's#^(AUTO_WHITE_LISTING=)(.*)#${1}1#' ${POLICYD_CONF}
     perl -pi -e 's#^(AUTO_WHITELIST_NUMBER=)(.*)#${1}10#' ${POLICYD_CONF}
 
