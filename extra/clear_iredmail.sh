@@ -362,8 +362,8 @@ get_all_accounts()
 
     # Amavisd.
     if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-        ALL_USERS="${ALL_USERS} ${AMAVISD_USER}"
-        ALL_GROUPS="${ALL_GROUPS} ${AMAVISD_GROUP}"
+        ALL_USERS="${ALL_USERS} ${AMAVISD_SYS_USER}"
+        ALL_GROUPS="${ALL_GROUPS} ${AMAVISD_SYS_GROUP}"
     fi
 
     # ClamAV.
