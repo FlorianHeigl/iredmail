@@ -71,6 +71,10 @@ elif [ X"${DISTRO}" == X"FREEBSD" ]; then
     export AWSTATS_CONF_SAMPLE="${AWSTATS_HTTPD_ROOT}/cgi-bin/awstats.model.conf"
     export AWSTATS_CONF_DIR="${AWSTATS_HTTPD_ROOT}/cgi-bin"
     export AWSTATS_CGI_DIR="${AWSTATS_CONF_DIR}"
+
+    # Override default settings.
+    export AWSTATS_CONF_WEB="${AWSTATS_CONF_DIR}/awstats.web.conf"
+    export AWSTATS_CONF_MAIL="${AWSTATS_CONF_DIR}/awstats.smtp.conf"
 else
     :
 fi
