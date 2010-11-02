@@ -128,8 +128,8 @@ cleanup_replace_iptables_rule()
     esac
 
     if [ X"${KERNEL_NAME}" == X"Linux" ]; then
-        if [ X"${DISTRO}" == X"${SUSE}" ]; then
-            ENABLED_SERVICES="${ENABLED_SERVICES} SuSEfirewall2_init SuSEfirewall2_setup"
+        if [ X"${DISTRO}" == X"SUSE" ]; then
+            ENABLED_SERVICES="${ENABLED_SERVICES} SuSEfirewall2_setup"
         else
             ENABLED_SERVICES="${ENABLED_SERVICES} iptables"
         fi
