@@ -290,8 +290,8 @@ EOF
     perl -pi -e 's#^(memory_limit = )#${1} 128M;#' ${PHP_INI}
 
     ECHO_DEBUG "Increase 'upload_max_filesize', 'post_max_size' to 10/12M: ${PHP_INI}."
-    perl -pi -e 's/^(upload_max_filesize.*=)/${1}10M; #/' ${PHP_INI}
-    perl -pi -e 's/^(post_max_size.*=)/${1}12M; #/' ${PHP_INI}
+    perl -pi -e 's/^(upload_max_filesize.*=).*/${1} 10M;/' ${PHP_INI}
+    perl -pi -e 's/^(post_max_size.*=)/${1} 12M;/' ${PHP_INI}
 
     # Set date.timezone. required by PHP-5.3.
     if [ X"${DISTRO}" == X"FREEBSD" -o X"${DISTRO}" == X"SUSE" ]; then
