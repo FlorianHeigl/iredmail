@@ -1,5 +1,8 @@
 iRedMail-0.7.0-beta2:
     * Improvements:
+        + Increase dovecot "mail_process_size" to 1024MB by default. Hope to
+          avoid a dovecot "out of memory" issue when processing large mailbox.
+          Thanks James Kong.
         + Enable whitelising sender (WHITELISTSENDER=1) in policyd by default.
     * Fixed:
         + Fix incorrect file localtion of php.ini on OpenSuSE.

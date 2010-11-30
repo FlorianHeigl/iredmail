@@ -38,6 +38,7 @@ lock_method         flock
 
 use_bayes           1
 bayes_auto_learn    1
+bayes_auto_expire   0
 
 score ALL_TRUSTED -10.000
 

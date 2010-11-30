@@ -103,7 +103,17 @@ log_path = ${DOVECOT_LOG_FILE}
 #login_processes_count = 3
 #login_max_processes_count = 128
 #login_max_connections = 256
+
 #max_mail_processes = 512
+
+# Set max process size in megabytes. Default is 256.
+# Most of the memory goes to mmap()ing files, so it shouldn't harm
+# much even if this limit is set pretty high.
+#
+# Note:
+# Some user reported that if mailbox is too large, dovecot will disconnect
+# the imap connection, and complain "pool_system_malloc(100248): Out of memory".
+mail_process_size = 1024
 
 disable_plaintext_auth = no
 
