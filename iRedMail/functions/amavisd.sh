@@ -319,7 +319,7 @@ amavisd_config_general()
   allow_disclaimers => 1,  # enables disclaimer insertion if available
   # notify administrator of locally originating malware
   virus_admin_maps => ["root\@\$mydomain"],
-  spam_admin_maps  => ["root\@$mydomain"],
+  spam_admin_maps  => ["root\@\$mydomain"],
   warnbadhsender   => 1,
   # forward to a smtpd service providing DKIM signing service
   #forward_method => 'smtp:[127.0.0.1]:10027',
