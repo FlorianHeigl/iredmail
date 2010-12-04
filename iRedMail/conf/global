@@ -195,7 +195,7 @@ if [ X"${KERNEL_NAME}" == X"Linux" ]; then
         # Debian
         export DISTRO='DEBIAN'
 
-        # Detect branch: Debian 5.x, Debian 6.x.
+        # Detect release version: 5.x, 6.x.
         # Debian 5.
         grep '^5\.' /etc/debian_version &>/dev/null
         if [ X"$?" == X"0" ]; then
