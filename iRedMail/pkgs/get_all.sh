@@ -301,6 +301,30 @@ EOF
 
 }
 
+create_repo_debian_backports()
+{
+    # Use http://backports.debian.org/ on Debian 5.
+    if [ X"${DISTRO}" == X"DEBIAN" -a X"${DISTRO_VERSION}" == X"5" ]; then
+        grep 'Debian-Backports-iRedMail' /etc/apt/sources.list &>/dev/null
+        if [ X"$?" != X"0" ]; then
+            cat >> /etc/apt/sources.list <<EOF
+# Debian-Backports-iRedMail
+deb http://backports.debian.org/debian-backports lenny-backports main
+EOF
+
+            cat >> /etc/apt/preferences <<EOF
+
+Package: *
+Pin: release a=lenny-backports
+Pin-Priority: 500
+EOF
+
+            # Force 'apt-get update' to enable backports repo.
+            ${APTGET} update
+        fi
+    fi
+}
+
 echo_end_msg()
 {
     cat <<EOF
@@ -330,24 +354,8 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     create_repo_rhel
 elif [ X"${DISTRO}" == X"SUSE" ]; then
     create_repo_suse
-fi
-
-# Use http://backports.debian.org/ on Debian 5.
-if [ X"${DISTRO}" == X"DEBIAN" -a X"${DISTRO_VERSION}" == X"5" ]; then
-    grep 'Debian-Backports-iRedMail' /etc/apt/sources.list &>/dev/null
-    if [ X"$?" != X"0" ]; then
-        cat >> /etc/apt/sources.list <<EOF
-# Debian-Backports-iRedMail
-deb http://backports.debian.org/debian-backports lenny-backports main
-EOF
-
-        cat >> /etc/apt/preferences <<EOF
-
-Package: *
-Pin: release a=lenny-backports
-Pin-Priority: 500
-EOF
-    fi
+elif [ X"${DISTRO}" == X"DEBIAN" -a X"${DISTRO_VERSION}" == X"5" ]; then
+    create_repo_debian_backports
 fi
 
 fetch_misc && \
