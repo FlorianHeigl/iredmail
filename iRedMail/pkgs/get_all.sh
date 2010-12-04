@@ -301,30 +301,57 @@ EOF
 
 }
 
-create_repo_debian_backports()
+create_repo_debian()
 {
     # Use http://backports.debian.org/ on Debian 5.
-    if [ X"${DISTRO}" == X"DEBIAN" -a X"${DISTRO_VERSION}" == X"5" ]; then
-        grep 'Debian-Backports-iRedMail' /etc/apt/sources.list &>/dev/null
-        if [ X"$?" != X"0" ]; then
-            cat >> /etc/apt/sources.list <<EOF
+    if [ X"${DISTRO}" == X"DEBIAN" ]; then
+        if [ X"${DISTRO_VERSION}" == X"5" ]; then
+            grep 'Debian-Backports-iRedMail' /etc/apt/sources.list &>/dev/null
+            if [ X"$?" != X"0" ]; then
+                cat >> /etc/apt/sources.list <<EOF
 # Debian-Backports-iRedMail
 deb http://backports.debian.org/debian-backports lenny-backports main
 EOF
 
-            cat >> /etc/apt/preferences <<EOF
+                cat >> /etc/apt/preferences <<EOF
 
 Package: *
 Pin: release a=lenny-backports
 Pin-Priority: 500
 EOF
 
-            # Force 'apt-get update' to enable backports repo.
-            ${APTGET} update
+                # Force 'apt-get update' to enable backports repo.
+                ${APTGET} update
+            fi
         fi
     fi
 }
 
+create_repo_ubuntu()
+{
+    if [ X"${DISTRO}" == X"UBUNTU" ]; then
+        if [ X"${DISTRO_CODENAME}" == X"hardy" ]; then
+            # Add ppa repo for Ubuntu 8.04.
+            grep 'Ubuntu-Hardy-PPA-iRedMail' /etc/apt/sources.list &>/dev/null
+            if [ X"$?" != X"0" ]; then
+                # Add repo url.
+                cat >> /etc/apt/sources.list <<EOF
+# Ubuntu-Hardy-PPA-iRedMail
+deb http://ppa.launchpad.net/iredmail/8.04/ubuntu hardy main
+#deb-src http://ppa.launchpad.net/iredmail/8.04/ubuntu hardy main
+EOF
+
+                # Import GPG key.
+                apt-key adv --recv-keys \
+                    --keyserver keyserver.ubuntu.com \
+                    0xd9226c1a29511386b3b9f8bc8dc2c190ddf700d3
+
+                # Force 'apt-get update'.
+                ${APTGET} update
+            fi
+        fi
+    fi
+}
 echo_end_msg()
 {
     cat <<EOF
@@ -354,8 +381,10 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     create_repo_rhel
 elif [ X"${DISTRO}" == X"SUSE" ]; then
     create_repo_suse
+elif [ X"${DISTRO}" == X"UBUNTU" ]; then
+    create_repo_ubuntu
 elif [ X"${DISTRO}" == X"DEBIAN" -a X"${DISTRO_VERSION}" == X"5" ]; then
-    create_repo_debian_backports
+    create_repo_debian
 fi
 
 fetch_misc && \
