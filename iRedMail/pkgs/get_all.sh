@@ -312,6 +312,13 @@ create_repo_debian_backports()
 deb http://backports.debian.org/debian-backports lenny-backports main
 EOF
 
+            cat >> /etc/apt/preferences <<EOF
+
+Package: *
+Pin: release a=lenny-backports
+Pin-Priority: 500
+EOF
+
             # Force 'apt-get update' to enable backports repo.
             ${APTGET} update
         fi
