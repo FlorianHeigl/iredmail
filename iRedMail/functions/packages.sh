@@ -23,7 +23,6 @@
 install_all()
 {
     ALL_PKGS=''
-    BACKPORT_PKGS=''    # For Debian 5, with backports.debian.org.
     ENABLED_SERVICES=''
     DISABLED_SERVICES=''
 
@@ -225,11 +224,7 @@ EOF
             ALL_PKGS="${ALL_PKGS} dovecot12"
 
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-            if [ X"${DISTRO_VERSION}" == X"5" ]; then
-                BACKPORT_PKGS="${BACKPORT_PKGS} dovecot-imapd dovecot-pop3d"
-            else
-                ALL_PKGS="${ALL_PKGS} dovecot-imapd dovecot-pop3d"
-            fi
+            ALL_PKGS="${ALL_PKGS} dovecot-imapd dovecot-pop3d"
         else
             :
         fi
@@ -374,10 +369,6 @@ EOF
     # Install all packages.
     install_all_pkgs()
     {
-        if [ X"${DISTRO}" == X"DEBIAN" -a X"${DISTRO_VERSION}" == X"5" ]; then
-            ${APTGET} -t lenny-backports install -y --force-yes ${BACKPORT_PKGS}
-        fi
-
         eval ${install_pkg} ${ALL_PKGS}
         if [ X"${DISTRO}" == X"SUSE" -a X"${USE_IREDADMIN}" == X"YES" ]; then
             ECHO_DEBUG "Install web.py (${MISC_DIR}/web.py-*.tar.bz)."
