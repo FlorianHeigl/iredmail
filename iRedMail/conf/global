@@ -181,6 +181,19 @@ if [ X"${KERNEL_NAME}" == X"Linux" ]; then
     elif [ -f /etc/debian_version ]; then
         # Debian
         export DISTRO='DEBIAN'
+
+        # Detect branch: Debian 5.x, Debian 6.x.
+        # Debian 5.
+        grep '^5\.' /etc/debian_version &>/dev/null
+        if [ X"$?" == X"0" ]; then
+            export DISTRO_CODENAME='5'
+        fi
+
+        # Debian 6.
+        grep '^6\.' /etc/debian_version &>/dev/null
+        if [ X"$?" == X"0" ]; then
+            export DISTRO_CODENAME='6'
+        fi
     else
         # Not support yet.
         echo "Your distrobution is not supported yet."
