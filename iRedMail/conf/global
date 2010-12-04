@@ -157,6 +157,19 @@ if [ X"${KERNEL_NAME}" == X"Linux" ]; then
     if [ -f /etc/redhat-release ]; then
         # RHEL/CentOS
         export DISTRO='RHEL'
+
+        # RHEL/CentOS 5.x.
+        grep ' 5\.' /etc/redhat-release &>/dev/null
+        if [ X"$?" == X"0" ]; then
+            export DISTRO_VERSION='5'
+        fi
+
+        # RHEL/CentOS 6.x.
+        grep ' 6\.' /etc/redhat-release &>/dev/null
+        if [ X"$?" == X"0" ]; then
+            export DISTRO_VERSION='6'
+        fi
+
     elif [ -f /etc/SuSE-release ]; then
         # SLES/OpenSuSE
         export DISTRO='SUSE'
@@ -259,7 +272,7 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     export YUM_REPOS_DIR='/etc/yum.repos.d'
     export LOCAL_REPO_NAME="${PROG_NAME}"
     export LOCAL_REPO_FILE="${YUM_REPOS_DIR}/${LOCAL_REPO_NAME}.repo"
-    export YUM_UPDATE_REPO='http://iredmail.org/yum/rpms/5/'
+    export YUM_UPDATE_REPO="http://iredmail.org/yum/rpms/${DISTRO_VERSION}/"
 
     # Override default value.
     export PKG_DIALOG="dialog.${ARCH}"
@@ -302,7 +315,7 @@ elif [ X"${DISTRO}" == X"SUSE" ]; then
     export ZYPPER_REPOS_DIR='/etc/zypp/repos.d'
     export LOCAL_REPO_NAME="${PROG_NAME}"
     export LOCAL_REPO_FILE="${YUM_REPOS_DIR}/${LOCAL_REPO_NAME}.repo"
-    export YUM_UPDATE_REPO='http://iredmail.org/yum/rpms/5/'
+    #export YUM_UPDATE_REPO=''
 
     # Override default value.
     export PKG_DIALOG="dialog"
