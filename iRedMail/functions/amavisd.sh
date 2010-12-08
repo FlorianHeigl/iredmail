@@ -342,8 +342,13 @@ amavisd_config_general()
 };
 
 #########################
-# Quarantine SPAM mails.
+# Quarantine mails.
 #
+
+# Don't quarantine mails with bad header.
+\$bad_header_quarantine_method = undef;
+
+# Quarantine SPAM.
 #\$spam_quarantine_to = 'spam-quarantine';
 
 # Quarantine method. How to store mail body.
