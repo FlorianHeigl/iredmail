@@ -97,6 +97,9 @@ EOF
 # Enable alias domain.
 \$CONF['alias_domain'] = 'YES';
 
+# Show realtime quota usage with dovecot-1.2 dict quota.
+\$CONF['new_quota_table'] = 'YES';
+
 \$CONF['backup'] = "NO";
 \$CONF['fetchmail'] = "NO";
 \$CONF['sendmail'] = "NO";
@@ -107,6 +110,9 @@ EOF
 \$CONF['vacation_control'] = "NO";
 \$CONF['vacation_control_admin'] = "NO";
 EOF
+
+    # Show realtime quota usage with dovecot-1.2 dict quota.
+    perl -pi -e 's#(.*table_quota2.*table_by_key.*)quota2(.*)#${1}mailbox${2}#' ${POSTFIXADMIN_HTTPD_ROOT}/functions.inc.php
 
     [ ! -z ${MAIL_ALIAS_ROOT} ] && \
         echo "\$CONF['admin_email'] = \"${MAIL_ALIAS_ROOT}\";" >> ${POSTFIXADMIN_CONF_LOCAL}
