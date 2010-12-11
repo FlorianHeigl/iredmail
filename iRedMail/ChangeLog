@@ -1,5 +1,7 @@
 iRedMail-0.7.0-beta2:
     * Improvements:
+        + Show realtime quota usage with dovecot-1.2 dict quota in
+          PostfixAdmin.
         + Don't quarantine mails with bad header in Amavisd.
           '$bad_header_quarantine_method=undef;'
         + Increase dovecot "mail_process_size" to 1024MB by default. Hope to
@@ -8,6 +10,8 @@ iRedMail-0.7.0-beta2:
         + Enable whitelising sender (WHITELISTSENDER=1) in policyd by default.
     * Fixed:
         + Fix incorrect file localtion of php.ini on OpenSuSE.
+    * Package Update:
+        + phpMyAdmin -> 3.3.8.1
 
 iRedMail-0.7.0-beta1:
     * Works on OpenSuSE 11.3. Tested on 11.3, but it should work well on
@@ -20,7 +24,7 @@ iRedMail-0.7.0-beta1:
         + Improve postfix ldap lookup to make mail list of alias domain work.
           Thanks for Andrea Di Dato's feedback and testing.
         + Integrate MySQL in Amavisd: @storage_sql_dsn.
-        + Improve backup mx support with MySQL backend. Thanks tiangangnet@bbs.
+        + Improve backup mx support with MySQL backend. Thanks tiangangnet@bbs
         + Replaced ldap attribute:
             - gn (old) -> givenName
             - fax (old) -> facsimileTelephoneNumber

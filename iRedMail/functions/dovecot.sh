@@ -85,6 +85,7 @@ listen = *
 # mail uid/gid.
 mail_uid = ${VMAIL_USER_UID}
 mail_gid = ${VMAIL_USER_GID}
+first_valid_uid = ${VMAIL_USER_UID}
 
 #
 # Debug options.

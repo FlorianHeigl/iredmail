@@ -20,7 +20,8 @@ adduser_vmail()
     if [ X"${DISTRO}" == X"FREEBSD" ]; then
         pw useradd -n ${VMAIL_USER_NAME} -s /sbin/nologin -d ${VMAIL_USER_HOME_DIR} -m 2>/dev/null
     elif [ X"${DISTRO}" == X"SUSE" ]; then
-        groupadd ${VMAIL_GROUP_NAME}
+        # Note: package 'postfix-mysql' will create vmail:vmail, with uid/gid=303.
+        groupadd ${VMAIL_GROUP_NAME} 2>/dev/null
         useradd -m -d ${VMAIL_USER_HOME_DIR} -s /sbin/nologin -g ${VMAIL_GROUP_NAME} ${VMAIL_USER_NAME} 2>/dev/null
     else
         useradd -m -d ${VMAIL_USER_HOME_DIR} -s /sbin/nologin ${VMAIL_USER_NAME} 2>/dev/null
