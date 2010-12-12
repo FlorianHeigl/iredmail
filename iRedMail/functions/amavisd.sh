@@ -329,6 +329,11 @@ amavisd_config_general()
   terminate_dsn_on_notify_success => 0,  # don't remove NOTIFY=SUCCESS option
 };
 
+# regular incoming mail, originating from anywhere (usually from outside)
+#\$policy_bank{'EXT'} = {
+#  # just use global settings, no special overrides
+#};
+
 #
 # Port used to release quarantined mails.
 #
@@ -501,6 +506,7 @@ EOF
     # Integrate SQL. Used to store incoming & outgoing related mail information.
     cat >> ${AMAVISD_CONF} <<EOF
 \$sql_allow_8bit_address = 1;
+\$timestamp_fmt_mysql = 1;
 @storage_sql_dsn = (
     ['DBI:mysql:database=${AMAVISD_DB_NAME};host=${MYSQL_SERVER};port=${MYSQL_PORT}', '${AMAVISD_DB_USER}', '${AMAVISD_DB_PASSWD}'],
 );
