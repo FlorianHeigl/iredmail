@@ -1,15 +1,4 @@
 ========
-Quick Installation Guide:
-
-    *) On RHEL/CentOS:
-
-        # cd /path/to/iRedMail-x.y.z/
-        # cd pkgs/
-        # sh get_all.sh
-        # cd ../
-        # sh iRedMail.sh
-
-========
 Full Installation Guide:
 
 *) Check if this is the lastest version before you run any script:
@@ -26,6 +15,9 @@ Full Installation Guide:
 
    - Ubuntu 8.04 & 9.04
      http://code.google.com/p/iredmail/wiki/Installation_on_Ubuntu
+
+   - OpenSuSE 11.3
+     http://code.google.com/p/iredmail/wiki/Installation_on_OpenSuSE
 
    - FreeBSD 7.2 & 8.0
      http://code.google.com/p/iredmail/wiki/Installation_on_FreeBSD

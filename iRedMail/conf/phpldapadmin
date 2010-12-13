@@ -37,3 +37,8 @@ else
     export PLA_HTTPD_ROOT_SYMBOL_LINK="${HTTPD_SERVERROOT}/phpldapadmin"
     export PLA_CONF_DIR="${PLA_HTTPD_ROOT_SYMBOL_LINK}/config"
 fi
+
+# Ubuntu 10.04 (lucid)
+if [ X"${DISTRO_CODENAME}" == X"lucid" ]; then
+    export PHPLDAPADMIN_USE_SOURCE='NO'
+fi
