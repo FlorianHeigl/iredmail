@@ -1,7 +1,6 @@
--- MySQL template for Amavisd.
--- Extracted from Amavisd docs/README.sql-mysql.
+-- MySQL template for Amavisd. Extracted from Amavisd docs/README.sql-mysql.
+-- Used by @lookup_sql_dsn and @storage_sql_dsn
 
--- Used by @lookup_sql_dsn
 -- local users
 CREATE TABLE IF NOT EXISTS users (
   id         int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,  -- unique id
@@ -81,6 +80,8 @@ CREATE TABLE IF NOT EXISTS policy (
         -- names mapped through %banned_rules to actual banned_filename tables
 );
 
+
+
 -- R/W part of the dataset (optional)
 --   May reside in the same or in a separate database as lookups database;
 --   REQUIRES SUPPORT FOR TRANSACTIONS; specified in @storage_sql_dsn
@@ -127,16 +128,17 @@ CREATE TABLE IF NOT EXISTS maddr (
 --   but the following MUST then be set in amavisd.conf: $timestamp_fmt_mysql=1
 CREATE TABLE IF NOT EXISTS msgs (
   partition_tag integer    DEFAULT 0,   -- see $partition_tag
-  mail_id    varbinary(12) NOT NULL,    -- long-term unique mail id
-  secret_id  varbinary(12) DEFAULT '',  -- authorizes release of mail_id
-  am_id      varchar(20)   NOT NULL,    -- id used in the log
-  time_num   integer unsigned NOT NULL, -- rx_time: seconds since Unix epoch
-  time_iso   char(16)      NOT NULL,    -- rx_time: ISO8601 UTC ascii time
-  sid        bigint unsigned NOT NULL,  -- sender: maddr.id
-  policy     varchar(255)  DEFAULT '',  -- policy bank path (like macro %p)
-  client_addr varchar(255) DEFAULT '',  -- SMTP client IP address (IPv4 or v6)
-  size       integer unsigned NOT NULL, -- message size in bytes
-  content    char(1),                   -- content type: V/B/U/S/Y/M/H/O/T/C
+  mail_id     varbinary(16) NOT NULL,    -- long-term unique mail id, dflt 12 ch
+  secret_id   varbinary(16) DEFAULT '',  -- authorizes release of mail_id, 12 ch
+  am_id       varchar(20)   NOT NULL,    -- id used in the log
+  time_num    integer unsigned NOT NULL, -- rx_time: seconds since Unix epoch
+  time_iso    char(16)      NOT NULL,    -- rx_time: ISO8601 UTC ascii time
+  sid         bigint unsigned NOT NULL,  -- sender: maddr.id
+  policy      varchar(255) DEFAULT '',   -- policy bank path (like macro %p)
+  client_addr varchar(255) DEFAULT '',   -- SMTP client IP address (IPv4 or v6)
+  size        integer unsigned NOT NULL, -- message size in bytes
+  originating char(1) DEFAULT ' ' NOT NULL,  -- sender from inside or auth'd
+  content     char(1),                   -- content type: V/B/U/S/Y/M/H/O/T/C
     -- virus/banned/unchecked/spam(kill)/spammy(tag2)/
     -- /bad-mime/bad-header/oversized/mta-err/clean
     -- is NULL on partially processed mail
@@ -168,16 +170,17 @@ CREATE INDEX msgs_idx_time_num ON msgs (time_num);
 --  orphaned and should be ignored and eventually deleted by external utilities
 CREATE TABLE IF NOT EXISTS msgrcpt (
   partition_tag integer    DEFAULT 0,    -- see $partition_tag
-  mail_id    varbinary(12) NOT NULL,     -- (must allow duplicates)
-  rseqnum    integer       DEFAULT 0,    -- recipient count within one message
+  mail_id    varbinary(16) NOT NULL,     -- (must allow duplicates)
+  rseqnum    integer  DEFAULT 0   NOT NULL, -- recip's enumeration within msg
   rid        bigint unsigned NOT NULL,   -- recipient: maddr.id (dupl. allowed)
-  content    char(1),                    -- content type: V/B/U/S/Y/M/H/O/T/C
-  ds         char(1)       NOT NULL,     -- delivery status: P/R/B/D/T
+  is_local   char(1)  DEFAULT ' ' NOT NULL, -- recip is: Y=local, N=foreign
+  content    char(1)  DEFAULT ' ' NOT NULL, -- content type V/B/U/S/Y/M/H/O/T/C
+  ds         char(1)  NOT NULL,          -- delivery status: P/R/B/D/T
                                          -- pass/reject/bounce/discard/tempfail
-  rs         char(1)       NOT NULL,     -- release status: initialized to ' '
-  bl         char(1)       DEFAULT ' ',  -- sender blacklisted by this recip
-  wl         char(1)       DEFAULT ' ',  -- sender whitelisted by this recip
-  bspam_level float,                     -- spam level + per-recip boost
+  rs         char(1)  NOT NULL,          -- release status: initialized to ' '
+  bl         char(1)  DEFAULT ' ',       -- sender blacklisted by this recip
+  wl         char(1)  DEFAULT ' ',       -- sender whitelisted by this recip
+  bspam_level float,                     -- per-recipient (total) spam level
   smtp_resp  varchar(255)  DEFAULT '',   -- SMTP response given to MTA
   PRIMARY KEY (partition_tag,mail_id,rseqnum)
 -- FOREIGN KEY (rid)     REFERENCES maddr(id)     ON DELETE RESTRICT,
@@ -191,7 +194,7 @@ CREATE INDEX msgrcpt_idx_rid      ON msgrcpt (rid);
 --  orphaned and should be ignored and eventually deleted by external utilities
 CREATE TABLE IF NOT EXISTS quarantine (
   partition_tag integer    DEFAULT 0,    -- see $partition_tag
-  mail_id    varbinary(12) NOT NULL,     -- long-term unique mail id
+  mail_id    varbinary(16) NOT NULL,     -- long-term unique mail id
   chunk_ind  integer unsigned NOT NULL,  -- chunk number, starting with 1
   mail_text  blob          NOT NULL,     -- store mail as chunks of octets
   PRIMARY KEY (partition_tag,mail_id,chunk_ind)
