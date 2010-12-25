@@ -218,11 +218,20 @@ mail_location = maildir:/%Lh/Maildir/:INDEX=/%Lh/Maildir/
 
 plugin {
     # Quota, stored in file 'maildirsize' under user mailbox.
-    #quota = maildir
+EOF
 
+        if [ X"${DOVECOT_VERSION}" == X"1.2" ]; then
+            cat >> ${DOVECOT_CONF} <<EOF
     # Dict quota. Used to store realtime quota in SQL.
     quota = dict:user::proxy::quotadict
+EOF
+        else
+            cat >> ${DOVECOT_CONF} <<EOF
+    quota = maildir
+EOF
+        fi
 
+        cat >> ${DOVECOT_CONF} <<EOF
     # Quota rules. Reference: http://wiki.dovecot.org/Quota/1.1
     # The following limit names are supported:
     #   - storage: Quota limit in kilobytes, 0 means unlimited.
