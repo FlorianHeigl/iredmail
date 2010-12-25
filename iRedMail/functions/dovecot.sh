@@ -239,9 +239,6 @@ plugin {
 dict {
     # NOTE: dict process currently runs as root, so this file will be owned as root.
     expire = db:${DOVECOT_EXPIRE_DICT_BDB}
-
-    # Dict quota. Used to store realtime quota in SQL.
-    quotadict = ${DOVECOT_REALTIME_QUOTA_SQLTYPE}:${DOVECOT_REALTIME_QUOTA_CONF}
 }
 
 plugin {
@@ -433,6 +430,14 @@ EOF
         # ---- Create ${DOVECOT_REALTIME_QUOTA_CONF} ----
         if [ X"${DOVECOT_VERSION}" == X"1.2" ]; then
             backup_file ${DOVECOT_REALTIME_QUOTA_CONF}
+
+            # Enable dict quota in dovecot.
+            cat >> ${DOVECOT_CONF} <<EOF
+dict {
+    # Dict quota. Used to store realtime quota in SQL.
+    quotadict = ${DOVECOT_REALTIME_QUOTA_SQLTYPE}:${DOVECOT_REALTIME_QUOTA_CONF}
+}
+EOF
 
             if [ X"${BACKEND}" == X"OpenLDAP" ]; then
                 realtime_quota_db_name="${IREDADMIN_DB_NAME}"
