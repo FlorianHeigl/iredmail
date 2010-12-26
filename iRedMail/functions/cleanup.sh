@@ -264,56 +264,6 @@ EOF
     sendmail -t ${tip_recipient} < /tmp/.links.eml &>/dev/null && rm -f /tmp/.links.eml &>/dev/null
 
     cat <<EOF
-
-********************************************************************
-* Congratulations, mail server setup complete. Please refer to tip
-* file for more information:
-*
-*   - ${TIP_FILE}
-*
-* And it's sent to your mail account ${tip_recipient}.
-*
-EOF
-
-#    if [ X"${DISTRO}" != X"FREEBSD" ]; then
-#        cat <<EOF
-#* If you want to remove/uninstall iRedMail quickly, please follow this tutorial:
-#* http://www.iredmail.org/forum/topic333-faq-how-to-uninstall-iredmail.html
-#*
-#EOF
-#fi
-
-if [ X"${POSTFIX_STARTED}" != X"YES" -a X"${DISTRO}" != X"FREEBSD" ]; then
-    cat <<EOF
-* Please reboot your system to enable mail related services or start them
-* manually without reboot:
-*
-EOF
-
-    # Prompt to disable selinux.
-    if [ ! -z ${SETENFORCE} ]; then
-        cat <<EOF
-*   # ${SETENFORCE} 0
-EOF
-    fi
-
-    cat <<EOF
-*   # for i in ${ENABLED_SERVICES}; do ${DIR_RC_SCRIPTS}/\${i} restart; done
-*
-EOF
-fi
-
-    if [ X"${DISTRO}" == X"FREEBSD" ]; then
-        # Reboot freebsd to enable mail related services, because sendmail is
-        # binding to port '25'.
-        cat <<EOF
-* Please reboot your system to enable mail related services.
-*
-EOF
-fi
-
-
-    cat <<EOF
 ********************************************************************
 * URLs of your web applications:
 *
@@ -380,6 +330,55 @@ EOF
 *
 EOF
     fi
+
+    cat <<EOF
+
+********************************************************************
+* Congratulations, mail server setup complete. Please refer to tip
+* file for more information:
+*
+*   - ${TIP_FILE}
+*
+* And it's sent to your mail account ${tip_recipient}.
+*
+EOF
+
+#    if [ X"${DISTRO}" != X"FREEBSD" ]; then
+#        cat <<EOF
+#* If you want to remove/uninstall iRedMail quickly, please follow this tutorial:
+#* http://www.iredmail.org/forum/topic333-faq-how-to-uninstall-iredmail.html
+#*
+#EOF
+#fi
+
+if [ X"${POSTFIX_STARTED}" != X"YES" -a X"${DISTRO}" != X"FREEBSD" ]; then
+    cat <<EOF
+* Please reboot your system to enable mail related services or start them
+* manually without reboot:
+*
+EOF
+
+    # Prompt to disable selinux.
+    if [ ! -z ${SETENFORCE} ]; then
+        cat <<EOF
+*   # ${SETENFORCE} 0
+EOF
+    fi
+
+    cat <<EOF
+*   # for i in ${ENABLED_SERVICES}; do ${DIR_RC_SCRIPTS}/\${i} restart; done
+*
+EOF
+fi
+
+    if [ X"${DISTRO}" == X"FREEBSD" ]; then
+        # Reboot freebsd to enable mail related services, because sendmail is
+        # binding to port '25'.
+        cat <<EOF
+* Please reboot your system to enable mail related services.
+*
+EOF
+fi
 
     cat <<EOF
 ********************************************************************
