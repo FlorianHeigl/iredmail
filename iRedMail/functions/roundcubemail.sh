@@ -211,6 +211,12 @@ rcm_config()
     # 2 - Full 2047 compatible
     perl -pi -e 's#(.*mime_param_folding.*=).*#${1} 1;#' main.inc.php
 
+    # Auto expand threads.
+    # 0 - Do not expand threads
+    # 1 - Expand all threads automatically
+    # 2 - Expand only threads with unread messages
+    perl -pi -e 's#(.*autoexpand_threads.*=).*#${1} 2;#' main.inc.php
+
     # Set true if deleted messages should not be displayed
     # This will make the application run slower
     perl -pi -e 's#(.*skip_deleted.*=).*#${1} TRUE;#' main.inc.php
