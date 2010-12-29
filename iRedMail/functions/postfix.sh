@@ -164,9 +164,8 @@ EOF
     #postconf -e header_checks="pcre:${POSTFIX_FILE_HEADER_CHECKS}"
     cat >> ${POSTFIX_FILE_HEADER_CHECKS} <<EOF
 # *******************************************************************
-# Below rules is wrote in pcre syntax, shipped within ${PROG_NAME} project:
-#   http://www.iredmail.org/
 # Reference:
+#   http://www.postfix.org/header_checks.5.html
 #   http://www.postfix.org/BACKSCATTER_README.html#real
 # *******************************************************************
 

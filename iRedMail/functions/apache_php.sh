@@ -293,6 +293,8 @@ EOF
     perl -pi -e 's/^(upload_max_filesize.*=).*/${1} 10M;/' ${PHP_INI}
     perl -pi -e 's/^(post_max_size.*=)/${1} 12M;/' ${PHP_INI}
 
+    perl -pi -e 's/^(suhosin.session.encrypt.*=)/${1} Off;/' ${PHP_INI}
+
     # Set date.timezone. required by PHP-5.3.
     if [ X"${DISTRO}" == X"FREEBSD" -o X"${DISTRO}" == X"SUSE" ]; then
         perl -pi -e 's#^;(date.timezone).*#${1} = UTC#' ${PHP_INI}
