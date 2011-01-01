@@ -121,7 +121,6 @@ cleanup_replace_iptables_rule()
                     ;;
                 N|n|* )
                     export "RESTART_IPTABLES='NO'"
-                    ECHO_INFO "Skip restart firewall."
                     ;;
             esac
             ;;
