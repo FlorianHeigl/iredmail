@@ -21,8 +21,9 @@
 #   http://www.iredmail.org/
 #
 # It should be localed at:
-#   - RHEL/CentOS: /etc/openldap/schema/iredmail.schema
+#   - RHEL/CentOS/OpenSuSE: /etc/openldap/schema/iredmail.schema
 #   - Debian: /etc/ldap/schema/iredmail.schema
+#   - FreeBSD: /usr/local/etc/openldap/schema/
 #
 #--------------------------------------------------------------------
 # The offical iredmail OID assigned by IANA is 32349, you can find it in url:
