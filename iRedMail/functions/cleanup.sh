@@ -231,6 +231,18 @@ cleanup()
 
 EOF
 
+    ECHO_DEBUG "Decrease sshd service start order via chkconfig."
+    if [ X"${DISTRO}" == X"RHEL" ]; then
+        # Unclearly power off might cause damage to OpenLDAP database, it will
+        # hangs while system startup. Decrease sshd start order to make sure you
+        # can always log into server for maintaince.
+        #
+        # 10 -> network, 12 -> syslog, rsyslog.
+        disable_service_rh sshd
+        perl -pi -e 's#(.*chkconfig.*)55(.*)#${1}13${2}#' ${DIR_RC_SCRIPTS}/sshd
+        enable_service_rh sshd
+    fi
+
     [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run cleanup_disable_selinux
     check_status_before_run cleanup_remove_sendmail
     [ X"${KERNEL_NAME}" == X"Linux" ] && check_status_before_run cleanup_replace_iptables_rule

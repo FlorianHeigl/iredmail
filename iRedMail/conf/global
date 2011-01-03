@@ -434,5 +434,5 @@ export TLS_DEPARTMENT='IT'
 export TLS_HOSTNAME="${HOSTNAME}"
 export TLS_ADMIN="root@${HOSTNAME}"
 
-# location of sshd_config
+# Location of sshd_config
 export SSHD_CONFIG='/etc/ssh/sshd_config'

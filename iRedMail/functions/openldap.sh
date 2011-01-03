@@ -35,6 +35,7 @@ openldap_config()
     #
     # Add ${LDAP_USER} to 'ssl-cert' group.
     [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ] && usermod -G ssl-cert ${LDAP_USER}
+
     if [ X"${DISTRO}" == X"SUSE" ]; then
         # Fix strict permission.
         chmod 0755 ${SSL_KEY_DIR}
