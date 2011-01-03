@@ -112,6 +112,7 @@ EOF
 EOF
 
     # Show realtime quota usage with dovecot-1.2 dict quota.
+    perl -pi -e 's#(.*quota2.*=.*)quota2(.*)#${1}mailbox${2}#' ${POSTFIXADMIN_HTTPD_ROOT}/config.inc.php
     perl -pi -e 's#(.*table_quota2.*table_by_key.*)quota2(.*)#${1}mailbox${2}#' ${POSTFIXADMIN_HTTPD_ROOT}/functions.inc.php
 
     [ ! -z ${MAIL_ALIAS_ROOT} ] && \
