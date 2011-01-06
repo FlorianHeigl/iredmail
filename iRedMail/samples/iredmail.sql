@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS admin (
 CREATE TABLE IF NOT EXISTS alias (
     address VARCHAR(255) NOT NULL DEFAULT '',
     goto TEXT NOT NULL,
+    name VARCHAR(255) DEFAULT '',
     moderators TEXT NOT NULL DEFAULT '',
     accesspolicy VARCHAR(30) NOT NULL DEFAULT '',
     domain VARCHAR(255) NOT NULL DEFAULT '',
