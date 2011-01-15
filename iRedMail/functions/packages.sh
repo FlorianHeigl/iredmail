@@ -387,7 +387,7 @@ EOF
         eval ${disable_service} ${DISABLED_SERVICES} >/dev/null
 
         if [ X"${DISTRO}" == X"SUSE" ]; then
-            eval ${disable_service} SuSEfirewall2_init SuSEfirewall2_setup >/dev/null
+            eval ${disable_service} SuSEfirewall2_setup SuSEfirewall2_init >/dev/null
         fi
 
         echo 'export status_enable_all_services="DONE"' >> ${STATUS_FILE}
