@@ -53,6 +53,7 @@ fi
 # ----------------------------------------
 # Optional components for special backend.
 # ----------------------------------------
+export tmp_config_optional_components="${ROOTDIR}/.optional_components"
 
 if [ X"${BACKEND}" == X"OpenLDAP" ]; then
     ${DIALOG} \
@@ -71,7 +72,7 @@ Note:
     "phpLDAPadmin" "Web-based OpenLDAP management tool" "on" \
     "phpMyAdmin" "Web-based MySQL management tool" "on" \
     "Awstats" "Advanced web and mail log analyzer" "on" \
-    2>/tmp/optional_components
+    2>${tmp_config_optional_components}
 
 elif [ X"${BACKEND}" == X"MySQL" ]; then
     ${DIALOG} \
@@ -90,14 +91,14 @@ Note:
     "iRedAdmin" "Official web-based iRedMail Admin Panel" "on" \
     "PostfixAdmin" "Web-based mail account management tool" "on" \
     "Awstats" "Advanced web and mail log analyzer" "on" \
-    2>/tmp/optional_components
+    2>${tmp_config_optional_components}
 else
     # No hook for other backend yet.
     :
 fi
 
-OPTIONAL_COMPONENTS="$(cat /tmp/optional_components)"
-rm -f /tmp/optional_components
+OPTIONAL_COMPONENTS="$(cat ${tmp_config_optional_components})"
+rm -f ${tmp_config_optional_components}
 
 echo ${OPTIONAL_COMPONENTS} | grep -i '\<SPF\>' >/dev/null 2>&1
 [ X"$?" == X"0" ] && export ENABLE_SPF='YES' && echo "export ENABLE_SPF='YES'" >>${CONFIG_FILE}
