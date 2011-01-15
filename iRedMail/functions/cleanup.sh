@@ -92,8 +92,6 @@ cleanup_replace_iptables_rule()
                 #   - ldaps (636)
                 perl -pi -e 's/^(FW_SERVICES_EXT_TCP=)(.*)/${1}"$ENV{'HTTPD_PORT'} 443 25 465 110 995 143 993 587 465 $ENV{'sshd_port'}"\n#${2}/' ${IPTABLES_CONFIG}
 
-                eval ${enable_service} SuSEfirewall2_init SuSEfirewall2_setup
-
             elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
                 # Copy sample rc script for Debian.
                 cp -f ${SAMPLE_DIR}/iptables.init.debian ${DIR_RC_SCRIPTS}/iptables
@@ -113,9 +111,7 @@ cleanup_replace_iptables_rule()
                     ECHO_INFO "Restarting firewall ..."
 
                     # OpenSuSE will use /etc/init.d/{SuSEfirewall2_init, SuSEfirewall2_setup} instead.
-                    if [ X"${DISTRO}" == X"SUSE" ]; then
-                        ${DIR_RC_SCRIPTS}/SuSEfirewall2_setup restart
-                    else
+                    if [ X"${DISTRO}" != X"SUSE" ]; then
                         ${DIR_RC_SCRIPTS}/iptables restart
                     fi
                     ;;
@@ -127,9 +123,7 @@ cleanup_replace_iptables_rule()
     esac
 
     if [ X"${KERNEL_NAME}" == X"Linux" ]; then
-        if [ X"${DISTRO}" == X"SUSE" ]; then
-            ENABLED_SERVICES="${ENABLED_SERVICES} SuSEfirewall2_setup"
-        else
+        if [ X"${DISTRO}" != X"SUSE" ]; then
             ENABLED_SERVICES="${ENABLED_SERVICES} iptables"
         fi
     fi
