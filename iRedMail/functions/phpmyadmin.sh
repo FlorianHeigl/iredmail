@@ -28,7 +28,6 @@ phpmyadmin_install()
 ${CONF_MSG}
 # Note: Please refer to ${HTTPD_SSL_CONF} for SSL/TLS setting.
 #Alias /phpmyadmin "${PHPMYADMIN_HTTPD_ROOT_SYMBOL_LINK}"
-#Alias /mysql "${PHPMYADMIN_HTTPD_ROOT_SYMBOL_LINK}"
 <Directory "${PHPMYADMIN_HTTPD_ROOT_SYMBOL_LINK}/">
     Options -Indexes
 </Directory>
@@ -36,7 +35,6 @@ EOF
 
     # Make phpMyAdmin can be accessed via HTTPS only.
     perl -pi -e 's#(</VirtualHost>)#Alias /phpmyadmin "$ENV{PHPMYADMIN_HTTPD_ROOT_SYMBOL_LINK}/"\n${1}#' ${HTTPD_SSL_CONF}
-    perl -pi -e 's#(</VirtualHost>)#Alias /mysql "$ENV{PHPMYADMIN_HTTPD_ROOT_SYMBOL_LINK}/"\n${1}#' ${HTTPD_SSL_CONF}
 
     ECHO_DEBUG "Config phpMyAdmin: ${PHPMYADMIN_CONFIG_FILE}."
     cd ${PHPMYADMIN_HTTPD_ROOT} && cp config.sample.inc.php ${PHPMYADMIN_CONFIG_FILE}

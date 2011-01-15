@@ -108,8 +108,6 @@ rcm_config()
     perl -pi -e 's#(.*syslog_id.*=).*#${1} "roundcube";#' main.inc.php
     # syslog_facility should be a constant, not string. (Do *NOT* use quote.)
     perl -pi -e 's#(.*syslog_facility.*=).*#${1} LOG_MAIL;#' main.inc.php
-    perl -pi -e 's#(.*log_logins.*=).*#${1} TRUE;#' main.inc.php
-    perl -pi -e 's#(.*smtp_log.*=).*#${1} TRUE;#' main.inc.php
 
     # Debugging
     perl -pi -e 's#(.*sql_debug.*=).*#${1} false;#' main.inc.php
@@ -120,9 +118,9 @@ rcm_config()
     # ----------------------------------
     # IMAP
     # ----------------------------------
-    perl -pi -e 's#(.*default_host.*= )(.*)#${1}"$ENV{'IMAP_SERVER'}";#' main.inc.php
-    #perl -pi -e 's#(.*default_port.*= )(.*)#${1} 143;#' main.inc.php
-    perl -pi -e 's#(.*imap_auth_type.*= )(.*)#${1}"check";#' main.inc.php
+    perl -pi -e 's#(.*default_host.*=).*#${1} "$ENV{'IMAP_SERVER'}";#' main.inc.php
+    #perl -pi -e 's#(.*default_port.*=).*#${1} 143;#' main.inc.php
+    perl -pi -e 's#(.*imap_auth_type.*=).*#${1} "";#' main.inc.php
 
     # ----------------------------------
     # SMTP
@@ -139,14 +137,18 @@ rcm_config()
     # SYSTEM
     # ----------------------------------
     # Disable installer.
-    perl -pi -e 's#(.*enable_installer.*= )(.*)#${1}FALSE;#' main.inc.php
+    perl -pi -e 's#(.*enable_installer.*=).*#${1} false;#' main.inc.php
 
     # enable caching of messages and mailbox data in the local database.
     # recommended if the IMAP server does not run on the same machine
     #perl -pi -e 's#(.*enable_caching.*= )(.*)#${1}FALSE;#' main.inc.php
 
+    # Allow browser-autocompletion on login form.
+    # 0 - disabled, 1 - username and host only, 2 - username, host, password
+    perl -pi -e 's#(.*login_autocomplete.*=)(.*)#${1} 2;#' main.inc.php
+
     # Automatically create a new ROUNDCUBE USER when log-in the first time.
-    perl -pi -e 's#(.*auto_create_user.*= )(.*)#${1}TRUE;#' main.inc.php
+    perl -pi -e 's#(.*auto_create_user.*=)(.*)#${1} true;#' main.inc.php
 
     perl -pi -e 's#(.*des_key.*= )(.*)#${1}"$ENV{'RCM_DES_KEY'}";#' main.inc.php
 
@@ -198,6 +200,9 @@ rcm_config()
     # 2 - Always show inline images
     perl -pi -e 's#(.*show_images.*=).*#${1} 1;#' main.inc.php
 
+    # save compose message every 60 seconds (1 minute)
+    perl -pi -e 's#(.*draft_autosave.*=).*#${1} 60;#' main.inc.php
+
     # Enable preview pane by default.
     perl -pi -e 's#(.*preview_pane.*=).*#${1} TRUE;#' main.inc.php
 
@@ -219,10 +224,13 @@ rcm_config()
 
     # Set true if deleted messages should not be displayed
     # This will make the application run slower
-    perl -pi -e 's#(.*skip_deleted.*=).*#${1} TRUE;#' main.inc.php
+    #perl -pi -e 's#(.*skip_deleted.*=).*#${1} TRUE;#' main.inc.php
 
     # Check all folders for recent messages.
-    perl -pi -e 's#(.*check_all_folders.*=)(.*)#${1} TRUE;#' main.inc.php
+    perl -pi -e 's#(.*check_all_folders.*=)(.*)#${1} true;#' main.inc.php
+
+    # after message delete/move, the next message will be displayed
+    perl -pi -e 's#(.*display_next.*=).*#${1} true;#' main.inc.php
 
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
         export LDAP_SERVER_HOST LDAP_SERVER_PORT LDAP_BIND_VERSION LDAP_BASEDN LDAP_ATTR_DOMAIN_RDN LDAP_ATTR_USER_RDN
@@ -314,7 +322,7 @@ rcm_plugin_managesieve()
 {
     ECHO_DEBUG "Enable and config plugin: managesieve."
     cd ${RCM_HTTPD_ROOT}/config/ && \
-    perl -pi -e 's#(.*rcmail_config.*plugins.*=.*array\()(.*\).*)#${1}"managesieve",${2}#' main.inc.php
+    perl -pi -e 's#(.*rcmail_config.*plugins.*=.*array\()(.*)#${1}"managesieve",${2}#' main.inc.php
 
     export MANAGESIEVE_BINDADDR MANAGESIEVE_PORT
     cd ${RCM_HTTPD_ROOT}/plugins/managesieve/ && \
