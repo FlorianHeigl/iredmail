@@ -313,7 +313,7 @@ EOF
             [ X"${USE_IREDAPD}" != "YES" ] && ALL_PKGS="${ALL_PKGS} python-ldap.${ARCH}"
 
         elif [ X"${DISTRO}" == X"SUSE" ]; then
-            # Note: Will install python-webpy via 'easy_install' (provided by python-setuptools).
+            # Note: Web.py will be installed locally via 'easy_install'.
             ALL_PKGS="${ALL_PKGS} apache2-mod_wsgi python-jinja2 python-ldap python-mysql python-setuptools"
             [ X"${USE_IREDAPD}" != "YES" ] && ALL_PKGS="${ALL_PKGS} python-ldap"
 

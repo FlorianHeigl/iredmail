@@ -87,6 +87,7 @@ Note:
     "DKIM signing/verification" "DomainKeys Identified Mail" "on" \
     "Roundcubemail" "WebMail program (PHP, AJAX)" "on" \
     "phpMyAdmin" "Web-based MySQL management tool" "on" \
+    "iRedAdmin" "Official web-based iRedMail Admin Panel" "on" \
     "PostfixAdmin" "Web-based mail account management tool" "on" \
     "Awstats" "Advanced web and mail log analyzer" "on" \
     2>/tmp/optional_components

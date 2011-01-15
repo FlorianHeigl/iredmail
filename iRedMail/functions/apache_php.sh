@@ -144,14 +144,14 @@ EOF
         #   - Define some settings in /etc/sysconfig/apache2
         perl -pi -e 's#^(APACHE_SERVERTOKENS=).*#${1}"ProductOnly"#' ${HTTPD_SYSCONFIG_CONF}
         perl -pi -e 's#^(APACHE_SERVERSIGNATURE=).*#${1}"email"#' ${HTTPD_SYSCONFIG_CONF}
-        perl -pi -e 's#^(APACHE_LOGLEVEL=).*#${1}"info"#' ${HTTPD_SYSCONFIG_CONF}
+        perl -pi -e 's#^(APACHE_LOGLEVEL=).*#${1}"warn"#' ${HTTPD_SYSCONFIG_CONF}
 
         #perl -pi -e 's#(.*Options).*#${1} FollowSymLinks#' ${HTTPD_CONF_ROOT}/httpd.conf
         #sed -i -e '/AllowOverride/,/AccessFileName/s#Deny from all#Allow from all#' ${HTTPD_CONF_ROOT}/httpd.conf
     else
         perl -pi -e 's#^(ServerTokens).*#${1} ProductOnly#' ${HTTPD_CONF}
         perl -pi -e 's#^(ServerSignature).*#${1} EMail#' ${HTTPD_CONF}
-        perl -pi -e 's#^(LogLevel).*#${1} info#' ${HTTPD_CONF}
+        perl -pi -e 's#^(LogLevel).*#${1} warn#' ${HTTPD_CONF}
     fi
 
     ############
