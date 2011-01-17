@@ -729,7 +729,7 @@ postfix_config_tls()
     postconf -e smtpd_tls_loglevel='0'
     postconf -e smtpd_tls_key_file="${SSL_KEY_FILE}"
     postconf -e smtpd_tls_cert_file="${SSL_CERT_FILE}"
-    #postconf -e #smtpd_tls_CAfile = 
+    postconf -e smtpd_tls_CAfile="${SSL_CERT_FILE}"
     postconf -e tls_random_source='dev:/dev/urandom'
     postconf -e tls_daemon_random_source='dev:/dev/urandom'
 

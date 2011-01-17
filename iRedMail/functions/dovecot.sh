@@ -47,6 +47,7 @@ EOF
 verbose_ssl = no
 ssl_key_file = ${SSL_KEY_FILE}
 ssl_cert_file = ${SSL_CERT_FILE}
+ssl_ca_file = ${SSL_CERT_FILE}
 EOF
     fi
 
@@ -86,6 +87,7 @@ listen = *
 mail_uid = ${VMAIL_USER_UID}
 mail_gid = ${VMAIL_USER_GID}
 first_valid_uid = ${VMAIL_USER_UID}
+last_valid_uid = ${VMAIL_USER_UID}
 
 #
 # Debug options.
