@@ -110,48 +110,61 @@ GRANT SELECT,INSERT,UPDATE,DELETE ON ${IREDADMIN_DB_NAME}.* TO "${IREDADMIN_DB_U
 FLUSH PRIVILEGES;
 EOF
 
-    # Import table used to store real-time used quota.
+    # Import addition tables.
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
         mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
 USE ${IREDADMIN_DB_NAME};
 SOURCE ${SAMPLE_DIR}/used_quota.sql;
+SOURCE ${SAMPLE_DIR}/imap_share_folder.sql;
 FLUSH PRIVILEGES;
 EOF
     fi
 
     ECHO_DEBUG "Configure iRedAdmin."
 
-    # General settings: [general] section.
-    [ ! -z ${MAIL_ALIAS_ROOT} ] && \
-        perl -pi -e 's#(webmaster =).*#${1} $ENV{MAIL_ALIAS_ROOT}#' settings.ini
+    # Generate config file: settings.ini
+    cd ${IREDADMIN_HTTPD_ROOT}/ && \
+    cat > settings.ini <<EOF
+[general]
+webmaster = ${MAIL_ALIAS_ROOT}
+mailbox_type = ${MAILBOX_FORMAT}
+debug = False
+skin = default
+lang = ${DEFAULT_LANG}
+backend = ldap
+storage_base_directory = ${STORAGE_BASE_DIR}
+storage_node = ${STORAGE_NODE}
+default_quota = 1024
+mtaTransport = dovecot
+show_login_date = False
+min_passwd_length = 0
+max_passwd_length = 0
 
-    [ X"${MAILBOX_FORMAT}" != X"Maildir" ] && \
-        perl -pi -e 's#(mailbox_type =).*#${1} $ENV{MAILBOX_FORMAT}#' settings.ini
+[iredadmin]
+dbn = mysql
+host = ${MYSQL_SERVER}
+port = ${MYSQL_PORT}
+db = ${IREDADMIN_DB_NAME}
+user = ${IREDADMIN_DB_USER}
+passwd = ${IREDADMIN_DB_PASSWD}
 
-    [ X"${MAILDIR_STYLE}" != X'hashed' ] && \
-        perl -pi -e 's#(hashed_maildir =).*#${1} False#' settings.ini
-
-    perl -pi -e 's#(mtaTransport =).*#${1} $ENV{TRANSPORT}#' settings.ini
-    perl -pi -e 's#(storage_base_directory =).*#${1} $ENV{STORAGE_BASE_DIR}#' settings.ini
-    perl -pi -e 's#(storage_node=).*#${1} $ENV{STORAGE_NODE}#' settings.ini
-
-    # MySQL database related settings: [iredadmin] section.
-    perl -pi -e 's#(lang =).*#${1} $ENV{DEFAULT_LANG}#' settings.ini
-    perl -pi -e 's#(host =).*#${1} $ENV{MYSQL_SERVER}#' settings.ini
-    perl -pi -e 's#(port =).*#${1} $ENV{MYSQL_PORT}#' settings.ini
-    perl -pi -e 's#(db =).*#${1} $ENV{IREDADMIN_DB_NAME}#' settings.ini
-    perl -pi -e 's#(user =).*#${1} $ENV{IREDADMIN_DB_USER}#' settings.ini
-    perl -pi -e 's#(passwd =).*#${1} $ENV{IREDADMIN_DB_PASSWD}#' settings.ini
+EOF
 
     # Backend related settings.
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
         # Section [ldap].
-        perl -pi -e 's#(uri =).*#${1} ldap://$ENV{LDAP_SERVER_HOST}:$ENV{LDAP_SERVER_PORT}/#' settings.ini
-        perl -pi -e 's#(suffix =).*#${1} $ENV{LDAP_SUFFIX}#' settings.ini
-        perl -pi -e 's#(basedn =).*#${1} $ENV{LDAP_BASEDN}#' settings.ini
-        perl -pi -e 's#(domainadmin_dn =).*#${1} $ENV{LDAP_ADMIN_BASEDN}#' settings.ini
-        perl -pi -e 's#(bind_dn =).*#${1} $ENV{LDAP_ADMIN_DN}#' settings.ini
-        perl -pi -e 's#(bind_pw =).*#${1} $ENV{LDAP_ADMIN_PW}#' settings.ini
+        cat >> settings.ini <<EOF
+[ldap]
+uri = ldap://${LDAP_SERVER_HOST}:${LDAP_SERVER_PORT}
+protocol_version = 3
+trace_level = 0
+basedn = ${LDAP_BASEDN}
+domainadmin_dn = ${LDAP_ADMIN_BASEDN}
+bind_dn = ${LDAP_ADMIN_DN}
+bind_pw = ${LDAP_ADMIN_PW}
+default_pw_scheme = SSHA
+
+EOF
     elif [ X"${BACKEND}" == X"MySQL" ]; then
         # Section [vmaildb].
         perl -pi -e 's#(host =).*#${1} $ENV{MYSQL_SERVER}#' settings.ini
@@ -159,6 +172,15 @@ EOF
         perl -pi -e 's#(db =).*#${1} $ENV{VMAIL_DB}#' settings.ini
         perl -pi -e 's#(user =).*#${1} $ENV{MYSQL_ADMIN_USER}#' settings.ini
         perl -pi -e 's#(passwd =).*#${1} $ENV{MYSQL_ADMIN_PW}#' settings.ini
+        cat >> settings.ini <<EOF
+[vmaildb]
+host = ${MYSQL_SERVER}
+port = ${MYSQL_PORT}
+db = ${VMAIL_DB}
+user = ${MYSQL_ADMIN_USER}
+passwd = ${MYSQL_ADMIN_PW}
+
+EOF
     fi
 
     cat >> ${TIP_FILE} <<EOF
@@ -172,24 +194,10 @@ Official Web-based Admin Panel (iRedAdmin):
     * Login account:
         - Username: ${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}, password: ${DOMAIN_ADMIN_PASSWD_PLAIN}
     * Settings:
-
-        [iredadmin]
-        dbn = mysql
-        host = ${MYSQL_SERVER}
-        port = ${MYSQL_PORT}
-        db = ${IREDADMIN_DB_NAME}
-        user = ${IREDADMIN_DB_USER}
-        passwd = ${IREDADMIN_DB_PASSWD}
-
-        [ldap]
-        uri = ldap://${LDAP_SERVER_HOST}:${LDAP_SERVER_PORT}/
-        basedn = ${LDAP_BASEDN}
-        domainadmin_dn = ${LDAP_ADMIN_BASEDN}
-        bind_dn = ${LDAP_ADMIN_DN}
-        bind_pw = ${LDAP_ADMIN_PW}
+        - ${IREDADMIN_HTTPD_ROOT}/settings.ini
 
         [policyd]
-        dbn = mysql
+        enabled = True
         host = ${MYSQL_SERVER}
         port = ${MYSQL_PORT}
         db = ${POLICYD_DB_NAME}
@@ -197,11 +205,10 @@ Official Web-based Admin Panel (iRedAdmin):
         passwd = ${POLICYD_DB_PASSWD}
 
         [amavisd]
-        server = ${AMAVISD_SERVER}
         quarantine = True
+        server = ${AMAVISD_SERVER}
         quarantine_port = ${AMAVISD_QUARANTINE_PORT}
         logging_into_sql = True
-        dbn = mysql
         host = ${MYSQL_SERVER}
         port = ${MYSQL_PORT}
         db = ${AMAVISD_DB_NAME}

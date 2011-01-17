@@ -317,16 +317,14 @@ EOF
 protocol lda {
     postmaster_address = root
     auth_socket_path = ${DOVECOT_SOCKET_MASTER}
-    #mail_plugins = ${DOVECOT_LDA_PLUGIN_SIEVE} quota ${DOVECOT_LDA_PLUGIN_AUTOCREATE} expire
-    mail_plugins = ${DOVECOT_LDA_PLUGIN_SIEVE} quota ${DOVECOT_LDA_PLUGIN_AUTOCREATE}
+    mail_plugins = ${DOVECOT_LDA_PLUGINS}
     sieve_global_path = ${GLOBAL_SIEVE_FILE}
     log_path = ${SIEVE_LOG_FILE}
 }
 
 # IMAP configuration
 protocol imap {
-    #mail_plugins = quota imap_quota expire
-    mail_plugins = quota imap_quota
+    mail_plugins = ${DOVECOT_IMAP_PLUGINS}
 
     # number of connections per-user per-IP
     #mail_max_userip_connections = 10
@@ -438,31 +436,31 @@ EOF
 }
 EOF
 
-        # ---- Create ${DOVECOT_REALTIME_QUOTA_CONF} ----
-        if [ X"${DOVECOT_VERSION}" == X"1.2" ]; then
-            backup_file ${DOVECOT_REALTIME_QUOTA_CONF}
+    # ---- Create ${DOVECOT_REALTIME_QUOTA_CONF} ----
+    if [ X"${DOVECOT_VERSION}" == X"1.2" ]; then
+        backup_file ${DOVECOT_REALTIME_QUOTA_CONF}
 
-            # Enable dict quota in dovecot.
-            cat >> ${DOVECOT_CONF} <<EOF
+        # Enable dict quota in dovecot.
+        cat >> ${DOVECOT_CONF} <<EOF
 dict {
     # Dict quota. Used to store realtime quota in SQL.
     quotadict = ${DOVECOT_REALTIME_QUOTA_SQLTYPE}:${DOVECOT_REALTIME_QUOTA_CONF}
 }
 EOF
 
-            if [ X"${BACKEND}" == X"OpenLDAP" ]; then
-                realtime_quota_db_name="${IREDADMIN_DB_NAME}"
-                realtime_quota_db_table="used_quota"
-                realtime_quota_db_user="${IREDADMIN_DB_USER}"
-                realtime_quota_db_passwd="${IREDADMIN_DB_PASSWD}"
-            else
-                realtime_quota_db_name="${VMAIL_DB}"
-                realtime_quota_db_table="mailbox"
-                realtime_quota_db_user="${MYSQL_ADMIN_USER}"
-                realtime_quota_db_passwd="${MYSQL_ADMIN_PW}"
-            fi
+        if [ X"${BACKEND}" == X"OpenLDAP" ]; then
+            realtime_quota_db_name="${IREDADMIN_DB_NAME}"
+            realtime_quota_db_table="used_quota"
+            realtime_quota_db_user="${IREDADMIN_DB_USER}"
+            realtime_quota_db_passwd="${IREDADMIN_DB_PASSWD}"
+        else
+            realtime_quota_db_name="${VMAIL_DB}"
+            realtime_quota_db_table="mailbox"
+            realtime_quota_db_user="${MYSQL_ADMIN_USER}"
+            realtime_quota_db_passwd="${MYSQL_ADMIN_PW}"
+        fi
 
-            cat > ${DOVECOT_REALTIME_QUOTA_CONF} <<EOF
+        cat > ${DOVECOT_REALTIME_QUOTA_CONF} <<EOF
 ${CONF_MSG}
 connect = host=${MYSQL_SERVER} dbname=${realtime_quota_db_name} user=${realtime_quota_db_user} password=${realtime_quota_db_passwd}
 map {
@@ -479,13 +477,13 @@ map {
 }
 EOF
 
-            # Create MySQL database ${IREDADMIN_DB_USER} and table 'used_quota'
-            # which used to store realtime quota.
-            if [ X"${BACKEND}" == X"OpenLDAP" -a X"${USE_IREDADMIN}" != X"YES" ]; then
-                # If iRedAdmin is not used, create database and import table here.
-                mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
+        # Create MySQL database ${IREDADMIN_DB_USER} and table 'used_quota'
+        # which used to store realtime quota.
+        if [ X"${BACKEND}" == X"OpenLDAP" -a X"${USE_IREDADMIN}" != X"YES" ]; then
+            # If iRedAdmin is not used, create database and import table here.
+            mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
 # Create databases.
-CREATE DATABASE ${IREDADMIN_DB_NAME} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE IF NOT EXISTS ${IREDADMIN_DB_NAME} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # Import SQL template.
 USE ${IREDADMIN_DB_NAME};
@@ -495,9 +493,87 @@ GRANT SELECT,INSERT,UPDATE,DELETE ON ${IREDADMIN_DB_NAME}.* TO "${IREDADMIN_DB_U
 FLUSH PRIVILEGES;
 EOF
 
-            fi
         fi
-        # ----
+    fi
+    # ---- real time dict quota ----
+
+    # ---- IMAP shared folder ----
+    if [ X"${DOVECOT_VERSION}" == X"1.2" ]; then
+        backup_file ${DOVECOT_SHARE_FOLDER_CONF}
+
+        if [ X"${BACKEND}" == X"OpenLDAP" ]; then
+            share_folder_db_name="${IREDADMIN_DB_NAME}"
+            share_folder_db_table="share_folder"
+            share_folder_db_user="${IREDADMIN_DB_USER}"
+            share_folder_db_passwd="${IREDADMIN_DB_PASSWD}"
+        else
+            share_folder_db_name="${VMAIL_DB}"
+            share_folder_db_table="share_folder"
+            share_folder_db_user="${MYSQL_ADMIN_USER}"
+            share_folder_db_passwd="${MYSQL_ADMIN_PW}"
+        fi
+
+        # Enable dict quota in dovecot.
+        cat >> ${DOVECOT_CONF} <<EOF
+namespace private {
+  separator = /
+  prefix =
+  #location defaults to mail_location.
+  inbox = yes
+}
+
+namespace shared {
+  separator = /
+  prefix = shared/%%u/
+  location = maildir:/%%Lh/Maildir/:INDEX=/%%Lh/Maildir/shared/%%u
+  subscriptions = no
+  list = children
+}
+
+plugin {
+    acl = vfile
+    acl_shared_dict = proxy::acl
+}
+dict {
+    acl = ${DOVECOT_SHARE_FOLDER_SQLTYPE}:${DOVECOT_SHARE_FOLDER_CONF}
+}
+EOF
+
+        # SQL lookup for share folder.
+        cat > ${DOVECOT_SHARE_FOLDER_CONF} <<EOF
+${CONF_MSG}
+connect = host=${MYSQL_SERVER} dbname=${share_folder_db_name} user=${share_folder_db_user} password=${share_folder_db_passwd}
+map {
+    pattern = shared/shared-boxes/user/\$to/\$from
+    table = share_folder
+    value_field = dummy
+
+    fields {
+        from_user = \$from
+        to_user = \$to
+    }
+}
+EOF
+
+        # Create MySQL database ${IREDADMIN_DB_USER} and table 'share_folder'
+        # which used to store realtime quota.
+        if [ X"${BACKEND}" == X"OpenLDAP" -a X"${USE_IREDADMIN}" != X"YES" ]; then
+            # If iRedAdmin is not used, create database and import table here.
+            mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF
+# Create databases.
+CREATE DATABASE IF NOT EXISTS ${IREDADMIN_DB_NAME} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# Import SQL template.
+USE ${IREDADMIN_DB_NAME};
+SOURCE ${SAMPLE_DIR}/imap_share_folder.sql;
+GRANT SELECT,INSERT,UPDATE,DELETE ON ${IREDADMIN_DB_NAME}.* TO "${IREDADMIN_DB_USER}"@localhost IDENTIFIED BY "${IREDADMIN_DB_PASSWD}";
+
+FLUSH PRIVILEGES;
+EOF
+        fi
+
+    fi
+    # ---- IMAP shared folder ----
 
     ECHO_DEBUG "Copy sample sieve global filter rule file: ${GLOBAL_SIEVE_FILE}.sample."
     cp -f ${SAMPLE_DIR}/dovecot.sieve ${GLOBAL_SIEVE_FILE}.sample

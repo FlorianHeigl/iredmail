@@ -122,6 +122,12 @@ rcm_config()
     #perl -pi -e 's#(.*default_port.*=).*#${1} 143;#' main.inc.php
     perl -pi -e 's#(.*imap_auth_type.*=).*#${1} "";#' main.inc.php
 
+    # IMAP share folder.
+    perl -pi -e 's#(.*imap_delimiter.*=).*#${1} "/";#' main.inc.php
+    perl -pi -e 's#(.*imap_ns_personal.*=).*#${1} null;#' main.inc.php
+    perl -pi -e 's#(.*imap_ns_other.*=).*#${1} null;#' main.inc.php
+    perl -pi -e 's#(.*imap_ns_shared.*=).*#${1} null;#' main.inc.php
+
     # ----------------------------------
     # SMTP
     # ----------------------------------

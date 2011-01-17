@@ -30,6 +30,7 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     export DOVECOT_LDAP_CONF='/etc/dovecot-ldap.conf'
     export DOVECOT_MYSQL_CONF='/etc/dovecot-mysql.conf'
     export DOVECOT_REALTIME_QUOTA_CONF='/etc/dovecot-used-quota.conf'
+    export DOVECOT_SHARE_FOLDER_CONF='/etc/dovecot-share-folder.conf'
     export DOVECOT_DELIVER='/usr/libexec/dovecot/deliver'
 elif [ X"${DISTRO}" == X"SUSE" ]; then
     if [ X"${DISTRO_VERSION}" == X"11.1" ]; then
@@ -43,6 +44,7 @@ elif [ X"${DISTRO}" == X"SUSE" ]; then
     export DOVECOT_LDAP_CONF='/etc/dovecot/dovecot-ldap.conf'
     export DOVECOT_MYSQL_CONF='/etc/dovecot/dovecot-mysql.conf'
     export DOVECOT_REALTIME_QUOTA_CONF='/etc/dovecot/dovecot-used-quota.conf'
+    export DOVECOT_SHARE_FOLDER_CONF='/etc/dovecot/dovecot-share-folder.conf'
     export DOVECOT_DELIVER='/usr/lib/dovecot/deliver'
 elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     export DOVECOT_VERSION='1.1'
@@ -55,6 +57,7 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     export DOVECOT_LDAP_CONF='/etc/dovecot/dovecot-ldap.conf'
     export DOVECOT_MYSQL_CONF='/etc/dovecot/dovecot-mysql.conf'
     export DOVECOT_REALTIME_QUOTA_CONF='/etc/dovecot/dovecot-used-quota.conf'
+    export DOVECOT_SHARE_FOLDER_CONF='/etc/dovecot/dovecot-share-folder.conf'
     export DOVECOT_DELIVER='/usr/lib/dovecot/deliver'
 elif [ X"${DISTRO}" == X"FREEBSD" ]; then
     export DOVECOT_VERSION='1.2'
@@ -62,16 +65,17 @@ elif [ X"${DISTRO}" == X"FREEBSD" ]; then
     export DOVECOT_LDAP_CONF='/usr/local/etc/dovecot-ldap.conf'
     export DOVECOT_MYSQL_CONF='/usr/local/etc/dovecot-mysql.conf'
     export DOVECOT_REALTIME_QUOTA_CONF='/usr/local/etc/dovecot-used-quota.conf'
+    export DOVECOT_SHARE_FOLDER_CONF='/usr/local/etc/dovecot-share-folder.conf'
     export DOVECOT_DELIVER='/usr/local/libexec/dovecot/deliver'
 fi
 
 # Name of LDA sieve plugin.
 if [ X"${DOVECOT_VERSION}" == X"1.1" ]; then
-    export DOVECOT_LDA_PLUGIN_SIEVE="cmusieve"
-    export DOVECOT_LDA_PLUGIN_AUTOCREATE=''
+    export DOVECOT_LDA_PLUGINS='cmusieve quota'
+    export DOVECOT_IMAP_PLUGINS='quota imap_quota'
 elif [ X"${DOVECOT_VERSION}" == X"1.2" ]; then
-    export DOVECOT_LDA_PLUGIN_SIEVE="sieve"
-    export DOVECOT_LDA_PLUGIN_AUTOCREATE='autocreate'
+    export DOVECOT_LDA_PLUGINS='quota sieve autocreate acl'
+    export DOVECOT_IMAP_PLUGINS='quota imap_quota acl imap_acl'
 fi
 
 # Dovecot user & group.
@@ -102,3 +106,4 @@ export DOVECOT_EXPIRE_DICT_BDB='/var/lib/dovecot/expire/expire.db'
 # Dovecot quota warning.
 export DOVECOT_QUOTA_WARNING_BIN='/usr/local/bin/dovecot-quota-warning.sh'
 export DOVECOT_REALTIME_QUOTA_SQLTYPE='mysql'
+export DOVECOT_SHARE_FOLDER_SQLTYPE='mysql'
