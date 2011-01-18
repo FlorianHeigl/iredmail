@@ -436,6 +436,25 @@ EOF
 }
 EOF
 
+    # IMAP plugin: autocreate.
+    if [ X"${DOVECOT_VERSION}" == X"1.2" ]; then
+        cat >> ${DOVECOT_CONF} <<EOF
+plugin {
+    autocreate = INBOX
+    autocreate2 = Sent
+    autocreate3 = Trash
+    autocreate4 = Drafts
+    autocreate5 = Junk
+
+    autosubscribe = INBOX
+    autosubscribe2 = Sent
+    autosubscribe3 = Trash
+    autosubscribe4 = Drafts
+    autosubscribe5 = Junk
+}
+EOF
+    fi
+
     # ---- Create ${DOVECOT_REALTIME_QUOTA_CONF} ----
     if [ X"${DOVECOT_VERSION}" == X"1.2" ]; then
         backup_file ${DOVECOT_REALTIME_QUOTA_CONF}

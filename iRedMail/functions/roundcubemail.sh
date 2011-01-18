@@ -185,11 +185,11 @@ rcm_config()
     perl -pi -e 's#(.*language.*= )(.*)#${1}"$ENV{'DEFAULT_LANG'}";#' main.inc.php
 
     # Automatic create and protect default IMAP folders.
-    perl -pi -e 's#(.*create_default_folders.*=)(.*)#${1} TRUE;#' main.inc.php
-    perl -pi -e 's#(.*protect_default_folders.*=)(.*)#${1} TRUE;#' main.inc.php
+    perl -pi -e 's#(.*create_default_folders.*=)(.*)#${1} true;#' main.inc.php
+    perl -pi -e 's#(.*protect_default_folders.*=)(.*)#${1} true;#' main.inc.php
 
     # Quota zero as unlimited.
-    perl -pi -e 's#(.*quota_zero_as_unlimited.*=).*#${1} TRUE;#' main.inc.php
+    perl -pi -e 's#(.*quota_zero_as_unlimited.*=).*#${1} true;#' main.inc.php
 
     # ----------------------------------
     # USER PREFERENCES
@@ -210,7 +210,7 @@ rcm_config()
     perl -pi -e 's#(.*draft_autosave.*=).*#${1} 60;#' main.inc.php
 
     # Enable preview pane by default.
-    perl -pi -e 's#(.*preview_pane.*=).*#${1} TRUE;#' main.inc.php
+    perl -pi -e 's#(.*preview_pane.*=).*#${1} true;#' main.inc.php
 
     # Mark as read when viewed in preview pane (delay in seconds)
     # Set to -1 if messages in preview pane should not be marked as read
@@ -230,7 +230,7 @@ rcm_config()
 
     # Set true if deleted messages should not be displayed
     # This will make the application run slower
-    #perl -pi -e 's#(.*skip_deleted.*=).*#${1} TRUE;#' main.inc.php
+    #perl -pi -e 's#(.*skip_deleted.*=).*#${1} true;#' main.inc.php
 
     # Check all folders for recent messages.
     perl -pi -e 's#(.*check_all_folders.*=)(.*)#${1} true;#' main.inc.php
