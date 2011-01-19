@@ -158,7 +158,6 @@ EOF
 Awstats:
     * Configuration files:
         - ${AWSTATS_CONF_DIR}
-        - ${AWSTATS_CONF_SAMPLE}
         - ${AWSTATS_CONF_WEB}
         - ${AWSTATS_CONF_MAIL}
         - ${AWSTATS_HTTPD_CONF}

@@ -308,7 +308,7 @@ EOF
     perl -pi -e 's#(.*id="taskbar">)#${1}\n<span style="padding-right: 3px;"><roundcube:object name="username" /></span>#' ${RCM_HTTPD_ROOT}/skins/default/includes/taskbar.html
 
     cat >> ${TIP_FILE} <<EOF
-WebMail(Roundcubemail):
+Roundcube webmail:
     * Configuration files:
         - ${HTTPD_SERVERROOT}/roundcubemail-${RCM_VERSION}/
         - ${HTTPD_SERVERROOT}/roundcubemail-${RCM_VERSION}/config/

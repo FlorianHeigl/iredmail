@@ -69,11 +69,14 @@ ClamAV:
         - ${FRESHCLAM_CONF}
         - /etc/logrotate.d/clamav
     * RC scripts:
-        - RHEL/CentOS:
+        - RHEL/CentOS/OpenSuSE:
             + ${DIR_RC_SCRIPTS}/clamd 
             + ${DIR_RC_SCRIPTS}/freshclam
         - Debian & Ubuntu:
             + ${DIR_RC_SCRIPTS}/clamav-daemon
+            + ${DIR_RC_SCRIPTS}/clamav-freshclam
+        - FreeBSD:
+            + ${DIR_RC_SCRIPTS}/clamav-clamd
             + ${DIR_RC_SCRIPTS}/clamav-freshclam
     * Log files:
         - ${CLAMD_LOGFILE}

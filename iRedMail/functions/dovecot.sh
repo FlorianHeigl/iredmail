@@ -687,12 +687,11 @@ EOF
 Dovecot:
     * Configuration files:
         - ${DOVECOT_CONF}
-    * LDAP:
-        - ${DOVECOT_LDAP_CONF}
-    * MySQL:
-        - ${DOVECOT_MYSQL_CONF}
-    * RC script:
-        - ${DIR_RC_SCRIPTS}/dovecot
+        - ${DOVECOT_LDAP_CONF} (For OpenLDAP backend)
+        - ${DOVECOT_MYSQL_CONF} (For MySQL backend)
+        - ${DOVECOT_REALTIME_QUOTA_CONF}
+        - ${DOVECOT_SHARE_FOLDER_CONF} (share folder)
+    * RC script: ${DIR_RC_SCRIPTS}/dovecot
     * Log files:
         - ${DOVECOT_LOGROTATE_FILE}
         - ${DOVECOT_LOG_FILE}

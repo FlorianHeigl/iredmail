@@ -185,7 +185,7 @@ EOF
     fi
 
     cat >> ${TIP_FILE} <<EOF
-Official Web-based Admin Panel (iRedAdmin):
+iRedAdmin - official web-based admin panel:
     * Version: ${IREDADMIN_VERSION}
     * Configuration files:
         - ${HTTPD_SERVERROOT}/iRedAdmin-${IREDADMIN_VERSION}/

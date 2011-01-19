@@ -59,6 +59,7 @@ phpMyAdmin:
     * Login account:
         - Username: ${MYSQL_ROOT_USER}, password: ${MYSQL_ROOT_PASSWD}
         - Username: ${MYSQL_ADMIN_USER}, password: ${MYSQL_ADMIN_PW}
+        - Username (read-only): ${MYSQL_BIND_USER}, password: ${MYSQL_BIND_PW}
     * URL:
         - https://${HOSTNAME}/phpmyadmin
     * See also:

@@ -34,11 +34,9 @@ sa_config()
 
     cat >> ${TIP_FILE} <<EOF
 SpamAssassin:
-    * Configuration files:
+    * Configuration files and rules:
         - ${SA_CONF_DIR}
-
-    * Rules:
-        - ${SA_RULES_DIR}
+        - ${SA_CONF_DIR}/local.cf
 
 EOF
 
