@@ -74,8 +74,10 @@ if [ X"${DOVECOT_VERSION}" == X"1.1" ]; then
     export DOVECOT_LDA_PLUGINS='cmusieve quota'
     export DOVECOT_IMAP_PLUGINS='quota imap_quota'
 elif [ X"${DOVECOT_VERSION}" == X"1.2" ]; then
-    export DOVECOT_LDA_PLUGINS='quota sieve autocreate acl'
-    export DOVECOT_IMAP_PLUGINS='quota imap_quota autocreate acl imap_acl'
+    # Append 'acl' to enable mailbox sharing.
+    export DOVECOT_LDA_PLUGINS='quota sieve autocreate'
+    # Append 'acl imap_acl' to enable mailbox sharing.
+    export DOVECOT_IMAP_PLUGINS='quota imap_quota autocreate'
 fi
 
 # Dovecot user & group.
