@@ -26,6 +26,9 @@ rcm_install()
         chmod 0000 ${RCM_HTTPD_ROOT}/{CHANGELOG,INSTALL,LICENSE,README,UPGRADING,installer,SQL}
     fi
 
+    # Copy plugin: imap_acl. Used for mailbox sharing.
+    extract_pkg ${PATCH_DIR}/roundcube/imap_acl.tar.gz ${RCM_HTTPD_ROOT}/plugins/
+
     cd ${RCM_HTTPD_ROOT}/config/
     cp -f db.inc.php.dist db.inc.php
     cp -f main.inc.php.dist main.inc.php

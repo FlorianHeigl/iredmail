@@ -134,6 +134,7 @@ lang = ${DEFAULT_LANG}
 backend = ldap
 storage_base_directory = ${STORAGE_BASE_DIR}
 storage_node = ${STORAGE_NODE}
+hashed_maildir = True
 default_quota = 1024
 mtaTransport = dovecot
 show_login_date = False

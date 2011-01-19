@@ -1,6 +1,9 @@
 iRedMail-0.7.0-beta2:
     * Improvements:
-        + IMAP share folder.
+        + Auto create default IMAP folders with dovecot plugin: autocreate.
+        + Add plugin 'imap_acl' for roundcube to let users manage their
+          mailbox sharing, but disabled by default.
+        + Mailbox sharing with dovecot.
         + Show realtime quota usage with dovecot-1.2 dict quota in
           PostfixAdmin.
         + Don't quarantine mails with bad header in Amavisd.
