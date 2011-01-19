@@ -113,7 +113,7 @@ fi
 . ${FUNCTIONS_DIR}/postfix.sh
 
 # Policy service: Policyd.
-. ${FUNCTIONS_DIR}/policy_service.sh
+. ${FUNCTIONS_DIR}/policyd.sh
 
 # iRedAPD.
 . ${FUNCTIONS_DIR}/iredapd.sh
