@@ -68,7 +68,6 @@ check_env
 . ${CONF_DIR}/postfix
 . ${CONF_DIR}/policyd
 . ${CONF_DIR}/iredapd
-. ${CONF_DIR}/pypolicyd-spf
 . ${CONF_DIR}/dovecot
 . ${CONF_DIR}/managesieve
 . ${CONF_DIR}/procmail
@@ -113,7 +112,7 @@ fi
 # Postfix.
 . ${FUNCTIONS_DIR}/postfix.sh
 
-# Policy service: Policyd & pypolicyd-spf.
+# Policy service: Policyd.
 . ${FUNCTIONS_DIR}/policy_service.sh
 
 # iRedAPD.

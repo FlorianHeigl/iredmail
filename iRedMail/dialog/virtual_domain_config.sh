@@ -123,7 +123,7 @@ Admin of domain ${FIRST_DOMAIN}:
     * Password: ${DOMAIN_ADMIN_PASSWD_PLAIN}
 
     Note:
-        - This account is used only for system administrations, not a mail user.
+        - This account is used for system administrations, not a mail user.
         - You can login iRedAdmin or PostfixAdmin with this account, login name
           is full email address.
 
@@ -131,7 +131,7 @@ First mail user:
     * Username: ${FIRST_USER}@${FIRST_DOMAIN}
     * Password: ${FIRST_USER_PASSWD}
     * SMTP/IMAP auth type: login
-    * Connection security: STARTTLS
+    * Connection security: STARTTLS or SSL/TLS
 
     Note:
         - This account is a normal mail user.

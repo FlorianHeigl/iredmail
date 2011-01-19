@@ -75,12 +75,9 @@ MySQL:
         - Name: ${MYSQL_BIND_USER}, Password: ${MYSQL_BIND_PW}
     * Vmail admin account (read-write):
         - Name: ${MYSQL_ADMIN_USER}, Password: ${MYSQL_ADMIN_PW}
-    * Data directory:
-        - /var/lib/mysql
-    * RC script:
-        - ${MYSQLD_INIT_SCRIPT}
-    * Log file:
-        - /var/log/mysqld.log
+    * Database stored in: /var/lib/mysql
+    * RC script: ${MYSQLD_INIT_SCRIPT}
+    * Log file: /var/log/mysqld.log
     * SSL Cert keys:
         - ${SSL_CERT_FILE}
         - ${SSL_KEY_FILE}

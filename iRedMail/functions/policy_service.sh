@@ -4,34 +4,6 @@
 # Date:     2008.04.07
 
 # ---------------------------------------------
-# pypolicyd-spf.
-# ---------------------------------------------
-pypolicyd_spf_config()
-{
-    ECHO_DEBUG "Install pypolicyd-spf for SPF."
-    cd ${MISC_DIR}
-    extract_pkg ${PYPOLICYD_SPF_TARBALL} && \
-    cd pypolicyd-spf-${PYPOLICYD_SPF_VERSION} && \
-    ECHO_DEBUG "Install pypolicyd-spf-${PYPOLICYD_SPF_VERSION}." && \
-    python setup.py build >/dev/null && python setup.py install >/dev/null
-
-    postconf -e spf-policyd_time_limit='3600'
-
-    cat >> ${POSTFIX_FILE_MASTER_CF} <<EOF
-policyd-spf  unix  -       n       n       -       -       spawn
-  user=nobody argv=/usr/bin/policyd-spf
-EOF
-
-    cat >> ${TIP_FILE} <<EOF
-SPF(pypolicyd-spf):
-    - Configuration file:
-        - /etc/python-policyd-spf/policyd-spf.conf
-EOF
-
-    echo 'export status_pypolicyd_spf_config="DONE"' >> ${STATUS_FILE}
-}
-
-# ---------------------------------------------
 # Policyd.
 # ---------------------------------------------
 policyd_user()
@@ -393,10 +365,6 @@ EOF
 
 policy_service_config()
 {
-    # Enable pypolicyd-spf.
-    [ X"${ENABLE_SPF}" == X"YES" -a X"${SPF_PROGRAM}" == X"pypolicyd-spf" ] && \
-        check_status_before_run pypolicyd_spf_config
-
     check_status_before_run policyd_user
     check_status_before_run policyd_config
 

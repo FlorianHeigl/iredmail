@@ -649,6 +649,7 @@ EOF
         cat >> ${TIP_FILE} <<EOF
         - $i
 EOF
+        echo '' >> ${TIP_FILE}
     done
 
     echo 'export status_postfix_config_mysql="DONE"' >> ${STATUS_FILE}
