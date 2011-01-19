@@ -535,18 +535,19 @@ EOF
         # Enable dict quota in dovecot.
         cat >> ${DOVECOT_CONF} <<EOF
 namespace private {
-  separator = /
-  prefix =
-  #location defaults to mail_location.
-  inbox = yes
+    separator = /
+    prefix =
+    #location defaults to mail_location.
+    inbox = yes
 }
 
 namespace shared {
-  separator = /
-  prefix = shared/%%u/
-  location = maildir:/%%Lh/Maildir/:INDEX=/%%Lh/Maildir/shared/%%u
-  subscriptions = no
-  list = children
+    separator = /
+    prefix = shared/%%u/
+    location = maildir:/%%Lh/Maildir/:INDEX=/%%Lh/Maildir/shared/%%u
+    # this namespace should handle its own subscriptions or not.
+    subscriptions = yes
+    list = children
 }
 
 plugin {
