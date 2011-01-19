@@ -196,6 +196,7 @@ Official Web-based Admin Panel (iRedAdmin):
         - Username: ${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}, password: ${DOMAIN_ADMIN_PASSWD_PLAIN}
     * Settings:
         - ${IREDADMIN_HTTPD_ROOT}/settings.ini
+        - Addition settings for Policyd & Amavisd integration support in iRedAdmin-Pro:
 
         [policyd]
         enabled = True

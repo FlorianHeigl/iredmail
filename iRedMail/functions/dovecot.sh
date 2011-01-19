@@ -332,7 +332,6 @@ protocol imap {
 
 # POP3 configuration
 protocol pop3 {
-    #mail_plugins = quota expire
     mail_plugins = quota
     pop3_uidl_format = %08Xu%08Xv
     pop3_client_workarounds = outlook-no-nuls oe-ns-eoh
