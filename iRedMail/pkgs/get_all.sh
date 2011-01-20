@@ -257,46 +257,20 @@ EOF
 create_repo_suse()
 {
     cat > ${ZYPPER_REPOS_DIR}/${PROG_NAME}.repo <<EOF
-[iRedMail-Apache2-Modules]
-name=iRedMail-Apache2-Modules
-baseurl=http://download.opensuse.org/repositories/Apache:/Modules/Apache_openSUSE_${DISTRO_VERSION}/
-enabled=1
-autorefresh=1
-path=/
-type=rpm-md
-keeppackages=0
-gpgcheck=0
- 
-[iRedMail-Policyd-v1]
-name=iRedMail-Policyd-v1
-baseurl=http://download.opensuse.org/repositories/server:/mail/openSUSE_${DISTRO_VERSION}/
-enabled=1
-autorefresh=1
-path=/
-type=rpm-md
-keeppackages=0
-gpgcheck=0
+# Repository for packages:
+#   - apache-mod_auth_mysql, apache-mod_wsgi
+#   - Altermime, awstats
+# Reference: http://iredmail.org/yum/opensuse/11.3/README
 
-[iRedMail-Altermime]
-name=iRedMail-Altermime
-baseurl=http://download.opensuse.org/repositories/openSUSE:/Factory:/Contrib/openSUSE_${DISTRO_VERSION}/
+[iRedMail]
+name=iRedMail
+baseurl=http://iredmail.org/yum/opensuse/${DISTRO_VERSION}/
 enabled=1
 autorefresh=1
 path=/
 type=rpm-md
 keeppackages=0
 gpgcheck=0
-
-[iRedMail-Awstats]
-name=iRedMail-Awstats
-baseurl=http://download.opensuse.org/repositories/network:/utilities/openSUSE_${DISTRO_VERSION}/
-enabled=1
-autorefresh=1
-path=/
-type=rpm-md
-keeppackages=0
-gpgcheck=0
-
 EOF
 
 }
@@ -381,6 +355,10 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     create_repo_rhel
 elif [ X"${DISTRO}" == X"SUSE" ]; then
     create_repo_suse
+
+    ECHO_INFO "Refresh zypper repositories."
+    zypper clean
+    zypper refresh
 elif [ X"${DISTRO}" == X"UBUNTU" ]; then
     create_repo_ubuntu
 elif [ X"${DISTRO}" == X"DEBIAN" -a X"${DISTRO_VERSION}" == X"5" ]; then

@@ -94,7 +94,6 @@ Please specify password for your first user:
 Note:
 
     * You can login webmail with this account.
-    * 'STARTTLS' is available for connection security.
 
 Warning:
 

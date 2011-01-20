@@ -55,7 +55,7 @@ install_all()
             ENABLED_SERVICES="${ENABLED_SERVICES} httpd"
 
         elif [ X"${DISTRO}" == X"SUSE" ]; then
-            ALL_PKGS="${ALL_PKGS} apache2-prefork apache2-mod_php5 php5-iconv php5-ldap php5-mysql php5-mcrypt php5-mbstring php5-hash php5-gettext"
+            ALL_PKGS="${ALL_PKGS} apache2-prefork apache2-mod_php5 php5-iconv php5-ldap php5-mysql php5-mcrypt php5-mbstring php5-hash php5-gettext php5-dom php5-json php5-intl php5-fileinfo"
             ENABLED_SERVICES="${ENABLED_SERVICES} apache2"
 
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
@@ -221,7 +221,7 @@ EOF
             DISABLED_SERVICES="${DISABLED_SERVICES} saslauthd"
 
         elif [ X"${DISTRO}" == X"SUSE" ]; then
-            ALL_PKGS="${ALL_PKGS} dovecot12"
+            ALL_PKGS="${ALL_PKGS} dovecot12 dovecot12-backend-mysql"
 
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
             ALL_PKGS="${ALL_PKGS} dovecot-imapd dovecot-pop3d"
