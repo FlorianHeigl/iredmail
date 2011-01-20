@@ -317,21 +317,38 @@ amavisd_config_general()
 
 # Apply to mails which coming from internal networks or authenticated
 # roaming users.
-\$policy_bank{'MYUSERS'} = {  # mail supposedly originating from our users
-  originating => 1,  # declare that mail was submitted by our smtp client
-  allow_disclaimers => 1,  # enables disclaimer insertion if available
-  # notify administrator of locally originating malware
-  virus_admin_maps => ["root\@\$mydomain"],
-  spam_admin_maps  => ["root\@\$mydomain"],
-  warnbadhsender   => 1,
-  warnvirussender  => 1,
-  warnspamsender   => 1,
-  # forward to a smtpd service providing DKIM signing service
-  #forward_method => 'smtp:[127.0.0.1]:10027',
-  # force MTA conversion to 7-bit (e.g. before DKIM signing)
-  smtpd_discard_ehlo_keywords => ['8BITMIME'],
-  bypass_banned_checks_maps => [1],  # allow sending any file names and types
-  terminate_dsn_on_notify_success => 0,  # don't remove NOTIFY=SUCCESS option
+# mail supposedly originating from our users
+\$policy_bank{'MYUSERS'} = {
+    # declare that mail was submitted by our smtp client
+    originating => 1,
+
+    # enables disclaimer insertion if available
+    allow_disclaimers => 1,
+
+    # notify administrator of locally originating malware
+    virus_admin_maps => ["root\@\$mydomain"],
+    spam_admin_maps  => ["root\@\$mydomain"],
+    warnbadhsender   => 1,
+    warnvirussender  => 1,
+    warnspamsender   => 1,
+
+    # forward to a smtpd service providing DKIM signing service
+    #forward_method => 'smtp:[127.0.0.1]:10027',
+
+    # force MTA conversion to 7-bit (e.g. before DKIM signing)
+    smtpd_discard_ehlo_keywords => ['8BITMIME'],
+
+    # allow sending any file names and types
+    bypass_banned_checks_maps => [1],
+
+    # don't remove NOTIFY=SUCCESS option
+    terminate_dsn_on_notify_success => 0,
+
+    # don't perform spam-check.
+    #bypass_spam_checks_maps => [1],
+
+    # don't perform header-check.
+    #bypass_header_checks_maps => [1],
 };
 
 # regular incoming mail, originating from anywhere (usually from outside)
