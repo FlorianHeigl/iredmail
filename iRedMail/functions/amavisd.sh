@@ -229,9 +229,9 @@ chomp(\$mydomain = "${HOSTNAME}");
   # notify administrator of locally originating malware
   virus_admin_maps => ["root\@\$mydomain"],
   spam_admin_maps  => ["root\@$mydomain"],
-  warnbadhsender   => 1,
-  warnvirussender  => 1,
-  warnspamsender   => 1,
+  warnbadhsender   => 0,
+  warnvirussender  => 0,
+  warnspamsender   => 0,
   # forward to a smtpd service providing DKIM signing service
   #forward_method => 'smtp:[127.0.0.1]:10027',
   # force MTA conversion to 7-bit (e.g. before DKIM signing)
@@ -328,9 +328,9 @@ amavisd_config_general()
     # notify administrator of locally originating malware
     virus_admin_maps => ["root\@\$mydomain"],
     spam_admin_maps  => ["root\@\$mydomain"],
-    warnbadhsender   => 1,
-    warnvirussender  => 1,
-    warnspamsender   => 1,
+    warnbadhsender   => 0,
+    warnvirussender  => 0,
+    warnspamsender   => 0,
 
     # forward to a smtpd service providing DKIM signing service
     #forward_method => 'smtp:[127.0.0.1]:10027',
@@ -428,7 +428,7 @@ amavisd_config_general()
 
 # Notify also non-local virus/banned recipients if \$warn*recip is true?
 #  (including those not matching local_domains*)
-\$warn_offsite = 1;
+\$warn_offsite = 0;
 
 #\$notify_sender_templ      = read_text('/var/amavis/notify_sender.txt');
 #\$notify_virus_sender_templ= read_text('/var/amavis/notify_virus_sender.txt');
