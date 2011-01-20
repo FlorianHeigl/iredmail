@@ -542,8 +542,8 @@ namespace private {
 
 namespace shared {
     separator = /
-    prefix = Shared/%%u/
-    location = maildir:/%%Lh/Maildir/:INDEX=/%%Lh/Maildir/Shared/%%u
+    prefix = Shared/%%Lu/
+    location = maildir:/%%Lh/Maildir/:INDEX=/%%Lh/Maildir/Shared/%%Lu
     # this namespace should handle its own subscriptions or not.
     subscriptions = yes
     list = children
