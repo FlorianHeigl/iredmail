@@ -344,11 +344,10 @@ amavisd_config_general()
     # don't remove NOTIFY=SUCCESS option
     terminate_dsn_on_notify_success => 0,
 
-    # don't perform spam-check.
+    # don't perform spam/header/virus check.
     #bypass_spam_checks_maps => [1],
-
-    # don't perform header-check.
     #bypass_header_checks_maps => [1],
+    #bypass_virus_checks_maps => [1],
 };
 
 # regular incoming mail, originating from anywhere (usually from outside)
