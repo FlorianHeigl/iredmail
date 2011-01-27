@@ -25,10 +25,10 @@
 # Table structure for table admin
 #
 CREATE TABLE IF NOT EXISTS admin (
-    username VARCHAR(255) NOT NULL DEFAULT '',
-    password VARCHAR(255) NOT NULL DEFAULT '',
+    username VARCHAR(255) CHARACTER SET ascii NOT NULL DEFAULT '',
+    password VARCHAR(255) CHARACTER SET ascii NOT NULL DEFAULT '',
     name VARCHAR(255) DEFAULT '',
-    language VARCHAR(255) NOT NULL DEFAULT 'en_US',
+    language VARCHAR(5) CHARACTER SET ascii NOT NULL DEFAULT 'en_US',
     created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
@@ -40,12 +40,12 @@ CREATE TABLE IF NOT EXISTS admin (
 # Table structure for table alias
 #
 CREATE TABLE IF NOT EXISTS alias (
-    address VARCHAR(255) NOT NULL DEFAULT '',
+    address VARCHAR(255) CHARACTER SET ascii NOT NULL DEFAULT '',
     goto TEXT NOT NULL,
     name VARCHAR(255) DEFAULT '',
     moderators TEXT NOT NULL DEFAULT '',
     accesspolicy VARCHAR(30) NOT NULL DEFAULT '',
-    domain VARCHAR(255) NOT NULL DEFAULT '',
+    domain VARCHAR(255) CHARACTER SET ascii NOT NULL DEFAULT '',
     created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS alias (
 # Table structure for table domain
 #
 CREATE TABLE IF NOT EXISTS domain (
-    domain VARCHAR(255) NOT NULL DEFAULT '',
+    domain VARCHAR(255) CHARACTER SET ascii NOT NULL DEFAULT '',
     description TEXT NOT NULL DEFAULT '',
     disclaimer TEXT NOT NULL DEFAULT '',
     aliases INT(10) NOT NULL DEFAULT '0',
@@ -78,34 +78,36 @@ CREATE TABLE IF NOT EXISTS domain (
 ) ENGINE=MyISAM;
 
 CREATE TABLE IF NOT EXISTS `alias_domain` (
-    `alias_domain` varchar(255) NOT NULL,
-    `target_domain` varchar(255) NOT NULL,
-    `created` datetime NOT NULL default '0000-00-00 00:00:00',
-    `modified` datetime NOT NULL default '0000-00-00 00:00:00',
-    `active` tinyint(1) NOT NULL default '1',
-    PRIMARY KEY  (`alias_domain`),
-    KEY `active` (`active`),
-    KEY `target_domain` (`target_domain`)
+    alias_domain VARCHAR(255) CHARACTER SET ascii NOT NULL,
+    target_domain VARCHAR(255) CHARACTER SET ascii NOT NULL,
+    created datetime NOT NULL default '0000-00-00 00:00:00',
+    modified datetime NOT NULL default '0000-00-00 00:00:00',
+    active tinyint(1) NOT NULL default '1',
+    PRIMARY KEY  (alias_domain),
+    KEY target_domain (target_domain),
+    KEY active (active)
 ) ENGINE=MyISAM;
 
 #
 # Table structure for table domain_admins
 #
 CREATE TABLE IF NOT EXISTS domain_admins (
-    username VARCHAR(255) NOT NULL DEFAULT '',
-    domain VARCHAR(255) NOT NULL DEFAULT '',
+    username VARCHAR(255) CHARACTER SET ascii NOT NULL DEFAULT '',
+    domain VARCHAR(255) CHARACTER SET ascii NOT NULL DEFAULT '',
     created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
-    KEY username (username)
+    PRIMARY KEY (username,domain),
+    KEY username (username),
+    KEY domain (domain)
 ) ENGINE=MyISAM;
 
 #
 # Table structure for table mailbox
 #
 CREATE TABLE IF NOT EXISTS mailbox (
-    username VARCHAR(255) NOT NULL,
+    username VARCHAR(255) CHARACTER SET ascii NOT NULL,
     password VARCHAR(255) NOT NULL DEFAULT '',
     name VARCHAR(255) NOT NULL DEFAULT '',
     storagebasedirectory VARCHAR(255) NOT NULL DEFAULT '',
@@ -114,7 +116,7 @@ CREATE TABLE IF NOT EXISTS mailbox (
     quota BIGINT(20) NOT NULL DEFAULT 0, -- Total mail quota size
     bytes BIGINT(20) NOT NULL DEFAULT 0, -- Number of used quota size
     messages BIGINT(20) NOT NULL DEFAULT 0, -- Number of current messages
-    domain VARCHAR(255) NOT NULL DEFAULT '',
+    domain VARCHAR(255) CHARACTER SET ascii NOT NULL DEFAULT '',
     transport VARCHAR(255) NOT NULL DEFAULT 'dovecot',
     department VARCHAR(255) NOT NULL DEFAULT '',
     rank VARCHAR(255) NOT NULL DEFAULT 'normal',
@@ -147,8 +149,8 @@ CREATE TABLE IF NOT EXISTS mailbox (
 # WARNING: Works only with Dovecot 1.2+.
 #
 CREATE TABLE IF NOT EXISTS share_folder (
-  from_user VARCHAR(150) NOT NULL,
-  to_user VARCHAR(150) NOT NULL,
+  from_user VARCHAR(255) CHARACTER SET ascii NOT NULL,
+  to_user VARCHAR(255) CHARACTER SET ascii NOT NULL,
   dummy CHAR(1),
   PRIMARY KEY (from_user, to_user)
 );
@@ -157,8 +159,8 @@ CREATE TABLE IF NOT EXISTS share_folder (
 # Table structure for table sender_bcc_domain
 #
 CREATE TABLE IF NOT EXISTS sender_bcc_domain (
-    domain VARCHAR(255) NOT NULL DEFAULT '',
-    bcc_address VARCHAR(255) NOT NULL DEFAULT '',
+    domain VARCHAR(255) CHARACTER SET ascii NOT NULL DEFAULT '',
+    bcc_address VARCHAR(255) CHARACTER SET ascii NOT NULL DEFAULT '',
     created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
@@ -170,9 +172,9 @@ CREATE TABLE IF NOT EXISTS sender_bcc_domain (
 # Table structure for table sender_bcc_user
 #
 CREATE TABLE IF NOT EXISTS sender_bcc_user (
-    username VARCHAR(255) NOT NULL DEFAULT '',
-    bcc_address VARCHAR(255) NOT NULL DEFAULT '',
-    domain VARCHAR(255) NOT NULL DEFAULT '',
+    username VARCHAR(255) CHARACTER SET ascii NOT NULL DEFAULT '',
+    bcc_address VARCHAR(255) CHARACTER SET ascii NOT NULL DEFAULT '',
+    domain VARCHAR(255) CHARACTER SET ascii NOT NULL DEFAULT '',
     created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
@@ -184,8 +186,8 @@ CREATE TABLE IF NOT EXISTS sender_bcc_user (
 # Table structure for table recipient_bcc_domain
 #
 CREATE TABLE IF NOT EXISTS recipient_bcc_domain (
-    domain VARCHAR(255) NOT NULL DEFAULT '',
-    bcc_address VARCHAR(255) NOT NULL DEFAULT '',
+    domain VARCHAR(255) CHARACTER SET ascii NOT NULL DEFAULT '',
+    bcc_address VARCHAR(255) CHARACTER SET ascii NOT NULL DEFAULT '',
     created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
@@ -197,9 +199,9 @@ CREATE TABLE IF NOT EXISTS recipient_bcc_domain (
 # Table structure for table recipient_bcc_user
 #
 CREATE TABLE IF NOT EXISTS recipient_bcc_user (
-    username VARCHAR(255) NOT NULL DEFAULT '',
-    bcc_address VARCHAR(255) NOT NULL DEFAULT '',
-    domain VARCHAR(255) NOT NULL DEFAULT '',
+    username VARCHAR(255) CHARACTER SET ascii NOT NULL DEFAULT '',
+    bcc_address VARCHAR(255) CHARACTER SET ascii NOT NULL DEFAULT '',
+    domain VARCHAR(255) CHARACTER SET ascii NOT NULL DEFAULT '',
     created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
@@ -208,7 +210,7 @@ CREATE TABLE IF NOT EXISTS recipient_bcc_user (
 ) ENGINE=MyISAM;
 
 #
-# Table structure for table log
+# Table structure for table log. Used in PostfixAdmin.
 #
 CREATE TABLE IF NOT EXISTS log (
     TIMESTAMP DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
