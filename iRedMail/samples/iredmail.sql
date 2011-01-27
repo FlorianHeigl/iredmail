@@ -122,6 +122,7 @@ CREATE TABLE IF NOT EXISTS mailbox (
     rank VARCHAR(255) NOT NULL DEFAULT 'normal',
     employeeid VARCHAR(255) DEFAULT NULL,
     enablesmtp TINYINT(1) NOT NULL DEFAULT '1',
+    enablesmtpsecured TINYINT(1) NOT NULL DEFAULT '1',
     enablepop3 TINYINT(1) NOT NULL DEFAULT '1',
     enablepop3secured TINYINT(1) NOT NULL DEFAULT '1',
     enableimap TINYINT(1) NOT NULL DEFAULT '1',
