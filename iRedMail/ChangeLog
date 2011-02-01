@@ -13,6 +13,8 @@ iRedMail-0.7.0-beta2:
           Thanks James Kong.
         + Enable whitelising sender (WHITELISTSENDER=1) in policyd by default.
     * Fixed:
+        + Make sure apache wsgi module is loaded on RHEL/CentOS.
+          Thanks Murat Uğur Eminoğlu for the feedback.
         + Fix incorrect file localtion of php.ini on OpenSuSE.
     * Package Update:
         + Roundcube webmail -> 0.5
