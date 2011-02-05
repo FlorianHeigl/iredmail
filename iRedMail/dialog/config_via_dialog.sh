@@ -88,7 +88,7 @@ rm -f /tmp/vmail_user_home_dir
 # --------------------- Backend --------------------
 # --------------------------------------------------
 ${DIALOG} \
-    --title "Choose your prefer backend" \
+    --title "Choose your preferred backend" \
     --radiolist "\
 We provide two backends and the homologous webmail programs:
 
@@ -97,7 +97,7 @@ We provide two backends and the homologous webmail programs:
     +----------+---------------+---------------------------+
     | OpenLDAP |               | iRedAdmin, phpLDAPadmin   |
     +----------+   Roundcube   +---------------------------+
-    | MySQL    |               | PostfixAdmin              |
+    | MySQL    |               | iRedAdmin, PostfixAdmin   |
     +----------+---------------+---------------------------+
 
 TIP:

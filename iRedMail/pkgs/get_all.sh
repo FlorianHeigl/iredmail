@@ -330,7 +330,7 @@ echo_end_msg()
 {
     cat <<EOF
 ********************************************************
-* All tasks had been finished Successfully. Next step:
+* All tasks had been finished successfully. Next step:
 *
 *   # cd ..
 *   # bash ${PROG_NAME}.sh
