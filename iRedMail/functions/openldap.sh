@@ -279,9 +279,10 @@ index ${LDAP_ATTR_USER_RECIPIENT_BCC_ADDRESS},${LDAP_ATTR_USER_SENDER_BCC_ADDRES
 EOF
 
     # Make slapd use slapd.conf insteald of slapd.d (cn=config backend).
-    [ X"${DISTRO}" == X"UBUNTU" ] && \
-        perl -pi -e 's#^(SLAPD_CONF=).*#${1}"$ENV{OPENLDAP_SLAPD_CONF}"#' ${OPENLDAP_SYSCONFIG_CONF} && \
+    if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+        perl -pi -e 's#^(SLAPD_CONF=).*#${1}"$ENV{OPENLDAP_SLAPD_CONF}"#' ${OPENLDAP_SYSCONFIG_CONF}
         perl -pi -e 's#^(SLAPD_PIDFILE=).*#${1}"$ENV{OPENLDAP_PID_FILE}"#' ${OPENLDAP_SYSCONFIG_CONF}
+    fi
 
     ECHO_DEBUG "Generate new client configuration file: ${OPENLDAP_LDAP_CONF}"
     cat > ${OPENLDAP_LDAP_CONF} <<EOF
