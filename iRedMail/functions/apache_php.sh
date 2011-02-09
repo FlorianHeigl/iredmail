@@ -293,11 +293,18 @@ EOF
     perl -pi -e 's/^(upload_max_filesize.*=).*/${1} 10M;/' ${PHP_INI}
     perl -pi -e 's/^(post_max_size.*=)/${1} 12M;/' ${PHP_INI}
 
+    ECHO_DEBUG "Disable php extension: suhosin. ${PHP_INI}."
     perl -pi -e 's/^(suhosin.session.encrypt.*=)/${1} Off;/' ${PHP_INI}
 
     # Set date.timezone. required by PHP-5.3.
     if [ X"${DISTRO}" == X"FREEBSD" -o X"${DISTRO}" == X"SUSE" ]; then
         perl -pi -e 's#^;(date.timezone).*#${1} = UTC#' ${PHP_INI}
+    fi
+
+    # Disable suhosin.session.encrypt on Debian 6. Required by Roundcube webmail.
+    if [ X"${DISTRO}" == X"DEBIAN" ]; then
+        [ -f ${PHP_INI_CONF_DIR}/suhosin.ini ] && \
+            perl -pi -e 's#.*(suhosin.session.encrypt).*#${1} = off#' ${PHP_INI_CONF_DIR}/suhosin.ini
     fi
 
     cat >> ${TIP_FILE} <<EOF

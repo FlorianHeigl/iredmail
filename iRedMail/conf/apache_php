@@ -96,6 +96,7 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
 
     # ---- PHP ----
     export PHP_INI='/etc/php5/apache2/php.ini'
+    export PHP_INI_CONF_DIR='/etc/php5/apache2/conf.d/'
 
 elif [ X"${DISTRO}" == X"FREEBSD" ]; then
     # Apache configuration files.
