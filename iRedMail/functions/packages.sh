@@ -346,10 +346,9 @@ EOF
     # Disable Ubuntu firewall rules, we have iptables init script and rule file.
     [ X"${DISTRO}" == X"UBUNTU" ] && export DISABLED_SERVICES="${DISABLED_SERVICES} ufw"
 
-    #
-    # ---- Ubuntu 10.04 special. ----
-    #
-    if [ X"${DISTRO_CODENAME}" == X"lucid" ]; then
+    # Debian 6 and Ubuntu 10.04/10.10 special.
+    # Install binary packages of phpldapadmin-1.2.x and phpMyAdmin-3.x.
+    if [ X"${DISTRO_CODENAME}" == X"lucid" -o X"${DISTRO_CODENAME}" == X"squeeze" ]; then
         # Install phpLDAPadmin.
         if [ X"${USE_PHPLDAPADMIN}" == X"YES" ]; then
             ALL_PKGS="${ALL_PKGS} phpldapadmin"

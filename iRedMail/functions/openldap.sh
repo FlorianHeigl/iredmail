@@ -28,6 +28,9 @@ openldap_config()
 {
     ECHO_INFO "Configure OpenLDAP server."
 
+    ECHO_DEBUG "Stoping OpenLDAP."
+    ${LDAP_INIT_SCRIPT} stop
+
     backup_file ${OPENLDAP_SLAPD_CONF} ${OPENLDAP_LDAP_CONF}
 
     ###########
@@ -316,7 +319,7 @@ ${OPENLDAP_LOGFILE} {
     compresscmd $(which bzip2)
     uncompresscmd $(which bunzip2)
     compressoptions -9
-    compressext .bz2 
+    compressext .bz2
 
     postrotate
         ${SYSLOG_POSTROTATE_CMD}
@@ -369,7 +372,7 @@ openldap_data_initialize()
 
     ECHO_DEBUG "Starting OpenLDAP."
     ${LDAP_INIT_SCRIPT} restart
-    
+
     ECHO_DEBUG -n "Sleep 5 seconds for LDAP daemon initialize:"
     for i in 5 4 3 2 1; do
         ECHO_DEBUG -n " ${i}" && sleep 1

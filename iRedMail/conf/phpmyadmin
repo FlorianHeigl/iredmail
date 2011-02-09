@@ -25,18 +25,21 @@ export PHPMYADMIN_TARBALL="phpMyAdmin-${PHPMYADMIN_VERSION}.tar.bz2"
 
 # Install phpMyAdmin with source tarball.
 export PHPMYADMIN_USE_SOURCE='YES'
+export PHPMYADMIN_HTTPD_ROOT="${HTTPD_SERVERROOT}/phpMyAdmin-${PHPMYADMIN_VERSION}"
+export PHPMYADMIN_HTTPD_ROOT_SYMBOL_LINK="${HTTPD_SERVERROOT}/phpmyadmin"
 
+# Install phpMyAdmin with binary packages.
 if [ X"${DISTRO}" == X"FREEBSD" ]; then
     export PHPMYADMIN_HTTPD_ROOT="${HTTPD_SERVERROOT}/phpMyAdmin"
     export PHPMYADMIN_HTTPD_ROOT_SYMBOL_LINK="${PHPMYADMIN_HTTPD_ROOT}"
     export PHPMYADMIN_USE_SOURCE='NO'
-elif [ X"${DISTRO}" == X"UBUNTU" -a X"${DISTRO_CODENAME}" == X"lucid" ]; then
+fi
+
+if [ X"${DISTRO_CODENAME}" == X"lucid" -o X"${DISTRO_CODENAME}" == X"squeeze" ]; then
     export PHPMYADMIN_USE_SOURCE='NO'
     export PHPMYADMIN_HTTPD_ROOT="/usr/share/phpmyadmin"
     export PHPMYADMIN_HTTPD_ROOT_SYMBOL_LINK="${PHPMYADMIN_HTTPD_ROOT}"
-else
-    export PHPMYADMIN_HTTPD_ROOT="${HTTPD_SERVERROOT}/phpMyAdmin-${PHPMYADMIN_VERSION}"
-    export PHPMYADMIN_HTTPD_ROOT_SYMBOL_LINK="${HTTPD_SERVERROOT}/phpmyadmin"
 fi
+###
 
 export PHPMYADMIN_CONFIG_FILE="${PHPMYADMIN_HTTPD_ROOT}/config.inc.php"
