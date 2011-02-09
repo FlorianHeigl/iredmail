@@ -32,4 +32,9 @@ export PYSIEVED_PIDFILE='/var/run/pysieved/pysieved.pid'
 
 # Variables for managesieve service.
 export MANAGESIEVE_BINDADDR="${PYSIEVED_BINDADDR}"
-export MANAGESIEVE_PORT="${PYSIEVED_PORT}"
+export MANAGESIEVE_PORT='2000'
+
+if [ X"${DISTRO_CODENAME}" == X"squeeze" ]; then
+    # Debian 6 changes default managesieve port to 4190.
+    export MANAGESIEVE_PORT='4190'
+fi
