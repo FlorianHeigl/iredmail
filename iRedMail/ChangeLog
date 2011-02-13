@@ -1,5 +1,9 @@
 iRedMail-0.7.0-beta3:
-    * Improved:
+    * New features:
+        + Enable personal LDAP address book. Roundcube users will store
+          contacts in personal LDAP address book by default.
+
+    * Improvements:
         + Don't allow user to view ldap attributes: domainAdmin,
           domainGlobalAdmin.
 

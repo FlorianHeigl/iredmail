@@ -250,45 +250,63 @@ rcm_config()
 // ----------------------------------
 // ADDRESSBOOK SETTINGS
 // ----------------------------------
-\$rcmail_config['ldap_public']["${FIRST_DOMAIN}"] = array(
+// Global LDAP address book.
+\$rcmail_config['ldap_public']["ldap_global"] = array(
     'name'          => 'Global Address Book',
-    'hosts'         => array("${LDAP_SERVER_HOST}"),
+    'hosts'         => array('${LDAP_SERVER_HOST}'),
     'port'          => ${LDAP_SERVER_PORT},
     'use_tls'       => false,
 
-    // ---- Used to search accounts only in the same domain. ----
+    // Search accounts in the same domain.
     'user_specific' => true, // If true the base_dn, bind_dn and bind_pass default to the user's IMAP login.
-    'base_dn'       => "${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}",
-    'bind_dn'       => "${LDAP_ATTR_USER_RDN}=%u@%d,${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}",
+    'base_dn'       => '${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}',
+    'bind_dn'       => '${LDAP_ATTR_USER_RDN}=%u@%d,${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}',
 
-    // ---- Uncomment below lines to search whole LDAP tree ----
-    //'base_dn'       => "${LDAP_BASEDN}",
-    //'bind_dn'       => "${LDAP_BINDDN}",
-    //'bind_pass'     => "${LDAP_BINDPW}",
+    'writable'      => false,
+    'ldap_version'  => '${LDAP_BIND_VERSION}',
+    'search_fields' => array('mail', 'cn', 'givenName', 'sn'),
+    'name_field'    => 'cn',
+    'email_field'   => 'mail',
+    'surname_field' => 'sn',
+    'firstname_field' => 'givenName',
+    'sort'          => 'cn',
+    'scope'         => 'sub',
+    'filter'        => '(&(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DELIVER})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DISPLAYED_IN_ADDRBOOK})(|(objectClass=${LDAP_OBJECTCLASS_MAILGROUP})(objectClass=${LDAP_OBJECTCLASS_MAILALIAS})(objectClass=${LDAP_OBJECTCLASS_MAILUSER})))',
+    'fuzzy_search'  => true);
 
-    'writable'      => false, // Indicates if we can write to the LDAP directory or not.
-    // If writable is true then these fields need to be populated:
-    // LDAP_Object_Classes, required_fields, LDAP_rdn
-    //'LDAP_Object_Classes' => array("top", "inetOrgPerson", "${LDAP_OBJECTCLASS_MAILUSER}"), // To create a new contact these are the object classes to specify (or any other classes you wish to use).
-    //'required_fields'     => array("cn", "sn", "mail"),     // The required fields needed to build a new contact as required by the object classes (can include additional fields not required by the object classes).
-    //'LDAP_rdn'      => "${LDAP_ATTR_USER_RDN}", // The RDN field that is used for new entries, this field needs to be one of the search_fields, the base of base_dn is appended to the RDN to insert into the LDAP directory.
-    'ldap_version'  => "${LDAP_BIND_VERSION}",       // using LDAPv3
-    'search_fields' => array('mail', 'cn', 'givenName', 'sn'),  // fields to search in
-    'name_field'    => 'cn',    // this field represents the contact's name
-    'email_field'   => 'mail',  // this field represents the contact's e-mail
-    'surname_field' => 'sn',    // this field represents the contact's last name
-    'firstname_field' => 'givenName',  // this field represents the contact's first name
-    'sort'          => 'cn',    // The field to sort the listing by.
-    'scope'         => 'sub',   // search mode: sub|base|list
-    'filter'        => "(&(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DELIVER})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DISPLAYED_IN_ADDRBOOK})(|(objectClass=${LDAP_OBJECTCLASS_MAILGROUP})(objectClass=${LDAP_OBJECTCLASS_MAILALIAS})(objectClass=${LDAP_OBJECTCLASS_MAILUSER})))", // Search mail users, lists, aliases.
-    'fuzzy_search'  => true);   // server allows wildcard search
+// Personal LDAP address book.
+\$rcmail_config['ldap_public']["ldap_personal"] = array(
+    'name'          => 'Personal Address Book',
+    'hosts'         => array('${LDAP_SERVER_HOST}'),
+    'port'          => ${LDAP_SERVER_PORT},
+    'use_tls'       => false,
+    'user_specific' => true,
+    'base_dn'       => '${LDAP_ATTR_USER_RDN}=%u@%d,${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}',
+    'bind_dn'       => '${LDAP_ATTR_USER_RDN}=%u@%d,${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}',
+    'writable'      => true,
+    'LDAP_Object_Classes' => array('top', 'inetOrgPerson'),
+    'required_fields'     => array('cn', 'mail'),
+    'LDAP_rdn'      => 'cn',
+    'ldap_version'  => '${LDAP_BIND_VERSION}',
+    'search_fields' => array('mail', 'cn', 'givenName', 'sn'),
+    'name_field'    => 'cn',
+    'email_field'   => 'mail',
+    'surname_field' => 'sn',
+    'firstname_field' => 'givenName',
+    'sort'          => 'cn',
+    'scope'         => 'list',
+    'filter'        => '(objectClass=inetOrgPerson)',
+    'fuzzy_search'  => true);
 
 // end of config file
 ?>
 EOF
 
+        # Store contacts in personal ldap address book.
+        perl -pi -e 's#(.*address_book_type.*=)(.*)#${1} "ldap";#' main.inc.php
+
         # List global address book in autocomplete_addressbooks, contains domain users and groups.
-        perl -pi -e 's#(.*autocomplete_addressbooks.*=)(.*)#${1} array("sql", "$ENV{'FIRST_DOMAIN'}");#' main.inc.php
+        perl -pi -e 's#(.*autocomplete_addressbooks.*=)(.*)#${1} array("ldap_global", "ldap_personal");#' main.inc.php
 
     #elif [ X"${BACKEND}" == X"MySQL" ]; then
         # Set correct username, password and database name.

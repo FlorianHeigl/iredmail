@@ -140,9 +140,16 @@ loglevel    0
 #   Admin Name: ${LDAP_ATTR_USER_RDN}=${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}, ${LDAP_ATTR_DOMAIN_RDN}=${FIRST_DOMAIN}, ${LDAP_BASEDN}
 #
 
-#
-# Set permission for LDAP attrs.
-#
+# Personal LDAP address book.
+access to dn.regex="cn=[^,]+,${LDAP_ATTR_USER_RDN}=([^,]+)@([^,]+),${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=([^,]+),${LDAP_BASEDN}\$"
+    by anonymous                    none
+    by self                         none
+    by dn.exact="${LDAP_BINDDN}"   read
+    by dn.exact="${LDAP_ADMIN_DN}"  write
+    by dn.regex="${LDAP_ATTR_USER_RDN}=\$1@\$2,${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=\$3,${LDAP_BASEDN}\$" read
+    by users                        none
+
+# Allow users to change their own passwords and mail forwarding addresses.
 access to attrs="${LDAP_ATTR_USER_PASSWD},${LDAP_ATTR_USER_FORWARD}"
     by anonymous    auth
     by self         write
@@ -150,7 +157,8 @@ access to attrs="${LDAP_ATTR_USER_PASSWD},${LDAP_ATTR_USER_FORWARD}"
     by dn.exact="${LDAP_ADMIN_DN}"  write
     by users        none
 
-access to attrs="cn,sn,telephoneNumber"
+# Allow to read others public info.
+access to attrs="cn,sn,gn,givenName,telephoneNumber"
     by anonymous    auth
     by self         write
     by dn.exact="${LDAP_BINDDN}"   read
@@ -165,7 +173,7 @@ access to attrs="objectclass,${LDAP_ATTR_DOMAIN_RDN},${LDAP_ATTR_MTA_TRANSPORT},
     by dn.exact="${LDAP_ADMIN_DN}"  write
     by users        read
 
-access to attrs="${LDAP_ATTR_DOMAIN_ADMIN},${LDAP_ATTR_DOMAIN_GLOBALADMIN}"
+access to attrs="${LDAP_ATTR_DOMAIN_ADMIN},${LDAP_ATTR_DOMAIN_GLOBALADMIN},${LDAP_ATTR_DOMAIN_SENDER_BCC_ADDRESS},${LDAP_ATTR_DOMAIN_RECIPIENT_BCC_ADDRESS}"
     by anonymous    auth
     by self         read
     by dn.exact="${LDAP_BINDDN}"   read
@@ -173,7 +181,7 @@ access to attrs="${LDAP_ATTR_DOMAIN_ADMIN},${LDAP_ATTR_DOMAIN_GLOBALADMIN}"
     by users        none
 
 # User attrs.
-access to attrs="employeeNumber,homeDirectory,mailMessageStore,${LDAP_ATTR_USER_RDN},${LDAP_ATTR_ACCOUNT_STATUS},${LDAP_ATTR_USER_SENDER_BCC_ADDRESS},${LDAP_ATTR_USER_RECIPIENT_BCC_ADDRESS},${LDAP_ATTR_USER_FORWARD},${LDAP_ATTR_USER_QUOTA},${LDAP_ATTR_USER_BACKUP_MAIL_ADDRESS},${LDAP_ATTR_USER_SHADOW_ADDRESS}"
+access to attrs="employeeNumber,homeDirectory,mailMessageStore,${LDAP_ATTR_USER_RDN},${LDAP_ATTR_ACCOUNT_STATUS},${LDAP_ATTR_USER_SENDER_BCC_ADDRESS},${LDAP_ATTR_USER_RECIPIENT_BCC_ADDRESS},${LDAP_ATTR_USER_QUOTA},${LDAP_ATTR_USER_BACKUP_MAIL_ADDRESS},${LDAP_ATTR_USER_SHADOW_ADDRESS}"
     by anonymous    auth
     by self         read
     by dn.exact="${LDAP_BINDDN}"   read
@@ -188,6 +196,7 @@ access to dn="${LDAP_BINDDN}"
     by self                         write
     by dn.exact="${LDAP_ADMIN_DN}"  write
     by users                        none
+
 access to dn="${LDAP_ADMIN_DN}"
     by anonymous                    auth
     by self                         write
