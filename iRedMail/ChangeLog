@@ -1,5 +1,6 @@
 iRedMail-0.7.0-beta3:
-    * Package update:
+    * Package update/changes:
+        + Remove roundcube third-party plugin: imap_acl.
         + Roundcube webmail -> 0.5.1
 
 iRedMail-0.7.0-beta2:
