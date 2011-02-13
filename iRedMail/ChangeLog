@@ -1,4 +1,8 @@
 iRedMail-0.7.0-beta3:
+    * Fixed:
+        + Incorrect path of phpLDAPadmin on Ubuntu 10.04.x/10.10.x.
+          Thanks xulingyun@bbs for the feedback.
+
     * Package update/changes:
         + Remove roundcube third-party plugin: imap_acl.
         + Roundcube webmail -> 0.5.1

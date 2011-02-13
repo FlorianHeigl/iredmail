@@ -28,17 +28,23 @@ export PLA_TARBALL="phpldapadmin-${PLA_VERSION}.tgz"
 export PHPLDAPADMIN_USE_SOURCE='YES'
 
 if [ X"${DISTRO}" == X"FREEBSD" ]; then
+    # Install phpLDAPadmin via ports tree.
+    export PHPLDAPADMIN_USE_SOURCE='NO'
+
     export PLA_HTTPD_ROOT="${HTTPD_SERVERROOT}/phpldapadmin/htdocs"
     export PLA_HTTPD_ROOT_SYMBOL_LINK="${PLA_HTTPD_ROOT}"
     export PLA_CONF_DIR="${HTTPD_SERVERROOT}/phpldapadmin/config"
-    export PHPLDAPADMIN_USE_SOURCE='NO'
 else
     export PLA_HTTPD_ROOT="${HTTPD_SERVERROOT}/phpldapadmin-${PLA_VERSION}"
     export PLA_HTTPD_ROOT_SYMBOL_LINK="${HTTPD_SERVERROOT}/phpldapadmin"
     export PLA_CONF_DIR="${PLA_HTTPD_ROOT_SYMBOL_LINK}/config"
 fi
 
-# Ubuntu 10.04 (lucid)
+# Ubuntu 10.04, 10.10.
 if [ X"${DISTRO_CODENAME}" == X"lucid" ]; then
     export PHPLDAPADMIN_USE_SOURCE='NO'
+
+    export PLA_HTTPD_ROOT="/usr/share/phpldapadmin"
+    export PLA_HTTPD_ROOT_SYMBOL_LINK="${HTTPD_SERVERROOT}/phpldapadmin"
+    export PLA_CONF_DIR="${PLA_HTTPD_ROOT_SYMBOL_LINK}/config"
 fi
