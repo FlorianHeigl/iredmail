@@ -1,4 +1,8 @@
 iRedMail-0.7.0-beta3:
+    * Improved:
+        + Don't allow user to view ldap attributes: domainAdmin,
+          domainGlobalAdmin.
+
     * Fixed:
         + Incorrect path of phpLDAPadmin on Ubuntu 10.04.x/10.10.x.
           Thanks xulingyun@bbs for the feedback.

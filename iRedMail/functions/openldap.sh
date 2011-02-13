@@ -158,12 +158,19 @@ access to attrs="cn,sn,telephoneNumber"
     by users        read
 
 # Domain attrs.
-access to attrs="objectclass,${LDAP_ATTR_DOMAIN_RDN},${LDAP_ATTR_MTA_TRANSPORT},${LDAP_ENABLED_SERVICE},${LDAP_ATTR_DOMAIN_SENDER_BCC_ADDRESS},${LDAP_ATTR_DOMAIN_RECIPIENT_BCC_ADDRESS},${LDAP_ATTR_DOMAIN_ADMIN},${LDAP_ATTR_DOMAIN_GLOBALADMIN},${LDAP_ATTR_DOMAIN_BACKUPMX},${LDAP_ATTR_DOMAIN_MAX_QUOTA_SIZE},${LDAP_ATTR_DOMAIN_MAX_USER_NUMBER}"
+access to attrs="objectclass,${LDAP_ATTR_DOMAIN_RDN},${LDAP_ATTR_MTA_TRANSPORT},${LDAP_ENABLED_SERVICE},${LDAP_ATTR_DOMAIN_SENDER_BCC_ADDRESS},${LDAP_ATTR_DOMAIN_RECIPIENT_BCC_ADDRESS},${LDAP_ATTR_DOMAIN_BACKUPMX},${LDAP_ATTR_DOMAIN_MAX_QUOTA_SIZE},${LDAP_ATTR_DOMAIN_MAX_USER_NUMBER}"
     by anonymous    auth
     by self         read
     by dn.exact="${LDAP_BINDDN}"   read
     by dn.exact="${LDAP_ADMIN_DN}"  write
     by users        read
+
+access to attrs="${LDAP_ATTR_DOMAIN_ADMIN},${LDAP_ATTR_DOMAIN_GLOBALADMIN}"
+    by anonymous    auth
+    by self         read
+    by dn.exact="${LDAP_BINDDN}"   read
+    by dn.exact="${LDAP_ADMIN_DN}"  write
+    by users        none
 
 # User attrs.
 access to attrs="employeeNumber,homeDirectory,mailMessageStore,${LDAP_ATTR_USER_RDN},${LDAP_ATTR_ACCOUNT_STATUS},${LDAP_ATTR_USER_SENDER_BCC_ADDRESS},${LDAP_ATTR_USER_RECIPIENT_BCC_ADDRESS},${LDAP_ATTR_USER_FORWARD},${LDAP_ATTR_USER_QUOTA},${LDAP_ATTR_USER_BACKUP_MAIL_ADDRESS},${LDAP_ATTR_USER_SHADOW_ADDRESS}"
