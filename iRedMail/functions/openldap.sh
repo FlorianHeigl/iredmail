@@ -146,7 +146,7 @@ access to dn.regex="cn=[^,]+,${LDAP_ATTR_USER_RDN}=([^,]+)@([^,]+),${LDAP_ATTR_G
     by self                         none
     by dn.exact="${LDAP_BINDDN}"   read
     by dn.exact="${LDAP_ADMIN_DN}"  write
-    by dn.regex="${LDAP_ATTR_USER_RDN}=\$1@\$2,${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=\$3,${LDAP_BASEDN}\$" read
+    by dn.regex="${LDAP_ATTR_USER_RDN}=\$1@\$2,${LDAP_ATTR_GROUP_RDN}=${LDAP_ATTR_GROUP_USERS},${LDAP_ATTR_DOMAIN_RDN}=\$3,${LDAP_BASEDN}\$" write
     by users                        none
 
 # Allow users to change their own passwords and mail forwarding addresses.
