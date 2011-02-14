@@ -252,7 +252,7 @@ rcm_config()
 // ----------------------------------
 // Global LDAP address book.
 \$rcmail_config['ldap_public']["ldap_global"] = array(
-    'name'          => 'Global Address Book',
+    'name'          => 'Global LDAP Address Book',
     'hosts'         => array('${LDAP_SERVER_HOST}'),
     'port'          => ${LDAP_SERVER_PORT},
     'use_tls'       => false,
@@ -276,7 +276,7 @@ rcm_config()
 
 // Personal LDAP address book.
 \$rcmail_config['ldap_public']["ldap_personal"] = array(
-    'name'          => 'Personal Address Book',
+    'name'          => 'Personal LDAP Address Book',
     'hosts'         => array('${LDAP_SERVER_HOST}'),
     'port'          => ${LDAP_SERVER_PORT},
     'use_tls'       => false,
@@ -303,10 +303,10 @@ rcm_config()
 EOF
 
         # Store contacts in personal ldap address book.
-        perl -pi -e 's#(.*address_book_type.*=)(.*)#${1} "ldap";#' main.inc.php
+        #perl -pi -e 's#(.*address_book_type.*=)(.*)#${1} "ldap";#' main.inc.php
 
-        # List global address book in autocomplete_addressbooks, contains domain users and groups.
-        perl -pi -e 's#(.*autocomplete_addressbooks.*=)(.*)#${1} array("ldap_global", "ldap_personal");#' main.inc.php
+        # Enable autocomplete for all address books.
+        perl -pi -e 's#(.*autocomplete_addressbooks.*=)(.*)#${1} array("sql", "ldap_global", "ldap_personal");#' main.inc.php
 
     #elif [ X"${BACKEND}" == X"MySQL" ]; then
         # Set correct username, password and database name.
