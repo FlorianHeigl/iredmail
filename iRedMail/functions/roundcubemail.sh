@@ -306,7 +306,7 @@ EOF
         #perl -pi -e 's#(.*address_book_type.*=)(.*)#${1} "ldap";#' main.inc.php
 
         # Enable autocomplete for all address books.
-        perl -pi -e 's#(.*autocomplete_addressbooks.*=)(.*)#${1} array("sql", "ldap_global", "ldap_personal");#' main.inc.php
+        perl -pi -e 's#(.*autocomplete_addressbooks.*=)(.*)#${1} array("sql", "ldap_global");#' main.inc.php
 
     #elif [ X"${BACKEND}" == X"MySQL" ]; then
         # Set correct username, password and database name.
