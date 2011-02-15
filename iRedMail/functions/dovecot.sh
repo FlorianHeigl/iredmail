@@ -335,6 +335,9 @@ protocol pop3 {
     mail_plugins = quota
     pop3_uidl_format = %08Xu%08Xv
     pop3_client_workarounds = outlook-no-nuls oe-ns-eoh
+
+    # number of connections per-user per-IP
+    #mail_max_userip_connections = 10
 }
 
 auth default {
