@@ -9,6 +9,8 @@ iRedMail-0.7.0-beta3:
           domainGlobalAdmin.
 
     * Fixed:
+        + Remove unique index (primary key) on table amavisd.msgrcpt to avoid
+          duplicate entries.
         + Incorrect path of phpLDAPadmin on Ubuntu 10.04.x/10.10.x.
           Thanks xulingyun@bbs for the feedback.
 

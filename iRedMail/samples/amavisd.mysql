@@ -182,12 +182,9 @@ CREATE TABLE msgrcpt (
   wl         char(1)  DEFAULT ' ',       -- sender whitelisted by this recip
   bspam_level float,                     -- per-recipient (total) spam level
   smtp_resp  varchar(255)  DEFAULT '',   -- SMTP response given to MTA
-  PRIMARY KEY (partition_tag,mail_id,rseqnum)
--- FOREIGN KEY (rid)     REFERENCES maddr(id)     ON DELETE RESTRICT,
--- FOREIGN KEY (mail_id) REFERENCES msgs(mail_id) ON DELETE CASCADE
+  KEY (mail_id),
+  KEY (rid)
 ) ENGINE=InnoDB;
-CREATE INDEX msgrcpt_idx_mail_id  ON msgrcpt (mail_id);
-CREATE INDEX msgrcpt_idx_rid      ON msgrcpt (rid);
 
 -- mail quarantine in SQL, enabled by $*_quarantine_method='sql:'
 -- NOTE: records in quarantine without corresponding msgs.mail_id record are
