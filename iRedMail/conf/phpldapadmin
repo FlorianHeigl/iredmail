@@ -45,6 +45,6 @@ if [ X"${DISTRO_CODENAME}" == X"lucid" ]; then
     export PHPLDAPADMIN_USE_SOURCE='NO'
 
     export PLA_HTTPD_ROOT="/usr/share/phpldapadmin"
-    export PLA_HTTPD_ROOT_SYMBOL_LINK="${HTTPD_SERVERROOT}/phpldapadmin"
-    export PLA_CONF_DIR="${PLA_HTTPD_ROOT_SYMBOL_LINK}/config"
+    export PLA_HTTPD_ROOT_SYMBOL_LINK="${PLA_HTTPD_ROOT}"
+    export PLA_CONF_DIR="${PLA_HTTPD_ROOT}/config"
 fi
