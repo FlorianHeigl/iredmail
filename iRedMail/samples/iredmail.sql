@@ -120,7 +120,7 @@ CREATE TABLE IF NOT EXISTS mailbox (
     transport VARCHAR(255) NOT NULL DEFAULT 'dovecot',
     department VARCHAR(255) NOT NULL DEFAULT '',
     rank VARCHAR(255) NOT NULL DEFAULT 'normal',
-    employeeid VARCHAR(255) DEFAULT NULL,
+    employeeid VARCHAR(255) DEFAULT '',
     enablesmtp TINYINT(1) NOT NULL DEFAULT '1',
     enablesmtpsecured TINYINT(1) NOT NULL DEFAULT '1',
     enablepop3 TINYINT(1) NOT NULL DEFAULT '1',
