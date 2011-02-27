@@ -36,7 +36,7 @@ EXAMPLE:
     +---------------------+-----------------------+
     | Your domain name    | Recommend LDAP suffix |
     +---------------------+-----------------------+
-    | iredmail.org        | dc=iredmail,dc=org    |
+    | example.com         | dc=example,dc=com     |
     +---------------------+-----------------------+
     | abc.com.cn          | dc=abc,dc=com,dc=cn   |
     +---------------------+-----------------------+

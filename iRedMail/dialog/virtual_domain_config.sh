@@ -29,7 +29,7 @@ Please specify your first virtual domain name.
 
 EXAMPLES:
 
-    * iredmail.org
+    * example.com
 
 " 20 76 2>/tmp/first_domain
 
