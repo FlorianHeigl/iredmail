@@ -58,9 +58,15 @@ iredadmin_config()
     chmod -R 0755 ${IREDADMIN_HTTPD_ROOT}
 
     # Copy sample configure file.
-    cd ${IREDADMIN_HTTPD_ROOT}/ && \
-    cp settings.ini.sample settings.ini && \
-    chown -R ${IREDADMIN_HTTPD_USER}:${IREDADMIN_HTTPD_GROUP} settings.ini && \
+    cd ${IREDADMIN_HTTPD_ROOT}/
+
+    if [ X"${BACKEND}" == X"OpenLDAP" ]; then
+        cp settings.ini.ldap.sample settings.ini
+    elif [ X"${BACKEND}" == X"OpenLDAP" ]; then
+        cp settings.ini.mysql.sample settings.ini
+    fi
+
+    chown -R ${IREDADMIN_HTTPD_USER}:${IREDADMIN_HTTPD_GROUP} settings.ini
     chmod 0600 settings.ini
 
     ECHO_DEBUG "Create directory alias for iRedAdmin."
@@ -126,67 +132,79 @@ EOF
 
     ECHO_DEBUG "Configure iRedAdmin."
 
-    # Generate config file: settings.ini
-    cd ${IREDADMIN_HTTPD_ROOT}/ && \
-    cat > settings.ini <<EOF
-[general]
-webmaster = ${MAIL_ALIAS_ROOT}
-mailbox_type = ${MAILBOX_FORMAT}
-debug = False
-skin = default
-lang = ${DEFAULT_LANG}
-backend = ldap
-storage_base_directory = ${STORAGE_BASE_DIR}
-storage_node = ${STORAGE_NODE}
-hashed_maildir = True
-default_quota = 1024
-mtaTransport = dovecot
-show_login_date = False
-min_passwd_length = 0
-max_passwd_length = 0
+    # Modify iRedAdmin settings.
+    # [general] section.
+    ECHO_DEBUG "Configure general settings."
+    sed -i.tmp \
+        -e "/\[general\]/,/\[/ s#\(^webmaster =\).*#\1 ${MAIL_ALIAS_ROOT}#" \
+        -e "/\[general\]/,/\[/ s#\(^storage_base_directory =\).*#\1 ${STORAGE_BASE_DIR}/${STORAGE_NODE}#" \
+        settings.ini
 
-[iredadmin]
-dbn = mysql
-host = ${MYSQL_SERVER}
-port = ${MYSQL_PORT}
-db = ${IREDADMIN_DB_NAME}
-user = ${IREDADMIN_DB_USER}
-passwd = ${IREDADMIN_DB_PASSWD}
-
-EOF
+    # [iredadmin] section.
+    ECHO_DEBUG "Configure iredadmin database related settings."
+    sed -i.tmp \
+        -e "/\[iredadmin\]/,/\[/ s#\(^host =\).*#\1 ${MYSQL_SERVER}#" \
+        -e "/\[iredadmin\]/,/\[/ s#\(^port =\).*#\1 ${MYSQL_PORT}#" \
+        -e "/\[iredadmin\]/,/\[/ s#\(^db =\).*#\1 ${IREDADMIN_DB_NAME}#" \
+        -e "/\[iredadmin\]/,/\[/ s#\(^user =\).*#\1 ${IREDADMIN_DB_USER}#" \
+        -e "/\[iredadmin\]/,/\[/ s#\(^passwd =\).*#\1 ${IREDADMIN_DB_PASSWD}#" \
+        settings.ini
 
     # Backend related settings.
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
+        # Change backend.
+        sed -i.tmp -e "/\[general\]/,/\[/ s#\(^backend =\).*#\1 ldap#" settings.ini
+
         # Section [ldap].
-        cat >> settings.ini <<EOF
-[ldap]
-uri = ldap://${LDAP_SERVER_HOST}:${LDAP_SERVER_PORT}
-protocol_version = 3
-trace_level = 0
-basedn = ${LDAP_BASEDN}
-domainadmin_dn = ${LDAP_ADMIN_BASEDN}
-bind_dn = ${LDAP_ADMIN_DN}
-bind_pw = ${LDAP_ADMIN_PW}
-default_pw_scheme = SSHA
+        ECHO_DEBUG "Configure OpenLDAP backend related settings."
+        sed -i.tmp \
+            -e "/\[ldap\]/,/\[/ s#\(^uri =\).*#\1 ldap://${LDAP_SERVER_HOST}:${LDAP_SERVER_PORT}#" \
+            -e "/\[ldap\]/,/\[/ s#\(^basedn =\).*#\1 ${LDAP_BASEDN}#" \
+            -e "/\[ldap\]/,/\[/ s#\(^domainadmin_dn =\).*#\1 ${LDAP_ADMIN_BASEDN}#" \
+            -e "/\[ldap\]/,/\[/ s#\(^bind_dn =\).*#\1 ${LDAP_ADMIN_DN}#" \
+            -e "/\[ldap\]/,/\[/ s#\(^bind_pw =\).*#\1 ${LDAP_ADMIN_PW}#" \
+            settings.ini
 
-EOF
     elif [ X"${BACKEND}" == X"MySQL" ]; then
-        # Section [vmaildb].
-        perl -pi -e 's#(host =).*#${1} $ENV{MYSQL_SERVER}#' settings.ini
-        perl -pi -e 's#(port =).*#${1} $ENV{MYSQL_PORT}#' settings.ini
-        perl -pi -e 's#(db =).*#${1} $ENV{VMAIL_DB}#' settings.ini
-        perl -pi -e 's#(user =).*#${1} $ENV{MYSQL_ADMIN_USER}#' settings.ini
-        perl -pi -e 's#(passwd =).*#${1} $ENV{MYSQL_ADMIN_PW}#' settings.ini
-        cat >> settings.ini <<EOF
-[vmaildb]
-host = ${MYSQL_SERVER}
-port = ${MYSQL_PORT}
-db = ${VMAIL_DB}
-user = ${MYSQL_ADMIN_USER}
-passwd = ${MYSQL_ADMIN_PW}
+        # Change backend.
+        sed -i.tmp -e "/\[general\]/,/\[/ s#\(^backend =\).*#\1 mysql#" settings.ini
 
-EOF
+        ECHO_DEBUG "Configure MySQL backend related settings."
+        sed -i.tmp \
+            -e "/\[vmaildb\]/,/\[/ s#\(^host =\).*#\1 ${MYSQL_SERVER}#" \
+            -e "/\[vmaildb\]/,/\[/ s#\(^port =\).*#\1 ${MYSQL_PORT}#" \
+            -e "/\[vmaildb\]/,/\[/ s#\(^db =\).*#\1 ${VMAIL_DB}#" \
+            -e "/\[vmaildb\]/,/\[/ s#\(^user =\).*#\1 ${MYSQL_ADMIN_USER}#" \
+            -e "/\[vmaildb\]/,/\[/ s#\(^passwd =\).*#\1 ${MYSQL_ADMIN_PW}#" \
+            settings.ini
     fi
+
+    # Section [policyd].
+    ECHO_DEBUG "Configure Policyd related settings."
+    sed -i.tmp \
+        -e "/\[policyd\]/,/\[/ s#\(^enabled =\).*#\1 True#" \
+        -e "/\[policyd\]/,/\[/ s#\(^host =\).*#\1 ${MYSQL_SERVER}#" \
+        -e "/\[policyd\]/,/\[/ s#\(^port =\).*#\1 ${MYSQL_PORT}#" \
+        -e "/\[policyd\]/,/\[/ s#\(^db =\).*#\1 ${POLICYD_DB_NAME}#" \
+        -e "/\[policyd\]/,/\[/ s#\(^user =\).*#\1 ${POLICYD_DB_USER}#" \
+        -e "/\[policyd\]/,/\[/ s#\(^passwd =\).*#\1 ${POLICYD_DB_PASSWD}#" \
+        settings.ini
+
+    # Section [amavisd].
+    ECHO_DEBUG "Configure Amavisd related settings."
+    sed -i.tmp \
+        -e "/\[amavisd\]/,/\[/ s#\(^quarantine =\).*#\1 True#" \
+        -e "/\[amavisd\]/,/\[/ s#\(^server =\).*#\1 ${AMAVISD_SERVER}#" \
+        -e "/\[amavisd\]/,/\[/ s#\(^quarantine_port =\).*#\1 ${AMAVISD_QUARANTINE_PORT}#" \
+        -e "/\[amavisd\]/,/\[/ s#\(^logging_into_sql =\).*#\1 True#" \
+        -e "/\[amavisd\]/,/\[/ s#\(^host =\).*#\1 ${MYSQL_SERVER}#" \
+        -e "/\[amavisd\]/,/\[/ s#\(^port =\).*#\1 ${MYSQL_PORT}#" \
+        -e "/\[amavisd\]/,/\[/ s#\(^db =\).*#\1 ${AMAVISD_DB_NAME}#" \
+        -e "/\[amavisd\]/,/\[/ s#\(^user =\).*#\1 ${AMAVISD_DB_USER}#" \
+        -e "/\[amavisd\]/,/\[/ s#\(^passwd =\).*#\1 ${AMAVISD_DB_PASSWD}#" \
+        settings.ini
+
+    [ -f settings.ini.tmp ] && rm -f settings.ini.tmp &>/dev/null
 
     cat >> ${TIP_FILE} <<EOF
 iRedAdmin - official web-based admin panel:
