@@ -112,6 +112,8 @@ export pkg_counter=1
 # Misc file (source tarball) list.
 if [ X"${DISTRO}" == X"FREEBSD" ]; then
     PKGMISC='SHASUM.freebsd.misc'
+elif [ X"${DISTRO}" == X"DEBIAN" -a X"${DISTRO_CODENAME}" == X"squeeze" ]; then
+    PKGMISC='MD5.ubuntu.lucid'
 elif [ X"${DISTRO}" == X"UBUNTU" -a X"${DISTRO_CODENAME}" == X"lucid" ]; then
     PKGMISC='MD5.ubuntu.lucid'
 elif [ X"${DISTRO}" == X"SUSE" ]; then
