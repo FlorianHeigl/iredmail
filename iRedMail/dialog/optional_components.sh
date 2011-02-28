@@ -89,7 +89,6 @@ Note:
     "Roundcubemail" "WebMail program (PHP, AJAX)" "on" \
     "phpMyAdmin" "Web-based MySQL management tool" "on" \
     "iRedAdmin" "Official web-based iRedMail Admin Panel" "on" \
-    "PostfixAdmin" "Web-based mail account management tool" "on" \
     "Awstats" "Advanced web and mail log analyzer" "on" \
     2>${tmp_config_optional_components}
 else
@@ -129,13 +128,6 @@ echo ${OPTIONAL_COMPONENTS} | grep -i 'phpmyadmin' >/dev/null 2>&1
 if [ X"$?" == X"0" ]; then
     export USE_PHPMYADMIN='YES'
     echo "export USE_PHPMYADMIN='YES'" >>${CONFIG_FILE}
-    echo "export REQUIRE_PHP='YES'" >> ${CONFIG_FILE}
-fi
-
-echo ${OPTIONAL_COMPONENTS} | grep -i 'postfixadmin' >/dev/null 2>&1
-if [ X"$?" == X"0" ]; then
-    export USE_POSTFIXADMIN='YES'
-    echo "export USE_POSTFIXADMIN='YES'" >>${CONFIG_FILE}
     echo "export REQUIRE_PHP='YES'" >> ${CONFIG_FILE}
 fi
 

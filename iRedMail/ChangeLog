@@ -15,6 +15,7 @@ iRedMail-0.7.0-beta3:
           Thanks xulingyun@bbs for the feedback.
 
     * Package update/changes:
+        + PostfixAdmin -> Removed.
         + iRedAdmin -> 0.1.4.
         + Roundcube webmail -> 0.5.1. Remove 3rd-party plugin: imap_acl.
 

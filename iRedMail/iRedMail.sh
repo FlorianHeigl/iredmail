@@ -75,7 +75,6 @@ check_env
 . ${CONF_DIR}/clamav
 . ${CONF_DIR}/spamassassin
 . ${CONF_DIR}/roundcube
-. ${CONF_DIR}/postfixadmin
 . ${CONF_DIR}/phpmyadmin
 . ${CONF_DIR}/awstats
 . ${CONF_DIR}/iredadmin
@@ -103,7 +102,6 @@ fi
 
 # MySQL.
 . ${FUNCTIONS_DIR}/mysql.sh
-. ${FUNCTIONS_DIR}/postfixadmin.sh
 . ${FUNCTIONS_DIR}/phpmyadmin.sh
 
 # Switch.

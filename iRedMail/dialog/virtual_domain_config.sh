@@ -58,7 +58,7 @@ Please specify password for the administrator user:
 
 Note:
 
-    * You can login iRedAdmin or PostfixAdmin with this account.
+    * You can login iRedAdmin with this account.
 
 Warning:
 
@@ -123,7 +123,7 @@ Admin of domain ${FIRST_DOMAIN}:
 
     Note:
         - This account is used for system administrations, not a mail user.
-        - You can login iRedAdmin or PostfixAdmin with this account, login name
+        - You can login iRedAdmin with this account, login name
           is full email address.
 
 First mail user:

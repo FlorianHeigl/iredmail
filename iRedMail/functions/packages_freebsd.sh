@@ -49,7 +49,7 @@ EOF
         ca_root_nss libssh2 curl libusb pth gnupg p5-IO-Socket-SSL \
         p5-Archive-Tar p5-Net-DNS p5-Mail-SpamAssassin p5-Authen-SASL \
         amavisd-new clamav apr python26 apache22 php5 php5-extensions \
-        php5-gd roundcube postfixadmin postfix MySQLdb p7zip; do
+        php5-gd roundcube postfix MySQLdb p7zip; do
         mkdir -p /var/db/ports/${i} 2>/dev/null
     done
 
@@ -583,13 +583,6 @@ WITHOUT_NSC=true
 WITH_AUTOCOMP=true
 EOF
 
-    # PostfixAdmin.
-    cat > /var/db/ports/postfixadmin/options <<EOF
-WITH_MYSQL=true
-WITH_MYSQLI=true
-WITHOUT_PGSQL=true
-EOF
-
     # Python-MySQLdb
     cat > /var/db/ports/MySQLdb/options <<EOF
 WITH_MYSQLCLIENT_R=true
@@ -627,12 +620,6 @@ EOF
     if [ X"${USE_PHPMYADMIN}" == X"YES" ]; then
         ALL_PKGS="${ALL_PKGS} phpMyAdmin"
         ALL_PORTS="${ALL_PORTS} databases/phpmyadmin"
-    fi
-
-    # PostfixAdmin.
-    if [ X"${USE_POSTFIXADMIN}" == X"YES" ]; then
-        ALL_PKGS="${ALL_PORTS} postfixadmin"
-        ALL_PORTS="${ALL_PORTS} mail/postfixadmin"
     fi
 
     # iRedAPD.

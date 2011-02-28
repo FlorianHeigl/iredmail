@@ -97,7 +97,7 @@ We provide two backends and the homologous webmail programs:
     +----------+---------------+---------------------------+
     | OpenLDAP |               | iRedAdmin, phpLDAPadmin   |
     +----------+   Roundcube   +---------------------------+
-    | MySQL    |               | iRedAdmin, PostfixAdmin   |
+    | MySQL    |               | iRedAdmin, phpMyAdmin     |
     +----------+---------------+---------------------------+
 
 TIP:

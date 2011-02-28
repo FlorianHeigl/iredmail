@@ -24,10 +24,6 @@ optional_components()
     [ X"${USE_PHPMYADMIN}" == X"YES" ] && \
         check_status_before_run phpmyadmin_install
 
-    # PostfixAdmin.
-    [ X"${USE_POSTFIXADMIN}" == X"YES" ] && \
-        check_status_before_run postfixadmin_install
-
     # Awstats.
     [ X"${USE_AWSTATS}" == X"YES" ] && \
         check_status_before_run awstats_config_basic && \

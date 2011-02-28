@@ -293,15 +293,6 @@ EOF
 EOF
     fi
 
-    # PostfixAdmin.
-    if [ X"${USE_POSTFIXADMIN}" == X"YES" ]; then
-        cat <<EOF
-* - PostfixAdmin: httpS://${HOSTNAME}/postfixadmin/
-*   + Account: ${SITE_ADMIN_NAME}, Password: ${SITE_ADMIN_PASSWD}
-*
-EOF
-    fi
-
     # phpMyAdmin.
     if [ X"${USE_PHPMYADMIN}" == X"YES" ]; then
         cat <<EOF
