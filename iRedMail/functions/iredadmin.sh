@@ -62,7 +62,7 @@ iredadmin_config()
 
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
         cp settings.ini.ldap.sample settings.ini
-    elif [ X"${BACKEND}" == X"OpenLDAP" ]; then
+    elif [ X"${BACKEND}" == X"MySQL" ]; then
         cp settings.ini.mysql.sample settings.ini
     fi
 
