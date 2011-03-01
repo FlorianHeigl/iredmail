@@ -119,7 +119,7 @@ INSERT INTO domain (domain,transport,created) VALUES ("${FIRST_DOMAIN}", "${TRAN
 
 /* Add your first domain admin. */
 INSERT INTO admin (username,password,created) VALUES ("${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}","${DOMAIN_ADMIN_PASSWD}", NOW());
-INSERT INTO domain_admins (username,domain,created) VALUES ("${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}","${FIRST_DOMAIN}", NOW());
+INSERT INTO domain_admins (username,domain,created) VALUES ("${DOMAIN_ADMIN_NAME}@${FIRST_DOMAIN}","ALL", NOW());
 
 /* Add domain admin. */
 /*
