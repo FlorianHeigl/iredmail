@@ -41,7 +41,7 @@ EXAMPLE:
     | abc.com.cn          | dc=abc,dc=com,dc=cn   |
     +---------------------+-----------------------+
 
-" 20 76 "dc=iredmail,dc=org" 2>/tmp/ldap_suffix
+" 20 76 "dc=example,dc=com" 2>/tmp/ldap_suffix
 
     LDAP_SUFFIX="$(cat /tmp/ldap_suffix)"
     [ X"${LDAP_SUFFIX}" != X"" ] && break
