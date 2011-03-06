@@ -68,6 +68,7 @@ CREATE TABLE IF NOT EXISTS domain (
     backupmx TINYINT(1) NOT NULL DEFAULT '0',
     defaultuserquota BIGINT(20) NOT NULL DEFAULT '1024',
     defaultuseraliases TEXT NOT NULL DEFAULT '',
+    defaultpasswordscheme VARCHAR(10) NOT NULL DEFAULT '',
     minpasswordlength INT(10) NOT NULL DEFAULT '0',
     maxpasswordlength INT(10) NOT NULL DEFAULT '0',
     created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',

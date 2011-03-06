@@ -1,6 +1,8 @@
 iRedMail-0.7.0-beta3:
     * New features:
         + Enable personal LDAP address book for OpenLDAP backend.
+        + New column for MySQL backend: domain.defaultpasswordscheme. Used
+          to store per-domain password scheme.
 
     * Improvements:
         + Check domain status in virtual_mailbox_maps, virtual_alias_maps
