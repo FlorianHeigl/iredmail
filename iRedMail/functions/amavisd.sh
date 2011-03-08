@@ -513,7 +513,7 @@ EOF
     version         => ${LDAP_BIND_VERSION},
     tls             => 0,
     timeout         => 120,
-    base            => "${LDAP_BASEDN}",
+    base            => "${LDAP_ATTR_DOMAIN_RDN}=%d,${LDAP_BASEDN}",
     scope           => "sub",
     query_filter    => "(&(objectClass=mailUser)(objectClass=amavisAccount)(accountStatus=active)(|(mail=%m)(shadowAddress=%m)))",
     bind_dn         => "${LDAP_BINDDN}",

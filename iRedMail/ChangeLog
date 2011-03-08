@@ -1,3 +1,8 @@
+iRedMail-0.7.0:
+    * Improvements:
+        + Search subtree of domain instead of whole tree in Amavisd ldap
+          lookup.
+
 iRedMail-0.7.0-beta3:
     * New features:
         + Enable personal LDAP address book for OpenLDAP backend.
