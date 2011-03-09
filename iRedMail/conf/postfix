@@ -95,7 +95,7 @@ export ldap_recipient_bcc_maps_user_cf="${POSTFIX_LOOKUP_DIR_LDAP}/recipient_bcc
 export ldap_sender_bcc_maps_domain_cf="${POSTFIX_LOOKUP_DIR_LDAP}/sender_bcc_maps_domain.cf"
 export ldap_sender_bcc_maps_user_cf="${POSTFIX_LOOKUP_DIR_LDAP}/sender_bcc_maps_user.cf"
 export ldap_relay_domains_cf="${POSTFIX_LOOKUP_DIR_LDAP}/relay_domains.cf"
-export ldap_catch_all_maps_cf="${POSTFIX_LOOKUP_DIR_LDAP}/catch_all_maps.cf"
+export ldap_catch_all_maps_cf="${POSTFIX_LOOKUP_DIR_LDAP}/catchall_maps.cf"
 
 # MySQL lookup.
 export POSTFIX_LOOKUP_DIR_MYSQL="${POSTFIX_ROOTDIR}/mysql"

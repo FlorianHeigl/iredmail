@@ -1,5 +1,6 @@
 iRedMail-0.7.0:
     * Improvements:
+        + Alias domain support for catchall account in LDAP backend.
         + Search subtree of domain instead of whole tree in Amavisd ldap
           lookup.
 
