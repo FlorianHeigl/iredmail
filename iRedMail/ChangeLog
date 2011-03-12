@@ -1,4 +1,5 @@
-iRedMail-0.7.0:
+iRedMail-0.7.0-beta4:
+    * Works on OpenSuSE 11.4.
     * Improvements:
         + Alias domain support for catchall account in LDAP backend.
         + Search subtree of domain instead of whole tree in Amavisd ldap
