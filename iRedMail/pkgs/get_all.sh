@@ -262,7 +262,7 @@ create_repo_suse()
 # Repository for packages:
 #   - apache-mod_auth_mysql, apache-mod_wsgi
 #   - Altermime, awstats
-# Reference: http://iredmail.org/yum/opensuse/11.3/README
+# Reference: http://iredmail.org/yum/opensuse/${DISTRO_VERSION}/README
 
 [iRedMail]
 name=iRedMail

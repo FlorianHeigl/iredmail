@@ -27,7 +27,7 @@
 CREATE TABLE IF NOT EXISTS admin (
     username VARCHAR(255) CHARACTER SET ascii NOT NULL DEFAULT '',
     password VARCHAR(255) CHARACTER SET ascii NOT NULL DEFAULT '',
-    name VARCHAR(255) DEFAULT '',
+    name VARCHAR(255) NOT NULL DEFAULT '',
     language VARCHAR(5) CHARACTER SET ascii NOT NULL DEFAULT 'en_US',
     created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -41,8 +41,8 @@ CREATE TABLE IF NOT EXISTS admin (
 #
 CREATE TABLE IF NOT EXISTS alias (
     address VARCHAR(255) CHARACTER SET ascii NOT NULL DEFAULT '',
-    goto TEXT NOT NULL,
-    name VARCHAR(255) DEFAULT '',
+    goto TEXT NOT NULL DEFAULT '',
+    name VARCHAR(255) NOT NULL DEFAULT '',
     moderators TEXT NOT NULL DEFAULT '',
     accesspolicy VARCHAR(30) NOT NULL DEFAULT '',
     domain VARCHAR(255) CHARACTER SET ascii NOT NULL DEFAULT '',
@@ -84,9 +84,9 @@ CREATE TABLE IF NOT EXISTS `alias_domain` (
     created datetime NOT NULL default '0000-00-00 00:00:00',
     modified datetime NOT NULL default '0000-00-00 00:00:00',
     active tinyint(1) NOT NULL default '1',
-    PRIMARY KEY  (alias_domain),
-    KEY target_domain (target_domain),
-    KEY active (active)
+    PRIMARY KEY (alias_domain),
+    KEY (target_domain),
+    KEY (active)
 ) ENGINE=MyISAM;
 
 #
@@ -100,8 +100,8 @@ CREATE TABLE IF NOT EXISTS domain_admins (
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
     PRIMARY KEY (username,domain),
-    KEY username (username),
-    KEY domain (domain)
+    KEY (username),
+    KEY (domain)
 ) ENGINE=MyISAM;
 
 #

@@ -29,9 +29,12 @@ install_all()
     ###########################
     # Enable syslog or rsyslog.
     #
-    if [ X"${DISTRO}" == X"RHEL" -o X"${DISTRO}" == X"SUSE" ]; then
+    if [ X"${DISTRO}" == X"RHEL" ]; then
         # RHEL/CENTOS, SuSE
         ENABLED_SERVICES="syslog ${ENABLED_SERVICES}"
+    elif [ X"${DISTRO}" == X"SUSE" ]; then
+        # Debian.
+        ENABLED_SERVICES="network syslog ${ENABLED_SERVICES}"
     elif [ X"${DISTRO}" == X"DEBIAN" ]; then
         # Debian.
         ENABLED_SERVICES="rsyslog ${ENABLED_SERVICES}"
@@ -368,7 +371,14 @@ EOF
     # Install all packages.
     install_all_pkgs()
     {
+        # Remove 'patterns-openSUSE-minimal_base' on OpenSuSE-11.4 before install.
+        if [ X"${DISTRO}" == X"SUSE" -a X"${DISTRO_VERSION}" == X"11.4" ]; then
+            rpm -e patterns-openSUSE-minimal_base
+        fi
+
+        # Install all packages.
         eval ${install_pkg} ${ALL_PKGS}
+
         if [ X"${DISTRO}" == X"SUSE" -a X"${USE_IREDADMIN}" == X"YES" ]; then
             ECHO_DEBUG "Install web.py (${MISC_DIR}/web.py-*.tar.bz)."
             easy_install ${MISC_DIR}/web.py-*.tar.gz >/dev/null

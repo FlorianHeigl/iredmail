@@ -281,7 +281,7 @@ enable_service_rh()
     services="$@"
     for i in $services; do
         ECHO_DEBUG "Enable service: $i."
-        /sbin/chkconfig --level 345 $i on
+        /sbin/chkconfig --level 2345 $i on
     done
 }
 
@@ -290,7 +290,7 @@ disable_service_rh()
     services="$@"
     for i in $services; do
         ECHO_DEBUG "Disable service: $i."
-        /sbin/chkconfig --level 345 $i off
+        /sbin/chkconfig --level 2345 $i off
     done
 }
 
