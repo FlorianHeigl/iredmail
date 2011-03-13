@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Author:   Zhang Huangbin (michaelbibby@gmail.com)
+# Author:   Zhang Huangbin (zhb(at)iredmail.org)
 # Purpose:  Create new SSL keys.
 # Project:  iRedMail (http://www.iredmail.org/)
 

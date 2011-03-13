@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Author: Zhang Huangbin <michaelbibby (at) gmail.com>
+# Author: Zhang Huangbin <zhb(at)iredmail.org>
 
 # ---------------------------------------------------------
 # SpamAssassin.

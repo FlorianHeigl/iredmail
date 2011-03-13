@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Author:   Zhang Huangbin (michaelbibby <at> gmail.com)
+# Author:   Zhang Huangbin (zhb(at)iredmail.org)
 # Purpose:  Import users to MySQL database from plain text file.
 # Project:  iRedMail (http://www.iredmail.org/)
 

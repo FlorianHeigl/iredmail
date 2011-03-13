@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Author:   Zhang Huangbin (michaelbibby <at> gmail.com).
+# Author:   Zhang Huangbin (zhb(at)iredmail.org).
 # Date:     2008.04.07
 
 # ---------------------------------------------

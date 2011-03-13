@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Author:   Zhang Huangbin <michaelbibby (at) gmail.com>
+# Author:   Zhang Huangbin <zhb(at)iredmail.org>
 # Purpose:  Send mail to notify user when his mailbox quota exceeds a
 #           specified limit.
 # Project:  iRedMail (http://www.iredmail.org/)

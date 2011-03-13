@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Author:   Zhang Huangbin (michaelbibby <at> gmail.com)
+# Author:   Zhang Huangbin (zhb(at)iredmail.org)
 
 #---------------------------------------------------------------------
 # This file is part of iRedMail, which is an open source mail server
@@ -38,7 +38,7 @@ Please specify username for access awstats from web browser.
 
 Example:
 
-    * michaelbibby
+    * admin
 
 " 20 76 2>/tmp/awstats_username
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-# Author: Zhang Huangbin <michaelbibby (at) gmail.com>
+# Author: Zhang Huangbin <zhb(at)iredmail.org>
 # Purpose: Add new OpenLDAP user for postfix mail server.
 # Project:  iRedMail (http://www.iredmail.org/)
 

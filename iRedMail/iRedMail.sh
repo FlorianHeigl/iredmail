@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Author:   Zhang Huangbin (michaelbibby <at> gmail.com)
+# Author:   Zhang Huangbin (zhb@iredmail.org)
 
 #---------------------------------------------------------------------
 # This file is part of iRedMail, which is an open source mail server
@@ -198,7 +198,7 @@ check_status_before_run enable_dovecot
 check_status_before_run procmail_config
 
 # ------------------------------------------------
-# Managesieve. 
+# Managesieve.
 # ------------------------------------------------
 check_status_before_run managesieve_config
 
