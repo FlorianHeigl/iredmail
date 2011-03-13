@@ -279,8 +279,9 @@ EOF
     # -----------------
     # Syslog Setting
     # -----------------
+    perl -pi -e 's#^(SYSLOG_FACILITY=)(.*)#${1}"$ENV{POLICYD_SYSLOG_FACILITY}"#' ${POLICYD_CONF} ${POLICYD_THROTTLE_CONF}
+
     if [ X"${POLICYD_SEPERATE_LOG}" == X"YES" ]; then
-        perl -pi -e 's#^(SYSLOG_FACILITY=)(.*)#${1}$ENV{POLICYD_SYSLOG_FACILITY}#' ${POLICYD_CONF} ${POLICYD_THROTTLE_CONF}
         echo -e "local1.*\t\t\t\t\t\t-${POLICYD_LOGFILE}" >> ${SYSLOG_CONF}
         cat > ${POLICYD_LOGROTATE_FILE} <<EOF
 ${CONF_MSG}

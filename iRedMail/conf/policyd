@@ -45,8 +45,9 @@ export POLICYD_THROTTLE_BINDPORT='10032'
 # Syslog setting.
 #
 export POLICYD_SEPERATE_LOG='NO'    # 'YES' or 'NO'
-# Default syslog facility is 'local1'
-export POLICYD_SYSLOG_FACILITY='LOCAL1'
+
+# Default syslog facility is 'LOG_MAIL|LOG_INFO'
+export POLICYD_SYSLOG_FACILITY='LOG_MAIL|LOG_INFO'
 export POLICYD_LOGFILE='/var/log/policyd.log'
 export POLICYD_LOGROTATE_FILE='/etc/logrotate.d/policyd'
 
