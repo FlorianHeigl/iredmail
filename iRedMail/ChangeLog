@@ -5,6 +5,9 @@ iRedMail-0.7.0-beta4:
         + Search subtree of domain instead of whole tree in Amavisd ldap
           lookup.
 
+    * Package update/changes:
+        + phpMyAdmin -> 3.3.9.2.
+
 iRedMail-0.7.0-beta3:
     * New features:
         + Enable personal LDAP address book for OpenLDAP backend.
