@@ -59,6 +59,25 @@ cleanup_remove_sendmail()
     echo 'export status_cleanup_remove_sendmail="DONE"' >> ${STATUS_FILE}
 }
 
+cleanup_remove_mod_python()
+{
+    # Remove mod_python.
+    eval ${LIST_ALL_PKGS} | grep 'mod_python' &>/dev/null
+
+    if [ X"$?" == X"0" ]; then
+        echo -n "iRedAdmin doesn't work with mod_python, *REMOVE* it now? [Y|n]"
+        read ANSWER
+        case $ANSWER in
+            N|n ) : ;;
+            Y|y|* ) eval ${remove_pkg} mod_python ;;
+        esac
+    else
+        :
+    fi
+
+    echo 'export status_cleanup_remove_mod_python="DONE"' >> ${STATUS_FILE}
+}
+
 cleanup_replace_iptables_rule()
 {
     # Get SSH listen port, replace default port number in iptable rule file.
@@ -239,6 +258,7 @@ EOF
 
     [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run cleanup_disable_selinux
     check_status_before_run cleanup_remove_sendmail
+    check_status_before_run cleanup_remove_mod_python
     [ X"${KERNEL_NAME}" == X"Linux" ] && check_status_before_run cleanup_replace_iptables_rule
     [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run cleanup_replace_mysql_config
     check_status_before_run cleanup_start_postfix_now
