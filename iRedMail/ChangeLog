@@ -1,3 +1,7 @@
+iRedMail-0.7.0-beta5:
+    * Reverse Amavisd LDAP query base dn.
+    * Install python-xml on OpenSuSE 11.4.
+
 iRedMail-0.7.0-beta4:
     * Works on OpenSuSE 11.4.
     * Improvements:
