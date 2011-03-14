@@ -31,7 +31,11 @@ install_all()
     #
     if [ X"${DISTRO}" == X"RHEL" ]; then
         # RHEL/CENTOS, SuSE
-        ENABLED_SERVICES="syslog ${ENABLED_SERVICES}"
+        if [ -x ${DIR_RC_SCRIPTS}/syslog ]; then
+            ENABLED_SERVICES="syslog ${ENABLED_SERVICES}"
+        elif [ -x ${DIR_RC_SCRIPTS}/rsyslog ]; then
+            ENABLED_SERVICES="rsyslog ${ENABLED_SERVICES}"
+        fi
     elif [ X"${DISTRO}" == X"SUSE" ]; then
         # Debian.
         ENABLED_SERVICES="network syslog ${ENABLED_SERVICES}"
