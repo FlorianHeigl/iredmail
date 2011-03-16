@@ -39,7 +39,7 @@ cleanup_remove_sendmail()
     eval ${LIST_ALL_PKGS} | grep sendmail >/dev/null 2>&1
 
     if [ X"$?" == X"0" ]; then
-        echo -n "Would you like to *REMOVE* sendmail now? [Y|n]"
+        ECHO_QUESTION -n "Would you like to *REMOVE* sendmail now? [Y|n]"
         read ANSWER
         case $ANSWER in
             N|n )
@@ -65,7 +65,7 @@ cleanup_remove_mod_python()
     eval ${LIST_ALL_PKGS} | grep 'mod_python' &>/dev/null
 
     if [ X"$?" == X"0" ]; then
-        echo -n "iRedAdmin doesn't work with mod_python, *REMOVE* it now? [Y|n]"
+        ECHO_QUESTION -n "iRedAdmin doesn't work with mod_python, *REMOVE* it now? [Y|n]"
         read ANSWER
         case $ANSWER in
             N|n ) : ;;
