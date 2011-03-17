@@ -29,11 +29,15 @@ CREATE TABLE IF NOT EXISTS admin (
     password VARCHAR(255) CHARACTER SET ascii NOT NULL DEFAULT '',
     name VARCHAR(255) NOT NULL DEFAULT '',
     language VARCHAR(5) CHARACTER SET ascii NOT NULL DEFAULT 'en_US',
+    passwordlastchange DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
-    PRIMARY KEY (username)
+    PRIMARY KEY (username),
+    KEY (passwordlastchange),
+    KEY (expired),
+    KEY (active)
 ) ENGINE=MyISAM;
 
 #
@@ -50,7 +54,10 @@ CREATE TABLE IF NOT EXISTS alias (
     modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
-    PRIMARY KEY (address)
+    PRIMARY KEY (address),
+    KEY (domain),
+    KEY (expired),
+    KEY (active)
 ) ENGINE=MyISAM;
 
 #
@@ -75,7 +82,10 @@ CREATE TABLE IF NOT EXISTS domain (
     modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
-    PRIMARY KEY (domain)
+    PRIMARY KEY (domain),
+    KEY (backupmx),
+    KEY (expired),
+    KEY (active)
 ) ENGINE=MyISAM;
 
 CREATE TABLE IF NOT EXISTS `alias_domain` (
@@ -101,7 +111,8 @@ CREATE TABLE IF NOT EXISTS domain_admins (
     active TINYINT(1) NOT NULL DEFAULT '1',
     PRIMARY KEY (username,domain),
     KEY (username),
-    KEY (domain)
+    KEY (domain),
+    KEY (active)
 ) ENGINE=MyISAM;
 
 #
@@ -138,24 +149,32 @@ CREATE TABLE IF NOT EXISTS mailbox (
     lastloginipv4 INT(4) UNSIGNED NOT NULL DEFAULT '0',
     lastloginprotocol CHAR(255) NOT NULL DEFAULT '',
     disclaimer TEXT NOT NULL DEFAULT '',
+    passwordlastchange DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
     local_part VARCHAR(255) NOT NULL DEFAULT '', -- Required by PostfixAdmin
-    PRIMARY KEY (username)
+    PRIMARY KEY (username),
+    KEY (domain),
+    KEY (department),
+    KEY (employeeid),
+    KEY (enablesmtp),
+    KEY (enablesmtpsecured),
+    KEY (enablepop3),
+    KEY (enablepop3secured),
+    KEY (enableimap),
+    KEY (enableimapsecured),
+    KEY (enabledeliver),
+    KEY (enablemanagesieve),
+    KEY (enablemanagesievesecured),
+    KEY (enablesieve),
+    KEY (enablesievesecured),
+    KEY (enableinternal),
+    KEY (passwordlastchange),
+    KEY (expired),
+    KEY (active)
 ) ENGINE=MyISAM;
-
-#
-# IMAP shared folders. User 'from_user' shares folders to user 'to_user'.
-# WARNING: Works only with Dovecot 1.2+.
-#
-CREATE TABLE IF NOT EXISTS share_folder (
-  from_user VARCHAR(255) CHARACTER SET ascii NOT NULL,
-  to_user VARCHAR(255) CHARACTER SET ascii NOT NULL,
-  dummy CHAR(1),
-  PRIMARY KEY (from_user, to_user)
-);
 
 #
 # Table structure for table sender_bcc_domain
@@ -167,7 +186,10 @@ CREATE TABLE IF NOT EXISTS sender_bcc_domain (
     modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
-    PRIMARY KEY (domain)
+    PRIMARY KEY (domain),
+    KEY (bcc_address),
+    KEY (expired),
+    KEY (active)
 ) ENGINE=MyISAM;
 
 #
@@ -181,7 +203,11 @@ CREATE TABLE IF NOT EXISTS sender_bcc_user (
     modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
-    PRIMARY KEY (username)
+    PRIMARY KEY (username),
+    KEY (bcc_address),
+    KEY (domain),
+    KEY (expired),
+    KEY (active)
 ) ENGINE=MyISAM;
 
 #
@@ -194,7 +220,10 @@ CREATE TABLE IF NOT EXISTS recipient_bcc_domain (
     modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
-    PRIMARY KEY (domain)
+    PRIMARY KEY (domain),
+    KEY (bcc_address),
+    KEY (expired),
+    KEY (active)
 ) ENGINE=MyISAM;
 
 #
@@ -208,8 +237,24 @@ CREATE TABLE IF NOT EXISTS recipient_bcc_user (
     modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
-    PRIMARY KEY (username)
+    PRIMARY KEY (username),
+    KEY (bcc_address),
+    KEY (expired),
+    KEY (active)
 ) ENGINE=MyISAM;
+
+#
+# IMAP shared folders. User 'from_user' shares folders to user 'to_user'.
+# WARNING: Works only with Dovecot 1.2+.
+#
+CREATE TABLE IF NOT EXISTS share_folder (
+    from_user VARCHAR(255) CHARACTER SET ascii NOT NULL,
+    to_user VARCHAR(255) CHARACTER SET ascii NOT NULL,
+    dummy CHAR(1),
+    PRIMARY KEY (from_user, to_user),
+    KEY (from_user),
+    KEY (to_user)
+);
 
 #
 # Table structure for table log. Used in PostfixAdmin.
