@@ -67,19 +67,38 @@ iredapd_config()
     chmod -R 0700 ${IREDAPD_ROOT_DIR}/iRedAPD-${IREDAPD_VERSION}
 
     # Config iredapd.
-    perl -pi -e 's#(listen_addr.*=).*#${1} $ENV{IREDAPD_LISTEN_ADDR}#' iredapd.ini
-    perl -pi -e 's#(listen_port.*=).*#${1} $ENV{IREDAPD_LISTEN_PORT}#' iredapd.ini
+    perl -pi -e 's#^(listen_addr).*#${1} = $ENV{IREDAPD_LISTEN_ADDR}#' iredapd.ini
+    perl -pi -e 's#^(listen_port).*#${1} = $ENV{IREDAPD_LISTEN_PORT}#' iredapd.ini
 
-    perl -pi -e 's#(run_as_user.*=).*#${1} $ENV{IREDAPD_DAEMON_USER}#' iredapd.ini
-    perl -pi -e 's#(run_as_daemon.*=).*#${1} yes#' iredapd.ini
+    perl -pi -e 's#^(run_as_user).*#${1} = $ENV{IREDAPD_DAEMON_USER}#' iredapd.ini
+    perl -pi -e 's#^(run_as_daemon).*#${1} = yes#' iredapd.ini
 
-    perl -pi -e 's#(uri).*#${1} = ldap://$ENV{LDAP_SERVER_HOST}:$ENV{LDAP_SERVER_PORT}#' iredapd.ini
-    perl -pi -e 's#(binddn).*#${1} = $ENV{LDAP_BINDDN}#' iredapd.ini
-    perl -pi -e 's#(bindpw).*#${1} = $ENV{LDAP_BINDPW}#' iredapd.ini
-    perl -pi -e 's#(basedn).*#${1} = $ENV{LDAP_BASEDN}#' iredapd.ini
+    if [ X"${BACKEND}" == X"OpenLDAP" ]; then
+        # Set backend.
+        perl -pi -e 's#^(backend).*#${1} = ldap#' iredapd.ini
 
-    # Enable plugins.
-    perl -pi -e 's#^(plugins).*#${1} = ldap_maillist_access_policy#' iredapd.ini
+        # Configure OpenLDAP server related stuffs.
+        perl -pi -e 's#^(uri).*#${1} = ldap://$ENV{LDAP_SERVER_HOST}:$ENV{LDAP_SERVER_PORT}#' iredapd.ini
+        perl -pi -e 's#^(binddn).*#${1} = $ENV{LDAP_BINDDN}#' iredapd.ini
+        perl -pi -e 's#^(bindpw).*#${1} = $ENV{LDAP_BINDPW}#' iredapd.ini
+        perl -pi -e 's#^(basedn).*#${1} = $ENV{LDAP_BASEDN}#' iredapd.ini
+
+        # Enable plugins.
+        perl -pi -e 's#^(plugins).*#${1} = ldap_maillist_access_policy#' iredapd.ini
+
+    elif [ X"${BACKEND}" == X"MySQL" ]; then
+        # Set backend.
+        perl -pi -e 's#^(backend).*#${1} = mysql#' iredapd.ini
+
+        # Configure MySQL server related stuffs.
+        perl -pi -e 's#^(server).*#${1} = $ENV{MYSQL_SERVER}#' iredapd.ini
+        perl -pi -e 's#^(db).*#${1} = $ENV{VMAIL_DB}#' iredapd.ini
+        perl -pi -e 's#^(user).*#${1} = $ENV{MYSQL_BIND_USER}#' iredapd.ini
+        perl -pi -e 's#^(password).*#${1} = $ENV{MYSQL_BIND_PW}#' iredapd.ini
+
+        # Enable plugins.
+        perl -pi -e 's#^(plugins).*#${1} = sql_alias_access_policy#' iredapd.ini
+    fi
 
     # FreeBSD.
     if [ X"${DISTRO}" == X"FREEBSD" ]; then

@@ -20,6 +20,10 @@
 # along with iRedMail.  If not, see <http://www.gnu.org/licenses/>.
 #---------------------------------------------------------------------
 
+# For iRedAPD: Postfix Policy Daemon.
+export USE_IREDAPD='YES'
+echo "export USE_IREDAPD='YES'" >> ${CONFIG_FILE}
+
 # --------------------------------------------------
 # ------------- POP3(s)/IMAP(s) --------------------
 # --------------------------------------------------

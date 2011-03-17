@@ -114,10 +114,6 @@ rm -f /tmp/backend
 
 if [ X"${BACKEND}" == X"OpenLDAP" ]; then
     . ${DIALOG_DIR}/ldap_config.sh
-
-    # For iRedAPD: Postfix Policy Daemon.
-    export USE_IREDAPD='YES'
-    echo "export USE_IREDAPD='YES'" >> ${CONFIG_FILE}
 else
     :
 fi
