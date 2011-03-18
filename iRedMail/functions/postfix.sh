@@ -506,7 +506,7 @@ postfix_config_mysql()
     postconf -e transport_maps="proxy:mysql:${mysql_transport_maps_user_cf}, proxy:mysql:${mysql_transport_maps_domain_cf}"
     postconf -e virtual_mailbox_domains="proxy:mysql:${mysql_virtual_mailbox_domains_cf}"
     postconf -e virtual_mailbox_maps="proxy:mysql:${mysql_virtual_mailbox_maps_cf}"
-    postconf -e virtual_alias_maps="proxy:mysql:${mysql_virtual_alias_maps_cf}, proxy:mysql:${mysql_domain_alias_maps_cf}"
+    postconf -e virtual_alias_maps="proxy:mysql:${mysql_virtual_alias_maps_cf}, proxy:mysql:${mysql_domain_alias_maps_cf}, proxy:mysql:${mysql_catchall_maps_cf}, proxy:mysql:${mysql_domain_alias_catchall_maps_cf}"
     postconf -e sender_bcc_maps="proxy:mysql:${mysql_sender_bcc_maps_domain_cf}, proxy:mysql:${mysql_sender_bcc_maps_user_cf}"
     postconf -e recipient_bcc_maps="proxy:mysql:${mysql_recipient_bcc_maps_domain_cf}, proxy:mysql:${mysql_recipient_bcc_maps_user_cf}"
     postconf -e relay_domains="\$mydestination, proxy:mysql:${mysql_relay_domains_cf}"
@@ -522,7 +522,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT transport FROM domain WHERE domain='%s' AND active='1'
+query       = SELECT transport FROM domain WHERE domain='%s' AND active=1
 EOF
 
     # Per-user transport maps.
@@ -532,7 +532,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT transport FROM mailbox WHERE username='%s' AND active='1' AND enabledeliver='1'
+query       = SELECT transport FROM mailbox WHERE username='%s' AND active=1 AND enabledeliver=1
 EOF
 
     cat > ${mysql_virtual_mailbox_domains_cf} <<EOF
@@ -541,7 +541,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT domain FROM domain WHERE domain='%s' AND backupmx='0' AND active='1'
+query       = SELECT domain FROM domain WHERE domain='%s' AND backupmx=0 AND active=1
 EOF
 
     cat > ${mysql_relay_domains_cf} <<EOF
@@ -550,7 +550,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT domain FROM domain WHERE domain='%s' AND backupmx='1' AND active='1'
+query       = SELECT domain FROM domain WHERE domain='%s' AND backupmx=1 AND active=1
 EOF
 
     cat > ${mysql_virtual_mailbox_maps_cf} <<EOF
@@ -559,7 +559,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT CONCAT(mailbox.storagenode, '/', mailbox.maildir) FROM mailbox,domain WHERE mailbox.username='%s' AND mailbox.active='1' AND mailbox.enabledeliver='1' AND domain.domain = mailbox.domain AND domain.active='1'
+query       = SELECT CONCAT(mailbox.storagenode, '/', mailbox.maildir) FROM mailbox,domain WHERE mailbox.username='%s' AND mailbox.active=1 AND mailbox.enabledeliver=1 AND domain.domain = mailbox.domain AND domain.active=1
 EOF
 
     cat > ${mysql_virtual_alias_maps_cf} <<EOF
@@ -568,7 +568,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT alias.goto FROM alias,domain WHERE (alias.address='%s' OR alias.address='@%d') AND alias.active='1' AND domain.backupmx='0' AND domain.active='1'
+query       = SELECT alias.goto FROM alias,domain WHERE alias.address='%s' AND alias.active=1 AND domain.backupmx=0 AND domain.active=1
 EOF
 
     cat > ${mysql_domain_alias_maps_cf} <<EOF
@@ -577,7 +577,25 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT goto FROM alias,alias_domain,domain WHERE alias_domain.alias_domain = '%d' and alias.address = CONCAT('%u', '@', alias_domain.target_domain) AND alias.active = 1 AND alias_domain.active='1' AND domain.backupmx='0'
+query       = SELECT alias.goto FROM alias,alias_domain,domain WHERE alias_domain.alias_domain='%d' AND alias.address=CONCAT('%u', '@', alias_domain.target_domain) AND alias_domain.target_domain=domain.domain AND alias.active=1 AND alias_domain.active=1 AND domain.backupmx=0
+EOF
+
+    cat > ${mysql_catchall_maps_cf} <<EOF
+user        = ${MYSQL_BIND_USER}
+password    = ${MYSQL_BIND_PW}
+hosts       = ${mysql_server}
+port        = ${MYSQL_PORT}
+dbname      = ${VMAIL_DB}
+query       = SELECT alias.goto FROM alias,domain WHERE alias.address='%d' AND alias.address=domain.domain AND alias.active=1 AND domain.active=1 AND domain.backupmx=0
+EOF
+
+    cat > ${mysql_domain_alias_catchall_maps_cf} <<EOF
+user        = ${MYSQL_BIND_USER}
+password    = ${MYSQL_BIND_PW}
+hosts       = ${mysql_server}
+port        = ${MYSQL_PORT}
+dbname      = ${VMAIL_DB}
+query       = SELECT alias.goto FROM alias,alias_domain,domain WHERE alias_domain.alias_domain='%d' AND alias.address=alias_domain.target_domain AND alias_domain.target_domain=domain.domain AND alias.active=1 AND alias_domain.active=1
 EOF
 
     cat > ${mysql_sender_login_maps_cf} <<EOF
@@ -586,7 +604,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT username FROM mailbox WHERE username='%s' AND active='1' AND enablesmtp='1'
+query       = SELECT username FROM mailbox WHERE username='%s' AND active=1 AND enablesmtp=1
 EOF
 
     cat > ${mysql_sender_bcc_maps_domain_cf} <<EOF
@@ -595,7 +613,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT bcc_address FROM sender_bcc_domain WHERE domain='%d' AND active='1'
+query       = SELECT bcc_address FROM sender_bcc_domain WHERE domain='%d' AND active=1
 EOF
 
     cat > ${mysql_sender_bcc_maps_user_cf} <<EOF
@@ -604,7 +622,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT bcc_address FROM sender_bcc_user WHERE username='%s' AND active='1'
+query       = SELECT bcc_address FROM sender_bcc_user WHERE username='%s' AND active=1
 EOF
 
     cat > ${mysql_recipient_bcc_maps_domain_cf} <<EOF
@@ -613,7 +631,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT bcc_address FROM recipient_bcc_domain WHERE domain='%d' AND active='1'
+query       = SELECT bcc_address FROM recipient_bcc_domain WHERE domain='%d' AND active=1
 EOF
 
     cat > ${mysql_recipient_bcc_maps_user_cf} <<EOF
@@ -622,7 +640,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT bcc_address FROM recipient_bcc_user WHERE username='%s' AND active='1'
+query       = SELECT bcc_address FROM recipient_bcc_user WHERE username='%s' AND active=1
 EOF
 
     ECHO_DEBUG "Set file permission: Owner/Group -> postfix/postfix, Mode -> 0640."
@@ -635,6 +653,9 @@ EOF
         ${mysql_transport_maps_user_cf} \
         ${mysql_virtual_mailbox_maps_cf} \
         ${mysql_virtual_alias_maps_cf} \
+        ${mysql_domain_alias_maps_cf} \
+        ${mysql_catchall_maps_cf} \
+        ${mysql_domain_alias_catchall_maps_cf} \
         ${mysql_sender_login_maps_cf} \
         ${mysql_sender_bcc_maps_domain_cf} \
         ${mysql_sender_bcc_maps_user_cf} \
