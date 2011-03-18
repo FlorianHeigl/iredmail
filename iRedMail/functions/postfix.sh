@@ -91,8 +91,6 @@ EOF
 
     postconf -e inet_protocols="ipv4"
     postconf -e mydestination="\$myhostname, localhost, localhost.localdomain, localhost.\$myhostname"
-    #postconf -e mail_name="${PROG_NAME}"
-    #postconf -e mail_version="${PROG_VERSION}"
     postconf -e biff="no"   # Do not notify local user.
     postconf -e inet_interfaces="all"
     postconf -e mynetworks="127.0.0.0/8"
