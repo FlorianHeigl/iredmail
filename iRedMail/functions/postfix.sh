@@ -65,10 +65,12 @@ EOF
 
         # Unset below settings since we don't use them.
         postconf -e canonical_maps=''
-        postconf -e virtual_alias_domains=''
         postconf -e relocated_maps=''
         postconf -e sender_canonical_maps=''
     fi
+
+    # Do not set virtual_alias_domains.
+    postconf -e virtual_alias_domains=''
 
     ECHO_DEBUG "Copy: /etc/{hosts,resolv.conf,localtime,services} -> ${POSTFIX_CHROOT_DIR}/etc/"
     mkdir -p ${POSTFIX_CHROOT_DIR}/etc/ 2>/dev/null
