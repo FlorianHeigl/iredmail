@@ -402,10 +402,16 @@ password_query = SELECT password FROM mailbox WHERE username='%u' AND active='1'
 EOF
         # Maildir format.
         [ X"${MAILBOX_FORMAT}" == X"Maildir" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
-user_query = SELECT CONCAT(storagebasedirectory, '/', storagenode, '/', maildir) AS home, \
-CONCAT('*:bytes=', quota*1048576) AS quota_rule \
-FROM mailbox WHERE username='%u' \
-AND active='1' AND enable%Ls%Lc='1'
+user_query = SELECT CONCAT(mailbox.storagebasedirectory, '/', mailbox.storagenode, '/', mailbox.maildir) AS home, \
+CONCAT('*:bytes=', mailbox.quota*1048576) AS quota_rule \
+FROM mailbox,domain \
+WHERE mailbox.username='%u' \
+AND mailbox.domain='%d' \
+AND mailbox.enable%Ls%Lc=1 \
+AND mailbox.domain=domain.domain \
+AND domain.backupmx=0 \
+AND domain.active=1 \
+AND mailbox.active=1
 EOF
         [ X"${MAILBOX_FORMAT}" == X"mbox" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
 user_query = SELECT CONCAT('mbox:', storagebasedirectory, '/', storagenode, '/', maildir, '/Maildir/') AS home, \

@@ -570,7 +570,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT alias.goto FROM alias,domain WHERE alias.address='%s' AND alias.active=1 AND domain.backupmx=0 AND domain.active=1
+query       = SELECT alias.goto FROM alias,domain WHERE alias.address='%s' AND alias.domain='%d' AND alias.domain=domain.domain AND alias.active=1 AND domain.backupmx=0 AND domain.active=1
 EOF
 
     cat > ${mysql_domain_alias_maps_cf} <<EOF

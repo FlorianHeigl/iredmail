@@ -1,3 +1,7 @@
+iRedMail-0.7.0:
+    * Check domain status in dovecot MySQL lookup and postfix virtual alias
+      lookup (MySQL backend).
+
 iRedMail-0.7.0-rc1:
     * Make catch-all account work as expected with MySQL backend.
     * Create indexes for some columns in MySQL backend.
