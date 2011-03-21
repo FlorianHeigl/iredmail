@@ -624,7 +624,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT bcc_address FROM sender_bcc_user WHERE username='%s' AND active=1
+query       = SELECT sender_bcc_user.bcc_address FROM sender_bcc_user,domain WHERE sender_bcc_user.username='%s' AND sender_bcc_user.domain='%d' AND sender_bcc_user.domain=domain.domain AND domain.backupmx=0 AND domain.active=1 AND sender_bcc_user.active=1
 EOF
 
     cat > ${mysql_recipient_bcc_maps_domain_cf} <<EOF
@@ -642,7 +642,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT bcc_address FROM recipient_bcc_user WHERE username='%s' AND active=1
+query       = SELECT recipient_bcc_user.bcc_address FROM recipient_bcc_user,domain WHERE recipient_bcc_user.username='%s' AND recipient_bcc_user.domain='%d' AND recipient_bcc_user.domain=domain.domain AND domain.backupmx=0 AND domain.active=1 AND recipient_bcc_user.active=1
 EOF
 
     ECHO_DEBUG "Set file permission: Owner/Group -> postfix/postfix, Mode -> 0640."

@@ -1,7 +1,8 @@
 iRedMail-0.7.0:
     * Check domain status in dovecot MySQL lookup and postfix
       virtual_mailbox_maps, virtual_alias_maps, sender_login_maps, per-user
-      transport_maps, (MySQL backend).
+      transport_maps, per-user sender_bcc_maps and recipient_bcc_maps (MySQL
+      backend).
 
 iRedMail-0.7.0-rc1:
     * Make catch-all account work as expected with MySQL backend.
