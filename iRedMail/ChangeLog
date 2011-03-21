@@ -1,4 +1,4 @@
-iRedMail-0.7.0:
+iRedMail-0.7.0-rc1:
     * Make catch-all account work as expected with MySQL backend.
     * Create indexes for some columns in MySQL backend.
 
