@@ -129,7 +129,7 @@ CREATE TABLE IF NOT EXISTS mailbox (
     bytes BIGINT(20) NOT NULL DEFAULT 0, -- Number of used quota size
     messages BIGINT(20) NOT NULL DEFAULT 0, -- Number of current messages
     domain VARCHAR(255) CHARACTER SET ascii NOT NULL DEFAULT '',
-    transport VARCHAR(255) NOT NULL DEFAULT 'dovecot',
+    transport VARCHAR(255) NOT NULL DEFAULT '',
     department VARCHAR(255) NOT NULL DEFAULT '',
     rank VARCHAR(255) NOT NULL DEFAULT 'normal',
     employeeid VARCHAR(255) DEFAULT '',
