@@ -165,7 +165,7 @@ if [ X"${KERNEL_NAME}" == X"Linux" ]; then
         fi
 
         # RHEL/CentOS 6.x.
-        grep ' 6\.' /etc/redhat-release &>/dev/null
+        grep '\ 6' /etc/redhat-release &>/dev/null
         if [ X"$?" == X"0" ]; then
             export DISTRO_VERSION='6'
         fi
