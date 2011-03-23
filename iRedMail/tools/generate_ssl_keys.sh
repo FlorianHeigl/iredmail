@@ -31,7 +31,7 @@ gen_pem_key()
 
     # Set correct file permission.
     chmod 0444 ${SSL_CERT_FILE}
-    chmod 0400 ${SSL_KEY_FILE}
+    chmod 0444 ${SSL_KEY_FILE}
 }
 
 gen_pem_key && cat <<EOF
