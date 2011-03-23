@@ -159,7 +159,7 @@ if [ X"${KERNEL_NAME}" == X"Linux" ]; then
         export DISTRO='RHEL'
 
         # RHEL/CentOS 5.x.
-        grep ' 5\.' /etc/redhat-release &>/dev/null
+        grep '\ 5' /etc/redhat-release &>/dev/null
         if [ X"$?" == X"0" ]; then
             export DISTRO_VERSION='5'
         fi
