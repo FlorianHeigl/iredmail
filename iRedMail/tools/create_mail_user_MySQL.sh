@@ -83,6 +83,7 @@ generate_sql()
 
     for i in $@; do
         username="$i"
+        mail="${username}@${DOMAIN}"
 
         if [ X"${USE_DEFAULT_PASSWD}" != X"YES" ]; then
             export CRYPT_PASSWD="$(openssl passwd -1 ${username})"
@@ -124,7 +125,8 @@ generate_sql()
 
         cat >> ${SQL} <<EOF
 INSERT INTO mailbox (username, password, name, storagebasedirectory, maildir, quota, domain, active)
-    VALUES ('${username}@${DOMAIN}', '${CRYPT_PASSWD}', '${username}', '${STORAGE_BASE_DIRECTORY}', '${maildir}', '${DEFAULT_QUOTA}', '${DOMAIN}', '1');
+    VALUES ('${mail}', '${CRYPT_PASSWD}', '${username}', '${STORAGE_BASE_DIRECTORY}', '${maildir}', '${DEFAULT_QUOTA}', '${DOMAIN}', '1');
+INSERT INTO alias (address, goto, created, active) VALUES ('${mail}', '${mail}', NOW(), 1);
 EOF
     done
 }
