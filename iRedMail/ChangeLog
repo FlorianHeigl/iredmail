@@ -1,4 +1,7 @@
 iRedMail-0.7.0-rc2:
+    * Update phpMyAdmin to 3.3.10.
+
+iRedMail-0.7.0-rc2:
     * Check domain status in dovecot MySQL lookup and postfix
       virtual_mailbox_maps, virtual_alias_maps, sender_login_maps, per-user
       transport_maps, per-user sender_bcc_maps and recipient_bcc_maps (MySQL
