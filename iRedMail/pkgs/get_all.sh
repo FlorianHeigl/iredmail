@@ -284,6 +284,8 @@ create_repo_debian()
         grep 'Debian-Backports-iRedMail' /etc/apt/sources.list &>/dev/null
         if [ X"$?" != X"0" ]; then
             cat >> /etc/apt/sources.list <<EOF
+# Debian-Volatile. Used for updating ClamAV.
+deb http://volatile.debian.org/debian-volatile lenny/volatile main contrib non-free
 # Debian-Backports-iRedMail
 deb http://backports.debian.org/debian-backports lenny-backports main
 EOF
@@ -294,6 +296,8 @@ Package: *
 Pin: release a=lenny-backports
 Pin-Priority: 500
 EOF
+
+            ${APTGET} install -y debian-archive-keyring
 
             # Force 'apt-get update' to enable backports repo.
             ${APTGET} update
