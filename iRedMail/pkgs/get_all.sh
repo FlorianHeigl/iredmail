@@ -286,6 +286,7 @@ create_repo_debian()
             if [ X"$?" != X"0" ]; then
                 cat >> /etc/apt/sources.list <<EOF
 # Debian-Backports-iRedMail
+deb http://volatile.debian.org/debian-volatile lenny/volatile main contrib non-free
 deb http://backports.debian.org/debian-backports lenny-backports main
 EOF
 
