@@ -297,10 +297,10 @@ Pin: release a=lenny-backports
 Pin-Priority: 500
 EOF
 
-            ${APTGET} install -y debian-archive-keyring
-
             # Force 'apt-get update' to enable backports repo.
             ${APTGET} update
+
+            ${APTGET} install -y debian-archive-keyring
         fi
     fi
 }
