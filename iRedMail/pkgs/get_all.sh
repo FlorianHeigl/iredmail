@@ -280,26 +280,23 @@ EOF
 create_repo_debian()
 {
     # Use http://backports.debian.org/ on Debian 5.
-    if [ X"${DISTRO}" == X"DEBIAN" ]; then
-        if [ X"${DISTRO_VERSION}" == X"5" ]; then
-            grep 'Debian-Backports-iRedMail' /etc/apt/sources.list &>/dev/null
-            if [ X"$?" != X"0" ]; then
-                cat >> /etc/apt/sources.list <<EOF
+    if [ X"${DISTRO}" == X"DEBIAN" -a X"${DISTRO_VERSION}" == X"5" ]; then
+        grep 'Debian-Backports-iRedMail' /etc/apt/sources.list &>/dev/null
+        if [ X"$?" != X"0" ]; then
+            cat >> /etc/apt/sources.list <<EOF
 # Debian-Backports-iRedMail
-deb http://volatile.debian.org/debian-volatile lenny/volatile main contrib non-free
 deb http://backports.debian.org/debian-backports lenny-backports main
 EOF
 
-                cat >> /etc/apt/preferences <<EOF
+            cat >> /etc/apt/preferences <<EOF
 
 Package: *
 Pin: release a=lenny-backports
 Pin-Priority: 500
 EOF
 
-                # Force 'apt-get update' to enable backports repo.
-                ${APTGET} update
-            fi
+            # Force 'apt-get update' to enable backports repo.
+            ${APTGET} update
         fi
     fi
 }
