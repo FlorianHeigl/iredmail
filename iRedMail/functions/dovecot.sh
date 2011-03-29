@@ -213,9 +213,6 @@ FOE
     if [ X"${MAILBOX_FORMAT}" == X"Maildir" ]; then
         cat >> ${DOVECOT_CONF} <<EOF
 # Maildir format and location.
-# Such as: /var/mail/vmail01/iredmail.org/www/
-#          ----------- ================
-#          homeDirectory  mailMessageStore
 mail_location = maildir:/%Lh/Maildir/:INDEX=/%Lh/Maildir/
 
 plugin {
@@ -377,7 +374,7 @@ EOF
 
         # Maildir format.
         [ X"${MAILBOX_FORMAT}" == X"Maildir" ] && cat >> ${DOVECOT_LDAP_CONF} <<EOF
-user_attrs      = ${LDAP_ATTR_USER_STORAGE_BASE_DIRECTORY}=home,mailMessageStore=mail=maildir:~/%\$/Maildir/,${LDAP_ATTR_USER_QUOTA}=quota_rule=*:bytes=%\$
+user_attrs      = ${LDAP_ATTR_USER_HOME_DIRECTORY}=home,mailMessageStore=mail=maildir:${STORAGE_BASE_DIR}/%\$/Maildir/,${LDAP_ATTR_USER_QUOTA}=quota_rule=*:bytes=%\$
 EOF
         [ X"${MAILBOX_FORMAT}" == X"mbox" ] && cat >> ${DOVECOT_LDAP_CONF} <<EOF
 #    sieve = /%Lh/%Ld/.%Ln${SIEVE_RULE_FILENAME}

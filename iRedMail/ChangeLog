@@ -1,4 +1,5 @@
-iRedMail-0.7.0-rc2:
+iRedMail-0.7.0-rc3:
+    * Make IMAP share folder work with LDAP backend. Thanks alexp@forum.
     * Update phpMyAdmin to 3.3.10.
 
 iRedMail-0.7.0-rc2:
