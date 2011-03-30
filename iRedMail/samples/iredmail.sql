@@ -35,9 +35,9 @@ CREATE TABLE IF NOT EXISTS admin (
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
     PRIMARY KEY (username),
-    KEY (passwordlastchange),
-    KEY (expired),
-    KEY (active)
+    INDEX (passwordlastchange),
+    INDEX (expired),
+    INDEX (active)
 ) ENGINE=MyISAM;
 
 #
@@ -55,9 +55,9 @@ CREATE TABLE IF NOT EXISTS alias (
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
     PRIMARY KEY (address),
-    KEY (domain),
-    KEY (expired),
-    KEY (active)
+    INDEX (domain),
+    INDEX (expired),
+    INDEX (active)
 ) ENGINE=MyISAM;
 
 #
@@ -83,9 +83,9 @@ CREATE TABLE IF NOT EXISTS domain (
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
     PRIMARY KEY (domain),
-    KEY (backupmx),
-    KEY (expired),
-    KEY (active)
+    INDEX (backupmx),
+    INDEX (expired),
+    INDEX (active)
 ) ENGINE=MyISAM;
 
 CREATE TABLE IF NOT EXISTS `alias_domain` (
@@ -95,8 +95,8 @@ CREATE TABLE IF NOT EXISTS `alias_domain` (
     modified datetime NOT NULL default '0000-00-00 00:00:00',
     active tinyint(1) NOT NULL default '1',
     PRIMARY KEY (alias_domain),
-    KEY (target_domain),
-    KEY (active)
+    INDEX (target_domain),
+    INDEX (active)
 ) ENGINE=MyISAM;
 
 #
@@ -110,9 +110,9 @@ CREATE TABLE IF NOT EXISTS domain_admins (
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
     PRIMARY KEY (username,domain),
-    KEY (username),
-    KEY (domain),
-    KEY (active)
+    INDEX (username),
+    INDEX (domain),
+    INDEX (active)
 ) ENGINE=MyISAM;
 
 #
@@ -156,24 +156,24 @@ CREATE TABLE IF NOT EXISTS mailbox (
     active TINYINT(1) NOT NULL DEFAULT '1',
     local_part VARCHAR(255) NOT NULL DEFAULT '', -- Required by PostfixAdmin
     PRIMARY KEY (username),
-    KEY (domain),
-    KEY (department),
-    KEY (employeeid),
-    KEY (enablesmtp),
-    KEY (enablesmtpsecured),
-    KEY (enablepop3),
-    KEY (enablepop3secured),
-    KEY (enableimap),
-    KEY (enableimapsecured),
-    KEY (enabledeliver),
-    KEY (enablemanagesieve),
-    KEY (enablemanagesievesecured),
-    KEY (enablesieve),
-    KEY (enablesievesecured),
-    KEY (enableinternal),
-    KEY (passwordlastchange),
-    KEY (expired),
-    KEY (active)
+    INDEX (domain),
+    INDEX (department),
+    INDEX (employeeid),
+    INDEX (enablesmtp),
+    INDEX (enablesmtpsecured),
+    INDEX (enablepop3),
+    INDEX (enablepop3secured),
+    INDEX (enableimap),
+    INDEX (enableimapsecured),
+    INDEX (enabledeliver),
+    INDEX (enablemanagesieve),
+    INDEX (enablemanagesievesecured),
+    INDEX (enablesieve),
+    INDEX (enablesievesecured),
+    INDEX (enableinternal),
+    INDEX (passwordlastchange),
+    INDEX (expired),
+    INDEX (active)
 ) ENGINE=MyISAM;
 
 #
@@ -187,9 +187,9 @@ CREATE TABLE IF NOT EXISTS sender_bcc_domain (
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
     PRIMARY KEY (domain),
-    KEY (bcc_address),
-    KEY (expired),
-    KEY (active)
+    INDEX (bcc_address),
+    INDEX (expired),
+    INDEX (active)
 ) ENGINE=MyISAM;
 
 #
@@ -204,10 +204,10 @@ CREATE TABLE IF NOT EXISTS sender_bcc_user (
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
     PRIMARY KEY (username),
-    KEY (bcc_address),
-    KEY (domain),
-    KEY (expired),
-    KEY (active)
+    INDEX (bcc_address),
+    INDEX (domain),
+    INDEX (expired),
+    INDEX (active)
 ) ENGINE=MyISAM;
 
 #
@@ -221,9 +221,9 @@ CREATE TABLE IF NOT EXISTS recipient_bcc_domain (
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
     PRIMARY KEY (domain),
-    KEY (bcc_address),
-    KEY (expired),
-    KEY (active)
+    INDEX (bcc_address),
+    INDEX (expired),
+    INDEX (active)
 ) ENGINE=MyISAM;
 
 #
@@ -238,9 +238,9 @@ CREATE TABLE IF NOT EXISTS recipient_bcc_user (
     expired DATETIME NOT NULL DEFAULT '9999-12-31 00:00:00',
     active TINYINT(1) NOT NULL DEFAULT '1',
     PRIMARY KEY (username),
-    KEY (bcc_address),
-    KEY (expired),
-    KEY (active)
+    INDEX (bcc_address),
+    INDEX (expired),
+    INDEX (active)
 ) ENGINE=MyISAM;
 
 #
@@ -252,8 +252,8 @@ CREATE TABLE IF NOT EXISTS share_folder (
     to_user VARCHAR(255) CHARACTER SET ascii NOT NULL,
     dummy CHAR(1),
     PRIMARY KEY (from_user, to_user),
-    KEY (from_user),
-    KEY (to_user)
+    INDEX (from_user),
+    INDEX (to_user)
 );
 
 #
