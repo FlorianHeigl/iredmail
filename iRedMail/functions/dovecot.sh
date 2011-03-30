@@ -323,6 +323,8 @@ protocol lda {
 protocol imap {
     mail_plugins = ${DOVECOT_IMAP_PLUGINS}
 
+    imap_client_workarounds = tb-extra-mailbox-sep
+
     # number of connections per-user per-IP
     #mail_max_userip_connections = 10
 }
