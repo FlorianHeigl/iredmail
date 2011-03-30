@@ -323,11 +323,11 @@ EOF
                 apt-key adv --recv-keys \
                     --keyserver keyserver.ubuntu.com \
                     0xd9226c1a29511386b3b9f8bc8dc2c190ddf700d3
-
-                # Force 'apt-get update'.
-                ${APTGET} update
             fi
         fi
+
+        # Force update
+        ${APTGET} update
     fi
 }
 echo_end_msg()
@@ -365,8 +365,13 @@ elif [ X"${DISTRO}" == X"SUSE" ]; then
     zypper refresh
 elif [ X"${DISTRO}" == X"UBUNTU" ]; then
     create_repo_ubuntu
-elif [ X"${DISTRO}" == X"DEBIAN" -a X"${DISTRO_VERSION}" == X"5" ]; then
-    create_repo_debian
+elif [ X"${DISTRO}" == X"DEBIAN" ]; then
+    if [ X"${DISTRO_VERSION}" == X"5" ]; then
+        create_repo_debian
+    else
+        # Force update.
+        ${APTGET} update
+    fi
 fi
 
 fetch_misc && \
