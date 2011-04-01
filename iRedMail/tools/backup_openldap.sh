@@ -89,7 +89,16 @@ DELETE_PLAIN_LDIF_FILE="YES"
 CMD_DATE='/bin/date'
 CMD_DU='du -sh'
 CMD_COMPRESS='bzip2 -9'
-CMD_SLAPCAT='slapcat'
+
+if [ -f /etc/ldap/slapd.conf ]; then
+    CMD_SLAPCAT='slapcat -f /etc/ldap/slapd.conf'
+elif [ -f /etc/openldap/slapd.conf ]; then
+    CMD_SLAPCAT='slapcat -f /etc/openldap/slapd.conf'
+elif [ -f /usr/local/etc/openldap/slapd.conf ]; then
+    CMD_SLAPCAT='slapcat -f /usr/local/etc/openldap/slapd.conf'
+else
+    CMD_SLAPCAT='slapcat'
+fi
 
 # Date.
 MONTH="$(${CMD_DATE} +%Y.%m)"
