@@ -1,8 +1,6 @@
-iRedMail-0.8.0-beta1:
+iRedMail-0.7.0:
     * Append '-f /path/to/slapd.conf' to slapcat in tools/backup_openldap.sh.
       Thanks Enrico Cotti <enrico.cotti@>.
-
-iRedMail-0.7.0:
     * Save date of password last change while updating password in roundcube.
 
 iRedMail-0.7.0-rc3:

@@ -27,7 +27,7 @@ while : ; do
     --inputbox "\
 Please specify your first virtual domain name.
 
-EXAMPLES:
+EXAMPLE:
 
     * example.com
 
@@ -60,7 +60,7 @@ Note:
 
     * You can login iRedAdmin with this account.
 
-Warning:
+WARNING:
 
     * EMPTY password is *NOT* permitted.
 
@@ -95,7 +95,7 @@ Note:
 
     * You can login webmail with this account.
 
-Warning:
+WARNING:
 
     * EMPTY password is *NOT* permitted.
 

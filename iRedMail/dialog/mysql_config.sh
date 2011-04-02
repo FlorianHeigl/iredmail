@@ -33,7 +33,7 @@ while : ; do
     ${PASSWORDBOX} "\
 Please specify password for MySQL administrator: root
 
-Warning:
+WARNING:
 
     * EMPTY password is *NOT* permitted.
 " 20 76 2>/tmp/mysql_rootpw

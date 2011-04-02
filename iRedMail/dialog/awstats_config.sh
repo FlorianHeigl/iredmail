@@ -36,7 +36,7 @@ else
         --inputbox "\
 Please specify username for access awstats from web browser.
 
-Example:
+EXAMPLE:
 
     * admin
 
@@ -56,7 +56,7 @@ Example:
         ${PASSWORDBOX} "\
 Please specify password for awstats user: ${AWSTATS_USERNAME}
 
-Warning:
+WARNING:
 
     * EMPTY password is *NOT* permitted.
 

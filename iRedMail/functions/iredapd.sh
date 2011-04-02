@@ -46,10 +46,16 @@ iredapd_config()
     ln -s ${IREDAPD_ROOT_DIR}/iRedAPD-${IREDAPD_VERSION} ${IREDAPD_ROOT_DIR}/iredapd 2>/dev/null
 
     # Copy init rc script.
-    if [ X"${DISTRO}" == X"FREEBSD" ]; then
+    if [ X"${DISTRO}" == X"RHEL" ]; then
+        cp ${IREDAPD_ROOT_DIR}/iredapd/rc_scripts/iredapd.rhel ${DIR_RC_SCRIPTS}/iredapd
+    elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+        cp ${IREDAPD_ROOT_DIR}/iredapd/rc_scripts/iredapd.debian ${DIR_RC_SCRIPTS}/iredapd
+    elif [ X"${DISTRO}" == X"SUSE" ]; then
+        cp ${IREDAPD_ROOT_DIR}/iredapd/rc_scripts/iredapd.opensuse ${DIR_RC_SCRIPTS}/iredapd
+    elif [ X"${DISTRO}" == X"FREEBSD" ]; then
         cp ${IREDAPD_ROOT_DIR}/iredapd/rc_scripts/iredapd.freebsd ${DIR_RC_SCRIPTS}/iredapd
     else
-        cp ${IREDAPD_ROOT_DIR}/iredapd/rc_scripts/iredapd ${DIR_RC_SCRIPTS}/iredapd
+        cp ${IREDAPD_ROOT_DIR}/iredapd/rc_scripts/iredapd.rhel ${DIR_RC_SCRIPTS}/iredapd
     fi
     chmod 0755 ${DIR_RC_SCRIPTS}/iredapd
     chmod +x ${IREDAPD_ROOT_DIR}/iredapd/src/iredapd.py

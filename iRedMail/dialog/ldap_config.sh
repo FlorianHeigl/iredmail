@@ -80,7 +80,7 @@ Please specify password for LDAP rootdn:
 
     * ${LDAP_ROOTDN}
 
-Warning:
+WARNING:
 
     * EMPTY password is *NOT* permitted.
 " 20 76 2>/tmp/ldap_rootpw
