@@ -398,7 +398,7 @@ bind            = ${LDAP_BIND}
 start_tls       = no
 bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
-search_base     = ${ldap_search_base_domain}
+search_base     = ${LDAP_BASEDN}
 scope           = sub
 query_filter    = (&(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ATTR_ACCOUNT_STATUS}=${LDAP_STATUS_ACTIVE})(|(mail=@%d)(${LDAP_ATTR_USER_SHADOW_ADDRESS}=@%d)))
 result_attribute= ${LDAP_ATTR_USER_FORWARD}

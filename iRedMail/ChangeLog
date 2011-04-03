@@ -1,5 +1,5 @@
 iRedMail-0.7.1:
-    * shadowAddress support in mail alias.
+    * Support domain alias in mail alias, catch-all account.
 
 iRedMail-0.7.0:
     * Append '-f /path/to/slapd.conf' to slapcat in tools/backup_openldap.sh.
