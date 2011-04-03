@@ -366,7 +366,7 @@ bind            = ${LDAP_BIND}
 start_tls       = no
 bind_dn         = ${LDAP_BINDDN}
 bind_pw         = ${LDAP_BINDPW}
-search_base     = ${ldap_search_base_domain}
+search_base     = ${LDAP_BASEDN}
 scope           = sub
 query_filter    = (&(|(${LDAP_ATTR_USER_RDN}=%s)(${LDAP_ATTR_USER_SHADOW_ADDRESS}=%s))(${LDAP_ATTR_ACCOUNT_STATUS}=${LDAP_STATUS_ACTIVE})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_MAIL})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_DELIVER})(|(objectClass=${LDAP_OBJECTCLASS_MAILALIAS})(&(objectClass=${LDAP_OBJECTCLASS_MAILUSER})(${LDAP_ENABLED_SERVICE}=${LDAP_SERVICE_FORWARD}))))
 result_attribute= ${LDAP_ATTR_USER_FORWARD}
