@@ -636,6 +636,13 @@ EOF
         [ X"${USE_IREDAPD}" != X"YES" ] && ALL_PORTS="${ALL_PORTS} net/py-ldap2"
     fi
 
+    # Fail2ban.
+    if [ X"${USE_FAIL2BAN}" == X"YES" ]; then
+        # python-ldap.
+        ALL_PORTS="${ALL_PORTS} security/py-fail2ban"
+        ENABLED_SERVICES="${ENABLED_SERVICES} fail2ban"
+    fi
+
     # Fetch all source tarballs.
     ECHO_INFO "==== Fetch all source tarballs of required components (make fetch-recursive) ===="
     for i in ${ALL_PORTS}; do

@@ -1,4 +1,7 @@
 iRedMail-0.7.1:
+    * Integrate Fail2ban.
+    * Support domain alias in relay_domains (MySQL backend special).
+      Thanks atros@forum.
     * Support domain alias in mail alias, catch-all account.
 
 iRedMail-0.7.0:

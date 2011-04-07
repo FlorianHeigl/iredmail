@@ -77,6 +77,7 @@ check_env
 . ${CONF_DIR}/roundcube
 . ${CONF_DIR}/phpmyadmin
 . ${CONF_DIR}/awstats
+. ${CONF_DIR}/fail2ban
 . ${CONF_DIR}/iredadmin
 
 # ------------------------------
@@ -139,6 +140,9 @@ fi
 
 # Awstats.
 . ${FUNCTIONS_DIR}/awstats.sh
+
+# Fail2ban.
+. ${FUNCTIONS_DIR}/fail2ban.sh
 
 # iRedAdmin.
 . ${FUNCTIONS_DIR}/iredadmin.sh

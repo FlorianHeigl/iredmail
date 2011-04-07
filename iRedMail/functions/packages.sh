@@ -333,6 +333,19 @@ EOF
     fi
     #### End iRedAdmin ####
 
+    #### Fail2ban ####
+    if [ X"${USE_FAIL2BAN}" == X"YES" ]; then
+        if [ X"${DISTRO}" == X"RHEL" -o \
+            X"${DISTRO}" == X"DEBIAN" -o \
+            X"${DISTRO}" == X"UBUNTU" -o \
+            X"${DISTRO}" == X"SUSE" \
+            ]; then
+            ALL_PKGS="${ALL_PKGS} fail2ban"
+            ENABLED_SERVICES="${ENABLED_SERVICES} fail2ban"
+        fi
+    fi
+
+
     ############################
     # Misc packages & services.
     #

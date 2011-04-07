@@ -151,7 +151,7 @@ Configuration completed.
 *************************************************************************
 EOF
 
-ECHO_INFO -n "Continue? [Y|n]"
+ECHO_QUESTION -n "Continue? [Y|n]"
 read ANSWER
 
 case ${ANSWER} in

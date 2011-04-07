@@ -76,6 +76,7 @@ Note:
     "phpLDAPadmin" "Web-based OpenLDAP management tool" "on" \
     "phpMyAdmin" "Web-based MySQL management tool" "on" \
     "Awstats" "Advanced web and mail log analyzer" "on" \
+    "Fail2ban" "Ban IP that makes too many password failures" "on" \
     2>${tmp_config_optional_components}
 
 elif [ X"${BACKEND}" == X"MySQL" ]; then
@@ -94,6 +95,7 @@ Note:
     "phpMyAdmin" "Web-based MySQL management tool" "on" \
     "iRedAdmin" "Official web-based iRedMail Admin Panel" "on" \
     "Awstats" "Advanced web and mail log analyzer" "on" \
+    "Fail2ban" "Ban IP that makes too many password failures" "on" \
     2>${tmp_config_optional_components}
 else
     # No hook for other backend yet.
@@ -136,7 +138,10 @@ if [ X"$?" == X"0" ]; then
 fi
 
 echo ${OPTIONAL_COMPONENTS} | grep -i 'awstats' >/dev/null 2>&1
-[ X"$?" == X"0" ] && USE_AWSTATS='YES' && echo "export USE_AWSTATS='YES'" >>${CONFIG_FILE}
+[ X"$?" == X"0" ] && export USE_AWSTATS='YES' && echo "export USE_AWSTATS='YES'" >>${CONFIG_FILE}
+
+echo ${OPTIONAL_COMPONENTS} | grep -i 'fail2ban' >/dev/null 2>&1
+[ X"$?" == X"0" ] && export USE_FAIL2BAN='YES' && echo "export USE_FAIL2BAN='YES'" >>${CONFIG_FILE}
 
 # ----------------------------------------------------------------
 # Promot to choose the prefer language for webmail.

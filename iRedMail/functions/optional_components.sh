@@ -39,4 +39,8 @@ optional_components()
     [ X"${USE_IREDAPD}" == X"YES" ] && \
         check_status_before_run iredapd_config
 
+    # Fail2ban.
+    [ X"${USE_FAIL2BAN}" == X"YES" ] && \
+        check_status_before_run fail2ban_config
+
 }

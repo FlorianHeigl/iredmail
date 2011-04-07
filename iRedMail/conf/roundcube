@@ -36,8 +36,7 @@ else
 fi
 
 # Syslog log file.
-export RCM_LOGFILE='/var/log/roundcube.log'
-export RCM_LOGROTATE_FILE="${LOGROTATE_DIR}/roundcube"
+export RCM_LOGFILE="${MAILLOG}"
 
 # Database setting.
 export RCM_DB="roundcubemail"
