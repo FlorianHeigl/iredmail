@@ -343,6 +343,10 @@ EOF
             ALL_PKGS="${ALL_PKGS} fail2ban"
             ENABLED_SERVICES="${ENABLED_SERVICES} fail2ban"
         fi
+
+        if [ X"${DISTRO}" == X"RHEL" ]; then
+            DISABLED_SERVICES="${DISABLED_SERVICES} shorewall"
+        fi
     fi
 
 

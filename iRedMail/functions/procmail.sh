@@ -4,7 +4,7 @@
 
 procmail_config()
 {
-    ECHO_INFO "Configure Procmail (MDA)."
+    ECHO_DEBUG "Configure Procmail (MDA)."
 
     ECHO_DEBUG "Copy ${SAMPLE_DIR}/procmailrc as ${PROCMAILRC}."
     backup_file ${PROCMAILRC}

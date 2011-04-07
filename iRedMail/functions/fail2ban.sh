@@ -41,13 +41,13 @@ ${CONF_MSG}
 
 # Please refer to ${FAIL2BAN_JAIL_CONF} for more examples.
 
-#[ssh-iptables]
-#enabled     = true
-#filter      = sshd
-#action      = iptables[name=ssh, port="${FAIL2BAN_DISABLED_SERVICES}", protocol=tcp]
-#               sendmail-whois[name=SSH, dest=root, sender=fail2ban@mail.com]
-#logpath     = ${FAIL2BAN_SSHD_LOG}
-#maxretry    = 5
+[ssh-iredmail]
+enabled     = true
+filter      = sshd
+action      = iptables[name=ssh, port="ssh", protocol=tcp]
+#               sendmail-whois[name=ssh, dest=root, sender=fail2ban@mail.com]
+logpath     = ${FAIL2BAN_SSHD_LOGFILE}
+maxretry    = 5
 
 [roundcube-iredmail]
 enabled     = true

@@ -86,8 +86,10 @@ cleanup_replace_iptables_rule()
         # No port number defined, use default (22).
         export sshd_port='22'
     else
-        # Replace port number in iptable rule file.
+        # Replace port number in iptable and Fail2ban.
         perl -pi -e 's#(.*multiport.*,)22 (.*)#${1}$ENV{sshd_port} ${2}#' ${SAMPLE_DIR}/iptables.rules
+        [ -f ${FAIL2BAN_JAIL_LOCAL_CONF} ] && \
+            perl -pi -e 's#(.*port=.*)ssh(.*)#${1}$ENV{sshd_port}${2}#' ${FAIL2BAN_JAIL_LOCAL_CONF}
     fi
 
     ECHO_QUESTION "Would you like to use firewall rules shipped within iRedMail now?"
