@@ -552,7 +552,7 @@ password    = ${MYSQL_BIND_PW}
 hosts       = ${mysql_server}
 port        = ${MYSQL_PORT}
 dbname      = ${VMAIL_DB}
-query       = SELECT domain FROM domain WHERE domain='%s' AND backupmx=1 AND active=1 UNION SELECT alias_domain FROM alias_domain WHERE alias_domain='%s' AND active=1
+query       = (SELECT domain FROM domain WHERE domain='%s' AND backupmx=1 AND active=1) UNION (SELECT alias_domain FROM alias_domain WHERE alias_domain='%s' AND active=1)
 EOF
 
     cat > ${mysql_virtual_mailbox_maps_cf} <<EOF

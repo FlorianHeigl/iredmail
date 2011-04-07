@@ -46,4 +46,4 @@ export FAIL2BAN_FILTER_ROUNDCUBE="roundcube.iredmail"
 export FAIL2BAN_FILTER_DOVECOT="dovecot.iredmail"
 
 export FAIL2BAN_LOGTARGET='SYSLOG'
-export FAIL2BAN_DISABLED_SERVICES="http,https,smtp,smtps,pop3,pop3s,imap,imaps,sieve"
+export FAIL2BAN_DISABLED_SERVICES="ssh,http,https,smtp,smtps,pop3,pop3s,imap,imaps,sieve"
