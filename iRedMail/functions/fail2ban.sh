@@ -96,14 +96,20 @@ EOF
     ECHO_DEBUG "Create filter: ${FAIL2BAN_FILTER_DIR}/${FAIL2BAN_FILTER_POSTFIX}.conf."
     cat > ${FAIL2BAN_FILTER_DIR}/${FAIL2BAN_FILTER_POSTFIX}.conf <<EOF
 [Definition]
-#failregex = reject: RCPT from (.*)\[<HOST>\]: 554
 failregex = \[<HOST>\]: SASL PLAIN authentication failed
             reject: RCPT from (.*)\[<HOST>\]: 550 5.1.1
             reject: RCPT from (.*)\[<HOST>\]: 450 4.7.1
             reject: RCPT from (.*)\[<HOST>\]: 554 5.7.1
-# reject: RCPT from (.*)\[<HOST>\]:  [45][05][0-4] 
 ignoreregex =
 EOF
+
+    # FreeBSD: Start fail2ban when system start up.
+    if [ X"${DISTRO}" == X"FREEBSD" ]; then
+        cat >> /etc/rc.conf <<EOF
+# Start fail2ban.
+fail2ban_enable="YES"
+EOF
+    fi
 
     echo 'export status_fail2ban_config="DONE"' >> ${STATUS_FILE}
 }
