@@ -184,9 +184,9 @@ awstats_config_weblog()
     fi
 
     perl -pi -e 's#^(SiteDomain=)(.*)#${1}"$ENV{'HOSTNAME'}"#' ${AWSTATS_CONF_WEB}
-    perl -pi -e 's#^(LogFile=)(.*)#${1}"$ENV{'HTTPD_LOG_ACCESSLOG'}"#' ${AWSTATS_CONF_WEB}
+    perl -pi -e 's#^(LogFile=)(.*)#${1}"$ENV{HTTPD_LOG_ACCESSLOG}"#' ${AWSTATS_CONF_WEB}
 
-    perl -pi -e 's#^(Lang=)(.*)#${1}$ENV{'AWSTATS_LANGUAGE'}#' ${AWSTATS_CONF_WEB}
+    perl -pi -e 's#^(Lang=)(.*)#${1}$ENV{AWSTATS_LANGUAGE}#' ${AWSTATS_CONF_WEB}
 
     # On RHEL/CentOS/Debian, ${AWSTATS_CONF_SAMPLE} is default config file. Overrided here.
     backup_file ${AWSTATS_CONF_SAMPLE}

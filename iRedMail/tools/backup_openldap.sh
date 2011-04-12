@@ -85,6 +85,9 @@ DELETE_PLAIN_LDIF_FILE="YES"
 #########################################################
 # You do *NOT* need to modify below lines.
 #########################################################
+
+export PATH="$PATH:/usr/sbin:/usr/local/sbin/"
+
 # Commands.
 CMD_DATE='/bin/date'
 CMD_DU='du -sh'
