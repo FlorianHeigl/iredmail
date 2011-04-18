@@ -36,6 +36,7 @@ install_all()
         elif [ -x ${DIR_RC_SCRIPTS}/rsyslog ]; then
             ENABLED_SERVICES="rsyslog ${ENABLED_SERVICES}"
         fi
+        DISABLED_SERVICES="${DISABLED_SERVICES} exim"
     elif [ X"${DISTRO}" == X"SUSE" ]; then
         # Debian.
         ENABLED_SERVICES="network syslog ${ENABLED_SERVICES}"
