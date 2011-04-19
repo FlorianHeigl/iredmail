@@ -156,19 +156,19 @@ fetch_pkgs_debian()
         cd ${PKG_DIR}
 
         if [ X"${PKGLIST}" != X"0" ]; then
-            ECHO_INFO "==================== Fetching Binary Packages ===================="
+            ECHO_INFO "Fetching Binary Packages ..."
             for i in ${PKGLIST}; do
                 if [ X"${DISTRO}" == X"DEBIAN" ]; then
                     url="${MIRROR}/debian/lenny/${i}"
                 fi
 
-                ECHO_INFO "* ${pkg_counter}/${pkg_total}: ${url}"
+                ECHO_INFO "+ ${pkg_counter}/${pkg_total}: ${url}"
                 ${FETCH_CMD} "${url}"
 
                 pkg_counter=$((pkg_counter+1))
             done
         else
-            ECHO_INFO "============== Fetching Binary Packages [ SKIP ] =============="
+            :
         fi
     else
         :
@@ -184,12 +184,12 @@ fetch_misc()
         misc_total=$(( $(echo ${MISCLIST} | wc -w | awk '{print $1}') ))
         misc_count=1
 
-        ECHO_INFO "==================== Fetching Source Tarballs ===================="
+        ECHO_INFO "Fetching Source Tarballs ..."
 
         for i in ${MISCLIST}
         do
             url="${MIRROR}/misc/${i}"
-            ECHO_INFO "* ${misc_count}/${misc_total}: ${url}"
+            ECHO_INFO "+ ${misc_count}/${misc_total}: ${url}"
 
             ${FETCH_CMD} "${url}"
 
