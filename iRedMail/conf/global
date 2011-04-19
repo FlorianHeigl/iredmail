@@ -120,7 +120,7 @@ if [ X"${TERM}" == X"xterm" -o X"${TERM}" == X"linux" ]; then
 elif [ X"${TERM}" == X"xterm-color" ]; then
     export TERM='xterm-color'
 else
-    export TERM='xterm'
+    export TERM='pcconsole'
 fi
 
 # Logrotate configuration directory.

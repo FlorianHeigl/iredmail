@@ -111,6 +111,24 @@ BACKEND="$(cat /tmp/backend)"
 echo "export BACKEND='${BACKEND}'" >> ${CONFIG_FILE}
 rm -f /tmp/backend
 
+# For virtual user query in Postfix, Dovecot.
+export MYSQL_BIND_USER="${VMAIL_USER_NAME}"
+export MYSQL_BIND_PW="$(${RANDOM_STRING})"
+echo "export MYSQL_BIND_USER='${MYSQL_BIND_USER}'" >> ${CONFIG_FILE}
+echo "export MYSQL_BIND_PW='${MYSQL_BIND_PW}'" >> ${CONFIG_FILE}
+
+# For database management: vmail.
+export MYSQL_ADMIN_USER="${VMAIL_ADMIN_USER_NAME}"
+export MYSQL_ADMIN_PW="$(${RANDOM_STRING})"
+echo "export MYSQL_ADMIN_USER='${MYSQL_ADMIN_USER}'" >> ${CONFIG_FILE}
+echo "export MYSQL_ADMIN_PW='${MYSQL_ADMIN_PW}'" >> ${CONFIG_FILE}
+
+# LDAP bind dn & password.
+export LDAP_BINDPW="$(${RANDOM_STRING})"
+export LDAP_ADMIN_PW="$(${RANDOM_STRING})"
+echo "export LDAP_BINDPW='${LDAP_BINDPW}'" >> ${CONFIG_FILE}
+echo "export LDAP_ADMIN_PW='${LDAP_ADMIN_PW}'" >> ${CONFIG_FILE}
+
 if [ X"${BACKEND}" == X"OpenLDAP" ]; then
     . ${DIALOG_DIR}/ldap_config.sh
 else

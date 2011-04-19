@@ -353,8 +353,8 @@ install_pkg_rhel()
     ${YUM} -y install $@
     if [ X"$?" != X"0" ]; then
         ECHO_ERROR "Installation failed, please check the terminal output."
-        ECHO_ERROR "If you're not sure what the problem is, try to get help in iRedMail forum:"
-        ECHO_ERROR "http://www.iredmail.org/forum/"
+        ECHO_ERROR "If you're not sure what the problem is, try to get help in iRedMail"
+        ECHO_ERROR "forum: http://www.iredmail.org/forum/"
         exit 255
     else
         :
