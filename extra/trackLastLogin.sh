@@ -29,8 +29,8 @@
 #if [ X"${USER}" != X"dump-capability" ]; then
 #   mysql -u${MYSQL_USER} -p${PASSWD} ${VMAIL_DB_NAME} >/dev/null 2>&1 <<EOF
 #       UPDATE mailbox SET \
-#       lastloginipv4="INET_ATON('$IP')", \
-#       lastlogindate="NOW()", \
+#       lastloginipv4=INET_ATON('$IP'), \
+#       lastlogindate=NOW(), \
 #       lastloginprotocol="${1}" \
 #       WHERE username='$USER';
 #EOF
