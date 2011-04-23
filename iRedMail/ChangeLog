@@ -3,6 +3,8 @@ iRedMail-0.7.1:
     * Support domain alias in relay_domains (MySQL backend special).
       Thanks atros@forum.
     * Support domain alias in mail alias, catch-all account.
+    * Package update/changes:
+        + Roundcube -> 0.5.2
 
 iRedMail-0.7.0:
     * Append '-f /path/to/slapd.conf' to slapcat in tools/backup_openldap.sh.
