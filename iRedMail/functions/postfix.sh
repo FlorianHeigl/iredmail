@@ -107,6 +107,9 @@ EOF
     postconf -e recipient_delimiter='+'
     postconf -e proxy_read_maps='$canonical_maps $lmtp_generic_maps $local_recipient_maps $mydestination $mynetworks $recipient_bcc_maps $recipient_canonical_maps $relay_domains $relay_recipient_maps $relocated_maps $sender_bcc_maps $sender_canonical_maps $smtp_generic_maps $smtpd_sender_login_maps $transport_maps $virtual_alias_domains $virtual_alias_maps $virtual_mailbox_domains $virtual_mailbox_maps $smtpd_sender_restrictions'
 
+    postconf -e smtp_data_init_timeout='240s'
+    postconf -e smtp_data_xfer_timeout='600s'
+
     #
     # Standalone smtpd_helo_restrictions.
     #
