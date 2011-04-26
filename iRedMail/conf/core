@@ -415,7 +415,7 @@ gen_pem_key()
     mkdir -p ${SSL_KEY_DIR} ${SSL_CERT_DIR} 2>/dev/null
 
     openssl req \
-        -x509 -nodes -days 3650 -newkey rsa:${RSA_KEY_LENGTH} \
+        -x509 -nodes -days 3650 -newkey rsa:${SSL_KEY_SIZE} \
         -subj "/C=${TLS_COUNTRY}/ST=${TLS_STATE}/L=${TLS_CITY}/O=${TLS_COMPANY}/OU=${TLS_DEPARTMENT}/CN=${TLS_HOSTNAME}/emailAddress=${TLS_ADMIN}/" \
         -out ${SSL_CERT_FILE} -keyout ${SSL_KEY_FILE} >/dev/null 2>&1
 

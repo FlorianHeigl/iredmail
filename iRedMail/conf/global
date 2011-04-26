@@ -432,7 +432,7 @@ export SSL_CERT_DIR="${SSL_FILE_DIR}/certs"
 export SSL_KEY_DIR="${SSL_FILE_DIR}/private"
 
 # SSL key.
-export RSA_KEY_LENGTH='2048'
+export OPENSSL_CONF="${SSL_FILE_DIR}/openssl.cnf"
 export SSL_CERT_FILE="${SSL_CERT_DIR}/iRedMail_CA.pem"
 export SSL_KEY_FILE="${SSL_KEY_DIR}/iRedMail.key"
 export TLS_COUNTRY='CN'
@@ -442,6 +442,15 @@ export TLS_COMPANY="${HOSTNAME}"
 export TLS_DEPARTMENT='IT'
 export TLS_HOSTNAME="${HOSTNAME}"
 export TLS_ADMIN="root@${HOSTNAME}"
+
+# Default SSL key size in bits
+export SSL_KEY_SIZE='2048'
+default_ssl_key_size="$(grep '^default_bits' ${OPENSSL_CONF} | awk -F'=' '{print $2}')"
+if [ -z ${default_ssl_key_size} ]; then
+    :
+elif [ ${default_ssl_key_size} -ge ${SSL_KEY_SIZE} ]; then
+    export SSL_KEY_SIZE="${default_ssl_key_size}"
+fi
 
 # Location of sshd_config
 export SSHD_CONFIG='/etc/ssh/sshd_config'

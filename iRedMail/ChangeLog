@@ -1,5 +1,5 @@
 iRedMail-0.7.1:
-    * Use 2048 as default RSA key length. Thanks mike.f@forum <m.fresel@>.
+    * Use 2048 as default SSL key length. Thanks mike.f@forum <m.fresel@>.
     * Increase Postfix timeout seconds: smtp_data_init_timeout (120s -> 240s),
       and smtp_data_xfer_timeout (180s -> 600s). Hope to avoid some timeout
       issues. Thanks write4saini@forum, mbsouth@forum.
