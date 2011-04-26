@@ -432,6 +432,7 @@ export SSL_CERT_DIR="${SSL_FILE_DIR}/certs"
 export SSL_KEY_DIR="${SSL_FILE_DIR}/private"
 
 # SSL key.
+export RSA_KEY_LENGTH='2048'
 export SSL_CERT_FILE="${SSL_CERT_DIR}/iRedMail_CA.pem"
 export SSL_KEY_FILE="${SSL_KEY_DIR}/iRedMail.key"
 export TLS_COUNTRY='CN'
