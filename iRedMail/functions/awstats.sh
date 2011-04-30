@@ -185,8 +185,9 @@ awstats_config_weblog()
 
     perl -pi -e 's#^(SiteDomain=)(.*)#${1}"$ENV{'HOSTNAME'}"#' ${AWSTATS_CONF_WEB}
     perl -pi -e 's#^(LogFile=)(.*)#${1}"$ENV{HTTPD_LOG_ACCESSLOG}"#' ${AWSTATS_CONF_WEB}
-
     perl -pi -e 's#^(Lang=)(.*)#${1}$ENV{AWSTATS_LANGUAGE}#' ${AWSTATS_CONF_WEB}
+
+    perl -pi -e 's#^(DirIcons=)(.*)#${1}"/awstats/icon#' ${AWSTATS_CONF_WEB}
 
     # On RHEL/CentOS/Debian, ${AWSTATS_CONF_SAMPLE} is default config file. Overrided here.
     backup_file ${AWSTATS_CONF_SAMPLE}
@@ -249,6 +250,8 @@ awstats_config_maillog()
     perl -pi -e 's#^(ShowSMTPErrorsStats=)(.*)#${1}1#' ${AWSTATS_CONF_MAIL}
 
     perl -pi -e 's#^(Lang=)(.*)#${1}$ENV{'AWSTATS_LANGUAGE'}#' ${AWSTATS_CONF_MAIL}
+
+    perl -pi -e 's#^(DirIcons=)(.*)#${1}"/awstats/icon#' ${AWSTATS_CONF_MAIL}
 
     echo 'export status_awstats_config_maillog="DONE"' >> ${STATUS_FILE}
 }
