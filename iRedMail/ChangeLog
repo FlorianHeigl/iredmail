@@ -4,8 +4,8 @@ iRedMail-0.7.1:
     * Increase Postfix timeout seconds: smtp_data_init_timeout (120s -> 240s),
       and smtp_data_xfer_timeout (180s -> 600s). Hope to avoid some timeout
       issues. Thanks write4saini@forum, mbsouth@forum.
-    * Integrate Fail2ban.
-    * Support domain alias in relay_domains (MySQL backend special).
+    * Integrate Fail2ban. Note: It doesn't work on FreeBSD yet.
+    * Support domain alias in postfix relay_domains (MySQL backend special).
       Thanks atros@forum.
     * Support domain alias in mail alias, catch-all account.
     * Package update/changes:
