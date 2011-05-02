@@ -10,6 +10,7 @@ iRedMail-0.7.1:
     * Support domain alias in mail alias, catch-all account.
     * Package update/changes:
         + Roundcube -> 0.5.2
+        + iRedAPD -> 1.3.5
 
 iRedMail-0.7.0:
     * Append '-f /path/to/slapd.conf' to slapcat in tools/backup_openldap.sh.
