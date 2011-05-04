@@ -1,3 +1,5 @@
+iRedMail-0.8.0:
+
 iRedMail-0.7.1:
     * Fix incorrect icon path in awstats. Thanks <rannal@> for the feedback.
     * Use 2048 as default SSL key length. Thanks mike.f@forum <m.fresel@>.

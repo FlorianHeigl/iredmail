@@ -26,6 +26,7 @@
 . ${CONF_DIR}/functions
 . ${CONF_DIR}/core
 . ${CONF_DIR}/openldap
+. ${CONF_DIR}/roundcube
 
 trap "exit 255" 2
 
@@ -128,6 +129,9 @@ export LDAP_BINDPW="$(${RANDOM_STRING})"
 export LDAP_ADMIN_PW="$(${RANDOM_STRING})"
 echo "export LDAP_BINDPW='${LDAP_BINDPW}'" >> ${CONFIG_FILE}
 echo "export LDAP_ADMIN_PW='${LDAP_ADMIN_PW}'" >> ${CONFIG_FILE}
+
+echo "export RCM_DB_USER='${RCM_DB_USER}'" >> ${CONFIG_FILE}
+echo "export RCM_DB_PASSWD='${RCM_DB_PASSWD}'" >> ${CONFIG_FILE}
 
 if [ X"${BACKEND}" == X"OpenLDAP" ]; then
     . ${DIALOG_DIR}/ldap_config.sh
