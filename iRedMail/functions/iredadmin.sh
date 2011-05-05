@@ -91,20 +91,6 @@ AddType text/html .py
     Order deny,allow
     Allow from all
 </Directory>
-
-# Used to enable compress web contents during transfer.
-DeflateCompressionLevel 3
-AddOutputFilter DEFLATE html xml php js css
-<Location />
-SetOutputFilter DEFLATE
-BrowserMatch ^Mozilla/4 gzip-only-text/html
-BrowserMatch ^Mozilla/4\.0[678] no-gzip
-BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
-SetEnvIfNoCase Request_URI \\.(?:gif|jpe?g|png)$ no-gzip dont-vary
-SetEnvIfNoCase Request_URI .(?:exe|t?gz|zip|bz2|sit|rar)$ no-gzip dont-vary
-SetEnvIfNoCase Request_URI .(?:pdf|mov|avi|mp3|mp4|rm)$ no-gzip dont-vary
-#Header append Vary User-Agent env=!dont-vary
-</Location>
 EOF
 
     ECHO_DEBUG "Import iredadmin database template."
