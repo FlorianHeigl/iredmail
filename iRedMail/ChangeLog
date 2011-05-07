@@ -1,4 +1,5 @@
 iRedMail-0.8.0:
+    * Enable LDAPS on FreeBSD by default. Thanks Markus Wyrsch <W-Chi@>.
 
 iRedMail-0.7.1:
     * Fix incorrect icon path in awstats. Thanks <rannal@> for the feedback.
