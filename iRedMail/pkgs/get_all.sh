@@ -242,7 +242,6 @@ name=${LOCAL_REPO_NAME}
 baseurl=${YUM_UPDATE_REPO}
 enabled=1
 gpgcheck=0
-priority=1
 
 # Dovecot-1.2.x.
 [iRedMail-Dovecot-12]
@@ -250,7 +249,6 @@ name=iRedMail-Dovecot-12
 baseurl=http://iredmail.org/yum/rpms/dovecot/rhel${DISTRO_VERSION}/
 enabled=1
 gpgcheck=0
-priority=1
 EOF
 
     echo 'export status_create_yum_repo="DONE"' >> ${STATUS_FILE}

@@ -71,7 +71,7 @@ whitelist_from_spf      *@sina.com *@sohu.com *@tom.com
 whitelist_from_spf      *@live.com *@hotmail.com
 
 # Whitelist from DKIM.
-whitelist_from_dk       *@gmail.com *@paypal.com
+whitelist_from_dkim       *@gmail.com *@paypal.com
 
 # Whitelist domains.
 # Reference: http://wiki.apache.org/spamassassin/ManualWhitelist
