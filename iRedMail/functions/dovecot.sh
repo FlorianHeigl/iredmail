@@ -222,6 +222,10 @@ EOF
         if [ X"${DOVECOT_VERSION}" == X"1.2" ]; then
             cat >> ${DOVECOT_CONF} <<EOF
     # Dict quota. Used to store realtime quota in SQL.
+    # Dict quota is recalculated only if the quota goes below zero. For example:
+    #
+    #   mysql> UPDATE mailbox SET bytes=-1,messages=-1 WHERE username='user@domain.ltd';
+    #
     quota = dict:user::proxy::quotadict
 EOF
         else
