@@ -76,7 +76,7 @@ CSV file format:
 Example #1:
     iredmail.org, zhang, secret_pw, Zhang Huangbin, 1024, group1:group2
 Example #2:
-    iredmail.org, zhang, secret_pw, Zhang Huangbin, , ,
+    iredmail.org, zhang, secret_pw, Zhang Huangbin, ,
 Example #3:
     iredmail.org, zhang, secret_pw, , 1024, group1:group2
      
@@ -167,7 +167,7 @@ def ldif_mailuser(domain, username, passwd, cn, quota, groups=''):
         ('homeDirectory',       [homeDirectory]),
         ('accountStatus',       ['active']),
         ('mtaTransport',        ['dovecot']),
-        ('enabledService',      ['mail', 'smtp',
+        ('enabledService',      ['mail', 'smtp', 'smtpsecured',
                                  'pop3', 'pop3secured', 'imap', 'imapsecured',
                                 'deliver', 'forward', 'senderbcc', 'recipientbcc',
                                  'managesieve', 'managesievesecured', 'internal',
