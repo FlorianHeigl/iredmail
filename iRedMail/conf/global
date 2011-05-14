@@ -453,3 +453,6 @@ fi
 
 # Location of sshd_config
 export SSHD_CONFIG='/etc/ssh/sshd_config'
+
+# MySQL databases which need to be backed up.
+export BACKUP_DATABASES=''

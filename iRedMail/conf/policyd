@@ -111,3 +111,5 @@ elif [ X"${DISTRO}" == X"FREEBSD" ]; then
 else
     :
 fi
+
+export BACKUP_DATABASES="${BACKUP_DATABASES} ${POLICYD_DB_NAME}"

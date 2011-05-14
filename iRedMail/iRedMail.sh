@@ -40,6 +40,7 @@ export PKG_DIR="${ROOTDIR}/pkgs/pkgs"
 export MISC_DIR="${ROOTDIR}/pkgs/misc"
 export SAMPLE_DIR="${ROOTDIR}/samples"
 export PATCH_DIR="${ROOTDIR}/patches"
+export TOOLS_DIR="${ROOTDIR}/patches"
 
 . ${CONF_DIR}/global
 . ${CONF_DIR}/functions

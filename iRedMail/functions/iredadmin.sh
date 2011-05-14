@@ -25,6 +25,9 @@ iredadmin_config()
 {
     ECHO_INFO "Configure iRedAdmin (official web-based admin panel)."
 
+    # Backup database.
+    export BACKUP_DATABASES="${BACKUP_DATABASES} ${IREDADMIN_DB_NAME}"
+
     # Create a low privilege user as httpd daemon user.
     if [ X"${KERNEL_NAME}" == X"FreeBSD" ]; then
         pw useradd -m -d ${IREDADMIN_HOME_DIR} -s /sbin/nologin -n ${IREDADMIN_HTTPD_USER}
