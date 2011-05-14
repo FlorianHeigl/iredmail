@@ -275,6 +275,7 @@ EOF
     [ X"${DISTRO}" == X"RHEL" ] && check_status_before_run cleanup_replace_mysql_config
     check_status_before_run cleanup_start_postfix_now
     [ X"${DISTRO}" == X"FREEBSD" ] && check_status_before_run cleanup_sa_preconfig
+    check_status_before_run cleanup_backup_scripts
 
     # Send tip file to the mail server admin and/or first mail user.
     tip_recipient="${FIRST_USER}@${FIRST_DOMAIN}"
