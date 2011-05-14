@@ -31,6 +31,7 @@ BASEDN = 'o=domains,dc=iredmail,dc=org'
 
 # Storage base directory.
 STORAGE_BASE_DIRECTORY = '/var/vmail/vmail1'
+STORAGE_NODE = STORAGE_BASE_DIRECTORY.split('/')[-1]
 
 # Hashed maildir: True, False.
 # Example:
@@ -153,6 +154,7 @@ def ldif_mailuser(domain, username, passwd, cn, quota, groups=''):
         mailMessageStore = "%s/%s-%s/" % (domain, username, DATE)
 
     homeDirectory = STORAGE_BASE_DIRECTORY + '/' + mailMessageStore
+    mailMessageStore = STORAGE_NODE + '/' + mailMessageStore
 
     ldif = [
         ('objectClass',         ['inetOrgPerson', 'mailUser', 'shadowAccount', 'amavisAccount',]),
