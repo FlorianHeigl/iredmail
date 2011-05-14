@@ -320,41 +320,7 @@ EOF
     # iRedAdmin.
     if [ X"${USE_IREDADMIN}" == X"YES" ]; then
         cat <<EOF
-* - iRedAdmin: httpS://${HOSTNAME}/iredadmin/
-*   + Account: ${SITE_ADMIN_NAME}, Password: ${SITE_ADMIN_PASSWD}
-*
-EOF
-    fi
-
-    # phpMyAdmin.
-    if [ X"${USE_PHPMYADMIN}" == X"YES" ]; then
-        cat <<EOF
-* - phpMyAdmin: httpS://${HOSTNAME}/phpmyadmin/
-*   + Accounts:
-*       - Name: ${MYSQL_ADMIN_USER}, Password: ${MYSQL_ADMIN_PW}
-*       - Name: ${MYSQL_ROOT_USER}, Password: ${MYSQL_ROOT_PASSWD}
-*
-EOF
-    fi
-
-    # phpLDAPadmin.
-    if [ X"${USE_PHPLDAPADMIN}" == X"YES" ]; then
-        cat <<EOF
-* - phpLDAPadmin: httpS://${HOSTNAME}/phpldapadmin/
-*   + Account:
-*       - Name (manage mail accounts only): ${LDAP_ADMIN_DN}, Password: ${LDAP_ADMIN_PW}
-*       - Name (site-wide manager): ${LDAP_ROOTDN}, Password: ${LDAP_ROOTPW}
-*
-EOF
-    fi
-
-    # Awstats.
-    if [ X"${USE_AWSTATS}" == X"YES" ]; then
-        cat <<EOF
-* - Awstats:
-*   + URLs:
-*       - httpS://${HOSTNAME}/awstats/awstats.pl?config=web
-*       - httpS://${HOSTNAME}/awstats/awstats.pl?config=smtp
+* - Admin Panel (iRedAdmin): httpS://${HOSTNAME}/iredadmin/
 *   + Account: ${SITE_ADMIN_NAME}, Password: ${SITE_ADMIN_PASSWD}
 *
 EOF
@@ -371,14 +337,6 @@ EOF
 * And it's sent to your mail account ${tip_recipient}.
 *
 EOF
-
-#    if [ X"${DISTRO}" != X"FREEBSD" ]; then
-#        cat <<EOF
-#* If you want to remove/uninstall iRedMail quickly, please follow this tutorial:
-#* http://www.iredmail.org/forum/topic333-faq-how-to-uninstall-iredmail.html
-#*
-#EOF
-#fi
 
 if [ X"${POSTFIX_STARTED}" != X"YES" -a X"${DISTRO}" != X"FREEBSD" ]; then
     cat <<EOF

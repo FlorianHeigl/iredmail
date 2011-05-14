@@ -29,7 +29,7 @@ openldap_config()
     ECHO_INFO "Configure OpenLDAP server."
 
     ECHO_DEBUG "Stoping OpenLDAP."
-    ${LDAP_INIT_SCRIPT} stop
+    ${LDAP_INIT_SCRIPT} stop >/dev/null
 
     backup_file ${OPENLDAP_SLAPD_CONF} ${OPENLDAP_LDAP_CONF}
 
@@ -388,7 +388,7 @@ openldap_data_initialize()
     chmod -R 0700 ${OPENLDAP_DATA_DIR}
 
     ECHO_DEBUG "Starting OpenLDAP."
-    ${LDAP_INIT_SCRIPT} restart
+    ${LDAP_INIT_SCRIPT} restart >/dev/null
 
     ECHO_DEBUG -n "Sleep 5 seconds for LDAP daemon initialize:"
     for i in 5 4 3 2 1; do
@@ -510,7 +510,7 @@ ${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_DISPLAYED_IN_ADDRBOOK}
 ${LDAP_ENABLED_SERVICE}: ${LDAP_SERVICE_SHADOW_ADDRESS}
 EOF
 
-    ldapadd -x -D "${LDAP_ROOTDN}" -w "${LDAP_ROOTPW}" -f ${LDAP_INIT_LDIF}
+    ldapadd -x -D "${LDAP_ROOTDN}" -w "${LDAP_ROOTPW}" -f ${LDAP_INIT_LDIF} >/dev/null
 
     cat >> ${TIP_FILE} <<EOF
 OpenLDAP:
