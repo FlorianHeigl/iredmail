@@ -150,6 +150,10 @@ EOF
         #sed -i -e '/AllowOverride/,/AccessFileName/s#Deny from all#Allow from all#' ${HTTPD_CONF_ROOT}/httpd.conf
     else
         perl -pi -e 's#^(ServerTokens).*#${1} ProductOnly#' ${HTTPD_CONF}
+        if [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+            perl -pi -e 's#^(ServerTokens).*#${1} ProductOnly#' ${HTTPD_CONF_DIR}/security
+        fi
+
         perl -pi -e 's#^(ServerSignature).*#${1} EMail#' ${HTTPD_CONF}
         perl -pi -e 's#^(LogLevel).*#${1} warn#' ${HTTPD_CONF}
     fi

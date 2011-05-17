@@ -1,5 +1,8 @@
 iRedMail-0.7.2:
     * Enable LDAPS on FreeBSD by default. Thanks Markus Wyrsch <W-Chi@>.
+    * Fixed:
+        + Set 'ServerTokens' to 'ProductOnly' in Apache on Debian/Ubuntu.
+          Thanks c33s@forum.
     * Package update:
         + phpLDAPadmin -> 1.2.1.1
         + phpMyAdmin -> 3.4.0
