@@ -47,6 +47,13 @@
 #       # /etc/init.d/cron status
 #
 
+###############################
+# How to restore backup file:
+###############################
+# Please refer to wiki tutorial for detail steps:
+# http://www.iredmail.org/wiki/index.php?title=IRedMail/FAQ/Backup#How_to_restore_from_LDIF_file
+#
+
 ###########################
 # DIRECTORY STRUCTURE
 ###########################
