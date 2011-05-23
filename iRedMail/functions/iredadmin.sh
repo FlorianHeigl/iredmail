@@ -70,7 +70,7 @@ iredadmin_config()
     fi
 
     chown -R ${IREDADMIN_HTTPD_USER}:${IREDADMIN_HTTPD_GROUP} settings.ini
-    chmod 0500 settings.ini
+    chmod 0400 settings.ini
 
     ECHO_DEBUG "Create directory alias for iRedAdmin."
     backup_file ${HTTPD_CONF_DIR}/iredadmin.conf
