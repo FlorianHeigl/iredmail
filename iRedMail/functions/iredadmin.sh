@@ -58,7 +58,7 @@ iredadmin_config()
 
     ECHO_DEBUG "Set correct permission for iRedAdmin: ${IREDADMIN_HTTPD_ROOT}."
     chown -R ${IREDADMIN_HTTPD_USER}:${IREDADMIN_HTTPD_GROUP} ${IREDADMIN_HTTPD_ROOT}
-    chmod -R 0755 ${IREDADMIN_HTTPD_ROOT}
+    chmod -R 0555 ${IREDADMIN_HTTPD_ROOT}
 
     # Copy sample configure file.
     cd ${IREDADMIN_HTTPD_ROOT}/
@@ -70,7 +70,7 @@ iredadmin_config()
     fi
 
     chown -R ${IREDADMIN_HTTPD_USER}:${IREDADMIN_HTTPD_GROUP} settings.ini
-    chmod 0600 settings.ini
+    chmod 0500 settings.ini
 
     ECHO_DEBUG "Create directory alias for iRedAdmin."
     backup_file ${HTTPD_CONF_DIR}/iredadmin.conf
