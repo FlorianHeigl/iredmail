@@ -45,7 +45,10 @@ install_all()
         ENABLED_SERVICES="rsyslog ${ENABLED_SERVICES}"
     elif [ X"${DISTRO}" == X"UBUNTU" ]; then
         # Ubuntu.
-        if [ X"${DISTRO_CODENAME}" == X"karmic" -o X"${DISTRO_CODENAME}" == X"lucid" ]; then
+        if [ X"${DISTRO_CODENAME}" == X"karmic" \
+            -o X"${DISTRO_CODENAME}" == X"lucid" \
+            -o X"${DISTRO_CODENAME}" == X"natty" \
+            ]; then
             # Ubuntu 9.10, 10.04.
             ENABLED_SERVICES="rsyslog ${ENABLED_SERVICES}"
         else
