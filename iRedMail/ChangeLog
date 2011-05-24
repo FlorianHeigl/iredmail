@@ -1,11 +1,12 @@
 iRedMail-0.7.2:
+    * Works on Ubuntu 11.04.
     * Enable LDAPS on FreeBSD by default. Thanks Markus Wyrsch <W-Chi@>.
     * Fixed:
         + Set 'ServerTokens' to 'ProductOnly' in Apache on Debian/Ubuntu.
           Thanks c33s@forum.
     * Package update:
         + phpLDAPadmin -> 1.2.1.1
-        + phpMyAdmin -> 3.4.0
+        + phpMyAdmin -> 3.4.1
 
 iRedMail-0.7.1:
     * Fix incorrect icon path in awstats. Thanks <rannal@> for the feedback.

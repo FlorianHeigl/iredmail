@@ -51,7 +51,11 @@ elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
 
     # Debian 5 (with backports), Ubuntu 10.04 uses dovecot-1.2.x.
     [ X"${DISTRO}" == X"DEBIAN" ] && export DOVECOT_VERSION='1.2'
-    [ X"${DISTRO_CODENAME}" == X"lucid" ] && export DOVECOT_VERSION='1.2'
+
+    # Ubuntu 10.04+
+    if [ X"${DISTRO_CODENAME}" == X"lucid" -o X"${DISTRO_CODENAME}" == X"natty" ]; then
+        export DOVECOT_VERSION='1.2'
+    fi
 
     export DOVECOT_CONF='/etc/dovecot/dovecot.conf'
     export DOVECOT_LDAP_CONF='/etc/dovecot/dovecot-ldap.conf'

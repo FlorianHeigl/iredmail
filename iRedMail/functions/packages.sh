@@ -68,6 +68,11 @@ install_all()
 
         elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
             ALL_PKGS="${ALL_PKGS} apache2 apache2-mpm-prefork apache2.2-common libapache2-mod-php5 libapache2-mod-auth-mysql php5-cli php5-imap php5-gd php5-mcrypt php5-mysql php5-ldap php5-mhash"
+
+            if [ X"${DISTRO_CODENAME}" == X"natty" ]; then
+                ALL_PKGS="${ALL_PKGS} php-net-ldap2"
+            fi
+
             ENABLED_SERVICES="${ENABLED_SERVICES} apache2"
         else
             :
