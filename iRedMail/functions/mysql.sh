@@ -78,9 +78,6 @@ MySQL:
     * Database stored in: /var/lib/mysql
     * RC script: ${MYSQLD_INIT_SCRIPT}
     * Log file: /var/log/mysqld.log
-    * SSL Cert keys (size: ${SSL_KEY_SIZE}):
-        - ${SSL_CERT_FILE}
-        - ${SSL_KEY_FILE}
     * See also:
         - ${MYSQL_INIT_SQL}
 

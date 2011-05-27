@@ -430,4 +430,11 @@ gen_pem_key()
     # Set correct file permission.
     chmod +r ${SSL_CERT_FILE}
     chmod +r ${SSL_KEY_FILE}
+
+    cat >> ${TIP_FILE} <<EOF
+
+SSL cert keys (size: ${SSL_KEY_SIZE}):
+    - ${SSL_CERT_FILE}
+    - ${SSL_KEY_FILE}
+EOF
 }

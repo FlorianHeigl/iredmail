@@ -317,7 +317,8 @@ EOF
 Apache & PHP:
     * Configuration files:
         - ${HTTPD_CONF_ROOT}
-        - ${HTTPD_CONF_DIR}
+        - ${HTTPD_CONF}
+        - ${HTTPD_CONF_DIR}/*
         - ${PHP_INI}
     * Directories:
         - ${HTTPD_SERVERROOT}
