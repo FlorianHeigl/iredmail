@@ -7,6 +7,7 @@ iRedMail-0.7.2:
     * Package update:
         + phpLDAPadmin -> 1.2.1.1
         + phpMyAdmin -> 3.4.1
+        + iRedAPD -> 1.3.6. Fix two issues for MySQL backend.
 
 iRedMail-0.7.1:
     * Fix incorrect icon path in awstats. Thanks <rannal@> for the feedback.
