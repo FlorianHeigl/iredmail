@@ -103,7 +103,7 @@ EOF
 
 amavisd_config_rhel()
 {
-    ECHO_INFO "Configure Amavisd-new."
+    ECHO_INFO "Configure Amavisd-new (interface between MTA and content checkers)."
 
     # Don't check amavisd-milter status.
     perl -pi -e 's/(.*)(status.*prog2.*)/${1}#${2}/' ${DIR_RC_SCRIPTS}/${AMAVISD_RC_SCRIPT_NAME}
