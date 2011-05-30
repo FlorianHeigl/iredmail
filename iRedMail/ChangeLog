@@ -1,6 +1,9 @@
 iRedMail-0.7.2:
     * Works on Ubuntu 11.04.
     * Enable LDAPS on FreeBSD by default. Thanks Markus Wyrsch <W-Chi@>.
+    * Improvements:
+        + Add alias domain support in postfix virtual_mailbox_domains (MySQL
+          backend special).
     * Fixed:
         + Set 'ServerTokens' to 'ProductOnly' in Apache on Debian/Ubuntu.
           Thanks c33s@forum.
