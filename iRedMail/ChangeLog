@@ -8,6 +8,7 @@ iRedMail-0.7.2:
         + Set 'ServerTokens' to 'ProductOnly' in Apache on Debian/Ubuntu.
           Thanks c33s@forum.
     * Package update:
+        + Roundcube webmail -> 0.5.3
         + phpLDAPadmin -> 1.2.1.1
         + phpMyAdmin -> 3.4.1
         + iRedAPD -> 1.3.6. Fix two issues for MySQL backend.
