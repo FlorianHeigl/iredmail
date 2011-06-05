@@ -76,7 +76,7 @@ Note:
     "phpLDAPadmin" "Web-based OpenLDAP management tool" "on" \
     "phpMyAdmin" "Web-based MySQL management tool" "on" \
     "Awstats" "Advanced web and mail log analyzer" "on" \
-    "Fail2ban" "Ban IP that makes too many password failures" "on" \
+    "Fail2ban" "Ban IP with too many password failures" "on" \
     2>${tmp_config_optional_components}
 
 elif [ X"${BACKEND}" == X"MySQL" ]; then
@@ -95,7 +95,7 @@ Note:
     "phpMyAdmin" "Web-based MySQL management tool" "on" \
     "iRedAdmin" "Official web-based iRedMail Admin Panel" "on" \
     "Awstats" "Advanced web and mail log analyzer" "on" \
-    "Fail2ban" "Ban IP that makes too many password failures" "on" \
+    "Fail2ban" "Ban IP with too many password failures" "on" \
     2>${tmp_config_optional_components}
 else
     # No hook for other backend yet.

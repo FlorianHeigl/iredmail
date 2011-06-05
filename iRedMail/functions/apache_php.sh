@@ -223,8 +223,17 @@ EOF
         # Set ServerName.
         perl -pi -e 's/^#(ServerName).*/${1} $ENV{HOSTNAME}/' ${HTTPD_CONF}
 
-        # Disable unique_id_module.
+        # Disable modules:
+        #   - unique_id_module
+        #   - optional_hook_export_module
+        #   - optional_hook_import_module
+        #   - optional_fn_import_module
+        #   - optional_fn_export_module
         perl -pi -e 's/^(LoadModule.*unique_id_module.*)/#${1}/' ${HTTPD_CONF}
+        perl -pi -e 's/^(LoadModule.*optional_hook_export_module.*)/#${1}/' ${HTTPD_CONF}
+        perl -pi -e 's/^(LoadModule.*optional_hook_import_module.*)/#${1}/' ${HTTPD_CONF}
+        perl -pi -e 's/^(LoadModule.*optional_fn_import_module.*)/#${1}/' ${HTTPD_CONF}
+        perl -pi -e 's/^(LoadModule.*optional_fn_export_module.*)/#${1}/' ${HTTPD_CONF}
 
         # Add index.php in DirectoryIndex.
         perl -pi -e 's#(.*DirectoryIndex.*)(index.html)#${1} index.php ${2}#' ${HTTPD_CONF}
@@ -302,9 +311,12 @@ EOF
     ECHO_DEBUG "Disable php extension: suhosin. ${PHP_INI}."
     perl -pi -e 's/^(suhosin.session.encrypt.*=)/${1} Off;/' ${PHP_INI}
 
-    # Set date.timezone. required by PHP-5.3.
-    if [ X"${DISTRO}" == X"FREEBSD" -o X"${DISTRO}" == X"SUSE" ]; then
-        perl -pi -e 's#^;(date.timezone).*#${1} = UTC#' ${PHP_INI}
+    # Set date.timezone. Required by PHP-5.3.
+    grep '^date.timezone' ${PHP_INI} >/dev/null
+    if [ X"$?" == X"0" ]; then
+        perl -pi -e 's#^(date.timezone).*#${1} = Asia/Hong_Kong#' ${PHP_INI}
+    else
+        perl -pi -e 's#^;(date.timezone).*#${1} = Asia/Hong_Kong#' ${PHP_INI}
     fi
 
     # Disable suhosin.session.encrypt on Debian 6. Required by Roundcube webmail.

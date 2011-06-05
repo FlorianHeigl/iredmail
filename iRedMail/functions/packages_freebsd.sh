@@ -28,7 +28,7 @@ install_all()
     DISABLED_SERVICES=''    # Scripts under /usr/local/etc/rc.d/
 
     # Make it don't popup dialog while building ports.
-    export BATCH=yes
+    export BATCH='yes'
 
     cat >> /etc/make.conf <<EOF
 # Without X-Window/GUI.
@@ -45,7 +45,7 @@ WITH_SASL=yes
 WANT_BDB_VER=46
 EOF
 
-    for i in m4 cyrus-sasl2 perl openslp mysql-server openldap24 dovecot \
+    for i in m4 libiconv cyrus-sasl2 perl openslp mysql-server openldap24 dovecot \
         ca_root_nss libssh2 curl libusb pth gnupg p5-IO-Socket-SSL \
         p5-Archive-Tar p5-Net-DNS p5-Mail-SpamAssassin p5-Authen-SASL \
         amavisd-new clamav apr python26 apache22 php5 php5-extensions \
@@ -58,6 +58,12 @@ EOF
 WITHOUT_LIBSIGSEGV=true
 EOF
 
+    # libiconv. DEPENDENCE.
+    cat > /var/db/ports/libiconv/options <<EOF
+WITH_EXTRA_ENCODINGS=true
+WITH_EXTRA_PATCHES=true
+EOF
+
     # Cyrus-SASL2. DEPENDENCE.
     cat > /var/db/ports/cyrus-sasl2/options <<EOF
 WITH_BDB=true
@@ -67,13 +73,13 @@ WITHOUT_SQLITE=true
 WITH_DEV_URANDOM=true
 WITHOUT_ALWAYSTRUE=true
 WITH_KEEP_DB_OPEN=true
-WITH_AUTHDAEMOND=true
-WITH_LOGIN=true
-WITH_PLAIN=true
-WITH_CRAM=true
-WITH_DIGEST=true
-WITH_OTP=true
-WITH_NTLM=true
+WITHOUT_AUTHDAEMOND=true
+WITHOUT_LOGIN=true
+WITHOUT_PLAIN=true
+WITHOUT_CRAM=true
+WITHOUT_DIGEST=true
+WITHOUT_OTP=true
+WITHOUT_NTLM=true
 EOF
 
     # Perl 5.8. REQUIRED.
@@ -159,9 +165,6 @@ EOF
     cat > /var/db/ports/dovecot/options <<EOF
 WITH_KQUEUE=true
 WITH_SSL=true
-WITH_IPV6=true
-WITH_POP3=true
-WITH_LDA=true
 WITH_MANAGESIEVE=true
 WITH_GSSAPI=true
 WITHOUT_VPOPMAIL=true
@@ -271,14 +274,20 @@ EOF
 
     # Amavisd-new. REQUIRED.
     cat > /var/db/ports/amavisd-new/options <<EOF
+WITH_IPV6=true
 WITH_BDB=true
+WITH_SNMP=true
+WITHOUT_SQLITE=true
 WITH_MYSQL=true
+WITHOUT_PGSQL=true
 WITH_LDAP=true
 WITH_SASL=true
+WITHOUT_MILTER=true
 WITH_SPAMASSASSIN=true
 WITH_P0F=true
 WITH_ALTERMIME=true
 WITH_FILE=true
+WITHOUT_RAR=true
 WITH_UNRAR=true
 WITH_ARJ=true
 WITH_UNARJ=true
@@ -294,9 +303,6 @@ WITH_FREEZE=true
 WITH_P7ZIP=true
 WITH_MSWORD=true
 WITH_TNEF=true
-WITHOUT_SQLITE=true
-WITHOUT_PGSQL=true
-WITHOUT_MILTER=true
 EOF
 
     # Disable RAR support on amd64 since it requires 32-bit libraries
@@ -315,12 +321,12 @@ EOF
     ALL_PORTS="${ALL_PORTS} security/amavisd-new"
     ENABLED_SERVICES="${ENABLED_SERVICES} amavisd"
 
-    # Postfix v2.5. REQUIRED.
+    # Postfix. REQUIRED.
     cat > /var/db/ports/postfix/options <<EOF
 WITH_PCRE=true
 WITHOUT_SASL2=true
 WITH_DOVECOT=true
-WITHOUT_SASLKRB=true
+WITHOUT_DOVECOT2=true
 WITHOUT_SASLKRB5=true
 WITHOUT_SASLKMIT=true
 WITH_TLS=true
@@ -332,10 +338,12 @@ WITH_CDB=true
 WITHOUT_NIS=true
 WITHOUT_VDA=true
 WITHOUT_TEST=true
+WITHOUT_SPF=true
+WITHOUT_INST_BASE=true
 EOF
 
     ALL_PKGS="${ALL_PKGS} pcre postfix"
-    ALL_PORTS="${ALL_PORTS} devel/pcre mail/postfix26"
+    ALL_PORTS="${ALL_PORTS} devel/pcre mail/postfix27"
     ENABLED_SERVICES="${ENABLED_SERVICES} postfix"
     DISABLED_SERVICES="${DISABLED_SERVICES} sendmail sendmail_submit sendmail_outbound sendmail_msq_queue"
 
@@ -543,7 +551,7 @@ WITH_RECODE=true
 WITH_SESSION=true
 WITHOUT_SHMOP=true
 WITH_SIMPLEXML=true
-WITHOUT_SNMP=true
+WITH_SNMP=true
 WITHOUT_SOAP=true
 WITH_SOCKETS=true
 WITH_SPL=true
@@ -673,7 +681,8 @@ EOF
                 cd /usr/ports/${i} && \
                     make clean && \
                     ECHO_INFO "Installing port: ${i} ..." && \
-                    make install clean
+                    make BATCH=yes install clean
+
                     if [ X"$?" == X"0" ]; then
                         echo "export status_install_port_${portname}='DONE'" >> ${STATUS_FILE}
                     else
