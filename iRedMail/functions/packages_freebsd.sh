@@ -645,11 +645,11 @@ EOF
     fi
 
     # Fail2ban.
-    if [ X"${USE_FAIL2BAN}" == X"YES" ]; then
-        # python-ldap.
-        ALL_PORTS="${ALL_PORTS} security/py-fail2ban"
-        ENABLED_SERVICES="${ENABLED_SERVICES} fail2ban"
-    fi
+    #if [ X"${USE_FAIL2BAN}" == X"YES" ]; then
+    #    # python-ldap.
+    #    ALL_PORTS="${ALL_PORTS} security/py-fail2ban"
+    #    ENABLED_SERVICES="${ENABLED_SERVICES} fail2ban"
+    #fi
 
     # Fetch all source tarballs.
     ECHO_INFO "==== Fetch all source tarballs of required components (make fetch-recursive) ===="
