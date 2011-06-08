@@ -96,7 +96,7 @@ EOF
     ECHO_DEBUG "Create filter: ${FAIL2BAN_FILTER_DIR}/${FAIL2BAN_FILTER_POSTFIX}.conf."
     cat > ${FAIL2BAN_FILTER_DIR}/${FAIL2BAN_FILTER_POSTFIX}.conf <<EOF
 [Definition]
-failregex = \[<HOST>\]: SASL PLAIN authentication failed
+failregex = \[<HOST>\]: SASL (PLAIN|LOGIN) authentication failed
             reject: RCPT from (.*)\[<HOST>\]: 550 5.1.1
             reject: RCPT from (.*)\[<HOST>\]: 450 4.7.1
             reject: RCPT from (.*)\[<HOST>\]: 554 5.7.1
