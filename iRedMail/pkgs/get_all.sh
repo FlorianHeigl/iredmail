@@ -239,7 +239,7 @@ create_repo_rhel()
     cat > ${LOCAL_REPO_FILE} <<EOF
 [${LOCAL_REPO_NAME}]
 name=${LOCAL_REPO_NAME}
-baseurl=${YUM_UPDATE_REPO}
+baseurl=http://iredmail.org/yum/rpms/${DISTRO_VERSION}/
 enabled=1
 gpgcheck=0
 
