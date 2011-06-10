@@ -42,7 +42,10 @@ count = 1
 for user in allUsers:
     (dn, entry) = user
     mail = entry['mail'][0]
-    enabledService = entry['enabledService']
+    if entry.has_key('enabledService'):
+        enabledService = entry['enabledService']
+    else:
+        continue
     objectClasses = entry['objectClass']
 
     # Get missing values.
