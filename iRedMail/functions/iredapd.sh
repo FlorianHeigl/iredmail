@@ -28,12 +28,12 @@ iredapd_config()
 
     # Create a low privilege user as daemon user.
     if [ X"${KERNEL_NAME}" == X"FreeBSD" ]; then
-        pw useradd -m -d ${IREDAPD_HOME_DIR} -s /sbin/nologin -c "iRedAPD daemon user" -n ${IREDAPD_DAEMON_USER}
+        pw useradd -m -d ${IREDAPD_HOME_DIR} -s ${SHELL_NOLOGIN} -c "iRedAPD daemon user" -n ${IREDAPD_DAEMON_USER}
     elif [ X"${DISTRO}" == X"SUSE" ]; then
         groupadd ${IREDAPD_DAEMON_GROUP}
-        useradd -m -d ${IREDAPD_HOME_DIR} -s /sbin/nologin -g ${IREDAPD_DAEMON_GROUP} ${IREDAPD_DAEMON_USER} 2>/dev/null
+        useradd -m -d ${IREDAPD_HOME_DIR} -s ${SHELL_NOLOGIN} -g ${IREDAPD_DAEMON_GROUP} ${IREDAPD_DAEMON_USER} 2>/dev/null
     else
-        useradd -m -d ${IREDAPD_HOME_DIR} -s /sbin/nologin -c "iRedAPD daemon user" ${IREDAPD_DAEMON_USER}
+        useradd -m -d ${IREDAPD_HOME_DIR} -s ${SHELL_NOLOGIN} -c "iRedAPD daemon user" ${IREDAPD_DAEMON_USER}
     fi
 
     # Extract source tarball.

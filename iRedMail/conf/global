@@ -22,7 +22,7 @@
 
 export PROG_NAME='iRedMail'
 export PROG_NAME_LOWERCASE='iredmail'
-export PROG_VERSION='0.7.2'
+export PROG_VERSION='0.7.3'
 
 # -----------------
 # ---- Generic ----
@@ -133,6 +133,9 @@ export PKG_DIALOG="dialog"
 export BIN_BZIP2='bzip2'
 export PKG_BZIP2='bzip2'
 
+# Shell: /sbin/nologin.
+export SHELL_NOLOGIN='/sbin/nologin'
+
 # Check hardware architecture.
 arch="$(uname -m)"
 case $arch in
@@ -213,6 +216,11 @@ if [ X"${KERNEL_NAME}" == X"Linux" ]; then
         if [ X"$?" == X"0" ]; then
             export DISTRO_VERSION='6'
             export DISTRO_CODENAME='squeeze'
+        fi
+
+        # Override settings.
+        if [ X"${DISTRO_CODENAME}" == X"squeeze" ]; then
+            export SHELL_NOLOGIN='/usr/sbin/nologin'
         fi
     else
         # Not support yet.

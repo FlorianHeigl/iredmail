@@ -11,13 +11,13 @@ policyd_user()
     ECHO_INFO "Configure Policyd (postfix policy daemon)."
     ECHO_DEBUG "Add user and group for policyd: ${POLICYD_USER}:${POLICYD_GROUP}."
     if [ X"${DISTRO}" == X"FREEBSD" ]; then
-        pw useradd -n ${POLICYD_USER} -s /sbin/nologin -d ${POLICYD_USER_HOME} -m
+        pw useradd -n ${POLICYD_USER} -s ${SHELL_NOLOGIN} -d ${POLICYD_USER_HOME} -m
     elif [ X"${DISTRO}" == X"SUSE" ]; then
         # Not need to add user/group.
         :
     else
         groupadd ${POLICYD_GROUP}
-        useradd -m -d ${POLICYD_USER_HOME} -s /sbin/nologin -g ${POLICYD_GROUP} ${POLICYD_USER}
+        useradd -m -d ${POLICYD_USER_HOME} -s ${SHELL_NOLOGIN} -g ${POLICYD_GROUP} ${POLICYD_USER}
     fi
 
     echo 'export status_policyd_user="DONE"' >> ${STATUS_FILE}
