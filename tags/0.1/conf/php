@@ -1,4 +1,0 @@
-# Author: Zhang Huangbin (michaelbibby <at> gmail.com)
-# Variables for PHP and related.
-
-PHP_INI='/etc/php.ini'

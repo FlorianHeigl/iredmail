@@ -1,8 +1,0 @@
-#!/bin/sh
-
-# Author: Zhang Huangbin (michaelbibby <at> gmail.com)
-
-export CLAMD_CONF='/etc/clamd.conf'
-export FRESHCLAM_CONF='/etc/freshclam.conf'
-export FRESHCLAM_PID_FILE='/var/run/clamav/freshclam.pid'
-export FRESHCLAM_INIT_FILE_SAMPLE="${SAMPLE_DIR}/freshclam.init"

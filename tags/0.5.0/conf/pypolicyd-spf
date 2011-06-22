@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-# Author: Zhang Huangbin (michaelbibby <at> gmail.com)
-
-# ------------------------------------------------
-# pypolicyd-spf.
-# ------------------------------------------------
-export PYPOLICYD_SPF_VERSION='0.6.1'
-export PYPOLICYD_SPF_TARBALL="pypolicyd-spf-${PYPOLICYD_SPF_VERSION}.tar.gz"

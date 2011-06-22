@@ -1,8 +1,0 @@
---- skins/default/includes/taskbar.html	2009-03-08 17:20:24.000000000 +0800
-+++ skins/default/includes/taskbar.html	2009-03-08 17:19:51.000000000 +0800
-@@ -1,4 +1,5 @@
- <div id="taskbar">
-+<span style="padding-right: 3px;"><roundcube:object name="username" /></span>
- <roundcube:button command="mail" label="mail" class="button-mail" />
- <roundcube:button command="addressbook" label="addressbook" class="button-addressbook" />
- <roundcube:button command="settings" label="settings" class="button-settings" />
