@@ -1,3 +1,7 @@
+iRedMail-0.7.3:
+    * Add smtp-amavis_destination_recipient_limit=1 in Postfix for concurrency
+      per-recipient limit. Thanks beez <jason@indo.net.id>.
+
 iRedMail-0.7.2:
     * Works on Ubuntu 11.04.
     * Enable LDAPS on FreeBSD by default. Thanks Markus Wyrsch <W-Chi@>.

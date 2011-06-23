@@ -582,6 +582,8 @@ ${AMAVISD_SERVER}:10025 inet n  -   -   -   -  smtpd
 EOF
 
     postconf -e content_filter="smtp-amavis:[${SMTP_SERVER}]:10024"
+    # Concurrency per recipient limit.
+    postconf -e smtp-amavis_destination_recipient_limit='1'
 
     # ---- Make amavisd log to standalone file: ${AMAVISD_LOGROTATE_FILE} ----
     if [ X"${AMAVISD_SEPERATE_LOG}" == X"YES" ]; then
