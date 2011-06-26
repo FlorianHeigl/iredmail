@@ -64,19 +64,31 @@ CREATE TABLE IF NOT EXISTS alias (
 # Table structure for table domain
 #
 CREATE TABLE IF NOT EXISTS domain (
+    -- mail domain name. e.g. iredmail.org.
     domain VARCHAR(255) CHARACTER SET ascii NOT NULL DEFAULT '',
     description TEXT NOT NULL DEFAULT '',
+    -- Disclaimer text. Used by Amavisd + AlterMIME.
     disclaimer TEXT NOT NULL DEFAULT '',
+    -- Max alias accounts in this domain. e.g. 10.
     aliases INT(10) NOT NULL DEFAULT '0',
+    -- Max mail accounts in this domain. e.g. 100.
     mailboxes INT(10) NOT NULL DEFAULT '0',
+    -- Max mailbox quota in this domain. e.g. 1073741824 (1GB).
     maxquota BIGINT(20) NOT NULL DEFAULT '0',
     quota BIGINT(20) NOT NULL DEFAULT '0',
+    -- Per-domain transport. e.g. dovecot, smtp:[192.168.1.1]:25
     transport VARCHAR(255) NOT NULL DEFAULT 'dovecot',
     backupmx TINYINT(1) NOT NULL DEFAULT '0',
+    -- Default quota size for newly created mail account.
     defaultuserquota BIGINT(20) NOT NULL DEFAULT '1024',
+    -- List of mail alias addresses, Newly created user will be
+    -- assigned to them.
     defaultuseraliases TEXT NOT NULL DEFAULT '',
+    -- Default password scheme. e.g. md5, plain.
     defaultpasswordscheme VARCHAR(10) NOT NULL DEFAULT '',
+    -- Minimal password length, per-domain setting.
     minpasswordlength INT(10) NOT NULL DEFAULT '0',
+    -- Max password length, per-domain setting.
     maxpasswordlength INT(10) NOT NULL DEFAULT '0',
     created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
