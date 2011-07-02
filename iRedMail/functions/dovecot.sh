@@ -279,36 +279,6 @@ plugin {
     sieve = ${SIEVE_DIR}/%Ld/%Ln/${SIEVE_RULE_FILENAME}
 }
 EOF
-    elif [ X"${MAILBOX_FORMAT}" == X"mbox" ]; then
-        cat >> ${DOVECOT_CONF} <<EOF
-# Mailbox format and location.
-# Such as: /var/mail/vmail01/iredmail.org/www
-#          ----------- ====================
-#          homeDirectory  mailMessageStore
-mail_location = mbox:/%Lh/:INBOX=/%Lh/inbox:INDEX=/%Lh/indexes
-
-# mbox performance optimizations.
-mbox_lazy_writes=yes
-mbox_min_index_size=10240
-mbox_very_dirty_syncs = yes
-mbox_read_locks = fcntl
-mbox_write_locks = dotlock fcntl
-
-plugin {
-    quota = dirsize
-
-    # Quota rules.
-    quota_rule = *:storage=0
-    #quota_rule2 = Trash:storage=100M
-    #quota_rule3 = Junk:ignore
-}
-
-# Per-user sieve mail filter.
-plugin {
-    # For mbox format.
-    sieve = ${SIEVE_DIR}/%Ld/.%Ln${SIEVE_RULE_FILENAME}
-}
-EOF
     else
         :
     fi
@@ -382,11 +352,9 @@ EOF
         [ X"${MAILBOX_FORMAT}" == X"Maildir" ] && cat >> ${DOVECOT_LDAP_CONF} <<EOF
 user_attrs      = ${LDAP_ATTR_USER_HOME_DIRECTORY}=home,mailMessageStore=mail=maildir:${STORAGE_BASE_DIR}/%\$/Maildir/,${LDAP_ATTR_USER_QUOTA}=quota_rule=*:bytes=%\$
 EOF
-        [ X"${MAILBOX_FORMAT}" == X"mbox" ] && cat >> ${DOVECOT_LDAP_CONF} <<EOF
-#    sieve = /%Lh/%Ld/.%Ln${SIEVE_RULE_FILENAME}
-user_attrs      = ${LDAP_ATTR_USER_STORAGE_BASE_DIRECTORY}=home,mailMessageStore=mail=dirsize:~/%\$,${LDAP_ATTR_USER_QUOTA}=quota_rule=*:bytes=%\$
-EOF
+
     else
+        # SQL backend.
         cat >> ${DOVECOT_CONF} <<EOF
     passdb sql {
         args = ${DOVECOT_MYSQL_CONF}
@@ -415,14 +383,6 @@ AND mailbox.domain=domain.domain \
 AND domain.backupmx=0 \
 AND domain.active=1 \
 AND mailbox.active=1
-EOF
-        [ X"${MAILBOX_FORMAT}" == X"mbox" ] && cat >> ${DOVECOT_MYSQL_CONF} <<EOF
-user_query = SELECT CONCAT('mbox:', storagebasedirectory, '/', storagenode, '/', maildir, '/Maildir/') AS home, \
-CONCAT('*:bytes=', quota*1048576) AS quota_rule, \
-maildir FROM mailbox \
-WHERE username='%u' \
-AND active='1' \
-AND enable%Ls='1'
 EOF
 
         # Set file permission.

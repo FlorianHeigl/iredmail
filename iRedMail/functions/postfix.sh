@@ -134,10 +134,6 @@ EOF
     # We use 'maildir' format, not 'mbox'.
     if [ X"${MAILBOX_FORMAT}" == X"Maildir" ]; then
         postconf -e home_mailbox="Maildir/"
-    elif [ X"${MAILBOX_FORMAT}" == X"mbox" ]; then
-        postconf -e home_mailbox="Mailbox"
-        postconf -e mailbox_delivery_lock='fcntl, dotlock'
-        postconf -e virtual_mailbox_lock='fcntl'
     else
         :
     fi
