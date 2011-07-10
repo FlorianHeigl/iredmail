@@ -232,7 +232,11 @@ EOF
     # Dovecot.
     if [ X"${ENABLE_DOVECOT}" == X"YES" ]; then
         if [ X"${DISTRO}" == X"RHEL" ]; then
-            ALL_PKGS="${ALL_PKGS} dovecot.${ARCH} dovecot-sieve.${ARCH} dovecot-managesieve.${ARCH}"
+            if [ X"${DISTRO_VERSION}" == X"5" ]; then
+                ALL_PKGS="${ALL_PKGS} dovecot.${ARCH} dovecot-sieve.${ARCH} dovecot-managesieve.${ARCH}"
+            elif [ X"${DISTRO_VERSION}" == X"6" ]; then
+                ALL_PKGS="${ALL_PKGS} dovecot.${ARCH} dovecot-pigeonhole.${ARCH}"
+            fi
 
             # We will use Dovecot SASL auth mechanism, so 'saslauthd'
             # is not necessary, should be disabled.

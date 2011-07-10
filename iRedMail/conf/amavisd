@@ -48,11 +48,19 @@ fi
 
 if [ X"${DISTRO}" == X"RHEL" ]; then
     export AMAVISD_BIN='/usr/sbin/amavisd'
-    export AMAVISD_CONF='/etc/amavisd.conf'
-    export AMAVISD_DKIM_CONF='/etc/amavisd.conf'
     export AMAVISD_RC_SCRIPT_NAME='amavisd'
     export AMAVISD_LDAP_SCHEMA_NAME='amavisd-new.schema'
-    export AMAVISD_VIRUSMAILS_DIR='/var/virusmails'
+
+    if [ X"${DISTRO_VERSION}" == X"5" ]; then
+        export AMAVISD_CONF='/etc/amavisd.conf'
+        export AMAVISD_VIRUSMAILS_DIR='/var/virusmails'
+    elif [ X"${DISTRO_VERSION}" == X"6" ]; then
+        export AMAVISD_CONF='/etc/amavisd/amavisd.conf'
+    fi
+
+    export AMAVISD_DKIM_CONF="${AMAVISD_CONF}"
+    export AMAVISD_MYHOME='/var/spool/amavisd'
+    export AMAVISD_QUARANTINEDIR="${AMAVISD_MYHOME}/quarantine"
 
 elif [ X"${DISTRO}" == X"SUSE" ]; then
     # Override global setting: user/group.

@@ -70,7 +70,7 @@ service = sieve
 mux = ${DOVECOT_SOCKET_MUX}
 
 # Path to Dovecot's master socket (if using Dovecot userdb lookup)
-master = ${DOVECOT_SOCKET_MASTER}
+master = ${DOVECOT_AUTH_SOCKET_PATH}
 
 # Path to sievec
 sievec = ${DOVECOT_SIEVEC}

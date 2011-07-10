@@ -50,11 +50,11 @@
 # mailbox of LDAP user will be:
 #    ${STORAGE_BASE_DIRECTORY}/${DOMAIN_NAME}/${USERNAME}/
 # Such as:
-#    /var/vmail/vmail01/domain.ltd/bibby/
+#    /var/vmail/vmail1/iredmail.org/zhb/
 #   -------------------|===========|-----|
 #   STORAGE_BASE_DIRECTORY|DOMAIN_NAME|USERNAME
 #
-STORAGE_BASE_DIRECTORY="/var/vmail/vmail01"
+STORAGE_BASE_DIRECTORY="/var/vmail/vmail1"
 
 # All mails will be stored under user vmail's home directory.
 # Files and directories will be ownned as 'vmail:vmail'.

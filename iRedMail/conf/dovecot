@@ -24,13 +24,36 @@
 # For Dovecot and dovecot-sieve. 
 # ----------------------------------------
 
+# Dovecot user & group.
+export DOVECOT_USER='dovecot'
+export DOVECOT_GROUP='dovecot'
+
+# Dovecot running directory, required by dovecot-2.x.
+export DOVECOT_BASE_DIR='/var/run/dovecot'
+
+# Enabled plugins for protocol 'lda' and 'imap'.
+export DOVECOT_LDA_PLUGINS='quota sieve autocreate'
+export DOVECOT_IMAP_PLUGINS='quota imap_quota autocreate'
+
+# Default quota type: maildir, dict:user::proxy::quotadict (quotadict).
+export DOVECOT_QUOTA_TYPE='dict:user::proxy::quotadict'
+
 if [ X"${DISTRO}" == X"RHEL" ]; then
-    export DOVECOT_VERSION='1.2'
-    export DOVECOT_CONF='/etc/dovecot.conf'
-    export DOVECOT_LDAP_CONF='/etc/dovecot-ldap.conf'
-    export DOVECOT_MYSQL_CONF='/etc/dovecot-mysql.conf'
-    export DOVECOT_REALTIME_QUOTA_CONF='/etc/dovecot-used-quota.conf'
-    export DOVECOT_SHARE_FOLDER_CONF='/etc/dovecot-share-folder.conf'
+    export DOVECOT_VERSION='2'
+    export DOVECOT_CONF='/etc/dovecot/dovecot.conf'
+    export DOVECOT_LDAP_CONF='/etc/dovecot/dovecot-ldap.conf'
+    export DOVECOT_MYSQL_CONF='/etc/dovecot/dovecot-mysql.conf'
+    export DOVECOT_REALTIME_QUOTA_CONF='/etc/dovecot/used-quota.conf'
+    export DOVECOT_SHARE_FOLDER_CONF='/etc/dovecot/share-folder.conf'
+
+    if [ X"${DISTRO_VERSION}" == X"5" ]; then
+        export DOVECOT_VERSION='1.2'
+        export DOVECOT_CONF='/etc/dovecot.conf'
+        export DOVECOT_LDAP_CONF='/etc/dovecot-ldap.conf'
+        export DOVECOT_MYSQL_CONF='/etc/dovecot-mysql.conf'
+        export DOVECOT_REALTIME_QUOTA_CONF='/etc/dovecot-used-quota.conf'
+        export DOVECOT_SHARE_FOLDER_CONF='/etc/dovecot-share-folder.conf'
+    fi
     export DOVECOT_DELIVER='/usr/libexec/dovecot/deliver'
 elif [ X"${DISTRO}" == X"SUSE" ]; then
     if [ X"${DISTRO_VERSION}" == X"11.1" ]; then
@@ -73,20 +96,11 @@ elif [ X"${DISTRO}" == X"FREEBSD" ]; then
     export DOVECOT_DELIVER='/usr/local/libexec/dovecot/deliver'
 fi
 
-# Name of LDA sieve plugin.
+# Override enabled plugins for dovecot-1.1.
 if [ X"${DOVECOT_VERSION}" == X"1.1" ]; then
     export DOVECOT_LDA_PLUGINS='cmusieve quota'
     export DOVECOT_IMAP_PLUGINS='quota imap_quota'
-elif [ X"${DOVECOT_VERSION}" == X"1.2" ]; then
-    # Append 'acl' to enable mailbox sharing.
-    export DOVECOT_LDA_PLUGINS='quota sieve autocreate'
-    # Append 'acl imap_acl' to enable mailbox sharing.
-    export DOVECOT_IMAP_PLUGINS='quota imap_quota autocreate'
 fi
-
-# Dovecot user & group.
-export DOVECOT_USER='dovecot'
-export DOVECOT_GROUP='dovecot'
 
 # Log & logrotate files.
 export DOVECOT_LOG_FILE='/var/log/dovecot.log'
@@ -96,7 +110,7 @@ export SIEVE_LOGROTATE_FILE="${LOGROTATE_DIR}/sieve"
 
 # Dovecot auth socket.
 export DOVECOT_SOCKET_MUX='/var/spool/postfix/dovecot-auth'
-export DOVECOT_SOCKET_MASTER='/var/run/dovecot/auth-master'
+export DOVECOT_AUTH_SOCKET_PATH='/var/run/dovecot/auth-master'
 
 export DOVECOT_BIN='/usr/sbin/dovecot'
 export DOVECOT_SIEVEC='/usr/libexec/dovecot/sievec'
@@ -110,6 +124,6 @@ export GLOBAL_SIEVE_FILE="${SIEVE_DIR}/${SIEVE_RULE_FILENAME}"
 export DOVECOT_EXPIRE_DICT_BDB='/var/lib/dovecot/expire/expire.db'
 
 # Dovecot quota warning.
-export DOVECOT_QUOTA_WARNING_BIN='/usr/local/bin/dovecot-quota-warning.sh'
+export DOVECOT_QUOTA_WARNING_SCRIPT='/usr/local/bin/dovecot-quota-warning.sh'
 export DOVECOT_REALTIME_QUOTA_SQLTYPE='mysql'
 export DOVECOT_SHARE_FOLDER_SQLTYPE='mysql'

@@ -242,14 +242,18 @@ name=${LOCAL_REPO_NAME}
 baseurl=http://iredmail.org/yum/rpms/${DISTRO_VERSION}/
 enabled=1
 gpgcheck=0
+EOF
 
-# Dovecot-1.2.x.
+    # Dovecot-1.2 for RHEL 5.
+    if [ X"${DISTRO_VERSION}" == X"5" ]; then
+        cat >> ${LOCAL_REPO_FILE} <<EOF
 [iRedMail-Dovecot-12]
 name=iRedMail-Dovecot-12
 baseurl=http://iredmail.org/yum/rpms/dovecot/rhel${DISTRO_VERSION}/
 enabled=1
 gpgcheck=0
 EOF
+    fi
 
     echo 'export status_create_yum_repo="DONE"' >> ${STATUS_FILE}
 }

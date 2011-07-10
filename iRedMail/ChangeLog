@@ -2,6 +2,8 @@ iRedMail-0.7.3:
     * Mbox format mailbox is not supported anymore.
     * Add smtp-amavis_destination_recipient_limit=1 in Postfix for concurrency
       per-recipient limit. Thanks beez <jason@indo.net.id>.
+    * Package update:
+        + phpMyAdmin -> 3.4.3.1
 
 iRedMail-0.7.2:
     * Works on Ubuntu 11.04.
