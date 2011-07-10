@@ -44,7 +44,11 @@ export OPENLDAP_DATA_DIR='/var/lib/ldap'    # Do *NOT* end with '/'.
 # Configure.
 if [ X"${DISTRO}" == X"RHEL" ]; then
     # OpenLDAP version.
-    export OPENLDAP_VERSION='2.3'
+    if [ X"${DISTRO_VERSION}" == X"5" ]; then
+        export OPENLDAP_VERSION='2.3'
+    else
+        export OPENLDAP_VERSION='2.4'
+    fi
 
     # LDAP daemon user & group.
     export LDAP_USER='ldap'

@@ -37,13 +37,6 @@ export MAILDIR_STYLE='hashed'
 # Current storage node.
 export STORAGE_NODE='vmail1'
 
-# Use exist Apache, MySQL, PHP: YES, NO.
-# Note: You may need to change apache/php related config file path.
-# Such as:
-#   - MySQL server address and root user acount (conf/mysql).
-#   - Path of apache/php config file path (conf/httpd).
-export USE_EXIST_AMP='NO'
-
 # Download packages from official yum repository or not, used in 'pkgs/get_all.sh'.
 export DOWNLOAD_PKGS='YES'
 
@@ -448,7 +441,7 @@ export TLS_ADMIN="root@${HOSTNAME}"
 
 # Default SSL key size in bits
 export SSL_KEY_SIZE='2048'
-default_ssl_key_size="$(grep '^default_bits' ${OPENSSL_CONF} 2>/dev/null | awk -F'=' '{print $2}')"
+default_ssl_key_size="$(grep '^default_bits' ${OPENSSL_CONF} 2>/dev/null | awk -F'=' '{print $2}' | awk '{print $1}')"
 if [ -z ${default_ssl_key_size} ]; then
     :
 elif [ ${default_ssl_key_size} -ge ${SSL_KEY_SIZE} ]; then

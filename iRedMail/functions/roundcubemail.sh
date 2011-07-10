@@ -356,7 +356,7 @@ rcm_plugin_managesieve()
     perl -pi -e 's#(.*managesieve_usetls.*=).*#${1} false;#' config.inc.php
     perl -pi -e 's#(.*managesieve_default.*=).*#${1} "$ENV{GLOBAL_SIEVE_FILE}";#' config.inc.php
 
-    echo 'export status_rcm_config_managesieve="DONE"' >> ${STATUS_FILE}
+    echo 'export status_rcm_plugin_managesieve="DONE"' >> ${STATUS_FILE}
 }
 
 rcm_plugin_password()
@@ -399,5 +399,5 @@ rcm_plugin_password()
         :
     fi
 
-    echo 'export status_rcm_config_password="DONE"' >> ${STATUS_FILE}
+    echo 'export status_rcm_plugin_password="DONE"' >> ${STATUS_FILE}
 }

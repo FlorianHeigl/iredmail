@@ -205,7 +205,6 @@ FLUSH PRIVILEGES;
 EOF
 
         fi
-    fi
     # ---- real time dict quota ----
 
     # ---- IMAP shared folder ----
