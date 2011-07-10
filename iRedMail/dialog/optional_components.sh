@@ -37,9 +37,18 @@ if [ X"${USE_POP3}" == X"YES" -o X"${USE_POP3S}" == X"YES" \
     # Which protocol will be enabled by Dovecot.
     DOVECOT_PROTOCOLS=''
     [ X"${USE_POP3}" == X"YES" ] && DOVECOT_PROTOCOLS="${DOVECOT_PROTOCOLS} pop3"
-    [ X"${USE_POP3S}" == X"YES" ] && DOVECOT_PROTOCOLS="${DOVECOT_PROTOCOLS} pop3s" && export ENABLE_DOVECOT_SSL="YES"
     [ X"${USE_IMAP}" == X"YES" ] && DOVECOT_PROTOCOLS="${DOVECOT_PROTOCOLS} imap"
-    [ X"${USE_IMAPS}" == X"YES" ] && DOVECOT_PROTOCOLS="${DOVECOT_PROTOCOLS} imaps" && export ENABLE_DOVECOT_SSL="YES"
+
+    if [ X"${DOVECOT_VERSION}" == X"1.1" -o X"${DOVECOT_VERSION}" == X"1.2" ]; then
+        [ X"${USE_POP3S}" == X"YES" ] && \
+            DOVECOT_PROTOCOLS="${DOVECOT_PROTOCOLS} pop3s" && \
+            export ENABLE_DOVECOT_SSL="YES"
+
+        [ X"${USE_IMAPS}" == X"YES" ] && \
+            DOVECOT_PROTOCOLS="${DOVECOT_PROTOCOLS} imaps" && \
+            export ENABLE_DOVECOT_SSL="YES"
+    fi
+
     echo "export DOVECOT_PROTOCOLS='${DOVECOT_PROTOCOLS}'" >> ${CONFIG_FILE}
 
     if [ X"${ENABLE_DOVECOT_SSL}" == X"YES" ]; then

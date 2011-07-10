@@ -37,7 +37,7 @@ dovecot2_config()
 ${CONF_MSG}
 EOF
 
-        cat ${SAMPLE_DIR}/dovecot2.conf >> ${DOVECOT_CONF}
+        cat ${SAMPLE_DIR}/conf/dovecot2.conf >> ${DOVECOT_CONF}
 
         # Base directory.
         perl -pi -e 's#PH_BASE_DIR#$ENV{DOVECOT_BASE_DIR}#' ${DOVECOT_CONF}
@@ -57,6 +57,7 @@ EOF
         # Authentication related settings.
         # Append this domain name if client gives empty realm.
         perl -pi -e 's#PH_AUTH_DEFAULT_REALM#$ENV{FIRST_DOMAIN}#' ${DOVECOT_CONF}
+        perl -pi -e 's#PH_AUTH_MECHANISMS#PLAIN LOGIN#' ${DOVECOT_CONF}
 
         # service auth {}
         perl -pi -e 's#PH_DOVECOT_AUTH_USER#$ENV{POSTFIX_DAEMON_USER}#' ${DOVECOT_CONF}
@@ -74,9 +75,9 @@ EOF
         else
             # MySQL.
             perl -pi -e 's#PH_USERDB_ARGS#$ENV{DOVECOT_MYSQL_CONF}#' ${DOVECOT_CONF}
-            perl -pi -e 's#PH_USERDB_DRIVER#mysql#' ${DOVECOT_CONF}
+            perl -pi -e 's#PH_USERDB_DRIVER#sql#' ${DOVECOT_CONF}
             perl -pi -e 's#PH_PASSDB_ARGS#$ENV{DOVECOT_MYSQL_CONF}#' ${DOVECOT_CONF}
-            perl -pi -e 's#PH_PASSDB_DRIVER#mysql#' ${DOVECOT_CONF}
+            perl -pi -e 's#PH_PASSDB_DRIVER#sql#' ${DOVECOT_CONF}
         fi
 
         perl -pi -e 's#PH_AUTH_SOCKET_PATH#$ENV{DOVECOT_AUTH_SOCKET_PATH}#' ${DOVECOT_CONF}
@@ -89,11 +90,12 @@ EOF
         # Sieve.
         perl -pi -e 's#PH_SIEVE_DIR#$ENV{SIEVE_DIR}#' ${DOVECOT_CONF}
         perl -pi -e 's#PH_SIEVE_RULE_FILENAME#$ENV{SIEVE_RULE_FILENAME}#' ${DOVECOT_CONF}
+        perl -pi -e 's#PH_GLOBAL_SIEVE_FILE#$ENV{GLOBAL_SIEVE_FILE}#' ${DOVECOT_CONF}
 
         # SSL.
-        perl -pi -e 's#PH_SSL#yes#' ${DOVECOT_CONF}
-        perl -pi -e 's#PH_SSL_CERT#$ENV{SSL_CERT_FILE}#' ${DOVECOT_CONF}
-        perl -pi -e 's#PH_SSL_KEY#$ENV{SSL_KEY_FILE}#' ${DOVECOT_CONF}
+        perl -pi -e 's#PH_ENABLE_SSL#yes#' ${DOVECOT_CONF}
+        perl -pi -e 's#PH_SSL_CERT#<$ENV{SSL_CERT_FILE}#' ${DOVECOT_CONF}
+        perl -pi -e 's#PH_SSL_KEY#<$ENV{SSL_KEY_FILE}#' ${DOVECOT_CONF}
 
         #mail_process_size = 1024
         #disable_plaintext_auth = no

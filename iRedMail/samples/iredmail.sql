@@ -152,6 +152,7 @@ CREATE TABLE IF NOT EXISTS mailbox (
     enableimap TINYINT(1) NOT NULL DEFAULT '1',
     enableimapsecured TINYINT(1) NOT NULL DEFAULT '1',
     enabledeliver TINYINT(1) NOT NULL DEFAULT '1',
+    enablelda TINYINT(1) NOT NULL DEFAULT '1',
     enablemanagesieve TINYINT(1) NOT NULL DEFAULT '1',
     enablemanagesievesecured TINYINT(1) NOT NULL DEFAULT '1',
     enablesieve TINYINT(1) NOT NULL DEFAULT '1',

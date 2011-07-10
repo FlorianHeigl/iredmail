@@ -124,9 +124,6 @@ fi
 # Managesieve.
 . ${FUNCTIONS_DIR}/managesieve.sh
 
-# Procmail.
-. ${FUNCTIONS_DIR}/procmail.sh
-
 # ClamAV.
 . ${FUNCTIONS_DIR}/clamav.sh
 
@@ -164,68 +161,41 @@ check_status_before_run install_all || (ECHO_INFO "Package installation error, p
 # Create SSL/TLS cert file.
 check_status_before_run gen_pem_key
 
-# ------------------------------------------------
 # User/Group: vmail
-# ------------------------------------------------
 check_status_before_run adduser_vmail
 
-# ------------------------------------------------
 # Apache & PHP.
-# ------------------------------------------------
 check_status_before_run apache_php_config
 
-# ------------------------------------------------
 # Install & Config Backend: OpenLDAP or MySQL.
-# ------------------------------------------------
 check_status_before_run backend_install
 
-# ------------------------------------------------
 # Postfix.
-# ------------------------------------------------
 check_status_before_run postfix_config_basic && \
 check_status_before_run postfix_config_virtual_host && \
 check_status_before_run postfix_config_sasl && \
 check_status_before_run postfix_config_tls
 
-# ------------------------------------------------
 # Policy service for Postfix: Policyd.
-# ------------------------------------------------
 check_status_before_run policy_service_config
 
-# ------------------------------------------------
 # Dovecot.
-# ------------------------------------------------
 check_status_before_run enable_dovecot
 
-# ------------------------------------------------
-# Procmail.
-# ------------------------------------------------
-check_status_before_run procmail_config
-
-# ------------------------------------------------
 # Managesieve.
-# ------------------------------------------------
 check_status_before_run managesieve_config
 
-# -----------------------------------------------
 # ClamAV.
-# -----------------------------------------------
 check_status_before_run clamav_config
 
-# ------------------------------------------------
-# Amavisd-new. (plus unrar, unarj, SpamAssassin)
-# ------------------------------------------------
+# Amavisd-new.
 check_status_before_run amavisd_config
 
 # SpamAssassin.
 check_status_before_run sa_config
 
-# -----------------------------------------------
 # Optional components.
-# -----------------------------------------------
 optional_components
 
-# -----------------------------------------------
-# Clear away.
-# -----------------------------------------------
+# Cleanup.
 check_status_before_run cleanup

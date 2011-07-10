@@ -229,36 +229,27 @@ EOF
     fi
 
     # Dovecot.
-    if [ X"${ENABLE_DOVECOT}" == X"YES" ]; then
-        if [ X"${DISTRO}" == X"RHEL" ]; then
-            if [ X"${DISTRO_VERSION}" == X"5" ]; then
-                ALL_PKGS="${ALL_PKGS} dovecot.${ARCH} dovecot-sieve.${ARCH} dovecot-managesieve.${ARCH}"
-            elif [ X"${DISTRO_VERSION}" == X"6" ]; then
-                ALL_PKGS="${ALL_PKGS} dovecot.${ARCH} dovecot-pigeonhole.${ARCH}"
-            fi
-
-            # We will use Dovecot SASL auth mechanism, so 'saslauthd'
-            # is not necessary, should be disabled.
-            DISABLED_SERVICES="${DISABLED_SERVICES} saslauthd"
-
-        elif [ X"${DISTRO}" == X"SUSE" ]; then
-            ALL_PKGS="${ALL_PKGS} dovecot12 dovecot12-backend-mysql"
-
-        elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
-            ALL_PKGS="${ALL_PKGS} dovecot-imapd dovecot-pop3d"
-        else
-            :
+    if [ X"${DISTRO}" == X"RHEL" ]; then
+        if [ X"${DISTRO_VERSION}" == X"5" ]; then
+            ALL_PKGS="${ALL_PKGS} dovecot.${ARCH} dovecot-sieve.${ARCH} dovecot-managesieve.${ARCH}"
+        elif [ X"${DISTRO_VERSION}" == X"6" ]; then
+            ALL_PKGS="${ALL_PKGS} dovecot.${ARCH} dovecot-pigeonhole.${ARCH}"
         fi
 
-        ENABLED_SERVICES="${ENABLED_SERVICES} dovecot"
+        # We will use Dovecot SASL auth mechanism, so 'saslauthd'
+        # is not necessary, should be disabled.
+        DISABLED_SERVICES="${DISABLED_SERVICES} saslauthd"
+
+    elif [ X"${DISTRO}" == X"SUSE" ]; then
+        ALL_PKGS="${ALL_PKGS} dovecot12 dovecot12-backend-mysql"
+
+    elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
+        ALL_PKGS="${ALL_PKGS} dovecot-imapd dovecot-pop3d"
     else
-        if [ X"${DISTRO}" == X"RHEL" ]; then
-            ALL_PKGS="procmail.${ARCH}"
-            ENABLED_SERVICES="${ENABLED_SERVICES} saslauthd"
-        elif [ X"${DISTRO}" == X"SUSE" ]; then
-            ALL_PKGS="procmail"
-        fi
+        :
     fi
+
+    ENABLED_SERVICES="${ENABLED_SERVICES} dovecot"
 
     # Amavisd-new & ClamAV & Altermime.
     if [ X"${DISTRO}" == X"RHEL" ]; then
