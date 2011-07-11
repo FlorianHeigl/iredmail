@@ -142,6 +142,9 @@ case $arch in
 esac
 
 # Check distribution.
+#   - DISTRO
+#   - DISTRO_VERSION
+#   - DISTRO_CODENAME
 if [ X"${KERNEL_NAME}" == X"Linux" ]; then
     # Directory of RC scripts.
     export DIR_RC_SCRIPTS='/etc/init.d'
@@ -264,7 +267,11 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     export disable_service='disable_service_rh'
 
     # Syslog config file: syslog.
-    export SYSLOG_CONF='/etc/syslog.conf'
+    if [ X"${DISTRO_VERSION}" == X"5" ]; then
+        export SYSLOG_CONF='/etc/syslog.conf'
+    else
+        export SYSLOG_CONF='/etc/rsyslog.conf'
+    fi
     export SYSLOG_POSTROTATE_CMD='/bin/kill -HUP $(cat /var/run/syslogd.pid 2> /dev/null) 2> /dev/null || true'
 
     # Crontab related.

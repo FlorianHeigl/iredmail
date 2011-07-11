@@ -239,6 +239,7 @@ enabledService: sieve
 enabledService: sievesecured
 enabledService: smtp
 enabledService: deliver
+enabledService: lda
 enabledService: forward
 enabledService: senderbcc
 enabledService: recipientbcc

@@ -171,7 +171,7 @@ def ldif_mailuser(domain, username, passwd, cn, quota, groups=''):
         ('mtaTransport',        ['dovecot']),
         ('enabledService',      ['mail', 'smtp', 'smtpsecured',
                                  'pop3', 'pop3secured', 'imap', 'imapsecured',
-                                'deliver', 'forward', 'senderbcc', 'recipientbcc',
+                                'deliver', 'lda', 'forward', 'senderbcc', 'recipientbcc',
                                  'managesieve', 'managesievesecured', 'internal',
                                  'sieve', 'sievesecured', 'shadowaddress',
                                 'displayedInGlobalAddressBook', ]),
