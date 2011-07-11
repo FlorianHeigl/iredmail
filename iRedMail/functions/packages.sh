@@ -233,7 +233,7 @@ EOF
         if [ X"${DISTRO_VERSION}" == X"5" ]; then
             ALL_PKGS="${ALL_PKGS} dovecot.${ARCH} dovecot-sieve.${ARCH} dovecot-managesieve.${ARCH}"
         elif [ X"${DISTRO_VERSION}" == X"6" ]; then
-            ALL_PKGS="${ALL_PKGS} dovecot.${ARCH} dovecot-pigeonhole.${ARCH}"
+            ALL_PKGS="${ALL_PKGS} dovecot.${ARCH} dovecot-managesieve.${ARCH} dovecot-pigeonhole.${ARCH}"
         fi
 
         # We will use Dovecot SASL auth mechanism, so 'saslauthd'

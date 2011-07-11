@@ -61,6 +61,7 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     export AMAVISD_DKIM_CONF="${AMAVISD_CONF}"
     export AMAVISD_MYHOME='/var/spool/amavisd'
     export AMAVISD_QUARANTINEDIR="${AMAVISD_MYHOME}/quarantine"
+    export AMAVISD_TEMPDIR="${AMAVISD_MYHOME}/tmp"
 
 elif [ X"${DISTRO}" == X"SUSE" ]; then
     # Override global setting: user/group.

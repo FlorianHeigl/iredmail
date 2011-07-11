@@ -40,6 +40,7 @@ if [ X"${USE_POP3}" == X"YES" -o X"${USE_POP3S}" == X"YES" \
     [ X"${USE_IMAP}" == X"YES" ] && DOVECOT_PROTOCOLS="${DOVECOT_PROTOCOLS} imap"
 
     if [ X"${DOVECOT_VERSION}" == X"1.1" -o X"${DOVECOT_VERSION}" == X"1.2" ]; then
+        # pop3s and imaps is not required in dovecot-2.x.
         [ X"${USE_POP3S}" == X"YES" ] && \
             DOVECOT_PROTOCOLS="${DOVECOT_PROTOCOLS} pop3s" && \
             export ENABLE_DOVECOT_SSL="YES"
@@ -47,6 +48,9 @@ if [ X"${USE_POP3}" == X"YES" -o X"${USE_POP3S}" == X"YES" \
         [ X"${USE_IMAPS}" == X"YES" ] && \
             DOVECOT_PROTOCOLS="${DOVECOT_PROTOCOLS} imaps" && \
             export ENABLE_DOVECOT_SSL="YES"
+    else
+        # managesieve service in dovecot-2.x.
+        DOVECOT_PROTOCOLS="${DOVECOT_PROTOCOLS} sieve"
     fi
 
     echo "export DOVECOT_PROTOCOLS='${DOVECOT_PROTOCOLS}'" >> ${CONFIG_FILE}

@@ -82,10 +82,17 @@ EOF
 
         perl -pi -e 's#PH_AUTH_SOCKET_PATH#$ENV{DOVECOT_AUTH_SOCKET_PATH}#' ${DOVECOT_CONF}
 
-        # Quota type.
+        # Quota.
         perl -pi -e 's#PH_QUOTA_TYPE#$ENV{DOVECOT_QUOTA_TYPE}#' ${DOVECOT_CONF}
         perl -pi -e 's#PH_QUOTA_WARNING_SCRIPT#$ENV{DOVECOT_QUOTA_WARNING_SCRIPT}#' ${DOVECOT_CONF}
         perl -pi -e 's#PH_QUOTA_WARNING_USER#$ENV{VMAIL_USER_NAME}#' ${DOVECOT_CONF}
+        perl -pi -e 's#PH_QUOTA_WARNING_GROUP#$ENV{VMAIL_GROUP_NAME}#' ${DOVECOT_CONF}
+
+        # Quota dict.
+        perl -pi -e 's#PH_SERVICE_DICT_USER#$ENV{VMAIL_USER_NAME}#' ${DOVECOT_CONF}
+        perl -pi -e 's#PH_SERVICE_DICT_GROUP#$ENV{VMAIL_GROUP_NAME}#' ${DOVECOT_CONF}
+        perl -pi -e 's#PH_DOVECOT_REALTIME_QUOTA_SQLTYPE#$ENV{DOVECOT_REALTIME_QUOTA_SQLTYPE}#' ${DOVECOT_CONF}
+        perl -pi -e 's#PH_DOVECOT_REALTIME_QUOTA_CONF#$ENV{DOVECOT_REALTIME_QUOTA_CONF}#' ${DOVECOT_CONF}
 
         # Sieve.
         perl -pi -e 's#PH_SIEVE_DIR#$ENV{SIEVE_DIR}#' ${DOVECOT_CONF}
@@ -104,6 +111,22 @@ EOF
     mkdir -p $(dirname ${DOVECOT_QUOTA_WARNING_SCRIPT}) 2>/dev/null
 
     backup_file ${DOVECOT_QUOTA_WARNING_SCRIPT}
+    cat > ${DOVECOT_QUOTA_WARNING_SCRIPT} <<FOE
+#!/usr/bin/env bash
+${CONF_MSG}
+
+PERCENT=\${1}
+USER=\${2}
+
+cat << EOF | ${DOVECOT_DELIVER} -d \${USER} -o "plugin/quota=dict:User quota::noenforcing:proxy::quota"
+From: no-reply@${HOSTNAME}
+Subject: Mailbox Quota Warning: \${PERCENT}% Full.
+
+Your mailbox is now \${PERCENT}% full, please clean up some mails for
+further incoming mails.
+
+EOF
+FOE
 
     chown root ${DOVECOT_QUOTA_WARNING_SCRIPT}
     chmod 0755 ${DOVECOT_QUOTA_WARNING_SCRIPT}

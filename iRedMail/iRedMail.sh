@@ -71,7 +71,6 @@ check_env
 . ${CONF_DIR}/iredapd
 . ${CONF_DIR}/dovecot
 . ${CONF_DIR}/managesieve
-. ${CONF_DIR}/procmail
 . ${CONF_DIR}/amavisd
 . ${CONF_DIR}/clamav
 . ${CONF_DIR}/spamassassin

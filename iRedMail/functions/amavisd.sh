@@ -122,6 +122,10 @@ amavisd_config_rhel()
     perl -pi -e 's/^(\$mydomain)/$1\ =\ \"$ENV{'HOSTNAME'}\"\;\t#/' ${AMAVISD_CONF}
     perl -pi -e 's/(.*local_domains_maps.*)(].*)/${1},"$ENV{'FIRST_DOMAIN'}"${2}/' ${AMAVISD_CONF}
 
+    if [ X"${DISTRO}" == X"RHEL" -a X"${DISTRO_VERSION}" == X"6" ]; then
+        perl -pi -e 's#(.*--tempdir=).*{.*}(.*)#${1}$ENV{AMAVISD_TEMPDIR}${2}#' ${AMAVISD_CONF}
+    fi
+
     # Set default score.
     #perl -pi -e 's/(.*)(sa_tag_level_deflt)(.*)/${1}${2} = 4.0; #${3}/' ${AMAVISD_CONF}
     #perl -pi -e 's/(.*)(sa_tag2_level_deflt)(.*)/${1}${2} = 6; #${3}/' ${AMAVISD_CONF}
