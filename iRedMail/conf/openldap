@@ -46,8 +46,10 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     # OpenLDAP version.
     if [ X"${DISTRO_VERSION}" == X"5" ]; then
         export OPENLDAP_VERSION='2.3'
+        export LDAP_RC_SCRIPT_NAME='ldap'
     else
         export OPENLDAP_VERSION='2.4'
+        export LDAP_RC_SCRIPT_NAME='slapd'
     fi
 
     # LDAP daemon user & group.
@@ -61,8 +63,13 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     export OPENLDAP_PID_FILE='/var/run/openldap/slapd.pid'
     export OPENLDAP_ARGS_FILE='/var/run/openldap/slapd.args'
 
+    export OPENLDAP_SYSCONFIG_CONF="${ETC_SYSCONFIG_DIR}/ldap"
+
     # RC script.
-    export LDAP_INIT_SCRIPT="${DIR_RC_SCRIPTS}/ldap"
+    export LDAP_INIT_SCRIPT="${DIR_RC_SCRIPTS}/${LDAP_RC_SCRIPT_NAME}"
+
+    # Module related.
+    export OPENLDAP_MODULE_PATH='/usr/lib/openldap'
 
 elif [ X"${DISTRO}" == X"SUSE" ]; then
     # OpenLDAP version.

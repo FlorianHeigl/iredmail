@@ -75,10 +75,10 @@ if [ X"${DISTRO}" == X"RHEL" ]; then
     # Special package.
     # command: which.
     export BIN_WHICH='which'
-    export PKG_WHICH="which.${ARCH}"
+    export PKG_WHICH="which${PKG_ARCH}"
     # command: wget.
     export BIN_WGET='wget'
-    export PKG_WGET="wget.${ARCH}"
+    export PKG_WGET="wget${PKG_ARCH}"
 
 elif [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ]; then
     export MIRROR='http://iredmail.org/apt'

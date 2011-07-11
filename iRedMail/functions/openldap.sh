@@ -39,7 +39,18 @@ openldap_config()
     # Add ${LDAP_USER} to 'ssl-cert' group.
     [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ] && usermod -G ssl-cert ${LDAP_USER}
 
-    if [ X"${DISTRO}" == X"SUSE" ]; then
+    if [ X"${DISTRO}" == X"RHEL" ]; then
+        if [ X"${DISTRO_VERSION}" == X"6" ]; then
+            # Run slapd with slapd.conf, not slapd.d.
+            perl -pi -e 's/#(SLAPD_OPTIONS=).*/${1}"-f $ENV{OPENLDAP_SLAPD_CONF}"/' ${OPENLDAP_SYSCONFIG_CONF}
+
+            # Run slapd with -h "... ldap:/// ..."
+            perl -pi -e 's/#(SLAPD_LDAP=).*/${1}yes/' ${OPENLDAP_SYSCONFIG_CONF}
+
+            # Run slapd with -h "... ldaps:/// ...".
+            perl -pi -e 's/#(SLAPD_LDAPS=).*/${1}yes/' ${OPENLDAP_SYSCONFIG_CONF}
+        fi
+    elif [ X"${DISTRO}" == X"SUSE" ]; then
         # Fix strict permission.
         chmod 0755 ${SSL_KEY_DIR}
 
@@ -57,9 +68,15 @@ openldap_config()
     cp -f ${SAMPLE_DIR}/iredmail.schema ${OPENLDAP_SCHEMA_DIR}
 
     # Copy amavisd schema.
-    [ X"${DISTRO}" == X"FREEBSD" ] && \
+    if [ X"${DISTRO}" == X"RHEL" ]; then
+        if [ X"${DISTRO_VERSION}" == X"6" ]; then
+            amavisd_schema_file="$( eval ${LIST_FILES_IN_PKG} amavisd-new | grep '/LDAP.schema$')"
+            cp -f ${amavisd_schema_file} ${OPENLDAP_SCHEMA_DIR}/${AMAVISD_LDAP_SCHEMA_NAME}
+        fi
+    elif [ X"${DISTRO}" == X"FREEBSD" ]; then
         cp -f /usr/local/share/doc/amavisd-new/LDAP.schema ${OPENLDAP_SCHEMA_DIR}/${AMAVISD_LDAP_SCHEMA_NAME}
-    ####
+    fi
+
 
     ECHO_DEBUG "Generate new server configuration file: ${OPENLDAP_SLAPD_CONF}."
     cat > ${OPENLDAP_SLAPD_CONF} <<EOF
@@ -380,6 +397,11 @@ openldap_data_initialize()
         [ -x ${DIR_RC_SCRIPTS}/apparmor ] && service_control apparmor restart >/dev/null 2>&1
     else
         :
+    fi
+
+    # Get DB_CONFIG.example.
+    if [ X"${DISTRO}" == X"RHEL" -a X"${DISTRO_VERSION}" == X"6" ]; then
+        export OPENLDAP_DB_CONFIG_SAMPLE="$( eval ${LIST_FILES_IN_PKG} openldap-servers | grep '/DB_CONFIG.example$')"
     fi
 
     ECHO_DEBUG "Create instance directory for openldap tree: ${LDAP_DATA_DIR}."

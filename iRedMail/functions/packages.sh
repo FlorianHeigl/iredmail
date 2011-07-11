@@ -61,9 +61,9 @@ install_all()
     # Apache and PHP.
     #
     if [ X"${DISTRO}" == X"RHEL" ]; then
-        ALL_PKGS="${ALL_PKGS} httpd.${ARCH} mod_ssl.${ARCH} php.${ARCH} php-common.${ARCH} php-imap.${ARCH} php-gd.${ARCH} php-mbstring.${ARCH} php-xml.${ARCH} php-mysql.${ARCH} php-ldap.${ARCH}"
+        ALL_PKGS="${ALL_PKGS} httpd${PKG_ARCH} mod_ssl${PKG_ARCH} php${PKG_ARCH} php-common${PKG_ARCH} php-imap${PKG_ARCH} php-gd${PKG_ARCH} php-mbstring${PKG_ARCH} php-xml${PKG_ARCH} php-mysql${PKG_ARCH} php-ldap${PKG_ARCH}"
         if [ X"${DISTRO_VERSION}" == X"5" ]; then
-            ALL_PKGS="${ALL_PKGS} libmcrypt.${ARCH} php-mcrypt.${ARCH} php-mhash.${ARCH}"
+            ALL_PKGS="${ALL_PKGS} libmcrypt${PKG_ARCH} php-mcrypt${PKG_ARCH} php-mhash${PKG_ARCH}"
         fi
         ENABLED_SERVICES="${ENABLED_SERVICES} httpd"
 
@@ -90,7 +90,7 @@ install_all()
     # Postfix.
     #
     if [ X"${DISTRO}" == X"RHEL" ]; then
-        ALL_PKGS="${ALL_PKGS} postfix.${ARCH}"
+        ALL_PKGS="${ALL_PKGS} postfix${PKG_ARCH}"
     elif [ X"${DISTRO}" == X"SUSE" ]; then
         # On OpenSuSE, postfix already has ldap_table support.
         ALL_PKGS="${ALL_PKGS} postfix"
@@ -127,7 +127,7 @@ install_all()
     # Note: mysql server is always required, used to store extra data,
     #       such as policyd, roundcube webmail data.
     if [ X"${DISTRO}" == X"RHEL" ]; then
-        ALL_PKGS="${ALL_PKGS} mysql-server.${ARCH} mysql.${ARCH}"
+        ALL_PKGS="${ALL_PKGS} mysql-server${PKG_ARCH} mysql${PKG_ARCH}"
         ENABLED_SERVICES="${ENABLED_SERVICES} mysqld"
     elif [ X"${DISTRO}" == X"SUSE" ]; then
         ALL_PKGS="${ALL_PKGS} mysql-community-server mysql-community-server-client"
@@ -158,8 +158,8 @@ install_all()
     if [ X"${BACKEND}" == X"OpenLDAP" ]; then
         # OpenLDAP server & client.
         if [ X"${DISTRO}" == X"RHEL" ]; then
-            ALL_PKGS="${ALL_PKGS} openldap.${ARCH} openldap-clients.${ARCH} openldap-servers.${ARCH}"
-            ENABLED_SERVICES="${ENABLED_SERVICES} ldap"
+            ALL_PKGS="${ALL_PKGS} openldap${PKG_ARCH} openldap-clients${PKG_ARCH} openldap-servers${PKG_ARCH}"
+            ENABLED_SERVICES="${ENABLED_SERVICES} ${LDAP_RC_SCRIPT_NAME}"
 
         elif [ X"${DISTRO}" == X"SUSE" ]; then
             ALL_PKGS="${ALL_PKGS} openldap2 openldap2-client"
@@ -175,7 +175,7 @@ install_all()
         # MySQL server & client.
         if [ X"${DISTRO}" == X"RHEL" ]; then
             # For Awstats.
-            [ X"${USE_AWSTATS}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} mod_auth_mysql.${ARCH}"
+            [ X"${USE_AWSTATS}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} mod_auth_mysql${PKG_ARCH}"
 
         elif [ X"${DISTRO}" == X"SUSE" ]; then
             [ X"${USE_AWSTATS}" == X"YES" ] && ALL_PKGS="${ALL_PKGS} postfix-mysql apache2-mod_auth_mysql"
@@ -194,7 +194,7 @@ install_all()
 
     # Policyd.
     if [ X"${DISTRO}" == X"RHEL" ]; then
-        ALL_PKGS="${ALL_PKGS} policyd.${ARCH}"
+        ALL_PKGS="${ALL_PKGS} policyd${PKG_ARCH}"
         ENABLED_SERVICES="${ENABLED_SERVICES} policyd"
     elif [ X"${DISTRO}" == X"SUSE" ]; then
         ALL_PKGS="${ALL_PKGS} policyd"
@@ -231,9 +231,9 @@ EOF
     # Dovecot.
     if [ X"${DISTRO}" == X"RHEL" ]; then
         if [ X"${DISTRO_VERSION}" == X"5" ]; then
-            ALL_PKGS="${ALL_PKGS} dovecot.${ARCH} dovecot-sieve.${ARCH} dovecot-managesieve.${ARCH}"
+            ALL_PKGS="${ALL_PKGS} dovecot${PKG_ARCH} dovecot-sieve${PKG_ARCH} dovecot-managesieve${PKG_ARCH}"
         elif [ X"${DISTRO_VERSION}" == X"6" ]; then
-            ALL_PKGS="${ALL_PKGS} dovecot.${ARCH} dovecot-managesieve.${ARCH} dovecot-pigeonhole.${ARCH}"
+            ALL_PKGS="${ALL_PKGS} dovecot${PKG_ARCH} dovecot-managesieve${PKG_ARCH} dovecot-pigeonhole${PKG_ARCH}"
         fi
 
         # We will use Dovecot SASL auth mechanism, so 'saslauthd'
@@ -253,9 +253,9 @@ EOF
 
     # Amavisd-new & ClamAV & Altermime.
     if [ X"${DISTRO}" == X"RHEL" ]; then
-        ALL_PKGS="${ALL_PKGS} clamd.${ARCH} clamav.${ARCH} clamav-db.${ARCH} spamassassin.${ARCH} altermime.${ARCH} perl-LDAP.noarch"
+        ALL_PKGS="${ALL_PKGS} clamd${PKG_ARCH} clamav${PKG_ARCH} clamav-db${PKG_ARCH} spamassassin${PKG_ARCH} altermime${PKG_ARCH} perl-LDAP.noarch"
         if [ X"${DISTRO_VERSION}" == X"5" ]; then
-            ALL_PKGS="${ALL_PKGS} amavisd-new.${ARCH} perl-IO-Compress.noarch"
+            ALL_PKGS="${ALL_PKGS} amavisd-new${PKG_ARCH} perl-IO-Compress.noarch"
         else
             ALL_PKGS="${ALL_PKGS} amavisd-new.noarch"
         fi
@@ -310,7 +310,7 @@ EOF
     # iRedAPD.
     #
     if [ X"${USE_IREDAPD}" == X"YES" ]; then
-        [ X"${DISTRO}" == X"RHEL" ] && ALL_PKGS="${ALL_PKGS} python-ldap.${ARCH}"
+        [ X"${DISTRO}" == X"RHEL" ] && ALL_PKGS="${ALL_PKGS} python-ldap${PKG_ARCH}"
         [ X"${DISTRO}" == X"SuSE" ] && ALL_PKGS="${ALL_PKGS} python-ldap"
         [ X"${DISTRO}" == X"DEBIAN" -o X"${DISTRO}" == X"UBUNTU" ] && ALL_PKGS="${ALL_PKGS} python-ldap"
         # Don't append 'iredapd' to ${ENABLED_SERVICES} since we don't have
@@ -326,8 +326,8 @@ EOF
     #
     if [ X"${USE_IREDADMIN}" == X"YES" ]; then
         if [ X"${DISTRO}" == X"RHEL" ]; then
-            ALL_PKGS="${ALL_PKGS} python-jinja2.${ARCH} python-webpy.noarch python-ldap.${ARCH} MySQL-python.${ARCH} mod_wsgi.${ARCH}"
-            [ X"${USE_IREDAPD}" != "YES" ] && ALL_PKGS="${ALL_PKGS} python-ldap.${ARCH}"
+            ALL_PKGS="${ALL_PKGS} python-jinja2${PKG_ARCH} python-webpy.noarch python-ldap${PKG_ARCH} MySQL-python${PKG_ARCH} mod_wsgi${PKG_ARCH}"
+            [ X"${USE_IREDAPD}" != "YES" ] && ALL_PKGS="${ALL_PKGS} python-ldap${PKG_ARCH}"
 
         elif [ X"${DISTRO}" == X"SUSE" ]; then
             # Note: Web.py will be installed locally via 'easy_install'.
@@ -364,9 +364,9 @@ EOF
     # Misc packages & services.
     #
     if [ X"${DISTRO}" == X"RHEL" ]; then
-        ALL_PKGS="${ALL_PKGS} bzip2.${ARCH} acl.${ARCH} patch.${ARCH} tmpwatch.${ARCH} crontabs.noarch dos2unix.${ARCH}"
+        ALL_PKGS="${ALL_PKGS} bzip2${PKG_ARCH} acl${PKG_ARCH} patch${PKG_ARCH} tmpwatch${PKG_ARCH} crontabs.noarch dos2unix${PKG_ARCH}"
         if [ X"${DISTRO_VERSION}" == X"5" ]; then
-            ALL_PKGS="${ALL_PKGS} vixie-cron.${ARCH}"
+            ALL_PKGS="${ALL_PKGS} vixie-cron${PKG_ARCH}"
         fi
         ENABLED_SERVICES="${ENABLED_SERVICES} crond"
     elif [ X"${DISTRO}" == X"SUSE" ]; then
