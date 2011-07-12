@@ -128,6 +128,8 @@ WELCOME_MSG_BODY="Welcome, new user."
 # Time stamp, will be appended in maildir.
 DATE="$(date +%Y.%m.%d.%H.%M.%S)"
 
+STORAGE_NODE="$(echo ${STORAGE_BASE_DIRECTORY} | tr '/' ' ' | awk '{print $NF}')"
+
 add_new_domain()
 {
     domain="$(echo ${1} | tr '[A-Z]' '[a-z]')"
@@ -220,7 +222,7 @@ objectClass: top
 storageBaseDirectory: ${STORAGE_BASE_DIRECTORY}
 homeDirectory: ${STORAGE_BASE_DIRECTORY}/${maildir}
 accountStatus: active
-mailMessageStore: ${maildir}
+mailMessageStore: ${STORAGE_NODE}/${maildir}
 mail: ${MAIL}
 mailQuota: ${QUOTA}
 userPassword: ${PASSWD}
