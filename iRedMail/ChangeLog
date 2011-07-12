@@ -1,4 +1,6 @@
 iRedMail-0.7.3:
+    * Add enabledService=lda for newly created LDAP mail user. Required by
+      Dovecot 2.x.
     * Works on CentOS 6.0, RHEL 6.x, Scientific Linux 6.x.
     * Mbox format mailbox is not supported anymore.
     * Add smtp-amavis_destination_recipient_limit=1 in Postfix for concurrency
