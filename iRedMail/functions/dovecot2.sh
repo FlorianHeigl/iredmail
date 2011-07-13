@@ -43,6 +43,7 @@ EOF
         perl -pi -e 's#PH_BASE_DIR#$ENV{DOVECOT_BASE_DIR}#' ${DOVECOT_CONF}
 
         # Provided services.
+        export DOVECOT_PROTOCOLS
         perl -pi -e 's#PH_PROTOCOLS#$ENV{DOVECOT_PROTOCOLS}#' ${DOVECOT_CONF}
 
         # Set correct uid/gid.

@@ -105,6 +105,10 @@ amavisd_config_rhel()
 {
     ECHO_INFO "Configure Amavisd-new (interface between MTA and content checkers)."
 
+    if [ X"${DISTRO}" == X"RHEL" -a X"${DISTRO_VERSION}" == X"6" ]; then
+        usermod -G ${AMAVISD_SYS_GROUP} ${CLAMAV_USER} >/dev/null
+    fi
+
     # Don't check amavisd-milter status.
     perl -pi -e 's/(.*)(status.*prog2.*)/${1}#${2}/' ${DIR_RC_SCRIPTS}/${AMAVISD_RC_SCRIPT_NAME}
 
@@ -298,7 +302,7 @@ amavisd_config_general()
 
     ### http://www.clamav.net/   - backs up clamd or Mail::ClamAV
     ['ClamAV-clamscan', 'clamscan',
-    "--stdout --disable-summary -r --tempdir=$TEMPBASE {}", [0], [1],
+    "--stdout --disable-summary -r --tempdir=\$TEMPBASE {}", [0], [1],
     qr/^.*?: (?!Infected Archive)(.*) FOUND$/ ],
 );
 
