@@ -37,97 +37,84 @@ dovecot2_config()
 ${CONF_MSG}
 EOF
 
-        cat ${SAMPLE_DIR}/conf/dovecot2.conf >> ${DOVECOT_CONF}
+    cat ${SAMPLE_DIR}/conf/dovecot2.conf >> ${DOVECOT_CONF}
 
-        # Base directory.
-        perl -pi -e 's#PH_BASE_DIR#$ENV{DOVECOT_BASE_DIR}#' ${DOVECOT_CONF}
+    # Base directory.
+    perl -pi -e 's#PH_BASE_DIR#$ENV{DOVECOT_BASE_DIR}#' ${DOVECOT_CONF}
 
-        # Provided services.
-        export DOVECOT_PROTOCOLS
-        perl -pi -e 's#PH_PROTOCOLS#$ENV{DOVECOT_PROTOCOLS}#' ${DOVECOT_CONF}
+    # Provided services.
+    export DOVECOT_PROTOCOLS
+    perl -pi -e 's#PH_PROTOCOLS#$ENV{DOVECOT_PROTOCOLS}#' ${DOVECOT_CONF}
 
-        # Set correct uid/gid.
-        perl -pi -e 's#PH_MAIL_UID#$ENV{VMAIL_USER_UID}#' ${DOVECOT_CONF}
-        perl -pi -e 's#PH_MAIL_GID#$ENV{VMAIL_USER_GID}#' ${DOVECOT_CONF}
-        perl -pi -e 's#PH_FIRST_VALID_UID#$ENV{VMAIL_USER_UID}#' ${DOVECOT_CONF}
-        perl -pi -e 's#PH_LAST_VALID_UID#$ENV{VMAIL_USER_UID}#' ${DOVECOT_CONF}
+    # Set correct uid/gid.
+    perl -pi -e 's#PH_MAIL_UID#$ENV{VMAIL_USER_UID}#' ${DOVECOT_CONF}
+    perl -pi -e 's#PH_MAIL_GID#$ENV{VMAIL_USER_GID}#' ${DOVECOT_CONF}
+    perl -pi -e 's#PH_FIRST_VALID_UID#$ENV{VMAIL_USER_UID}#' ${DOVECOT_CONF}
+    perl -pi -e 's#PH_LAST_VALID_UID#$ENV{VMAIL_USER_UID}#' ${DOVECOT_CONF}
 
-        # Log file.
-        perl -pi -e 's#PH_LOG_PATH#$ENV{DOVECOT_LOG_FILE}#' ${DOVECOT_CONF}
+    # Log file.
+    perl -pi -e 's#PH_LOG_PATH#$ENV{DOVECOT_LOG_FILE}#' ${DOVECOT_CONF}
 
-        # Authentication related settings.
-        # Append this domain name if client gives empty realm.
-        perl -pi -e 's#PH_AUTH_DEFAULT_REALM#$ENV{FIRST_DOMAIN}#' ${DOVECOT_CONF}
-        perl -pi -e 's#PH_AUTH_MECHANISMS#PLAIN LOGIN#' ${DOVECOT_CONF}
+    # Authentication related settings.
+    # Append this domain name if client gives empty realm.
+    perl -pi -e 's#PH_AUTH_DEFAULT_REALM#$ENV{FIRST_DOMAIN}#' ${DOVECOT_CONF}
+    perl -pi -e 's#PH_AUTH_MECHANISMS#PLAIN LOGIN#' ${DOVECOT_CONF}
 
-        # service auth {}
-        perl -pi -e 's#PH_DOVECOT_AUTH_USER#$ENV{POSTFIX_DAEMON_USER}#' ${DOVECOT_CONF}
-        perl -pi -e 's#PH_DOVECOT_AUTH_GROUP#$ENV{POSTFIX_DAEMON_GROUP}#' ${DOVECOT_CONF}
-        perl -pi -e 's#PH_AUTH_MASTER_USER#$ENV{VMAIL_USER_NAME}#' ${DOVECOT_CONF}
-        perl -pi -e 's#PH_AUTH_MASTER_GROUP#$ENV{VMAIL_GROUP_NAME}#' ${DOVECOT_CONF}
+    # service auth {}
+    perl -pi -e 's#PH_DOVECOT_AUTH_USER#$ENV{POSTFIX_DAEMON_USER}#' ${DOVECOT_CONF}
+    perl -pi -e 's#PH_DOVECOT_AUTH_GROUP#$ENV{POSTFIX_DAEMON_GROUP}#' ${DOVECOT_CONF}
+    perl -pi -e 's#PH_AUTH_MASTER_USER#$ENV{VMAIL_USER_NAME}#' ${DOVECOT_CONF}
+    perl -pi -e 's#PH_AUTH_MASTER_GROUP#$ENV{VMAIL_GROUP_NAME}#' ${DOVECOT_CONF}
 
-        # Virtual mail accounts.
-        # Reference: http://wiki2.dovecot.org/AuthDatabase/LDAP
-        if [ X"${BACKEND}" == X"OpenLDAP" ]; then
-            perl -pi -e 's#PH_USERDB_ARGS#$ENV{DOVECOT_LDAP_CONF}#' ${DOVECOT_CONF}
-            perl -pi -e 's#PH_USERDB_DRIVER#ldap#' ${DOVECOT_CONF}
-            perl -pi -e 's#PH_PASSDB_ARGS#$ENV{DOVECOT_LDAP_CONF}#' ${DOVECOT_CONF}
-            perl -pi -e 's#PH_PASSDB_DRIVER#ldap#' ${DOVECOT_CONF}
-        else
-            # MySQL.
-            perl -pi -e 's#PH_USERDB_ARGS#$ENV{DOVECOT_MYSQL_CONF}#' ${DOVECOT_CONF}
-            perl -pi -e 's#PH_USERDB_DRIVER#sql#' ${DOVECOT_CONF}
-            perl -pi -e 's#PH_PASSDB_ARGS#$ENV{DOVECOT_MYSQL_CONF}#' ${DOVECOT_CONF}
-            perl -pi -e 's#PH_PASSDB_DRIVER#sql#' ${DOVECOT_CONF}
-        fi
+    # Virtual mail accounts.
+    # Reference: http://wiki2.dovecot.org/AuthDatabase/LDAP
+    if [ X"${BACKEND}" == X"OpenLDAP" ]; then
+        perl -pi -e 's#PH_USERDB_ARGS#$ENV{DOVECOT_LDAP_CONF}#' ${DOVECOT_CONF}
+        perl -pi -e 's#PH_USERDB_DRIVER#ldap#' ${DOVECOT_CONF}
+        perl -pi -e 's#PH_PASSDB_ARGS#$ENV{DOVECOT_LDAP_CONF}#' ${DOVECOT_CONF}
+        perl -pi -e 's#PH_PASSDB_DRIVER#ldap#' ${DOVECOT_CONF}
+    else
+        # MySQL.
+        perl -pi -e 's#PH_USERDB_ARGS#$ENV{DOVECOT_MYSQL_CONF}#' ${DOVECOT_CONF}
+        perl -pi -e 's#PH_USERDB_DRIVER#sql#' ${DOVECOT_CONF}
+        perl -pi -e 's#PH_PASSDB_ARGS#$ENV{DOVECOT_MYSQL_CONF}#' ${DOVECOT_CONF}
+        perl -pi -e 's#PH_PASSDB_DRIVER#sql#' ${DOVECOT_CONF}
+    fi
 
-        perl -pi -e 's#PH_AUTH_SOCKET_PATH#$ENV{DOVECOT_AUTH_SOCKET_PATH}#' ${DOVECOT_CONF}
+    perl -pi -e 's#PH_AUTH_SOCKET_PATH#$ENV{DOVECOT_AUTH_SOCKET_PATH}#' ${DOVECOT_CONF}
 
-        # Quota.
-        perl -pi -e 's#PH_QUOTA_TYPE#$ENV{DOVECOT_QUOTA_TYPE}#' ${DOVECOT_CONF}
-        perl -pi -e 's#PH_QUOTA_WARNING_SCRIPT#$ENV{DOVECOT_QUOTA_WARNING_SCRIPT}#' ${DOVECOT_CONF}
-        perl -pi -e 's#PH_QUOTA_WARNING_USER#$ENV{VMAIL_USER_NAME}#' ${DOVECOT_CONF}
-        perl -pi -e 's#PH_QUOTA_WARNING_GROUP#$ENV{VMAIL_GROUP_NAME}#' ${DOVECOT_CONF}
+    # Quota.
+    perl -pi -e 's#PH_QUOTA_TYPE#$ENV{DOVECOT_QUOTA_TYPE}#' ${DOVECOT_CONF}
+    perl -pi -e 's#PH_QUOTA_WARNING_SCRIPT#$ENV{DOVECOT_QUOTA_WARNING_SCRIPT}#' ${DOVECOT_CONF}
+    perl -pi -e 's#PH_QUOTA_WARNING_USER#$ENV{VMAIL_USER_NAME}#' ${DOVECOT_CONF}
+    perl -pi -e 's#PH_QUOTA_WARNING_GROUP#$ENV{VMAIL_GROUP_NAME}#' ${DOVECOT_CONF}
 
-        # Quota dict.
-        perl -pi -e 's#PH_SERVICE_DICT_USER#$ENV{VMAIL_USER_NAME}#' ${DOVECOT_CONF}
-        perl -pi -e 's#PH_SERVICE_DICT_GROUP#$ENV{VMAIL_GROUP_NAME}#' ${DOVECOT_CONF}
-        perl -pi -e 's#PH_DOVECOT_REALTIME_QUOTA_SQLTYPE#$ENV{DOVECOT_REALTIME_QUOTA_SQLTYPE}#' ${DOVECOT_CONF}
-        perl -pi -e 's#PH_DOVECOT_REALTIME_QUOTA_CONF#$ENV{DOVECOT_REALTIME_QUOTA_CONF}#' ${DOVECOT_CONF}
+    # Quota dict.
+    perl -pi -e 's#PH_SERVICE_DICT_USER#$ENV{VMAIL_USER_NAME}#' ${DOVECOT_CONF}
+    perl -pi -e 's#PH_SERVICE_DICT_GROUP#$ENV{VMAIL_GROUP_NAME}#' ${DOVECOT_CONF}
+    perl -pi -e 's#PH_DOVECOT_REALTIME_QUOTA_SQLTYPE#$ENV{DOVECOT_REALTIME_QUOTA_SQLTYPE}#' ${DOVECOT_CONF}
+    perl -pi -e 's#PH_DOVECOT_REALTIME_QUOTA_CONF#$ENV{DOVECOT_REALTIME_QUOTA_CONF}#' ${DOVECOT_CONF}
 
-        # Sieve.
-        perl -pi -e 's#PH_SIEVE_DIR#$ENV{SIEVE_DIR}#' ${DOVECOT_CONF}
-        perl -pi -e 's#PH_SIEVE_RULE_FILENAME#$ENV{SIEVE_RULE_FILENAME}#' ${DOVECOT_CONF}
-        perl -pi -e 's#PH_GLOBAL_SIEVE_FILE#$ENV{GLOBAL_SIEVE_FILE}#' ${DOVECOT_CONF}
+    # Sieve.
+    perl -pi -e 's#PH_SIEVE_DIR#$ENV{SIEVE_DIR}#' ${DOVECOT_CONF}
+    perl -pi -e 's#PH_SIEVE_RULE_FILENAME#$ENV{SIEVE_RULE_FILENAME}#' ${DOVECOT_CONF}
+    perl -pi -e 's#PH_GLOBAL_SIEVE_FILE#$ENV{GLOBAL_SIEVE_FILE}#' ${DOVECOT_CONF}
 
-        # SSL.
-        perl -pi -e 's#PH_ENABLE_SSL#yes#' ${DOVECOT_CONF}
-        perl -pi -e 's#PH_SSL_CERT#<$ENV{SSL_CERT_FILE}#' ${DOVECOT_CONF}
-        perl -pi -e 's#PH_SSL_KEY#<$ENV{SSL_KEY_FILE}#' ${DOVECOT_CONF}
-
-        #mail_process_size = 1024
-        #disable_plaintext_auth = no
+    # SSL.
+    perl -pi -e 's#PH_ENABLE_SSL#yes#' ${DOVECOT_CONF}
+    perl -pi -e 's#PH_SSL_CERT#<$ENV{SSL_CERT_FILE}#' ${DOVECOT_CONF}
+    perl -pi -e 's#PH_SSL_KEY#<$ENV{SSL_KEY_FILE}#' ${DOVECOT_CONF}
 
     # Generate dovecot quota warning script.
     mkdir -p $(dirname ${DOVECOT_QUOTA_WARNING_SCRIPT}) 2>/dev/null
 
     backup_file ${DOVECOT_QUOTA_WARNING_SCRIPT}
-    cat > ${DOVECOT_QUOTA_WARNING_SCRIPT} <<FOE
-#!/usr/bin/env bash
-${CONF_MSG}
+    rm -f ${DOVECOT_QUOTA_WARNING_SCRIPT} 2>/dev/null
+    cp -f ${SAMPLE_DIR}/conf/dovecot2-quota-warning.sh ${DOVECOT_QUOTA_WARNING_SCRIPT}
 
-PERCENT=\${1}
-USER=\${2}
-
-cat << EOF | ${DOVECOT_DELIVER} -d \${USER} -o "plugin/quota=dict:User quota::noenforcing:proxy::quota"
-From: no-reply@${HOSTNAME}
-Subject: Mailbox Quota Warning: \${PERCENT}% Full.
-
-Your mailbox is now \${PERCENT}% full, please clean up some mails for
-further incoming mails.
-
-EOF
-FOE
+    export DOVECOT_DELIVER HOSTNAME
+    perl -pi -e 's#PH_DOVECOT_DELIVER#$ENV{DOVECOT_DELIVER}#' ${DOVECOT_QUOTA_WARNING_SCRIPT}
+    perl -pi -e 's#PH_HOSTNAME#$ENV{HOSTNAME}#' ${DOVECOT_QUOTA_WARNING_SCRIPT}
 
     chown root ${DOVECOT_QUOTA_WARNING_SCRIPT}
     chmod 0755 ${DOVECOT_QUOTA_WARNING_SCRIPT}
