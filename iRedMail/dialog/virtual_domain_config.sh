@@ -38,7 +38,8 @@ WARNING:
 
     FIRST_DOMAIN="$(cat /tmp/first_domain)"
 
-    [ X"${FIRST_DOMAIN}" != X"" ] && break
+    echo "${FIRST_DOMAIN}" | grep '\.' &>/dev/null
+    [ X"$?" == X"0" ] && break
 done
 
 echo "export FIRST_DOMAIN='${FIRST_DOMAIN}'" >> ${CONFIG_FILE}
