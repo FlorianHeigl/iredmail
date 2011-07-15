@@ -1,4 +1,4 @@
-iRedMail-0.7.3-rc1:
+iRedMail-0.7.3:
     * Add enabledService=lda for newly created LDAP mail user. Required by
       Dovecot 2.x.
     * Works on CentOS 6.0, RHEL 6.x, Scientific Linux 6.x.
