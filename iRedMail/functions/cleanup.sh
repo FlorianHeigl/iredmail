@@ -145,7 +145,8 @@ cleanup_replace_iptables_rule()
 
     if [ X"${KERNEL_NAME}" == X"Linux" ]; then
         if [ X"${DISTRO}" != X"SUSE" ]; then
-            ENABLED_SERVICES="${ENABLED_SERVICES} iptables"
+            # Restarting iptables before restarting fail2ban.
+            ENABLED_SERVICES="iptables ${ENABLED_SERVICES}"
         fi
     fi
 
