@@ -24,6 +24,9 @@
 # For Dovecot and dovecot-sieve. 
 # ----------------------------------------
 
+export ENABLE_DOVECOT="YES"
+export ENABLE_DOVECOT_SSL="YES"
+
 # Dovecot user & group.
 export DOVECOT_USER='dovecot'
 export DOVECOT_GROUP='dovecot'
@@ -63,6 +66,7 @@ elif [ X"${DISTRO}" == X"SUSE" ]; then
         # OpenSuSE 11.2 and later versions ship dovecot-1.2.x
         export DOVECOT_VERSION='1.2'
     fi
+
     export DOVECOT_CONF='/etc/dovecot/dovecot.conf'
     export DOVECOT_LDAP_CONF='/etc/dovecot/dovecot-ldap.conf'
     export DOVECOT_MYSQL_CONF='/etc/dovecot/dovecot-mysql.conf'
@@ -127,3 +131,9 @@ export DOVECOT_EXPIRE_DICT_BDB='/var/lib/dovecot/expire/expire.db'
 export DOVECOT_QUOTA_WARNING_SCRIPT='/usr/local/bin/dovecot-quota-warning.sh'
 export DOVECOT_REALTIME_QUOTA_SQLTYPE='mysql'
 export DOVECOT_SHARE_FOLDER_SQLTYPE='mysql'
+
+if [ X"${DOVECOT_VERSION}" == X"1.1" -o X"${DOVECOT_VERSION}" == X"1.2" ]; then
+    export DOVECOT_PROTOCOLS="pop3 pop3s imap imaps"
+else
+    export DOVECOT_PROTOCOLS="pop3 imap sieve"
+fi

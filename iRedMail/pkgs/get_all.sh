@@ -152,24 +152,20 @@ prepare_dirs()
 
 fetch_pkgs_debian()
 {
-    if [ X"${DOWNLOAD_PKGS}" == X"YES" ]; then
-        cd ${PKG_DIR}
+    cd ${PKG_DIR}
 
-        if [ X"${PKGLIST}" != X"0" ]; then
-            ECHO_INFO "Fetching Binary Packages ..."
-            for i in ${PKGLIST}; do
-                if [ X"${DISTRO}" == X"DEBIAN" ]; then
-                    url="${MIRROR}/debian/lenny/${i}"
-                fi
+    if [ X"${PKGLIST}" != X"0" ]; then
+        ECHO_INFO "Fetching Binary Packages ..."
+        for i in ${PKGLIST}; do
+            if [ X"${DISTRO}" == X"DEBIAN" ]; then
+                url="${MIRROR}/debian/lenny/${i}"
+            fi
 
-                ECHO_INFO "+ ${pkg_counter}/${pkg_total}: ${url}"
-                ${FETCH_CMD} "${url}"
+            ECHO_INFO "+ ${pkg_counter}/${pkg_total}: ${url}"
+            ${FETCH_CMD} "${url}"
 
-                pkg_counter=$((pkg_counter+1))
-            done
-        else
-            :
-        fi
+            pkg_counter=$((pkg_counter+1))
+        done
     else
         :
     fi
@@ -177,27 +173,22 @@ fetch_pkgs_debian()
 
 fetch_misc()
 {
-    if [ X"${DOWNLOAD_PKGS}" == X"YES" ]; then
-        # Fetch all misc packages.
-        cd ${MISC_DIR}
+    # Fetch all misc packages.
+    cd ${MISC_DIR}
 
-        misc_total=$(( $(echo ${MISCLIST} | wc -w | awk '{print $1}') ))
-        misc_count=1
+    misc_total=$(( $(echo ${MISCLIST} | wc -w | awk '{print $1}') ))
+    misc_count=1
 
-        ECHO_INFO "Fetching Source Tarballs ..."
+    ECHO_INFO "Fetching Source Tarballs ..."
 
-        for i in ${MISCLIST}
-        do
-            url="${MIRROR}/misc/${i}"
-            ECHO_INFO "+ ${misc_count}/${misc_total}: ${url}"
+    for i in ${MISCLIST}; do
+        url="${MIRROR}/misc/${i}"
+        ECHO_INFO "+ ${misc_count}/${misc_total}: ${url}"
 
-            ${FETCH_CMD} "${url}"
+        ${FETCH_CMD} "${url}"
 
-            misc_count=$((misc_count + 1))
-        done
-    else
-        :
-    fi
+        misc_count=$((misc_count + 1))
+    done
 }
 
 check_md5()
@@ -363,7 +354,7 @@ elif [ X"${DISTRO}" == X"SUSE" ]; then
     create_repo_suse
 
     ECHO_INFO "Refresh zypper repositories."
-    zypper clean
+    zypper clean --all
     zypper refresh
 elif [ X"${DISTRO}" == X"UBUNTU" ]; then
     create_repo_ubuntu

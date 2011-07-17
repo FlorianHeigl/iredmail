@@ -22,13 +22,6 @@
 
 # Variables for MySQL database server and related.
 
-export MYSQL_FRESH_INSTALLATION='YES'
-
-# If your host is "localhost", MySQL (the commandline tool 'mysql' as well)
-# always tries to use the socket connection for speeding up things. If you
-# enter "127.0.0.1" as hostname, MySQL uses the TCP connection.
-export MYSQL_SERVER='127.0.0.1'
-export MYSQL_PORT='3306'
 export MYSQL_SOCKET='/var/lib/mysql/mysql.sock'
 export MYSQL_ROOT_USER='root'
 

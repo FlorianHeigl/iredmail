@@ -40,9 +40,9 @@ awstats_config_basic()
 ${CONF_MSG}
 # Note: Please refer to ${HTTPD_SSL_CONF} for SSL/TLS setting.
 #Alias /awstats/icon "${AWSTATS_ICON_DIR}/"
+#Alias /awstats/css "${AWSTATS_CSS_DIR}/"
+#Alias /awstats/js "${AWSTATS_JS_DIR}/"
 #ScriptAlias /awstats "${AWSTATS_CGI_DIR}/"
-#Alias /css "${AWSTATS_CSS_DIR}/"
-#Alias /js "${AWSTATS_JS_DIR}/"
 
 <Directory ${AWSTATS_CGI_DIR}/>
     DirectoryIndex awstats.pl
@@ -149,6 +149,12 @@ EOF
     Require valid-user
 </Directory>
 EOF
+
+    if [ X"${DISTRO}" == X"SUSE" ]; then
+        perl -pi -e 's#(</VirtualHost>)#Alias /awstats/icon "$ENV{'AWSTATS_ICON_DIR'}/"\n${1}#' ${HTTPD_SSL_CONF}
+        perl -pi -e 's#(</VirtualHost>)#Alias /awstats/js "$ENV{'AWSTATS_JS_DIR'}/"\n${1}#' ${HTTPD_SSL_CONF}
+        perl -pi -e 's#(</VirtualHost>)#Alias /awstats/css "$ENV{'AWSTATS_CSS_DIR'}/"\n${1}#' ${HTTPD_SSL_CONF}
+    fi
 
     # Make Awstats can be accessed via HTTPS.
     perl -pi -e 's#(</VirtualHost>)#Alias /awstats/icon "$ENV{'AWSTATS_ICON_DIR'}/"\n${1}#' ${HTTPD_SSL_CONF}

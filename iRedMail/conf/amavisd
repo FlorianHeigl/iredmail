@@ -22,7 +22,6 @@
 
 # Warning: Please source 'conf/postfix' first.
 
-export AMAVISD_SERVER='127.0.0.1'
 export AMAVISD_SYS_USER='amavis'
 export AMAVISD_SYS_GROUP='amavis'
 export AMAVISD_QUARANTINE_PORT='9998'

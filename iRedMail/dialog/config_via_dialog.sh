@@ -173,15 +173,13 @@ Configuration completed.
 *************************************************************************
 EOF
 
-ECHO_QUESTION -n "Continue? [Y|n]"
+ECHO_QUESTION -n "Continue? [y|N]"
 read ANSWER
 
 case ${ANSWER} in
-    N|n)
+    Y|y) : ;;
+    N|n|*)
         ECHO_INFO "Canceled, Exit."
         exit 255
-        ;;
-    Y|y|*)
-        :
         ;;
 esac

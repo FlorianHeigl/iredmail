@@ -48,20 +48,16 @@ EOF
 
     echo '' > ${MYSQL_INIT_SQL}
 
-    if [ X"${MYSQL_FRESH_INSTALLATION}" == X"YES" ]; then
-        ECHO_DEBUG "Setting password for MySQL admin (${MYSQL_ROOT_USER})."
-        mysqladmin --user=root password "${MYSQL_ROOT_PASSWD}"
+    ECHO_DEBUG "Setting password for MySQL admin (${MYSQL_ROOT_USER})."
+    mysqladmin --user=root password "${MYSQL_ROOT_PASSWD}"
 
-        cat >> ${MYSQL_INIT_SQL} <<EOF
-/* Delete empty username. */
+    cat >> ${MYSQL_INIT_SQL} <<EOF
+/* Delete anonymouse user. */
 USE mysql;
 
 DELETE FROM user WHERE User='';
 DELETE FROM db WHERE User='';
 EOF
-    else
-        :
-    fi
 
     ECHO_DEBUG "Initialize MySQL database."
     mysql -h${MYSQL_SERVER} -P${MYSQL_PORT} -u${MYSQL_ROOT_USER} -p"${MYSQL_ROOT_PASSWD}" <<EOF

@@ -37,18 +37,12 @@ export MAILDIR_STYLE='hashed'
 # Current storage node.
 export STORAGE_NODE='vmail1'
 
-# Download packages from official yum repository or not, used in 'pkgs/get_all.sh'.
-export DOWNLOAD_PKGS='YES'
-
 # For distribute deployment.
+export MYSQL_SERVER='127.0.0.1'
+export MYSQL_PORT='3306'
 export IMAP_SERVER='127.0.0.1'
 export SMTP_SERVER='127.0.0.1'
-
-# For POP3/IMAP services.
-export USE_POP3='YES'
-export USE_POP3S='YES'
-export USE_IMAP='YES'
-export USE_IMAPS='YES'
+export AMAVISD_SERVER='127.0.0.1'
 
 # For managesieve service and software.
 export USE_MANAGESIEVE='YES'    # Use managesieve service.
