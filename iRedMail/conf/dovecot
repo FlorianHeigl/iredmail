@@ -133,7 +133,7 @@ export DOVECOT_REALTIME_QUOTA_SQLTYPE='mysql'
 export DOVECOT_SHARE_FOLDER_SQLTYPE='mysql'
 
 if [ X"${DOVECOT_VERSION}" == X"1.1" -o X"${DOVECOT_VERSION}" == X"1.2" ]; then
-    export DOVECOT_PROTOCOLS="pop3 pop3s imap imaps"
+    export DOVECOT_PROTOCOLS="pop3 pop3s imap imaps managesieve"
 else
     export DOVECOT_PROTOCOLS="pop3 imap sieve"
 fi
