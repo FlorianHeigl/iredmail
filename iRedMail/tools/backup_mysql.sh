@@ -125,9 +125,9 @@ LOGFILE="${LOG_DIR}/mysql-${DATE}.log"
 
 # Check required variables.
 if [ X"${MYSQL_USER}" == X"" -o X"${MYSQL_PASSWD}" == X"" -o X"${DATABASES}" == X"" ]; then
-    echo "[ERROR] You don't have correct MySQL related configurations in file: ${0}"
-    echo -e "\t- MYSQL_USER\n\t- MYSQL_PASSWD\n\t- DATABASES"
-    echo "Please configure them first."
+    echo "[ERROR] You don't have correct MySQL related configurations in file: ${0}" 1>&2
+    echo -e "\t- MYSQL_USER\n\t- MYSQL_PASSWD\n\t- DATABASES" 1>&2
+    echo "Please configure them first." 1>&2
 
     exit 255
 fi
@@ -135,8 +135,8 @@ fi
 # Verify MySQL connection.
 ${CMD_MYSQL} -u"${MYSQL_USER}" -p"${MYSQL_PASSWD}" -e "show databases" >/dev/null 2>&1
 if [ X"$?" != X"0" ]; then
-    echo "[ERROR] MySQL username or password is incorrect in file ${0}."
-    echo "Please fix them first."
+    echo "[ERROR] MySQL username or password is incorrect in file ${0}." 1>&2
+    echo "Please fix them first." 1>&2
 
     exit 255
 fi
@@ -214,9 +214,7 @@ if [ X"${BACKUP_SUCCESS}" == X"YES" ]; then
 * Backup completed successfully.
 EOF
 else
-    cat <<EOF
-* Backup completed with !!!ERRORS!!!.
-EOF
+    echo -e "\n* Backup completed with !!!ERRORS!!!.\n" 1>&2
 fi
 
 cat << EOF

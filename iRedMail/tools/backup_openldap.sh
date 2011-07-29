@@ -190,9 +190,7 @@ if [ X"${BACKUP_SUCCESS}" == X"YES" ]; then
 * Backup completed successfully.
 EOF
 else
-    cat <<EOF
-* Backup completed with !!!ERRORS!!!.
-EOF
+    echo -e "\n* Backup completed with !!!ERRORS!!!.\n" 1>&2
 fi
 
 cat << EOF
