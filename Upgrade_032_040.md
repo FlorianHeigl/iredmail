@@ -1,0 +1,1 @@
+﻿Document moved: http://www.iredmail.org/docs/upgrade.iredmail.0.3.2-0.4.0.html
